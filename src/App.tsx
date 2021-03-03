@@ -4,6 +4,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { useTranslation } from 'react-i18next';
+
+import './i18n';
+import { showWalletPopup } from './redux/modules/ui';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -17,6 +22,9 @@ const useStyles = makeStyles(() =>
 );
 const App: React.FunctionComponent = () => {
     const classes = useStyles();
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -24,7 +32,14 @@ const App: React.FunctionComponent = () => {
                     <Typography variant="h6" className={classes.title}>
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Button
+                        color="inherit"
+                        onClick={() => {
+                            dispatch(showWalletPopup());
+                        }}
+                    >
+                        {t('header.connect-wallet')}
+                    </Button>
                 </Toolbar>
             </AppBar>
         </div>
