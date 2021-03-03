@@ -30,7 +30,7 @@ const App: React.FunctionComponent = () => {
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>
-                        News
+                        Thales Demo
                     </Typography>
                     <Button
                         color="inherit"
