@@ -1,5 +1,9 @@
 {
     "header": {
+        "links": {
+            "home": "Thales Home",
+            "options": "Options"
+        },
         "connect-wallet": "Connect wallet"
     }
 }
