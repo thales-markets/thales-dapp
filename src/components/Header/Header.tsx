@@ -11,12 +11,12 @@ const Header: React.FC = () => {
     const dispatch = useDispatch();
 
     return (
-        <Menu style={{ marginTop: '10px' }}>
-            <Link to={ROUTES.Home}>
-                <a className="item">{t('header.links.home')}</a>
+        <Menu>
+            <Link to={ROUTES.Home} className="item">
+                {t('header.links.home')}
             </Link>
-            <Link to={ROUTES.Options}>
-                <a className="item">{t('header.links.options')}</a>
+            <Link to={ROUTES.Options.Home} className="item">
+                {t('header.links.options')}
             </Link>
             <Menu.Menu position="right">
                 <Button

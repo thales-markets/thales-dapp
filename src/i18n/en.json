@@ -5,5 +5,36 @@
             "options": "Options"
         },
         "connect-wallet": "Connect wallet"
+    },
+    "common": {
+        "wallet": {
+            "your-wallet": "YOUR WALLET",
+            "currency-balance": "{{currencyKey}} BALANCE",
+            "eth-value": "ETH PRICE (USD)",
+            "balance-currency": "Balance: {{balance}}",
+            "no-wallet-connected": "No wallet currently connected",
+            "connect-currency-wallet": "connect {{currencyKey}} wallet to start",
+            "connect-your-wallet": "Connect your wallet"
+        },
+        "by-date": "by {{date}}",
+        "val-in-cents": "{{val}}c"
+    },
+    "options": {
+        "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
+        "phases": {
+            "bidding": "bidding",
+            "trading": "trading",
+            "maturity": "maturity",
+            "expiry": "expired"
+        },
+        "market-creation": {
+            "not-connected": {
+                "title": "Connect a wallet to create a market or place a bid"
+            },
+            "no-markets": {
+                "title": "Create a market or place a bid to get started"
+            },
+            "create-market-button-label": "create a new market"
+        }
     }
 }

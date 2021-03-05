@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import Root from './Root';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/store';
+import './i18n';
+import 'semantic-ui-css/semantic.min.css';
+import './index.css';
 
 ReactDOM.render(
-    <React.StrictMode>
+    <React.Fragment>
         <Root store={store} />
-    </React.StrictMode>,
+    </React.Fragment>,
     document.getElementById('root')
 );
 
