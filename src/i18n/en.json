@@ -19,6 +19,19 @@
         "by-date": "by {{date}}",
         "val-in-cents": "{{val}}c"
     },
+    "modals": {
+        "wallet": {
+            "back-to-wallet-selection": "Back to wallet selection",
+            "select-your-wallet": "Select your wallet",
+            "connect-your-wallet": "Connect your wallet",
+            "errors": {
+                "could-not-get-address": "Could not get addresses from wallet",
+                "ledger-error": "Please make sure your Ledger is unlocked, on Ethereum app with contract data setting allowed",
+                "generic-error": "Error"
+            },
+            "retry": "Retry"
+        }
+    },
     "options": {
         "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
         "phases": {

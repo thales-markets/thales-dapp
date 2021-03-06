@@ -4,12 +4,12 @@ import { RootState } from '../rootReducer';
 const sliceName = 'ui';
 
 type UISliceState = {
-    isWalletPopupVisible: boolean;
+    walletPopupIsVisible: boolean;
     synthsCategoryFilter: string | null;
 };
 
 const initialState: UISliceState = {
-    isWalletPopupVisible: false,
+    walletPopupIsVisible: false,
     synthsCategoryFilter: null,
 };
 
@@ -18,10 +18,10 @@ export const uiSlice = createSlice({
     initialState,
     reducers: {
         toggleWalletPopup: (state, action: PayloadAction<boolean>) => {
-            state.isWalletPopupVisible = action.payload;
+            state.walletPopupIsVisible = action.payload;
         },
         showWalletPopup: (state) => {
-            state.isWalletPopupVisible = true;
+            state.walletPopupIsVisible = true;
         },
         setSynthsCategoryFilter: (state, action: PayloadAction<{ category: string | null }>) => {
             state.synthsCategoryFilter = action.payload.category;
@@ -32,7 +32,7 @@ export const uiSlice = createSlice({
 export const { toggleWalletPopup, showWalletPopup, setSynthsCategoryFilter } = uiSlice.actions;
 
 export const getUIState = (state: RootState) => state[sliceName];
-export const isWalletPopupVisible = (state: RootState) => getUIState(state).isWalletPopupVisible;
+export const walletPopupIsVisible = (state: RootState) => getUIState(state).walletPopupIsVisible;
 export const getSynthsCategoryFilter = (state: RootState) => getUIState(state).synthsCategoryFilter;
 
 export default uiSlice.reducer;

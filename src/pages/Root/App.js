@@ -11,6 +11,7 @@ import { setAvailableSynths, updateFrozenSynths } from 'redux/modules/synths';
 import { fetchRatesRequest } from 'redux/modules/rates';
 import { useDispatch } from 'react-redux';
 import { getExchangeData } from 'dataFetcher';
+import WalletPopup from 'components/WalletPopup';
 const queryClient = new QueryClient();
 
 const REFRESH_INTERVAL = 2 * 60 * 1000;
@@ -61,6 +62,7 @@ const App = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
+                <WalletPopup />
                 <Switch>
                     <Route path={ROUTES.Options.Home}>
                         <MainLayout>

@@ -27,3 +27,6 @@ button {
     margin-bottom: 0 !important;
     background-color: #d94454;
 }
+.ui.message {
+    padding: 0.5em 1.5em;
+}
