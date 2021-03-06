@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import ROUTES from './constants/routes';
-import MainLayout from './components/MainLayout';
-import Home from './pages/Home';
-import Options from './pages/Options';
+import ROUTES from '../../constants/routes';
+import MainLayout from '../../components/MainLayout';
+import Home from '../Home';
+import Options from '../Options';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { getEthereumNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -25,7 +25,7 @@ const App = () => {
     }, []);
     useEffect(() => {
         const init = async () => {
-            const { networkId, name } = await getEthereumNetwork();
+            const { networkId } = await getEthereumNetwork();
             if (!snxJSConnector.initialized) {
                 snxJSConnector.setContractSettings({ networkId });
             }

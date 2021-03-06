@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Root from './Root';
+import Root from './pages/Root';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/store';
 import './i18n';
