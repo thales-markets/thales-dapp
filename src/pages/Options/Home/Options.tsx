@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
-import QUERY_KEYS from '../../constants/queryKeys';
-import MarketCreation from './components/MarketCreation';
-import { OptionsMarkets } from './types';
+import QUERY_KEYS from '../../../constants/queryKeys';
+import MarketCreation from '../components/MarketCreation';
+import { OptionsMarkets } from '../types';
 import snxData from 'synthetix-data';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import { sortOptionsMarkets } from '../../utils/options';
+import { sortOptionsMarkets } from '../../../utils/options';
 import { RootState } from 'redux/rootReducer';
 import { getAvailableSynthsMap } from 'redux/modules/synths';
-import HotMarkets from './components/HotMarkets';
+import HotMarkets from '../components/HotMarkets';
+import MarketsTable from '../components/MarketsTable';
 
 const MAX_HOT_MARKETS = 4;
 
@@ -32,6 +33,7 @@ export const Options: React.FC = () => {
             <h1>Options</h1>
             <HotMarkets optionsMarkets={hotMarkets} />
             <MarketCreation />
+            <MarketsTable optionsMarkets={optionsMarkets} />
         </>
     );
 };

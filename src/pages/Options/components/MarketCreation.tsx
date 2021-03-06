@@ -20,7 +20,7 @@ const MarketCreation: React.FC = () => {
         <Segment placeholder textAlign="center">
             {!isWalletConnected ? (
                 <>
-                    <Header as="h1">{t('options.market-creation.not-connected.title')}</Header>
+                    <Header as="h1">{t('options.home.market-creation.not-connected.title')}</Header>
                     <NewToBinaryOptions />
                     <Button primary onClick={() => dispatch(toggleWalletPopup(true))}>
                         {t('common.wallet.connect-your-wallet')}
@@ -28,10 +28,10 @@ const MarketCreation: React.FC = () => {
                 </>
             ) : (
                 <>
-                    <Header as="h1">{t('options.market-creation.no-markets.title')}</Header>
+                    <Header as="h1">{t('options.home.market-creation.no-markets.title')}</Header>
                     <NewToBinaryOptions />
                     <Button primary onClick={() => navigateTo(ROUTES.Options.CreateMarket)}>
-                        {t('options.market-creation.create-market-button-label')}
+                        {t('options.home.market-creation.create-market-button-label')}
                     </Button>
                 </>
             )}

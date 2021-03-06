@@ -33,21 +33,69 @@
         }
     },
     "options": {
-        "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
         "phases": {
             "bidding": "bidding",
             "trading": "trading",
             "maturity": "maturity",
             "expiry": "expired"
         },
-        "market-creation": {
-            "not-connected": {
-                "title": "Connect a wallet to create a market or place a bid"
+        "home": {
+            "market-creation": {
+                "not-connected": {
+                    "title": "Connect a wallet to create a market or place a bid"
+                },
+                "no-markets": {
+                    "title": "Create a market or place a bid to get started"
+                },
+                "create-market-button-label": "create a new market"
             },
-            "no-markets": {
-                "title": "Create a market or place a bid to get started"
+            "explore-markets": {
+                "title": "Bid on open markets:",
+                "table": {
+                    "filters": {
+                        "markets": {
+                            "no-results": "No markets found, please try again."
+                        },
+                        "creator": {
+                            "tooltip-connected": "Markets you’ve created. Connect a wallet to start.",
+                            "tooltip-not-connected": "Markets you’ve created. Click on the row to enter.",
+                            "no-results": "You haven't created any markets yet."
+                        },
+                        "user-bids": {
+                            "tooltip-connected": "Markets you’ve bid on. Connect a wallet to start.",
+                            "tooltip-not-connected": "Markets you’ve bid on. Click on the row to enter.",
+                            "no-results": "You haven't placed any bids yet."
+                        }
+                    },
+                    "view-all-markets": "view all markets",
+                    "view-all-open-markets": "view all open markets"
+                }
             },
-            "create-market-button-label": "create a new market"
+            "markets-table": {
+                "asset-col": "asset",
+                "strike-price-col": "strike price ({{currencyKey}})",
+                "maturity-date-col": "maturity date",
+                "long-short-col": "long / short",
+                "phase-col": "phase",
+                "pool-size-col": "pool size (<0>{{currencyKey}}</0>)",
+                "time-remaining-col": "time remaining"
+            }
+        },
+        "common": {
+            "time-remaining": {
+                "ended": "ended"
+            },
+            "long": "long",
+            "short": "short",
+            "price": "price",
+            "amount-long": "{{amount}} long",
+            "amount-short": "{{amount}} short",
+            "final-price": "final price:",
+            "claimable-amount": "claimable: {{amount}}",
+            "long-price": "Long price",
+            "short-price": "Short price",
+            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
+            "withdrawals": "withdrawals"
         }
     }
 }
