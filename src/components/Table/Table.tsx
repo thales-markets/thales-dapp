@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo, DependencyList } from 'react';
 import { useTable, useSortBy, Column, Row } from 'react-table';
 import { ReactComponent as SortDownIcon } from 'assets/images/sort-down.svg';
@@ -80,7 +79,6 @@ const Table: React.FC<TableProps> = ({
 
                         return (
                             <SemanticTable.Row
-                                className="table-body-row"
                                 {...row.getRowProps()}
                                 onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
                                 key={rowIndex}

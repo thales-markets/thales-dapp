@@ -1,6 +1,6 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 import keyBy from 'lodash/keyBy';
-import { synthWeight } from '../../utils/synthOrdering';
+import { synthWeight } from '../../constants/currency';
 import { SYNTHS_MAP, CurrencyKeys, CurrencyKey, Category } from '../../constants/currency';
 import { RootState } from 'redux/rootReducer';
 

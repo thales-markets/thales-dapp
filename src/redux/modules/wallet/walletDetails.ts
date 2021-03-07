@@ -1,6 +1,4 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import { setSigner } from 'utils/snxJSConnector';
 import { getAddress } from 'utils/formatters';
 import { defaultNetwork, NetworkId } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
@@ -12,7 +10,6 @@ export type WalletDetailsSliceState = {
     unlockError: string | null;
     walletPaginatorIndex: number;
     availableWallets: string[];
-    derivationPath: string | null;
     networkId: NetworkId;
     networkName: string;
 };
@@ -24,7 +21,6 @@ const initialState: WalletDetailsSliceState = {
     walletPaginatorIndex: 0,
     availableWallets: [],
     currentWallet: null,
-    derivationPath: localStorage.getItem(LOCAL_STORAGE_KEYS.WALLET_DERIVATION_PATH),
     networkId: defaultNetwork.networkId,
     networkName: defaultNetwork.name,
 };
@@ -47,9 +43,6 @@ export const walletDetailsSlice = createSlice({
                 currentWallet: payload.currentWallet ? getAddress(payload.currentWallet) : state.currentWallet,
             };
         },
-        updateWalletPaginatorIndex: (state, action: PayloadAction<number>) => {
-            state.walletPaginatorIndex = action.payload;
-        },
         updateNetworkSettings: (
             state,
             action: PayloadAction<{
@@ -61,28 +54,6 @@ export const walletDetailsSlice = createSlice({
 
             state.networkId = networkId;
             state.networkName = networkName;
-        },
-        setDerivationPath: (
-            state,
-            action: PayloadAction<{
-                signerOptions: {
-                    type: string;
-                    networkId: NetworkId;
-                    derivationPath: string;
-                    networkName: string;
-                };
-                derivationPath: string;
-            }>
-        ) => {
-            const { signerOptions, derivationPath } = action.payload;
-
-            /* TODO: move this side effect to a saga */
-            setSigner(signerOptions);
-            localStorage.setItem(LOCAL_STORAGE_KEYS.WALLET_DERIVATION_PATH, derivationPath);
-
-            state.derivationPath = derivationPath;
-            state.availableWallets = [];
-            state.walletPaginatorIndex = 0;
         },
     },
 });
@@ -100,12 +71,6 @@ export const getIsWalletConnected = createSelector(getCurrentWalletAddress, (cur
 );
 export const getWalletInfo = (state: RootState) => getWalletState(state);
 
-export const {
-    updateNetworkSettings,
-    resetWalletReducer,
-    updateWalletReducer,
-    setDerivationPath,
-    updateWalletPaginatorIndex,
-} = walletDetailsSlice.actions;
+export const { updateNetworkSettings, resetWalletReducer, updateWalletReducer } = walletDetailsSlice.actions;
 
 export default walletDetailsSlice.reducer;

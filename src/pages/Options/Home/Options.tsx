@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import QUERY_KEYS from '../../../constants/queryKeys';
 import MarketCreation from '../components/MarketCreation';
-import { OptionsMarkets } from '../types';
+import { OptionsMarkets } from '../../../types/options';
 import snxData from 'synthetix-data';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';

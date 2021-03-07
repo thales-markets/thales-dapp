@@ -1,13 +1,13 @@
 import React from 'react';
-import { OptionsMarkets } from '../types';
+import { OptionsMarkets } from '../../../types/options';
 import { Card } from 'semantic-ui-react';
 import TimeRemaining from './TimeRemaining';
-import { getCurrencyKeyIcon } from 'utils/currency';
 import { formatCurrencyWithSign, formatShortDate } from 'utils/formatters';
 import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import MarketSentiment from './MarketSentiment';
 import { navigateToOptionsMarket } from 'utils/routes';
+import Currency from 'components/Currency';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -18,16 +18,16 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     return (
         <Card.Group>
             {optionsMarkets.map((optionsMarket) => {
-                const currencyIcon = getCurrencyKeyIcon(optionsMarket.currencyKey);
-                const { AssetIcon } = currencyIcon;
-
                 return (
                     <Card key={optionsMarket.address} onClick={() => navigateToOptionsMarket(optionsMarket.address)}>
                         <Card.Content>
                             <Card.Header>
-                                <span>
-                                    <AssetIcon width="22" height="22" /> {optionsMarket.asset}
-                                </span>
+                                <Currency.Name
+                                    currencyKey={optionsMarket.currencyKey}
+                                    name={optionsMarket.asset}
+                                    showIcon={true}
+                                    iconProps={{ width: '24px', height: '24px', type: 'asset' }}
+                                />
                                 <TimeRemaining end={optionsMarket.timeRemaining} />
                             </Card.Header>
                             <Card.Description textAlign="center">

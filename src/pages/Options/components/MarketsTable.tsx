@@ -5,10 +5,10 @@ import { SYNTHS_MAP, FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { formatShortDate, formatCurrency } from 'utils/formatters';
 import Table from 'components/Table';
 import { CurrencyCol } from 'components/Table/common';
-import { OptionsMarkets, HistoricalOptionsMarketInfo } from 'pages/Options/types';
+import { OptionsMarkets, HistoricalOptionsMarketInfo } from 'types/options';
 import TimeRemaining from '../components/TimeRemaining';
-import { getCurrencyKeyIcon } from 'utils/currency';
 import { navigateToOptionsMarket } from 'utils/routes';
+import Currency from 'components/Currency';
 
 type MarketsTableProps = {
     optionsMarkets: OptionsMarkets;
@@ -27,16 +27,14 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                     accessor: 'currencyKey',
                     Cell: (
                         cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['currencyKey']>
-                    ) => {
-                        const currencyIcon = getCurrencyKeyIcon(cellProps.cell.value);
-                        const { AssetIcon } = currencyIcon;
-                        return (
-                            <span style={{ display: 'flex', alignItems: 'center' }}>
-                                <AssetIcon width="22" height="22" style={{ marginRight: 10 }} />{' '}
-                                {cellProps.row.original.asset}
-                            </span>
-                        );
-                    },
+                    ) => (
+                        <Currency.Name
+                            currencyKey={cellProps.cell.value}
+                            name={cellProps.row.original.asset}
+                            showIcon={true}
+                            iconProps={{ width: '24px', height: '24px', type: 'asset' }}
+                        />
+                    ),
                     width: 150,
                     sortable: true,
                 },

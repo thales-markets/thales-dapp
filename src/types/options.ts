@@ -1,4 +1,4 @@
-import { CurrencyKey } from '../../constants/currency';
+import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers/utils';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';

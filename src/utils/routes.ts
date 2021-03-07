@@ -1,7 +1,8 @@
 import ROUTES from 'constants/routes';
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 
-const history = createBrowserHistory();
+// TODO try with browser history
+const history = createHashHistory();
 
 export const navigateTo = (path: string, replacePath = false, scrollToTop = false) => {
     if (scrollToTop) {

@@ -8,12 +8,6 @@
     },
     "common": {
         "wallet": {
-            "your-wallet": "YOUR WALLET",
-            "currency-balance": "{{currencyKey}} BALANCE",
-            "eth-value": "ETH PRICE (USD)",
-            "balance-currency": "Balance: {{balance}}",
-            "no-wallet-connected": "No wallet currently connected",
-            "connect-currency-wallet": "connect {{currencyKey}} wallet to start",
             "connect-your-wallet": "Connect your wallet"
         },
         "by-date": "by {{date}}",
@@ -21,12 +15,8 @@
     },
     "modals": {
         "wallet": {
-            "back-to-wallet-selection": "Back to wallet selection",
-            "select-your-wallet": "Select your wallet",
             "connect-your-wallet": "Connect your wallet",
             "errors": {
-                "could-not-get-address": "Could not get addresses from wallet",
-                "ledger-error": "Please make sure your Ledger is unlocked, on Ethereum app with contract data setting allowed",
                 "generic-error": "Error"
             },
             "retry": "Retry"
@@ -90,12 +80,9 @@
             "price": "price",
             "amount-long": "{{amount}} long",
             "amount-short": "{{amount}} short",
-            "final-price": "final price:",
-            "claimable-amount": "claimable: {{amount}}",
             "long-price": "Long price",
             "short-price": "Short price",
-            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
-            "withdrawals": "withdrawals"
+            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!"
         }
     }
 }

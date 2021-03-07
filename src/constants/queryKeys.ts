@@ -1,15 +1,6 @@
-import { CurrencyKey } from './currency';
 import { Period } from './period';
 
 export const QUERY_KEYS = {
-    Synths: {
-        HistoricalRates: (currencyKey: CurrencyKey, period: Period) => [
-            'synths',
-            'historicalRates',
-            currencyKey,
-            period,
-        ],
-    },
     BinaryOptions: {
         Markets: ['binaryOptions', 'markets'],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
@@ -28,11 +19,6 @@ export const QUERY_KEYS = {
         ],
         UserMarkets: (walletAddress: string) => ['binaryOptions', 'userMarkets', walletAddress],
         OptionPrices: (marketAddress: string, period: Period) => ['binaryOptions', marketAddress, period],
-    },
-    HistoricalTrades: {
-        AllTrades: ['historicalTrades', 'trades'],
-        UserTrades: (walletAddress: string) => ['historicalTrades', 'trades', walletAddress],
-        UserSettledTrades: (walletAddress: string) => ['historicalSettledTrades', 'trades', walletAddress],
     },
 };
 

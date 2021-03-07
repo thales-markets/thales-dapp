@@ -1,7 +1,7 @@
 import orderBy from 'lodash/orderBy';
 import { SynthDefinitionMap } from 'redux/modules/synths';
 import { PHASE } from '../constants/options';
-import { OptionsMarkets, Phase } from '../pages/Options/types';
+import { OptionsMarkets, Phase } from '../types/options';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthDefinitionMap) =>
     orderBy(

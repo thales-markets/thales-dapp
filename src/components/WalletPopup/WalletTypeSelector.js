@@ -1,11 +1,11 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector, { connectToWallet } from 'utils/snxJSConnector';
 import { hasEthereumInjected, SUPPORTED_WALLETS, SUPPORTED_WALLETS_MAP, onMetamaskAccountChange } from 'utils/network';
 import { ReactComponent as MetamaskWallet } from 'assets/images/wallets/metamask.svg';
-import { Header, Segment } from 'semantic-ui-react';
-import { getWalletInfo, resetWalletReducer, updateWalletReducer } from 'redux/modules/wallet/walletDetails';
+import { Header, Button } from 'semantic-ui-react';
+import { resetWalletReducer, updateWalletReducer } from 'redux/modules/wallet/walletDetails';
 import { toggleWalletPopup } from 'redux/modules/ui';
 
 const { METAMASK } = SUPPORTED_WALLETS_MAP;
@@ -17,11 +17,10 @@ const walletTypeToIconMap = {
 const WalletTypeSelector = ({ selectAddressScreen }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { derivationPath } = useSelector((state) => getWalletInfo(state));
 
-    const onWalletClick = async ({ wallet, derivationPath }) => {
+    const onWalletClick = async ({ wallet }) => {
         dispatch(resetWalletReducer());
-        const walletStatus = await connectToWallet({ wallet, derivationPath });
+        const walletStatus = await connectToWallet({ wallet });
         dispatch(updateWalletReducer({ ...walletStatus, availableWallets: [] }));
         if (walletStatus && walletStatus.unlocked && walletStatus.currentWallet) {
             if (walletStatus.walletType === METAMASK) {
@@ -54,15 +53,10 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
 
                 return (
                     <div key={wallet} style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Segment
-                            key={wallet}
-                            disabled={noMetamask}
-                            onClick={() => onWalletClick({ wallet, derivationPath })}
-                            style={{ cursor: 'pointer', width: 115 }}
-                        >
+                        <Button key={wallet} disabled={noMetamask} onClick={() => onWalletClick({ wallet })}>
                             <Icon width="80px" height="80px" />
                             <Header as="h3">{wallet}</Header>
-                        </Segment>
+                        </Button>
                     </div>
                 );
             })}

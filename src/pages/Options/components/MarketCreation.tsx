@@ -1,20 +1,19 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import ROUTES from '../../../constants/routes';
-
-//import { getIsWalletConnected } from 'ducks/wallet/walletDetails';
-
 import NewToBinaryOptions from './NewToBinaryOptions';
 import { toggleWalletPopup } from '../../../redux/modules/ui';
 import { Button, Header, Segment } from 'semantic-ui-react';
 import { navigateTo } from 'utils/routes';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const isWalletConnected = false;
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
         <Segment placeholder textAlign="center">

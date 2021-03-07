@@ -82,7 +82,6 @@ const connectToMetamask = async (networkId: NetworkId, networkName: string) => {
     }
 };
 
-// TODO - check is this needed in case of Metamask only
 const getSignerConfig = () => {
     return {};
 };
@@ -97,7 +96,7 @@ export const setSigner = ({ type, networkId }: { type: string; networkId: Networ
     });
 };
 
-export const connectToWallet = async ({ wallet }: { wallet: string; derivationPath: string }) => {
+export const connectToWallet = async ({ wallet }: { wallet: string }) => {
     const ethereumNetwork = await getEthereumNetwork();
     if (!ethereumNetwork) {
         return {

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import React, { useCallback, useEffect } from 'react';
+import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import Home from '../Home';
@@ -12,56 +12,51 @@ import { fetchRatesRequest } from 'redux/modules/rates';
 import { useDispatch } from 'react-redux';
 import { getExchangeData } from 'dataFetcher';
 import WalletPopup from 'components/WalletPopup';
-const queryClient = new QueryClient();
+import { updateNetworkSettings } from 'redux/modules/wallet/walletDetails';
 
 const REFRESH_INTERVAL = 2 * 60 * 1000;
 
+const queryClient = new QueryClient();
+
 const App = () => {
-    const [intervalId, setIntervalId] = useState(undefined);
     const dispatch = useDispatch();
+    // TODO - move this logic into synths slice?
     const fetchAndSetExchangeData = useCallback(async () => {
         const { frozenSynths } = await getExchangeData();
-        //setNetworkGasInfo(networkPrices);
         dispatch(updateFrozenSynths({ frozenSynths }));
     }, []);
+
     useEffect(() => {
         const init = async () => {
-            const { networkId } = await getEthereumNetwork();
+            const { networkId, name } = await getEthereumNetwork();
             if (!snxJSConnector.initialized) {
                 snxJSConnector.setContractSettings({ networkId });
             }
-
-            //updateNetworkSettings({ networkId, networkName: name.toLowerCase() });
+            updateNetworkSettings({ networkId, networkName: name.toLowerCase() });
 
             const synths = snxJSConnector.snxJS.contractSettings.synths.filter((synth) => synth.asset);
 
             dispatch(setAvailableSynths({ synths }));
-            //setAppReady();
-
             fetchAndSetExchangeData();
-            //fetchAppStatusRequest();
             dispatch(fetchRatesRequest());
-            // TODO: stop fetching data when system is suspended
-            clearInterval(intervalId);
-            const _intervalId = setInterval(() => {
-                fetchAndSetExchangeData();
-                //fetchWalletBalancesRequest();
-                dispatch(fetchRatesRequest());
-                //fetchAppStatusRequest();
-            }, REFRESH_INTERVAL);
-            setIntervalId(_intervalId);
         };
 
         init();
 
+        // TODO: stop fetching data when system is suspended
+        const interval = setInterval(() => {
+            fetchAndSetExchangeData();
+            dispatch(fetchRatesRequest());
+        }, REFRESH_INTERVAL);
+
         return () => {
-            clearInterval(intervalId);
+            clearInterval(interval);
         };
-    }, [fetchAndSetExchangeData /*, fetchWalletBalancesRequest*/]);
+    }, [fetchAndSetExchangeData]);
 
     return (
         <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
+            <Router>
                 <WalletPopup />
                 <Switch>
                     <Route path={ROUTES.Options.Home}>
@@ -75,7 +70,7 @@ const App = () => {
                         </MainLayout>
                     </Route>
                 </Switch>
-            </BrowserRouter>
+            </Router>
         </QueryClientProvider>
     );
 };
