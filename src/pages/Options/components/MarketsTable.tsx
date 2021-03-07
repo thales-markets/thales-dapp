@@ -16,6 +16,21 @@ type MarketsTableProps = {
     isLoading?: boolean;
 };
 
+const getPhaseBackgroundColor = (phase: string) => {
+    switch (phase) {
+        case 'bidding':
+            return '#fbe6b8';
+        case 'trading':
+            return '#9fe3d5';
+        case 'maturity':
+            return '#c5d5ff';
+        case 'expiry':
+            return '#f5607066';
+        default:
+            break;
+    }
+};
+
 export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
 
@@ -106,7 +121,15 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                     Header: <>{t('options.home.markets-table.phase-col')}</>,
                     accessor: 'phase',
                     Cell: (cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['phase']>) => (
-                        <span>{cellProps.cell.value}</span>
+                        <span
+                            style={{
+                                backgroundColor: getPhaseBackgroundColor(cellProps.cell.value),
+                                textTransform: 'uppercase',
+                                padding: 5,
+                            }}
+                        >
+                            {t(`options.phases.${cellProps.cell.value}`)}
+                        </span>
                     ),
                     width: 150,
                 },

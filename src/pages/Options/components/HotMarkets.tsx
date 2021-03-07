@@ -3,7 +3,7 @@ import { OptionsMarkets } from '../../../types/options';
 import { Card } from 'semantic-ui-react';
 import TimeRemaining from './TimeRemaining';
 import { formatCurrencyWithSign, formatShortDate } from 'utils/formatters';
-import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import MarketSentiment from './MarketSentiment';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -32,8 +32,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                             </Card.Header>
                             <Card.Description textAlign="center">
                                 <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 5, marginTop: 10 }}>
-                                    {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}{' '}
-                                    {FIAT_CURRENCY_MAP.USD}
+                                    {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
                                 </div>
                                 <div style={{ fontSize: 14, textTransform: 'uppercase' }}>
                                     {t('common.by-date', { date: formatShortDate(optionsMarket.maturityDate) })}
