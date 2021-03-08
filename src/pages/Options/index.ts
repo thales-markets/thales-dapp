@@ -1,1 +1,3 @@
-export { default } from './Home/Options';
+import Home from './Home';
+
+export default { Home };

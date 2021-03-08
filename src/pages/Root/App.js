@@ -61,7 +61,7 @@ const App = () => {
                 <Switch>
                     <Route path={ROUTES.Options.Home}>
                         <MainLayout>
-                            <Options />
+                            <Options.Home />
                         </MainLayout>
                     </Route>
                     <Route path={ROUTES.Home}>

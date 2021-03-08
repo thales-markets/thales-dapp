@@ -13,7 +13,7 @@ import MarketsTable from '../components/MarketsTable';
 
 const MAX_HOT_MARKETS = 4;
 
-export const Options: React.FC = () => {
+export const Home: React.FC = () => {
     const marketsQuery = useQuery<OptionsMarkets, any>(QUERY_KEYS.BinaryOptions.Markets, () =>
         snxData.binaryOptions.markets({ max: Infinity })
     );
@@ -38,4 +38,4 @@ export const Options: React.FC = () => {
     );
 };
 
-export default Options;
+export default Home;

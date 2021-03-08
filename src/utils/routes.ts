@@ -11,7 +11,7 @@ export const navigateTo = (path: string, replacePath = false, scrollToTop = fals
     replacePath ? history.replace(path) : history.push(path);
 };
 
-export const buildOptionsMarketLink = (marketAddress: string) => `${ROUTES.Options}/${marketAddress}`;
+export const buildOptionsMarketLink = (marketAddress: string) => `${ROUTES.Options.Home}/${marketAddress}`;
 
 export const navigateToOptionsMarket = (marketAddress: string, replacePath = false) =>
     navigateTo(buildOptionsMarketLink(marketAddress), replacePath);
