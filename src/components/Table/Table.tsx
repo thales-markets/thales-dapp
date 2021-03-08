@@ -41,8 +41,8 @@ const Table: React.FC<TableProps> = ({
 
     return (
         <SemanticTable {...getTableProps()} selectable>
-            {headerGroups.map((headerGroup) => (
-                <SemanticTable.Header {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+            {headerGroups.map((headerGroup, headerGroupIndex: any) => (
+                <SemanticTable.Header {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                     <SemanticTable.Row>
                         {headerGroup.headers.map((column: any, headerIndex: any) => (
                             <SemanticTable.HeaderCell
