@@ -36,82 +36,94 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ selectedPeriod, optionsMark
     const noChartData = historicalOptionPriceQuery.isSuccess && chartData.length < 2;
 
     return (
-        <>
-            <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={noChartData ? [] : chartData}>
-                    <XAxis
-                        dataKey="timestamp"
-                        //tick={fontStyleMedium}
-                        axisLine={false}
-                        tickLine={false}
-                        tickFormatter={(val: any) => {
-                            if (!isNumber(val)) {
-                                return '';
-                            }
-                            const periodOverOneDay =
-                                selectedPeriod != null && selectedPeriod.value > PERIOD_IN_HOURS.ONE_DAY;
+        <div style={{ height: 300 }}>
+            <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={noChartData ? [] : chartData}>
+                            <XAxis
+                                dataKey="timestamp"
+                                //tick={fontStyleMedium}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(val: any) => {
+                                    if (!isNumber(val)) {
+                                        return '';
+                                    }
+                                    const periodOverOneDay =
+                                        selectedPeriod != null && selectedPeriod.value > PERIOD_IN_HOURS.ONE_DAY;
 
-                            return format(val, periodOverOneDay ? 'dd MMM' : 'h:mma');
-                        }}
-                    />
-                    <YAxis
-                        type="number"
-                        domain={[0, 1]}
-                        orientation="right"
-                        //tick={fontStyleMedium}
-                        axisLine={false}
-                        tickLine={false}
-                        tickFormatter={(val: any) => t('common.val-in-cents', { val })}
-                    />
-                    <Line
-                        type="linear"
-                        name={t('options.common.long-price')}
-                        dataKey="longPrice"
-                        stroke="#10BA97"
-                        strokeWidth={1.5}
-                        isAnimationActive={false}
-                    />
-                    <Line
-                        type="linear"
-                        name={t('options.common.short-price')}
-                        dataKey="shortPrice"
-                        stroke="#D94454"
-                        strokeWidth={1.5}
-                        isAnimationActive={false}
-                    />
-                    {!noChartData && (
-                        <Tooltip
-                            // @ts-ignore
-                            cursor={{ strokeWidth: 1, stroke: '#9492C4' }}
-                            contentStyle={{
-                                border: 'none',
-                                borderRadius: '4px',
-                                backgroundColor: '#F3F3FE',
+                                    return format(val, periodOverOneDay ? 'dd MMM' : 'h:mma');
+                                }}
+                            />
+                            <YAxis
+                                type="number"
+                                domain={[0, 1]}
+                                orientation="right"
+                                //tick={fontStyleMedium}
+                                axisLine={false}
+                                tickLine={false}
+                                tickFormatter={(val: any) => t('common.val-in-cents', { val })}
+                            />
+                            <Line
+                                type="linear"
+                                name={t('options.common.long-price')}
+                                dataKey="longPrice"
+                                stroke="#10BA97"
+                                strokeWidth={1.5}
+                                isAnimationActive={false}
+                            />
+                            <Line
+                                type="linear"
+                                name={t('options.common.short-price')}
+                                dataKey="shortPrice"
+                                stroke="#D94454"
+                                strokeWidth={1.5}
+                                isAnimationActive={false}
+                            />
+                            {!noChartData && (
+                                <Tooltip
+                                    // @ts-ignore
+                                    cursor={{ strokeWidth: 1, stroke: '#9492C4' }}
+                                    contentStyle={{
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        backgroundColor: '#F3F3FE',
+                                    }}
+                                    itemStyle={{
+                                        //...fontStyle,
+                                        textTransform: 'capitalize',
+                                    }}
+                                    //labelStyle={fontStyle}
+                                    formatter={(val: string | number) => formatCurrencyWithSign(USD_SIGN, val)}
+                                    labelFormatter={(label: any) => {
+                                        if (!isNumber(label)) {
+                                            return '';
+                                        }
+                                        return format(label, 'do MMM yy | HH:mm');
+                                    }}
+                                />
+                            )}
+                        </LineChart>
+                    </ResponsiveContainer>
+                    {isLoading && <Loader active />}
+                    {noChartData && (
+                        <div
+                            style={{
+                                justifyItems: 'center',
+                                left: '50%',
+                                top: '50%',
+                                position: 'absolute',
+                                display: 'grid',
                             }}
-                            itemStyle={{
-                                //...fontStyle,
-                                textTransform: 'capitalize',
-                            }}
-                            //labelStyle={fontStyle}
-                            formatter={(val: string | number) => formatCurrencyWithSign(USD_SIGN, val)}
-                            labelFormatter={(label: any) => {
-                                if (!isNumber(label)) {
-                                    return '';
-                                }
-                                return format(label, 'do MMM yy | HH:mm');
-                            }}
-                        />
+                        >
+                            <ExclamationIcon />
+                            {t('options.market.chart-card.no-chart-data')}
+                        </div>
                     )}
-                </LineChart>
-            </ResponsiveContainer>
-            {isLoading && <Loader active />}
-            {noChartData && (
-                <div>
-                    <ExclamationIcon />
-                    {t('options.market.chart-card.no-chart-data')}
                 </div>
-            )}
-        </>
+            </div>
+        </div>
     );
 };
 

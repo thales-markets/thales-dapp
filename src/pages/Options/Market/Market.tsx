@@ -141,8 +141,14 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                 {t('options.market.heading.all-markets')}
                             </Link>{' '}
                             | {marketHeading}
-                            <Button size="mini" onClick={handleViewMarketDetails} style={{ marginLeft: 10 }}>
-                                {t('options.market.heading.market-details')} <Icon name="info circle"></Icon>
+                            <Button
+                                size="mini"
+                                onClick={handleViewMarketDetails}
+                                style={{ marginLeft: 10, marginRight: 10 }}
+                            >
+                                {t('options.market.heading.market-details')}
+                                {'  '}
+                                <Icon name="info circle"></Icon>
                             </Button>
                         </span>
                         <span style={{ textTransform: 'uppercase' }}>

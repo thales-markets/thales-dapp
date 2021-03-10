@@ -13,7 +13,6 @@ const MAX_HOT_MARKETS = 4;
 export const Home: React.FC = () => {
     const marketsQuery = useBinaryOptionsMarkets();
 
-    console.log(marketsQuery.data);
     const synthsMap = useSelector((state: RootState) => getAvailableSynthsMap(state));
     const optionsMarkets = useMemo(
         () =>

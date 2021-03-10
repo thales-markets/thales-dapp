@@ -113,7 +113,15 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedPeriod, optionsMarket }
                     </ResponsiveContainer>
                     {isLoading && <Loader active />}
                     {noChartData && (
-                        <div>
+                        <div
+                            style={{
+                                justifyItems: 'center',
+                                left: '50%',
+                                top: '50%',
+                                position: 'absolute',
+                                display: 'grid',
+                            }}
+                        >
                             <ExclamationIcon />
                             {t('options.market.chart-card.no-chart-data')}
                         </div>
