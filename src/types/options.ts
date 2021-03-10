@@ -1,5 +1,5 @@
-import { CurrencyKey } from '../constants/currency';
-import { BigNumberish } from 'ethers/utils';
+import {CurrencyKey} from '../constants/currency';
+import {BigNumberish} from 'ethers/utils';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
 
@@ -53,6 +53,9 @@ export type HistoricalOptionsMarketInfo = {
     phase: Phase;
     phaseNum: number;
     timeRemaining: number;
+    openOrders: number;
+    longAddress: string;
+    shortAddress: string;
 };
 
 export type OptionsMarketInfo = {

@@ -141,6 +141,28 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                     ) => <TimeRemaining end={cellProps.cell.value} />,
                     width: 150,
                 },
+                {
+                    Header: <>{t('options.home.markets-table.openorders')}</>,
+                    accessor: 'openorders',
+                    Cell: (
+                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['openOrders']>
+                    ) => <span>{cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'N/A'}</span>,
+                    width: 150,
+                    sortable: true,
+                },
+                {
+                    Header: <>{t('options.home.markets-table.longaddress')}</>,
+                    accessor: 'longaddress',
+                    Cell: (
+                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['longAddress']>
+                    ) => (
+                        <span>
+                            {cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'Not in trading'}
+                        </span>
+                    ),
+                    width: 150,
+                    sortable: true,
+                },
             ]}
             data={optionsMarkets}
             onTableRowClick={(row: Row<HistoricalOptionsMarketInfo>) => {
