@@ -1,6 +1,15 @@
+import { CurrencyKey } from './currency';
 import { Period } from './period';
 
 export const QUERY_KEYS = {
+    Rates: {
+        HistoricalRates: (currencyKey: CurrencyKey, period: Period) => [
+            'rates',
+            'historicalRates',
+            currencyKey,
+            period,
+        ],
+    },
     BinaryOptions: {
         Markets: ['binaryOptions', 'markets'],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],

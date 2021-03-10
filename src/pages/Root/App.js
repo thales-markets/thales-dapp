@@ -13,6 +13,8 @@ import { useDispatch } from 'react-redux';
 import { getExchangeData } from 'dataFetcher';
 import WalletPopup from 'components/WalletPopup';
 import { updateNetworkSettings } from 'redux/modules/wallet/walletDetails';
+import FullScreenMainLayout from 'components/FullScreenMainLayout';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const REFRESH_INTERVAL = 2 * 60 * 1000;
 
@@ -59,6 +61,14 @@ const App = () => {
             <Router>
                 <WalletPopup />
                 <Switch>
+                    <Route
+                        path={ROUTES.Options.MarketMatch}
+                        render={(routeProps) => (
+                            <FullScreenMainLayout>
+                                <Options.Market {...routeProps} />
+                            </FullScreenMainLayout>
+                        )}
+                    />
                     <Route path={ROUTES.Options.Home}>
                         <MainLayout>
                             <Options.Home />
@@ -71,6 +81,7 @@ const App = () => {
                     </Route>
                 </Switch>
             </Router>
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
 };

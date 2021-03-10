@@ -11,7 +11,17 @@
             "connect-your-wallet": "Connect your wallet"
         },
         "by-date": "by {{date}}",
-        "val-in-cents": "{{val}}c"
+        "val-in-cents": "{{val}}c",
+        "chart-periods": {
+            "1H": "1H",
+            "4H": "4H",
+            "1D": "1D",
+            "1W": "1W",
+            "1M": "1M"
+        },
+        "transaction": {
+            "view": "View"
+        }
     },
     "modals": {
         "wallet": {
@@ -69,6 +79,131 @@
                 "phase-col": "phase",
                 "pool-size-col": "pool size (<0>{{currencyKey}}</0>)",
                 "time-remaining-col": "time remaining"
+            }
+        },
+        "market": {
+            "heading": {
+                "all-markets": "all markets",
+                "market-details": "market details",
+                "market-sentiment": "market sentiment:"
+            },
+            "info-modal": {
+                "title": "market information:",
+                "table": {
+                    "currency-col": "currency",
+                    "strike-price-col": "strike price",
+                    "phase-col": "phase",
+                    "bidding-end-col": "bidding end",
+                    "maturity-col": "maturity",
+                    "expiry-col": "expiry",
+                    "option-prices-col": "option prices",
+                    "total-outstanding-bids-col": "total outstanding bids",
+                    "total-outstanding-options-col": "total outstanding options",
+                    "deposited-currency-col": "deposited <0>{{currencyKey}}</0>",
+                    "currency-price-col": "current <0>{{currencyKey}}</0> price",
+                    "final-price-col": "final <0>{{currencyKey}}</0> price",
+                    "current-price-col": "current <0>{{currencyKey}}</0> price",
+                    "current-result-col": "current result",
+                    "final-result-col": "final result"
+                }
+            },
+            "chart-card": {
+                "chart-types": {
+                    "price": "price",
+                    "options": "options"
+                },
+                "no-chart-data": "No chart data"
+            },
+            "transactions-card": {
+                "recent-market-tab-title": "recent market activity",
+                "your-activity-tab-title": "your activity",
+                "pending-transactions-tab-title": "pending transactions",
+                "table": {
+                    "date-time-col": "date | time",
+                    "type-col": "type",
+                    "position-col": "position",
+                    "amount-col": "amount",
+                    "tx-status-col": "tx status",
+                    "no-results-your-activity": "No transactions associated with this wallet.",
+                    "no-results-recent-activity": "No transactions associated with this market.",
+                    "no-results-pending-transactions": "No pending transactions associated with this wallet.",
+                    "types": {
+                        "bid": "Bid",
+                        "refund": "Withdrawal",
+                        "claim": "Claim",
+                        "exercise": "Exercise"
+                    }
+                }
+            },
+            "trade-card": {
+                "shared": {
+                    "price-shift": "If a bid is too large for the current size of the market, it will cause slippage."
+                },
+                "bidding": {
+                    "bid": {
+                        "title": "place bid",
+                        "subtitle": "Pick a side to place a bid:",
+                        "amount-label": "bid amount:",
+                        "price-label": "price:",
+                        "confirm-bid": "confirm-bid",
+                        "confirm-button": {
+                            "label": "confirm bid",
+                            "progress-label": "bidding in progress...",
+                            "high-slippage": "Warning this bid will shift market prices by more than 10% make sure you have entered the right bid amount."
+                        }
+                    },
+                    "refund": {
+                        "title": "withdraw",
+                        "subtitle": "From your existing bid:",
+                        "amount-label": "withdrawing:",
+                        "price-label": "price:",
+                        "confirm-button": {
+                            "label": "confirm withdrawal",
+                            "progress-label": "withdrawal in progress..."
+                        },
+                        "disabled": {
+                            "tooltip": "Market Creator has disabled all withdrawals - sUSD bids are final",
+                            "first-time-tooltip": "WARNING: market creator has disabled withdrawals on this market. All sUSD bids are final."
+                        }
+                    },
+                    "common": {
+                        "current-position": "current position:",
+                        "bid": "bid:",
+                        "payout": "payout:",
+                        "bid-fee": "Bid fee",
+                        "refund-fee": "Refund fee"
+                    },
+                    "footer": {
+                        "end-label": "bidding period closing in:"
+                    }
+                },
+                "trading": {
+                    "title": "claim options",
+                    "card-title": "bidding has closed",
+                    "card-subtitle": "Options available:",
+                    "confirm-button": {
+                        "label": "claim options",
+                        "progress-label": "claiming in progress...",
+                        "success-label": "nothing to claim"
+                    },
+                    "footer": {
+                        "end-label": "trading period closing in:"
+                    }
+                },
+                "maturity": {
+                    "title": "exercise options",
+                    "card-title": "market has closed",
+                    "card-subtitle": "Options available:",
+                    "payout-amount": "payout amount",
+                    "confirm-button": {
+                        "label": "exercise options",
+                        "progress-label": "exercising in progress...",
+                        "success-label": "nothing to exercise"
+                    },
+                    "footer": {
+                        "end-label": "time left to exercise:"
+                    }
+                }
             }
         },
         "common": {

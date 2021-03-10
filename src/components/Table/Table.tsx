@@ -69,7 +69,7 @@ const Table: React.FC<TableProps> = ({
                 </SemanticTable.Header>
             ))}
             {isLoading ? (
-                <Loader />
+                <Loader active />
             ) : noResultsMessage != null ? (
                 noResultsMessage
             ) : (

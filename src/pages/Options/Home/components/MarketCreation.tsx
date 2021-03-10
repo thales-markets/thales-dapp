@@ -2,9 +2,9 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import ROUTES from '../../../constants/routes';
-import NewToBinaryOptions from './NewToBinaryOptions';
-import { toggleWalletPopup } from '../../../redux/modules/ui';
+import ROUTES from '../../../../constants/routes';
+import NewToBinaryOptions from '../../components/NewToBinaryOptions';
+import { toggleWalletPopup } from '../../../../redux/modules/ui';
 import { Button, Header, Segment } from 'semantic-ui-react';
 import { navigateTo } from 'utils/routes';
 import { RootState } from 'redux/rootReducer';

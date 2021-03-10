@@ -1,13 +1,13 @@
 import React from 'react';
-import { OptionsMarkets } from '../../../types/options';
 import { Card } from 'semantic-ui-react';
 import TimeRemaining from './TimeRemaining';
 import { formatCurrencyWithSign, formatShortDate } from 'utils/formatters';
 import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
-import MarketSentiment from './MarketSentiment';
 import { navigateToOptionsMarket } from 'utils/routes';
 import Currency from 'components/Currency';
+import { OptionsMarkets } from 'types/options';
+import MarketSentiment from 'pages/Options/components/MarketSentiment';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;

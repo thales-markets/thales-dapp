@@ -1,23 +1,19 @@
 import React, { useMemo } from 'react';
-import QUERY_KEYS from '../../../constants/queryKeys';
-import MarketCreation from '../components/MarketCreation';
-import { OptionsMarkets } from '../../../types/options';
-import snxData from 'synthetix-data';
-import { useQuery } from 'react-query';
+import MarketCreation from './components/MarketCreation';
 import { useSelector } from 'react-redux';
 import { sortOptionsMarkets } from '../../../utils/options';
 import { RootState } from 'redux/rootReducer';
 import { getAvailableSynthsMap } from 'redux/modules/synths';
-import HotMarkets from '../components/HotMarkets';
-import MarketsTable from '../components/MarketsTable';
+import HotMarkets from './components/HotMarkets';
+import MarketsTable from './components/MarketsTable';
+import useBinaryOptionsMarkets from 'queries/options/useBinaryOptionsMarkets';
 
 const MAX_HOT_MARKETS = 4;
 
 export const Home: React.FC = () => {
-    const marketsQuery = useQuery<OptionsMarkets, any>(QUERY_KEYS.BinaryOptions.Markets, () =>
-        snxData.binaryOptions.markets({ max: Infinity })
-    );
+    const marketsQuery = useBinaryOptionsMarkets();
 
+    console.log(marketsQuery.data);
     const synthsMap = useSelector((state: RootState) => getAvailableSynthsMap(state));
     const optionsMarkets = useMemo(
         () =>
