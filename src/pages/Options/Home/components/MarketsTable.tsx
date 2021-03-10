@@ -143,7 +143,7 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                 },
                 {
                     Header: <>{t('options.home.markets-table.openorders')}</>,
-                    accessor: 'openorders',
+                    accessor: 'openOrders',
                     Cell: (
                         cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['openOrders']>
                     ) => <span>{cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'N/A'}</span>,
@@ -152,7 +152,7 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                 },
                 {
                     Header: <>{t('options.home.markets-table.longaddress')}</>,
-                    accessor: 'longaddress',
+                    accessor: 'longAddress',
                     Cell: (
                         cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['longAddress']>
                     ) => (
