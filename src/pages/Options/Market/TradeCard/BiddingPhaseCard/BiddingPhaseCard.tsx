@@ -395,7 +395,12 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                             placement="top"
                             arrow={true}
                         >
-                            <Menu.Item name="refund" active={isRefund} disabled={true}>
+                            <Menu.Item
+                                name="refund"
+                                active={isRefund}
+                                disabled={true}
+                                style={{ textTransform: 'uppercase' }}
+                            >
                                 {t('options.market.trade-card.bidding.refund.title')} <BlockedIcon />
                             </Menu.Item>
                         </Tooltip>

@@ -18,15 +18,14 @@ import MarketInfoModal from './MarketInfoModal';
 import TradeCard from './TradeCard';
 import ChartCard from './ChartCard';
 import MarketSentiment from '../components/MarketSentiment';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+//import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 
 type MarketProps = {
     marketAddress: string;
 };
 
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    console.log(ethGasPriceQuery);
+    // const ethGasPriceQuery = useEthGasPriceQuery();
 
     const { t } = useTranslation();
     const { synthsMap } = snxJSConnector;
@@ -61,7 +60,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         const { phase, timeRemaining } = getPhaseAndEndDate(biddingEndDate, maturityDate, expiryDate);
 
         const currencyKey = parseBytes32String(oracleDetails.key);
-
         return {
             isResolved: resolution.resolved,
             address: marketAddress,
@@ -69,7 +67,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             priceUpdatedAt: Number(oraclePriceAndTimestamp.updatedAt) * 1000,
             currentPrice: bigNumberFormatter(oraclePriceAndTimestamp.price),
             finalPrice: bigNumberFormatter(oracleDetails.finalPrice),
-            asset: synthsMap != null ? synthsMap[currencyKey].asset || currencyKey : null,
+            asset: synthsMap != null ? synthsMap[currencyKey]?.asset || currencyKey : null,
             strikePrice: bigNumberFormatter(oracleDetails.strikePrice),
             biddingEndDate,
             maturityDate,
@@ -178,8 +176,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             </Grid>
             {marketInfoModalVisible && (
                 <MarketInfoModal
-                    // marketHeading={marketHeading}
-                    // optionMarket={optionsMarket}
+                    marketHeading={marketHeading}
+                    optionMarket={optionsMarket}
                     onClose={() => setMarketInfoModalVisible(false)}
                 />
             )}
