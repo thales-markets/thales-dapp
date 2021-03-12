@@ -11,6 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
 import { useMarketContext } from '../../contexts/MarketContext';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
+import TradingPhaseCard from './TradingPhaseCard';
 
 const queryClient = new QueryClient();
 
@@ -117,8 +118,8 @@ const TradeCard: React.FC = () => {
     return (
         <>
             {optionsMarket.phase === 'bidding' && <BiddingPhaseCard {...sharedProps} />}
-            {/* {optionsMarket.phase === 'trading' && <TradingPhaseCard {...sharedProps} />}
-            {optionsMarket.phase === 'maturity' && <MaturityPhaseCard {...sharedProps} />} */}
+            {optionsMarket.phase === 'trading' && <TradingPhaseCard {...sharedProps} />}
+            {/* {optionsMarket.phase === 'maturity' && <MaturityPhaseCard {...sharedProps} />} */}
         </>
     );
 };

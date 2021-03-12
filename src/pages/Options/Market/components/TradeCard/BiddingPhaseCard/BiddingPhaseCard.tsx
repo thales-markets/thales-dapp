@@ -26,16 +26,16 @@ import {
     addOptionsPendingTransaction,
     updateOptionsPendingTransactionStatus,
 } from 'redux/modules/options/pendingTransaction';
-import { Button, Grid, Header, Icon, Menu } from 'semantic-ui-react';
+import { Button, Grid, Header, Menu, Message } from 'semantic-ui-react';
 import { QueryClient } from 'react-query';
 import TimeRemaining from 'pages/Options/Home/components/TimeRemaining';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import BidNetworkFees from '../BidNetworkFees';
+import { SLIPPAGE_THRESHOLD } from 'constants/options';
 
 const queryClient = new QueryClient();
 const TIMEOUT_DELAY = 2500;
-const SLIPPAGE_THRESHOLD = 0.1;
 
 function getPriceDifference(currentPrice: number, newPrice: number) {
     return newPrice - currentPrice;
@@ -449,45 +449,39 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                 fees={fees}
                 amount={isLong ? longSideAmount : shortSideAmount}
             />
-            <Tooltip
-                open={optionsMarket.withdrawalsEnabled ? false : !withdrawalsDisabledTooltipDismissed}
-                title={
-                    <span>
-                        {t('options.market.trade-card.bidding.refund.disabled.first-time-tooltip')}
-                        <Icon disabled name="close" onClick={handleDismissWithdrawalsTooltip} />
-                    </span>
-                }
-                interactive={true}
-                placement="top"
-                arrow={true}
-            >
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                    {hasAllowance ? (
-                        <Tooltip
-                            open={isBid && Math.abs(priceShift) > SLIPPAGE_THRESHOLD}
-                            title={<span>{t(`${transKey}.confirm-button.high-slippage`)}</span>}
-                            arrow={true}
-                            placement="bottom"
+            {optionsMarket.withdrawalsEnabled
+                ? false
+                : !withdrawalsDisabledTooltipDismissed && (
+                      <Message onDismiss={handleDismissWithdrawalsTooltip}>
+                          {t('options.market.trade-card.bidding.refund.disabled.first-time-tooltip')}
+                      </Message>
+                  )}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                {hasAllowance ? (
+                    <Tooltip
+                        open={isBid && Math.abs(priceShift) > SLIPPAGE_THRESHOLD}
+                        title={<span>{t(`${transKey}.confirm-button.high-slippage`)}</span>}
+                        arrow={true}
+                        placement="bottom"
+                    >
+                        <Button
+                            primary
+                            disabled={isBidding || !isWalletConnected || !sUSDBalance || !gasLimit}
+                            onClick={handleBidOrRefund}
                         >
-                            <Button
-                                primary
-                                disabled={isBidding || !isWalletConnected || !sUSDBalance || !gasLimit}
-                                onClick={handleBidOrRefund}
-                            >
-                                {!isBidding
-                                    ? t(`${transKey}.confirm-button.label`)
-                                    : t(`${transKey}.confirm-button.progress-label`)}
-                            </Button>
-                        </Tooltip>
-                    ) : (
-                        <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
-                            {!isAllowing
-                                ? t('common.enable-wallet-access.label')
-                                : t('common.enable-wallet-access.progress-label')}
+                            {!isBidding
+                                ? t(`${transKey}.confirm-button.label`)
+                                : t(`${transKey}.confirm-button.progress-label`)}
                         </Button>
-                    )}
-                </div>
-            </Tooltip>
+                    </Tooltip>
+                ) : (
+                    <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
+                        {!isAllowing
+                            ? t('common.enable-wallet-access.label')
+                            : t('common.enable-wallet-access.progress-label')}
+                    </Button>
+                )}
+            </div>
             <div style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}>
                 <span>
                     {t('options.market.trade-card.bidding.footer.end-label')}{' '}

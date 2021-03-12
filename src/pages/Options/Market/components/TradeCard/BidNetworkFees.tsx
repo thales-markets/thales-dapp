@@ -1,7 +1,7 @@
 import React from 'react';
 import { OptionsTransaction } from 'types/options';
 
-type NetworkFeesProps = {
+type BidNetworkFeesProps = {
     className?: string;
     gasLimit: number | null;
     type?: OptionsTransaction['type'];
@@ -9,8 +9,8 @@ type NetworkFeesProps = {
     amount: string | number;
 };
 
-const NetworkFees: React.FC<NetworkFeesProps> = () => {
+const BidNetworkFees: React.FC<BidNetworkFeesProps> = () => {
     return <span>Network Fees</span>;
 };
 
-export default NetworkFees;
+export default BidNetworkFees;
