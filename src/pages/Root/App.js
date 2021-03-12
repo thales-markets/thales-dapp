@@ -15,6 +15,8 @@ import WalletPopup from 'components/WalletPopup';
 import { updateNetworkSettings } from 'redux/modules/wallet/walletDetails';
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { fetchAppStatusRequest, setAppReady } from 'redux/modules/app';
+import { setNetworkGasInfo } from 'redux/modules/transaction';
 
 const REFRESH_INTERVAL = 2 * 60 * 1000;
 
@@ -22,9 +24,11 @@ const queryClient = new QueryClient();
 
 const App = () => {
     const dispatch = useDispatch();
+
     // TODO - move this logic into synths slice?
     const fetchAndSetExchangeData = useCallback(async () => {
-        const { frozenSynths } = await getExchangeData();
+        const { networkPrices, frozenSynths } = await getExchangeData();
+        dispatch(setNetworkGasInfo(networkPrices));
         dispatch(updateFrozenSynths({ frozenSynths }));
     }, []);
 
@@ -34,12 +38,14 @@ const App = () => {
             if (!snxJSConnector.initialized) {
                 snxJSConnector.setContractSettings({ networkId });
             }
-            updateNetworkSettings({ networkId, networkName: name.toLowerCase() });
+            dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
 
             const synths = snxJSConnector.snxJS.contractSettings.synths.filter((synth) => synth.asset);
 
             dispatch(setAvailableSynths({ synths }));
+            dispatch(setAppReady());
             fetchAndSetExchangeData();
+            dispatch(fetchAppStatusRequest());
             dispatch(fetchRatesRequest());
         };
 
@@ -49,6 +55,7 @@ const App = () => {
         const interval = setInterval(() => {
             fetchAndSetExchangeData();
             dispatch(fetchRatesRequest());
+            dispatch(fetchAppStatusRequest());
         }, REFRESH_INTERVAL);
 
         return () => {

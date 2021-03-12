@@ -7,11 +7,123 @@
         "connect-wallet": "Connect wallet"
     },
     "common": {
+        "max": "max",
+        "gas-limit": "gas limit",
+        "network-fee-gas": "network fee (gas)",
+        "gas-price-gwei": "gas price (gwei)",
+        "gwei": "gwei",
+        "transaction": {
+            "view": "View"
+        },
+        "contracts": {
+            "view": "View Contract"
+        },
+        "actions": {
+            "submit": "submit",
+            "close": "close",
+            "options": "options",
+            "edit": "edit",
+            "confirm": "confirm",
+            "click-to-retry": "click to retry",
+            "trade": "trade",
+            "info": "info",
+            "convert-to-eth": "convert to eth",
+            "swap-via-1inch": "swap via 1inch",
+            "add-to-metamask": "add to metamask",
+            "view": "view",
+            "liquidate": "liquidate"
+        },
+        "tx-status": {
+            "waiting": "Waiting",
+            "open": "Open",
+            "closed": "Closed",
+            "closing": "Closing",
+            "in": "Transferred in",
+            "out": "Transferred out",
+            "complete": "Complete",
+            "pending": "Pending",
+            "confirmed": "Confirmed",
+            "cancelled": "Cancelled",
+            "failed": "failed"
+        },
         "wallet": {
+            "your-wallet": "YOUR WALLET",
+            "currency-balance": "{{currencyKey}} BALANCE",
+            "eth-value": "ETH PRICE (USD)",
+            "balance-currency": "Balance: {{balance}}",
+            "no-wallet-connected": "No wallet currently connected",
+            "connect-currency-wallet": "connect {{currencyKey}} wallet to start",
             "connect-your-wallet": "Connect your wallet"
         },
-        "by-date": "by {{date}}",
-        "val-in-cents": "{{val}}c",
+        "errors": {
+            "amount-exceeds-balance": "Amount exceeds balance",
+            "gas-exceeds-limit": "Max input is {{gasPrice}}",
+            "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
+            "error-loading": "An error occurred trying to load",
+            "fee-reclamation": "There is a waiting period after completing a trade. Please wait approximately {{waitingPeriod}} minutes before attempting to exchange {{currency}}",
+            "c-ratio-exceeded": "Min c-ratio is 150%",
+            "c-ratio-below": "C-ratio below current ratio",
+            "c-ratio-above": "C-ratio above current ratio",
+            "amount-exceeds-liquidatable": "Amount exceeds debt to cover"
+        },
+        "currency": {
+            "buy-currencyA-with-currencyB": "Buy {{currencyKeyA}} with {{currencyKeyB}}",
+            "buy-currencyA-with-currencyB-on-uniswap": "Buy {{currencyKeyA}} with {{currencyKeyB}} on Uniswap",
+            "borrow-currency": "Borrow {{currencyKey}}",
+            "synthetic-currency": "Synthetic {{currencyKey}}",
+            "fiat-synths": "sFiat",
+            "decimals": "decimals",
+            "contract-address": "contract address",
+            "lower-limit": "lower limit",
+            "upper-limit": "upper limit",
+            "entry": "entry",
+            "lower-limit-price": "lower {{price}}",
+            "upper-limit-price": "upper {{price}}",
+            "entry-limit-price": "entry {{price}}",
+            "frozen-synth": "This Synth has been frozen",
+            "lower-limit-reached-reset": "Lower limit reached, reset in progress.",
+            "upper-limit-reached-reset": "Upper limit reached, reset in progress.",
+            "trade-synths-for-currency": "trade synths for <0>{{currencyKey}}</0>",
+            "buy-currency": "buy <0>{{currencyKey}}</0>",
+            "try-currencyA-currencyB-or-currencyC-currencyD": "Try {{currencyA}} / {{currencyB}} or {{currencyC}} / {{currencyD}}"
+        },
+        "frozen": {
+            "message": "<0>{{currencyKey}} price limit hit.</0><1>Synth reset in progress.</1>"
+        },
+        "currency-category": {
+            "crypto": "crypto",
+            "forex": "forex",
+            "commodity": "commodities",
+            "equities": "equities",
+            "index": "indices",
+            "inverse": "inverse"
+        },
+        "search": "search",
+        "features": {
+            "coming-soon": "coming soon"
+        },
+        "search-results": {
+            "no-results-for-query": "No results for <0>{{searchQuery}}</0>"
+        },
+        "chart": {
+            "no-data-available": "No data available"
+        },
+        "systemStatus": {
+            "suspended-synths": {
+                "reasons": {
+                    "market-closed": "Market closed"
+                }
+            }
+        },
+        "filters": {
+            "all": "all"
+        },
+        "pagination": {
+            "page": "Page",
+            "page-number": "Page {{pageNumber}}"
+        },
+        "buy": "buy",
+        "sell": "sell",
         "chart-periods": {
             "1H": "1H",
             "4H": "4H",
@@ -19,9 +131,26 @@
             "1W": "1W",
             "1M": "1M"
         },
-        "transaction": {
-            "view": "View"
-        }
+        "top-number": "top {{number}}",
+        "by-date": "by {{date}}",
+        "val-in-cents": "{{val}}c",
+        "eg-val": "e.g. {{val}}",
+        "select-date": "select date",
+        "beta": "beta",
+        "or": "or",
+        "toggle": {
+            "on": "on",
+            "off": "off"
+        },
+        "enable-wallet-access": {
+            "label": "enable wallet access",
+            "progress-label": "enabling wallet access..."
+        },
+        "asset": "asset",
+        "units": "units",
+        "weight": "weight",
+        "more-info": "More info",
+        "not-available": "None"
     },
     "modals": {
         "wallet": {

@@ -20,6 +20,7 @@ import MarketSentiment from '../components/MarketSentiment';
 import ChartCard from './components/ChartCard';
 import TransactionsCard from './components/TransactionsCard';
 import MarketInfoModal from './components/MarketInfoModal';
+import TradeCard from './components/TradeCard';
 
 type MarketProps = {
     marketAddress: string;
@@ -163,7 +164,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                     <ChartCard />
                     <TransactionsCard />
                 </Grid.Column>
-                <Grid.Column width={5} color="red"></Grid.Column>
+                <Grid.Column width={5} style={{ paddingRight: 40 }}>
+                    <TradeCard />
+                </Grid.Column>
             </Grid>
             {/* <StyledCenteredPageLayout>
                 <LeftCol>
