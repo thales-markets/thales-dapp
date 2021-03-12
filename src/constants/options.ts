@@ -15,5 +15,6 @@ export const SIDE: Record<Side | number, number | Side> = {
 };
 
 export const PHASES = ['bidding', 'trading', 'maturity', 'expiry'] as Phase[];
+export const PHASES_CARDS = ['bidding', 'trading', 'maturity'] as Phase[];
 
 export const SLIPPAGE_THRESHOLD = 0.1;

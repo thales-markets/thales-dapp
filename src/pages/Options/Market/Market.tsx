@@ -9,12 +9,12 @@ import { formatCurrencyWithSign, formatShortDate, bigNumberFormatter, parseBytes
 import QUERY_KEYS from 'constants/queryKeys';
 import { MarketProvider } from './contexts/MarketContext';
 import { useBOMContractContext } from './contexts/BOMContractContext';
-import { Button, Grid, Icon, Loader } from 'semantic-ui-react';
+import { Button, Grid, Icon, Loader, Step } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import { getAvailableSynthsMap } from 'redux/modules/synths';
 import { OptionsMarketInfo } from 'types/options';
 import { getPhaseAndEndDate } from 'utils/options';
-import { SIDE } from 'constants/options';
+import { PHASES_CARDS, SIDE } from 'constants/options';
 import { Link } from 'react-router-dom';
 import MarketSentiment from '../components/MarketSentiment';
 import ChartCard from './components/ChartCard';
@@ -165,6 +165,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                     <TransactionsCard />
                 </Grid.Column>
                 <Grid.Column width={5} style={{ paddingRight: 40 }}>
+                    <Step.Group fluid style={{ textTransform: 'uppercase' }}>
+                        {PHASES_CARDS.map((phase, idx: number) => (
+                            <Step key={phase} active={phase === optionsMarket.phase} itemIndex={idx}>
+                                {t(`options.phases.${phase}`)}
+                            </Step>
+                        ))}
+                    </Step.Group>
                     <TradeCard />
                 </Grid.Column>
             </Grid>

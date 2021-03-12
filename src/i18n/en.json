@@ -346,9 +346,12 @@
             "price": "price",
             "amount-long": "{{amount}} long",
             "amount-short": "{{amount}} short",
+            "final-price": "final price:",
+            "claimable-amount": "claimable: {{amount}}",
             "long-price": "Long price",
             "short-price": "Short price",
-            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!"
+            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
+            "withdrawals": "withdrawals"
         }
     }
 }
