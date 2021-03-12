@@ -1,9 +1,9 @@
 import orderBy from 'lodash/orderBy';
-import { SynthDefinitionMap } from 'redux/modules/synths';
+import { SynthsMap } from 'synthetix-js';
 import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
 
-export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthDefinitionMap) =>
+export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthsMap) =>
     orderBy(
         markets.map((optionsMarket) => {
             const { phase, timeRemaining } = getPhaseAndEndDate(

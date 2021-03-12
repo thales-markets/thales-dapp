@@ -1,14 +1,16 @@
-import { SynthetixJs, ContractSettings } from 'synthetix-js';
+import { SynthetixJs, ContractSettings, SynthsMap } from 'synthetix-js';
 
 import { ethers } from 'ethers';
 import { getEthereumNetwork, SUPPORTED_WALLETS_MAP, NetworkId } from './network';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
+import keyBy from 'lodash/keyBy';
 
 type SnxJSConnector = {
     initialized: boolean;
     snxJS: SynthetixJs;
     synths: SynthetixJs['contractSettings']['synths'];
+    synthsMap: SynthsMap;
     provider: SynthetixJs['contractSettings']['provider'];
     signer: SynthetixJs['contractSettings']['signer'];
     signers: typeof SynthetixJs.signers;
@@ -31,6 +33,7 @@ const snxJSConnector: SnxJSConnector = {
         this.initialized = true;
         this.snxJS = new SynthetixJs(contractSettings);
         this.synths = this.snxJS.contractSettings.synths;
+        this.synthsMap = keyBy(this.synths, 'name');
         this.signer = this.snxJS.contractSettings.signer;
         this.provider = this.snxJS.contractSettings.provider;
         this.utils = this.snxJS.utils;

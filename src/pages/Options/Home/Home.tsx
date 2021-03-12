@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react';
 import MarketCreation from './components/MarketCreation';
-import { useSelector } from 'react-redux';
 import { sortOptionsMarkets } from '../../../utils/options';
-import { RootState } from 'redux/rootReducer';
-import { getAvailableSynthsMap } from 'redux/modules/synths';
 import HotMarkets from './components/HotMarkets';
 import MarketsTable from './components/MarketsTable';
 import useBinaryOptionsMarkets from 'queries/options/useBinaryOptionsMarkets';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const MAX_HOT_MARKETS = 4;
 
 export const Home: React.FC = () => {
     const marketsQuery = useBinaryOptionsMarkets();
-    const synthsMap = useSelector((state: RootState) => getAvailableSynthsMap(state));
+    const { synthsMap } = snxJSConnector;
     const optionsMarkets = useMemo(
         () =>
             marketsQuery.isSuccess && Array.isArray(marketsQuery.data)

@@ -2,7 +2,6 @@ declare module 'synthetix-js' {
     import { JsonRpcSigner, Web3Provider } from 'ethers/providers';
     import { BigNumberish } from 'ethers/utils';
     import { ethers } from 'ethers';
-
     export interface ContractSettings {
         networkId: 1 | 3 | 4 | 42;
         signer?: JsonRpcSignerWithNextAddress;
@@ -11,7 +10,8 @@ declare module 'synthetix-js' {
     export type JsonRpcSignerWithNextAddress = JsonRpcSigner & {
         getNextAddresses: () => Promise<string[]>;
     };
-    export type Synths = {
+
+    export type Synth = {
         name: string;
         asset: string;
         category: string;
@@ -22,7 +22,11 @@ declare module 'synthetix-js' {
         exchange?: string;
         index?: { symbol: string; name: string; units: number }[];
         inverted?: { entryPoint: number; upperLimit: number; lowerLimit: number };
-    }[];
+    };
+
+    export type Synths = Synth[];
+
+    export type SynthsMap = Record<string, Synth>;
 
     export type Signers = {
         Metamask: JsonRpcSignerWithNextAddress;

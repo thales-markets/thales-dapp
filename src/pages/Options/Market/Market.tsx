@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
 import ROUTES from 'constants/routes';
@@ -10,8 +9,6 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { MarketProvider } from './contexts/MarketContext';
 import { useBOMContractContext } from './contexts/BOMContractContext';
 import { Button, Grid, Icon, Loader, Step } from 'semantic-ui-react';
-import { RootState } from 'redux/rootReducer';
-import { getAvailableSynthsMap } from 'redux/modules/synths';
 import { OptionsMarketInfo } from 'types/options';
 import { getPhaseAndEndDate } from 'utils/options';
 import { PHASES_CARDS, SIDE } from 'constants/options';
@@ -21,14 +18,18 @@ import MarketInfoModal from './MarketInfoModal';
 import TradeCard from './TradeCard';
 import ChartCard from './ChartCard';
 import MarketSentiment from '../components/MarketSentiment';
+import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 
 type MarketProps = {
     marketAddress: string;
 };
 
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    console.log(ethGasPriceQuery);
+
     const { t } = useTranslation();
-    const synthsMap = useSelector((state: RootState) => getAvailableSynthsMap(state));
+    const { synthsMap } = snxJSConnector;
     const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
     const BOMContract = useBOMContractContext();
 
@@ -68,7 +69,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             priceUpdatedAt: Number(oraclePriceAndTimestamp.updatedAt) * 1000,
             currentPrice: bigNumberFormatter(oraclePriceAndTimestamp.price),
             finalPrice: bigNumberFormatter(oracleDetails.finalPrice),
-            asset: synthsMap[currencyKey]?.asset || currencyKey,
+            asset: synthsMap != null ? synthsMap[currencyKey].asset || currencyKey : null,
             strikePrice: bigNumberFormatter(oracleDetails.strikePrice),
             biddingEndDate,
             maturityDate,
@@ -166,8 +167,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 </Grid.Column>
                 <Grid.Column width={5} style={{ paddingRight: 40 }}>
                     <Step.Group fluid style={{ textTransform: 'uppercase' }}>
-                        {PHASES_CARDS.map((phase, idx: number) => (
-                            <Step key={phase} active={phase === optionsMarket.phase} itemIndex={idx}>
+                        {PHASES_CARDS.map((phase) => (
+                            <Step key={phase} active={phase === optionsMarket.phase}>
                                 {t(`options.phases.${phase}`)}
                             </Step>
                         ))}

@@ -16,6 +16,12 @@ export const QUERY_KEYS = {
             period,
         ],
     },
+    Synths: {
+        FrozenSynths: ['synths', 'frozenSynths'],
+    },
+    Network: {
+        EthGasPrice: ['network', 'ethGasPrice'],
+    },
     BinaryOptions: {
         Markets: ['binaryOptions', 'markets'],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],

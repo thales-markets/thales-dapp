@@ -7,7 +7,6 @@ import Options from '../Options';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { getEthereumNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
-import { setAvailableSynths, updateFrozenSynths } from 'redux/modules/synths';
 import { useDispatch } from 'react-redux';
 import { getExchangeData } from 'dataFetcher';
 import WalletPopup from 'components/WalletPopup';
@@ -26,9 +25,8 @@ const App = () => {
 
     // TODO - move this logic into synths slice?
     const fetchAndSetExchangeData = useCallback(async () => {
-        const { networkPrices, frozenSynths } = await getExchangeData();
+        const { networkPrices } = await getExchangeData();
         dispatch(setNetworkGasInfo(networkPrices));
-        dispatch(updateFrozenSynths({ frozenSynths }));
     }, []);
 
     useEffect(() => {
@@ -39,9 +37,6 @@ const App = () => {
             }
             dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
 
-            const synths = snxJSConnector.snxJS.contractSettings.synths.filter((synth) => synth.asset);
-
-            dispatch(setAvailableSynths({ synths }));
             dispatch(setAppReady());
             fetchAndSetExchangeData();
             dispatch(fetchAppStatusRequest());
