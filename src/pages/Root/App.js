@@ -8,7 +8,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { getEthereumNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { setAvailableSynths, updateFrozenSynths } from 'redux/modules/synths';
-import { fetchRatesRequest } from 'redux/modules/rates';
 import { useDispatch } from 'react-redux';
 import { getExchangeData } from 'dataFetcher';
 import WalletPopup from 'components/WalletPopup';
@@ -46,7 +45,6 @@ const App = () => {
             dispatch(setAppReady());
             fetchAndSetExchangeData();
             dispatch(fetchAppStatusRequest());
-            dispatch(fetchRatesRequest());
         };
 
         init();
@@ -54,7 +52,6 @@ const App = () => {
         // TODO: stop fetching data when system is suspended
         const interval = setInterval(() => {
             fetchAndSetExchangeData();
-            dispatch(fetchRatesRequest());
             dispatch(fetchAppStatusRequest());
         }, REFRESH_INTERVAL);
 
