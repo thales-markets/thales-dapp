@@ -1,7 +1,13 @@
+import { NetworkId } from 'utils/network';
 import { CurrencyKey } from './currency';
 import { Period } from './period';
 
 export const QUERY_KEYS = {
+    WalletBalances: {
+        Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
+        ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
+        Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
+    },
     Rates: {
         HistoricalRates: (currencyKey: CurrencyKey, period: Period) => [
             'rates',

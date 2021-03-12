@@ -1,8 +1,8 @@
 import { all } from 'redux-saga/effects';
-import { watchFetchRatesRequest } from './modules/rates';
+import { watchFetchSystemStatusRequest } from './modules/app';
 
 const rootSaga = function* () {
-    yield all([watchFetchRatesRequest()]);
+    yield all([watchFetchSystemStatusRequest()]);
 };
 
 export default rootSaga;

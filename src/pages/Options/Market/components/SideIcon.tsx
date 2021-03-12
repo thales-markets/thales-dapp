@@ -8,7 +8,9 @@ type SideIconProps = {
 };
 
 const SideIcon: React.FC<SideIconProps> = ({ side }) => (
-    <span>{side === 'long' ? <TrendUpIcon /> : <TrendDownIcon />}</span>
+    <span style={{ backgroundColor: side === 'long' ? '#10BA97' : '#D94454' }}>
+        {side === 'long' ? <TrendUpIcon /> : <TrendDownIcon />}
+    </span>
 );
 
 export default SideIcon;
