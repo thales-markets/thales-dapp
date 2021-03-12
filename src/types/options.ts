@@ -54,6 +54,7 @@ export type HistoricalOptionsMarketInfo = {
     phaseNum: number;
     timeRemaining: number;
     openOrders: number;
+    orders: Array<any>;
     longAddress: string;
     shortAddress: string;
 };

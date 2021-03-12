@@ -19,6 +19,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
 import { getCurrentWalletAddress } from '../../../../redux/modules/wallet/walletDetails';
 import dotenv from 'dotenv';
+import { ContractWrappers } from '@0x/contract-wrappers';
+
 dotenv.config();
 
 type MarketsTableProps = {
@@ -158,7 +160,24 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                     accessor: 'openOrders',
                     Cell: (
                         cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['openOrders']>
-                    ) => <span>{cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'N/A'}</span>,
+                    ) => (
+                        <span
+                            title={cellProps.row.original.orders ? JSON.stringify(cellProps.row.original.orders) : ''}
+                        >
+                            {cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'N/A'}
+                            <button value={cellProps.row.original.orders} onClick={buyOrder}>
+                                Buy order
+                            </button>
+                            <button value={cellProps.row.original.orders} onClick={cancelOrder}>
+                                Cancel order
+                            </button>
+                            {cellProps.row.original.phase == 'trading' && (
+                                <button value="0x57ab1e02fee23774580c119740129eac7081e9d3" onClick={approve}>
+                                    Approve susd
+                                </button>
+                            )}
+                        </span>
+                    ),
                     width: 150,
                     sortable: true,
                 },
@@ -207,11 +226,38 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
 });
 
 declare const window: any;
+
 export async function approve(ev: any): Promise<void> {
-    ev.preventDefault();
     const erc20Instance = new ethers.Contract(ev.currentTarget.value, erc20Abi, snxJSConnector.signer);
     const maxInt = `0x${'f'.repeat(64)}`;
     await erc20Instance.approve('0xDef1C0ded9bec7F1a1670819833240f027b25EfF', maxInt);
+}
+
+export async function buyOrder(ev: any): Promise<void> {
+    const contractWrappers = new ContractWrappers(window.ethereum, { chainId: 1 });
+
+    const targetOrder = ev.target.value.order;
+
+    const PROTOCOL_FEE_MULTIPLIER = new BigNumber(70000);
+    const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
+        return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
+    };
+
+    const gasp = await window.web3.eth.getGasPrice();
+    const valueP = calculateProtocolFee([targetOrder], gasp);
+
+    await contractWrappers.exchangeProxy
+        .fillLimitOrder(targetOrder, targetOrder.signature, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18))
+        .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
+}
+
+export async function cancelOrder(ev: any): Promise<void> {
+    const contractWrappers = new ContractWrappers(window.ethereum, { chainId: 1 });
+
+    const targetOrder = ev.target.value.order;
+    await contractWrappers.exchangeProxy
+        .cancelLimitOrder(targetOrder)
+        .awaitTransactionSuccessAsync({ from: walletAddress });
 }
 
 export async function submitOrder(ev: any): Promise<void> {

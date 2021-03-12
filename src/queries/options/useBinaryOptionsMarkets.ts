@@ -24,6 +24,13 @@ const useBinaryOptionsMarkets = () => {
                 );
                 let responseJ = await response.json();
                 const totalLong = responseJ.bids.total + responseJ.asks.total;
+                o.orders = [];
+                if (responseJ.asks.records && responseJ.asks.records.length > 0) {
+                    o.orders.push(responseJ.asks.records);
+                }
+                if (responseJ.bids.records && responseJ.bids.records.length > 0) {
+                    o.orders.push(responseJ.bids.records);
+                }
 
                 response = await fetch(
                     `https://api.0x.org/sra/v4/orderbook?baseToken=` +
@@ -32,6 +39,14 @@ const useBinaryOptionsMarkets = () => {
                         susdTokenAddress
                 );
                 responseJ = await response.json();
+
+                if (responseJ.asks.records && responseJ.asks.records.length > 0) {
+                    o.orders.push(responseJ.asks.records);
+                }
+                if (responseJ.bids.records && responseJ.bids.records.length > 0) {
+                    o.orders.push(responseJ.bids.records);
+                }
+
                 const totalShort = responseJ.bids.total + responseJ.asks.total;
 
                 o.openOrders = totalLong + totalShort;
