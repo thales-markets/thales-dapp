@@ -117,7 +117,7 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
     return (
         <Segment>
             <div style={{ marginBottom: 30 }}>
-                <Header as="h23" style={{ textTransform: 'uppercase' }}>
+                <Header as="h3" style={{ textTransform: 'uppercase' }}>
                     {t('options.market.trade-card.trading.title')}
                 </Header>
             </div>

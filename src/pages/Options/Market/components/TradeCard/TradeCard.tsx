@@ -12,6 +12,7 @@ import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wal
 import { useMarketContext } from '../../contexts/MarketContext';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import TradingPhaseCard from './TradingPhaseCard';
+import MaturityPhaseCard from './MaturityPhaseCard';
 
 const queryClient = new QueryClient();
 
@@ -119,7 +120,7 @@ const TradeCard: React.FC = () => {
         <>
             {optionsMarket.phase === 'bidding' && <BiddingPhaseCard {...sharedProps} />}
             {optionsMarket.phase === 'trading' && <TradingPhaseCard {...sharedProps} />}
-            {/* {optionsMarket.phase === 'maturity' && <MaturityPhaseCard {...sharedProps} />} */}
+            {optionsMarket.phase === 'maturity' && <MaturityPhaseCard {...sharedProps} />}
         </>
     );
 };
