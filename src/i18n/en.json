@@ -79,7 +79,8 @@
                 "phase-col": "phase",
                 "pool-size-col": "pool size (<0>{{currencyKey}}</0>)",
                 "time-remaining-col": "time remaining",
-                "openorders": "open orders"
+                "openorders": "open orders",
+                "actions": "actions"
             }
         },
         "market": {
