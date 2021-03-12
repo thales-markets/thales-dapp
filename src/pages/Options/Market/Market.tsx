@@ -16,11 +16,11 @@ import { OptionsMarketInfo } from 'types/options';
 import { getPhaseAndEndDate } from 'utils/options';
 import { PHASES_CARDS, SIDE } from 'constants/options';
 import { Link } from 'react-router-dom';
+import TransactionsCard from './TransactionsCard';
+import MarketInfoModal from './MarketInfoModal';
+import TradeCard from './TradeCard';
+import ChartCard from './ChartCard';
 import MarketSentiment from '../components/MarketSentiment';
-import ChartCard from './components/ChartCard';
-import TransactionsCard from './components/TransactionsCard';
-import MarketInfoModal from './components/MarketInfoModal';
-import TradeCard from './components/TradeCard';
 
 type MarketProps = {
     marketAddress: string;
@@ -175,44 +175,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                     <TradeCard />
                 </Grid.Column>
             </Grid>
-            {/* <StyledCenteredPageLayout>
-                <LeftCol>
-                    <Heading>
-                        <HeadingItem>
-                            <AllMarketsLink to={ROUTES.Options.Home}>
-                                <ArrowBackIcon />
-                                {t('options.market.heading.all-markets')}
-                            </AllMarketsLink>
-                            |<HeadingTitle>{marketHeading}</HeadingTitle>
-                        </HeadingItem>
-                        <HeadingItem>
-                            <MarketDetailsTextButton onClick={handleViewMarketDetails}>
-                                {t('options.market.heading.market-details')} <InfoRoundedIcon />
-                            </MarketDetailsTextButton>
-                        </HeadingItem>
-                        <StyledHeadingItem>
-                            <HeadingTitle>{t('options.market.heading.market-sentiment')}</HeadingTitle>
-                            <StyledMarketSentiment
-                                short={optionsMarket.shortPrice}
-                                long={optionsMarket.longPrice}
-                                display="col"
-                            />
-                        </StyledHeadingItem>
-                    </Heading>
-                    <ChartCard />
-                    <TransactionsCard />
-                </LeftCol>
-                <RightCol>
-                    <Phases>
-                        {PHASES_CARDS.map((phase, idx: number) => (
-                            <PhaseItem key={phase} isActive={phase === optionsMarket!.phase} itemIndex={idx}>
-                                {t(`options.phases.${phase}`)}
-                            </PhaseItem>
-                        ))}
-                    </Phases>
-                    <TradeCard />
-                </RightCol>
-            </StyledCenteredPageLayout> */}
             {marketInfoModalVisible && (
                 <MarketInfoModal
                     // marketHeading={marketHeading}

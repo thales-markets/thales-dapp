@@ -1,5 +1,5 @@
-import {CurrencyKey} from '../constants/currency';
-import {BigNumberish} from 'ethers/utils';
+import { CurrencyKey } from '../constants/currency';
+import { BigNumberish } from 'ethers/utils';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
 
@@ -110,4 +110,9 @@ export type OptionsMarketsMap = Record<string, HistoricalOptionsMarketInfo>;
 export type TradeCardPhaseProps = {
     optionsMarket: OptionsMarketInfo;
     accountMarketInfo: AccountMarketInfo;
+};
+
+export type CurrentPosition = {
+    bid: number;
+    payout: number;
 };

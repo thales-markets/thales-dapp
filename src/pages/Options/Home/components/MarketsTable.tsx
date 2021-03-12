@@ -6,7 +6,7 @@ import { formatShortDate, formatCurrency } from 'utils/formatters';
 import Table from 'components/Table';
 import { CurrencyCol } from 'components/Table/common';
 import { OptionsMarkets, HistoricalOptionsMarketInfo } from 'types/options';
-import TimeRemaining from '../components/TimeRemaining';
+import TimeRemaining from '../../components/TimeRemaining';
 import Currency from 'components/Currency';
 import { ethers } from 'ethers';
 import snxJSConnector from '../../../../utils/snxJSConnector';
