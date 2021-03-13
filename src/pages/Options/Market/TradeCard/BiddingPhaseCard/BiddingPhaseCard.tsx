@@ -203,7 +203,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                 gasPrice: gasInfo.gasPrice * GWEI_UNIT,
             })) as ethers.ContractTransaction;
 
-            console.log('tx', tx);
             dispatch(
                 addOptionsPendingTransaction({
                     optionTransaction: {
@@ -218,7 +217,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                 })
             );
             tx.wait().then((txResult) => {
-                console.log('txResult', txResult);
                 if (txResult && txResult.transactionHash) {
                     dispatch(
                         updateOptionsPendingTransactionStatus({

@@ -212,6 +212,44 @@
                 "actions": "actions"
             }
         },
+        "create-market": {
+            "back-to-markets": "back to markets",
+            "title": "Create a new Binary Options market",
+            "subtitle": "Here you can create a new Binary Options market by selecting an asset, the strike price that bidders can take either side of, when to close the market, the long/short skew, and how much you’re bidding.",
+            "details": {
+                "select-asset-label": "select asset:",
+                "strike-price-label": "strike price:",
+                "bidding-end-date-label": "bidding end date:",
+                "market-maturity-date-label": "market maturity date:",
+                "long-short-skew-label": "long/short price skew:",
+                "funding-amount": {
+                    "label": "market funding amount:",
+                    "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
+                }
+            },
+            "summary": {
+                "title": "new market summary:",
+                "dates": {
+                    "bidding-end": "Bidding end",
+                    "maturity-date": "Maturity date",
+                    "time-to-exercise": "Time to exercise"
+                },
+                "fees": {
+                    "bidding": "Bidding fee",
+                    "creator": "Creator earns",
+                    "refund": "Withdrawal penalty",
+                    "pool": "Fee pool earns"
+                },
+                "withdrawals": {
+                    "tooltip": "Here you can choose to allow withdrawals, which can affect the pay-out and odds dramatically, particularly late in the Bidding phase."
+                },
+                "wallet-access": "Before you can create a new market, enable wallet access:",
+                "create-market-button-label": "create market",
+                "creating-market-button-label": "creating market...",
+                "approve-manager-button-label": "enable wallet access",
+                "waiting-for-approval-button-label": "enabling wallet access..."
+            }
+        },
         "market": {
             "heading": {
                 "all-markets": "all markets",
