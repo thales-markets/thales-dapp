@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { CellProps } from 'react-table';
+import { CellProps, Row } from 'react-table';
 import { SYNTHS_MAP, FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { formatShortDate, formatCurrency } from 'utils/formatters';
 import Table from 'components/Table';
@@ -20,6 +20,7 @@ import { RootState } from '../../../../redux/rootReducer';
 import { getCurrentWalletAddress } from '../../../../redux/modules/wallet/walletDetails';
 import dotenv from 'dotenv';
 import { ContractWrappers } from '@0x/contract-wrappers';
+import { navigateToOptionsMarket } from 'utils/routes';
 
 dotenv.config();
 
@@ -216,9 +217,9 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                 },
             ]}
             data={optionsMarkets}
-            // onTableRowClick={(row: Row<HistoricalOptionsMarketInfo>) => {
-            //     navigateToOptionsMarket(row.original.address);
-            // }}
+            onTableRowClick={(row: Row<HistoricalOptionsMarketInfo>) => {
+                navigateToOptionsMarket(row.original.address);
+            }}
             isLoading={isLoading}
             noResultsMessage={noResultsMessage}
         />
@@ -228,12 +229,14 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
 declare const window: any;
 
 export async function approve(ev: any): Promise<void> {
+    ev.stopPropagation();
     const erc20Instance = new ethers.Contract(ev.currentTarget.value, erc20Abi, snxJSConnector.signer);
     const maxInt = `0x${'f'.repeat(64)}`;
     await erc20Instance.approve('0xDef1C0ded9bec7F1a1670819833240f027b25EfF', maxInt);
 }
 
 export async function buyOrder(ev: any): Promise<void> {
+    ev.stopPropagation();
     const contractWrappers = new ContractWrappers(window.ethereum, { chainId: 1 });
 
     const targetOrder = ev.target.value.order;
@@ -252,6 +255,7 @@ export async function buyOrder(ev: any): Promise<void> {
 }
 
 export async function cancelOrder(ev: any): Promise<void> {
+    ev.stopPropagation();
     const contractWrappers = new ContractWrappers(window.ethereum, { chainId: 1 });
 
     const targetOrder = ev.target.value.order;
@@ -261,6 +265,7 @@ export async function cancelOrder(ev: any): Promise<void> {
 }
 
 export async function submitOrder(ev: any): Promise<void> {
+    ev.stopPropagation();
     const susdTokenAddress = '0x57ab1e02fee23774580c119740129eac7081e9d3';
     const makerToken = ev.currentTarget.value;
 
