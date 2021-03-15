@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { getGasInfo, setGasPrice } from 'redux/modules/transaction';
-import { RootState } from 'redux/rootReducer';
 import { Message, Input } from 'semantic-ui-react';
+import { setGasSpeed, setCustomGasPrice } from 'redux/modules/wallet/walletDetails';
+import useEthGasPriceQuery, { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 
 const MAX_GAS_MULTIPLE = 1.5;
 
@@ -12,38 +12,50 @@ type GasMenuProps = {
 };
 
 const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
-    const { gasSpeed /*, gasPrice */ } = useSelector((state: RootState) => getGasInfo(state));
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPriceSlow = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['slow'] : 0), [
+        ethGasPriceQuery.data,
+    ]);
+    const gasPriceAverage = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['average'] : 0), [
+        ethGasPriceQuery.data,
+    ]);
+    const gasPriceFast = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['fast'] : 0), [
+        ethGasPriceQuery.data,
+    ]);
+
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const [customGasPrice, setCustomGasPrice] = useState<string>('');
+    const [localCustomGasPrice, setLocalCustomGasPrice] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
-    const setGasPriceAndCloseDropdown = (updateGasPrice: number) => {
-        dispatch(setGasPrice(updateGasPrice));
+    const setGasSpeedAndCloseDropdown = (gasSpeed: GasSpeed) => {
+        dispatch(setGasSpeed(gasSpeed));
+        dispatch(setCustomGasPrice(null));
         setDropdownIsOpen(false);
     };
 
-    const gasPriceLimit = useMemo(() => Math.floor(gasSpeed.fastestAllowed * MAX_GAS_MULTIPLE), [
-        gasSpeed.fastestAllowed,
-    ]);
+    const gasPriceLimit = useMemo(
+        () => Math.floor(ethGasPriceQuery.data != null ? ethGasPriceQuery.data.fast * MAX_GAS_MULTIPLE : 0),
+        [ethGasPriceQuery]
+    );
 
     useEffect(() => {
-        if (customGasPrice) {
-            const customGasPriceNum = Number(customGasPrice);
+        if (localCustomGasPrice) {
+            const customGasPriceNum = Number(localCustomGasPrice);
             const exceedsGasLimit = customGasPriceNum > gasPriceLimit;
-            dispatch(setGasPrice(exceedsGasLimit ? gasPriceLimit : Math.max(0, customGasPriceNum)));
+            dispatch(setCustomGasPrice(exceedsGasLimit ? gasPriceLimit : Math.max(0, customGasPriceNum)));
             setErrorMessage(
                 exceedsGasLimit ? t('common.errors.gas-exceeds-limit', { gasPrice: gasPriceLimit }) : undefined
             );
         }
-    }, [setGasPrice, customGasPrice, gasPriceLimit, t]);
+    }, [setCustomGasPrice, localCustomGasPrice, gasPriceLimit, t]);
 
     return (
         <div>
             <Input
-                value={customGasPrice}
+                value={localCustomGasPrice}
                 onChange={(e) => {
-                    setCustomGasPrice(e.target.value);
+                    setLocalCustomGasPrice(e.target.value);
                 }}
                 placeholder={t('modals.gwei.placeholder')}
                 type="number"
@@ -52,25 +64,25 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
             />
             {errorMessage && <Message negative>{errorMessage}</Message>}
             <div
-                onClick={() => setGasPriceAndCloseDropdown(gasSpeed.slowAllowed)}
+                onClick={() => setGasSpeedAndCloseDropdown('slow')}
                 style={{ display: 'flex', justifyContent: 'space-between' }}
             >
                 <div>{t('modals.gwei.table.safe')}</div>
-                <div>{gasSpeed.slowAllowed}</div>
+                <div>{gasPriceSlow}</div>
             </div>
             <div
-                onClick={() => setGasPriceAndCloseDropdown(gasSpeed.averageAllowed)}
+                onClick={() => setGasSpeedAndCloseDropdown('average')}
                 style={{ display: 'flex', justifyContent: 'space-between' }}
             >
                 <div>{t('modals.gwei.table.standard')}</div>
-                <div>{gasSpeed.averageAllowed}</div>
+                <div>{gasPriceAverage}</div>
             </div>
             <div
-                onClick={() => setGasPriceAndCloseDropdown(gasSpeed.fastestAllowed)}
+                onClick={() => setGasSpeedAndCloseDropdown('fast')}
                 style={{ display: 'flex', justifyContent: 'space-between' }}
             >
                 <div>{t('modals.gwei.table.fast')}</div>
-                <div>{gasSpeed.fastestAllowed}</div>
+                <div>{gasPriceFast}</div>
             </div>
         </div>
     );

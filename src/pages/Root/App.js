@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
@@ -8,13 +8,11 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { getEthereumNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
-import { getExchangeData } from 'dataFetcher';
 import WalletPopup from 'components/WalletPopup';
 import { getIsWalletConnected, updateNetworkSettings } from 'redux/modules/wallet/walletDetails';
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { fetchAppStatusRequest, setAppReady } from 'redux/modules/app';
-import { setNetworkGasInfo } from 'redux/modules/transaction';
 import CreateMarket from 'pages/Options/CreateMarket';
 
 const REFRESH_INTERVAL = 2 * 60 * 1000;
@@ -25,12 +23,6 @@ const App = () => {
     const dispatch = useDispatch();
     const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
 
-    // TODO - move this logic into synths slice?
-    const fetchAndSetExchangeData = useCallback(async () => {
-        const { networkPrices } = await getExchangeData();
-        dispatch(setNetworkGasInfo(networkPrices));
-    }, []);
-
     useEffect(() => {
         const init = async () => {
             const { networkId, name } = await getEthereumNetwork();
@@ -40,7 +32,6 @@ const App = () => {
             dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
 
             dispatch(setAppReady());
-            fetchAndSetExchangeData();
             dispatch(fetchAppStatusRequest());
         };
 
@@ -48,14 +39,13 @@ const App = () => {
 
         // TODO: stop fetching data when system is suspended
         const interval = setInterval(() => {
-            fetchAndSetExchangeData();
             dispatch(fetchAppStatusRequest());
         }, REFRESH_INTERVAL);
 
         return () => {
             clearInterval(interval);
         };
-    }, [fetchAndSetExchangeData]);
+    }, []);
 
     return (
         <QueryClientProvider client={queryClient}>

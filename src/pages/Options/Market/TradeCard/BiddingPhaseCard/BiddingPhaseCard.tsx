@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
@@ -16,11 +16,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet/walletDetails';
+import {
+    getCurrentWalletAddress,
+    getCustomGasPrice,
+    getGasSpeed,
+    getIsWalletConnected,
+    getNetworkId,
+} from 'redux/modules/wallet/walletDetails';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { OptionsTransaction, TradeCardPhaseProps } from 'types/options';
-import { normalizeGasLimit } from 'utils/transactions';
-import { getGasInfo } from 'redux/modules/transaction';
+import { normalizeGasLimit } from 'utils/network';
 import { GWEI_UNIT } from 'utils/network';
 import {
     addOptionsPendingTransaction,
@@ -33,6 +38,7 @@ import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuer
 import { getIsAppReady } from 'redux/modules/app';
 import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
+import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 
 const queryClient = new QueryClient();
 const TIMEOUT_DELAY = 2500;
@@ -61,7 +67,18 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
 
-    const gasInfo = useSelector((state: RootState) => getGasInfo(state));
+    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
+    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPrice = useMemo(
+        () =>
+            customGasPrice !== null
+                ? customGasPrice
+                : ethGasPriceQuery.data != null
+                ? ethGasPriceQuery.data[gasSpeed]
+                : null,
+        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
+    );
     const { longPrice, shortPrice, fees, isResolved, BN } = optionsMarket;
     const { t } = useTranslation();
     const BOMContract = useBOMContractContext();
@@ -170,66 +187,70 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     }, [currentWalletAddress, isWalletConnected]);
 
     const handleAllowance = async () => {
-        const {
-            snxJS: { sUSD },
-        } = snxJSConnector as any;
-        try {
-            setIsAllowing(true);
-            const maxInt = `0x${'f'.repeat(64)}`;
-            const gasEstimate = await sUSD.contract.estimate.approve(BOMContract.address, maxInt);
-            await sUSD.approve(BOMContract.address, maxInt, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                gasPrice: gasInfo.gasPrice * GWEI_UNIT,
-            });
-        } catch (e) {
-            console.log(e);
-            setIsAllowing(false);
+        if (gasPrice !== null) {
+            const {
+                snxJS: { sUSD },
+            } = snxJSConnector as any;
+            try {
+                setIsAllowing(true);
+                const maxInt = `0x${'f'.repeat(64)}`;
+                const gasEstimate = await sUSD.contract.estimate.approve(BOMContract.address, maxInt);
+                await sUSD.approve(BOMContract.address, maxInt, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasPrice: gasPrice * GWEI_UNIT,
+                });
+            } catch (e) {
+                console.log(e);
+                setIsAllowing(false);
+            }
         }
     };
 
     const handleBidOrRefund = async () => {
-        const {
-            utils: { parseEther },
-        } = snxJSConnector as any;
-        const amount = isShort ? shortSideAmount : longSideAmount;
-        if (!amount) return;
-        try {
-            setIsBidding(true);
-            const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-            const bidOrRefundFunction = isBid ? BOMContractWithSigner.bid : BOMContractWithSigner.refund;
-            const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
-            const tx = (await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount, {
-                gasLimit,
-                gasPrice: gasInfo.gasPrice * GWEI_UNIT,
-            })) as ethers.ContractTransaction;
+        if (gasPrice !== null) {
+            const {
+                utils: { parseEther },
+            } = snxJSConnector as any;
+            const amount = isShort ? shortSideAmount : longSideAmount;
+            if (!amount) return;
+            try {
+                setIsBidding(true);
+                const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
+                const bidOrRefundFunction = isBid ? BOMContractWithSigner.bid : BOMContractWithSigner.refund;
+                const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
+                const tx = (await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount, {
+                    gasLimit,
+                    gasPrice: gasPrice * GWEI_UNIT,
+                })) as ethers.ContractTransaction;
 
-            dispatch(
-                addOptionsPendingTransaction({
-                    optionTransaction: {
-                        hash: tx.hash ?? '',
-                        market: optionsMarket.address,
-                        currencyKey: optionsMarket.currencyKey,
-                        account: currentWalletAddress ?? '',
-                        type,
-                        amount,
-                        side,
-                    },
-                })
-            );
-            tx.wait().then((txResult) => {
-                if (txResult && txResult.transactionHash) {
-                    dispatch(
-                        updateOptionsPendingTransactionStatus({
-                            hash: txResult.transactionHash,
-                            status: 'confirmed',
-                        })
-                    );
-                }
-            });
-            setIsBidding(false);
-        } catch (e) {
-            console.log(e);
-            setIsBidding(false);
+                dispatch(
+                    addOptionsPendingTransaction({
+                        optionTransaction: {
+                            hash: tx.hash ?? '',
+                            market: optionsMarket.address,
+                            currencyKey: optionsMarket.currencyKey,
+                            account: currentWalletAddress ?? '',
+                            type,
+                            amount,
+                            side,
+                        },
+                    })
+                );
+                tx.wait().then((txResult) => {
+                    if (txResult && txResult.transactionHash) {
+                        dispatch(
+                            updateOptionsPendingTransactionStatus({
+                                hash: txResult.transactionHash,
+                                status: 'confirmed',
+                            })
+                        );
+                    }
+                });
+                setIsBidding(false);
+            } catch (e) {
+                console.log(e);
+                setIsBidding(false);
+            }
         }
     };
 

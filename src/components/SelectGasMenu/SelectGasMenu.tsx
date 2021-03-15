@@ -5,7 +5,7 @@ import { formatCurrency } from 'utils/formatters';
 import SelectGasMenuBody from './SelectGasMenuBody';
 
 type SelectGasMenuProps = {
-    gasPrice: number;
+    gasPrice: number | null;
 };
 
 export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: SelectGasMenuProps) => {
@@ -26,7 +26,7 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
                     onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}
                     style={{ display: 'flex', justifyContent: 'center' }}
                 >
-                    <div>{formatCurrency(gasPrice) || 0}</div>
+                    <div>{formatCurrency(gasPrice || 0) || 0}</div>
                     <Label size="tiny" style={{ textTransform: 'uppercase' }}>
                         {t('common.actions.edit')}
                     </Label>

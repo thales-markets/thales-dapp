@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from 'utils/snxJSConnector';
-import { normalizeGasLimit } from 'utils/transactions';
+import { normalizeGasLimit } from 'utils/network';
 import { ReactComponent as ClockIcon } from 'assets/images/clock.svg';
 import QUERY_KEYS from 'constants/queryKeys';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';

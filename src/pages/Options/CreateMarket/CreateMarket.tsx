@@ -15,7 +15,7 @@ import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, FIAT_CURRENCY_MAP, CurrencyKey, USD_SI
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters';
-import { normalizeGasLimit } from 'utils/transactions';
+import { normalizeGasLimit } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import { formatPercentage, formatShortDate, bytesFormatter } from 'utils/formatters';
@@ -25,14 +25,14 @@ import SideIcon from '../Market/components/SideIcon';
 import { Link } from 'react-router-dom';
 import { Button, Container, Form, Grid, Header, Input, Segment, Divider } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress } from 'redux/modules/wallet/walletDetails';
-import { getGasInfo } from 'redux/modules/transaction';
+import { getCurrentWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet/walletDetails';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { GWEI_UNIT } from 'utils/network';
 import Currency from 'components/Currency';
 import Select from 'components/Select';
 import MarketSentiment from '../components/MarketSentiment';
 import { withStyles } from '@material-ui/core';
+import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 
 const StyledSlider = withStyles({
     root: {
@@ -77,7 +77,18 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 
 export const CreateMarket: React.FC = () => {
     const currentWallet = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
-    const gasInfo = useSelector((state: RootState) => getGasInfo(state));
+    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
+    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPrice = useMemo(
+        () =>
+            customGasPrice !== null
+                ? customGasPrice
+                : ethGasPriceQuery.data != null
+                ? ethGasPriceQuery.data[gasSpeed]
+                : null,
+        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
+    );
     const { synthsMap: synths } = snxJSConnector;
     const { t } = useTranslation();
     const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
@@ -247,40 +258,44 @@ export const CreateMarket: React.FC = () => {
     const strikePricePlaceholderVal = `${USD_SIGN}10000.00 ${FIAT_CURRENCY_MAP.USD}`;
 
     const handleApproveManager = async () => {
-        const {
-            snxJS: { sUSD, BinaryOptionMarketManager },
-        } = snxJSConnector as any;
-        try {
-            setIsManagerApprovalPending(true);
-            const maxInt = `0x${'f'.repeat(64)}`;
-            const gasEstimate = await sUSD.contract.estimate.approve(
-                BinaryOptionMarketManager.contract.address,
-                maxInt
-            );
-            await sUSD.approve(BinaryOptionMarketManager.contract.address, maxInt, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                gasPrice: gasInfo.gasPrice * GWEI_UNIT,
-            });
-        } catch (e) {
-            console.log(e);
-            setIsManagerApprovalPending(false);
+        if (gasPrice !== null) {
+            const {
+                snxJS: { sUSD, BinaryOptionMarketManager },
+            } = snxJSConnector as any;
+            try {
+                setIsManagerApprovalPending(true);
+                const maxInt = `0x${'f'.repeat(64)}`;
+                const gasEstimate = await sUSD.contract.estimate.approve(
+                    BinaryOptionMarketManager.contract.address,
+                    maxInt
+                );
+                await sUSD.approve(BinaryOptionMarketManager.contract.address, maxInt, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasPrice: gasPrice * GWEI_UNIT,
+                });
+            } catch (e) {
+                console.log(e);
+                setIsManagerApprovalPending(false);
+            }
         }
     };
 
     const handleMarketCreation = async () => {
-        const {
-            snxJS: { BinaryOptionMarketManager },
-        } = snxJSConnector as any;
-        try {
-            const { oracleKey, price, times, bids } = formatCreateMarketArguments();
-            await BinaryOptionMarketManager.createMarket(oracleKey, price, withdrawalsEnabled, times, bids, {
-                gasPrice: gasInfo.gasPrice * GWEI_UNIT,
-                gasLimit,
-            });
-            setIsCreatingMarket(true);
-        } catch (e) {
-            console.log(e);
-            setIsCreatingMarket(false);
+        if (gasPrice !== null) {
+            const {
+                snxJS: { BinaryOptionMarketManager },
+            } = snxJSConnector as any;
+            try {
+                const { oracleKey, price, times, bids } = formatCreateMarketArguments();
+                await BinaryOptionMarketManager.createMarket(oracleKey, price, withdrawalsEnabled, times, bids, {
+                    gasPrice: gasPrice * GWEI_UNIT,
+                    gasLimit,
+                });
+                setIsCreatingMarket(true);
+            } catch (e) {
+                console.log(e);
+                setIsCreatingMarket(false);
+            }
         }
     };
 

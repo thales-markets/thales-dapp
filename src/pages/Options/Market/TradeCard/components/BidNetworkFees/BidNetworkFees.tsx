@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from '@material-ui/core/Tooltip';
 import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters';
@@ -9,11 +9,12 @@ import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
-import { getGasInfo } from 'redux/modules/transaction';
 import { getTransactionPrice } from 'utils/network';
 import SelectGasMenu from 'components/SelectGasMenu';
 import { OptionsTransaction } from 'types/options';
 import { Divider } from 'semantic-ui-react';
+import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet/walletDetails';
 
 type BidNetworkFeesProps = {
     gasLimit: number | null;
@@ -24,14 +25,24 @@ type BidNetworkFeesProps = {
 
 const BidNetworkFees: React.FC<BidNetworkFeesProps> = ({ gasLimit, fees, type, amount }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const gasInfo = useSelector((state: RootState) => getGasInfo(state));
+    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
+    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPrice = useMemo(
+        () =>
+            customGasPrice !== null
+                ? customGasPrice
+                : ethGasPriceQuery.data != null
+                ? ethGasPriceQuery.data[gasSpeed]
+                : null,
+        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
+    );
     const exchangeRatesQuery = useExchangeRatesQuery(isAppReady);
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     const { t } = useTranslation();
 
-    const { gasPrice } = gasInfo;
     const networkFee = getTransactionPrice(gasPrice, gasLimit, ethRate);
     const bidOrRefundFee = fees ? (type === 'bid' ? fees.creatorFee + fees.poolFee : fees.refundFee) : 0;
 

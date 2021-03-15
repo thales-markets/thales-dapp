@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters';
@@ -7,9 +7,10 @@ import { getIsAppReady } from 'redux/modules/app';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
-import { getGasInfo } from 'redux/modules/transaction';
 import { getTransactionPrice } from 'utils/network';
 import SelectGasMenu from 'components/SelectGasMenu';
+import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet/walletDetails';
+import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 
 type NetworkFeesProps = {
     gasLimit: number | null;
@@ -17,14 +18,23 @@ type NetworkFeesProps = {
 
 const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const gasInfo = useSelector((state: RootState) => getGasInfo(state));
+    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
+    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPrice = useMemo(
+        () =>
+            customGasPrice !== null
+                ? customGasPrice
+                : ethGasPriceQuery.data != null
+                ? ethGasPriceQuery.data[gasSpeed]
+                : null,
+        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
+    );
     const exchangeRatesQuery = useExchangeRatesQuery(isAppReady);
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     const { t } = useTranslation();
-
-    const { gasPrice } = gasInfo;
 
     return (
         <div>

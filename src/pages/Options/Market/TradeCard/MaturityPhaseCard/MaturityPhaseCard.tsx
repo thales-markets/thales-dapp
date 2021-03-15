@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import snxJSConnector from 'utils/snxJSConnector';
-import { normalizeGasLimit } from 'utils/transactions';
+import { normalizeGasLimit } from 'utils/network';
 import { ReactComponent as FinishIcon } from 'assets/images/finish.svg';
 import { formatCurrencyWithSign } from 'utils/formatters';
 import { USD_SIGN, SYNTHS_MAP } from 'constants/currency';

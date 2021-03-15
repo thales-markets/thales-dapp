@@ -1,3 +1,4 @@
+import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import throttle from 'lodash/throttle';
 
 export type NetworkId = 1 | 3 | 4 | 42;
@@ -59,43 +60,6 @@ export const getTransactionPrice = (gasPrice: number | null, gasLimit: number | 
     return (gasPrice * ethPrice * gasLimit) / GWEI_UNIT;
 };
 
-const getPriceLimit = (networkInfo: { fast: number; average: number; safeLow: number }, gasPriceLimit: number) => {
-    const fast = networkInfo.fast / 10;
-    const average = networkInfo.average / 10;
-    const slow = networkInfo.safeLow / 10;
-
-    const speed = {
-        fast,
-        average,
-        slow,
-    };
-
-    if (gasPriceLimit) {
-        return {
-            ...speed,
-            fastestAllowed: gasPriceLimit,
-            averageAllowed: Math.min(average, gasPriceLimit),
-            slowAllowed: Math.min(slow, gasPriceLimit),
-        };
-    }
-    return {
-        ...speed,
-        fastestAllowed: fast,
-        averageAllowed: average,
-        slowAllowed: slow,
-    };
-};
-
-export const getGasInfo = async () => {
-    try {
-        const results = await fetch('https://ethgasstation.info/json/ethgasAPI.json');
-        const networkInfo = await results.json();
-        return getPriceLimit(networkInfo, 0);
-    } catch (e) {
-        console.log('Error while getting gas info', e);
-    }
-};
-
 export function onMetamaskAccountChange(cb: () => void) {
     if (!window.ethereum) return;
     const listener = throttle(cb, 1000);
@@ -113,3 +77,5 @@ export function hasMetamaskInstalled() {
 }
 
 export const isMainNet = (networkId: NetworkId) => networkId === 1;
+
+export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;

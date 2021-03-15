@@ -3,14 +3,12 @@ import ui from './modules/ui';
 import wallet from './modules/wallet';
 import options from './modules/options';
 import app from './modules/app';
-import transaction from './modules/transaction';
 
 const rootReducer = combineReducers({
     app,
     wallet,
     ui,
     options,
-    transaction,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
