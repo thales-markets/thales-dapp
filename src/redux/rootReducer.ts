@@ -1,14 +1,14 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import ui from './modules/ui';
 import wallet from './modules/wallet';
-import options from './modules/options';
+import optionsPendingTransactions from './modules/optionsPendingTransactions';
 import app from './modules/app';
 
 const rootReducer = combineReducers({
     app,
     wallet,
     ui,
-    options,
+    optionsPendingTransactions,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

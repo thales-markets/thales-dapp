@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'redux/rootReducer';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
 
-const sliceName = 'pendingTransaction';
+const sliceName = 'optionsPendingTransactions';
 
 const initialState: OptionsTransactions = [];
 
-export const pendingTransactionsSlice = createSlice({
+export const optionsPendingTransactionsSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
@@ -44,8 +44,11 @@ export const pendingTransactionsSlice = createSlice({
     },
 });
 
-export const getOptionsPendingTransactions = (state: RootState) => state.options[sliceName];
+export const getOptionsPendingTransactions = (state: RootState) => state[sliceName];
 
-export const { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } = pendingTransactionsSlice.actions;
+export const {
+    addOptionsPendingTransaction,
+    updateOptionsPendingTransactionStatus,
+} = optionsPendingTransactionsSlice.actions;
 
-export default pendingTransactionsSlice.reducer;
+export default optionsPendingTransactionsSlice.reducer;

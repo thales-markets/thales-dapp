@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { connect, ConnectedProps } from 'react-redux';
 import TransactionsTable from '../components/TransactionsTable';
 import { RootState } from 'redux/rootReducer';
-import { getOptionsPendingTransactions } from 'redux/modules/options/pendingTransaction';
+import { getOptionsPendingTransactions } from 'redux/modules/optionsPendingTransactions';
 
 const mapStateToProps = (state: RootState) => ({
     pendingTransactions: getOptionsPendingTransactions(state),

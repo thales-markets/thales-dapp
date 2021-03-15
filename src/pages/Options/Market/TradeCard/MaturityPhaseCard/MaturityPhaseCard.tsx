@@ -19,7 +19,7 @@ import { RootState } from 'redux/rootReducer';
 import {
     addOptionsPendingTransaction,
     updateOptionsPendingTransactionStatus,
-} from 'redux/modules/options/pendingTransaction';
+} from 'redux/modules/optionsPendingTransactions';
 import ResultCard from '../components/ResultCard';
 
 const queryClient = new QueryClient();

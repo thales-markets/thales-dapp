@@ -30,7 +30,7 @@ import { GWEI_UNIT } from 'utils/network';
 import {
     addOptionsPendingTransaction,
     updateOptionsPendingTransactionStatus,
-} from 'redux/modules/options/pendingTransaction';
+} from 'redux/modules/optionsPendingTransactions';
 import { Button, Grid, Header, Menu, Message } from 'semantic-ui-react';
 import { QueryClient } from 'react-query';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
@@ -90,6 +90,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     const [shortSideAmount, setShortSideAmount] = useState<OptionsTransaction['amount'] | string>('');
     const [longPriceAmount, setLongPriceAmount] = useState<string | number>('');
     const [shortPriceAmount, setShortPriceAmount] = useState<string | number>('');
+    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [withdrawalsDisabledTooltipDismissedMarkets, setWithdrawalsDisabledTooltipDismissedMarkets] = useLocalStorage(
         LOCAL_STORAGE_KEYS.BO_WITHDRAWALS_DISABLED_TOOLTIP_DISMISSED,
         []
@@ -206,6 +207,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     const handleBidOrRefund = async () => {
         if (gasPrice !== null) {
+            setTxErrorMessage(null);
             const {
                 utils: { parseEther },
             } = snxJSConnector as any;
@@ -244,9 +246,10 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                         );
                     }
                 });
-                setIsBidding(false);
             } catch (e) {
                 console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            } finally {
                 setIsBidding(false);
             }
         }
@@ -503,6 +506,9 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                             : t('common.enable-wallet-access.progress-label')}
                     </Button>
                 )}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}>
                 <span>
