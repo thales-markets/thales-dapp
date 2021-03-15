@@ -4,7 +4,8 @@ import useBinaryOptionsMarkets from 'queries/options/useBinaryOptionsMarkets';
 import snxJSConnector from 'utils/snxJSConnector';
 import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
-import MarketsTable from './MarketsTable';
+import ExploreMarkets from './ExploreMarkets';
+import { Loader } from 'semantic-ui-react';
 
 const MAX_HOT_MARKETS = 4;
 
@@ -22,10 +23,15 @@ export const Home: React.FC = () => {
     const hotMarkets = useMemo(() => optionsMarkets.slice(0, MAX_HOT_MARKETS), [optionsMarkets]);
     return (
         <>
-            <h1>Options</h1>
-            <HotMarkets optionsMarkets={hotMarkets} />
-            <MarketCreation />
-            <MarketsTable optionsMarkets={optionsMarkets} />
+            {optionsMarkets.length ? (
+                <>
+                    <HotMarkets optionsMarkets={hotMarkets} />
+                    <MarketCreation />
+                    <ExploreMarkets optionsMarkets={optionsMarkets} />
+                </>
+            ) : (
+                <Loader active />
+            )}
         </>
     );
 };
