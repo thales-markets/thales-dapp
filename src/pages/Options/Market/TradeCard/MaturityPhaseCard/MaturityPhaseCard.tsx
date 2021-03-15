@@ -12,7 +12,7 @@ import { Button, Header, Message, Segment } from 'semantic-ui-react';
 import { TradeCardPhaseProps } from 'types/options';
 import { QueryClient } from 'react-query';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
 import QUERY_KEYS from 'constants/queryKeys';
 import { RootState } from 'redux/rootReducer';
@@ -28,7 +28,7 @@ type MaturityPhaseCardProps = TradeCardPhaseProps;
 const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
     const dispatch = useDispatch();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const currentWalletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const { t } = useTranslation();
     const BOMContract = useBOMContractContext();
@@ -74,7 +74,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                     optionTransaction: {
                         market: optionsMarket.address,
                         currencyKey: optionsMarket.currencyKey,
-                        account: currentWalletAddress,
+                        account: walletAddress,
                         hash: tx.hash || '',
                         type: 'exercise',
                         amount: isLongResult ? balances.long : balances.short,

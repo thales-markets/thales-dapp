@@ -64,7 +64,7 @@ const connectToMetamask = async (networkId: NetworkId, networkName: string) => {
         if (accounts && accounts.length > 0) {
             return {
                 ...walletState,
-                currentWallet: accounts[0],
+                walletAddress: accounts[0],
                 unlocked: true,
                 networkId,
                 networkName: networkName.toLowerCase(),

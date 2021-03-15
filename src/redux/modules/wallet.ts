@@ -8,7 +8,7 @@ import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 export type WalletSliceState = {
     walletType: string;
     unlocked: boolean;
-    currentWallet: string | null;
+    walletAddress: string | null;
     unlockError: string | null;
     walletPaginatorIndex: number;
     availableWallets: string[];
@@ -25,7 +25,7 @@ const initialState: WalletSliceState = {
     unlockError: null,
     walletPaginatorIndex: 0,
     availableWallets: [],
-    currentWallet: null,
+    walletAddress: null,
     networkId: defaultNetwork.networkId,
     networkName: defaultNetwork.name,
     gasSpeed: DEFAULT_GAS_SPEED,
@@ -48,7 +48,7 @@ export const walletDetailsSlice = createSlice({
             return {
                 ...state,
                 ...payload,
-                currentWallet: payload.currentWallet ? getAddress(payload.currentWallet) : state.currentWallet,
+                walletAddress: payload.walletAddress ? getAddress(payload.walletAddress) : state.walletAddress,
             };
         },
         updateNetworkSettings: (
@@ -91,10 +91,8 @@ export const getNetwork = (state: RootState) => ({
     networkId: getNetworkId(state),
     networkName: getNetworkName(state),
 });
-export const getCurrentWalletAddress = (state: RootState) => getWalletState(state).currentWallet;
-export const getIsWalletConnected = createSelector(getCurrentWalletAddress, (currentWallet) =>
-    currentWallet != null ? true : false
-);
+export const getWalletAddress = (state: RootState) => getWalletState(state).walletAddress;
+export const getIsWalletConnected = createSelector(getWalletAddress, (walletAddress) => walletAddress != null);
 export const getWalletInfo = (state: RootState) => getWalletState(state);
 
 export const getGasSpeed = (state: RootState) => getWalletState(state).gasSpeed;

@@ -25,7 +25,7 @@ import SideIcon from '../Market/components/SideIcon';
 import { Link } from 'react-router-dom';
 import { Button, Container, Form, Grid, Header, Input, Segment, Divider } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
+import { getWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { GWEI_UNIT } from 'utils/network';
 import Currency from 'components/Currency';
@@ -76,7 +76,7 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 );
 
 export const CreateMarket: React.FC = () => {
-    const currentWallet = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const ethGasPriceQuery = useEthGasPriceQuery();
@@ -175,7 +175,7 @@ export const CreateMarket: React.FC = () => {
         const getAllowanceForCurrentWallet = async () => {
             try {
                 const [allowance, fees] = await Promise.all([
-                    sUSD.allowance(currentWallet, BinaryOptionMarketManager.contract.address),
+                    sUSD.allowance(walletAddress, BinaryOptionMarketManager.contract.address),
                     BinaryOptionMarketManager.fees(),
                 ]);
                 setIsManagerApproved(!!bigNumberFormatter(allowance));
@@ -191,7 +191,7 @@ export const CreateMarket: React.FC = () => {
         };
         const setEventListeners = () => {
             sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === currentWallet && spender === BinaryOptionMarketManager.contract.address) {
+                if (owner === walletAddress && spender === BinaryOptionMarketManager.contract.address) {
                     setIsManagerApproved(true);
                 }
             });
@@ -212,7 +212,7 @@ export const CreateMarket: React.FC = () => {
             BINARY_OPTIONS_EVENTS.MARKET_CREATED,
             (market: string, creator: string, oracleKey: string) => {
                 if (
-                    creator === currentWallet &&
+                    creator === walletAddress &&
                     parseBytes32String(oracleKey) === (currencyKey as CurrencyKeyOptionType).value
                 ) {
                     navigateToOptionsMarket(market);

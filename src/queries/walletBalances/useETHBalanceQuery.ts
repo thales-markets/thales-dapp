@@ -1,11 +1,11 @@
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { SYNTHS_MAP } from 'constants/currency';
 import { bigNumberFormatter, bytesFormatter } from 'utils/formatters';
 import { NetworkId } from 'utils/network';
 
-const useETHBalanceQuery = (walletAddress: string, networkId: NetworkId, enabled: boolean) => {
+const useETHBalanceQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
         QUERY_KEYS.WalletBalances.ETH(walletAddress ?? '', networkId),
         async () => {
@@ -21,9 +21,7 @@ const useETHBalanceQuery = (walletAddress: string, networkId: NetworkId, enabled
                 usdBalance: bigNumberFormatter(usdBalance),
             };
         },
-        {
-            enabled,
-        }
+        options
     );
 };
 

@@ -6,13 +6,13 @@ import YourTransactions from './YourTransactions';
 import { useMarketContext } from '../contexts/MarketContext';
 import PendingTransactions from './PendingTransactions';
 import { Menu } from 'semantic-ui-react';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 
 const TransactionsCard: React.FC = () => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
-    const walletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const tabContent: Array<{

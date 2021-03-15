@@ -17,7 +17,7 @@ import { useLocalStorage } from 'hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import { RootState } from 'redux/rootReducer';
 import {
-    getCurrentWalletAddress,
+    getWalletAddress,
     getCustomGasPrice,
     getGasSpeed,
     getIsWalletConnected,
@@ -52,15 +52,13 @@ type BiddingPhaseCardProps = TradeCardPhaseProps;
 const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
     const dispatch = useDispatch();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const currentWalletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(
-        currentWalletAddress,
-        networkId,
-        isAppReady && isWalletConnected
-    );
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const walletBalancesMap =
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
@@ -165,13 +163,13 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         } = snxJSConnector as any;
 
         const getAllowance = async () => {
-            const allowance = await sUSD.allowance(currentWalletAddress, BOMContract.address);
+            const allowance = await sUSD.allowance(walletAddress, BOMContract.address);
             setAllowance(!!Number(allowance));
         };
 
         const registerAllowanceListener = () => {
             sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === currentWalletAddress && spender === getAddress(BOMContract.address)) {
+                if (owner === walletAddress && spender === getAddress(BOMContract.address)) {
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -184,7 +182,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         return () => {
             sUSD.contract.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [currentWalletAddress, isWalletConnected]);
+    }, [walletAddress, isWalletConnected]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -229,7 +227,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                             hash: tx.hash ?? '',
                             market: optionsMarket.address,
                             currencyKey: optionsMarket.currencyKey,
-                            account: currentWalletAddress ?? '',
+                            account: walletAddress ?? '',
                             type,
                             amount,
                             side,

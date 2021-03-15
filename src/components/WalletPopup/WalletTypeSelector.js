@@ -22,7 +22,7 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
         dispatch(resetWalletReducer());
         const walletStatus = await connectToWallet({ wallet });
         dispatch(updateWalletReducer({ ...walletStatus, availableWallets: [] }));
-        if (walletStatus && walletStatus.unlocked && walletStatus.currentWallet) {
+        if (walletStatus && walletStatus.unlocked && walletStatus.walletAddress) {
             if (walletStatus.walletType === METAMASK) {
                 onMetamaskAccountChange(async (accounts) => {
                     if (accounts && accounts.length > 0) {
@@ -31,7 +31,7 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
                             networkId: walletStatus.networkId,
                             signer,
                         });
-                        dispatch(updateWalletReducer({ currentWallet: accounts[0] }));
+                        dispatch(updateWalletReducer({ walletAddress: accounts[0] }));
                     }
                 });
             }

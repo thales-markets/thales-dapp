@@ -17,7 +17,7 @@ import { generatePseudoRandomSalt } from '@0x/order-utils';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
-import { getCurrentWalletAddress } from '../../../../redux/modules/wallet';
+import { getWalletAddress } from '../../../../redux/modules/wallet';
 import dotenv from 'dotenv';
 import { ContractWrappers } from '@0x/contract-wrappers';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -31,7 +31,7 @@ type MarketsTableProps = {
 };
 let walletAddress = '';
 const getPhaseBackgroundColor = (phase: string) => {
-    walletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     switch (phase) {
         case 'bidding':
             return '#fbe6b8';

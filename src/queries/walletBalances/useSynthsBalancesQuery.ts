@@ -4,11 +4,11 @@ import { bytesFormatter, bigNumberFormatter, parseBytes32String } from 'utils/fo
 
 import { SYNTHS_MAP, CurrencyKey } from 'constants/currency';
 import { BigNumberish } from 'ethers/utils';
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';
 
-const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, enabled: boolean) => {
+const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {
     return useQuery<any>(
         QUERY_KEYS.WalletBalances.Synths(walletAddress ?? '', networkId),
         async () => {
@@ -45,9 +45,7 @@ const useSynthsBalancesQuery = (walletAddress: string, networkId: NetworkId, ena
                 usdBalance: totalBalanceResults ? bigNumberFormatter(totalBalanceResults) : 0,
             };
         },
-        {
-            enabled,
-        }
+        options
     );
 };
 

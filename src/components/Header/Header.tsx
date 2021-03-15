@@ -11,7 +11,7 @@ import { getWalletInfo } from 'redux/modules/wallet';
 const Header: React.FC = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { currentWallet, networkName } = useSelector((state: RootState) => getWalletInfo(state));
+    const { walletAddress, networkName } = useSelector((state: RootState) => getWalletInfo(state));
 
     return (
         <Menu>
@@ -22,10 +22,10 @@ const Header: React.FC = () => {
                 {t('header.links.options')}
             </Link>
             <Menu.Menu position="right">
-                {currentWallet != null ? (
+                {walletAddress != null ? (
                     <Message>
                         <Icon name="dot circle" color="green" />
-                        <span>{currentWallet}</span>
+                        <span>{walletAddress}</span>
                         <Label>{networkName}</Label>
                     </Message>
                 ) : (

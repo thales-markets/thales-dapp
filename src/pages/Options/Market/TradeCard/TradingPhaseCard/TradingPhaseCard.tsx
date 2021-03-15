@@ -8,7 +8,7 @@ import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { ethers } from 'ethers';
 import { TradeCardPhaseProps } from 'types/options';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import {
     addOptionsPendingTransaction,
     updateOptionsPendingTransactionStatus,
@@ -26,7 +26,7 @@ type TradingPhaseCardProps = TradeCardPhaseProps;
 const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
     const dispatch = useDispatch();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const currentWalletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const { t } = useTranslation();
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -66,7 +66,7 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
             const sharedPendingTxProps = {
                 market: optionsMarket.address,
                 currencyKey: optionsMarket.currencyKey,
-                account: currentWalletAddress,
+                account: walletAddress,
             };
 
             if (claimable.long) {

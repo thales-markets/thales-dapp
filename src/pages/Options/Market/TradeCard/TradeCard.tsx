@@ -8,7 +8,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter } from 'utils/formatters';
 import { AccountMarketInfo } from 'types/options';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import { useMarketContext } from '../contexts/MarketContext';
 import { useBOMContractContext } from '../contexts/BOMContractContext';
 import TradingPhaseCard from './TradingPhaseCard';
@@ -17,17 +17,17 @@ import MaturityPhaseCard from './MaturityPhaseCard';
 const queryClient = new QueryClient();
 
 const TradeCard: React.FC = () => {
-    const currentWalletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const optionsMarket = useMarketContext();
     const BOMContract = useBOMContractContext();
 
     const accountMarketInfoQuery = useQuery<AccountMarketInfo, any>(
-        QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarket.address, currentWalletAddress as string),
+        QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarket.address, walletAddress as string),
         async () => {
             const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getAccountMarketData(
                 optionsMarket.address,
-                currentWalletAddress
+                walletAddress
             );
             return {
                 claimable: {
@@ -76,9 +76,9 @@ const TradeCard: React.FC = () => {
         const refetchQueries = () => {
             queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(BOMContract.address));
 
-            if (currentWalletAddress) {
+            if (walletAddress) {
                 queryClient.invalidateQueries(
-                    QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarket.address, currentWalletAddress as string)
+                    QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarket.address, walletAddress as string)
                 );
             }
         };
@@ -89,14 +89,14 @@ const TradeCard: React.FC = () => {
             refetchQueries();
         });
 
-        if (currentWalletAddress) {
+        if (walletAddress) {
             BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_CLAIMED, (account: string) => {
-                if (currentWalletAddress === account) {
+                if (walletAddress === account) {
                     refetchQueries();
                 }
             });
             BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_EXERCISED, (account: string) => {
-                if (currentWalletAddress === account) {
+                if (walletAddress === account) {
                     refetchQueries();
                 }
             });
@@ -104,7 +104,7 @@ const TradeCard: React.FC = () => {
         return () => {
             BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.BID);
             BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.REFUND);
-            if (currentWalletAddress) {
+            if (walletAddress) {
                 BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_CLAIMED);
                 BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_EXERCISED);
             }

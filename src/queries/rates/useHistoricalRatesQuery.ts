@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 import snxData from 'synthetix-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { CurrencyKey, SYNTHS_MAP, sUSD_EXCHANGE_RATE } from 'constants/currency';
@@ -11,7 +11,11 @@ import {
 } from '../../utils/rates';
 import { HistoricalRatesUpdates } from '../../types/rates';
 
-const useHistoricalRatesQuery = (currencyKey: CurrencyKey | null, period: Period = Period.ONE_DAY) => {
+const useHistoricalRatesQuery = (
+    currencyKey: CurrencyKey | null,
+    period: Period = Period.ONE_DAY,
+    options?: UseQueryOptions<HistoricalRatesUpdates>
+) => {
     const periodInHours = PERIOD_IN_HOURS[period];
 
     return useQuery<HistoricalRatesUpdates>(
@@ -42,6 +46,10 @@ const useHistoricalRatesQuery = (currencyKey: CurrencyKey | null, period: Period
                     change,
                 };
             }
+        },
+        {
+            enabled: currencyKey !== null,
+            ...options,
         }
     );
 };

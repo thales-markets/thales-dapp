@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { CurrencyKey } from 'constants/currency';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters';
@@ -6,7 +6,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 export type Rates = Record<CurrencyKey, number>;
 
-const useExchangeRatesQuery = (enabled: boolean) => {
+const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
     return useQuery<Rates>(
         QUERY_KEYS.Rates.ExchangeRates,
         async () => {
@@ -22,9 +22,7 @@ const useExchangeRatesQuery = (enabled: boolean) => {
 
             return exchangeRates;
         },
-        {
-            enabled,
-        }
+        options
     );
 };
 

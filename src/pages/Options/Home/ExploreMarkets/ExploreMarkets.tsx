@@ -12,7 +12,7 @@ import ROUTES from 'constants/routes';
 import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import { PHASES } from 'constants/options';
@@ -34,14 +34,14 @@ const defaultFilter: Filter = {
 
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const currentWalletAddress = useSelector((state: RootState) => getCurrentWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const { t } = useTranslation();
     const [assetSearch, setAssetSearch] = useState<string>('');
     const [filter, setFilter] = useState<Filter>(defaultFilter);
 
     const userBidsMarketsQuery = useQuery<string[], any>(
-        QUERY_KEYS.BinaryOptions.UserMarkets(currentWalletAddress || ''),
-        () => snxData.binaryOptions.marketsBidOn({ account: currentWalletAddress }),
+        QUERY_KEYS.BinaryOptions.UserMarkets(walletAddress || ''),
+        () => snxData.binaryOptions.marketsBidOn({ account: walletAddress }),
         {
             enabled: isWalletConnected && filter.name === 'user-bids',
         }
@@ -49,7 +49,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
     const filteredOptionsMarkets = useMemo(() => {
         if (filter.name === 'creator' && isWalletConnected) {
-            return optionsMarkets.filter(({ creator }) => creator.toLowerCase() === currentWalletAddress.toLowerCase());
+            return optionsMarkets.filter(({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase());
         } else if (filter.name === 'user-bids' && isWalletConnected) {
             return userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
                 ? optionsMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
@@ -61,7 +61,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         optionsMarkets,
         filter,
         isWalletConnected,
-        currentWalletAddress,
+        walletAddress,
         userBidsMarketsQuery.data,
         userBidsMarketsQuery.isSuccess,
     ]);
