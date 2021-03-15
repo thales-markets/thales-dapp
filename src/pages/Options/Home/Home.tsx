@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
-import MarketCreation from './components/MarketCreation';
 import { sortOptionsMarkets } from '../../../utils/options';
-import HotMarkets from './components/HotMarkets';
-import MarketsTable from './components/MarketsTable';
 import useBinaryOptionsMarkets from 'queries/options/useBinaryOptionsMarkets';
 import snxJSConnector from 'utils/snxJSConnector';
+import HotMarkets from './HotMarkets';
+import MarketCreation from './MarketCreation/MarketCreation';
+import MarketsTable from './MarketsTable';
 
 const MAX_HOT_MARKETS = 4;
 
