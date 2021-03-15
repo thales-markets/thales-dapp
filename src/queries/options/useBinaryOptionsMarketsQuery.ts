@@ -7,7 +7,7 @@ import { getPhaseAndEndDate } from '../../utils/options';
 
 const susdTokenAddress = '0x57ab1e02fee23774580c119740129eac7081e9d3';
 
-const useBinaryOptionsMarkets = (options?: UseQueryOptions<OptionsMarkets>) => {
+const useBinaryOptionsMarketsQuery = (options?: UseQueryOptions<OptionsMarkets>) => {
     return useQuery<OptionsMarkets>(
         QUERY_KEYS.BinaryOptions.Markets,
         async () => {
@@ -66,4 +66,4 @@ const useBinaryOptionsMarkets = (options?: UseQueryOptions<OptionsMarkets>) => {
     );
 };
 
-export default useBinaryOptionsMarkets;
+export default useBinaryOptionsMarketsQuery;

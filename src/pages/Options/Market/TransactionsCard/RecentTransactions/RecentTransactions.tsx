@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../components/TransactionsTable';
 import { OptionsMarketInfo } from 'types/options';
-import useBinaryOptionsTransactions from 'queries/options/useBinaryOptionsTransactions';
+import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
 
 type RecentTransactionsProps = {
     marketAddress: OptionsMarketInfo['address'];
@@ -11,7 +11,7 @@ type RecentTransactionsProps = {
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }) => {
     const { t } = useTranslation();
 
-    const transactionsQuery = useBinaryOptionsTransactions(marketAddress);
+    const transactionsQuery = useBinaryOptionsTransactionsQuery(marketAddress);
 
     const noResults = transactionsQuery.isSuccess && transactionsQuery.data && transactionsQuery.data.length === 0;
 

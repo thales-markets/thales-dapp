@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
-import useBinaryOptionsMarkets from 'queries/options/useBinaryOptionsMarkets';
+import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import snxJSConnector from 'utils/snxJSConnector';
 import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
@@ -10,7 +10,7 @@ import { Loader } from 'semantic-ui-react';
 const MAX_HOT_MARKETS = 4;
 
 export const Home: React.FC = () => {
-    const marketsQuery = useBinaryOptionsMarkets();
+    const marketsQuery = useBinaryOptionsMarketsQuery();
     const { synthsMap } = snxJSConnector;
     const optionsMarkets = useMemo(
         () =>

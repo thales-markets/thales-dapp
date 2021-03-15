@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import TransactionsTable from '../components/TransactionsTable';
 import { OptionsMarketInfo } from 'types/options';
-import useBinaryOptionsUserTransactions from 'queries/options/useBinaryOptionsUserTransactions';
+import useBinaryOptionsUserTransactionsQuery from 'queries/options/useBinaryOptionsUserTransactionsQuery';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected } from 'redux/modules/wallet';
@@ -18,7 +18,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress, 
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const transactionsQuery = useBinaryOptionsUserTransactions(marketAddress, walletAddress, {
+    const transactionsQuery = useBinaryOptionsUserTransactionsQuery(marketAddress, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
 

@@ -3,7 +3,7 @@ import snxData from 'synthetix-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsTransactions } from 'types/options';
 
-const useBinaryOptionsUserTransactions = (
+const useBinaryOptionsUserTransactionsQuery = (
     marketAddress: string,
     walletAddress: string,
     options?: UseQueryOptions<OptionsTransactions>
@@ -15,4 +15,4 @@ const useBinaryOptionsUserTransactions = (
     );
 };
 
-export default useBinaryOptionsUserTransactions;
+export default useBinaryOptionsUserTransactionsQuery;

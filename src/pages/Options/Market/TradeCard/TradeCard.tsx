@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useQuery, QueryClient } from 'react-query';
+import { QueryClient } from 'react-query';
 import BiddingPhaseCard from './BiddingPhaseCard';
-import snxJSConnector from 'utils/snxJSConnector';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
 import QUERY_KEYS from 'constants/queryKeys';
-import { bigNumberFormatter } from 'utils/formatters';
 import { AccountMarketInfo } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
@@ -13,41 +11,21 @@ import { useMarketContext } from '../contexts/MarketContext';
 import { useBOMContractContext } from '../contexts/BOMContractContext';
 import TradingPhaseCard from './TradingPhaseCard';
 import MaturityPhaseCard from './MaturityPhaseCard';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import { getIsAppReady } from 'redux/modules/app';
 
 const queryClient = new QueryClient();
 
 const TradeCard: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const optionsMarket = useMarketContext();
     const BOMContract = useBOMContractContext();
 
-    const accountMarketInfoQuery = useQuery<AccountMarketInfo, any>(
-        QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarket.address, walletAddress as string),
-        async () => {
-            const result = await (snxJSConnector as any).binaryOptionsMarketDataContract.getAccountMarketData(
-                optionsMarket.address,
-                walletAddress
-            );
-            return {
-                claimable: {
-                    long: bigNumberFormatter(result.claimable.long),
-                    short: bigNumberFormatter(result.claimable.short),
-                },
-                balances: {
-                    long: bigNumberFormatter(result.balances.long),
-                    short: bigNumberFormatter(result.balances.short),
-                },
-                bids: {
-                    long: bigNumberFormatter(result.bids.long),
-                    short: bigNumberFormatter(result.bids.short),
-                },
-            };
-        },
-        {
-            enabled: isWalletConnected,
-        }
-    );
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const accountMarketInfo = {
         balances: {

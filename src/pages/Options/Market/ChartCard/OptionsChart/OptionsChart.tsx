@@ -9,7 +9,7 @@ import { formatCurrencyWithSign } from 'utils/formatters';
 import { PeriodLabel, PERIOD_IN_HOURS } from 'constants/period';
 import { Loader } from 'semantic-ui-react';
 import { OptionsMarketInfo } from 'types/options';
-import useBinaryOptionsHistoricalOptionPrice from 'queries/options/useBinaryOptionsHistoricalOptionPrice';
+import useBinaryOptionsHistoricalOptionPriceQuery from 'queries/options/useBinaryOptionsHistoricalOptionPriceQuery';
 
 type OptionsChartProps = {
     selectedPeriod: PeriodLabel;
@@ -19,7 +19,7 @@ type OptionsChartProps = {
 const OptionsChart: React.FC<OptionsChartProps> = ({ selectedPeriod, optionsMarket }) => {
     const { t } = useTranslation();
 
-    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPrice(
+    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(
         optionsMarket.address,
         selectedPeriod.period
     );

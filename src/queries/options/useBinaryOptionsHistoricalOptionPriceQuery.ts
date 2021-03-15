@@ -5,7 +5,7 @@ import { OptionsTransactions } from 'types/options';
 import { calculateTimestampForPeriod } from 'utils/rates';
 import { PERIOD_IN_HOURS, Period } from 'constants/period';
 
-const useBinaryOptionsHistoricalOptionPrice = (
+const useBinaryOptionsHistoricalOptionPriceQuery = (
     marketAddress: string,
     period: Period = Period.ONE_DAY,
     options?: UseQueryOptions<OptionsTransactions>
@@ -24,4 +24,4 @@ const useBinaryOptionsHistoricalOptionPrice = (
     );
 };
 
-export default useBinaryOptionsHistoricalOptionPrice;
+export default useBinaryOptionsHistoricalOptionPriceQuery;

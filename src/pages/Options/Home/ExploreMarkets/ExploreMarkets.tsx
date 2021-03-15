@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from '@material-ui/core/Tooltip';
-import snxData from 'synthetix-data';
-import { useQuery } from 'react-query';
 import { ReactComponent as PencilIcon } from 'assets/images/pencil.svg';
 import { ReactComponent as PersonIcon } from 'assets/images/person.svg';
 import { ReactComponent as NoResultsIcon } from 'assets/images/no-results.svg';
-import QUERY_KEYS from 'constants/queryKeys';
 import MarketsTable from '../MarketsTable';
 import ROUTES from 'constants/routes';
 import { OptionsMarkets } from 'types/options';
@@ -18,6 +15,8 @@ import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import { PHASES } from 'constants/options';
 import { navigateTo } from 'utils/routes';
 import { Button, Container, Input } from 'semantic-ui-react';
+import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
+import { getIsAppReady } from 'redux/modules/app';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -35,17 +34,14 @@ const defaultFilter: Filter = {
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const { t } = useTranslation();
     const [assetSearch, setAssetSearch] = useState<string>('');
     const [filter, setFilter] = useState<Filter>(defaultFilter);
 
-    const userBidsMarketsQuery = useQuery<string[], any>(
-        QUERY_KEYS.BinaryOptions.UserMarkets(walletAddress || ''),
-        () => snxData.binaryOptions.marketsBidOn({ account: walletAddress }),
-        {
-            enabled: isWalletConnected && filter.name === 'user-bids',
-        }
-    );
+    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, {
+        enabled: isAppReady && isWalletConnected && filter.name === 'user-bids',
+    });
 
     const filteredOptionsMarkets = useMemo(() => {
         if (filter.name === 'creator' && isWalletConnected) {
