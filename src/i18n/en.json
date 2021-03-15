@@ -159,6 +159,21 @@
                 "generic-error": "Error"
             },
             "retry": "Retry"
+        },
+        "gwei": {
+            "title": "Set transaction speed & price",
+            "desc": "Adjust the slider below to set the transaction speed.",
+            "placeholder": "CUSTOM",
+            "table": {
+                "speed-allowed": "Speed (allowed)",
+                "slow": "Slow",
+                "safe": "Safe",
+                "standard": "Standard",
+                "average": "Average",
+                "fast": "fast",
+                "price": "price"
+            },
+            "submit": "Submit changes"
         }
     },
     "options": {
@@ -340,7 +355,11 @@
                         "bid": "bid:",
                         "payout": "payout:",
                         "bid-fee": "Bid fee",
-                        "refund-fee": "Refund fee"
+                        "refund-fee": "Refund fee",
+                        "network-info-tooltip": {
+                            "exchange-fee": "Exchange fee",
+                            "network-fee": "Network fee (gas)"
+                        }
                     },
                     "footer": {
                         "end-label": "bidding period closing in:"

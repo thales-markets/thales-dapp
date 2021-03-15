@@ -15,6 +15,7 @@ export const QUERY_KEYS = {
             currencyKey,
             period,
         ],
+        ExchangeRates: ['rates', 'exchangeRates'],
     },
     Synths: {
         FrozenSynths: ['synths', 'frozenSynths'],
