@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import { Button, Icon, Label, Menu, Message } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
-import { getWalletInfo } from 'redux/modules/wallet/walletDetails';
+import { getWalletInfo } from 'redux/modules/wallet';
 
 const Header: React.FC = () => {
     const { t } = useTranslation();

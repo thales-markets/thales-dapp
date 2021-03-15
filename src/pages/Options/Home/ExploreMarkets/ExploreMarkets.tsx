@@ -12,7 +12,7 @@ import ROUTES from 'constants/routes';
 import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
+import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import { PHASES } from 'constants/options';

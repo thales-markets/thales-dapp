@@ -25,7 +25,7 @@ import SideIcon from '../Market/components/SideIcon';
 import { Link } from 'react-router-dom';
 import { Button, Container, Form, Grid, Header, Input, Segment, Divider } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet/walletDetails';
+import { getCurrentWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { GWEI_UNIT } from 'utils/network';
 import Currency from 'components/Currency';

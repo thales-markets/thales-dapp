@@ -17,7 +17,7 @@ import { generatePseudoRandomSalt } from '@0x/order-utils';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
-import { getCurrentWalletAddress } from '../../../../redux/modules/wallet/walletDetails';
+import { getCurrentWalletAddress } from '../../../../redux/modules/wallet';
 import dotenv from 'dotenv';
 import { ContractWrappers } from '@0x/contract-wrappers';
 import { navigateToOptionsMarket } from 'utils/routes';

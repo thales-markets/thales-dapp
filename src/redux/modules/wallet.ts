@@ -5,7 +5,7 @@ import { RootState } from 'redux/rootReducer';
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_SPEED } from 'constants/defaults';
 import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 
-export type WalletDetailsSliceState = {
+export type WalletSliceState = {
     walletType: string;
     unlocked: boolean;
     currentWallet: string | null;
@@ -19,7 +19,7 @@ export type WalletDetailsSliceState = {
     gasLimit: number;
 };
 
-const initialState: WalletDetailsSliceState = {
+const initialState: WalletSliceState = {
     walletType: '',
     unlocked: false,
     unlockError: null,
@@ -33,7 +33,7 @@ const initialState: WalletDetailsSliceState = {
     gasLimit: DEFAULT_GAS_LIMIT,
 };
 
-const sliceName = 'walletDetails';
+const sliceName = 'wallet';
 
 export const walletDetailsSlice = createSlice({
     name: sliceName,
@@ -42,7 +42,7 @@ export const walletDetailsSlice = createSlice({
         resetWalletReducer: () => {
             return initialState;
         },
-        updateWalletReducer: (state, action: PayloadAction<Partial<WalletDetailsSliceState>>) => {
+        updateWalletReducer: (state, action: PayloadAction<Partial<WalletSliceState>>) => {
             const { payload } = action;
 
             return {
@@ -84,7 +84,7 @@ export const walletDetailsSlice = createSlice({
     },
 });
 
-export const getWalletState = (state: RootState) => state.wallet[sliceName];
+export const getWalletState = (state: RootState) => state[sliceName];
 export const getNetworkId = (state: RootState) => getWalletState(state).networkId;
 export const getNetworkName = (state: RootState) => getWalletState(state).networkName;
 export const getNetwork = (state: RootState) => ({

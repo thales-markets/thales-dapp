@@ -9,7 +9,7 @@ import { getEthereumNetwork } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
 import WalletPopup from 'components/WalletPopup';
-import { getIsWalletConnected, updateNetworkSettings } from 'redux/modules/wallet/walletDetails';
+import { getIsWalletConnected, updateNetworkSettings } from 'redux/modules/wallet';
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { fetchAppStatusRequest, setAppReady } from 'redux/modules/app';

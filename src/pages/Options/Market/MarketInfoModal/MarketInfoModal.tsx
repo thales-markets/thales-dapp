@@ -7,7 +7,7 @@ import { USD_SIGN, SYNTHS_MAP } from 'constants/currency';
 import { getEtherscanAddressLink } from 'utils/explorers';
 import { Grid, Header, Modal, Table } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet/walletDetails';
+import { getNetworkId } from 'redux/modules/wallet';
 import { OptionsMarketInfo } from 'types/options';
 
 type MarketInfoModalProps = {

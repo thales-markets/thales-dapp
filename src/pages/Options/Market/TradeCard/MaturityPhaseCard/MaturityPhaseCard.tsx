@@ -12,7 +12,7 @@ import { Button, Header, Message, Segment } from 'semantic-ui-react';
 import { TradeCardPhaseProps } from 'types/options';
 import { QueryClient } from 'react-query';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
+import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
 import QUERY_KEYS from 'constants/queryKeys';
 import { RootState } from 'redux/rootReducer';

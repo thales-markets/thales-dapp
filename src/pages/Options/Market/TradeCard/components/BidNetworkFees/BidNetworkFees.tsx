@@ -14,7 +14,7 @@ import SelectGasMenu from 'components/SelectGasMenu';
 import { OptionsTransaction } from 'types/options';
 import { Divider } from 'semantic-ui-react';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet/walletDetails';
+import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 
 type BidNetworkFeesProps = {
     gasLimit: number | null;

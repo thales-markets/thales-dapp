@@ -8,7 +8,7 @@ import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { ethers } from 'ethers';
 import { TradeCardPhaseProps } from 'types/options';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
+import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import {
     addOptionsPendingTransaction,
     updateOptionsPendingTransactionStatus,

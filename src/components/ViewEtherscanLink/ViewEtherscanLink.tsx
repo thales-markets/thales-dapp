@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanTxLink } from 'utils/explorers';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet/walletDetails';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type ViewEtherscanLinkProps = {
     isDisabled?: boolean;

@@ -5,7 +5,7 @@ import snxJSConnector, { connectToWallet } from 'utils/snxJSConnector';
 import { hasEthereumInjected, SUPPORTED_WALLETS, SUPPORTED_WALLETS_MAP, onMetamaskAccountChange } from 'utils/network';
 import { ReactComponent as MetamaskWallet } from 'assets/images/wallets/metamask.svg';
 import { Header, Button } from 'semantic-ui-react';
-import { resetWalletReducer, updateWalletReducer } from 'redux/modules/wallet/walletDetails';
+import { resetWalletReducer, updateWalletReducer } from 'redux/modules/wallet';
 import { toggleWalletPopup } from 'redux/modules/ui';
 
 const { METAMASK } = SUPPORTED_WALLETS_MAP;

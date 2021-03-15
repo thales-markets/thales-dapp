@@ -22,7 +22,7 @@ import {
     getGasSpeed,
     getIsWalletConnected,
     getNetworkId,
-} from 'redux/modules/wallet/walletDetails';
+} from 'redux/modules/wallet';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { OptionsTransaction, TradeCardPhaseProps } from 'types/options';
 import { normalizeGasLimit } from 'utils/network';

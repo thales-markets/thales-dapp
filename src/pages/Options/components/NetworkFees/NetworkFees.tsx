@@ -9,7 +9,7 @@ import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
 import { getTransactionPrice } from 'utils/network';
 import SelectGasMenu from 'components/SelectGasMenu';
-import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet/walletDetails';
+import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 
 type NetworkFeesProps = {

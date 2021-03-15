@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import WalletTypeSelector from './WalletTypeSelector';
 import WalletAddressSelector from './WalletAddressSelector';
 import { Modal } from 'semantic-ui-react';
-import { getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
+import { getIsWalletConnected } from 'redux/modules/wallet';
 import { toggleWalletPopup, walletPopupIsVisible } from 'redux/modules/ui';
 import { RootState } from 'redux/rootReducer';
 

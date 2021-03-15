@@ -8,7 +8,7 @@ import { toggleWalletPopup } from '../../../../redux/modules/ui';
 import { Button, Header, Segment } from 'semantic-ui-react';
 import { navigateTo } from 'utils/routes';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
+import { getIsWalletConnected } from 'redux/modules/wallet';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();

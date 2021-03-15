@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Message, Input } from 'semantic-ui-react';
-import { setGasSpeed, setCustomGasPrice } from 'redux/modules/wallet/walletDetails';
+import { setGasSpeed, setCustomGasPrice } from 'redux/modules/wallet';
 import useEthGasPriceQuery, { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 
 const MAX_GAS_MULTIPLE = 1.5;

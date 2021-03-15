@@ -8,7 +8,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter } from 'utils/formatters';
 import { AccountMarketInfo } from 'types/options';
 import { RootState } from 'redux/rootReducer';
-import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet/walletDetails';
+import { getCurrentWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import { useMarketContext } from '../contexts/MarketContext';
 import { useBOMContractContext } from '../contexts/BOMContractContext';
 import TradingPhaseCard from './TradingPhaseCard';
