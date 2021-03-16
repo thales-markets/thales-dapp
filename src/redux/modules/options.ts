@@ -2,11 +2,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'redux/rootReducer';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
 
-const sliceName = 'optionsPendingTransactions';
+const sliceName = 'options';
 
-const initialState: OptionsTransactions = [];
+type OptionsSliceState = {
+    pendingTransactions: OptionsTransactions;
+};
 
-export const optionsPendingTransactionsSlice = createSlice({
+const initialState: OptionsSliceState = {
+    pendingTransactions: [],
+};
+
+export const optionsSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
@@ -24,7 +30,7 @@ export const optionsPendingTransactionsSlice = createSlice({
                 timestamp: Date.now(),
             };
 
-            state.unshift(optionTransactionWithStatus);
+            state.pendingTransactions.unshift(optionTransactionWithStatus);
         },
         updateOptionsPendingTransactionStatus: (
             state,
@@ -35,20 +41,17 @@ export const optionsPendingTransactionsSlice = createSlice({
         ) => {
             const { hash, status } = action.payload;
 
-            state.forEach((optionTransaction, idx) => {
+            state.pendingTransactions.forEach((optionTransaction, idx) => {
                 if (optionTransaction.hash === hash) {
-                    state[idx].status = status;
+                    state.pendingTransactions[idx].status = status;
                 }
             });
         },
     },
 });
 
-export const getOptionsPendingTransactions = (state: RootState) => state[sliceName];
+export const getOptionsPendingTransactions = (state: RootState) => state[sliceName].pendingTransactions;
 
-export const {
-    addOptionsPendingTransaction,
-    updateOptionsPendingTransactionStatus,
-} = optionsPendingTransactionsSlice.actions;
+export const { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } = optionsSlice.actions;
 
-export default optionsPendingTransactionsSlice.reducer;
+export default optionsSlice.reducer;

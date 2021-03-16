@@ -16,10 +16,7 @@ import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
 import QUERY_KEYS from 'constants/queryKeys';
 import { RootState } from 'redux/rootReducer';
-import {
-    addOptionsPendingTransaction,
-    updateOptionsPendingTransactionStatus,
-} from 'redux/modules/optionsPendingTransactions';
+import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import ResultCard from '../components/ResultCard';
 
 const queryClient = new QueryClient();

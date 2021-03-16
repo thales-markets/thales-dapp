@@ -9,10 +9,7 @@ import { ethers } from 'ethers';
 import { TradeCardPhaseProps } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
-import {
-    addOptionsPendingTransaction,
-    updateOptionsPendingTransactionStatus,
-} from 'redux/modules/optionsPendingTransactions';
+import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Header, Message, Segment } from 'semantic-ui-react';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';

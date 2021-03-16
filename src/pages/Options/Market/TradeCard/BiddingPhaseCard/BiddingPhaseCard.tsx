@@ -27,10 +27,7 @@ import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContract
 import { OptionsTransaction, TradeCardPhaseProps } from 'types/options';
 import { normalizeGasLimit } from 'utils/network';
 import { GWEI_UNIT } from 'utils/network';
-import {
-    addOptionsPendingTransaction,
-    updateOptionsPendingTransactionStatus,
-} from 'redux/modules/optionsPendingTransactions';
+import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { Button, Grid, Header, Menu, Message } from 'semantic-ui-react';
 import { QueryClient } from 'react-query';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
