@@ -9,7 +9,7 @@ import ROUTES from 'constants/routes';
 import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
+import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import { PHASES } from 'constants/options';
@@ -35,11 +35,12 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
     const [assetSearch, setAssetSearch] = useState<string>('');
     const [filter, setFilter] = useState<Filter>(defaultFilter);
 
-    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, {
+    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && filter.name === 'user-bids',
     });
 

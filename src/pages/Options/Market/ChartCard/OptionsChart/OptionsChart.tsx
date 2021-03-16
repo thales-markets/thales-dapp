@@ -10,6 +10,9 @@ import { PeriodLabel, PERIOD_IN_HOURS } from 'constants/period';
 import { Loader } from 'semantic-ui-react';
 import { OptionsMarketInfo } from 'types/options';
 import useBinaryOptionsHistoricalOptionPriceQuery from 'queries/options/useBinaryOptionsHistoricalOptionPriceQuery';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type OptionsChartProps = {
     selectedPeriod: PeriodLabel;
@@ -18,10 +21,12 @@ type OptionsChartProps = {
 
 const OptionsChart: React.FC<OptionsChartProps> = ({ selectedPeriod, optionsMarket }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(
         optionsMarket.address,
-        selectedPeriod.period
+        selectedPeriod.period,
+        networkId
     );
 
     const chartData = useMemo(() => {

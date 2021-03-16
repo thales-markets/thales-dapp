@@ -5,7 +5,7 @@ import { OptionsMarketInfo } from 'types/options';
 import useBinaryOptionsUserTransactionsQuery from 'queries/options/useBinaryOptionsUserTransactionsQuery';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 
 type RecentTransactionsProps = {
@@ -17,8 +17,9 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress, 
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const transactionsQuery = useBinaryOptionsUserTransactionsQuery(marketAddress, walletAddress, {
+    const transactionsQuery = useBinaryOptionsUserTransactionsQuery(marketAddress, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
