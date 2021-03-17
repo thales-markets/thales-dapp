@@ -1,12 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import snxJSConnector, { connectToWallet } from 'utils/snxJSConnector';
-import { hasEthereumInjected, SUPPORTED_WALLETS, SUPPORTED_WALLETS_MAP, onMetamaskAccountChange } from 'utils/network';
+import { connectToWallet } from 'utils/snxJSConnector';
+import { hasEthereumInjected, SUPPORTED_WALLETS, SUPPORTED_WALLETS_MAP } from 'utils/network';
 import { ReactComponent as MetamaskWallet } from 'assets/images/wallets/metamask.svg';
 import { Header, Button } from 'semantic-ui-react';
 import { resetWalletReducer, updateWalletReducer } from 'redux/modules/wallet';
 import { toggleWalletPopup } from 'redux/modules/ui';
+import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
 
 const { METAMASK } = SUPPORTED_WALLETS_MAP;
 
@@ -24,16 +25,10 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
         dispatch(updateWalletReducer({ ...walletStatus, availableWallets: [] }));
         if (walletStatus && walletStatus.unlocked && walletStatus.walletAddress) {
             if (walletStatus.walletType === METAMASK) {
-                onMetamaskAccountChange(async (accounts) => {
-                    if (accounts && accounts.length > 0) {
-                        const signer = new snxJSConnector.signers[METAMASK]({});
-                        snxJSConnector.setContractSettings({
-                            networkId: walletStatus.networkId,
-                            signer,
-                        });
-                        dispatch(updateWalletReducer({ walletAddress: accounts[0] }));
-                    }
-                });
+                mountMetamaskAccountChangeEvent(walletStatus.networkId, (walletAddress) =>
+                    dispatch(updateWalletReducer({ walletAddress }))
+                );
+                mountMetamaskNetworkChange();
             }
             dispatch(toggleWalletPopup(false));
         } else selectAddressScreen();

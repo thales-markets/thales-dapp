@@ -4,6 +4,19 @@ import { defaultNetwork, NetworkId, normalizeGasLimit } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_SPEED } from 'constants/defaults';
 import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
+import { setSigner } from 'utils/snxJSConnector';
+import { getPersistedState, persistState } from 'redux/persistedState';
+
+const sliceName = 'wallet';
+
+const getPersistedStateAndSetSigner = () => {
+    const persistedState = getPersistedState(sliceName);
+    if (persistedState.walletAddress != null) {
+        setSigner({ type: persistedState.walletType, networkId: persistedState.networkId });
+    }
+
+    return persistedState;
+};
 
 export type WalletSliceState = {
     walletType: string;
@@ -31,25 +44,27 @@ const initialState: WalletSliceState = {
     gasSpeed: DEFAULT_GAS_SPEED,
     customGasPrice: null,
     gasLimit: DEFAULT_GAS_LIMIT,
+    ...getPersistedStateAndSetSigner(),
 };
-
-const sliceName = 'wallet';
 
 export const walletDetailsSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
         resetWalletReducer: () => {
+            persistState(sliceName, initialState);
             return initialState;
         },
         updateWalletReducer: (state, action: PayloadAction<Partial<WalletSliceState>>) => {
             const { payload } = action;
-
-            return {
+            const newState = {
                 ...state,
                 ...payload,
                 walletAddress: payload.walletAddress ? getAddress(payload.walletAddress) : state.walletAddress,
             };
+
+            persistState(sliceName, newState);
+            return newState;
         },
         updateNetworkSettings: (
             state,
@@ -62,24 +77,19 @@ export const walletDetailsSlice = createSlice({
 
             state.networkId = networkId;
             state.networkName = networkName;
+            persistState(sliceName, state);
         },
         setGasSpeed: (state, action: PayloadAction<GasSpeed>) => {
-            return {
-                ...state,
-                gasSpeed: action.payload,
-            };
+            state.gasSpeed = action.payload;
+            persistState(sliceName, state);
         },
         setCustomGasPrice: (state, action: PayloadAction<number | null>) => {
-            return {
-                ...state,
-                customGasPrice: action.payload,
-            };
+            state.customGasPrice = action.payload;
+            persistState(sliceName, state);
         },
         setGasLimit: (state, action: PayloadAction<number>) => {
-            return {
-                ...state,
-                gasLimit: normalizeGasLimit(action.payload),
-            };
+            state.gasLimit = normalizeGasLimit(action.payload);
+            persistState(sliceName, state);
         },
     },
 });

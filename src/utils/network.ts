@@ -69,7 +69,7 @@ export function onMetamaskAccountChange(cb: () => void) {
 export function onMetamaskNetworkChange(cb: () => void) {
     if (!window.ethereum) return;
     const listener = throttle(cb, 1000);
-    window.ethereum.on('networkChanged', listener);
+    window.ethereum.on('chainChanged', listener);
 }
 
 export function hasMetamaskInstalled() {
