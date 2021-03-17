@@ -27,7 +27,7 @@ export const Home: React.FC = () => {
     const hotMarkets = useMemo(() => optionsMarkets.slice(0, MAX_HOT_MARKETS), [optionsMarkets]);
     return (
         <>
-            {optionsMarkets.length ? (
+            {marketsQuery.isSuccess ? (
                 <>
                     <HotMarkets optionsMarkets={hotMarkets} />
                     <MarketCreation />
