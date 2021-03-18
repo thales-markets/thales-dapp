@@ -13,7 +13,7 @@ import snxJSConnector from '../../../../utils/snxJSConnector';
 import { BigNumber } from '@0x/utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import { generatePseudoRandomSalt } from '@0x/order-utils';
+import { generatePseudoRandomSalt, signatureUtils, Order } from '@0x/order-utils';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
@@ -45,6 +45,14 @@ const getPhaseBackgroundColor = (phase: string) => {
             break;
     }
 };
+
+const {
+    snxJS: { sUSD },
+} = snxJSConnector as any;
+
+export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const NULL_BYTES = '0x';
+export const ZERO = new BigNumber(0);
 
 export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
@@ -166,14 +174,17 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
                             title={cellProps.row.original.orders ? JSON.stringify(cellProps.row.original.orders) : ''}
                         >
                             {cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'N/A'}
-                            <button value={cellProps.row.original.orders} onClick={buyOrder}>
+                            <button onClick={(event) => buyOrder(event, cellProps.row.original.orders)}>
                                 Buy order
                             </button>
-                            <button value={cellProps.row.original.orders} onClick={cancelOrder}>
+                            <button
+                                value={cellProps.row.original.orders}
+                                onClick={(event) => cancelOrder(event, cellProps.row.original.orders)}
+                            >
                                 Cancel order
                             </button>
                             {cellProps.row.original.phase == 'trading' && (
-                                <button value="0x57ab1e02fee23774580c119740129eac7081e9d3" onClick={approve}>
+                                <button value={sUSD.contract.address} onClick={approve}>
                                     Approve susd
                                 </button>
                             )}
@@ -230,35 +241,95 @@ declare const window: any;
 
 export async function approve(ev: any): Promise<void> {
     ev.stopPropagation();
+
+    let isV4 = true;
+    if (snxJSConnector.contractSettings.networkId == 42) {
+        isV4 = false;
+    }
+
+    const contractWrappers = new ContractWrappers(window.ethereum, {
+        chainId: snxJSConnector.contractSettings.networkId,
+    });
+
     const erc20Instance = new ethers.Contract(ev.currentTarget.value, erc20Abi, snxJSConnector.signer);
     const maxInt = `0x${'f'.repeat(64)}`;
-    await erc20Instance.approve('0xDef1C0ded9bec7F1a1670819833240f027b25EfF', maxInt);
+    if (isV4) {
+        await erc20Instance.approve(contractWrappers.exchangeProxy.address, maxInt);
+    } else {
+        const addressToApprove = '0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e';
+        //contractWrappers.contractAddresses.erc20Proxy
+        await erc20Instance.approve(addressToApprove, maxInt);
+    }
 }
 
-export async function buyOrder(ev: any): Promise<void> {
+export async function buyOrder(ev: any, orders: any): Promise<void> {
     ev.stopPropagation();
-    const contractWrappers = new ContractWrappers(window.ethereum, { chainId: 1 });
 
-    const targetOrder = ev.target.value.order;
+    let isV4 = true;
+    if (snxJSConnector.contractSettings.networkId == 42) {
+        isV4 = false;
+    }
 
-    const PROTOCOL_FEE_MULTIPLIER = new BigNumber(70000);
+    const contractWrappers = new ContractWrappers(window.ethereum, {
+        chainId: snxJSConnector.contractSettings.networkId,
+    });
+
+    const targetOrder = orders[0][0].order;
+
+    const PROTOCOL_FEE_MULTIPLIER = new BigNumber(1500000);
     const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
         return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
     };
 
-    const gasp = await window.web3.eth.getGasPrice();
+    const gasp = (await window.web3.eth) ? window.web3.eth.getGasPrice() : 1e9;
     const valueP = calculateProtocolFee([targetOrder], gasp);
 
-    await contractWrappers.exchangeProxy
-        .fillLimitOrder(targetOrder, targetOrder.signature, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18))
-        .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
+    if (isV4) {
+        await contractWrappers.exchangeProxy
+            .fillLimitOrder(targetOrder, targetOrder.signature, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18))
+            .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
+    } else {
+        contractWrappers.exchange
+            .fillOrder(targetOrder, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18), targetOrder.signature)
+            .sendTransactionAsync({
+                from: window.web3.currentProvider.selectedAddress,
+                value: valueP,
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+        // const contract = new ethers.Contract(
+        //     '0xf1ec7d0ba42f15fb5c9e3adbe86431973e44764c',
+        //     contractWrappers.exchange.abi,
+        //     snxJSConnector.signer
+        // );
+        //
+        // const overrides = {
+        //     // To convert Ether to Wei:
+        //     value: ethers.utils.parseEther(valueP.toString(10)), // ether in this case MUST be a string
+        //
+        //     // Or you can use Wei directly if you have that:
+        //     // value: someBigNumber
+        //     // value: 1234   // Note that using JavaScript numbers requires they are less than Number.MAX_SAFE_INTEGER
+        //     // value: "1234567890"
+        //     // value: "0x1234"
+        //
+        //     // Or, promises are also supported:
+        //     // value: provider.getBalance(addr)
+        // };
+        //
+        // await contract.fillOrder(targetOrder, 1, targetOrder.signature, overrides);
+    }
 }
 
-export async function cancelOrder(ev: any): Promise<void> {
+export async function cancelOrder(ev: any, orders: any): Promise<void> {
     ev.stopPropagation();
-    const contractWrappers = new ContractWrappers(window.ethereum, { chainId: 1 });
 
-    const targetOrder = ev.target.value.order;
+    const contractWrappers = new ContractWrappers(window.ethereum, {
+        chainId: snxJSConnector.contractSettings.networkId,
+    });
+
+    const targetOrder = orders[0][0].order;
     await contractWrappers.exchangeProxy
         .cancelLimitOrder(targetOrder)
         .awaitTransactionSuccessAsync({ from: walletAddress });
@@ -266,53 +337,122 @@ export async function cancelOrder(ev: any): Promise<void> {
 
 export async function submitOrder(ev: any): Promise<void> {
     ev.stopPropagation();
-    const susdTokenAddress = '0x57ab1e02fee23774580c119740129eac7081e9d3';
+
+    const contractWrappers = new ContractWrappers(window.ethereum, {
+        chainId: snxJSConnector.contractSettings.networkId,
+    });
+
+    let isV4 = true;
+    let baseUrl = 'https://api.0x.org/';
+    if (snxJSConnector.contractSettings.networkId == 42) {
+        isV4 = false;
+        baseUrl = 'https://kovan.api.0x.org/';
+    }
     const makerToken = ev.currentTarget.value;
+    if (isV4) {
+        const createSignedOrderV4Async = async () => {
+            const order = new LimitOrder({
+                makerToken: makerToken,
+                takerToken: sUSD.contract.address,
+                makerAmount: Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18),
+                takerAmount: Web3Wrapper.toBaseUnitAmount(new BigNumber(20), 18),
+                maker: walletAddress,
+                sender: '0x0000000000000000000000000000000000000000',
+                expiry: getRandomFutureDateInSeconds(),
+                salt: generatePseudoRandomSalt(),
+                chainId: snxJSConnector.contractSettings.networkId,
+                verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+            });
 
-    const createSignedOrderV4Async = async () => {
-        const order = new LimitOrder({
-            makerToken: makerToken,
-            takerToken: susdTokenAddress,
-            makerAmount: Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18),
-            takerAmount: Web3Wrapper.toBaseUnitAmount(new BigNumber(20), 18),
-            maker: walletAddress,
-            sender: '0x0000000000000000000000000000000000000000',
-            expiry: getRandomFutureDateInSeconds(),
+            const signature = await order.getSignatureWithProviderAsync(window.ethereum, SignatureType.EIP712);
+            return { ...order, signature };
+        };
+
+        const order = await createSignedOrderV4Async();
+
+        const url = baseUrl + `sra/v4/order`;
+
+        console.log(`Posting order to ${url}`);
+        try {
+            const response = await axios({
+                method: 'POST',
+                url,
+                data: order,
+            });
+            console.log(JSON.stringify(response.data));
+            console.log(response.status);
+        } catch (err) {
+            console.error('ERROR');
+            //console.error(err);
+            console.error(JSON.stringify(err.response.data));
+            process.exit(1);
+        }
+    } else {
+        const makerAssetAmount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
+        // the amount the maker wants of taker asset
+        const takerAssetAmount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
+        // 0x v2 uses hex encoded asset data strings to encode all the information needed to identify an asset
+        const makerAssetData = await contractWrappers.devUtils.encodeERC20AssetData(makerToken).callAsync();
+        const takerAssetData = await contractWrappers.devUtils.encodeERC20AssetData(sUSD.contract.address).callAsync();
+
+        // Set up the Order and fill it
+        const randomExpiration = getRandomFutureDateInSeconds();
+        const exchangeAddress = '0x4eacd0af335451709e1e7b570b8ea68edec8bc97';
+        //contractWrappers.contractAddresses.exchange;
+
+        // Create the order
+        const order: Order = {
+            chainId: snxJSConnector.contractSettings.networkId,
+            exchangeAddress,
+            makerAddress: window.web3.currentProvider.selectedAddress,
+            takerAddress: NULL_ADDRESS,
+            senderAddress: NULL_ADDRESS,
+            feeRecipientAddress: NULL_ADDRESS,
+            expirationTimeSeconds: randomExpiration,
             salt: generatePseudoRandomSalt(),
-            chainId: 1,
-            verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-        });
+            makerAssetAmount,
+            takerAssetAmount,
+            makerAssetData,
+            takerAssetData,
+            makerFeeAssetData: NULL_BYTES,
+            takerFeeAssetData: NULL_BYTES,
+            makerFee: ZERO,
+            takerFee: ZERO,
+        };
 
-        const signature = await order.getSignatureWithProviderAsync(window.ethereum, SignatureType.EIP712);
-        return { ...order, signature };
-    };
+        // Generate the order hash and sign it
+        const signedOrder = await signatureUtils.ecSignOrderAsync(
+            window.web3.currentProvider,
+            order,
+            window.web3.currentProvider.selectedAddress
+        );
 
-    const order = await createSignedOrderV4Async();
+        const url = baseUrl + `sra/v3/order`;
 
-    const url = `https://api.0x.org/sra/v4/order`;
-
-    console.log(`Posting order to ${url}`);
-    try {
-        const response = await axios({
-            method: 'POST',
-            url,
-            data: order,
-        });
-        console.log(JSON.stringify(response.data));
-        console.log(response.status);
-    } catch (err) {
-        console.error('ERROR');
-        //console.error(err);
-        console.error(JSON.stringify(err.response.data));
-        process.exit(1);
+        console.log(`Posting order to ${url}`);
+        try {
+            const response = await axios({
+                method: 'POST',
+                url,
+                data: signedOrder,
+            });
+            console.log(JSON.stringify(response.data));
+            console.log(response.status);
+        } catch (err) {
+            console.error('ERROR');
+            //console.error(err);
+            console.error(JSON.stringify(err.response.data));
+            process.exit(1);
+        }
     }
 }
 
 export const ONE_SECOND_MS = 1000;
 export const ONE_MINUTE_MS = ONE_SECOND_MS * 60;
 export const TEN_MINUTES_MS = ONE_MINUTE_MS * 10;
+export const SIXTY_MINUTES_MS = ONE_MINUTE_MS * 10 * 6;
 export const getRandomFutureDateInSeconds = (): BigNumber => {
-    return new BigNumber(Date.now() + TEN_MINUTES_MS).div(ONE_SECOND_MS).integerValue(BigNumber.ROUND_CEIL);
+    return new BigNumber(Date.now() + SIXTY_MINUTES_MS).div(ONE_SECOND_MS).integerValue(BigNumber.ROUND_CEIL);
 };
 
 const erc20Abi = [
