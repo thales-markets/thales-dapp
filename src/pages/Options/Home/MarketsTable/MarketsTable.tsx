@@ -289,36 +289,28 @@ export async function buyOrder(ev: any, orders: any): Promise<void> {
             .fillLimitOrder(targetOrder, targetOrder.signature, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18))
             .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
     } else {
-        contractWrappers.exchange
-            .fillOrder(targetOrder, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18), targetOrder.signature)
-            .sendTransactionAsync({
-                from: window.web3.currentProvider.selectedAddress,
-                value: valueP,
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-        // const contract = new ethers.Contract(
-        //     '0xf1ec7d0ba42f15fb5c9e3adbe86431973e44764c',
-        //     contractWrappers.exchange.abi,
-        //     snxJSConnector.signer
-        // );
-        //
-        // const overrides = {
-        //     // To convert Ether to Wei:
-        //     value: ethers.utils.parseEther(valueP.toString(10)), // ether in this case MUST be a string
-        //
-        //     // Or you can use Wei directly if you have that:
-        //     // value: someBigNumber
-        //     // value: 1234   // Note that using JavaScript numbers requires they are less than Number.MAX_SAFE_INTEGER
-        //     // value: "1234567890"
-        //     // value: "0x1234"
-        //
-        //     // Or, promises are also supported:
-        //     // value: provider.getBalance(addr)
-        // };
-        //
-        // await contract.fillOrder(targetOrder, 1, targetOrder.signature, overrides);
+        // contractWrappers.exchange
+        //     .fillOrder(targetOrder, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18), targetOrder.signature)
+        //     .sendTransactionAsync({
+        //         from: window.web3.currentProvider.selectedAddress,
+        //         value: valueP,
+        //     })
+        //     .catch((e) => {
+        //         console.log(e);
+        //     });
+
+        const contract = new ethers.Contract(
+            '0x4eacd0af335451709e1e7b570b8ea68edec8bc97',
+            contractWrappers.exchange.abi,
+            snxJSConnector.signer
+        );
+        const overrides = {
+            // To convert Ether to Wei:
+            value: ethers.utils.parseEther('0.1'), // ether in this case MUST be a string
+        };
+
+        const amount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
+        await contract.fillOrder(targetOrder, amount, targetOrder.signature, overrides);
     }
 }
 
