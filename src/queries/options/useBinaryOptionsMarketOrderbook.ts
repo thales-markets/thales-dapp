@@ -61,11 +61,11 @@ const useBinaryOptionsMarketOrderbook = (
                         return {
                             rawSignedOrder: record.order,
                             order: {
-                                amount: bigNumberFormatter(record.order.makerAssetAmount),
+                                amount: bigNumberFormatter(record.order.takerAssetAmount),
                                 price:
-                                    bigNumberFormatter(record.order.takerAssetAmount) /
-                                    bigNumberFormatter(record.order.makerAssetAmount),
-                                total: bigNumberFormatter(record.order.takerAssetAmount),
+                                    bigNumberFormatter(record.order.makerAssetAmount) /
+                                    bigNumberFormatter(record.order.takerAssetAmount),
+                                total: bigNumberFormatter(record.order.makerAssetAmount),
                                 timeRemaining: record.order.expirationTimeSeconds * ONE_SECOND_MS,
                             },
                         };

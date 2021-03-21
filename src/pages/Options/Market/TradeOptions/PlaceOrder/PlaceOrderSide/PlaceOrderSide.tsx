@@ -71,8 +71,14 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, side }) => {
 
         const makerToken = side === 'buy' ? sUSD.contract.address : baseToken;
         const takerToken = side === 'buy' ? baseToken : sUSD.contract.address;
-        const makerAmount = Web3Wrapper.toBaseUnitAmount(new BigNumber(quantity), DECIMALS);
-        const takerAmount = Web3Wrapper.toBaseUnitAmount(new BigNumber(Number(quantity) * Number(price)), DECIMALS);
+        const makerAmount = Web3Wrapper.toBaseUnitAmount(
+            new BigNumber(side === 'buy' ? Number(quantity) * Number(price) : quantity),
+            DECIMALS
+        );
+        const takerAmount = Web3Wrapper.toBaseUnitAmount(
+            new BigNumber(side === 'buy' ? quantity : Number(quantity) * Number(price)),
+            DECIMALS
+        );
         const expiry = new BigNumber(Math.round((duration as Date).getTime() / 1000));
         const salt = generatePseudoRandomSalt();
 
@@ -157,6 +163,17 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, side }) => {
         <Segment>
             <Form>
                 <Form.Field>
+                    <label>Quantity</label>
+                    <Input
+                        fluid
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        id="quantity"
+                        type="number"
+                        min="0"
+                    />
+                </Form.Field>
+                <Form.Field>
                     <label>Price</label>
                     <Input
                         fluid
@@ -164,17 +181,6 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, side }) => {
                         onChange={(e) => setPrice(e.target.value)}
                         label={SYNTHS_MAP.sUSD}
                         id="order-price"
-                        type="number"
-                        min="0"
-                    />
-                </Form.Field>
-                <Form.Field>
-                    <label>Quantity</label>
-                    <Input
-                        fluid
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
-                        id="quantity"
                         type="number"
                         min="0"
                     />
