@@ -15,6 +15,7 @@ import TradeCard from './TradeCard';
 import ChartCard from './ChartCard';
 import MarketSentiment from '../components/MarketSentiment';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
+import TradeOptions from './TradeOptions';
 
 type MarketProps = {
     marketAddress: string;
@@ -70,6 +71,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         </span>
                     </Grid.Row>
                     <ChartCard />
+                    {optionsMarket.phase === 'trading' && <TradeOptions />}
                     <TransactionsCard />
                 </Grid.Column>
                 <Grid.Column width={5} style={{ paddingRight: 40 }}>

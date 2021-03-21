@@ -17,9 +17,8 @@ import { generatePseudoRandomSalt, signatureUtils, Order } from '@0x/order-utils
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
-import { getWalletAddress } from '../../../../redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from '../../../../redux/modules/wallet';
 import dotenv from 'dotenv';
-import { ContractWrappers } from '@0x/contract-wrappers';
 import { navigateToOptionsMarket } from 'utils/routes';
 
 dotenv.config();
@@ -30,8 +29,8 @@ type MarketsTableProps = {
     isLoading?: boolean;
 };
 let walletAddress = '';
+let networkId = 1;
 const getPhaseBackgroundColor = (phase: string) => {
-    walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     switch (phase) {
         case 'bidding':
             return '#fbe6b8';
@@ -46,16 +45,17 @@ const getPhaseBackgroundColor = (phase: string) => {
     }
 };
 
-const {
-    snxJS: { sUSD },
-} = snxJSConnector as any;
-
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const NULL_BYTES = '0x';
 export const ZERO = new BigNumber(0);
 
 export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();
+    walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    networkId = useSelector((state: RootState) => getNetworkId(state)) || '';
+    const {
+        snxJS: { sUSD },
+    } = snxJSConnector as any;
 
     return (
         <Table
@@ -241,38 +241,32 @@ declare const window: any;
 
 export async function approve(ev: any): Promise<void> {
     ev.stopPropagation();
+    const { contractWrappers0x } = snxJSConnector as any;
 
     let isV4 = true;
-    if (snxJSConnector.contractSettings.networkId == 42) {
+    if (networkId == 42) {
         isV4 = false;
     }
-
-    const contractWrappers = new ContractWrappers(window.ethereum, {
-        chainId: snxJSConnector.contractSettings.networkId,
-    });
 
     const erc20Instance = new ethers.Contract(ev.currentTarget.value, erc20Abi, snxJSConnector.signer);
     const maxInt = `0x${'f'.repeat(64)}`;
     if (isV4) {
-        await erc20Instance.approve(contractWrappers.exchangeProxy.address, maxInt);
+        await erc20Instance.approve(contractWrappers0x.exchangeProxy.address, maxInt);
     } else {
         const addressToApprove = '0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e';
-        //contractWrappers.contractAddresses.erc20Proxy
+        //contractWrappers0x.contractAddresses.erc20Proxy
         await erc20Instance.approve(addressToApprove, maxInt);
     }
 }
 
 export async function buyOrder(ev: any, orders: any): Promise<void> {
     ev.stopPropagation();
+    const { contractWrappers0x } = snxJSConnector as any;
 
     let isV4 = true;
-    if (snxJSConnector.contractSettings.networkId == 42) {
+    if (networkId == 42) {
         isV4 = false;
     }
-
-    const contractWrappers = new ContractWrappers(window.ethereum, {
-        chainId: snxJSConnector.contractSettings.networkId,
-    });
 
     const targetOrder = orders[0][0].order;
 
@@ -285,11 +279,11 @@ export async function buyOrder(ev: any, orders: any): Promise<void> {
     const valueP = calculateProtocolFee([targetOrder], gasp);
 
     if (isV4) {
-        await contractWrappers.exchangeProxy
+        await contractWrappers0x.exchangeProxy
             .fillLimitOrder(targetOrder, targetOrder.signature, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18))
             .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
     } else {
-        // contractWrappers.exchange
+        // contractWrappers0x.exchange
         //     .fillOrder(targetOrder, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18), targetOrder.signature)
         //     .sendTransactionAsync({
         //         from: window.web3.currentProvider.selectedAddress,
@@ -301,7 +295,7 @@ export async function buyOrder(ev: any, orders: any): Promise<void> {
 
         const contract = new ethers.Contract(
             '0x4eacd0af335451709e1e7b570b8ea68edec8bc97',
-            contractWrappers.exchange.abi,
+            contractWrappers0x.exchange.abi,
             snxJSConnector.signer
         );
         const overrides = {
@@ -316,27 +310,24 @@ export async function buyOrder(ev: any, orders: any): Promise<void> {
 
 export async function cancelOrder(ev: any, orders: any): Promise<void> {
     ev.stopPropagation();
-
-    const contractWrappers = new ContractWrappers(window.ethereum, {
-        chainId: snxJSConnector.contractSettings.networkId,
-    });
+    const { contractWrappers0x } = snxJSConnector as any;
 
     const targetOrder = orders[0][0].order;
-    await contractWrappers.exchangeProxy
+    await contractWrappers0x.exchangeProxy
         .cancelLimitOrder(targetOrder)
         .awaitTransactionSuccessAsync({ from: walletAddress });
 }
 
 export async function submitOrder(ev: any): Promise<void> {
     ev.stopPropagation();
-
-    const contractWrappers = new ContractWrappers(window.ethereum, {
-        chainId: snxJSConnector.contractSettings.networkId,
-    });
+    const {
+        snxJS: { sUSD },
+        contractWrappers0x,
+    } = snxJSConnector as any;
 
     let isV4 = true;
     let baseUrl = 'https://api.0x.org/';
-    if (snxJSConnector.contractSettings.networkId == 42) {
+    if (networkId == 42) {
         isV4 = false;
         baseUrl = 'https://kovan.api.0x.org/';
     }
@@ -352,7 +343,7 @@ export async function submitOrder(ev: any): Promise<void> {
                 sender: '0x0000000000000000000000000000000000000000',
                 expiry: getRandomFutureDateInSeconds(),
                 salt: generatePseudoRandomSalt(),
-                chainId: snxJSConnector.contractSettings.networkId,
+                chainId: networkId,
                 verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
             });
 
@@ -377,24 +368,25 @@ export async function submitOrder(ev: any): Promise<void> {
             console.error('ERROR');
             //console.error(err);
             console.error(JSON.stringify(err.response.data));
-            process.exit(1);
         }
     } else {
         const makerAssetAmount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
         // the amount the maker wants of taker asset
         const takerAssetAmount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
         // 0x v2 uses hex encoded asset data strings to encode all the information needed to identify an asset
-        const makerAssetData = await contractWrappers.devUtils.encodeERC20AssetData(makerToken).callAsync();
-        const takerAssetData = await contractWrappers.devUtils.encodeERC20AssetData(sUSD.contract.address).callAsync();
+        const makerAssetData = await contractWrappers0x.devUtils.encodeERC20AssetData(makerToken).callAsync();
+        const takerAssetData = await contractWrappers0x.devUtils
+            .encodeERC20AssetData(sUSD.contract.address)
+            .callAsync();
 
         // Set up the Order and fill it
         const randomExpiration = getRandomFutureDateInSeconds();
         const exchangeAddress = '0x4eacd0af335451709e1e7b570b8ea68edec8bc97';
-        //contractWrappers.contractAddresses.exchange;
+        //contractWrappers0x.contractAddresses.exchange;
 
         // Create the order
         const order: Order = {
-            chainId: snxJSConnector.contractSettings.networkId,
+            chainId: networkId,
             exchangeAddress,
             makerAddress: window.web3.currentProvider.selectedAddress,
             takerAddress: NULL_ADDRESS,
@@ -434,7 +426,6 @@ export async function submitOrder(ev: any): Promise<void> {
             console.error('ERROR');
             //console.error(err);
             console.error(JSON.stringify(err.response.data));
-            process.exit(1);
         }
     }
 }

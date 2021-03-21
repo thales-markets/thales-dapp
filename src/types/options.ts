@@ -1,5 +1,6 @@
 import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers/utils';
+import { SignedOrder } from '@0x/types';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
 
@@ -96,6 +97,8 @@ export type OptionsMarketInfo = {
     };
     BN: BNOptionValue;
     withdrawalsEnabled: boolean;
+    longAddress: string;
+    shortAddress: string;
 };
 
 export type AccountMarketInfo = {
@@ -116,3 +119,24 @@ export type CurrentPosition = {
     bid: number;
     payout: number;
 };
+
+export type OrderbookInfo = {
+    buyOrders: Orders;
+    sellOrders: Orders;
+};
+
+export type Orders = OrderItem[];
+
+export type OrderItem = {
+    rawSignedOrder: SignedOrder;
+    order: DisplayOrder;
+};
+
+export type DisplayOrder = {
+    price: number;
+    amount: number;
+    total: number;
+    timeRemaining: number;
+};
+
+export type OrderSide = 'buy' | 'sell';

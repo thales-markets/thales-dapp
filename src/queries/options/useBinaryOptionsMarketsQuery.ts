@@ -4,16 +4,11 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsMarkets } from 'types/options';
 import { getPhaseAndEndDate } from '../../utils/options';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { ContractWrappers } from '@0x/contract-wrappers';
-
-declare const window: any;
-const contractWrappers = new ContractWrappers(window.ethereum, {
-    chainId: snxJSConnector.contractSettings.networkId,
-});
 
 const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptions<OptionsMarkets>) => {
     const {
         snxJS: { sUSD },
+        contractWrappers0x,
     } = snxJSConnector as any;
     return useQuery<OptionsMarkets>(
         QUERY_KEYS.BinaryOptions.Markets,
@@ -26,7 +21,7 @@ const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptio
                 if ('trading' == getPhaseAndEndDate(o.biddingEndDate, o.maturityDate, o.expiryDate).phase) {
                     let isV4 = true;
                     let baseUrl = 'https://api.0x.org/sra/v4/';
-                    if (snxJSConnector.contractSettings.networkId == 42) {
+                    if (networkId == 42) {
                         isV4 = false;
                         baseUrl = 'https://kovan.api.0x.org/sra/v3/';
                     }
@@ -60,10 +55,10 @@ const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptio
 
                         o.openOrders = totalLong + totalShort;
                     } else {
-                        let makerAssetData = await contractWrappers.devUtils
+                        let makerAssetData = await contractWrappers0x.devUtils
                             .encodeERC20AssetData(o.longAddress)
                             .callAsync();
-                        const takerAssetData = await contractWrappers.devUtils
+                        const takerAssetData = await contractWrappers0x.devUtils
                             .encodeERC20AssetData(sUSD.contract.address)
                             .callAsync();
 
@@ -80,7 +75,7 @@ const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptio
                             o.orders.push(responseJ.bids.records);
                         }
 
-                        makerAssetData = await contractWrappers.devUtils
+                        makerAssetData = await contractWrappers0x.devUtils
                             .encodeERC20AssetData(o.shortAddress)
                             .callAsync();
 

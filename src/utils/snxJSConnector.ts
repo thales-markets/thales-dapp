@@ -5,6 +5,9 @@ import { getEthereumNetwork, SUPPORTED_WALLETS_MAP, NetworkId } from './network'
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import keyBy from 'lodash/keyBy';
+import { ContractWrappers } from '@0x/contract-wrappers';
+
+declare const window: any;
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -22,6 +25,8 @@ type SnxJSConnector = {
     setContractSettings: (contractSettings: ContractSettings) => void;
     binaryOptionsUtils: SynthetixJs['binaryOptionsUtils'];
     contractSettings: ContractSettings;
+    // TODO move this into separate logic
+    contractWrappers0x: ContractWrappers;
 };
 
 // @ts-ignore
@@ -51,6 +56,9 @@ const snxJSConnector: SnxJSConnector = {
             binaryOptionsMarketDataContract.abi,
             this.provider
         );
+        this.contractWrappers0x = new ContractWrappers(window.ethereum, {
+            chainId: contractSettings.networkId,
+        });
     },
 };
 

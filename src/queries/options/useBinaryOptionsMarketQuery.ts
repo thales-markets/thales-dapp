@@ -100,6 +100,8 @@ const useBinaryOptionsMarketQuery = (
                     refundFeeBN: fees.refundFee,
                 },
                 withdrawalsEnabled,
+                longAddress: options.long,
+                shortAddress: options.short,
             } as OptionsMarketInfo;
         },
         options
