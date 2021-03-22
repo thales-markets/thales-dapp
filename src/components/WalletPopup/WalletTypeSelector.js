@@ -22,7 +22,7 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
     const onWalletClick = async ({ wallet }) => {
         dispatch(resetWallet());
         const walletStatus = await connectToWallet({ wallet });
-        dispatch(updateWalletr({ ...walletStatus, availableWallets: [] }));
+        dispatch(updateWallet({ ...walletStatus, availableWallets: [] }));
         if (walletStatus && walletStatus.unlocked && walletStatus.walletAddress) {
             if (walletStatus.walletType === METAMASK) {
                 mountMetamaskAccountChangeEvent(walletStatus.networkId, (walletAddress) =>

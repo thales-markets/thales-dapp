@@ -243,6 +243,7 @@ export const CreateMarket: React.FC = () => {
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);
+                setGasLimit(null);
             }
         };
         fetchGasLimit();
@@ -433,7 +434,7 @@ export const CreateMarket: React.FC = () => {
                     </Container>
                 </Grid.Column>
                 <Grid.Column width={5} style={{ paddingRight: 40, marginTop: 50 }}>
-                    <Segment fluid>
+                    <Segment>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <Header style={{ textTransform: 'uppercase' }}>
                                 {t('options.create-market.summary.title')}
