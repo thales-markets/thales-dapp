@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import snxJSConnector from 'utils/snxJSConnector';
-import { bytesFormatter, bigNumberFormatter, parseBytes32String } from 'utils/formatters';
+import { bytesFormatter, bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 
 import { SYNTHS_MAP, CurrencyKey } from 'constants/currency';
 import { BigNumberish } from 'ethers/utils';

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { SYNTHS_MAP } from 'constants/currency';
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { ReactComponent as QuestionMark } from 'assets/images/question-mark.svg';
 import { CurrentPosition, OptionsTransaction } from 'types/options';
 import { Segment, Label, Input, Button, Header, Popup } from 'semantic-ui-react';

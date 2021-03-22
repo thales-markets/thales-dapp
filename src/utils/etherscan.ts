@@ -1,4 +1,4 @@
-import { SUPPORTED_NETWORKS, isMainNet, NetworkId } from '../utils/network';
+import { SUPPORTED_NETWORKS, isMainNet, NetworkId } from './network';
 
 const getEtherScanBaseURL = (networkId: NetworkId) => {
     const network = SUPPORTED_NETWORKS[networkId];

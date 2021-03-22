@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { AccountMarketInfo } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { bigNumberFormatter } from 'utils/formatters';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const useBinaryOptionsAccountMarketInfoQuery = (
     marketAddress: string,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CurrencyKey } from 'constants/currency';
-import { formatCurrencyPair } from 'utils/formatters';
+import { formatCurrencyPair } from 'utils/formatters/string';
 import CurrencyIcon from './CurrencyIcon';
 
 type CurrencyPairProps = {

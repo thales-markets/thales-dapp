@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters';
+import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { Side } from 'types/options';
 import { Header, Segment } from 'semantic-ui-react';
 import SideIcon from '../../../components/SideIcon';

@@ -8,7 +8,8 @@ import { SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { getCurrencyKeyBalance, getCurrencyKeyUSDBalanceBN } from 'utils/balances';
-import { formatCurrencyWithKey, getAddress } from 'utils/formatters';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { getAddress } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import TradeSide from './TradeSide';
 import { ethers } from 'ethers';
@@ -26,7 +27,7 @@ import {
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { OptionsTransaction, TradeCardPhaseProps } from 'types/options';
 import { normalizeGasLimit } from 'utils/network';
-import { GWEI_UNIT } from 'utils/network';
+import { GWEI_UNIT } from 'constants/network';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { Button, Grid, Header, Menu, Message } from 'semantic-ui-react';
 import { QueryClient } from 'react-query';

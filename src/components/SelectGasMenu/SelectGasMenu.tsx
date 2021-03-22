@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Label } from 'semantic-ui-react';
-import { formatCurrency } from 'utils/formatters';
+import { formatCurrency } from 'utils/formatters/number';
 import SelectGasMenuBody from './SelectGasMenuBody';
 
 type SelectGasMenuProps = {

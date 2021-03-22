@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { OrderbookInfo, OrderItem } from 'types/options';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { bigNumberFormatter } from 'utils/formatters';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { ONE_SECOND_MS } from 'constants/0x';
 import { get0xBaseURL, isV4 } from 'utils/0x';
 import { NetworkId } from 'utils/network';

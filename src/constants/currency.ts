@@ -269,18 +269,8 @@ export const currencyKeyToIconMap = {
     // [SYNTHS_MAP.sNIKKEI]: { SynthIcon: sNIKKEIIcon, AssetIcon: NIKKEIIcon },
 };
 
-export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
-export const isCryptoCurrency = (currencyKey: CurrencyKey) => !!CRYPTO_CURRENCY_MAP[currencyKey];
-export const isFiatCurrency = (currencyKey: CurrencyKey) => !!FIAT_CURRENCY_MAP[currencyKey];
-export const toMarketPair = (baseCurrencyKey: CurrencyKey, quoteCurrencyKey: CurrencyKey) =>
-    `${baseCurrencyKey}-${quoteCurrencyKey}`;
-
-// TODO: replace this with a more robust logic (like checking the asset field)
-export const toInverseSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^s/i, 'i');
-export const toStandardSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^i/i, 's');
-export const synthToAsset = (currencyKey: CurrencyKey) => currencyKey.replace(/^(i|s)/i, '');
-
 export const sUSD_EXCHANGE_RATE = 1;
+export const SYNTH_DECIMALS = 18;
 
 export const FIAT_SYNTHS = [
     SYNTHS_MAP.sEUR,

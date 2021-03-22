@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Progress } from 'semantic-ui-react';
-import { formatCurrency } from 'utils/formatters';
+import { formatCurrency } from 'utils/formatters/number';
 
 type Display = 'row' | 'col';
 

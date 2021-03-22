@@ -1,5 +1,5 @@
 import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
-import { getAddress } from 'utils/formatters';
+import { getAddress } from 'utils/formatters/ethers';
 import { defaultNetwork, NetworkId, normalizeGasLimit } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { DEFAULT_GAS_LIMIT, DEFAULT_GAS_SPEED } from 'constants/defaults';

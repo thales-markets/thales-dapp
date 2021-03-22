@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithSign } from 'utils/formatters';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { getIsAppReady } from 'redux/modules/app';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';

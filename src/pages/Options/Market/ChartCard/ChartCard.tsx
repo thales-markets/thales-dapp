@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { ReactComponent as OptionsLineIcon } from 'assets/images/options-line.svg';
 import { ReactComponent as DollarSignIcon } from 'assets/images/dollar-sign.svg';
-import { formatCurrencyWithSign } from 'utils/formatters';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { PeriodLabel, PERIOD_LABELS_MAP, PERIOD_LABELS } from 'constants/period';
 import Currency from 'components/Currency';
 import { Card, Button } from 'semantic-ui-react';

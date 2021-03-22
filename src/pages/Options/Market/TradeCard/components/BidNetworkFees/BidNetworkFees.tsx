@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Tooltip from '@material-ui/core/Tooltip';
-import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { ReactComponent as QuestionMark } from 'assets/images/question-mark.svg';
 import { useSelector } from 'react-redux';

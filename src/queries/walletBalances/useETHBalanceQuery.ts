@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { SYNTHS_MAP } from 'constants/currency';
-import { bigNumberFormatter, bytesFormatter } from 'utils/formatters';
+import { bigNumberFormatter, bytesFormatter } from 'utils/formatters/ethers';
 import { NetworkId } from 'utils/network';
 
 const useETHBalanceQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<any>) => {

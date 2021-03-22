@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card } from 'semantic-ui-react';
 import TimeRemaining from '../../components/TimeRemaining';
-import { formatCurrencyWithSign, formatShortDate } from 'utils/formatters';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDate } from 'utils/formatters/date';
 import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { navigateToOptionsMarket } from 'utils/routes';

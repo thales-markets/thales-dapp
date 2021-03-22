@@ -6,7 +6,7 @@ import isNumber from 'lodash/isNumber';
 import get from 'lodash/get';
 import { USD_SIGN } from 'constants/currency';
 import { ReactComponent as ExclamationIcon } from 'assets/images/exclamation.svg';
-import { formatCurrencyWithSign } from 'utils/formatters';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { PeriodLabel, PERIOD_IN_HOURS } from 'constants/period';
 import { Loader } from 'semantic-ui-react';
 import { OptionsMarketInfo } from 'types/options';

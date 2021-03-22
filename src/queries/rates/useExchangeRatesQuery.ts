@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { CurrencyKey } from 'constants/currency';
-import { bigNumberFormatter, parseBytes32String } from 'utils/formatters';
+import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 
 export type Rates = Record<CurrencyKey, number>;

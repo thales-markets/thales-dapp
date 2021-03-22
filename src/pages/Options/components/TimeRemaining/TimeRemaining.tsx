@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import intervalToDuration from 'date-fns/intervalToDuration';
 //import differenceInHours from 'date-fns/differenceInHours';
 import differenceInWeeks from 'date-fns/differenceInWeeks';
-import { formattedDuration } from 'utils/formatters';
+import { formattedDuration } from 'utils/formatters/date';
 import useInterval from 'hooks/useInterval';
 
 type TimeRemainingProps = {

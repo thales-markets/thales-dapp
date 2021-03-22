@@ -1,6 +1,6 @@
 import React from 'react';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { formatCurrencyWithSign } from 'utils/formatters';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 type CurrencyColProps = {
     sign?: string;

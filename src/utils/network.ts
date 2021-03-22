@@ -1,9 +1,8 @@
 import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
+import { GWEI_UNIT } from 'constants/network';
 import throttle from 'lodash/throttle';
 
 export type NetworkId = 1 | 3 | 4 | 42;
-
-export const GWEI_UNIT = 1000000000;
 
 export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
@@ -26,6 +25,7 @@ export const defaultNetwork: { name: string; networkId: NetworkId } = {
     networkId: 1,
 };
 
+// TODO - refactor this with new logic (web3 should be removed since it isn't supported by Metamask) - use @metamask/detect-provider
 export async function getEthereumNetwork() {
     if (!hasEthereumInjected()) {
         return defaultNetwork;

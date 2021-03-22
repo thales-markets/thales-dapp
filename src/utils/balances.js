@@ -1,4 +1,4 @@
-import { isSynth } from 'constants/currency';
+import { isSynth } from 'utils/currency';
 import get from 'lodash/get';
 
 const getSynthBalancePath = (currencyKey, field) => ['synths', 'balances', currencyKey, field];
