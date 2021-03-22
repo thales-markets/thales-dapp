@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 // import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Form, Input, Segment, Button, Message } from 'semantic-ui-react';
+import { Form, Input, Segment, Button, Message, Header } from 'semantic-ui-react';
 import { OrderSide } from 'types/options';
 import { get0xBaseURL, isV4 } from 'utils/0x';
 // import { getCurrencyKeyBalance } from 'utils/balances';
@@ -161,6 +161,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, side }) => {
 
     return (
         <Segment>
+            <Header as="h3">{side === 'buy' ? 'Buy' : 'Sell'}</Header>
             <Form>
                 <Form.Field>
                     <label>Quantity</label>
@@ -200,14 +201,18 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, side }) => {
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                 {hasAllowance ? (
                     <Button
-                        primary
+                        color={side === 'buy' ? 'green' : 'red'}
                         disabled={isSubmitting || !isWalletConnected /*||!sUSDBalance || !gasLimit*/}
                         onClick={handleSubmitOrder}
                     >
                         {!isSubmitting ? 'Submit' : 'Submitting in progress...'}
                     </Button>
                 ) : (
-                    <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
+                    <Button
+                        color={side === 'buy' ? 'green' : 'red'}
+                        disabled={isAllowing || !isWalletConnected}
+                        onClick={handleAllowance}
+                    >
                         {!isAllowing
                             ? t('common.enable-wallet-access.label')
                             : t('common.enable-wallet-access.progress-label')}
