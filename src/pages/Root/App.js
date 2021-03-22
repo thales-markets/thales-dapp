@@ -9,14 +9,13 @@ import { getEthereumNetwork, SUPPORTED_WALLETS_MAP } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
 import WalletPopup from 'components/WalletPopup';
-import { getIsWalletConnected, updateNetworkSettings, updateWalletReducer, getWalletInfo } from 'redux/modules/wallet';
+import { getIsWalletConnected, updateNetworkSettings, updateWallet, getWalletInfo } from 'redux/modules/wallet';
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { fetchAppStatusRequest, setAppReady } from 'redux/modules/app';
+import { setAppReady } from 'redux/modules/app';
 import CreateMarket from 'pages/Options/CreateMarket';
 import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
 
-const REFRESH_INTERVAL = 2 * 60 * 1000;
 const { METAMASK } = SUPPORTED_WALLETS_MAP;
 
 const queryClient = new QueryClient();
@@ -43,26 +42,16 @@ const App = () => {
                         signer,
                     });
                     mountMetamaskAccountChangeEvent(networkId, (walletAddress) =>
-                        dispatch(updateWalletReducer({ walletAddress }))
+                        dispatch(updateWallet({ walletAddress }))
                     );
                     mountMetamaskNetworkChange();
                 }
             }
 
             dispatch(setAppReady());
-            dispatch(fetchAppStatusRequest());
         };
 
         init();
-
-        // TODO: stop fetching data when system is suspended
-        const interval = setInterval(() => {
-            dispatch(fetchAppStatusRequest());
-        }, REFRESH_INTERVAL);
-
-        return () => {
-            clearInterval(interval);
-        };
     }, []);
 
     return (

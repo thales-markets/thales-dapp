@@ -51,11 +51,11 @@ export const walletDetailsSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        resetWalletReducer: () => {
+        resetWallet: () => {
             persistState(sliceName, initialState);
             return initialState;
         },
-        updateWalletReducer: (state, action: PayloadAction<Partial<WalletSliceState>>) => {
+        updateWallet: (state, action: PayloadAction<Partial<WalletSliceState>>) => {
             const { payload } = action;
             const newState = {
                 ...state,
@@ -111,8 +111,8 @@ export const getCustomGasPrice = (state: RootState) => getWalletState(state).cus
 
 export const {
     updateNetworkSettings,
-    resetWalletReducer,
-    updateWalletReducer,
+    resetWallet,
+    updateWallet,
     setGasSpeed,
     setCustomGasPrice,
     setGasLimit,

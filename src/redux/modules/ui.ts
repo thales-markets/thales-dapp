@@ -5,12 +5,10 @@ const sliceName = 'ui';
 
 type UISliceState = {
     walletPopupIsVisible: boolean;
-    hideSmallValueAssets: boolean;
 };
 
 const initialState: UISliceState = {
     walletPopupIsVisible: false,
-    hideSmallValueAssets: false,
 };
 
 export const uiSlice = createSlice({
@@ -23,9 +21,6 @@ export const uiSlice = createSlice({
         showWalletPopup: (state) => {
             state.walletPopupIsVisible = true;
         },
-        toggleHideSmallValueAssets: (state) => {
-            state.hideSmallValueAssets = !state.hideSmallValueAssets;
-        },
     },
 });
 
@@ -33,6 +28,5 @@ export const { toggleWalletPopup, showWalletPopup } = uiSlice.actions;
 
 export const getUIState = (state: RootState) => state[sliceName];
 export const walletPopupIsVisible = (state: RootState) => getUIState(state).walletPopupIsVisible;
-export const getHideSmallValueAssets = (state: RootState) => getUIState(state).hideSmallValueAssets;
 
 export default uiSlice.reducer;

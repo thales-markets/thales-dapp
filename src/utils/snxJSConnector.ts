@@ -83,7 +83,7 @@ const connectToMetamask = async (networkId: NetworkId, networkName: string) => {
                 unlockError: 'Please connect to Metamask',
             };
         }
-        // We updateWalletReducer with all the infos
+        // We updateWallet with all the infos
     } catch (e) {
         console.log(e);
         return {

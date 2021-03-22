@@ -5,7 +5,7 @@ import { connectToWallet } from 'utils/snxJSConnector';
 import { hasEthereumInjected, SUPPORTED_WALLETS, SUPPORTED_WALLETS_MAP } from 'utils/network';
 import { ReactComponent as MetamaskWallet } from 'assets/images/wallets/metamask.svg';
 import { Header, Button } from 'semantic-ui-react';
-import { resetWalletReducer, updateWalletReducer } from 'redux/modules/wallet';
+import { resetWallet, updateWallet } from 'redux/modules/wallet';
 import { toggleWalletPopup } from 'redux/modules/ui';
 import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
 
@@ -20,13 +20,13 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
     const dispatch = useDispatch();
 
     const onWalletClick = async ({ wallet }) => {
-        dispatch(resetWalletReducer());
+        dispatch(resetWallet());
         const walletStatus = await connectToWallet({ wallet });
-        dispatch(updateWalletReducer({ ...walletStatus, availableWallets: [] }));
+        dispatch(updateWalletr({ ...walletStatus, availableWallets: [] }));
         if (walletStatus && walletStatus.unlocked && walletStatus.walletAddress) {
             if (walletStatus.walletType === METAMASK) {
                 mountMetamaskAccountChangeEvent(walletStatus.networkId, (walletAddress) =>
-                    dispatch(updateWalletReducer({ walletAddress }))
+                    dispatch(updateWallet({ walletAddress }))
                 );
                 mountMetamaskNetworkChange();
             }
