@@ -71,13 +71,17 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order }
                 contractWrappers0x.exchange.abi,
                 snxJSConnector.signer
             );
-            // const overrides = {
-            //     // To convert Ether to Wei:
-            //     value: ethers.utils.parseEther('0.1'), // ether in this case MUST be a string
-            // };
+            const overrides = {
+                // To convert Ether to Wei:
+                value: ethers.utils.parseEther('0.1'), // ether in this case MUST be a string
+            };
 
-            const amount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
-            await contract.fillOrder(targetOrder, amount, targetOrder.signature);
+            //const amount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
+            try {
+                await contract.fillOrder(targetOrder, Number(amount), targetOrder.signature, overrides);
+            } catch (e) {
+                console.log(e);
+            }
         }
         setIsFilling(false);
     };
