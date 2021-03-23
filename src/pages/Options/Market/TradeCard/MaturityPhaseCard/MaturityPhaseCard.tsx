@@ -17,35 +17,47 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { RootState } from 'redux/rootReducer';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import ResultCard from '../components/ResultCard';
-import queryConnector from 'utils/queryConnector';
+import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
+import { BINARY_OPTIONS_EVENTS } from 'constants/events';
 
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
 const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
+    const BOMContract = useBOMContractContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-
-    const { t } = useTranslation();
-    const BOMContract = useBOMContractContext();
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const { balances, claimable } = accountMarketInfo;
     const { result } = optionsMarket;
-
     const longAmount = balances.long + claimable.long;
     const shortAmount = balances.short + claimable.short;
     const nothingToExercise = !longAmount && !shortAmount;
     const isLongResult = result === 'long';
+    const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise || !gasLimit;
 
-    const buttonDisabled = isExercising || !isWalletConnected || nothingToExercise || !gasLimit;
+    useEffect(() => {
+        if (walletAddress) {
+            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_EXERCISED, (account: string) => {
+                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                if (walletAddress === account) {
+                    setIsExercising(false);
+                }
+            });
+        }
+        return () => {
+            if (walletAddress) {
+                BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_EXERCISED);
+            }
+        };
+    }, [walletAddress]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            if (!isWalletConnected) return;
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimate.exerciseOptions();
@@ -55,8 +67,9 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                 setGasLimit(null);
             }
         };
+        if (!isWalletConnected || nothingToExercise) return;
         fetchGasLimit();
-    }, [isWalletConnected]);
+    }, [isWalletConnected, nothingToExercise]);
 
     const handleExercise = async () => {
         try {
@@ -91,7 +104,6 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-        } finally {
             setIsExercising(false);
         }
     };
@@ -125,7 +137,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
             </div>
             <NetworkFees gasLimit={gasLimit} />
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Button primary disabled={buttonDisabled} onClick={handleExercise}>
+                <Button primary disabled={isButtonDisabled} onClick={handleExercise}>
                     {nothingToExercise
                         ? t('options.market.trade-card.maturity.confirm-button.success-label')
                         : !isExercising

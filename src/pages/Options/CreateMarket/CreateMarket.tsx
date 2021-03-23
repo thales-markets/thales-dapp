@@ -77,9 +77,28 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 );
 
 export const CreateMarket: React.FC = () => {
+    const { t } = useTranslation();
+    const { synthsMap: synths } = snxJSConnector;
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
+    const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
+    const [strikePrice, setStrikePrice] = useState<number | string>('');
+    const [biddingEndDate, setEndOfBidding] = useState<Date | null | undefined>(null);
+    const [maturityDate, setMaturityDate] = useState<Date | null | undefined>(null);
+    const [initialLongShorts, setInitialLongShorts] = useState<{ long: number; short: number }>({
+        long: 50,
+        short: 50,
+    });
+    const [initialFundingAmount, setInitialFundingAmount] = useState<number | string>('');
+    const [hasAllowance, setAllowance] = useState<boolean>(false);
+    const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
+    const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
+    const [withdrawalsEnabled, setWithdrawalsEnabled] = useState<boolean>(true);
+    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPrice = useMemo(
         () =>
@@ -90,24 +109,6 @@ export const CreateMarket: React.FC = () => {
                 : null,
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
-    const { synthsMap: synths } = snxJSConnector;
-    const { t } = useTranslation();
-    const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
-    const [strikePrice, setStrikePrice] = useState<number | string>('');
-    const [biddingEndDate, setEndOfBidding] = useState<Date | null | undefined>(null);
-    const [maturityDate, setMaturityDate] = useState<Date | null | undefined>(null);
-    const [initialLongShorts, setInitialLongShorts] = useState<{ long: number; short: number }>({
-        long: 50,
-        short: 50,
-    });
-    const [initialFundingAmount, setInitialFundingAmount] = useState<number | string>('');
-    const [isManagerApproved, setIsManagerApproved] = useState<boolean>(false);
-    const [isManagerApprovalPending, setIsManagerApprovalPending] = useState<boolean>(false);
-    const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
-    const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
-    const [withdrawalsEnabled, setWithdrawalsEnabled] = useState<boolean>(true);
-    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const assetsOptions = useMemo(
         () =>
@@ -147,7 +148,7 @@ export const CreateMarket: React.FC = () => {
     );
 
     const isButtonDisabled =
-        currencyKey == null ||
+        currencyKey === null ||
         strikePrice === '' ||
         biddingEndDate === null ||
         maturityDate === null ||
@@ -180,7 +181,7 @@ export const CreateMarket: React.FC = () => {
                     sUSD.allowance(walletAddress, BinaryOptionMarketManager.contract.address),
                     BinaryOptionMarketManager.fees(),
                 ]);
-                setIsManagerApproved(!!bigNumberFormatter(allowance));
+                setAllowance(!!bigNumberFormatter(allowance));
                 setMarketFees({
                     creator: fees.creatorFee / 1e18,
                     pool: fees.poolFee / 1e18,
@@ -194,8 +195,8 @@ export const CreateMarket: React.FC = () => {
         const setEventListeners = () => {
             sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
                 if (owner === walletAddress && spender === BinaryOptionMarketManager.contract.address) {
-                    setIsManagerApproved(true);
-                    setIsManagerApprovalPending(false);
+                    setAllowance(true);
+                    setIsAllowing(false);
                 }
             });
         };
@@ -229,7 +230,6 @@ export const CreateMarket: React.FC = () => {
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            if (isButtonDisabled) return;
             const {
                 snxJS: { BinaryOptionMarketManager },
             } = snxJSConnector as any;
@@ -248,6 +248,7 @@ export const CreateMarket: React.FC = () => {
                 setGasLimit(null);
             }
         };
+        if (isButtonDisabled) return;
         fetchGasLimit();
     }, [
         isButtonDisabled,
@@ -267,7 +268,7 @@ export const CreateMarket: React.FC = () => {
                 snxJS: { sUSD, BinaryOptionMarketManager },
             } = snxJSConnector as any;
             try {
-                setIsManagerApprovalPending(true);
+                setIsAllowing(true);
                 const maxInt = `0x${'f'.repeat(64)}`;
                 const gasEstimate = await sUSD.contract.estimate.approve(
                     BinaryOptionMarketManager.contract.address,
@@ -279,7 +280,7 @@ export const CreateMarket: React.FC = () => {
                 });
             } catch (e) {
                 console.log(e);
-                setIsManagerApprovalPending(false);
+                setIsAllowing(false);
             }
         }
     };
@@ -545,7 +546,7 @@ export const CreateMarket: React.FC = () => {
                         </div>
                         <NetworkFees gasLimit={gasLimit} />
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                            {isManagerApproved ? (
+                            {hasAllowance ? (
                                 <Button
                                     primary
                                     disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
@@ -556,8 +557,8 @@ export const CreateMarket: React.FC = () => {
                                         : t('options.create-market.summary.create-market-button-label')}
                                 </Button>
                             ) : (
-                                <Button primary disabled={isManagerApprovalPending} onClick={handleApproveManager}>
-                                    {isManagerApprovalPending
+                                <Button primary disabled={isAllowing} onClick={handleApproveManager}>
+                                    {isAllowing
                                         ? t('options.create-market.summary.waiting-for-approval-button-label')
                                         : t('options.create-market.summary.approve-manager-button-label')}
                                 </Button>

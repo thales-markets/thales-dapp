@@ -15,31 +15,43 @@ import { Button, Header, Message, Segment } from 'semantic-ui-react';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import ResultCard from '../components/ResultCard';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import queryConnector from 'utils/queryConnector';
+import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
+import { BINARY_OPTIONS_EVENTS } from 'constants/events';
 
 type TradingPhaseCardProps = TradeCardPhaseProps;
 
 const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
+    const BOMContract = useBOMContractContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-
-    const { t } = useTranslation();
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-
-    const BOMContract = useBOMContractContext();
-
     const [isClaiming, setIsClaiming] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const { bids, balances, claimable } = accountMarketInfo;
-
     const nothingToClaim = !bids.short && !bids.long;
-    const buttonDisabled = isClaiming || !isWalletConnected || nothingToClaim || !gasLimit;
+    const isButtonDisabled = isClaiming || !isWalletConnected || nothingToClaim || !gasLimit;
+
+    useEffect(() => {
+        if (walletAddress) {
+            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_CLAIMED, (account: string) => {
+                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                if (walletAddress === account) {
+                    setIsClaiming(false);
+                }
+            });
+        }
+        return () => {
+            if (walletAddress) {
+                BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_CLAIMED);
+            }
+        };
+    }, [walletAddress]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            if (!isWalletConnected) return;
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimate.claimOptions();
@@ -49,8 +61,9 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
                 setGasLimit(null);
             }
         };
+        if (!isWalletConnected || nothingToClaim) return;
         fetchGasLimit();
-    }, [isWalletConnected]);
+    }, [isWalletConnected, nothingToClaim]);
 
     const handleClaim = async () => {
         try {
@@ -105,7 +118,6 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-        } finally {
             setIsClaiming(false);
         }
     };
@@ -132,7 +144,7 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
             </div>
             <NetworkFees gasLimit={gasLimit} />
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Button primary disabled={buttonDisabled} onClick={handleClaim}>
+                <Button primary disabled={isButtonDisabled} onClick={handleClaim}>
                     {nothingToClaim
                         ? t('options.market.trade-card.trading.confirm-button.success-label')
                         : !isClaiming

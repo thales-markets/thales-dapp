@@ -6,7 +6,7 @@ import { ReactComponent as BlockedIcon } from 'assets/images/blocked.svg';
 import QUERY_KEYS from 'constants/queryKeys';
 import { SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { APPROVAL_EVENTS } from 'constants/events';
+import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { getCurrencyKeyBalance, getCurrencyKeyUSDBalanceBN } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
@@ -36,7 +36,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import queryConnector from 'utils/queryConnector';
+import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -47,36 +47,18 @@ function getPriceDifference(currentPrice: number, newPrice: number) {
 type BiddingPhaseCardProps = TradeCardPhaseProps;
 
 const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
+    const BOMContract = useBOMContractContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
-
-    const walletBalancesMap =
-        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
-            ? { synths: synthsWalletBalancesQuery.data }
-            : null;
-
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
-    const { longPrice, shortPrice, fees, isResolved, BN } = optionsMarket;
-    const { t } = useTranslation();
-    const BOMContract = useBOMContractContext();
+    const [side, setSide] = useState<OptionsTransaction['side']>('long');
+    const [pricesAfterBidOrRefundTimer, setPricesAfterBidOrRefundTimer] = useState<number | null>(null);
+    const [bidOrRefundForPriceTimer, setBidOrRefundForPriceTimer] = useState<number | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
@@ -92,16 +74,30 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         LOCAL_STORAGE_KEYS.BO_WITHDRAWALS_DISABLED_TOOLTIP_DISMISSED,
         []
     );
-
     const withdrawalsDisabledTooltipDismissed = withdrawalsDisabledTooltipDismissedMarkets.includes(
         optionsMarket.address
     );
 
-    const [side, setSide] = useState<OptionsTransaction['side']>('long');
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
 
-    const [pricesAfterBidOrRefundTimer, setPricesAfterBidOrRefundTimer] = useState<number | null>(null);
-    const [bidOrRefundForPriceTimer, setBidOrRefundForPriceTimer] = useState<number | null>(null);
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPrice = useMemo(
+        () =>
+            customGasPrice !== null
+                ? customGasPrice
+                : ethGasPriceQuery.data != null
+                ? ethGasPriceQuery.data[gasSpeed]
+                : null,
+        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
+    );
 
+    const { longPrice, shortPrice, fees, isResolved, BN } = optionsMarket;
     const { bids, claimable } = accountMarketInfo;
     const longPosition = {
         bid: bids.long,
@@ -115,6 +111,10 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     const isBid = type === 'bid';
     const isLong = side === 'long';
     const isShort = side === 'short';
+    const transKey = isBid ? 'options.market.trade-card.bidding.bid' : 'options.market.trade-card.bidding.refund';
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+    const sUSDBalanceBN = getCurrencyKeyUSDBalanceBN(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+    const isButtonDisabled = isBidding || !isWalletConnected || !sUSDBalance || !gasLimit;
 
     useEffect(() => {
         return () => {
@@ -127,10 +127,24 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         };
     }, []);
 
-    const transKey = isBid ? 'options.market.trade-card.bidding.bid' : 'options.market.trade-card.bidding.refund';
-
-    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
-    const sUSDBalanceBN = getCurrencyKeyUSDBalanceBN(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+    useEffect(() => {
+        BOMContract.on(BINARY_OPTIONS_EVENTS.BID, (_, account: string) => {
+            refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+            if (walletAddress === account) {
+                setIsBidding(false);
+            }
+        });
+        BOMContract.on(BINARY_OPTIONS_EVENTS.REFUND, (_, account: string) => {
+            refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+            if (walletAddress === account) {
+                setIsBidding(false);
+            }
+        });
+        return () => {
+            BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.BID);
+            BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.REFUND);
+        };
+    }, [walletAddress]);
 
     useEffect(() => {
         const fetchGasLimit = async (isShort: boolean, amount: string) => {
@@ -245,7 +259,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             } catch (e) {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            } finally {
                 setIsBidding(false);
             }
         }
@@ -485,11 +498,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                         arrow={true}
                         placement="bottom"
                     >
-                        <Button
-                            primary
-                            disabled={isBidding || !isWalletConnected || !sUSDBalance || !gasLimit}
-                            onClick={handleBidOrRefund}
-                        >
+                        <Button primary disabled={isButtonDisabled} onClick={handleBidOrRefund}>
                             {!isBidding
                                 ? t(`${transKey}.confirm-button.label`)
                                 : t(`${transKey}.confirm-button.progress-label`)}
