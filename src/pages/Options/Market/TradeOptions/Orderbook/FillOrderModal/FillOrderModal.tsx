@@ -39,7 +39,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order }
 
         const targetOrder = order.rawSignedOrder;
 
-        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(1500000);
+        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(70000);
         const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
             return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
         };
@@ -76,9 +76,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order }
                 value: ethers.utils.parseEther('0.1'), // ether in this case MUST be a string
             };
 
-            //const amount = Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18);
             try {
-                await contract.fillOrder(targetOrder, Number(amount), targetOrder.signature, overrides);
+                const newAmount = new BigNumber(10).pow(18).multipliedBy(amount);
+                await contract.fillOrder(targetOrder, newAmount.toFixed(), targetOrder.signature, overrides);
             } catch (e) {
                 console.log(e);
             }

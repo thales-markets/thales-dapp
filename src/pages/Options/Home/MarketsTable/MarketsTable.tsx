@@ -271,7 +271,7 @@ export async function buyOrder(ev: any, orders: any): Promise<void> {
 
     const targetOrder = orders[0][0].order;
 
-    const PROTOCOL_FEE_MULTIPLIER = new BigNumber(1500000);
+    const PROTOCOL_FEE_MULTIPLIER = new BigNumber(70000);
     const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
         return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
     };
