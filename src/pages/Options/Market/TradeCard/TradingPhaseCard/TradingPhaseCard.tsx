@@ -14,10 +14,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Header, Message, Segment } from 'semantic-ui-react';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import ResultCard from '../components/ResultCard';
-import { QueryClient } from 'react-query';
 import NetworkFees from 'pages/Options/components/NetworkFees';
+import queryConnector from 'utils/queryConnector';
 
-const queryClient = new QueryClient();
 type TradingPhaseCardProps = TradeCardPhaseProps;
 
 const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
@@ -150,7 +149,9 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
                     <TimeRemaining
                         end={optionsMarket.timeRemaining}
                         onEnded={() =>
-                            queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(optionsMarket.address))
+                            queryConnector.queryClient.invalidateQueries(
+                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                            )
                         }
                     />
                 </span>

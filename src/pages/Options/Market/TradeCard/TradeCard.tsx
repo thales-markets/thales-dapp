@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { QueryClient } from 'react-query';
 import BiddingPhaseCard from './BiddingPhaseCard';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
 import QUERY_KEYS from 'constants/queryKeys';
@@ -13,8 +12,7 @@ import TradingPhaseCard from './TradingPhaseCard';
 import MaturityPhaseCard from './MaturityPhaseCard';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getIsAppReady } from 'redux/modules/app';
-
-const queryClient = new QueryClient();
+import queryConnector from 'utils/queryConnector';
 
 const TradeCard: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -52,10 +50,10 @@ const TradeCard: React.FC = () => {
 
     useEffect(() => {
         const refetchQueries = () => {
-            queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(BOMContract.address));
+            queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(BOMContract.address));
 
             if (walletAddress) {
-                queryClient.invalidateQueries(
+                queryConnector.queryClient.invalidateQueries(
                     QUERY_KEYS.BinaryOptions.AccountMarketInfo(optionsMarket.address, walletAddress as string)
                 );
             }

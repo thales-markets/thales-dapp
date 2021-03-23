@@ -24,7 +24,7 @@ import NetworkFees from '../components/NetworkFees';
 import NewToBinaryOptions from '../components/NewToBinaryOptions';
 import SideIcon from '../Market/components/SideIcon';
 import { Link } from 'react-router-dom';
-import { Button, Container, Form, Grid, Header, Input, Segment, Divider } from 'semantic-ui-react';
+import { Button, Container, Form, Grid, Header, Input, Segment, Divider, Message } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -107,6 +107,7 @@ export const CreateMarket: React.FC = () => {
     const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [withdrawalsEnabled, setWithdrawalsEnabled] = useState<boolean>(true);
+    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const assetsOptions = useMemo(
         () =>
@@ -194,6 +195,7 @@ export const CreateMarket: React.FC = () => {
             sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
                 if (owner === walletAddress && spender === BinaryOptionMarketManager.contract.address) {
                     setIsManagerApproved(true);
+                    setIsManagerApprovalPending(false);
                 }
             });
         };
@@ -288,14 +290,16 @@ export const CreateMarket: React.FC = () => {
                 snxJS: { BinaryOptionMarketManager },
             } = snxJSConnector as any;
             try {
+                setTxErrorMessage(null);
+                setIsCreatingMarket(true);
                 const { oracleKey, price, times, bids } = formatCreateMarketArguments();
                 await BinaryOptionMarketManager.createMarket(oracleKey, price, withdrawalsEnabled, times, bids, {
                     gasPrice: gasPrice * GWEI_UNIT,
                     gasLimit,
                 });
-                setIsCreatingMarket(true);
             } catch (e) {
                 console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsCreatingMarket(false);
             }
         }
@@ -542,17 +546,26 @@ export const CreateMarket: React.FC = () => {
                         <NetworkFees gasLimit={gasLimit} />
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
                             {isManagerApproved ? (
-                                <Button primary disabled={isButtonDisabled || !gasLimit} onClick={handleMarketCreation}>
+                                <Button
+                                    primary
+                                    disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
+                                    onClick={handleMarketCreation}
+                                >
                                     {isCreatingMarket
                                         ? t('options.create-market.summary.creating-market-button-label')
                                         : t('options.create-market.summary.create-market-button-label')}
                                 </Button>
                             ) : (
-                                <Button primary onClick={handleApproveManager}>
+                                <Button primary disabled={isManagerApprovalPending} onClick={handleApproveManager}>
                                     {isManagerApprovalPending
                                         ? t('options.create-market.summary.waiting-for-approval-button-label')
                                         : t('options.create-market.summary.approve-manager-button-label')}
                                 </Button>
+                            )}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                            {txErrorMessage && (
+                                <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
                             )}
                         </div>
                     </Segment>

@@ -9,7 +9,7 @@ import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { getCurrencyKeyBalance, getCurrencyKeyUSDBalanceBN } from 'utils/balances';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { getAddress } from 'utils/formatters/ethers';
+import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import TradeSide from './TradeSide';
 import { ethers } from 'ethers';
@@ -30,15 +30,14 @@ import { normalizeGasLimit } from 'utils/network';
 import { GWEI_UNIT } from 'constants/network';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { Button, Grid, Header, Menu, Message } from 'semantic-ui-react';
-import { QueryClient } from 'react-query';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import queryConnector from 'utils/queryConnector';
 
-const queryClient = new QueryClient();
 const TIMEOUT_DELAY = 2500;
 
 function getPriceDifference(currentPrice: number, newPrice: number) {
@@ -163,7 +162,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
         const getAllowance = async () => {
             const allowance = await sUSD.allowance(walletAddress, BOMContract.address);
-            setAllowance(!!Number(allowance));
+            setAllowance(!!bigNumberFormatter(allowance));
         };
 
         const registerAllowanceListener = () => {
@@ -205,13 +204,13 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     const handleBidOrRefund = async () => {
         if (gasPrice !== null) {
-            setTxErrorMessage(null);
             const {
                 utils: { parseEther },
             } = snxJSConnector as any;
             const amount = isShort ? shortSideAmount : longSideAmount;
             if (!amount) return;
             try {
+                setTxErrorMessage(null);
                 setIsBidding(true);
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const bidOrRefundFunction = isBid ? BOMContractWithSigner.bid : BOMContractWithSigner.refund;
@@ -234,16 +233,15 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                         },
                     })
                 );
-                tx.wait().then((txResult) => {
-                    if (txResult && txResult.transactionHash) {
-                        dispatch(
-                            updateOptionsPendingTransactionStatus({
-                                hash: txResult.transactionHash,
-                                status: 'confirmed',
-                            })
-                        );
-                    }
-                });
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    dispatch(
+                        updateOptionsPendingTransactionStatus({
+                            hash: txResult.transactionHash,
+                            status: 'confirmed',
+                        })
+                    );
+                }
             } catch (e) {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -514,7 +512,9 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                     <TimeRemaining
                         end={optionsMarket.timeRemaining}
                         onEnded={() =>
-                            queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(optionsMarket.address))
+                            queryConnector.queryClient.invalidateQueries(
+                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                            )
                         }
                     />
                 </span>

@@ -10,7 +10,6 @@ import { USD_SIGN, SYNTHS_MAP } from 'constants/currency';
 import { ethers } from 'ethers';
 import { Button, Header, Message, Segment } from 'semantic-ui-react';
 import { TradeCardPhaseProps } from 'types/options';
-import { QueryClient } from 'react-query';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
@@ -18,8 +17,8 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { RootState } from 'redux/rootReducer';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import ResultCard from '../components/ResultCard';
+import queryConnector from 'utils/queryConnector';
 
-const queryClient = new QueryClient();
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
 const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, accountMarketInfo }) => {
@@ -144,7 +143,9 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                     <TimeRemaining
                         end={optionsMarket.timeRemaining}
                         onEnded={() =>
-                            queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Market(optionsMarket.address))
+                            queryConnector.queryClient.invalidateQueries(
+                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                            )
                         }
                     />
                 </span>

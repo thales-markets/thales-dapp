@@ -4,7 +4,7 @@ import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import Home from '../Home';
 import Options from '../Options';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import { getEthereumNetwork, SUPPORTED_WALLETS_MAP } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,15 +15,15 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { setAppReady } from 'redux/modules/app';
 import CreateMarket from 'pages/Options/CreateMarket';
 import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
+import queryConnector from 'utils/queryConnector';
 
 const { METAMASK } = SUPPORTED_WALLETS_MAP;
-
-const queryClient = new QueryClient();
 
 const App = () => {
     const dispatch = useDispatch();
     const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
     const walletInfo = useSelector((state) => getWalletInfo(state));
+    queryConnector.setQueryClient();
 
     useEffect(() => {
         const init = async () => {
@@ -55,7 +55,7 @@ const App = () => {
     }, []);
 
     return (
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryConnector.queryClient}>
             <Router>
                 <WalletPopup />
                 <Switch>
