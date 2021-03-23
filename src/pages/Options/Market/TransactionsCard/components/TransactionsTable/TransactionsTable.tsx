@@ -8,7 +8,7 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import SideIcon from '../../../components/SideIcon';
+import OptionSideIcon from '../../../components/OptionSideIcon';
 
 type TransactionsTableProps = {
     optionsTransactions: OptionsTransactions;
@@ -48,7 +48,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                             if (type === 'exercise') return <span>{EMPTY_VALUE}</span>;
                             return (
                                 <span>
-                                    <SideIcon side={side} />
+                                    <OptionSideIcon side={side} />
                                     <span>{side}</span>
                                 </span>
                             );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Header } from 'semantic-ui-react';
-import { Side } from 'types/options';
+import { OptionSide } from 'types/options';
 import OptionResult from '../OptionResult';
 
 type ResultCardProps = {
@@ -11,7 +11,7 @@ type ResultCardProps = {
     shortAmount: number;
     longPrice?: number;
     shortPrice?: number;
-    result?: Side;
+    result?: OptionSide;
     exercised?: boolean;
     claimableLongAmount?: number;
     claimableShortAmount?: number;

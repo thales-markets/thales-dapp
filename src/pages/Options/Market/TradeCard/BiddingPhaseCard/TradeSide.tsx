@@ -7,7 +7,7 @@ import { ReactComponent as QuestionMark } from 'assets/images/question-mark.svg'
 import { CurrentPosition, OptionsTransaction } from 'types/options';
 import { Segment, Label, Input, Button, Header, Popup } from 'semantic-ui-react';
 import { SLIPPAGE_THRESHOLD } from 'constants/options';
-import SideIcon from '../../components/SideIcon';
+import OptionSideIcon from '../../components/OptionSideIcon';
 
 type TradeSideProps = {
     isActive: boolean;
@@ -47,7 +47,7 @@ const TradeSide: React.FC<TradeSideProps> = ({
         <Segment secondary={isActive} onClick={onClick}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
                 <Label>
-                    {t(`options.common.${side}`)} <SideIcon side={side} />
+                    {t(`options.common.${side}`)} <OptionSideIcon side={side} />
                 </Label>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>

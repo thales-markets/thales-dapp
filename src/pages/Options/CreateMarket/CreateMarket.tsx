@@ -17,23 +17,23 @@ import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { formatPercentage } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
 import { bytesFormatter, parseBytes32String, bigNumberFormatter } from 'utils/formatters/ethers';
-import { normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import NewToBinaryOptions from '../components/NewToBinaryOptions';
-import SideIcon from '../Market/components/SideIcon';
+import OptionSideIcon from '../Market/components/OptionSideIcon';
 import { Link } from 'react-router-dom';
 import { Button, Container, Form, Grid, Header, Input, Segment, Divider, Message } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { GWEI_UNIT } from 'constants/network';
 import Currency from 'components/Currency';
 import Select from 'components/Select';
 import MarketSentiment from '../components/MarketSentiment';
 import { withStyles } from '@material-ui/core';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import { MaxUint256 } from 'ethers/constants';
 
 const StyledSlider = withStyles({
     root: {
@@ -262,21 +262,20 @@ export const CreateMarket: React.FC = () => {
 
     const strikePricePlaceholderVal = `${USD_SIGN}10000.00 ${FIAT_CURRENCY_MAP.USD}`;
 
-    const handleApproveManager = async () => {
+    const handleAllowance = async () => {
         if (gasPrice !== null) {
             const {
                 snxJS: { sUSD, BinaryOptionMarketManager },
             } = snxJSConnector as any;
             try {
                 setIsAllowing(true);
-                const maxInt = `0x${'f'.repeat(64)}`;
                 const gasEstimate = await sUSD.contract.estimate.approve(
                     BinaryOptionMarketManager.contract.address,
-                    maxInt
+                    MaxUint256
                 );
-                await sUSD.approve(BinaryOptionMarketManager.contract.address, maxInt, {
+                await sUSD.approve(BinaryOptionMarketManager.contract.address, MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPrice * GWEI_UNIT,
+                    gasPrice: gasPriceInWei(gasPrice),
                 });
             } catch (e) {
                 console.log(e);
@@ -295,7 +294,7 @@ export const CreateMarket: React.FC = () => {
                 setIsCreatingMarket(true);
                 const { oracleKey, price, times, bids } = formatCreateMarketArguments();
                 await BinaryOptionMarketManager.createMarket(oracleKey, price, withdrawalsEnabled, times, bids, {
-                    gasPrice: gasPrice * GWEI_UNIT,
+                    gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
                 });
             } catch (e) {
@@ -424,12 +423,12 @@ export const CreateMarket: React.FC = () => {
                                         />
                                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                             <div>
-                                                <SideIcon side="long" />{' '}
+                                                <OptionSideIcon side="long" />{' '}
                                                 {t('common.val-in-cents', { val: initialLongShorts.long })}
                                             </div>
                                             <div>
                                                 {t('common.val-in-cents', { val: initialLongShorts.short })}{' '}
-                                                <SideIcon side="short" />
+                                                <OptionSideIcon side="short" />
                                             </div>
                                         </div>
                                     </div>
@@ -557,7 +556,7 @@ export const CreateMarket: React.FC = () => {
                                         : t('options.create-market.summary.create-market-button-label')}
                                 </Button>
                             ) : (
-                                <Button primary disabled={isAllowing} onClick={handleApproveManager}>
+                                <Button primary disabled={isAllowing} onClick={handleAllowance}>
                                     {isAllowing
                                         ? t('options.create-market.summary.waiting-for-approval-button-label')
                                         : t('options.create-market.summary.approve-manager-button-label')}

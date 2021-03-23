@@ -26,8 +26,7 @@ import {
 } from 'redux/modules/wallet';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { OptionsTransaction, TradeCardPhaseProps } from 'types/options';
-import { normalizeGasLimit } from 'utils/network';
-import { GWEI_UNIT } from 'constants/network';
+import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { Button, Grid, Header, Menu, Message } from 'semantic-ui-react';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
@@ -37,6 +36,7 @@ import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
+import { MaxUint256 } from 'ethers/constants';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -203,11 +203,10 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             } = snxJSConnector as any;
             try {
                 setIsAllowing(true);
-                const maxInt = `0x${'f'.repeat(64)}`;
-                const gasEstimate = await sUSD.contract.estimate.approve(BOMContract.address, maxInt);
-                await sUSD.approve(BOMContract.address, maxInt, {
+                const gasEstimate = await sUSD.contract.estimate.approve(BOMContract.address, MaxUint256);
+                await sUSD.approve(BOMContract.address, MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPrice * GWEI_UNIT,
+                    gasPrice: gasPriceInWei(gasPrice),
                 });
             } catch (e) {
                 console.log(e);
@@ -231,7 +230,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                 const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
                 const tx = (await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount, {
                     gasLimit,
-                    gasPrice: gasPrice * GWEI_UNIT,
+                    gasPrice: gasPriceInWei(gasPrice),
                 })) as ethers.ContractTransaction;
 
                 dispatch(

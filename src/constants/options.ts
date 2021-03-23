@@ -1,4 +1,4 @@
-import { Phase, Side } from '../types/options';
+import { Phase, OptionSide } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
     bidding: 0,
@@ -7,7 +7,7 @@ export const PHASE: Record<Phase, number> = {
     expiry: 3,
 };
 
-export const SIDE: Record<Side | number, number | Side> = {
+export const SIDE: Record<OptionSide | number, number | OptionSide> = {
     long: 0,
     short: 1,
     0: 'long',

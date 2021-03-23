@@ -1,15 +1,17 @@
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React, { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Header, Table } from 'semantic-ui-react';
 import { Orders, OrderItem, OrderSide } from 'types/options';
 import FillOrderModal from '../FillOrderModal';
 
 type OrderbookSideProps = {
     orders: Orders;
-    side: OrderSide;
+    orderSide: OrderSide;
 };
 
-const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, side }) => {
+const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, orderSide }) => {
+    const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
     const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
     const openFillOrderModal = useCallback((order: OrderItem) => {
@@ -19,17 +21,25 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, side }) => {
 
     return (
         <div>
-            <Header as="h3">{side === 'buy' ? 'Buy Orders' : 'Sell Orders'}</Header>
-            <Table compact>
+            <Header as="h3">{t(`options.market.trade-options.orderbook.${orderSide}.title`)}</Header>
+            <Table compact selectable>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Price (sUSD)</Table.HeaderCell>
-                        <Table.HeaderCell>Amount</Table.HeaderCell>
-                        <Table.HeaderCell>Total (sUSD)</Table.HeaderCell>
-                        <Table.HeaderCell>Time remaining</Table.HeaderCell>
+                        <Table.HeaderCell style={{ textTransform: 'none' }}>
+                            {t('options.market.trade-options.orderbook.table.price-col')}
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>
+                            {t('options.market.trade-options.orderbook.table.amount-col')}
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>
+                            {t('options.market.trade-options.orderbook.table.total-col')}
+                        </Table.HeaderCell>
+                        <Table.HeaderCell>
+                            {t('options.market.trade-options.orderbook.table.time-remaining-col')}
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
-                <Table.Body style={{ color: side === 'buy' ? 'green' : 'red' }}>
+                <Table.Body style={{ color: orderSide === 'buy' ? 'green' : 'red' }}>
                     {orders.map((orderItem: OrderItem, index: number) => {
                         return (
                             <Table.Row key={index} onClick={() => openFillOrderModal(orderItem)}>

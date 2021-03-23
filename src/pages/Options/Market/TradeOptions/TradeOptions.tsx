@@ -5,10 +5,10 @@ import PlaceOrder from './PlaceOrder';
 const TradeOptions: React.FC = () => {
     return (
         <>
-            <Orderbook optionsSide="long" />
-            <PlaceOrder optionsSide="long" />
-            <Orderbook optionsSide="short" />
-            <PlaceOrder optionsSide="short" />
+            <Orderbook optionSide="long" />
+            <PlaceOrder optionSide="long" />
+            <Orderbook optionSide="short" />
+            <PlaceOrder optionSide="short" />
         </>
     );
 };

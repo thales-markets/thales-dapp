@@ -79,3 +79,5 @@ export function hasMetamaskInstalled() {
 export const isMainNet = (networkId: NetworkId) => networkId === 1;
 
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
+
+export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;

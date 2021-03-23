@@ -43,12 +43,13 @@ button {
 .ui.message {
     padding: 0.5em 1.5em;
 }
-.ui.table thead th {
-    text-transform: uppercase !important;
-}
-label {
-    text-transform: uppercase !important;
+.ui.form .field > label {
+    text-transform: uppercase;
 }
 ::placeholder {
     text-transform: uppercase !important;
+}
+
+tr:hover {
+    cursor: pointer;
 }

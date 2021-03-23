@@ -1,27 +1,52 @@
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { Grid, Header, Segment } from 'semantic-ui-react';
-import { Side } from 'types/options';
+import { AccountMarketInfo, OptionSide } from 'types/options';
 import { useMarketContext } from '../../contexts/MarketContext';
 import PlaceOrderSide from './PlaceOrderSide';
 
 type PlaceOrderProps = {
-    optionsSide: Side;
+    optionSide: OptionSide;
 };
 
-const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionsSide }) => {
+const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
+    const { t } = useTranslation();
     const optionsMarket = useMarketContext();
-    const baseToken = optionsSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
+
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    let optBalances = {
+        long: 0,
+        short: 0,
+    };
+
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
+        const { balances } = accountMarketInfoQuery.data as AccountMarketInfo;
+        optBalances = balances;
+    }
+    const tokenBalance = optionSide === 'long' ? optBalances.long : optBalances.short;
 
     return (
         <>
-            <Segment>
-                <Header as="h2">{optionsSide === 'long' ? 'Place Long order' : 'Place Short order'}</Header>
+            <Segment color={optionSide === 'long' ? 'green' : 'red'}>
+                <Header as="h2">{t(`options.market.trade-options.place-order.${optionSide}.title`)}</Header>
                 <Grid centered>
                     <Grid.Column width={8}>
-                        <PlaceOrderSide baseToken={baseToken} side="buy" />
+                        <PlaceOrderSide baseToken={baseToken} orderSide="buy" tokenBalance={tokenBalance} />
                     </Grid.Column>
                     <Grid.Column width={8}>
-                        <PlaceOrderSide baseToken={baseToken} side="sell" />
+                        <PlaceOrderSide baseToken={baseToken} orderSide="sell" tokenBalance={tokenBalance} />
                     </Grid.Column>
                 </Grid>
             </Segment>

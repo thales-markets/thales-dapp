@@ -87,7 +87,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order }
     };
 
     return (
-        <Modal open={true} onClose={onClose} centered={false} closeIcon>
+        <Modal open={true} onClose={onClose} centered={false} closeIcon size="mini">
             <Modal.Content>
                 <Segment>
                     <Form>

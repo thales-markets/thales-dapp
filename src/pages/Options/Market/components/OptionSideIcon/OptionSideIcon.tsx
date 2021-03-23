@@ -1,16 +1,16 @@
 import React from 'react';
 import { ReactComponent as TrendUpIcon } from 'assets/images/trend-up.svg';
 import { ReactComponent as TrendDownIcon } from 'assets/images/trend-down.svg';
-import { Side } from 'types/options';
+import { OptionSide } from 'types/options';
 
-type SideIconProps = {
-    side: Side;
+type OptionSideIconProps = {
+    side: OptionSide;
 };
 
-const SideIcon: React.FC<SideIconProps> = ({ side }) => (
+const OptionSideIcon: React.FC<OptionSideIconProps> = ({ side }) => (
     <span style={{ backgroundColor: side === 'long' ? '#10BA97' : '#D94454' }}>
         {side === 'long' ? <TrendUpIcon /> : <TrendDownIcon />}
     </span>
 );
 
-export default SideIcon;
+export default OptionSideIcon;

@@ -48,6 +48,7 @@ const Table: React.FC<TableProps> = ({
                             <SemanticTable.HeaderCell
                                 {...column.getHeaderProps(column.sortable ? column.getSortByToggleProps() : undefined)}
                                 key={headerIndex}
+                                style={{ textTransform: 'uppercase' }}
                             >
                                 {column.render('Header')}
                                 {column.sortable && (

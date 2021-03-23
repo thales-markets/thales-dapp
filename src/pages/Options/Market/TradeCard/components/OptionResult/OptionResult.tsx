@@ -2,12 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
-import { Side } from 'types/options';
+import { OptionSide } from 'types/options';
 import { Header, Segment } from 'semantic-ui-react';
-import SideIcon from '../../../components/SideIcon';
+import OptionSideIcon from '../../../components/OptionSideIcon';
 
 type OptionResultProps = {
-    side: Side;
+    side: OptionSide;
     amount: number;
     price?: number;
     claimableAmount?: number;
@@ -19,7 +19,7 @@ const OptionResult: React.FC<OptionResultProps> = ({ side, amount, price, claima
     return (
         <Segment style={{ textTransform: 'uppercase' }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 5 }}>
-                <SideIcon side={side} />
+                <OptionSideIcon side={side} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
                 <Header as="h3">{t(`options.common.amount-${side}`, { amount: formatCurrency(amount) })}</Header>

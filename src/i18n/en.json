@@ -392,6 +392,49 @@
                         "end-label": "time left to exercise:"
                     }
                 }
+            },
+            "trade-options": {
+                "orderbook": {
+                    "long": {
+                        "title": "Trade Long options"
+                    },
+                    "short": {
+                        "title": "Trade Short options"
+                    },
+                    "buy": {
+                        "title": "Buy Orders"
+                    },
+                    "sell": {
+                        "title": "Sell Orders"
+                    },
+                    "table": {
+                        "price-col": "Price per sOPT (sUSD)",
+                        "amount-col": "Amount (sOPT)",
+                        "total-col": "Total (sUSD)",
+                        "time-remaining-col": "Time remaining"
+                    }
+                },
+                "place-order": {
+                    "long": {
+                        "title": "Place Long order"
+                    },
+                    "short": {
+                        "title": "Place Short order"
+                    },
+                    "buy": {
+                        "title": "Buy sOPT"
+                    },
+                    "sell": {
+                        "title": "Sell sOPT"
+                    },
+                    "amount-label": "Amount to {{orderSide}}",
+                    "price-label": "Price per sOPT",
+                    "order-end-date": "Order end date",
+                    "confirm-button": {
+                        "label": "Submit order",
+                        "progress-label": "Submitting in progress..."
+                    }
+                }
             }
         },
         "common": {

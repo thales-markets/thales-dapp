@@ -4,7 +4,7 @@ import { SignedOrder } from '@0x/types';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
 
-export type Side = 'long' | 'short';
+export type OptionSide = 'long' | 'short';
 
 export type OptionsTransactionType = 'refund' | 'bid' | 'exercise' | 'claim';
 
@@ -14,7 +14,7 @@ export type OptionsTransaction = {
     account: string;
     currencyKey: CurrencyKey;
     timestamp: number;
-    side: Side;
+    side: OptionSide;
     amount: number | string;
     market: string;
     status?: 'pending' | 'confirmed';
@@ -76,7 +76,7 @@ export type OptionsMarketInfo = {
     asset: string;
     phase: Phase;
     timeRemaining: number;
-    result: Side;
+    result: OptionSide;
     totalBids: OptionValue;
     totalClaimableSupplies: OptionValue;
     totalSupplies: OptionValue;

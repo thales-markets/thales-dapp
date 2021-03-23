@@ -1,24 +1,26 @@
 import React, { useMemo } from 'react';
 import { Grid, Header, Segment } from 'semantic-ui-react';
 import OrderbookSide from './OrderbookSide';
-import { Side } from 'types/options';
+import { OptionSide } from 'types/options';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import { useMarketContext } from '../../contexts/MarketContext';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
+import { useTranslation } from 'react-i18next';
 
 type OrderbookProps = {
-    optionsSide: Side;
+    optionSide: OptionSide;
 };
 
-const Orderbook: React.FC<OrderbookProps> = ({ optionsSide }) => {
+const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
+    const { t } = useTranslation();
     const optionsMarket = useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const optionsTokenAddress = optionsSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
+    const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
     const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, {
         enabled: isAppReady,
@@ -36,14 +38,14 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionsSide }) => {
 
     return (
         <>
-            <Segment>
-                <Header as="h2">{optionsSide === 'long' ? 'Trade Long options' : 'Trade Short options'}</Header>
+            <Segment color={optionSide === 'long' ? 'green' : 'red'}>
+                <Header as="h2">{t(`options.market.trade-options.orderbook.${optionSide}.title`)}</Header>
                 <Grid centered>
                     <Grid.Column width={8}>
-                        <OrderbookSide orders={buyOrders} side="buy" />
+                        <OrderbookSide orders={buyOrders} orderSide="buy" />
                     </Grid.Column>
                     <Grid.Column width={8}>
-                        <OrderbookSide orders={sellOrders} side="sell" />
+                        <OrderbookSide orders={sellOrders} orderSide="sell" />
                     </Grid.Column>
                 </Grid>
             </Segment>
