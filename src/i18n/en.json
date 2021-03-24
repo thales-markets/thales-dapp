@@ -410,6 +410,8 @@
                     "table": {
                         "price-col": "Price per sOPT (sUSD)",
                         "amount-col": "Amount (sOPT)",
+                        "remaining-amount-col": "Remaining Amount (sOPT)",
+                        "remaining-amount-susd-col": "Remaining Amount (sUSD)",
                         "total-col": "Total (sUSD)",
                         "time-remaining-col": "Time remaining"
                     }
