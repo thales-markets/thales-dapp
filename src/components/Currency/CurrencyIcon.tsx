@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCurrencyKeyIcon } from 'utils/currency';
+import { getAssetIcon, getSynthIcon } from 'utils/currency';
 import { CurrencyKey } from 'constants/currency';
 
 type CurrencyIconProps = {
@@ -8,17 +8,24 @@ type CurrencyIconProps = {
 };
 
 export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, type = 'synth', ...rest }) => {
-    const currencyIcon = getCurrencyKeyIcon(currencyKey);
+    const props = {
+        width: '24px',
+        height: '24px',
+        alt: currencyKey,
+        ...rest,
+    };
 
-    if (!currencyIcon) {
+    if (type === 'synth') {
+        return <img src={getSynthIcon(currencyKey)} style={{ marginRight: 10 }} {...props} />;
+    }
+
+    const AssetIcon = getAssetIcon(currencyKey);
+
+    if (!AssetIcon) {
         return null;
     }
 
-    const { SynthIcon, AssetIcon } = currencyIcon;
-
-    const Icon = type === 'synth' && SynthIcon ? SynthIcon : AssetIcon;
-
-    return <Icon width="22" height="22" style={{ marginRight: 10 }} {...rest} />;
+    return <AssetIcon style={{ marginRight: 10 }} {...props} />;
 };
 
 export default CurrencyIcon;

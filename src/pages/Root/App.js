@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
-import Home from '../Home';
-import Options from '../Options';
 import { QueryClientProvider } from 'react-query';
 import { getEthereumNetwork, SUPPORTED_WALLETS_MAP } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -13,9 +11,14 @@ import { getIsWalletConnected, updateNetworkSettings, updateWallet, getWalletInf
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { setAppReady } from 'redux/modules/app';
-import CreateMarket from 'pages/Options/CreateMarket';
 import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
 import queryConnector from 'utils/queryConnector';
+import { Loader } from 'semantic-ui-react';
+
+const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
+const Home = lazy(() => import('../Home'));
+const OptionsHome = lazy(() => import('../Options/Home'));
+const OptionsMarket = lazy(() => import('../Options/Market'));
 
 const { METAMASK } = SUPPORTED_WALLETS_MAP;
 
@@ -56,44 +59,46 @@ const App = () => {
 
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
-            <Router>
-                <WalletPopup />
-                <Switch>
-                    <Route
-                        exact
-                        path={ROUTES.Options.CreateMarket}
-                        render={() =>
-                            isWalletConnected ? (
+            <Suspense fallback={<Loader active />}>
+                <Router>
+                    <WalletPopup />
+                    <Switch>
+                        <Route
+                            exact
+                            path={ROUTES.Options.CreateMarket}
+                            render={() =>
+                                isWalletConnected ? (
+                                    <FullScreenMainLayout>
+                                        <OptionsCreateMarket />
+                                    </FullScreenMainLayout>
+                                ) : (
+                                    <Redirect to={ROUTES.Options.Home} />
+                                )
+                            }
+                        />
+                        <Route
+                            exact
+                            path={ROUTES.Options.MarketMatch}
+                            render={(routeProps) => (
                                 <FullScreenMainLayout>
-                                    <CreateMarket />
+                                    <OptionsMarket {...routeProps} />
                                 </FullScreenMainLayout>
-                            ) : (
-                                <Redirect to={ROUTES.Options.Home} />
-                            )
-                        }
-                    />
-                    <Route
-                        exact
-                        path={ROUTES.Options.MarketMatch}
-                        render={(routeProps) => (
-                            <FullScreenMainLayout>
-                                <Options.Market {...routeProps} />
-                            </FullScreenMainLayout>
-                        )}
-                    />
-                    <Route exact path={ROUTES.Options.Home}>
-                        <MainLayout>
-                            <Options.Home />
-                        </MainLayout>
-                    </Route>
-                    <Route exact path={ROUTES.Home}>
-                        <MainLayout>
-                            <Home />
-                        </MainLayout>
-                    </Route>
-                </Switch>
-            </Router>
-            <ReactQueryDevtools initialIsOpen={false} />
+                            )}
+                        />
+                        <Route exact path={ROUTES.Options.Home}>
+                            <MainLayout>
+                                <OptionsHome />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Home}>
+                            <MainLayout>
+                                <Home />
+                            </MainLayout>
+                        </Route>
+                    </Switch>
+                </Router>
+                <ReactQueryDevtools initialIsOpen={false} />
+            </Suspense>
         </QueryClientProvider>
     );
 };

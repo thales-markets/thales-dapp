@@ -1,5 +1,5 @@
 import {
-    currencyKeyToIconMap,
+    currencyKeyToAssetIconMap,
     CurrencyKey,
     CRYPTO_CURRENCY_MAP,
     FIAT_CURRENCY_MAP,
@@ -17,4 +17,7 @@ export const toInverseSynth = (currencyKey: CurrencyKey) => currencyKey.replace(
 export const toStandardSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^i/i, 's');
 export const synthToAsset = (currencyKey: CurrencyKey) => currencyKey.replace(/^(i|s)/i, '');
 
-export const getCurrencyKeyIcon = (currencyKey: CurrencyKey) => currencyKeyToIconMap[currencyKey];
+export const getAssetIcon = (currencyKey: CurrencyKey) => currencyKeyToAssetIconMap[currencyKey];
+
+export const getSynthIcon = (currencyKey: CurrencyKey) =>
+    `https://raw.githubusercontent.com/Synthetixio/synthetix-assets/master/synths/${currencyKey}.svg`;
