@@ -205,7 +205,7 @@ export const CreateMarket: React.FC = () => {
         return () => {
             sUSD.contract.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, []);
+    }, [walletAddress]);
 
     useEffect(() => {
         const {

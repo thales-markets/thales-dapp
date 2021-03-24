@@ -432,7 +432,14 @@
                     "order-end-date": "Order end date",
                     "confirm-button": {
                         "label": "Submit order",
-                        "progress-label": "Submitting in progress..."
+                        "progress-label": "Submitting order in progress..."
+                    }
+                },
+                "fill-order": {
+                    "amount-label": "Amount to {{orderSide}}",
+                    "confirm-button": {
+                        "label": "Fill order",
+                        "progress-label": "Filling order in progress..."
                     }
                 }
             }

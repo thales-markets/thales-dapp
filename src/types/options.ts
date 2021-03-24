@@ -129,7 +129,7 @@ export type Orders = OrderItem[];
 
 export type OrderItem = {
     rawSignedOrder: SignedOrder;
-    order: DisplayOrder;
+    displayOrder: DisplayOrder;
 };
 
 export type DisplayOrder = {

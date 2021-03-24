@@ -43,11 +43,11 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, orderSide }) => {
                     {orders.map((orderItem: OrderItem, index: number) => {
                         return (
                             <Table.Row key={index} onClick={() => openFillOrderModal(orderItem)}>
-                                <Table.Cell>{orderItem.order.price}</Table.Cell>
-                                <Table.Cell>{orderItem.order.amount}</Table.Cell>
-                                <Table.Cell>{orderItem.order.total}</Table.Cell>
+                                <Table.Cell>{orderItem.displayOrder.price}</Table.Cell>
+                                <Table.Cell>{orderItem.displayOrder.amount}</Table.Cell>
+                                <Table.Cell>{orderItem.displayOrder.total}</Table.Cell>
                                 <Table.Cell>
-                                    <TimeRemaining end={orderItem.order.timeRemaining} />
+                                    <TimeRemaining end={orderItem.displayOrder.timeRemaining} />
                                 </Table.Cell>
                             </Table.Row>
                         );

@@ -92,11 +92,12 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order }
                 <Segment>
                     <Form>
                         <Form.Field>
-                            <label>Amount</label>
+                            <label>{t('options.market.trade-options.fill-order.amount-label')}</label>
                             <Input
                                 fluid
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
+                                label="sOPT"
                                 id="amount"
                                 type="number"
                                 min="0"
@@ -110,7 +111,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order }
                                 disabled={isFilling || !isWalletConnected /*||!sUSDBalance || !gasLimit*/}
                                 onClick={handleFillOrder}
                             >
-                                {!isFilling ? 'Fill order' : 'Filling order in progress...'}
+                                {!isFilling
+                                    ? t('options.market.trade-options.fill-order.confirm-button.label')
+                                    : t('options.market.trade-options.fill-order.confirm-button.progress-label')}
                             </Button>
                         ) : (
                             <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
