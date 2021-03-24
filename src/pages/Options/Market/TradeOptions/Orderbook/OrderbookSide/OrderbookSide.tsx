@@ -58,7 +58,13 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, orderSide }) => {
                                               (orderItem.displayOrder.amount * orderItem.displayOrder.price)
                                           ).toFixed(4)}
                                 </Table.Cell>
-                                <Table.Cell>{orderItem.displayOrder.fillableAmount.toFixed(4)}</Table.Cell>
+                                <Table.Cell>
+                                    {orderSide === 'sell'
+                                        ? orderItem.displayOrder.fillableAmount.toFixed(4)
+                                        : (
+                                              orderItem.displayOrder.fillableAmount * orderItem.displayOrder.price
+                                          ).toFixed(4)}
+                                </Table.Cell>
                                 <Table.Cell>{orderItem.displayOrder.amount}</Table.Cell>
                                 <Table.Cell>{orderItem.displayOrder.total}</Table.Cell>
                                 <Table.Cell>
