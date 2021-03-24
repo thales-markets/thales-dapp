@@ -135,6 +135,7 @@ export type OrderItem = {
 export type DisplayOrder = {
     price: number;
     amount: number;
+    fillableAmount: number;
     total: number;
     timeRemaining: number;
 };

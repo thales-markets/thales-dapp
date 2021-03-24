@@ -27,9 +27,12 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, orderSide }) => {
                     <Table.Row>
                         <Table.HeaderCell style={{ textTransform: 'none' }}>
                             {t('options.market.trade-options.orderbook.table.price-col')}
+                        <Table.HeaderCell>Remaining Amount</Table.HeaderCell>
                         </Table.HeaderCell>
                         <Table.HeaderCell>
                             {t('options.market.trade-options.orderbook.table.amount-col')}
+                        <Table.HeaderCell>Original Amount</Table.HeaderCell>
+                        <Table.HeaderCell>Original Total (sUSD)</Table.HeaderCell>
                         </Table.HeaderCell>
                         <Table.HeaderCell>
                             {t('options.market.trade-options.orderbook.table.total-col')}
@@ -46,6 +49,15 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({ orders, orderSide }) => {
                                 <Table.Cell>{orderItem.displayOrder.price}</Table.Cell>
                                 <Table.Cell>{orderItem.displayOrder.amount}</Table.Cell>
                                 <Table.Cell>{orderItem.displayOrder.total}</Table.Cell>
+                                <Table.Cell>
+                                    {side === 'buy'
+                                        ? orderItem.order.fillableAmount.toFixed(4)
+                                        : (
+                                              (orderItem.order.fillableAmount * orderItem.order.amount) /
+                                              (orderItem.order.amount * orderItem.order.price)
+                                          ).toFixed(4)}
+                                </Table.Cell>
+                                <Table.Cell>{orderItem.order.fillableAmount.toFixed(4)}</Table.Cell>
                                 <Table.Cell>
                                     <TimeRemaining end={orderItem.displayOrder.timeRemaining} />
                                 </Table.Cell>

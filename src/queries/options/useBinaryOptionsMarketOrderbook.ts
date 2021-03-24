@@ -50,6 +50,7 @@ const useBinaryOptionsMarketOrderbook = (
                                     bigNumberFormatter(record.order.makerAssetAmount),
                                 total: bigNumberFormatter(record.order.takerAssetAmount),
                                 timeRemaining: record.order.expirationTimeSeconds * ONE_SECOND_MS,
+                                fillableAmount: bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount),
                             },
                         };
                     }
@@ -67,6 +68,7 @@ const useBinaryOptionsMarketOrderbook = (
                                     bigNumberFormatter(record.order.takerAssetAmount),
                                 total: bigNumberFormatter(record.order.makerAssetAmount),
                                 timeRemaining: record.order.expirationTimeSeconds * ONE_SECOND_MS,
+                                fillableAmount: bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount),
                             },
                         };
                     }
