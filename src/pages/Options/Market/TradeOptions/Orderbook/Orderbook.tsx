@@ -42,10 +42,10 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                 <Header as="h2">{t(`options.market.trade-options.orderbook.${optionSide}.title`)}</Header>
                 <Grid centered>
                     <Grid.Column width={8}>
-                        <OrderbookSide orders={buyOrders} orderSide="buy" />
+                        <OrderbookSide orders={buyOrders} orderSide="buy" optionSide={optionSide} />
                     </Grid.Column>
                     <Grid.Column width={8}>
-                        <OrderbookSide orders={sellOrders} orderSide="sell" />
+                        <OrderbookSide orders={sellOrders} orderSide="sell" optionSide={optionSide} />
                     </Grid.Column>
                 </Grid>
             </Segment>

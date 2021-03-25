@@ -46,10 +46,10 @@ button {
 .ui.form .field > label {
     text-transform: uppercase;
 }
-::placeholder {
+::placeholder,
+.divider.default.text {
     text-transform: uppercase !important;
 }
-
 tr:hover {
     cursor: pointer;
 }

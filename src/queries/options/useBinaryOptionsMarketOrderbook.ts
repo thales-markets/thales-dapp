@@ -3,9 +3,9 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OrderbookInfo, OrderItem } from 'types/options';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
-import { ONE_SECOND_MS } from 'constants/0x';
 import { get0xBaseURL, isV4 } from 'utils/0x';
 import { NetworkId } from 'utils/network';
+import { toJSTimestamp } from 'utils/formatters/date';
 
 const useBinaryOptionsMarketOrderbook = (
     networkId: NetworkId,
@@ -41,16 +41,25 @@ const useBinaryOptionsMarketOrderbook = (
             if (responseJ.asks.records && responseJ.asks.records.length > 0) {
                 orderbook.sellOrders = responseJ.asks.records.map(
                     (record: any): OrderItem => {
+                        const price =
+                            bigNumberFormatter(record.order.takerAssetAmount) /
+                            bigNumberFormatter(record.order.makerAssetAmount);
+                        const amount = bigNumberFormatter(record.order.makerAssetAmount);
+                        const total = bigNumberFormatter(record.order.takerAssetAmount);
+                        const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
+                        const fillableAmount =
+                            bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount) / price;
+                        const filled = (amount - fillableAmount) / amount;
+
                         return {
                             rawSignedOrder: record.order,
                             displayOrder: {
-                                amount: bigNumberFormatter(record.order.makerAssetAmount),
-                                price:
-                                    bigNumberFormatter(record.order.takerAssetAmount) /
-                                    bigNumberFormatter(record.order.makerAssetAmount),
-                                total: bigNumberFormatter(record.order.takerAssetAmount),
-                                timeRemaining: record.order.expirationTimeSeconds * ONE_SECOND_MS,
-                                fillableAmount: bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount),
+                                amount,
+                                price,
+                                total,
+                                timeRemaining,
+                                fillableAmount,
+                                filled,
                             },
                         };
                     }
@@ -59,16 +68,24 @@ const useBinaryOptionsMarketOrderbook = (
             if (responseJ.bids.records && responseJ.bids.records.length > 0) {
                 orderbook.buyOrders = responseJ.bids.records.map(
                     (record: any): OrderItem => {
+                        const price =
+                            bigNumberFormatter(record.order.makerAssetAmount) /
+                            bigNumberFormatter(record.order.takerAssetAmount);
+                        const amount = bigNumberFormatter(record.order.takerAssetAmount);
+                        const total = bigNumberFormatter(record.order.makerAssetAmount);
+                        const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
+                        const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount);
+                        const filled = (amount - fillableAmount) / amount;
+
                         return {
                             rawSignedOrder: record.order,
                             displayOrder: {
-                                amount: bigNumberFormatter(record.order.takerAssetAmount),
-                                price:
-                                    bigNumberFormatter(record.order.makerAssetAmount) /
-                                    bigNumberFormatter(record.order.takerAssetAmount),
-                                total: bigNumberFormatter(record.order.makerAssetAmount),
-                                timeRemaining: record.order.expirationTimeSeconds * ONE_SECOND_MS,
-                                fillableAmount: bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount),
+                                amount,
+                                price,
+                                total,
+                                timeRemaining,
+                                fillableAmount,
+                                filled,
                             },
                         };
                     }

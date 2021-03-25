@@ -136,6 +136,7 @@
         "val-in-cents": "{{val}}c",
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
+        "select": "select",
         "beta": "beta",
         "or": "or",
         "toggle": {
@@ -410,8 +411,7 @@
                     "table": {
                         "price-col": "Price per sOPT (sUSD)",
                         "amount-col": "Amount (sOPT)",
-                        "remaining-amount-col": "Remaining Amount (sOPT)",
-                        "remaining-amount-susd-col": "Remaining Amount (sUSD)",
+                        "filled-col": "Filled (%)",
                         "total-col": "Total (sUSD)",
                         "time-remaining-col": "Time remaining"
                     }
@@ -431,13 +431,30 @@
                     },
                     "amount-label": "Amount to {{orderSide}}",
                     "price-label": "Price per sOPT",
-                    "order-end-date": "Order end date",
+                    "expiration-label": "Expires in",
+                    "total-label": "Total (sUSD):",
                     "confirm-button": {
                         "label": "Submit order",
                         "progress-label": "Submitting order in progress..."
                     }
                 },
                 "fill-order": {
+                    "buy": {
+                        "title": "Sell sOPT"
+                    },
+                    "sell": {
+                        "title": "Buy sOPT"
+                    },
+                    "order-details": {
+                        "title": "Order details",
+                        "price-label": "Price per sOPT (sUSD):",
+                        "amount-label": "Amount (sOPT):",
+                        "total-label": "Total (sUSD):",
+                        "filled-label": "Filled (%):",
+                        "remaining-amount-label": "Remaining amount (sOPT):",
+                        "remaining-amount-susd-label": "Remaining amount (sUSD):"
+                    },
+                    "max-button-tooltip": "Set MAX available amount based on remaining order amount and wallet balance",
                     "amount-label": "Amount to {{orderSide}}",
                     "confirm-button": {
                         "label": "Fill order",
@@ -460,7 +477,14 @@
             "long-price": "Long price",
             "short-price": "Short price",
             "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
-            "withdrawals": "withdrawals"
+            "withdrawals": "withdrawals",
+            "order-periods": {
+                "10M": "10 minutes",
+                "1H": "1 hour",
+                "1D": "1 day",
+                "1W": "1 week",
+                "trading-end": "At trading period expiration"
+            }
         }
     }
 }

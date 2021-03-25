@@ -10,7 +10,6 @@ import { LimitOrder, SignatureType, ZERO } from '@0x/protocol-utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
-import DatePicker from 'components/Input/DatePicker';
 import { DECIMALS } from 'constants/0x';
 import { SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
@@ -27,11 +26,11 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Form, Input, Segment, Button, Message, Header } from 'semantic-ui-react';
+import { Form, Input, Segment, Button, Message, Header, Dropdown } from 'semantic-ui-react';
 import { OrderSide } from 'types/options';
 import { get0xBaseURL, isV4 } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -41,6 +40,14 @@ import { MaxUint256 } from 'ethers/constants';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import {
+    AMOUNT_PERCENTAGE,
+    OrderPeriod,
+    OrderPeriodItem,
+    ORDER_PERIOD_IN_SECONDS,
+    ORDER_PERIOD_ITEMS_MAP,
+} from 'constants/options';
+import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 
 declare const window: any;
 
@@ -52,6 +59,7 @@ type PlaceOrderSideProps = {
 
 const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, tokenBalance }) => {
     const { t } = useTranslation();
+    const optionsMarket = useMarketContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -60,7 +68,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [price, setPrice] = useState<number | string>('');
     const [amount, setAmount] = useState<number | string>('');
-    const [orderEndDate, setOrderEndDate] = useState<Date | null | undefined>(null);
+    const [expiration, setExpiration] = useState<string | undefined>(undefined);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
@@ -90,19 +98,44 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         contractWrappers0x,
     } = snxJSConnector as any;
     const isBuy = orderSide === 'buy';
-    // const isSell = orderSide === 'sell';
-    // const isLong = optionSide === 'long';
-    // const isShort = optionSide === 'short';
 
-    const isButtonDisabled = isSubmitting || !isWalletConnected || (isBuy ? !sUSDBalance : !tokenBalance);
+    const isButtonDisabled =
+        price === '' ||
+        Number(price) < 0 ||
+        expiration === undefined ||
+        amount === '' ||
+        Number(amount) < 0 ||
+        isSubmitting ||
+        !isWalletConnected ||
+        (isBuy ? !sUSDBalance : !tokenBalance);
+
     const makerToken = isBuy ? sUSD.contract.address : baseToken;
     const takerToken = isBuy ? baseToken : sUSD.contract.address;
-    const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
     const addressToApprove: string = isV4(networkId)
         ? contractWrappers0x.exchangeProxy.address
         : '0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e';
 
+    const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
+        return {
+            key: period.value,
+            value: period.value,
+            text: t(period.i18nLabel),
+        };
+    });
+
+    const getOrderEndDate = () => {
+        let orderEndDate = 0;
+        if (expiration) {
+            orderEndDate =
+                expiration === OrderPeriod.TRADING_END
+                    ? Math.round(optionsMarket.timeRemaining / 1000)
+                    : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
+        }
+        return new BigNumber(orderEndDate);
+    };
+
     useEffect(() => {
+        const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
             setAllowance(!!bigNumberFormatter(allowance));
@@ -127,6 +160,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
+            const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
             try {
                 setIsAllowing(true);
                 const gasEstimate = await erc20Instance.estimate.approve(addressToApprove, MaxUint256);
@@ -156,7 +190,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
             new BigNumber(isBuy ? amount : Number(amount) * Number(price)),
             DECIMALS
         );
-        const expiry = new BigNumber(Math.round((orderEndDate as Date).getTime() / 1000));
+        const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
 
         if (isV4(networkId)) {
@@ -249,6 +283,13 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         }
     };
 
+    const calculateAmount = (percentage: number) => {
+        if (isBuy && price === '') return;
+        const maxsOPTBalance = isBuy ? sUSDBalance / Number(price) : tokenBalance;
+        const newAmount = (maxsOPTBalance * percentage) / 100;
+        setAmount(formatCurrency(newAmount));
+    };
+
     return (
         <Segment>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -265,20 +306,6 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
             <Form>
                 <Form.Field>
                     <label style={{ textTransform: 'none' }}>
-                        {t('options.market.trade-options.place-order.amount-label', { orderSide })}
-                    </label>
-                    <Input
-                        fluid
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        label="sOPT"
-                        id="amount"
-                        type="number"
-                        min="0"
-                    />
-                </Form.Field>
-                <Form.Field>
-                    <label style={{ textTransform: 'none' }}>
                         {t('options.market.trade-options.place-order.price-label')}
                     </label>
                     <Input
@@ -289,21 +316,53 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                         id="price"
                         type="number"
                         min="0"
+                        step="any"
                     />
                 </Form.Field>
                 <Form.Field>
                     <label style={{ textTransform: 'none' }}>
-                        {t('options.market.trade-options.place-order.order-end-date')}
+                        {t('options.market.trade-options.place-order.amount-label', { orderSide })}
                     </label>
-                    <DatePicker
-                        id="order-end-date"
-                        dateFormat="MMM d, yyyy h:mm aa"
-                        selected={orderEndDate}
-                        showTimeSelect={true}
-                        onChange={(d: Date) => setOrderEndDate(d)}
-                        minDate={new Date()}
+                    <Input
+                        fluid
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        label="sOPT"
+                        id="amount"
+                        type="number"
+                        min="0"
+                        step="any"
+                    />
+                    <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
+                        {AMOUNT_PERCENTAGE.map((percentage: number) => (
+                            <Button
+                                size="mini"
+                                key={percentage}
+                                onClick={() => calculateAmount(percentage)}
+                                color="teal"
+                                disabled={isBuy && price === ''}
+                            >
+                                {`${percentage}%`}
+                            </Button>
+                        ))}
+                    </div>
+                </Form.Field>
+                <Form.Field>
+                    <label style={{ textTransform: 'none' }}>
+                        {t('options.market.trade-options.place-order.expiration-label')}
+                    </label>
+                    <Dropdown
+                        value={expiration}
+                        onChange={(_, data) => setExpiration(data.value?.toString())}
+                        placeholder={t('common.select')}
+                        selection
+                        options={expirationOptions}
                     />
                 </Form.Field>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>{t('options.market.trade-options.place-order.total-label')}</span>
+                    <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}</span>
+                </div>
             </Form>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                 {hasAllowance ? (
