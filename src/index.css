@@ -50,6 +50,7 @@ button {
 .divider.default.text {
     text-transform: uppercase !important;
 }
-tr:hover {
+.selectable.table tr:hover,
+.icon.cancel:hover {
     cursor: pointer;
 }

@@ -99,7 +99,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
     const isButtonDisabled =
         amount === '' ||
-        Number(amount) < 0 ||
+        Number(amount) <= 0 ||
         isFilling ||
         !isWalletConnected ||
         (isBuy ? !tokenBalance : !sUSDBalance);

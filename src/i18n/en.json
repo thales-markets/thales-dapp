@@ -409,11 +409,15 @@
                         "title": "Sell Orders"
                     },
                     "table": {
+                        "type-col": "Type",
                         "price-col": "Price per sOPT (sUSD)",
                         "amount-col": "Amount (sOPT)",
                         "filled-col": "Filled (%)",
                         "total-col": "Total (sUSD)",
-                        "time-remaining-col": "Time remaining"
+                        "remaining-amount-col": "Remaining amount (sOPT):",
+                        "remaining-amount-susd-col": "Remaining amount (sUSD):",
+                        "time-remaining-col": "Time remaining",
+                        "cancel-col": "Cancel"
                     }
                 },
                 "place-order": {
@@ -459,6 +463,14 @@
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
+                    }
+                },
+                "my-orders": {
+                    "long": {
+                        "title": "Active Long orders"
+                    },
+                    "short": {
+                        "title": "Active Short order"
                     }
                 }
             }

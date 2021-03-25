@@ -101,10 +101,10 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
 
     const isButtonDisabled =
         price === '' ||
-        Number(price) < 0 ||
+        Number(price) <= 0 ||
         expiration === undefined ||
         amount === '' ||
-        Number(amount) < 0 ||
+        Number(amount) <= 0 ||
         isSubmitting ||
         !isWalletConnected ||
         (isBuy ? !sUSDBalance : !tokenBalance);
@@ -224,13 +224,12 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                 } catch (err) {
                     console.error(JSON.stringify(err.response.data));
                     setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                } finally {
                     setIsSubmitting(false);
                 }
+                setIsSubmitting(false);
             } catch (e) {
                 console.error(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            } finally {
                 setIsSubmitting(false);
             }
         } else {
@@ -271,13 +270,12 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                 } catch (err) {
                     console.error(JSON.stringify(err.response.data));
                     setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                } finally {
                     setIsSubmitting(false);
                 }
+                setIsSubmitting(false);
             } catch (e) {
                 console.error(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            } finally {
                 setIsSubmitting(false);
             }
         }
