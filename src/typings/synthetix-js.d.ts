@@ -5,6 +5,7 @@ declare module 'synthetix-js' {
     export interface ContractSettings {
         networkId: 1 | 3 | 4 | 42;
         signer?: JsonRpcSignerWithNextAddress;
+        provider?: Web3Provider;
     }
 
     export type JsonRpcSignerWithNextAddress = JsonRpcSigner & {

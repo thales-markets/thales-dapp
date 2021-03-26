@@ -7,7 +7,7 @@ import { ReactComponent as MetamaskWallet } from 'assets/images/wallets/metamask
 import { Header, Button } from 'semantic-ui-react';
 import { resetWallet, updateWallet } from 'redux/modules/wallet';
 import { toggleWalletPopup } from 'redux/modules/ui';
-import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
+// import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
 
 const { METAMASK } = SUPPORTED_WALLETS_MAP;
 
@@ -25,10 +25,10 @@ const WalletTypeSelector = ({ selectAddressScreen }) => {
         dispatch(updateWallet({ ...walletStatus, availableWallets: [] }));
         if (walletStatus && walletStatus.unlocked && walletStatus.walletAddress) {
             if (walletStatus.walletType === METAMASK) {
-                mountMetamaskAccountChangeEvent(walletStatus.networkId, (walletAddress) =>
-                    dispatch(updateWallet({ walletAddress }))
-                );
-                mountMetamaskNetworkChange();
+                // mountMetamaskAccountChangeEvent(walletStatus.networkId, (walletAddress) =>
+                //     dispatch(updateWallet({ walletAddress }))
+                // );
+                // mountMetamaskNetworkChange();
             }
             dispatch(toggleWalletPopup(false));
         } else selectAddressScreen();

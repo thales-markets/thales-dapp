@@ -9,7 +9,7 @@ import { getPersistedState, persistState } from 'redux/persistedState';
 
 const sliceName = 'wallet';
 
-const getPersistedStateAndSetSigner = () => {
+export const getPersistedStateAndSetSigner = () => {
     const persistedState = getPersistedState(sliceName);
     if (persistedState.walletAddress != null) {
         setSigner({ type: persistedState.walletType, networkId: persistedState.networkId });
@@ -44,7 +44,7 @@ const initialState: WalletSliceState = {
     gasSpeed: DEFAULT_GAS_SPEED,
     customGasPrice: null,
     gasLimit: DEFAULT_GAS_LIMIT,
-    ...getPersistedStateAndSetSigner(),
+    //...getPersistedStateAndSetSigner(),
 };
 
 export const walletDetailsSlice = createSlice({
