@@ -25,6 +25,9 @@ const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptio
                         isV4 = false;
                         baseUrl = 'https://kovan.api.0x.org/sra/v3/';
                     }
+                    if (networkId == 3) {
+                        baseUrl = 'https://ropsten.api.0x.org/sra/v4/';
+                    }
                     if (isV4) {
                         let response = await fetch(
                             baseUrl + `orderbook?baseToken=` + o.longAddress + '&quoteToken=' + sUSD.contract.address

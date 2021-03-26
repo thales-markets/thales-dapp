@@ -22,6 +22,93 @@ const useBinaryOptionsMarketOrderbook = (
         buyOrders: [],
         sellOrders: [],
     };
+
+    function prepSellOrder(record: any) {
+        if (isV4(networkId)) {
+            const price = bigNumberFormatter(record.order.takerAmount) / bigNumberFormatter(record.order.makerAmount);
+            const amount = bigNumberFormatter(record.order.makerAmount);
+            const total = bigNumberFormatter(record.order.takerAmount);
+            const timeRemaining = toJSTimestamp(record.order.expiry);
+            const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
+            const filled = (amount - fillableAmount) / amount;
+
+            return {
+                rawSignedOrder: record.order,
+                displayOrder: {
+                    amount,
+                    price,
+                    total,
+                    timeRemaining,
+                    fillableAmount,
+                    filled,
+                },
+            };
+        } else {
+            const price =
+                bigNumberFormatter(record.order.takerAssetAmount) / bigNumberFormatter(record.order.makerAssetAmount);
+            const amount = bigNumberFormatter(record.order.makerAssetAmount);
+            const total = bigNumberFormatter(record.order.takerAssetAmount);
+            const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
+            const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount) / price;
+            const filled = (amount - fillableAmount) / amount;
+
+            return {
+                rawSignedOrder: record.order,
+                displayOrder: {
+                    amount,
+                    price,
+                    total,
+                    timeRemaining,
+                    fillableAmount,
+                    filled,
+                },
+            };
+        }
+    }
+
+    function prepBuyOrder(record: any) {
+        if (isV4(networkId)) {
+            const price = bigNumberFormatter(record.order.makerAmount) / bigNumberFormatter(record.order.takerAmount);
+            const amount = bigNumberFormatter(record.order.takerAmount);
+            const total = bigNumberFormatter(record.order.makerAmount);
+            const timeRemaining = toJSTimestamp(record.order.expiry);
+            const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
+            const filled = (amount - fillableAmount) / amount;
+
+            return {
+                rawSignedOrder: record.order,
+                displayOrder: {
+                    amount,
+                    price,
+                    total,
+                    timeRemaining,
+                    fillableAmount,
+                    filled,
+                },
+            };
+        } else {
+            const price =
+                bigNumberFormatter(record.order.makerAssetAmount) / bigNumberFormatter(record.order.takerAssetAmount);
+            const amount = bigNumberFormatter(record.order.takerAssetAmount);
+            const total = bigNumberFormatter(record.order.makerAssetAmount);
+            const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
+            const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount);
+            const filled = (amount - fillableAmount) / amount;
+
+            return {
+                rawSignedOrder: record.order,
+                displayOrder: {
+                    amount,
+                    price,
+                    total,
+                    timeRemaining,
+                    fillableAmount,
+                    filled,
+                },
+            };
+        }
+    }
+
     return useQuery<OrderbookInfo>(
         QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress),
         async () => {
@@ -41,53 +128,14 @@ const useBinaryOptionsMarketOrderbook = (
             if (responseJ.asks.records && responseJ.asks.records.length > 0) {
                 orderbook.sellOrders = responseJ.asks.records.map(
                     (record: any): OrderItem => {
-                        const price =
-                            bigNumberFormatter(record.order.takerAssetAmount) /
-                            bigNumberFormatter(record.order.makerAssetAmount);
-                        const amount = bigNumberFormatter(record.order.makerAssetAmount);
-                        const total = bigNumberFormatter(record.order.takerAssetAmount);
-                        const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
-                        const fillableAmount =
-                            bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount) / price;
-                        const filled = (amount - fillableAmount) / amount;
-
-                        return {
-                            rawSignedOrder: record.order,
-                            displayOrder: {
-                                amount,
-                                price,
-                                total,
-                                timeRemaining,
-                                fillableAmount,
-                                filled,
-                            },
-                        };
+                        return prepSellOrder(record);
                     }
                 );
             }
             if (responseJ.bids.records && responseJ.bids.records.length > 0) {
                 orderbook.buyOrders = responseJ.bids.records.map(
                     (record: any): OrderItem => {
-                        const price =
-                            bigNumberFormatter(record.order.makerAssetAmount) /
-                            bigNumberFormatter(record.order.takerAssetAmount);
-                        const amount = bigNumberFormatter(record.order.takerAssetAmount);
-                        const total = bigNumberFormatter(record.order.makerAssetAmount);
-                        const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
-                        const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount);
-                        const filled = (amount - fillableAmount) / amount;
-
-                        return {
-                            rawSignedOrder: record.order,
-                            displayOrder: {
-                                amount,
-                                price,
-                                total,
-                                timeRemaining,
-                                fillableAmount,
-                                filled,
-                            },
-                        };
+                        return prepBuyOrder(record);
                     }
                 );
             }

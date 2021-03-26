@@ -12,6 +12,7 @@ import { OrderItem, OrderSide, OptionSide } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useMarketContext } from '../../contexts/MarketContext';
+import { isV4 } from '../../../../../utils/0x';
 
 type MyOrdersProps = {
     optionSide: OptionSide;
@@ -57,8 +58,10 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
                 }
             );
             const orders = orderBy(
-                [...buyOrders, ...sellOrders].filter(
-                    (order: MyOrder) => order.rawSignedOrder.makerAddress.toLowerCase() === walletAddress.toLowerCase()
+                [...buyOrders, ...sellOrders].filter((order: MyOrder) =>
+                    isV4(networkId)
+                        ? order.rawSignedOrder.maker.toLowerCase() === walletAddress.toLowerCase()
+                        : order.rawSignedOrder.makerAddress.toLowerCase() === walletAddress.toLowerCase()
                 ),
                 'displayOrder.timeRemaining',
                 'asc'

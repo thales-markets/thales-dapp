@@ -241,6 +241,8 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                 exchangeAddress: '0x4eacd0af335451709e1e7b570b8ea68edec8bc97',
                 makerAddress: walletAddress,
                 takerAddress: NULL_ADDRESS,
+                maker: walletAddress,
+                taker: NULL_ADDRESS,
                 senderAddress: NULL_ADDRESS,
                 feeRecipientAddress: NULL_ADDRESS,
                 expirationTimeSeconds: expiry,

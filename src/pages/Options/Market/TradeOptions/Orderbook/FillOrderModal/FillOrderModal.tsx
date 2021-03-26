@@ -158,7 +158,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         const targetOrder = order.rawSignedOrder;
         const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
 
-        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(70000);
+        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(150000);
         const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
             return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
         };
@@ -171,7 +171,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 .fillLimitOrder(
                     targetOrder,
                     targetOrder.signature,
-                    Web3Wrapper.toBaseUnitAmount(new BigNumber(1), DECIMALS)
+                    Web3Wrapper.toBaseUnitAmount(new BigNumber(sOPTAmount), DECIMALS)
                 )
                 .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
         } else {
