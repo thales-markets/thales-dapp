@@ -60,7 +60,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
             const orders = orderBy(
                 [...buyOrders, ...sellOrders].filter((order: MyOrder) =>
                     isV4(networkId)
-                        ? order.rawSignedOrder.maker.toLowerCase() === walletAddress.toLowerCase()
+                        ? order.displayOrder.maker.toLowerCase() === walletAddress.toLowerCase()
                         : order.rawSignedOrder.makerAddress.toLowerCase() === walletAddress.toLowerCase()
                 ),
                 'displayOrder.timeRemaining',

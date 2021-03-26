@@ -31,6 +31,8 @@ const useBinaryOptionsMarketOrderbook = (
             const timeRemaining = toJSTimestamp(record.order.expiry);
             const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
             const filled = (amount - fillableAmount) / amount;
+            const maker = record.order.maker;
+            const taker = record.order.taker;
 
             return {
                 rawSignedOrder: record.order,
@@ -41,6 +43,8 @@ const useBinaryOptionsMarketOrderbook = (
                     timeRemaining,
                     fillableAmount,
                     filled,
+                    maker,
+                    taker,
                 },
             };
         } else {
@@ -51,6 +55,8 @@ const useBinaryOptionsMarketOrderbook = (
             const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
             const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount) / price;
             const filled = (amount - fillableAmount) / amount;
+            const maker = record.order.makerAddress;
+            const taker = record.order.takerAddress;
 
             return {
                 rawSignedOrder: record.order,
@@ -61,6 +67,8 @@ const useBinaryOptionsMarketOrderbook = (
                     timeRemaining,
                     fillableAmount,
                     filled,
+                    maker,
+                    taker,
                 },
             };
         }
@@ -74,6 +82,8 @@ const useBinaryOptionsMarketOrderbook = (
             const timeRemaining = toJSTimestamp(record.order.expiry);
             const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
             const filled = (amount - fillableAmount) / amount;
+            const maker = record.order.maker;
+            const taker = record.order.taker;
 
             return {
                 rawSignedOrder: record.order,
@@ -84,6 +94,8 @@ const useBinaryOptionsMarketOrderbook = (
                     timeRemaining,
                     fillableAmount,
                     filled,
+                    maker,
+                    taker,
                 },
             };
         } else {
@@ -94,6 +106,8 @@ const useBinaryOptionsMarketOrderbook = (
             const timeRemaining = toJSTimestamp(record.order.expirationTimeSeconds);
             const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAssetAmount);
             const filled = (amount - fillableAmount) / amount;
+            const maker = record.order.makerAddress;
+            const taker = record.order.takerAddress;
 
             return {
                 rawSignedOrder: record.order,
@@ -104,6 +118,8 @@ const useBinaryOptionsMarketOrderbook = (
                     timeRemaining,
                     fillableAmount,
                     filled,
+                    maker,
+                    taker,
                 },
             };
         }
