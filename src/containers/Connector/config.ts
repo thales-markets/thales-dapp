@@ -5,7 +5,7 @@ import { NetworkId } from 'utils/network';
 
 export const initOnboard = (networkId: NetworkId, subscriptions: Subscriptions) => {
     return onboard({
-        dappId: 'adfa2c18-d691-4265-9d5b-1ddfb8ddab64',
+        dappId: process.env.REACT_APP_BLOCKNATIVE_ONBOARD_API_KEY,
         hideBranding: true,
         networkId: networkId,
         subscriptions,
@@ -20,7 +20,7 @@ export const initOnboard = (networkId: NetworkId, subscriptions: Subscriptions) 
 export const initNotify = (networkId: NetworkId, options: InitOptions) => {
     return notify({
         darkMode: true,
-        dappId: '12e8d075-c9f5-4736-af94-36af2fc957aa',
+        dappId: process.env.REACT_APP_BLOCKNATIVE_NOTIFY_API_KEY,
         networkId: networkId,
         desktopPosition: 'topRight',
         ...options,

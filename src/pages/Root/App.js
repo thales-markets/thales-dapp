@@ -13,6 +13,7 @@ import {
     updateWallet,
     getWalletInfo,
     getNetworkId,
+    resetWallet,
 } from 'redux/modules/wallet';
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -80,23 +81,26 @@ const App = () => {
                     dispatch(updateWallet({ walletAddress }));
                 },
                 network: (networkId) => {
-                    const provider = new ethers.providers.Web3Provider(onboard.getState().wallet.provider);
-                    const signer = provider.getSigner();
+                    console.log(process.env.REACT_APP_BLOCKNATIVE_ONBOARD_API_KEY);
+                    if (networkId) {
+                        const provider = new ethers.providers.Web3Provider(onboard.getState().wallet.provider);
+                        const signer = provider.getSigner();
 
-                    snxJSConnector.setContractSettings({
-                        networkId: networkId,
-                        provider,
-                        signer: signer,
-                    });
-                    onboard.config({ networkId });
-                    notify.config({ networkId });
-
-                    dispatch(
-                        updateNetworkSettings({
+                        snxJSConnector.setContractSettings({
                             networkId: networkId,
-                            networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
-                        })
-                    );
+                            provider,
+                            signer: signer,
+                        });
+                        onboard.config({ networkId });
+                        notify.config({ networkId });
+
+                        dispatch(
+                            updateNetworkSettings({
+                                networkId: networkId,
+                                networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
+                            })
+                        );
+                    }
                 },
                 wallet: async (wallet) => {
                     if (wallet.provider) {
@@ -110,7 +114,12 @@ const App = () => {
                             provider,
                             signer: signer,
                         });
-                        dispatch(updateNetworkSettings({ networkId, networkName: network.name.toLowerCase() }));
+                        dispatch(
+                            updateNetworkSettings({
+                                networkId,
+                                networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
+                            })
+                        );
                         setSelectedWallet(wallet.name);
                     } else {
                         // TODO: setting provider to null might cause issues, perhaps use a default provider?
@@ -147,11 +156,30 @@ const App = () => {
         }
     };
 
+    const disconnectWallet = async () => {
+        try {
+            if (onboard) {
+                onboard.walletReset();
+                dispatch(resetWallet());
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
             <Suspense fallback={<Loader active />}>
                 <Router>
-                    <Button onClick={connectWallet}>Connect Wallet</Button>
+                    <Button primary onClick={connectWallet}>
+                        Connect Wallet
+                    </Button>
+                    <Button primary onClick={connectWallet}>
+                        Switch Wallet
+                    </Button>
+                    <Button primary onClick={disconnectWallet}>
+                        Disconnect Wallet
+                    </Button>
                     <WalletPopup />
                     <Switch>
                         <Route
