@@ -33,6 +33,7 @@ import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import { Tooltip } from '@material-ui/core';
+import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -45,6 +46,7 @@ declare const window: any;
 export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, orderSide, optionSide }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
+    const contractWrappers0x = useContractWrappers0xContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -93,7 +95,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
     const {
         snxJS: { sUSD },
-        contractWrappers0x,
     } = snxJSConnector as any;
     const isBuy = orderSide === 'buy';
 
@@ -153,12 +154,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const handleFillOrder = async () => {
         setTxErrorMessage(null);
         setIsFilling(true);
-        const { contractWrappers0x } = snxJSConnector as any;
 
         const targetOrder = order.rawSignedOrder;
         const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
 
-        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(70000);
+        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(150000);
         const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
             return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
         };
@@ -169,9 +169,10 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         if (isV4(networkId)) {
             await contractWrappers0x.exchangeProxy
                 .fillLimitOrder(
-                    targetOrder,
-                    targetOrder.signature,
-                    Web3Wrapper.toBaseUnitAmount(new BigNumber(1), DECIMALS)
+                    // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
+                    targetOrder as any,
+                    targetOrder.signature as any,
+                    Web3Wrapper.toBaseUnitAmount(new BigNumber(sOPTAmount), DECIMALS)
                 )
                 .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
         } else {

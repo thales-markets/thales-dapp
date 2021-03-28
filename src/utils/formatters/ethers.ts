@@ -1,13 +1,10 @@
-import snxJSConnector from '../snxJSConnector';
 import { BigNumberish } from 'ethers/utils';
+import { ethers } from 'ethers';
 
-// TODO - this should be removed at some point, use directly from ehters lib
+export const bytesFormatter = (input: string) => ethers.utils.formatBytes32String(input);
 
-export const bytesFormatter = (input: string) => (snxJSConnector as any).ethersUtils.formatBytes32String(input);
+export const parseBytes32String = (input: string) => ethers.utils.parseBytes32String(input);
 
-export const parseBytes32String = (input: string) => (snxJSConnector as any).ethersUtils.parseBytes32String(input);
+export const bigNumberFormatter = (value: BigNumberish) => Number(ethers.utils.formatEther(value));
 
-export const bigNumberFormatter = (value: BigNumberish) =>
-    Number((snxJSConnector as any).ethersUtils.formatEther(value));
-
-export const getAddress = (addr: string) => (snxJSConnector as any).ethersUtils.getAddress(addr);
+export const getAddress = (addr: string) => ethers.utils.getAddress(addr);

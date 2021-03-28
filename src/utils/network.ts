@@ -77,6 +77,7 @@ export function hasMetamaskInstalled() {
 }
 
 export const isMainNet = (networkId: NetworkId) => networkId === 1;
+export const isRopsten = (networkId: NetworkId) => networkId === 3;
 
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 

@@ -10,8 +10,9 @@ import { RootState } from 'redux/rootReducer';
 import { Header, Icon, Segment, Table } from 'semantic-ui-react';
 import { OrderItem, OrderSide, OptionSide } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
-import snxJSConnector from 'utils/snxJSConnector';
 import { useMarketContext } from '../../contexts/MarketContext';
+import { isV4 } from '../../../../../utils/0x';
+import { useContractWrappers0xContext } from '../../contexts/ContractWrappers0xContext';
 
 type MyOrdersProps = {
     optionSide: OptionSide;
@@ -28,19 +29,19 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const contractWrappers0x = useContractWrappers0xContext();
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
-    const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, {
+    const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, contractWrappers0x, {
         enabled: isAppReady && isWalletConnected,
     });
 
     const cancelOrder = async (order: MyOrder) => {
-        const { contractWrappers0x } = snxJSConnector as any;
-
         const targetOrder = order.rawSignedOrder;
         await contractWrappers0x.exchangeProxy
-            .cancelLimitOrder(targetOrder)
+            // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
+            .cancelLimitOrder(targetOrder as any)
             .awaitTransactionSuccessAsync({ from: walletAddress });
     };
 
@@ -57,8 +58,10 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
                 }
             );
             const orders = orderBy(
-                [...buyOrders, ...sellOrders].filter(
-                    (order: MyOrder) => order.rawSignedOrder.makerAddress.toLowerCase() === walletAddress.toLowerCase()
+                [...buyOrders, ...sellOrders].filter((order: MyOrder) =>
+                    isV4(networkId)
+                        ? order.displayOrder.maker.toLowerCase() === walletAddress.toLowerCase()
+                        : order.rawSignedOrder.makerAddress.toLowerCase() === walletAddress.toLowerCase()
                 ),
                 'displayOrder.timeRemaining',
                 'asc'

@@ -139,6 +139,8 @@ export type DisplayOrder = {
     filled: number;
     total: number;
     timeRemaining: number;
+    maker: string;
+    taker: string;
 };
 
 export type OrderSide = 'buy' | 'sell';

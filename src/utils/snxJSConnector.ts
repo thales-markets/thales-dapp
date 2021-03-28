@@ -1,13 +1,9 @@
 import { SynthetixJs, ContractSettings, SynthsMap } from 'synthetix-js';
-
 import { ethers } from 'ethers';
 import { getEthereumNetwork, SUPPORTED_WALLETS_MAP, NetworkId } from './network';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import keyBy from 'lodash/keyBy';
-import { ContractWrappers } from '@0x/contract-wrappers';
-
-declare const window: any;
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -17,16 +13,11 @@ type SnxJSConnector = {
     provider: SynthetixJs['contractSettings']['provider'];
     signer: SynthetixJs['contractSettings']['signer'];
     signers: typeof SynthetixJs.signers;
-    utils: SynthetixJs['utils'];
-    ethers: typeof ethers;
-    ethersUtils: SynthetixJs['ethers']['utils'];
     synthSummaryUtilContract: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
     binaryOptionsUtils: SynthetixJs['binaryOptionsUtils'];
     contractSettings: ContractSettings;
-    // TODO move this into separate logic
-    contractWrappers0x: ContractWrappers;
 };
 
 // @ts-ignore
@@ -41,10 +32,7 @@ const snxJSConnector: SnxJSConnector = {
         this.synthsMap = keyBy(this.synths, 'name');
         this.signer = this.snxJS.contractSettings.signer;
         this.provider = this.snxJS.contractSettings.provider;
-        this.utils = this.snxJS.utils;
-        this.ethersUtils = this.snxJS.ethers.utils;
         this.binaryOptionsUtils = this.snxJS.binaryOptionsUtils;
-        this.ethers = ethers;
         this.contractSettings = contractSettings;
         this.synthSummaryUtilContract = new ethers.Contract(
             synthSummaryUtilContract.addresses[contractSettings.networkId],
@@ -56,9 +44,6 @@ const snxJSConnector: SnxJSConnector = {
             binaryOptionsMarketDataContract.abi,
             this.provider
         );
-        this.contractWrappers0x = new ContractWrappers(window.ethereum, {
-            chainId: contractSettings.networkId,
-        });
     },
 };
 

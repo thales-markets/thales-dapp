@@ -1,1 +1,1 @@
-export { default } from './TradeOptions';
+export { default } from './TradeOptionsContainer';
