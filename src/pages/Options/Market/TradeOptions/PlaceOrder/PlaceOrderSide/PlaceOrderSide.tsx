@@ -48,6 +48,7 @@ import {
     ORDER_PERIOD_ITEMS_MAP,
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
+import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
 
 declare const window: any;
 
@@ -60,6 +61,7 @@ type PlaceOrderSideProps = {
 const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, tokenBalance }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
+    const contractWrappers0x = useContractWrappers0xContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -95,7 +97,6 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
     );
     const {
         snxJS: { sUSD },
-        contractWrappers0x,
     } = snxJSConnector as any;
     const isBuy = orderSide === 'buy';
 

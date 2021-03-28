@@ -6,15 +6,16 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { get0xBaseURL, isV4 } from 'utils/0x';
 import { NetworkId } from 'utils/network';
 import { toJSTimestamp } from 'utils/formatters/date';
+import { ContractWrappers } from '@0x/contract-wrappers';
 
 const useBinaryOptionsMarketOrderbook = (
     networkId: NetworkId,
     optionsTokenAddress: string,
+    contractWrappers0x: ContractWrappers,
     options?: UseQueryOptions<OrderbookInfo>
 ) => {
     const {
         snxJS: { sUSD },
-        contractWrappers0x,
     } = snxJSConnector as any;
     const baseUrl = get0xBaseURL(networkId);
 

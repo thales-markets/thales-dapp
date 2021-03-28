@@ -4,11 +4,11 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsMarkets } from 'types/options';
 import { getPhaseAndEndDate } from '../../utils/options';
 import snxJSConnector from '../../utils/snxJSConnector';
+import { assetDataUtils } from '@0x/order-utils';
 
 const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptions<OptionsMarkets>) => {
     const {
         snxJS: { sUSD },
-        contractWrappers0x,
     } = snxJSConnector as any;
     return useQuery<OptionsMarkets>(
         QUERY_KEYS.BinaryOptions.Markets,
@@ -58,12 +58,8 @@ const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptio
 
                         o.openOrders = totalLong + totalShort;
                     } else {
-                        let makerAssetData = await contractWrappers0x.devUtils
-                            .encodeERC20AssetData(o.longAddress)
-                            .callAsync();
-                        const takerAssetData = await contractWrappers0x.devUtils
-                            .encodeERC20AssetData(sUSD.contract.address)
-                            .callAsync();
+                        let makerAssetData = assetDataUtils.encodeERC20AssetData(o.longAddress);
+                        const takerAssetData = assetDataUtils.encodeERC20AssetData(sUSD.contract.address);
 
                         let response = await fetch(
                             baseUrl + `orderbook?baseAssetData=` + makerAssetData + '&quoteAssetData=' + takerAssetData
@@ -78,9 +74,7 @@ const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptio
                             o.orders.push(responseJ.bids.records);
                         }
 
-                        makerAssetData = await contractWrappers0x.devUtils
-                            .encodeERC20AssetData(o.shortAddress)
-                            .callAsync();
+                        makerAssetData = assetDataUtils.encodeERC20AssetData(o.shortAddress);
 
                         response = await fetch(
                             baseUrl + `orderbook?baseAssetData=` + makerAssetData + '&quoteAssetData=' + takerAssetData
