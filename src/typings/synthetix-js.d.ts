@@ -4,13 +4,9 @@ declare module 'synthetix-js' {
     import { ethers } from 'ethers';
     export interface ContractSettings {
         networkId: 1 | 3 | 4 | 42;
-        signer?: JsonRpcSignerWithNextAddress;
+        signer?: JsonRpcSigner;
         provider?: Web3Provider;
     }
-
-    export type JsonRpcSignerWithNextAddress = JsonRpcSigner & {
-        getNextAddresses: () => Promise<string[]>;
-    };
 
     export type Synth = {
         name: string;
@@ -28,26 +24,16 @@ declare module 'synthetix-js' {
     export type Synths = Synth[];
 
     export type SynthsMap = Record<string, Synth>;
-
-    export type Signers = {
-        Metamask: JsonRpcSignerWithNextAddress;
-        Ledger: JsonRpcSignerWithNextAddress;
-        Coinbase: JsonRpcSignerWithNextAddress;
-        WalletConnect: JsonRpcSignerWithNextAddress;
-        Portis: JsonRpcSignerWithNextAddress;
-    };
-
     export class SynthetixJs {
         constructor(contractSettings: ContractSettings);
 
         contractSettings: {
             synths: Synths;
-            signer: JsonRpcSignerWithNextAddress;
+            signer: JsonRpcSigner;
             provider: Web3Provider;
         };
         utils: typeof ethers.utils;
         ethers: { utils: typeof ethers.utils };
-        static signers: Signers;
         binaryOptionsUtils: any;
         Exchanger: {
             feeRateForExchange: (quoteCurrencyKey: string, baseCurrencyKey: string) => Promise<BigNumberish>;

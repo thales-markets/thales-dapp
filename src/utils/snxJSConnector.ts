@@ -1,6 +1,5 @@
 import { SynthetixJs, ContractSettings, SynthsMap } from 'synthetix-js';
 import { ethers } from 'ethers';
-import { getEthereumNetwork, SUPPORTED_WALLETS_MAP, NetworkId } from './network';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import keyBy from 'lodash/keyBy';
@@ -12,7 +11,6 @@ type SnxJSConnector = {
     synthsMap: SynthsMap;
     provider: SynthetixJs['contractSettings']['provider'];
     signer: SynthetixJs['contractSettings']['signer'];
-    signers: typeof SynthetixJs.signers;
     synthSummaryUtilContract: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
@@ -23,7 +21,6 @@ type SnxJSConnector = {
 // @ts-ignore
 const snxJSConnector: SnxJSConnector = {
     initialized: false,
-    signers: SynthetixJs.signers,
 
     setContractSettings: function (contractSettings: ContractSettings) {
         this.initialized = true;
@@ -45,73 +42,6 @@ const snxJSConnector: SnxJSConnector = {
             this.provider
         );
     },
-};
-
-const connectToMetamask = async (networkId: NetworkId, networkName: string) => {
-    const walletState = {
-        walletType: SUPPORTED_WALLETS_MAP.METAMASK,
-        unlocked: false,
-    };
-    try {
-        const accounts = await snxJSConnector.signer.getNextAddresses();
-        if (accounts && accounts.length > 0) {
-            return {
-                ...walletState,
-                walletAddress: accounts[0],
-                unlocked: true,
-                networkId,
-                networkName: networkName.toLowerCase(),
-            };
-        } else {
-            return {
-                ...walletState,
-                unlockError: 'Please connect to Metamask',
-            };
-        }
-        // We updateWallet with all the infos
-    } catch (e) {
-        console.log(e);
-        return {
-            ...walletState,
-            unlockError: e.message,
-        };
-    }
-};
-
-const getSignerConfig = () => {
-    return {};
-};
-
-export const setSigner = ({ type, networkId }: { type: string; networkId: NetworkId }) => {
-    // @ts-ignore
-    const signer = new snxJSConnector.signers[type](getSignerConfig());
-
-    snxJSConnector.setContractSettings({
-        networkId,
-        signer,
-    });
-};
-
-export const connectToWallet = async ({ wallet }: { wallet: string }) => {
-    const ethereumNetwork = await getEthereumNetwork();
-    if (!ethereumNetwork) {
-        return {
-            walletType: '',
-            unlocked: false,
-            unlockError: 'Network not supported',
-        };
-    }
-
-    const { name, networkId } = ethereumNetwork;
-
-    setSigner({ type: wallet, networkId });
-
-    switch (wallet) {
-        case SUPPORTED_WALLETS_MAP.METAMASK:
-            return connectToMetamask(networkId, name);
-        default:
-            return {};
-    }
 };
 
 export default snxJSConnector;

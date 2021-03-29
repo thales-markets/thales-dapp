@@ -1,16 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { showWalletPopup } from '../../redux/modules/ui';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import { Button, Icon, Label, Menu, Message } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import { getWalletInfo } from 'redux/modules/wallet';
+import onboardConnector from 'utils/onboardConnector';
+import { truncateAddress } from 'utils/formatters/string';
 
 const Header: React.FC = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const { walletAddress, networkName } = useSelector((state: RootState) => getWalletInfo(state));
 
     return (
@@ -23,18 +23,18 @@ const Header: React.FC = () => {
             </Link>
             <Menu.Menu position="right">
                 {walletAddress != null ? (
-                    <Message>
-                        <Icon name="dot circle" color="green" />
-                        <span>{walletAddress}</span>
-                        <Label>{networkName}</Label>
-                    </Message>
+                    <>
+                        <Message style={{ margin: 0 }}>
+                            <Icon name="dot circle" color="green" />
+                            <span>{truncateAddress(walletAddress)}</span>
+                            <Label>{networkName}</Label>
+                        </Message>
+                        <Button secondary onClick={() => onboardConnector.disconnectWallet()}>
+                            {t('header.disconnect-wallet')}
+                        </Button>
+                    </>
                 ) : (
-                    <Button
-                        secondary
-                        onClick={() => {
-                            dispatch(showWalletPopup());
-                        }}
-                    >
+                    <Button primary onClick={() => onboardConnector.connectWallet()}>
                         {t('header.connect-wallet')}
                     </Button>
                 )}

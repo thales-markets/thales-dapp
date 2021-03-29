@@ -4,7 +4,8 @@
             "home": "Thales Home",
             "options": "Options"
         },
-        "connect-wallet": "Connect wallet"
+        "connect-wallet": "Connect wallet",
+        "disconnect-wallet": "Disconnect wallet"
     },
     "common": {
         "max": "max",

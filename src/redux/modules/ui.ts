@@ -4,29 +4,26 @@ import { RootState } from '../rootReducer';
 const sliceName = 'ui';
 
 type UISliceState = {
-    walletPopupIsVisible: boolean;
+    theme: string;
 };
 
 const initialState: UISliceState = {
-    walletPopupIsVisible: false,
+    theme: '',
 };
 
 export const uiSlice = createSlice({
     name: sliceName,
     initialState,
     reducers: {
-        toggleWalletPopup: (state, action: PayloadAction<boolean>) => {
-            state.walletPopupIsVisible = action.payload;
-        },
-        showWalletPopup: (state) => {
-            state.walletPopupIsVisible = true;
+        setTheme: (state, action: PayloadAction<string>) => {
+            state.theme = action.payload;
         },
     },
 });
 
-export const { toggleWalletPopup, showWalletPopup } = uiSlice.actions;
+export const { setTheme } = uiSlice.actions;
 
 export const getUIState = (state: RootState) => state[sliceName];
-export const walletPopupIsVisible = (state: RootState) => getUIState(state).walletPopupIsVisible;
+export const getTheme = (state: RootState) => getUIState(state).theme;
 
 export default uiSlice.reducer;

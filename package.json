@@ -17,7 +17,6 @@
         "@types/jest": "^26.0.20",
         "axios": "^0.21.1",
         "bignumber.js": "^9.0.1",
-        "bnc-notify": "^1.5.1",
         "bnc-onboard": "^1.20.0",
         "date-fns": "^2.19.0",
         "ethers": "^4.0.46",
