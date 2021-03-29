@@ -1,18 +1,16 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-
 import ROUTES from '../../../../constants/routes';
 import NewToBinaryOptions from '../../components/NewToBinaryOptions';
-import { toggleWalletPopup } from '../../../../redux/modules/ui';
 import { Button, Header, Segment } from 'semantic-ui-react';
 import { navigateTo } from 'utils/routes';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
+import onboardConnector from 'utils/onboardConnector';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
@@ -21,7 +19,7 @@ const MarketCreation: React.FC = () => {
                 <>
                     <Header as="h1">{t('options.home.market-creation.not-connected.title')}</Header>
                     <NewToBinaryOptions />
-                    <Button primary onClick={() => dispatch(toggleWalletPopup(true))}>
+                    <Button primary onClick={() => onboardConnector.connectWallet()}>
                         {t('common.wallet.connect-your-wallet')}
                     </Button>
                 </>

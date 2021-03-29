@@ -24,7 +24,7 @@ export const QUERY_KEYS = {
         EthGasPrice: ['network', 'ethGasPrice'],
     },
     BinaryOptions: {
-        Markets: ['binaryOptions', 'markets'],
+        Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
         AccountMarketInfo: (marketAddress: string, accountAddress: string) => [
             'binaryOptions',
@@ -39,7 +39,12 @@ export const QUERY_KEYS = {
             marketAddress,
             walletAddress,
         ],
-        UserMarkets: (walletAddress: string) => ['binaryOptions', 'userMarkets', walletAddress],
+        UserMarkets: (walletAddress: string, networkId: NetworkId) => [
+            'binaryOptions',
+            'userMarkets',
+            walletAddress,
+            networkId,
+        ],
         OptionPrices: (marketAddress: string, period: Period) => ['binaryOptions', marketAddress, period],
         MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
     },

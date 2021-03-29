@@ -4,13 +4,14 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsMarkets } from 'types/options';
 // import { getPhaseAndEndDate } from '../../utils/options';
 // import snxJSConnector from '../../utils/snxJSConnector';
+import { NetworkId } from 'utils/network';
 
-const useBinaryOptionsMarketsQuery = (networkId: number, options?: UseQueryOptions<OptionsMarkets>) => {
+const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOptions<OptionsMarkets>) => {
     // const {
     //     snxJS: { sUSD },
     // } = snxJSConnector as any;
     return useQuery<OptionsMarkets>(
-        QUERY_KEYS.BinaryOptions.Markets,
+        QUERY_KEYS.BinaryOptions.Markets(networkId),
         async () => {
             const optionsMarkets: OptionsMarkets = await thalesData.binaryOptions.markets({
                 max: Infinity,

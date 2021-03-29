@@ -3,29 +3,33 @@ import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import { QueryClientProvider } from 'react-query';
-import { getEthereumNetwork, SUPPORTED_WALLETS_MAP } from 'utils/network';
+import { getEthereumNetwork, SUPPORTED_NETWORKS } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
-import WalletPopup from 'components/WalletPopup';
-import { getIsWalletConnected, updateNetworkSettings, updateWallet, getWalletInfo } from 'redux/modules/wallet';
+import { getIsWalletConnected, updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
 import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { setAppReady } from 'redux/modules/app';
-import { mountMetamaskAccountChangeEvent, mountMetamaskNetworkChange } from 'utils/walletEvents';
+import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import queryConnector from 'utils/queryConnector';
 import { Loader } from 'semantic-ui-react';
+import { initOnboard } from 'containers/Connector/config';
+import { ethers } from 'ethers';
+import useLocalStorage from 'hooks/useLocalStorage';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import onboardConnector from 'utils/onboardConnector';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 
-const { METAMASK } = SUPPORTED_WALLETS_MAP;
-
 const App = () => {
     const dispatch = useDispatch();
     const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
-    const walletInfo = useSelector((state) => getWalletInfo(state));
+    const isAppReady = useSelector((state) => getIsAppReady(state));
+    const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
+    const networkId = useSelector((state) => getNetworkId(state));
+
     queryConnector.setQueryClient();
 
     useEffect(() => {
@@ -36,32 +40,84 @@ const App = () => {
             }
             dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
 
-            // on page refresh, events are lost, we need to mount again
-            if (isWalletConnected) {
-                if (walletInfo.walletType === METAMASK) {
-                    const signer = new snxJSConnector.signers[METAMASK]({});
-                    snxJSConnector.setContractSettings({
-                        networkId: networkId,
-                        signer,
-                    });
-                    mountMetamaskAccountChangeEvent(networkId, (walletAddress) =>
-                        dispatch(updateWallet({ walletAddress }))
-                    );
-                    mountMetamaskNetworkChange();
-                }
-            }
-
             dispatch(setAppReady());
         };
 
         init();
     }, []);
 
+    useEffect(() => {
+        if (isAppReady && networkId) {
+            const onboard = initOnboard(networkId, {
+                address: (walletAddress) => {
+                    dispatch(updateWallet({ walletAddress: walletAddress }));
+                },
+                network: (networkId) => {
+                    if (networkId) {
+                        if (onboardConnector.onboard.getState().wallet.provider) {
+                            const provider = new ethers.providers.Web3Provider(
+                                onboardConnector.onboard.getState().wallet.provider
+                            );
+                            const signer = provider.getSigner();
+
+                            snxJSConnector.setContractSettings({
+                                networkId,
+                                provider,
+                                signer,
+                            });
+                        } else {
+                            snxJSConnector.setContractSettings({ networkId });
+                        }
+
+                        onboardConnector.onboard.config({ networkId });
+
+                        dispatch(
+                            updateNetworkSettings({
+                                networkId: networkId,
+                                networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
+                            })
+                        );
+                    }
+                },
+                wallet: async (wallet) => {
+                    if (wallet.provider) {
+                        const provider = new ethers.providers.Web3Provider(wallet.provider);
+                        const signer = provider.getSigner();
+                        const network = await provider.getNetwork();
+                        const networkId = network.chainId;
+
+                        snxJSConnector.setContractSettings({
+                            networkId,
+                            provider,
+                            signer,
+                        });
+                        dispatch(
+                            updateNetworkSettings({
+                                networkId,
+                                networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
+                            })
+                        );
+                        setSelectedWallet(wallet.name);
+                    } else {
+                        setSelectedWallet(null);
+                    }
+                },
+            });
+            onboardConnector.setOnBoard(onboard);
+        }
+    }, [isAppReady]);
+
+    // load previously saved wallet
+    useEffect(() => {
+        if (onboardConnector.onboard && selectedWallet) {
+            onboardConnector.onboard.walletSelect(selectedWallet);
+        }
+    }, [isAppReady, onboardConnector.onboard, selectedWallet]);
+
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
             <Suspense fallback={<Loader active />}>
                 <Router>
-                    <WalletPopup />
                     <Switch>
                         <Route
                             exact
