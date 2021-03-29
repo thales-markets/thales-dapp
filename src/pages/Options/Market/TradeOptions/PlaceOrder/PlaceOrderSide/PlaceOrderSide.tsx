@@ -1,12 +1,5 @@
-import {
-    generatePseudoRandomSalt,
-    NULL_ADDRESS,
-    NULL_BYTES,
-    Order,
-    signatureUtils,
-    ZERO_AMOUNT,
-} from '@0x/order-utils';
-import { LimitOrder, SignatureType, ZERO } from '@0x/protocol-utils';
+import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
+import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
 import BigNumber from 'bignumber.js';
@@ -28,7 +21,7 @@ import {
 import { RootState } from 'redux/rootReducer';
 import { Form, Input, Segment, Button, Message, Header, Dropdown } from 'semantic-ui-react';
 import { OrderSide } from 'types/options';
-import { get0xBaseURL, isV4 } from 'utils/0x';
+import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -112,9 +105,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
 
     const makerToken = isBuy ? sUSD.contract.address : baseToken;
     const takerToken = isBuy ? baseToken : sUSD.contract.address;
-    const addressToApprove: string = isV4(networkId)
-        ? contractWrappers0x.exchangeProxy.address
-        : '0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e';
+    const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
@@ -194,91 +185,43 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
 
-        if (isV4(networkId)) {
-            try {
-                const createSignedOrderV4Async = async () => {
-                    const order = new LimitOrder({
-                        makerToken,
-                        takerToken,
-                        makerAmount,
-                        takerAmount,
-                        maker: walletAddress,
-                        sender: NULL_ADDRESS,
-                        expiry,
-                        salt,
-                        chainId: networkId,
-                        verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                    });
+        try {
+            const createSignedOrderV4Async = async () => {
+                const order = new LimitOrder({
+                    makerToken,
+                    takerToken,
+                    makerAmount,
+                    takerAmount,
+                    maker: walletAddress,
+                    sender: NULL_ADDRESS,
+                    expiry,
+                    salt,
+                    chainId: networkId,
+                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+                });
 
-                    const signature = await order.getSignatureWithProviderAsync(window.ethereum, SignatureType.EIP712);
-                    return { ...order, signature };
-                };
-
-                const signedOrder = await createSignedOrderV4Async();
-
-                try {
-                    await axios({
-                        method: 'POST',
-                        url: placeOrderUrl,
-                        data: signedOrder,
-                    });
-                } catch (err) {
-                    console.error(JSON.stringify(err.response.data));
-                    setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                    setIsSubmitting(false);
-                }
-                setIsSubmitting(false);
-            } catch (e) {
-                console.error(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsSubmitting(false);
-            }
-        } else {
-            const makerAssetData = await contractWrappers0x.devUtils.encodeERC20AssetData(makerToken).callAsync();
-            const takerAssetData = await contractWrappers0x.devUtils.encodeERC20AssetData(takerToken).callAsync();
-
-            const order: Order = {
-                chainId: networkId,
-                exchangeAddress: '0x4eacd0af335451709e1e7b570b8ea68edec8bc97',
-                makerAddress: walletAddress,
-                takerAddress: NULL_ADDRESS,
-                senderAddress: NULL_ADDRESS,
-                feeRecipientAddress: NULL_ADDRESS,
-                expirationTimeSeconds: expiry,
-                salt,
-                makerAssetAmount: makerAmount,
-                takerAssetAmount: takerAmount,
-                makerAssetData,
-                takerAssetData,
-                makerFeeAssetData: NULL_BYTES,
-                takerFeeAssetData: NULL_BYTES,
-                makerFee: ZERO,
-                takerFee: ZERO_AMOUNT,
+                const signature = await order.getSignatureWithProviderAsync(window.ethereum, SignatureType.EIP712);
+                return { ...order, signature };
             };
-            try {
-                const signedOrder = await signatureUtils.ecSignOrderAsync(
-                    window.web3.currentProvider,
-                    order,
-                    walletAddress
-                );
 
-                try {
-                    await axios({
-                        method: 'POST',
-                        url: placeOrderUrl,
-                        data: signedOrder,
-                    });
-                } catch (err) {
-                    console.error(JSON.stringify(err.response.data));
-                    setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                    setIsSubmitting(false);
-                }
-                setIsSubmitting(false);
-            } catch (e) {
-                console.error(e);
+            const signedOrder = await createSignedOrderV4Async();
+
+            try {
+                await axios({
+                    method: 'POST',
+                    url: placeOrderUrl,
+                    data: signedOrder,
+                });
+            } catch (err) {
+                console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsSubmitting(false);
             }
+            setIsSubmitting(false);
+        } catch (e) {
+            console.error(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsSubmitting(false);
         }
     };
 

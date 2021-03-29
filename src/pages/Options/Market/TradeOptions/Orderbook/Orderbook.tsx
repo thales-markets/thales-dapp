@@ -9,7 +9,6 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useTranslation } from 'react-i18next';
-import { useContractWrappers0xContext } from '../../contexts/ContractWrappers0xContext';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -18,13 +17,12 @@ type OrderbookProps = {
 const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
-    const contractWrappers0x = useContractWrappers0xContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
-    const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, contractWrappers0x, {
+    const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, {
         enabled: isAppReady,
     });
 

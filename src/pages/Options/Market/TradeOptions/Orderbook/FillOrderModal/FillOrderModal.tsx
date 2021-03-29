@@ -12,7 +12,6 @@ import {
 } from 'redux/modules/wallet';
 import { AccountMarketInfo, OptionSide, OrderItem, OrderSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { isV4 } from 'utils/0x';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import BigNumber from 'bignumber.js';
 import { DECIMALS } from 'constants/0x';
@@ -106,9 +105,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         (isBuy ? !tokenBalance : !sUSDBalance);
 
     const takerToken = isBuy ? baseToken : sUSD.contract.address;
-    const addressToApprove: string = isV4(networkId)
-        ? contractWrappers0x.exchangeProxy.address
-        : '0xf1ec01d6236d3cd881a0bf0130ea25fe4234003e';
+    const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -166,43 +163,14 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         const gasp = (await window.web3.eth) ? window.web3.eth.getGasPrice() : 1e9;
         const valueP = calculateProtocolFee([targetOrder], gasp);
 
-        if (isV4(networkId)) {
-            await contractWrappers0x.exchangeProxy
-                .fillLimitOrder(
-                    // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
-                    targetOrder as any,
-                    targetOrder.signature as any,
-                    Web3Wrapper.toBaseUnitAmount(new BigNumber(sOPTAmount), DECIMALS)
-                )
-                .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
-        } else {
-            // contractWrappers.exchange
-            //     .fillOrder(targetOrder, Web3Wrapper.toBaseUnitAmount(new BigNumber(1), 18), targetOrder.signature)
-            //     .sendTransactionAsync({
-            //         from: window.web3.currentProvider.selectedAddress,
-            //         value: valueP,
-            //     })
-            //     .catch((e) => {
-            //         console.log(e);
-            //     });
-
-            const contract = new ethers.Contract(
-                '0x4eacd0af335451709e1e7b570b8ea68edec8bc97',
-                contractWrappers0x.exchange.abi,
-                snxJSConnector.signer
-            );
-            const overrides = {
-                // To convert Ether to Wei:
-                value: ethers.utils.parseEther('0.1'), // ether in this case MUST be a string
-            };
-
-            try {
-                const newAmount = new BigNumber(10).pow(18).multipliedBy(sOPTAmount);
-                await contract.fillOrder(targetOrder, newAmount.toFixed(), targetOrder.signature, overrides);
-            } catch (e) {
-                console.log(e);
-            }
-        }
+        await contractWrappers0x.exchangeProxy
+            .fillLimitOrder(
+                // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
+                targetOrder as any,
+                targetOrder.signature as any,
+                Web3Wrapper.toBaseUnitAmount(new BigNumber(sOPTAmount), DECIMALS)
+            )
+            .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
         setIsFilling(false);
     };
 

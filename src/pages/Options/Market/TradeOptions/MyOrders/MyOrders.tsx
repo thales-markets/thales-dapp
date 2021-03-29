@@ -11,7 +11,6 @@ import { Header, Icon, Segment, Table } from 'semantic-ui-react';
 import { OrderItem, OrderSide, OptionSide } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 import { useMarketContext } from '../../contexts/MarketContext';
-import { isV4 } from '../../../../../utils/0x';
 import { useContractWrappers0xContext } from '../../contexts/ContractWrappers0xContext';
 
 type MyOrdersProps = {
@@ -33,7 +32,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
-    const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, contractWrappers0x, {
+    const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, {
         enabled: isAppReady && isWalletConnected,
     });
 
@@ -58,10 +57,8 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
                 }
             );
             const orders = orderBy(
-                [...buyOrders, ...sellOrders].filter((order: MyOrder) =>
-                    isV4(networkId)
-                        ? order.displayOrder.maker.toLowerCase() === walletAddress.toLowerCase()
-                        : order.rawSignedOrder.makerAddress.toLowerCase() === walletAddress.toLowerCase()
+                [...buyOrders, ...sellOrders].filter(
+                    (order: MyOrder) => order.displayOrder.maker.toLowerCase() === walletAddress.toLowerCase()
                 ),
                 'displayOrder.timeRemaining',
                 'asc'
