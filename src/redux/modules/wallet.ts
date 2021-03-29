@@ -8,12 +8,7 @@ import { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 const sliceName = 'wallet';
 
 export type WalletSliceState = {
-    walletType: string;
-    unlocked: boolean;
     walletAddress: string | null;
-    unlockError: string | null;
-    walletPaginatorIndex: number;
-    availableWallets: string[];
     networkId: NetworkId;
     networkName: string;
     gasSpeed: GasSpeed;
@@ -22,11 +17,6 @@ export type WalletSliceState = {
 };
 
 const initialState: WalletSliceState = {
-    walletType: '',
-    unlocked: false,
-    unlockError: null,
-    walletPaginatorIndex: 0,
-    availableWallets: [],
     walletAddress: null,
     networkId: defaultNetwork.networkId,
     networkName: defaultNetwork.name,

@@ -8,8 +8,6 @@ import TradeOptions from './TradeOptions';
 import { ContractWrappers0xProvider } from '../contexts/ContractWrappers0xContext';
 import snxJSConnector from '../../../../utils/snxJSConnector';
 
-declare const window: any;
-
 const TradeOptionsContainer: React.FC = () => {
     const [contractWrappers0x, setContractWrappers0x] = useState<ContractWrappers>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
