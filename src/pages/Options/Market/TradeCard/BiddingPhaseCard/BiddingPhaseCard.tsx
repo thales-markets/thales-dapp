@@ -36,7 +36,6 @@ import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
-import { MaxUint256 } from 'ethers/constants';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -203,8 +202,11 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             } = snxJSConnector as any;
             try {
                 setIsAllowing(true);
-                const gasEstimate = await sUSD.contract.estimate.approve(BOMContract.address, MaxUint256);
-                await sUSD.approve(BOMContract.address, MaxUint256, {
+                const gasEstimate = await sUSD.contract.estimate.approve(
+                    BOMContract.address,
+                    ethers.constants.MaxUint256
+                );
+                await sUSD.approve(BOMContract.address, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });

@@ -29,7 +29,6 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { MaxUint256 } from 'ethers/constants';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
@@ -155,8 +154,8 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
             const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
             try {
                 setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimate.approve(addressToApprove, MaxUint256);
-                await erc20Instance.approve(addressToApprove, MaxUint256, {
+                const gasEstimate = await erc20Instance.estimate.approve(addressToApprove, ethers.constants.MaxUint256);
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });

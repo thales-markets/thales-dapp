@@ -33,7 +33,7 @@ import Select from 'components/Select';
 import MarketSentiment from '../components/MarketSentiment';
 import { withStyles } from '@material-ui/core';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import { MaxUint256 } from 'ethers/constants';
+import { ethers } from 'ethers';
 
 const StyledSlider = withStyles({
     root: {
@@ -271,9 +271,9 @@ export const CreateMarket: React.FC = () => {
                 setIsAllowing(true);
                 const gasEstimate = await sUSD.contract.estimate.approve(
                     BinaryOptionMarketManager.contract.address,
-                    MaxUint256
+                    ethers.constants.MaxUint256
                 );
-                await sUSD.approve(BinaryOptionMarketManager.contract.address, MaxUint256, {
+                await sUSD.approve(BinaryOptionMarketManager.contract.address, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });

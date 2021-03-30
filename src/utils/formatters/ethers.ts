@@ -1,4 +1,4 @@
-import { BigNumberish } from 'ethers/utils';
+import { BigNumberish } from 'ethers';
 import { ethers } from 'ethers';
 
 export const bytesFormatter = (input: string) => ethers.utils.formatBytes32String(input);
