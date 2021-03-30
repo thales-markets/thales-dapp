@@ -44,7 +44,6 @@ const snxJSConnector: SnxJSConnector = {
             binaryOptionsMarketDataContract.abi,
             this.provider
         );
-        console.log('here: ', this);
     },
 };
 

@@ -149,7 +149,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         const fetchGasLimit = async (isShort: boolean, amount: string) => {
             const {
                 utils: { parseEther },
-            } = snxJSConnector as any;
+            } = snxJSConnector.snxJS as any;
             try {
                 const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
@@ -170,17 +170,16 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     useEffect(() => {
         const {
-            snxJS: { contracts },
-        } = snxJSConnector as any;
-        const sUSD = contracts.SynthsUSD;
+            contracts: { SynthsUSD },
+        } = snxJSConnector.snxJS as any;
 
         const getAllowance = async () => {
-            const allowance = await sUSD.allowance(walletAddress, BOMContract.address);
+            const allowance = await SynthsUSD.allowance(walletAddress, BOMContract.address);
             setAllowance(!!bigNumberFormatter(allowance));
         };
 
         const registerAllowanceListener = () => {
-            sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+            SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
                 if (owner === walletAddress && spender === getAddress(BOMContract.address)) {
                     setAllowance(true);
                     setIsAllowing(false);
@@ -192,23 +191,22 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             registerAllowanceListener();
         }
         return () => {
-            sUSD.contract.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+            SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
     }, [walletAddress, isWalletConnected]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
             const {
-                snxJS: { contracts },
-            } = snxJSConnector as any;
-            const sUSD = contracts.SynthsUSD;
+                contracts: { SynthsUSD },
+            } = snxJSConnector.snxJS as any;
             try {
                 setIsAllowing(true);
-                const gasEstimate = await sUSD.contract.estimate.approve(
+                const gasEstimate = await SynthsUSD.estimateGas.approve(
                     BOMContract.address,
                     ethers.constants.MaxUint256
                 );
-                await sUSD.approve(BOMContract.address, ethers.constants.MaxUint256, {
+                await SynthsUSD.approve(BOMContract.address, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });
@@ -223,7 +221,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         if (gasPrice !== null) {
             const {
                 utils: { parseEther },
-            } = snxJSConnector as any;
+            } = snxJSConnector.snxJS as any;
             const amount = isShort ? shortSideAmount : longSideAmount;
             if (!amount) return;
             try {
@@ -276,7 +274,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         const {
             utils: { parseEther },
             binaryOptionsUtils: { bidOrRefundForPrice },
-        } = snxJSConnector as any;
+        } = snxJSConnector.snxJS as any;
         const setPriceAmountFunction = isShort ? setShortPriceAmount : setLongPriceAmount;
         const setSideAmountFunction = isShort ? setShortSideAmount : setLongSideAmount;
         const bidPrice = isShort ? shortPrice : longPrice;
@@ -341,7 +339,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         const {
             utils: { parseEther },
             binaryOptionsUtils: { pricesAfterBidOrRefund },
-        } = snxJSConnector as any;
+        } = snxJSConnector.snxJS as any;
         if (!amount) {
             setLongPriceAmount('');
             setShortPriceAmount('');

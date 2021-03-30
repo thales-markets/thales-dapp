@@ -92,9 +92,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     );
 
     const {
-        snxJS: { contracts },
-    } = snxJSConnector as any;
-    const sUSD = contracts.SynthsUSD;
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =
@@ -104,7 +103,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         !isWalletConnected ||
         (isBuy ? !tokenBalance : !sUSDBalance);
 
-    const takerToken = isBuy ? baseToken : sUSD.contract.address;
+    const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
 
     useEffect(() => {

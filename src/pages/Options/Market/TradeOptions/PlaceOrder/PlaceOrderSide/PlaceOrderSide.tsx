@@ -88,9 +88,8 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
     const {
-        snxJS: { contracts },
-    } = snxJSConnector as any;
-    const sUSD = contracts.SynthsUSD;
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =
@@ -103,8 +102,8 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         !isWalletConnected ||
         (isBuy ? !sUSDBalance : !tokenBalance);
 
-    const makerToken = isBuy ? sUSD.contract.address : baseToken;
-    const takerToken = isBuy ? baseToken : sUSD.contract.address;
+    const makerToken = isBuy ? SynthsUSD.address : baseToken;
+    const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
