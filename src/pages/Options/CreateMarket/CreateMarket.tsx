@@ -175,7 +175,6 @@ export const CreateMarket: React.FC = () => {
         const {
             contracts: { SynthsUSD, BinaryOptionMarketManager },
         } = snxJSConnector.snxJS as any;
-        console.log(SynthsUSD);
         const getAllowanceForCurrentWallet = async () => {
             try {
                 const [allowance, fees] = await Promise.all([
