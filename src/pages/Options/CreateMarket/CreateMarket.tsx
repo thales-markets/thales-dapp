@@ -34,6 +34,7 @@ import MarketSentiment from '../components/MarketSentiment';
 import { withStyles } from '@material-ui/core';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { MaxUint256 } from 'ethers/constants';
+import { parseEther } from 'ethers/utils';
 
 const StyledSlider = withStyles({
     root: {
@@ -155,9 +156,6 @@ export const CreateMarket: React.FC = () => {
         initialFundingAmount === '';
 
     const formatCreateMarketArguments = () => {
-        const {
-            utils: { parseEther },
-        } = snxJSConnector as any;
         const longBidAmount: number = (initialFundingAmount as number) * (initialLongShorts.long / 100);
         const shortBidAmount: number = (initialFundingAmount as number) * (initialLongShorts.short / 100);
 

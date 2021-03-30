@@ -37,6 +37,7 @@ import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
 import { MaxUint256 } from 'ethers/constants';
+import { parseEther } from 'ethers/utils';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -148,9 +149,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     useEffect(() => {
         const fetchGasLimit = async (isShort: boolean, amount: string) => {
-            const {
-                utils: { parseEther },
-            } = snxJSConnector as any;
             try {
                 const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
@@ -217,9 +215,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     const handleBidOrRefund = async () => {
         if (gasPrice !== null) {
-            const {
-                utils: { parseEther },
-            } = snxJSConnector as any;
             const amount = isShort ? shortSideAmount : longSideAmount;
             if (!amount) return;
             try {
@@ -270,7 +265,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         isRefund: boolean
     ) => {
         const {
-            utils: { parseEther },
             binaryOptionsUtils: { bidOrRefundForPrice },
         } = snxJSConnector as any;
         const setPriceAmountFunction = isShort ? setShortPriceAmount : setLongPriceAmount;
@@ -335,7 +329,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     const handleBidAmount = async (amount: string) => {
         isShort ? setShortSideAmount(amount) : setLongSideAmount(amount);
         const {
-            utils: { parseEther },
             binaryOptionsUtils: { pricesAfterBidOrRefund },
         } = snxJSConnector as any;
         if (!amount) {

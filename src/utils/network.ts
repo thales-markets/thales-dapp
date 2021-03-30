@@ -50,3 +50,8 @@ export const isMainNet = (networkId: NetworkId) => networkId === 1;
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 
 export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
+
+export const getInfuraRpcURL = (networkId: NetworkId) => {
+    const network = SUPPORTED_NETWORKS[networkId];
+    return `https://${network}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
+};

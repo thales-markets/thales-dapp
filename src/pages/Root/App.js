@@ -12,7 +12,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import queryConnector from 'utils/queryConnector';
 import { Loader } from 'semantic-ui-react';
-import { initOnboard } from 'containers/Connector/config';
+import { initOnboard } from 'config/onboard';
 import { ethers } from 'ethers';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
