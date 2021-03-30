@@ -173,14 +173,20 @@ export const CreateMarket: React.FC = () => {
 
     useEffect(() => {
         const {
-            snxJS: { sUSD, BinaryOptionMarketManager },
+            snxJS: { contracts },
+            binaryOptionsMarketDataContract,
         } = snxJSConnector as any;
+        const sUSD = contracts.SynthsUSD;
+        console.log('not here: ', sUSD);
+        console.log('binary: ', binaryOptionsMarketDataContract);
         const getAllowanceForCurrentWallet = async () => {
             try {
                 const [allowance, fees] = await Promise.all([
-                    sUSD.allowance(walletAddress, BinaryOptionMarketManager.contract.address),
-                    BinaryOptionMarketManager.fees(),
+                    sUSD.allowance(walletAddress, binaryOptionsMarketDataContract.address),
+                    binaryOptionsMarketDataContract.getMarketData(binaryOptionsMarketDataContract.address),
                 ]);
+                console.log(allowance);
+                console.log(fees);
                 setAllowance(!!bigNumberFormatter(allowance));
                 setMarketFees({
                     creator: fees.creatorFee / 1e18,
@@ -193,8 +199,8 @@ export const CreateMarket: React.FC = () => {
             }
         };
         const setEventListeners = () => {
-            sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === BinaryOptionMarketManager.contract.address) {
+            sUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                if (owner === walletAddress && spender === binaryOptionsMarketDataContract.address) {
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -211,6 +217,7 @@ export const CreateMarket: React.FC = () => {
         const {
             snxJS: { BinaryOptionMarketManager },
         } = snxJSConnector as any;
+        console.log(BinaryOptionMarketManager);
         if (!isCreatingMarket) return;
         BinaryOptionMarketManager.contract.on(
             BINARY_OPTIONS_EVENTS.MARKET_CREATED,
@@ -265,11 +272,12 @@ export const CreateMarket: React.FC = () => {
     const handleAllowance = async () => {
         if (gasPrice !== null) {
             const {
-                snxJS: { sUSD, BinaryOptionMarketManager },
+                snxJS: { contracts, BinaryOptionMarketManager },
             } = snxJSConnector as any;
+            const sUSD = contracts.SynthsUSD;
             try {
                 setIsAllowing(true);
-                const gasEstimate = await sUSD.contract.estimate.approve(
+                const gasEstimate = await sUSD.estimateGas.approve(
                     BinaryOptionMarketManager.contract.address,
                     ethers.constants.MaxUint256
                 );

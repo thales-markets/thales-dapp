@@ -13,8 +13,9 @@ const useBinaryOptionsMarketOrderbook = (
     options?: UseQueryOptions<OrderbookInfo>
 ) => {
     const {
-        snxJS: { sUSD },
+        snxJS: { contracts },
     } = snxJSConnector as any;
+    const sUSD = contracts.SynthsUSD;
     const baseUrl = get0xBaseURL(networkId);
 
     const orderbook: OrderbookInfo = {

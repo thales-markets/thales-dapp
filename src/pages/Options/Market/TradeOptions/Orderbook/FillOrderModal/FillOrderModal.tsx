@@ -92,8 +92,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     );
 
     const {
-        snxJS: { sUSD },
+        snxJS: { contracts },
     } = snxJSConnector as any;
+    const sUSD = contracts.SynthsUSD;
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =

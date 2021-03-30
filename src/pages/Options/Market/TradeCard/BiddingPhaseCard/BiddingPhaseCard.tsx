@@ -170,8 +170,9 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     useEffect(() => {
         const {
-            snxJS: { sUSD },
+            snxJS: { contracts },
         } = snxJSConnector as any;
+        const sUSD = contracts.SynthsUSD;
 
         const getAllowance = async () => {
             const allowance = await sUSD.allowance(walletAddress, BOMContract.address);
@@ -198,8 +199,9 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     const handleAllowance = async () => {
         if (gasPrice !== null) {
             const {
-                snxJS: { sUSD },
+                snxJS: { contracts },
             } = snxJSConnector as any;
+            const sUSD = contracts.SynthsUSD;
             try {
                 setIsAllowing(true);
                 const gasEstimate = await sUSD.contract.estimate.approve(

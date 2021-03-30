@@ -88,8 +88,9 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
     const {
-        snxJS: { sUSD },
+        snxJS: { contracts },
     } = snxJSConnector as any;
+    const sUSD = contracts.SynthsUSD;
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =
