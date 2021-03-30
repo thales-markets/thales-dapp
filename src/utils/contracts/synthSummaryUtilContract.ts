@@ -4,6 +4,9 @@ export const synthSummaryUtilContract = {
         3: '0x26a3C1878c4f3598e58f8bFB60B3cD9EF083e892',
         4: '0xba6c0220157008cecb7364b37e27885e7b5be74a',
         42: '0xA2b5742922ae4CA1676349009E33DA5fB4D05dCB',
+        // added 5 and 31337 to resolve error with typings
+        5: '', // TODO: goerli network remove or implement
+        31337: '', // TODO: mainnet-fork remover or implement
     },
     abi: [
         {

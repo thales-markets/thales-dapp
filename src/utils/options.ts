@@ -1,5 +1,5 @@
 import orderBy from 'lodash/orderBy';
-import { SynthsMap } from 'synthetix-js';
+import { SynthsMap } from 'types/synthetix';
 import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
 

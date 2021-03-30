@@ -4,6 +4,9 @@ export const binaryOptionsMarketDataContract = {
         3: '0x953Cb51942084edd0e1E6BdCBa9e19eCDfC3BdFd',
         4: '0x99D378835E2981e4AA8EeF08090d5621853dfC34',
         42: '0xe9d2762643Ab57a07b4fb91E38D13e501d2cbaAd',
+        // added 5 and 31337 to resolve error with typings
+        5: '', // TODO: goerli network remove or implement
+        31337: '', // TODO: mainnet-fork remover or implement
     },
     abi: [
         {
