@@ -60,7 +60,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
         const fetchGasLimit = async () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await BOMContractWithSigner.estimate.exerciseOptions();
+                const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);

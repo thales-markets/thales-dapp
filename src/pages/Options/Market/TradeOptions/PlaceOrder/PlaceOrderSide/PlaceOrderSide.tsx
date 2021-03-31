@@ -29,7 +29,6 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { MaxUint256 } from 'ethers/constants';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
@@ -87,8 +86,8 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
     const {
-        snxJS: { sUSD },
-    } = snxJSConnector as any;
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =
@@ -101,8 +100,8 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         !isWalletConnected ||
         (isBuy ? !sUSDBalance : !tokenBalance);
 
-    const makerToken = isBuy ? sUSD.contract.address : baseToken;
-    const takerToken = isBuy ? baseToken : sUSD.contract.address;
+    const makerToken = isBuy ? SynthsUSD.address : baseToken;
+    const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
@@ -153,8 +152,11 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
             const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
             try {
                 setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimate.approve(addressToApprove, MaxUint256);
-                await erc20Instance.approve(addressToApprove, MaxUint256, {
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });
@@ -200,7 +202,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
 
                 try {
                     const signature = await order.getSignatureWithProviderAsync(
-                        (snxJSConnector.signer.provider as any).provider,
+                        (snxJSConnector.signer?.provider as any).provider,
                         SignatureType.EIP712
                     );
                     return { ...order, signature };

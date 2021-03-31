@@ -20,7 +20,6 @@ import { APPROVAL_EVENTS } from 'constants/events';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { MaxUint256 } from 'ethers/constants';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -93,8 +92,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     );
 
     const {
-        snxJS: { sUSD },
-    } = snxJSConnector as any;
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =
@@ -104,7 +103,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         !isWalletConnected ||
         (isBuy ? !tokenBalance : !sUSDBalance);
 
-    const takerToken = isBuy ? baseToken : sUSD.contract.address;
+    const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
 
     useEffect(() => {
@@ -136,8 +135,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
             try {
                 setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimate.approve(addressToApprove, MaxUint256);
-                await erc20Instance.approve(addressToApprove, MaxUint256, {
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });

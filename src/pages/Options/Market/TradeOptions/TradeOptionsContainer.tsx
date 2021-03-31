@@ -13,7 +13,7 @@ const TradeOptionsContainer: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     useEffect(() => {
         setContractWrappers0x(
-            new ContractWrappers((snxJSConnector.signer.provider as any).provider, {
+            new ContractWrappers((snxJSConnector.signer?.provider as any).provider, {
                 chainId: networkId,
             })
         );

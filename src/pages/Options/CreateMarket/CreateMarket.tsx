@@ -33,8 +33,7 @@ import Select from 'components/Select';
 import MarketSentiment from '../components/MarketSentiment';
 import { withStyles } from '@material-ui/core';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import { MaxUint256 } from 'ethers/constants';
-import { parseEther } from 'ethers/utils';
+import { ethers } from 'ethers';
 
 const StyledSlider = withStyles({
     root: {
@@ -160,23 +159,26 @@ export const CreateMarket: React.FC = () => {
         const shortBidAmount: number = (initialFundingAmount as number) * (initialLongShorts.short / 100);
 
         const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
-        const price = parseEther(strikePrice.toString());
+        const price = ethers.utils.parseEther(strikePrice.toString());
         const times = [
             Math.round((biddingEndDate as Date).getTime() / 1000),
             Math.round((maturityDate as Date).getTime() / 1000),
         ];
-        const bids = [parseEther(longBidAmount.toString()), parseEther(shortBidAmount.toString())];
+        const bids = [
+            ethers.utils.parseEther(longBidAmount.toString()),
+            ethers.utils.parseEther(shortBidAmount.toString()),
+        ];
         return { oracleKey, price, times, bids };
     };
 
     useEffect(() => {
         const {
-            snxJS: { sUSD, BinaryOptionMarketManager },
-        } = snxJSConnector as any;
+            contracts: { SynthsUSD, BinaryOptionMarketManager },
+        } = snxJSConnector.snxJS as any;
         const getAllowanceForCurrentWallet = async () => {
             try {
                 const [allowance, fees] = await Promise.all([
-                    sUSD.allowance(walletAddress, BinaryOptionMarketManager.contract.address),
+                    SynthsUSD.allowance(walletAddress, BinaryOptionMarketManager.address),
                     BinaryOptionMarketManager.fees(),
                 ]);
                 setAllowance(!!bigNumberFormatter(allowance));
@@ -191,8 +193,8 @@ export const CreateMarket: React.FC = () => {
             }
         };
         const setEventListeners = () => {
-            sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === BinaryOptionMarketManager.contract.address) {
+            SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                if (owner === walletAddress && spender === BinaryOptionMarketManager.address) {
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -201,16 +203,16 @@ export const CreateMarket: React.FC = () => {
         getAllowanceForCurrentWallet();
         setEventListeners();
         return () => {
-            sUSD.contract.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+            SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
     }, [walletAddress]);
 
     useEffect(() => {
         const {
-            snxJS: { BinaryOptionMarketManager },
-        } = snxJSConnector as any;
+            contracts: { BinaryOptionMarketManager },
+        } = snxJSConnector.snxJS as any;
         if (!isCreatingMarket) return;
-        BinaryOptionMarketManager.contract.on(
+        BinaryOptionMarketManager.on(
             BINARY_OPTIONS_EVENTS.MARKET_CREATED,
             (market: string, creator: string, oracleKey: string) => {
                 if (
@@ -222,18 +224,18 @@ export const CreateMarket: React.FC = () => {
             }
         );
         return () => {
-            BinaryOptionMarketManager.contract.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
+            BinaryOptionMarketManager.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
         };
     }, [isCreatingMarket]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
             const {
-                snxJS: { BinaryOptionMarketManager },
-            } = snxJSConnector as any;
+                contracts: { BinaryOptionMarketManager },
+            } = snxJSConnector.snxJS as any;
             try {
                 const { oracleKey, price, times, bids } = formatCreateMarketArguments();
-                const gasEstimate = await BinaryOptionMarketManager.contract.estimate.createMarket(
+                const gasEstimate = await BinaryOptionMarketManager.estimateGas.createMarket(
                     oracleKey,
                     price,
                     withdrawalsEnabled,
@@ -263,15 +265,15 @@ export const CreateMarket: React.FC = () => {
     const handleAllowance = async () => {
         if (gasPrice !== null) {
             const {
-                snxJS: { sUSD, BinaryOptionMarketManager },
-            } = snxJSConnector as any;
+                contracts: { SynthsUSD, BinaryOptionMarketManager },
+            } = snxJSConnector.snxJS as any;
             try {
                 setIsAllowing(true);
-                const gasEstimate = await sUSD.contract.estimate.approve(
-                    BinaryOptionMarketManager.contract.address,
-                    MaxUint256
+                const gasEstimate = await SynthsUSD.estimateGas.approve(
+                    BinaryOptionMarketManager.address,
+                    ethers.constants.MaxUint256
                 );
-                await sUSD.approve(BinaryOptionMarketManager.contract.address, MaxUint256, {
+                await SynthsUSD.approve(BinaryOptionMarketManager.address, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });
@@ -285,8 +287,8 @@ export const CreateMarket: React.FC = () => {
     const handleMarketCreation = async () => {
         if (gasPrice !== null) {
             const {
-                snxJS: { BinaryOptionMarketManager },
-            } = snxJSConnector as any;
+                contracts: { BinaryOptionMarketManager },
+            } = snxJSConnector.snxJS as any;
             try {
                 setTxErrorMessage(null);
                 setIsCreatingMarket(true);

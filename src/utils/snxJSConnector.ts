@@ -1,20 +1,22 @@
-import { SynthetixJs, ContractSettings, SynthsMap } from 'synthetix-js';
-import { ethers } from 'ethers';
+import { ethers, Signer } from 'ethers';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import keyBy from 'lodash/keyBy';
+import initSynthetixJS, { Synth } from '@synthetixio/js';
+import { SynthsMap, ContractSettings } from 'types/synthetix';
+import * as BinaryOptionsUtils from './binaryOptions';
 
 type SnxJSConnector = {
     initialized: boolean;
-    snxJS: SynthetixJs;
-    synths: SynthetixJs['contractSettings']['synths'];
+    snxJS: ReturnType<typeof initSynthetixJS> | null;
+    synths: Synth[];
     synthsMap: SynthsMap;
-    provider: SynthetixJs['contractSettings']['provider'];
-    signer: SynthetixJs['contractSettings']['signer'];
+    provider: ethers.providers.Provider | undefined;
+    signer: Signer | undefined;
     synthSummaryUtilContract: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
-    binaryOptionsUtils: SynthetixJs['binaryOptionsUtils'];
+    binaryOptionsUtils: any;
     contractSettings: ContractSettings;
 };
 
@@ -24,12 +26,12 @@ const snxJSConnector: SnxJSConnector = {
 
     setContractSettings: function (contractSettings: ContractSettings) {
         this.initialized = true;
-        this.snxJS = new SynthetixJs(contractSettings);
-        this.synths = this.snxJS.contractSettings.synths;
+        this.snxJS = initSynthetixJS(contractSettings);
+        this.synths = this.snxJS.synths;
         this.synthsMap = keyBy(this.synths, 'name');
-        this.signer = this.snxJS.contractSettings.signer;
-        this.provider = this.snxJS.contractSettings.provider;
-        this.binaryOptionsUtils = this.snxJS.binaryOptionsUtils;
+        this.signer = contractSettings.signer;
+        this.provider = contractSettings.provider;
+        this.binaryOptionsUtils = BinaryOptionsUtils;
         this.contractSettings = contractSettings;
         this.synthSummaryUtilContract = new ethers.Contract(
             synthSummaryUtilContract.addresses[contractSettings.networkId],

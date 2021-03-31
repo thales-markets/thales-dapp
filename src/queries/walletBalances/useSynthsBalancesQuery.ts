@@ -3,7 +3,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { bytesFormatter, bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 
 import { SYNTHS_MAP, CurrencyKey } from 'constants/currency';
-import { BigNumberish } from 'ethers/utils';
+import { BigNumberish } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { NetworkId } from 'utils/network';

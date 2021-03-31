@@ -36,8 +36,6 @@ import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
-import { MaxUint256 } from 'ethers/constants';
-import { parseEther } from 'ethers/utils';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -150,11 +148,12 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     useEffect(() => {
         const fetchGasLimit = async (isShort: boolean, amount: string) => {
             try {
-                const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
+                const bidOrRefundAmount =
+                    amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const bidOrRefundFunction = isBid
-                    ? BOMContractWithSigner.estimate.bid
-                    : BOMContractWithSigner.estimate.refund;
+                    ? BOMContractWithSigner.estimateGas.bid
+                    : BOMContractWithSigner.estimateGas.refund;
                 const gasEstimate = await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount);
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
@@ -169,16 +168,16 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     useEffect(() => {
         const {
-            snxJS: { sUSD },
-        } = snxJSConnector as any;
+            contracts: { SynthsUSD },
+        } = snxJSConnector.snxJS as any;
 
         const getAllowance = async () => {
-            const allowance = await sUSD.allowance(walletAddress, BOMContract.address);
+            const allowance = await SynthsUSD.allowance(walletAddress, BOMContract.address);
             setAllowance(!!bigNumberFormatter(allowance));
         };
 
         const registerAllowanceListener = () => {
-            sUSD.contract.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+            SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
                 if (owner === walletAddress && spender === getAddress(BOMContract.address)) {
                     setAllowance(true);
                     setIsAllowing(false);
@@ -190,19 +189,22 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             registerAllowanceListener();
         }
         return () => {
-            sUSD.contract.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+            SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
     }, [walletAddress, isWalletConnected]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
             const {
-                snxJS: { sUSD },
-            } = snxJSConnector as any;
+                contracts: { SynthsUSD },
+            } = snxJSConnector.snxJS as any;
             try {
                 setIsAllowing(true);
-                const gasEstimate = await sUSD.contract.estimate.approve(BOMContract.address, MaxUint256);
-                await sUSD.approve(BOMContract.address, MaxUint256, {
+                const gasEstimate = await SynthsUSD.estimateGas.approve(
+                    BOMContract.address,
+                    ethers.constants.MaxUint256
+                );
+                await SynthsUSD.approve(BOMContract.address, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });
@@ -222,7 +224,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                 setIsBidding(true);
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const bidOrRefundFunction = isBid ? BOMContractWithSigner.bid : BOMContractWithSigner.refund;
-                const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
+                const bidOrRefundAmount =
+                    amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
                 const tx = (await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount, {
                     gasLimit,
                     gasPrice: gasPriceInWei(gasPrice),
@@ -282,7 +285,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             const estimatedAmountNeeded = bidOrRefundForPrice({
                 bidSide: isShort ? 1 : 0,
                 priceSide: targetShort ? 1 : 0,
-                price: parseEther(targetPrice),
+                price: ethers.utils.parseEther(targetPrice),
                 refund: isRefund,
                 fee: BN.feeBN,
                 refundFee: BN.refundFeeBN,
@@ -303,7 +306,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                     const amountNeeded = await BOMContract.bidOrRefundForPrice(
                         isShort ? 1 : 0,
                         targetShort ? 1 : 0,
-                        parseEther(targetPrice),
+                        ethers.utils.parseEther(targetPrice),
                         isRefund
                     );
                     setSideAmountFunction(amountNeeded / 1e18);
@@ -340,7 +343,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             return;
         }
         try {
-            const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : parseEther(amount.toString());
+            const bidOrRefundAmount =
+                amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
 
             const estimatedPrice = pricesAfterBidOrRefund({
                 side: isShort ? 1 : 0,

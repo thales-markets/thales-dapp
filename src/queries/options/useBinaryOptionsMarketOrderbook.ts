@@ -13,8 +13,8 @@ const useBinaryOptionsMarketOrderbook = (
     options?: UseQueryOptions<OrderbookInfo>
 ) => {
     const {
-        snxJS: { sUSD },
-    } = snxJSConnector as any;
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
     const baseUrl = get0xBaseURL(networkId);
 
     const orderbook: OrderbookInfo = {
@@ -75,7 +75,7 @@ const useBinaryOptionsMarketOrderbook = (
     return useQuery<OrderbookInfo>(
         QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress),
         async () => {
-            const orderbookUrl = `${baseUrl}orderbook?baseToken=${optionsTokenAddress}&quoteToken=${sUSD.contract.address}`;
+            const orderbookUrl = `${baseUrl}orderbook?baseToken=${optionsTokenAddress}&quoteToken=${SynthsUSD.address}`;
 
             const response = await fetch(orderbookUrl);
 

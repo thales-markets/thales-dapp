@@ -1,5 +1,5 @@
 import { CurrencyKey } from '../constants/currency';
-import { BigNumberish } from 'ethers/utils';
+import { BigNumberish } from 'ethers';
 import { SignedOrder } from '@0x/types';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
