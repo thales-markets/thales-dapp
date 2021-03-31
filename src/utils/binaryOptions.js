@@ -1,3 +1,5 @@
+import { ethers } from 'ethers';
+
 /* eslint-disable */ 
 const utils = require('ethers').utils;
 
@@ -6,7 +8,7 @@ const Side = {
   Short: 1,
 };
 
-const toBN = utils.bigNumberify;
+const toBN = ethers.BigNumber.from;
 const toUnit = utils.parseEther;
 
 const UNIT = toUnit('1');
