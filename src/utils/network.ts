@@ -53,5 +53,5 @@ export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
 export const getInfuraRpcURL = (networkId: NetworkId) => {
     const network = SUPPORTED_NETWORKS[networkId];
-    return `https://${network}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
+    return `https://${network.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
 };
