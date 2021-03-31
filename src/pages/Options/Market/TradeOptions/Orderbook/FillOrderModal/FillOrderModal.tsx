@@ -135,7 +135,10 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
             try {
                 setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimate.approve(addressToApprove, ethers.constants.MaxUint256);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
                 await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),

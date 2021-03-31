@@ -152,8 +152,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                     amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const bidOrRefundFunction = isBid
-                    ? BOMContractWithSigner.estimate.bid
-                    : BOMContractWithSigner.estimate.refund;
+                    ? BOMContractWithSigner.estimateGas.bid
+                    : BOMContractWithSigner.estimateGas.refund;
                 const gasEstimate = await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount);
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
