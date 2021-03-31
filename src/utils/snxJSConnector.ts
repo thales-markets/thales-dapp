@@ -25,7 +25,6 @@ const snxJSConnector: SnxJSConnector = {
     initialized: false,
 
     setContractSettings: function (contractSettings: ContractSettings) {
-        const number = contractSettings.networkId;
         this.initialized = true;
         this.snxJS = initSynthetixJS(contractSettings);
         this.synths = this.snxJS.synths;
@@ -35,7 +34,7 @@ const snxJSConnector: SnxJSConnector = {
         this.binaryOptionsUtils = BinaryOptionsUtils;
         this.contractSettings = contractSettings;
         this.synthSummaryUtilContract = new ethers.Contract(
-            synthSummaryUtilContract.addresses[number],
+            synthSummaryUtilContract.addresses[contractSettings.networkId],
             synthSummaryUtilContract.abi,
             this.provider
         );
