@@ -155,19 +155,16 @@ export const CreateMarket: React.FC = () => {
         initialFundingAmount === '';
 
     const formatCreateMarketArguments = () => {
-        const {
-            utils: { parseEther },
-        } = snxJSConnector.snxJS as any;
         const longBidAmount: number = (initialFundingAmount as number) * (initialLongShorts.long / 100);
         const shortBidAmount: number = (initialFundingAmount as number) * (initialLongShorts.short / 100);
 
         const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
-        const price = parseEther(strikePrice.toString());
+        const price = ethers.utils.parseEther(strikePrice.toString());
         const times = [
             Math.round((biddingEndDate as Date).getTime() / 1000),
             Math.round((maturityDate as Date).getTime() / 1000),
         ];
-        const bids = [parseEther(longBidAmount.toString()), parseEther(shortBidAmount.toString())];
+        const bids = [ethers.utils.parseEther(longBidAmount.toString()), ethers.utils.parseEther(shortBidAmount.toString())];
         return { oracleKey, price, times, bids };
     };
 
