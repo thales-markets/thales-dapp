@@ -164,7 +164,10 @@ export const CreateMarket: React.FC = () => {
             Math.round((biddingEndDate as Date).getTime() / 1000),
             Math.round((maturityDate as Date).getTime() / 1000),
         ];
-        const bids = [ethers.utils.parseEther(longBidAmount.toString()), ethers.utils.parseEther(shortBidAmount.toString())];
+        const bids = [
+            ethers.utils.parseEther(longBidAmount.toString()),
+            ethers.utils.parseEther(shortBidAmount.toString()),
+        ];
         return { oracleKey, price, times, bids };
     };
 

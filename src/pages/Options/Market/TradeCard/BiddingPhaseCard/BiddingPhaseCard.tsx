@@ -148,7 +148,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     useEffect(() => {
         const fetchGasLimit = async (isShort: boolean, amount: string) => {
             try {
-                const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
+                const bidOrRefundAmount =
+                    amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const bidOrRefundFunction = isBid
                     ? BOMContractWithSigner.estimate.bid
@@ -223,7 +224,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
                 setIsBidding(true);
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const bidOrRefundFunction = isBid ? BOMContractWithSigner.bid : BOMContractWithSigner.refund;
-                const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
+                const bidOrRefundAmount =
+                    amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
                 const tx = (await bidOrRefundFunction(isShort ? 1 : 0, bidOrRefundAmount, {
                     gasLimit,
                     gasPrice: gasPriceInWei(gasPrice),
@@ -341,7 +343,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
             return;
         }
         try {
-            const bidOrRefundAmount = amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
+            const bidOrRefundAmount =
+                amount === sUSDBalance ? sUSDBalanceBN : ethers.utils.parseEther(amount.toString());
 
             const estimatedPrice = pricesAfterBidOrRefund({
                 side: isShort ? 1 : 0,
