@@ -6,16 +6,14 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import TradeOptions from './TradeOptions';
 import { ContractWrappers0xProvider } from '../contexts/ContractWrappers0xContext';
-
-declare const window: any;
+import snxJSConnector from '../../../../utils/snxJSConnector';
 
 const TradeOptionsContainer: React.FC = () => {
     const [contractWrappers0x, setContractWrappers0x] = useState<ContractWrappers>();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-
     useEffect(() => {
         setContractWrappers0x(
-            new ContractWrappers(window.ethereum, {
+            new ContractWrappers((snxJSConnector.signer.provider as any).provider, {
                 chainId: networkId,
             })
         );

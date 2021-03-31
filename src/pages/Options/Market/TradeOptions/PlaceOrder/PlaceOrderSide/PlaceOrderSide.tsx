@@ -42,8 +42,6 @@ import {
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
 
-declare const window: any;
-
 type PlaceOrderSideProps = {
     baseToken: string;
     orderSide: OrderSide;
@@ -199,8 +197,15 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                     verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
                 });
 
-                const signature = await order.getSignatureWithProviderAsync(window.ethereum, SignatureType.EIP712);
-                return { ...order, signature };
+                try {
+                    const signature = await order.getSignatureWithProviderAsync(
+                        (snxJSConnector.signer.provider as any).provider,
+                        SignatureType.EIP712
+                    );
+                    return { ...order, signature };
+                } catch (e) {
+                    console.log(e);
+                }
             };
 
             const signedOrder = await createSignedOrderV4Async();

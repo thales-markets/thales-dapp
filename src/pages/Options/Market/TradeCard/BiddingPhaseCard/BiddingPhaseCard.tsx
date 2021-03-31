@@ -272,8 +272,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         isRefund: boolean
     ) => {
         const {
-            utils: { parseEther },
             binaryOptionsUtils: { bidOrRefundForPrice },
+            utils: { parseEther },
         } = snxJSConnector.snxJS as any;
         const setPriceAmountFunction = isShort ? setShortPriceAmount : setLongPriceAmount;
         const setSideAmountFunction = isShort ? setShortSideAmount : setLongSideAmount;
@@ -337,8 +337,8 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     const handleBidAmount = async (amount: string) => {
         isShort ? setShortSideAmount(amount) : setLongSideAmount(amount);
         const {
-            utils: { parseEther },
             binaryOptionsUtils: { pricesAfterBidOrRefund },
+            utils: { parseEther },
         } = snxJSConnector.snxJS as any;
         if (!amount) {
             setLongPriceAmount('');
