@@ -199,7 +199,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
 
                 try {
                     const signature = await order.getSignatureWithProviderAsync(
-                        (snxJSConnector.signer.provider as any).provider,
+                        (snxJSConnector.signer?.provider as any).provider,
                         SignatureType.EIP712
                     );
                     return { ...order, signature };
