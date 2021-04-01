@@ -29,6 +29,7 @@ const useBinaryOptionsMarketOrderbook = (
         const timeRemaining = toJSTimestamp(record.order.expiry);
         const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
         const filled = (amount - fillableAmount) / amount;
+        const orderHash = record.metaData.orderHash;
 
         return {
             rawOrder: record.order,
@@ -40,6 +41,7 @@ const useBinaryOptionsMarketOrderbook = (
                 timeRemaining,
                 fillableAmount,
                 filled,
+                orderHash,
             },
         };
     }
@@ -51,6 +53,7 @@ const useBinaryOptionsMarketOrderbook = (
         const timeRemaining = toJSTimestamp(record.order.expiry);
         const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
         const filled = (amount - fillableAmount) / amount;
+        const orderHash = record.metaData.orderHash;
 
         return {
             rawOrder: record.order,
@@ -62,6 +65,7 @@ const useBinaryOptionsMarketOrderbook = (
                 timeRemaining,
                 fillableAmount,
                 filled,
+                orderHash,
             },
         };
     }

@@ -1,7 +1,7 @@
 import { orderBy } from 'lodash';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -11,7 +11,7 @@ import { Header, Icon, Segment, Table } from 'semantic-ui-react';
 import { OrderItem, OrderSide, OptionSide } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 import { useMarketContext } from '../../contexts/MarketContext';
-import { useContractWrappers0xContext } from '../../contexts/ContractWrappers0xContext';
+import CancelOrderModal from './CancelOrderModal';
 
 type MyOrdersProps = {
     optionSide: OptionSide;
@@ -28,7 +28,6 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const contractWrappers0x = useContractWrappers0xContext();
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
@@ -36,11 +35,12 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const cancelOrder = async (order: MyOrder) => {
-        await contractWrappers0x.exchangeProxy
-            .cancelLimitOrder(order.rawOrder)
-            .sendTransactionAsync({ from: walletAddress });
-    };
+    const [cancelOrderModalVisible, setCancelOrderModalVisible] = useState<boolean>(false);
+    const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
+    const openCancelOrderModal = useCallback((order: OrderItem) => {
+        setCancelOrderModalVisible(true);
+        setSelectedOrder(order);
+    }, []);
 
     const orders = useMemo(() => {
         if (orderbookQuery.isSuccess && orderbookQuery.data) {
@@ -120,13 +120,20 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
                                     <TimeRemaining end={orderItem.displayOrder.timeRemaining} />
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <Icon name="cancel" color="red" onClick={() => cancelOrder(orderItem)} />
+                                    <Icon name="cancel" color="red" onClick={() => openCancelOrderModal(orderItem)} />
                                 </Table.Cell>
                             </Table.Row>
                         );
                     })}
                 </Table.Body>
             </Table>
+            {cancelOrderModalVisible && selectedOrder !== null && (
+                <CancelOrderModal
+                    order={selectedOrder}
+                    baseToken={optionsTokenAddress}
+                    onClose={() => setCancelOrderModalVisible(false)}
+                />
+            )}
         </Segment>
     );
 };

@@ -140,6 +140,7 @@ export type DisplayOrder = {
     filled: number;
     total: number;
     timeRemaining: number;
+    orderHash: string;
 };
 
 export type OrderSide = 'buy' | 'sell';

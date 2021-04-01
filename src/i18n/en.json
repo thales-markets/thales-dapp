@@ -450,15 +450,6 @@
                     "sell": {
                         "title": "Buy sOPT"
                     },
-                    "order-details": {
-                        "title": "Order details",
-                        "price-label": "Price per sOPT (sUSD):",
-                        "amount-label": "Amount (sOPT):",
-                        "total-label": "Total (sUSD):",
-                        "filled-label": "Filled (%):",
-                        "remaining-amount-label": "Remaining amount (sOPT):",
-                        "remaining-amount-susd-label": "Remaining amount (sUSD):"
-                    },
                     "max-button-tooltip": "Set MAX available amount based on remaining order amount and wallet balance",
                     "amount-label": "Amount to {{orderSide}}",
                     "confirm-button": {
@@ -473,6 +464,22 @@
                     "short": {
                         "title": "Active Short order"
                     }
+                },
+                "cancel-order": {
+                    "title": "Cancel order?",
+                    "confirm-button": {
+                        "label": "Cancel order",
+                        "progress-label": "Canceling order in progress..."
+                    }
+                },
+                "order-details": {
+                    "title": "Order details",
+                    "price-label": "Price per sOPT (sUSD):",
+                    "amount-label": "Amount (sOPT):",
+                    "total-label": "Total (sUSD):",
+                    "filled-label": "Filled (%):",
+                    "remaining-amount-label": "Remaining amount (sOPT):",
+                    "remaining-amount-susd-label": "Remaining amount (sUSD):"
                 }
             }
         },

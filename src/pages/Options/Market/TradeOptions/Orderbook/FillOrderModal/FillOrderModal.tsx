@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Button, Form, Header, Input, Message, Modal, Segment, Card } from 'semantic-ui-react';
+import { Button, Form, Header, Input, Message, Modal, Segment } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import {
     getCustomGasPrice,
@@ -25,7 +25,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { formatCurrencyWithKey, formatPercentage, toBigNumber } from 'utils/formatters/number';
+import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import { Tooltip } from '@material-ui/core';
@@ -35,6 +35,7 @@ import { IZeroExEvents } from '@0x/contract-wrappers';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { calculate0xProtocolFee } from 'utils/0x';
 import { refetchOrderbook } from 'utils/queryConnector';
+import OrderDetails from '../../components/OrderDetails';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -136,9 +137,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     useEffect(() => {
         const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
             IZeroExEvents.LimitOrderFilled,
-            { taker: walletAddress },
+            { orderHash: order.displayOrder.orderHash },
             (_, log) => {
-                if (log?.log.args.taker.toLowerCase() === walletAddress.toLowerCase()) {
+                if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
                     refetchOrderbook(baseToken);
                     setIsFilling(false);
                     onClose();
@@ -248,67 +249,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                                 : EMPTY_VALUE}
                         </span>
                     </div>
-                    <Card fluid>
-                        <Card.Content>
-                            <Card.Header>
-                                {t('options.market.trade-options.fill-order.order-details.title')}
-                            </Card.Header>
-                            <Card.Description>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>
-                                        {t('options.market.trade-options.fill-order.order-details.price-label')}
-                                    </span>
-                                    <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.displayOrder.price)}</span>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>
-                                        {t('options.market.trade-options.fill-order.order-details.amount-label')}
-                                    </span>
-                                    <span>{formatCurrencyWithKey('sOPT', order.displayOrder.amount)}</span>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>
-                                        {t('options.market.trade-options.fill-order.order-details.total-label')}
-                                    </span>
-                                    <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.displayOrder.total)}</span>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>
-                                        {t('options.market.trade-options.fill-order.order-details.filled-label')}
-                                    </span>
-                                    <span>{formatPercentage(order.displayOrder.filled)}</span>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>
-                                        {t(
-                                            'options.market.trade-options.fill-order.order-details.remaining-amount-label'
-                                        )}
-                                    </span>
-                                    <span>
-                                        <strong>
-                                            {formatCurrencyWithKey('sOPT', order.displayOrder.fillableAmount)}
-                                        </strong>
-                                    </span>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>
-                                        {t(
-                                            'options.market.trade-options.fill-order.order-details.remaining-amount-susd-label'
-                                        )}
-                                    </span>
-                                    <span>
-                                        <strong>
-                                            {formatCurrencyWithKey(
-                                                SYNTHS_MAP.sUSD,
-                                                order.displayOrder.fillableAmount * order.displayOrder.price
-                                            )}
-                                        </strong>
-                                    </span>
-                                </div>
-                            </Card.Description>
-                        </Card.Content>
-                    </Card>
-                    <div></div>
+                    <OrderDetails order={order.displayOrder} />
                     <Form>
                         <Form.Field>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
