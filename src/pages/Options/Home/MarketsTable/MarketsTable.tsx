@@ -9,7 +9,6 @@ import { CurrencyCol } from 'components/Table/common';
 import { OptionsMarkets, HistoricalOptionsMarketInfo } from 'types/options';
 import TimeRemaining from '../../components/TimeRemaining';
 import Currency from 'components/Currency';
-import { BigNumber } from '@0x/utils';
 import dotenv from 'dotenv';
 import { navigateToOptionsMarket } from 'utils/routes';
 
@@ -34,10 +33,6 @@ const getPhaseBackgroundColor = (phase: string) => {
             break;
     }
 };
-
-export const ZERO = new BigNumber(0);
-export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
-export const NULL_BYTES = '0x';
 
 export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noResultsMessage, isLoading }) => {
     const { t } = useTranslation();

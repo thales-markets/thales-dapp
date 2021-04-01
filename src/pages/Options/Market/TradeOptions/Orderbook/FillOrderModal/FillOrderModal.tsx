@@ -13,8 +13,6 @@ import {
 import { AccountMarketInfo, OptionSide, OrderItem, OrderSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { Web3Wrapper } from '@0x/web3-wrapper';
-import BigNumber from 'bignumber.js';
-import { DECIMALS } from 'constants/0x';
 import { ethers } from 'ethers';
 import { APPROVAL_EVENTS } from 'constants/events';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -27,11 +25,15 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentage, toBigNumber } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import { Tooltip } from '@material-ui/core';
 import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
+import NetworkFees from 'pages/Options/components/NetworkFees';
+import { IZeroExEvents } from '@0x/contract-wrappers';
+import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { calculate0xProtocolFee } from 'utils/0x';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -39,7 +41,6 @@ type FillOrderModalProps = {
     orderSide: OrderSide;
     onClose: () => void;
 };
-declare const window: any;
 
 export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, orderSide, optionSide }) => {
     const { t } = useTranslation();
@@ -55,6 +56,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [gasLimit, setGasLimit] = useState<number | null>(null);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
@@ -130,6 +132,50 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         };
     }, [walletAddress, isWalletConnected]);
 
+    useEffect(() => {
+        const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
+            IZeroExEvents.LimitOrderFilled,
+            { taker: walletAddress },
+            (_, log) => {
+                console.log(log?.log.args.taker, walletAddress);
+                if (log?.log.args.taker.toLowerCase() === walletAddress.toLowerCase()) {
+                    setIsFilling(false);
+                    onClose();
+                }
+            }
+        );
+        return () => {
+            contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchGasLimit = async () => {
+            if (gasPrice !== null) {
+                const targetOrder = order.rawSignedOrder;
+                const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
+
+                const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
+                try {
+                    const gasEstimate = await contractWrappers0x.exchangeProxy
+                        .fillLimitOrder(
+                            // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
+                            targetOrder as any,
+                            targetOrder.signature as any,
+                            Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
+                        )
+                        .estimateGasAsync({ from: walletAddress, value: protocolFee });
+                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                } catch (e) {
+                    console.log(e);
+                    setGasLimit(null);
+                }
+            }
+        };
+        if (isButtonDisabled) return;
+        fetchGasLimit();
+    }, [isButtonDisabled, gasPrice]);
+
     const handleAllowance = async () => {
         if (gasPrice !== null) {
             const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -151,29 +197,34 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     };
 
     const handleFillOrder = async () => {
-        setTxErrorMessage(null);
-        setIsFilling(true);
+        if (gasPrice !== null) {
+            setTxErrorMessage(null);
+            setIsFilling(true);
 
-        const targetOrder = order.rawSignedOrder;
-        const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
+            const targetOrder = order.rawSignedOrder;
+            const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
+            const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
 
-        const PROTOCOL_FEE_MULTIPLIER = new BigNumber(150000);
-        const calculateProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number): BigNumber => {
-            return new BigNumber(PROTOCOL_FEE_MULTIPLIER).times(gasPrice).times(orders.length);
-        };
-
-        const gasp = (await window.web3.eth) ? window.web3.eth.getGasPrice() : 1e9;
-        const valueP = calculateProtocolFee([targetOrder], gasp);
-
-        await contractWrappers0x.exchangeProxy
-            .fillLimitOrder(
-                // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
-                targetOrder as any,
-                targetOrder.signature as any,
-                Web3Wrapper.toBaseUnitAmount(new BigNumber(sOPTAmount), DECIMALS)
-            )
-            .awaitTransactionSuccessAsync({ from: walletAddress, value: valueP });
-        setIsFilling(false);
+            try {
+                await contractWrappers0x.exchangeProxy
+                    .fillLimitOrder(
+                        // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
+                        targetOrder as any,
+                        targetOrder.signature as any,
+                        Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
+                    )
+                    .sendTransactionAsync({
+                        from: walletAddress,
+                        gas: gasLimit !== null ? gasLimit : undefined,
+                        gasPrice: gasPriceInWei(gasPrice),
+                        value: protocolFee,
+                    });
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsFilling(false);
+            }
+        }
     };
 
     const onMaxClick = () => {
@@ -291,9 +342,10 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             />
                         </Form.Field>
                     </Form>
+                    <NetworkFees gasLimit={gasLimit} />
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                         {hasAllowance ? (
-                            <Button primary disabled={isButtonDisabled /* || !gasLimit*/} onClick={handleFillOrder}>
+                            <Button primary disabled={isButtonDisabled || !gasLimit} onClick={handleFillOrder}>
                                 {!isFilling
                                     ? t('options.market.trade-options.fill-order.confirm-button.label')
                                     : t('options.market.trade-options.fill-order.confirm-button.progress-label')}

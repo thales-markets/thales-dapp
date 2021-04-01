@@ -2,8 +2,6 @@ import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
-import BigNumber from 'bignumber.js';
-import { DECIMALS } from 'constants/0x';
 import { SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
@@ -23,7 +21,7 @@ import { Form, Input, Segment, Button, Message, Header, Dropdown } from 'semanti
 import { OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -41,6 +39,7 @@ import {
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
+import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 
 type PlaceOrderSideProps = {
     baseToken: string;
@@ -120,7 +119,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                     ? Math.round(optionsMarket.timeRemaining / 1000)
                     : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
         }
-        return new BigNumber(orderEndDate);
+        return toBigNumber(orderEndDate);
     };
 
     useEffect(() => {
@@ -175,12 +174,12 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         const placeOrderUrl = `${baseUrl}order`;
 
         const makerAmount = Web3Wrapper.toBaseUnitAmount(
-            new BigNumber(isBuy ? Number(amount) * Number(price) : amount),
-            DECIMALS
+            toBigNumber(isBuy ? Number(amount) * Number(price) : amount),
+            DEFAULT_TOKEN_DECIMALS
         );
         const takerAmount = Web3Wrapper.toBaseUnitAmount(
-            new BigNumber(isBuy ? amount : Number(amount) * Number(price)),
-            DECIMALS
+            toBigNumber(isBuy ? amount : Number(amount) * Number(price)),
+            DEFAULT_TOKEN_DECIMALS
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();

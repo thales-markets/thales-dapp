@@ -41,7 +41,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
         await contractWrappers0x.exchangeProxy
             // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
             .cancelLimitOrder(targetOrder as any)
-            .awaitTransactionSuccessAsync({ from: walletAddress });
+            .sendTransactionAsync({ from: walletAddress });
     };
 
     const orders = useMemo(() => {
