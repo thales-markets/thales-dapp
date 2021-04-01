@@ -29,11 +29,10 @@ const useBinaryOptionsMarketOrderbook = (
         const timeRemaining = toJSTimestamp(record.order.expiry);
         const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
         const filled = (amount - fillableAmount) / amount;
-        const maker = record.order.maker;
-        const taker = record.order.taker;
 
         return {
-            rawSignedOrder: record.order,
+            rawOrder: record.order,
+            signature: record.signature,
             displayOrder: {
                 amount,
                 price,
@@ -41,8 +40,6 @@ const useBinaryOptionsMarketOrderbook = (
                 timeRemaining,
                 fillableAmount,
                 filled,
-                maker,
-                taker,
             },
         };
     }
@@ -54,11 +51,10 @@ const useBinaryOptionsMarketOrderbook = (
         const timeRemaining = toJSTimestamp(record.order.expiry);
         const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
         const filled = (amount - fillableAmount) / amount;
-        const maker = record.order.maker;
-        const taker = record.order.taker;
 
         return {
-            rawSignedOrder: record.order,
+            rawOrder: record.order,
+            signature: record.signature,
             displayOrder: {
                 amount,
                 price,
@@ -66,8 +62,6 @@ const useBinaryOptionsMarketOrderbook = (
                 timeRemaining,
                 fillableAmount,
                 filled,
-                maker,
-                taker,
             },
         };
     }

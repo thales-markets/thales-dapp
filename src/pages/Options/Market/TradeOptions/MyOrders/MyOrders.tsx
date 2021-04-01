@@ -37,10 +37,8 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
     });
 
     const cancelOrder = async (order: MyOrder) => {
-        const targetOrder = order.rawSignedOrder;
         await contractWrappers0x.exchangeProxy
-            // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
-            .cancelLimitOrder(targetOrder as any)
+            .cancelLimitOrder(order.rawOrder)
             .sendTransactionAsync({ from: walletAddress });
     };
 
@@ -58,7 +56,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
             );
             const orders = orderBy(
                 [...buyOrders, ...sellOrders].filter(
-                    (order: MyOrder) => order.displayOrder.maker.toLowerCase() === walletAddress.toLowerCase()
+                    (order: MyOrder) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase()
                 ),
                 'displayOrder.timeRemaining',
                 'asc'

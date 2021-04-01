@@ -1,6 +1,6 @@
 import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
-import { SignedOrder } from '@0x/types';
+import { LimitOrder, Signature } from '@0x/protocol-utils';
 
 export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
 
@@ -128,7 +128,8 @@ export type OrderbookInfo = {
 export type Orders = OrderItem[];
 
 export type OrderItem = {
-    rawSignedOrder: SignedOrder;
+    rawOrder: LimitOrder;
+    signature: Signature;
     displayOrder: DisplayOrder;
 };
 
@@ -139,8 +140,6 @@ export type DisplayOrder = {
     filled: number;
     total: number;
     timeRemaining: number;
-    maker: string;
-    taker: string;
 };
 
 export type OrderSide = 'buy' | 'sell';

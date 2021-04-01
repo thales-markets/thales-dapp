@@ -152,16 +152,15 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     useEffect(() => {
         const fetchGasLimit = async () => {
             if (gasPrice !== null) {
-                const targetOrder = order.rawSignedOrder;
+                const targetOrder = order.rawOrder;
                 const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
 
                 const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
                 try {
                     const gasEstimate = await contractWrappers0x.exchangeProxy
                         .fillLimitOrder(
-                            // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
-                            targetOrder as any,
-                            targetOrder.signature as any,
+                            targetOrder,
+                            order.signature,
                             Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
                         )
                         .estimateGasAsync({ from: walletAddress, value: protocolFee });
@@ -201,16 +200,15 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             setTxErrorMessage(null);
             setIsFilling(true);
 
-            const targetOrder = order.rawSignedOrder;
+            const targetOrder = order.rawOrder;
             const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
             const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
 
             try {
                 await contractWrappers0x.exchangeProxy
                     .fillLimitOrder(
-                        // TODO - remove this conversion to any, set LimitOrder as type for targetOrder
-                        targetOrder as any,
-                        targetOrder.signature as any,
+                        targetOrder,
+                        order.signature,
                         Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
                     )
                     .sendTransactionAsync({
