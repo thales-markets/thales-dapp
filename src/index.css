@@ -54,3 +54,8 @@ button {
 .icon.cancel:hover {
     cursor: pointer;
 }
+
+@font-face {
+    font-family: 'Titillium Web';
+    src: local('Titillium Web'), url(./assets/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf) format('truetype');
+}
