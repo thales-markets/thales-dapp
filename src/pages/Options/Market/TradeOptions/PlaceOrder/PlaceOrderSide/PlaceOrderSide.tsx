@@ -23,7 +23,7 @@ import { Form, Input, Segment, Button, Message, Header, Dropdown } from 'semanti
 import { OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -236,7 +236,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         if (isBuy && price === '') return;
         const maxsOPTBalance = isBuy ? sUSDBalance / Number(price) : tokenBalance;
         const newAmount = (maxsOPTBalance * percentage) / 100;
-        setAmount(formatCurrency(newAmount));
+        setAmount(newAmount);
     };
 
     return (
