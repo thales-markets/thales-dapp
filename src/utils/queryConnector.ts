@@ -27,4 +27,8 @@ export const refetchMarketQueries = (
     }
 };
 
+export const refetchOrderbook = (optionsTokenAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress));
+};
+
 export default queryConnector;

@@ -32,7 +32,7 @@ const useBinaryOptionsMarketOrderbook = (
 
         return {
             rawOrder: record.order,
-            signature: record.signature,
+            signature: record.order.signature,
             displayOrder: {
                 amount,
                 price,
@@ -54,7 +54,7 @@ const useBinaryOptionsMarketOrderbook = (
 
         return {
             rawOrder: record.order,
-            signature: record.signature,
+            signature: record.order.signature,
             displayOrder: {
                 amount,
                 price,

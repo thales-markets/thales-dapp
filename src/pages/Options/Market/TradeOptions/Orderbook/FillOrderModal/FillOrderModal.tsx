@@ -34,6 +34,7 @@ import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { calculate0xProtocolFee } from 'utils/0x';
+import { refetchOrderbook } from 'utils/queryConnector';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -137,8 +138,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             IZeroExEvents.LimitOrderFilled,
             { taker: walletAddress },
             (_, log) => {
-                console.log(log?.log.args.taker, walletAddress);
                 if (log?.log.args.taker.toLowerCase() === walletAddress.toLowerCase()) {
+                    refetchOrderbook(baseToken);
                     setIsFilling(false);
                     onClose();
                 }
