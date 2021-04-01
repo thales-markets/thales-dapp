@@ -84,7 +84,7 @@ const Header: React.FC = () => {
                 <NavLink to="">Partners</NavLink>
                 <NavLink to="">Comunnity</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
-                    <UsedApp>Used App</UsedApp>
+                    <UsedApp>Use dApp</UsedApp>
                 </NavLink>
             </Links>
         </Header>
