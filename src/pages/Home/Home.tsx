@@ -37,6 +37,7 @@ export const MarketButton = styled(Button)`
 `;
 
 export const LaunchApp = styled(Button)`
+    padding: 8px 35px;
     background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
     color: white;
     margin-right: 20px;

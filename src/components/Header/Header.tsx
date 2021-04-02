@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Logo } from 'components/base/logo';
+import { Button } from 'components/base/button';
 
 const Header: React.FC = () => {
     const Header = styled.div`
@@ -37,21 +38,11 @@ const Header: React.FC = () => {
         }
     `;
 
-    const UsedApp = styled.button`
+    const UsedApp = styled(Button)`
+        padding: 8px 35px;
         margin-left: 60px;
-        width: 140px;
-        height: 40px;
         color: white;
         background: #3936c7;
-        border-radius: 23px;
-        cursor: pointer;
-        border: none;
-        text-transform: none !important;
-        font-family: Titillium Web;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 24px;
         &:hover {
             background: #44e1e2;
         }
