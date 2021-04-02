@@ -4,7 +4,6 @@ import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketData
 import keyBy from 'lodash/keyBy';
 import initSynthetixJS, { Synth } from '@synthetixio/js';
 import { SynthsMap, ContractSettings } from 'types/synthetix';
-import * as BinaryOptionsUtils from './binaryOptions';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -16,8 +15,6 @@ type SnxJSConnector = {
     synthSummaryUtilContract: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
-    binaryOptionsUtils: any;
-    contractSettings: ContractSettings;
 };
 
 // @ts-ignore
@@ -31,8 +28,6 @@ const snxJSConnector: SnxJSConnector = {
         this.synthsMap = keyBy(this.synths, 'name');
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
-        this.binaryOptionsUtils = BinaryOptionsUtils;
-        this.contractSettings = contractSettings;
         this.synthSummaryUtilContract = new ethers.Contract(
             synthSummaryUtilContract.addresses[contractSettings.networkId],
             synthSummaryUtilContract.abi,

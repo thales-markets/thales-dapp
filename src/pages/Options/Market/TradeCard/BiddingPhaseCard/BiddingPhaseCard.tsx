@@ -36,6 +36,7 @@ import { SLIPPAGE_THRESHOLD } from 'constants/options';
 import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
+import { bidOrRefundForPrice, pricesAfterBidOrRefund } from 'utils/binaryOptions';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -267,9 +268,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         targetShort: boolean,
         isRefund: boolean
     ) => {
-        const {
-            binaryOptionsUtils: { bidOrRefundForPrice },
-        } = snxJSConnector as any;
         const setPriceAmountFunction = isShort ? setShortPriceAmount : setLongPriceAmount;
         const setSideAmountFunction = isShort ? setShortSideAmount : setLongSideAmount;
         const bidPrice = isShort ? shortPrice : longPrice;
@@ -331,9 +329,6 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
 
     const handleBidAmount = async (amount: string) => {
         isShort ? setShortSideAmount(amount) : setLongSideAmount(amount);
-        const {
-            binaryOptionsUtils: { pricesAfterBidOrRefund },
-        } = snxJSConnector as any;
         if (!amount) {
             setLongPriceAmount('');
             setShortPriceAmount('');

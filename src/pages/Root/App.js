@@ -36,7 +36,10 @@ const App = () => {
         const init = async () => {
             const { networkId, name } = await getEthereumNetwork();
             if (!snxJSConnector.initialized) {
-                const provider = new ethers.getDefaultProvider(networkId);
+                const provider = new ethers.providers.InfuraProvider(
+                    networkId,
+                    process.env.REACT_APP_INFURA_PROJECT_ID
+                );
                 snxJSConnector.setContractSettings({ networkId, provider });
             }
             dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
