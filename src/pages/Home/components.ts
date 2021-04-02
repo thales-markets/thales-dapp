@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import logo from 'assets/images/logo.svg';
 
 export const Section = styled.section`
     &:nth-child(odd) {
@@ -104,43 +102,6 @@ export const VerticalWrapper = styled.div`
     align-items: center;
 `;
 
-export const LaunchApp = styled.button`
-    width: 173px;
-    height: 48px;
-    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
-    border-radius: 23px;
-    cursor: pointer;
-    border: none;
-    color: white;
-    text-transform: none !important;
-    font-family: Titillium Web;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
-    text-align: center;
-    letter-spacing: 0.5px;
-    margin-right: 20px;
-`;
-
-export const WhoIsThales = styled.button`
-    width: 184px;
-    height: 48px;
-    background: transparent;
-    border-radius: 23px;
-    cursor: pointer;
-    border: 1.5px solid #44e1e2;
-    color: #44e1e2;
-    text-transform: none !important;
-    font-family: Titillium Web;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
-    text-align: center;
-    letter-spacing: 0.5px;
-`;
-
 export const SideTitle = styled(SideHeader)`
     letter-spacing: 3px;
 `;
@@ -149,24 +110,6 @@ export const FooterIcon = styled.img`
     width: 30px;
     height: 30px;
     margin: 60px;
-`;
-
-export const Logo = styled(Link)`
-    display: flex;
-    flex: 1;
-    &:before {
-        content: ' ';
-        background-image: url(${logo});
-        height: 52px;
-        width: 52px;
-        margin-right: 20px;
-    }
-    font-family: Titillium Web;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 36px;
-    line-height: 55px;
-    color: white;
 `;
 
 export const PoweredBy = styled.div`
@@ -187,44 +130,4 @@ export const SyntetixLogo = styled.img`
     position: relative;
     top: 2px;
 }
-`;
-
-export const CreateMarket = styled.button`
-    width: 177px;
-    height: 48px;
-    background: #3936c7;
-    border-radius: 23px;
-    font-family: Titillium Web;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
-    text-align: center;
-    letter-spacing: 1.5px;
-    color: #ffffff;
-    text-transform: none !important;
-    border: none;
-    margin-top: 30px;
-    cursor: pointer;
-`;
-
-export const ViewMarket = styled.button`
-    width: 244px;
-    height: 48px;
-    background: #3936c7;
-    border-radius: 40px;
-    font-family: Titillium Web;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
-    text-align: center;
-    letter-spacing: 1.5px;
-    color: #ffffff;
-    text-transform: none !important;
-    border: none;
-    margin-top: 30px;
-    cursor: pointer;
-    padding: 8px 24px;
-    box-sizing: content-box;
 `;

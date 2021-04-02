@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import logo from 'assets/images/logo.svg';
+import { Logo } from 'components/base/logo';
 
 const Header: React.FC = () => {
     const Header = styled.div`
@@ -13,23 +13,8 @@ const Header: React.FC = () => {
         align-items: center;
     `;
 
-    const Logo = styled(Link)`
-        display: flex;
-        flex: 1;
+    const LocalLogo = styled(Logo)`
         margin-left: 75px;
-        &:before {
-            content: ' ';
-            background-image: url(${logo});
-            height: 52px;
-            width: 52px;
-            margin-right: 20px;
-        }
-        font-family: Titillium Web;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 36px;
-        line-height: 55px;
-        color: white;
     `;
 
     const Links = styled.div`
@@ -77,7 +62,7 @@ const Header: React.FC = () => {
 
     return (
         <Header>
-            <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
+            <LocalLogo to={ROUTES.Home}>{t('header.links.home')}</LocalLogo>
             <Links>
                 <NavLink to="">Products</NavLink>
                 <NavLink to="">Markets</NavLink>

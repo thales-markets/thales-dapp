@@ -10,11 +10,9 @@ import Header from 'components/Header';
 import {
     Wrapper,
     InfoText,
-    LaunchApp,
     Section,
     Side,
     SideTitle,
-    WhoIsThales,
     MainWrapper,
     Image,
     SideHeader,
@@ -23,14 +21,32 @@ import {
     List,
     ListItem,
     FooterIcon,
-    Logo,
     VerticalWrapper,
     PoweredBy,
     SyntetixLogo,
-    CreateMarket,
-    ViewMarket,
 } from './components';
 import ROUTES from 'constants/routes';
+import { Button } from 'components/base/button';
+import styled from 'styled-components';
+import { Logo } from 'components/base/logo';
+
+export const MarketButton = styled(Button)`
+    background: #3936c7;
+    color: #ffffff;
+    margin-top: 30px;
+`;
+
+export const LaunchApp = styled(Button)`
+    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
+    color: white;
+    margin-right: 20px;
+`;
+
+export const WhoIsThales = styled(Button)`
+    background: transparent;
+    border: 1.5px solid #44e1e2;
+    color: #44e1e2;
+`;
 
 export const Home: React.FC = () => {
     return (
@@ -64,7 +80,7 @@ export const Home: React.FC = () => {
                             Thales enables anyone to spin up a market to speculate on the prices of crypto assets,
                             commodities, equities and index products - and earn fees for doing so.
                         </SideContent>
-                        <CreateMarket>Create market</CreateMarket>
+                        <MarketButton>Create market</MarketButton>
                     </Side>
                 </MainWrapper>
             </Section>
@@ -85,7 +101,7 @@ export const Home: React.FC = () => {
                                 0x
                             </ListItem>
                         </List>
-                        <ViewMarket>View trading markets</ViewMarket>
+                        <MarketButton>View trading markets</MarketButton>
                     </Side>
                     <Side>
                         <Image src={img3}></Image>
