@@ -36,7 +36,8 @@ const App = () => {
         const init = async () => {
             const { networkId, name } = await getEthereumNetwork();
             if (!snxJSConnector.initialized) {
-                snxJSConnector.setContractSettings({ networkId });
+                const provider = new ethers.getDefaultProvider(networkId);
+                snxJSConnector.setContractSettings({ networkId, provider });
             }
             dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
 

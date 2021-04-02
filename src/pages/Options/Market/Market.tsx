@@ -17,6 +17,9 @@ import ChartCard from './ChartCard';
 import MarketSentiment from '../components/MarketSentiment';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import TradeOptions from './TradeOptions';
+import { getIsAppReady } from 'redux/modules/app';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
 
 type MarketProps = {
     marketAddress: string;
@@ -26,8 +29,11 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const { t } = useTranslation();
     const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
     const BOMContract = useBOMContractContext();
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, BOMContract);
+    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, BOMContract, {
+        enabled: isAppReady,
+    });
 
     const handleViewMarketDetails = useCallback(() => {
         setMarketInfoModalVisible(true);
