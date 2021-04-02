@@ -1,106 +1,58 @@
 import React from 'react';
-import styled from 'styled-components';
 import img1 from 'assets/images/img1.svg';
 import img2 from 'assets/images/img2.svg';
 import img3 from 'assets/images/img3.svg';
+import github from 'assets/images/github.svg';
+import twitter from 'assets/images/twitter.svg';
+import discord from 'assets/images/discord.svg';
+import synthetix from 'assets/images/synthetix.svg';
 import Header from 'components/Header';
+import {
+    Wrapper,
+    InfoText,
+    LaunchApp,
+    Section,
+    Side,
+    SideTitle,
+    WhoIsThales,
+    MainWrapper,
+    Image,
+    SideHeader,
+    SideContent,
+    ListHeader,
+    List,
+    ListItem,
+    FooterIcon,
+    Logo,
+    VerticalWrapper,
+    PoweredBy,
+    SyntetixLogo,
+} from './components';
+import ROUTES from 'constants/routes';
 
 export const Home: React.FC = () => {
-    const Section = styled.section`
-        &:nth-child(odd) {
-            background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-        }
-        &:nth-child(even) {
-            background: white;
-        }
-    `;
-
-    const Wrapper = styled.div`
-        display: flex;
-        width: min(100%, 1440px);
-        margin: auto;
-        @media (max-width: 768px) {
-            flex-direction: column;
-        }
-    `;
-
-    const Side = styled.div`
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 120px 140px 120px 60px;
-        &:first-child {
-            padding: 120px 60px 120px 140px;
-        }
-        @media (max-width: 768px) {
-            padding: 40px !important;
-        }
-    `;
-    const SideHeader = styled.h2`
-        font-family: Titillium Web;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 49px;
-        line-height: 64px;
-        letter-spacing: -1px;
-        color: ${(props) => props.color};
-    `;
-    const SideContent = styled.h2`
-        font-family: Titillium Web;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 20px;
-        line-height: 32px;
-        letter-spacing: 0.2px;
-        color: ${(props) => props.color};
-    `;
-    const Image = styled.img`
-        width: 100%;
-        height: 100%;
-    `;
-
-    const ListHeader = styled.h2`
-        font-family: Titillium Web;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 25px;
-        line-height: 48px;
-        color: #fff;
-    `;
-
-    const List = styled.ul`
-        list-style-position: outside;
-        padding-left: 20px;
-    `;
-
-    const ListItem = styled.li`
-        font-family: Titillium Web;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 20px;
-        line-height: 32px;
-        letter-spacing: 0.2px;
-        color: #fff;
-    `;
-
     return (
         <>
             <Section>
-                <Wrapper>
+                <MainWrapper>
                     <Header />
-                </Wrapper>
-                <Wrapper>
+                </MainWrapper>
+                <MainWrapper>
                     <Side>
-                        <SideHeader color="white">Non-custodial Options Trading</SideHeader>
+                        <SideTitle color="white">Non-custodial Options Trading</SideTitle>
+                        <InfoText>Create, trade and excercise binary options</InfoText>
+                        <Wrapper>
+                            <LaunchApp>Launch app</LaunchApp>
+                            <WhoIsThales>Who is Thales?</WhoIsThales>
+                        </Wrapper>
                     </Side>
                     <Side>
                         <Image src={img1}></Image>
                     </Side>
-                </Wrapper>
+                </MainWrapper>
             </Section>
             <Section>
-                <Wrapper>
+                <MainWrapper>
                     <Side>
                         <Image src={img2}></Image>
                     </Side>
@@ -111,10 +63,10 @@ export const Home: React.FC = () => {
                             commodities, equities and index products - and earn fees for doing so.
                         </SideContent>
                     </Side>
-                </Wrapper>
+                </MainWrapper>
             </Section>
             <Section>
-                <Wrapper>
+                <MainWrapper>
                     <Side>
                         <SideHeader color="white">Trade Options</SideHeader>
                         <ListHeader>Buy and Sell options</ListHeader>
@@ -134,10 +86,10 @@ export const Home: React.FC = () => {
                     <Side>
                         <Image src={img3}></Image>
                     </Side>
-                </Wrapper>
+                </MainWrapper>
             </Section>
             <Section>
-                <Wrapper>
+                <MainWrapper>
                     <Side>
                         <Image src={img3}></Image>
                     </Side>
@@ -153,9 +105,24 @@ export const Home: React.FC = () => {
                             much higher price than what Thales paid for the rights to use the olive presses.
                         </SideContent>
                     </Side>
-                </Wrapper>
+                </MainWrapper>
             </Section>
-            <Section></Section>
+            <Section>
+                <VerticalWrapper>
+                    <Wrapper>
+                        <FooterIcon src={github}></FooterIcon>
+                        <FooterIcon src={twitter}></FooterIcon>
+                        <FooterIcon src={discord}></FooterIcon>
+                    </Wrapper>
+                    <Wrapper>
+                        <Logo to={ROUTES.Home}>Thales</Logo>
+                    </Wrapper>
+                    <PoweredBy>
+                        Powered by
+                        <SyntetixLogo src={synthetix}></SyntetixLogo>
+                    </PoweredBy>
+                </VerticalWrapper>
+            </Section>
         </>
     );
 };
