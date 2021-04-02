@@ -27,6 +27,8 @@ import {
     VerticalWrapper,
     PoweredBy,
     SyntetixLogo,
+    CreateMarket,
+    ViewMarket,
 } from './components';
 import ROUTES from 'constants/routes';
 
@@ -62,6 +64,7 @@ export const Home: React.FC = () => {
                             Thales enables anyone to spin up a market to speculate on the prices of crypto assets,
                             commodities, equities and index products - and earn fees for doing so.
                         </SideContent>
+                        <CreateMarket>Create market</CreateMarket>
                     </Side>
                 </MainWrapper>
             </Section>
@@ -82,6 +85,7 @@ export const Home: React.FC = () => {
                                 0x
                             </ListItem>
                         </List>
+                        <ViewMarket>View trading markets</ViewMarket>
                     </Side>
                     <Side>
                         <Image src={img3}></Image>

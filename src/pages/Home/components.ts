@@ -188,3 +188,43 @@ export const SyntetixLogo = styled.img`
     top: 2px;
 }
 `;
+
+export const CreateMarket = styled.button`
+    width: 177px;
+    height: 48px;
+    background: #3936c7;
+    border-radius: 23px;
+    font-family: Titillium Web;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    text-transform: none !important;
+    border: none;
+    margin-top: 30px;
+    cursor: pointer;
+`;
+
+export const ViewMarket = styled.button`
+    width: 244px;
+    height: 48px;
+    background: #3936c7;
+    border-radius: 40px;
+    font-family: Titillium Web;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    text-transform: none !important;
+    border: none;
+    margin-top: 30px;
+    cursor: pointer;
+    padding: 8px 24px;
+    box-sizing: content-box;
+`;
