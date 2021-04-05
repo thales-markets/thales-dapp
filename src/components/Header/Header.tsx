@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Logo } from 'components/base/logo';
-import { Button } from 'components/base/button';
+import { Button, Logo } from 'theme/common';
 
 const Header: React.FC = () => {
     const Header = styled.div`
@@ -22,12 +21,11 @@ const Header: React.FC = () => {
         flex: 3;
         display: flex;
         justify-content: flex-end;
+        align-items: center;
     `;
 
     const NavLink = styled(Link)`
         margin-right: 40px;
-        font-family: Titillium Web;
-        font-style: normal;
         font-weight: 600;
         font-size: 16px;
         line-height: 32px;

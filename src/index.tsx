@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import store from './redux/store';
 import './i18n';
 import 'semantic-ui-css/semantic.min.css';
-import './index.css';
+import './theme/main.css';
 
 ReactDOM.render(
     <React.Fragment>
