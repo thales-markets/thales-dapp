@@ -1,11 +1,31 @@
 {
     "header": {
         "links": {
-            "home": "Thales Home",
+            "home": "Thales",
             "options": "Options"
         },
         "connect-wallet": "Connect wallet",
         "disconnect-wallet": "Disconnect wallet"
+    },
+    "landing-page": {
+        "title": "Non-custodial Options Trading",
+        "description": "Create, trade and excercise binary options",
+        "launch-app": "Launch app",
+        "who-is-thales": "Who is Thales?",
+        "thales-is": "Thales is considered the first known person to exercise an options contract in Ancient Greece. In response to challengers who prodded Thales that if Thales was such a famous philosopher then how could he be impoverished, Thales leveraged his knowledge of the seasons and the stars into profitable actions. Thales bought the right to use all the olive presses in town at a very low price in the winter. Several months later, there was a bountiful olive harvest. Thales earned a killing renting out the olive presses to people willing to pay a much higher price than what Thales paid for the rights to use the olive presses.",
+        "markets": {
+            "title": "Markets",
+            "description": "Thales enables anyone to spin up a market to speculate on the prices of crypto assets, commodities, equities and index products - and earn fees for doing so.",
+            "create-market": "Create Market"
+        },
+        "options": {
+            "title": "Trade Options",
+            "description": "Buy and Sell options",
+            "option1": "Buy or sell a Yes or No option to respond to changes in the price of the underlying",
+            "option2": "Identify high-probability opportunities to earn a profit on mispriced options",
+            "option3": "Earn fees for being a market-maker who offers liquidity on Thales orderbooks, powered by 0x",
+            "view-market": "View trading markets"
+        }    
     },
     "common": {
         "max": "max",
