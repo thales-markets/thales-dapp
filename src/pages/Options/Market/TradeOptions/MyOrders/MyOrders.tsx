@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Header, Icon, Segment, Table } from 'semantic-ui-react';
+import { Header, Icon, Table } from 'semantic-ui-react';
 import { OrderItem, OrderSide, OptionSide } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 import { useMarketContext } from '../../contexts/MarketContext';
@@ -67,9 +67,9 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
     }, [orderbookQuery.data, walletAddress]);
 
     return (
-        <Segment color={optionSide === 'long' ? 'green' : 'red'}>
-            <Header as="h2">{t(`options.market.trade-options.my-orders.${optionSide}.title`)}</Header>
-            <Table compact>
+        <>
+            <Header as="h3">{t(`options.market.trade-options.my-orders.${optionSide}.title`)}</Header>
+            <Table compact selectable fixed striped size="small">
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>
@@ -134,7 +134,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ optionSide }) => {
                     onClose={() => setCancelOrderModalVisible(false)}
                 />
             )}
-        </Segment>
+        </>
     );
 };
 

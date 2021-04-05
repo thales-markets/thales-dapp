@@ -17,7 +17,7 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Form, Input, Segment, Button, Message, Header, Dropdown } from 'semantic-ui-react';
+import { Form, Input, Segment, Button, Message, Dropdown } from 'semantic-ui-react';
 import { OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -43,11 +43,10 @@ import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 
 type PlaceOrderSideProps = {
     baseToken: string;
-    orderSide: OrderSide;
     tokenBalance: number;
 };
 
-const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, tokenBalance }) => {
+const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, tokenBalance }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
     const contractWrappers0x = useContractWrappers0xContext();
@@ -64,6 +63,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [orderSide, setOrderSide] = useState<OrderSide>('buy');
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -144,7 +144,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected]);
+    }, [walletAddress, isWalletConnected, isBuy]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -240,8 +240,7 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
 
     return (
         <Segment>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Header as="h3">{t(`options.market.trade-options.place-order.${orderSide}.title`)}</Header>
+            <div style={{ display: 'flex', justifyContent: 'end' }}>
                 <span>
                     <WalletIcon />
                     {isWalletConnected
@@ -252,6 +251,19 @@ const PlaceOrderSide: React.FC<PlaceOrderSideProps> = ({ baseToken, orderSide, t
                 </span>
             </div>
             <Form>
+                <Form.Field>
+                    <label style={{ textTransform: 'none' }}>
+                        {t('options.market.trade-options.place-order.order-type-label')}
+                    </label>
+                    <span>
+                        <Button size="mini" positive={orderSide === 'buy'} onClick={() => setOrderSide('buy')}>
+                            {t('common.buy')}
+                        </Button>
+                        <Button size="mini" negative={orderSide === 'sell'} onClick={() => setOrderSide('sell')}>
+                            {t('common.sell')}
+                        </Button>
+                    </span>
+                </Form.Field>
                 <Form.Field>
                     <label style={{ textTransform: 'none' }}>
                         {t('options.market.trade-options.place-order.price-label')}

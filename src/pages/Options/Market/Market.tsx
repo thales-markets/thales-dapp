@@ -77,8 +77,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                             />
                         </span>
                     </Grid.Row>
-                    <ChartCard />
                     {optionsMarket.phase === 'trading' && <TradeOptions />}
+                    <ChartCard />
                     <TransactionsCard />
                 </Grid.Column>
                 <Grid.Column width={5} style={{ paddingRight: 40 }}>

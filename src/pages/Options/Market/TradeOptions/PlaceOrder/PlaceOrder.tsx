@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Grid, Header, Segment } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide } from 'types/options';
 import { useMarketContext } from '../../contexts/MarketContext';
 import PlaceOrderSide from './PlaceOrderSide';
@@ -39,17 +39,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
 
     return (
         <>
-            <Segment color={optionSide === 'long' ? 'green' : 'red'}>
-                <Header as="h2">{t(`options.market.trade-options.place-order.${optionSide}.title`)}</Header>
-                <Grid centered>
-                    <Grid.Column width={8}>
-                        <PlaceOrderSide baseToken={baseToken} orderSide="buy" tokenBalance={tokenBalance} />
-                    </Grid.Column>
-                    <Grid.Column width={8}>
-                        <PlaceOrderSide baseToken={baseToken} orderSide="sell" tokenBalance={tokenBalance} />
-                    </Grid.Column>
-                </Grid>
-            </Segment>
+            <Header as="h3">{t(`options.market.trade-options.place-order.${optionSide}.title`)}</Header>
+            <PlaceOrderSide baseToken={baseToken} tokenBalance={tokenBalance} />
         </>
     );
 };

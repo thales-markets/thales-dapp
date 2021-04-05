@@ -396,19 +396,10 @@
                 }
             },
             "trade-options": {
+                "trade-long-options-tab-title": "Trade Long options",
+                "trade-short-options-tab-title": "Trade Short options",
                 "orderbook": {
-                    "long": {
-                        "title": "Trade Long options"
-                    },
-                    "short": {
-                        "title": "Trade Short options"
-                    },
-                    "buy": {
-                        "title": "Buy Orders"
-                    },
-                    "sell": {
-                        "title": "Sell Orders"
-                    },
+                    "title": "Orderbook",
                     "table": {
                         "type-col": "Type",
                         "price-col": "Price per sOPT (sUSD)",
@@ -434,6 +425,7 @@
                     "sell": {
                         "title": "Sell sOPT"
                     },
+                    "order-type-label": "Order type",
                     "amount-label": "Amount to {{orderSide}}",
                     "price-label": "Price per sOPT",
                     "expiration-label": "Expires in",
@@ -459,10 +451,10 @@
                 },
                 "my-orders": {
                     "long": {
-                        "title": "Active Long orders"
+                        "title": "My active Long orders"
                     },
                     "short": {
-                        "title": "Active Short order"
+                        "title": "My active Short order"
                     }
                 },
                 "cancel-order": {
