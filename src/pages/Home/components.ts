@@ -14,6 +14,7 @@ export const SideContent = styled.h2`
     line-height: 32px;
     letter-spacing: 0.2px;
     color: ${(props) => props.color};
+    width: 461px;
 `;
 
 export const ListHeader = styled.h2`
