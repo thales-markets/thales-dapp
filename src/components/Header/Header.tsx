@@ -47,7 +47,6 @@ const Header: React.FC = () => {
     `;
 
     const { t } = useTranslation();
-    // const { walletAddress, networkName } = useSelector((state: RootState) => getWalletInfo(state));
 
     return (
         <Header>
