@@ -13,6 +13,7 @@ export const FlexDivCentered = styled(FlexDiv)`
 `;
 
 export const FlexDivColumn = styled(FlexDiv)`
+    flex: 1;
     flex-direction: column;
 `;
 
