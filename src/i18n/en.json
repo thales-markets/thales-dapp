@@ -25,7 +25,7 @@
             "option2": "Identify high-probability opportunities to earn a profit on mispriced options",
             "option3": "Earn fees for being a market-maker who offers liquidity on Thales orderbooks, powered by 0x",
             "view-market": "View trading markets"
-        }    
+        }
     },
     "common": {
         "max": "max",
@@ -418,6 +418,8 @@
             "trade-options": {
                 "trade-long-options-tab-title": "Trade Long options",
                 "trade-short-options-tab-title": "Trade Short options",
+                "market-tab-title": "Market",
+                "limit-tab-title": "Limit",
                 "orderbook": {
                     "title": "Orderbook",
                     "table": {
