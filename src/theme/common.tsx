@@ -69,7 +69,10 @@ export const Button = styled.button`
     text-align: center;
     letter-spacing: 0.5px;
     text-transform: none !important;
-
+    &:hover {
+        background: #44e1e2;
+        color: white;
+    }
     cursor: pointer;
 `;
 
@@ -88,6 +91,9 @@ export const Logo = styled(Link)`
     font-size: 36px;
     line-height: 55px;
     color: white;
+    &:hover {
+        color: white;
+    }
 `;
 
 export const Image = styled.img`

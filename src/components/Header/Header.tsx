@@ -34,6 +34,9 @@ const Header: React.FC = () => {
         &:last-child {
             margin-right: 75px;
         }
+        &:hover {
+            color: #44e1e2;
+        }
     `;
 
     const UsedApp = styled(Button)`
@@ -41,9 +44,6 @@ const Header: React.FC = () => {
         margin-left: 60px;
         color: white;
         background: #3936c7;
-        &:hover {
-            background: #44e1e2;
-        }
     `;
 
     const { t } = useTranslation();
