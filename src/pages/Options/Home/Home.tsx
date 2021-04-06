@@ -18,6 +18,7 @@ export const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const { synthsMap } = snxJSConnector;
+
     const optionsMarkets = useMemo(
         () =>
             marketsQuery.isSuccess && Array.isArray(marketsQuery.data)
@@ -27,6 +28,7 @@ export const Home: React.FC = () => {
     );
 
     const hotMarkets = useMemo(() => optionsMarkets.slice(0, MAX_HOT_MARKETS), [optionsMarkets]);
+
     return (
         <>
             {marketsQuery.isSuccess ? (
@@ -37,7 +39,9 @@ export const Home: React.FC = () => {
                             <MarketCreation></MarketCreation>
                         </FlexDivColumn>
                     </Section>
-                    <HotMarkets optionsMarkets={hotMarkets} />
+                    <Section>
+                        <HotMarkets optionsMarkets={hotMarkets} />
+                    </Section>
                     <ExploreMarkets optionsMarkets={optionsMarkets} />
                 </>
             ) : (

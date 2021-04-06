@@ -100,3 +100,11 @@ export const Image = styled.img`
     width: 100%;
     height: 100%;
 `;
+
+export const SubTitle = styled.h2`
+    font-weight: bold;
+    font-size: 49px;
+    line-height: 64px;
+    letter-spacing: -1px;
+    color: ${(props) => props.color};
+`;

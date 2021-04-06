@@ -217,6 +217,7 @@
             },
             "explore-markets": {
                 "title": "Bid on open markets:",
+                "discover": "Discover Top-Notch Markets",
                 "table": {
                     "filters": {
                         "markets": {

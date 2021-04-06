@@ -3,7 +3,6 @@ import Header from 'components/Header';
 import {
     InfoText,
     SideTitle,
-    SideHeader,
     SideContent,
     ListHeader,
     Li,
@@ -12,7 +11,7 @@ import {
     MarketButton,
     List,
 } from './components';
-import { FlexDiv, FlexDivColumn, Image, Section, Side } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Image, Section, Side, SubTitle } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
 import img3 from 'assets/images/img3.svg';
@@ -44,14 +43,14 @@ const Home: React.FC = () => {
             <Section>
                 <Side></Side>
                 <Side>
-                    <SideHeader color="#04045a">{t('landing-page.markets.title')}</SideHeader>
+                    <SubTitle color="#04045a">{t('landing-page.markets.title')}</SubTitle>
                     <SideContent color="#04045a">{t('landing-page.markets.description')}</SideContent>
                     <MarketButton>{t('landing-page.markets.create-market')}</MarketButton>
                 </Side>
             </Section>
             <Section>
                 <Side>
-                    <SideHeader color="white">{t('landing-page.options.title')}</SideHeader>
+                    <SubTitle color="white">{t('landing-page.options.title')}</SubTitle>
                     <ListHeader>{t('landing-page.options.description')}</ListHeader>
                     <List>
                         <Li>{t('landing-page.options.option1')}</Li>
@@ -67,7 +66,7 @@ const Home: React.FC = () => {
                     <Image src={img3}></Image>
                 </Side>
                 <Side>
-                    <SideHeader color="#04045a">{t('landing-page.who-is-thales')}</SideHeader>
+                    <SubTitle color="#04045a">{t('landing-page.who-is-thales')}</SubTitle>
                     <SideContent color="#04045a">{t('landing-page.thales-is')}</SideContent>
                 </Side>
             </Section>
