@@ -5,6 +5,6 @@
 
 * {
     box-sizing: border-box;
-    font-family: 'Titillium Web';
+    font-family: 'Titillium Web' !important;
     font-style: normal;
 }

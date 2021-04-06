@@ -10,11 +10,13 @@ import {
     LaunchApp,
     WhoIsThales,
     MarketButton,
+    List,
 } from './components';
-import { FlexDiv, FlexDivColumn, Section, Side } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Image, Section, Side } from 'theme/common';
 import { Footer } from './components/Footer';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
+import img3 from 'assets/images/img3.svg';
 
 export const Home: React.FC = () => {
     const { t } = useTranslation();
@@ -35,10 +37,12 @@ export const Home: React.FC = () => {
                                 <WhoIsThales>{t('landing-page.who-is-thales')}</WhoIsThales>
                             </FlexDiv>
                         </Side>
+                        <Side></Side>
                     </FlexDiv>
                 </FlexDivColumn>
             </Section>
             <Section>
+                <Side></Side>
                 <Side>
                     <SideHeader color="#04045a">{t('landing-page.markets.title')}</SideHeader>
                     <SideContent color="#04045a">{t('landing-page.markets.description')}</SideContent>
@@ -49,13 +53,19 @@ export const Home: React.FC = () => {
                 <Side>
                     <SideHeader color="white">{t('landing-page.options.title')}</SideHeader>
                     <ListHeader>{t('landing-page.options.description')}</ListHeader>
-                    <Li>{t('landing-page.options.option1')}</Li>
-                    <Li>{t('landing-page.options.option2')}</Li>
-                    <Li>{t('landing-page.options.option3')}</Li>
+                    <List>
+                        <Li>{t('landing-page.options.option1')}</Li>
+                        <Li>{t('landing-page.options.option2')}</Li>
+                        <Li>{t('landing-page.options.option3')}</Li>
+                    </List>
                     <MarketButton>{t('landing-page.options.view-market')}</MarketButton>
                 </Side>
+                <Side></Side>
             </Section>
             <Section>
+                <Side>
+                    <Image src={img3}></Image>
+                </Side>
                 <Side>
                     <SideHeader color="#04045a">{t('landing-page.who-is-thales')}</SideHeader>
                     <SideContent color="#04045a">{t('landing-page.thales-is')}</SideContent>

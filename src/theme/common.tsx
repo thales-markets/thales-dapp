@@ -48,8 +48,11 @@ export const Section: React.FC = (props) => (
 );
 
 export const Side = styled(FlexDivColumnCentered)`
-    padding: 120px;
-    align-items: center;
+    flex: 1;
+    padding: 120px 140px 120px 60px;
+    &:first-child {
+        padding: 120px 60px 120px 140px;
+    }
     @media (max-width: 768px) {
         padding: 40px !important;
     }
@@ -59,7 +62,7 @@ export const Button = styled.button`
     padding: 8px 24px;
     border-radius: 40px;
     border: none;
-
+    align-self: flex-start;
     font-weight: bold;
     font-size: 20px;
     line-height: 32px;

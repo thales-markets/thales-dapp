@@ -9,7 +9,6 @@ export const SideHeader = styled.h2`
     color: ${(props) => props.color};
 `;
 export const SideContent = styled.h2`
-    text-align: center;
     font-weight: normal;
     font-size: 20px;
     line-height: 32px;
@@ -36,7 +35,6 @@ export const Li = styled.li`
     line-height: 32px;
     letter-spacing: 0.2px;
     color: #fff;
-    list-style: none;
 `;
 
 export const InfoText = styled.p`
@@ -48,8 +46,13 @@ export const InfoText = styled.p`
     color: #f6f6fe;
 `;
 
-export const SideTitle = styled(SideHeader)`
-    letter-spacing: 3px;
+export const SideTitle = styled.h2`
+    font-family: Open Sans !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 72px;
+    line-height: 84px;
+    color: #f6f6fe;
 `;
 
 export const MarketButton = styled(Button)`
