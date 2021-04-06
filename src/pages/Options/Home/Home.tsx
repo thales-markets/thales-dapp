@@ -9,6 +9,8 @@ import { Loader } from 'semantic-ui-react';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
+import { FlexDivColumn, Section } from 'theme/common';
+import MarketHeader from './MarketHeader';
 
 const MAX_HOT_MARKETS = 4;
 
@@ -29,8 +31,13 @@ export const Home: React.FC = () => {
         <>
             {marketsQuery.isSuccess ? (
                 <>
+                    <Section>
+                        <FlexDivColumn>
+                            <MarketHeader></MarketHeader>
+                            <MarketCreation></MarketCreation>
+                        </FlexDivColumn>
+                    </Section>
                     <HotMarkets optionsMarkets={hotMarkets} />
-                    <MarketCreation />
                     <ExploreMarkets optionsMarkets={optionsMarkets} />
                 </>
             ) : (

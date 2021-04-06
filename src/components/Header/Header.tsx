@@ -7,14 +7,11 @@ import { Button, Logo } from 'theme/common';
 
 const Header: React.FC = () => {
     const Header = styled.div`
+        padding: 0 75px;
         width: 100%;
         display: flex;
         height: 100px;
         align-items: center;
-    `;
-
-    const LocalLogo = styled(Logo)`
-        margin-left: 75px;
     `;
 
     const Links = styled.div`
@@ -32,7 +29,7 @@ const Header: React.FC = () => {
         letter-spacing: 0.15px;
         color: white;
         &:last-child {
-            margin-right: 75px;
+            margin-right: 0;
         }
     `;
 
@@ -50,7 +47,7 @@ const Header: React.FC = () => {
 
     return (
         <Header>
-            <LocalLogo to={ROUTES.Home}>{t('header.links.home')}</LocalLogo>
+            <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
             <Links>
                 <NavLink to="">Products</NavLink>
                 <NavLink to="">Markets</NavLink>

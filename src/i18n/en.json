@@ -74,7 +74,7 @@
             "balance-currency": "Balance: {{balance}}",
             "no-wallet-connected": "No wallet currently connected",
             "connect-currency-wallet": "connect {{currencyKey}} wallet to start",
-            "connect-your-wallet": "Connect your wallet"
+            "connect-your-wallet": "Connect wallet"
         },
         "errors": {
             "amount-exceeds-balance": "Amount exceeds balance",
@@ -213,7 +213,7 @@
                 "no-markets": {
                     "title": "Create a market or place a bid to get started"
                 },
-                "create-market-button-label": "create a new market"
+                "create-market-button-label": "Create market"
             },
             "explore-markets": {
                 "title": "Bid on open markets:",
@@ -281,7 +281,7 @@
                     "tooltip": "Here you can choose to allow withdrawals, which can affect the pay-out and odds dramatically, particularly late in the Bidding phase."
                 },
                 "wallet-access": "Before you can create a new market, enable wallet access:",
-                "create-market-button-label": "create market",
+                "create-market-button-label": "Create market",
                 "creating-market-button-label": "creating market...",
                 "approve-manager-button-label": "enable wallet access",
                 "waiting-for-approval-button-label": "enabling wallet access..."

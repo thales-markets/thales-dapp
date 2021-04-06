@@ -13,12 +13,12 @@ import {
     List,
 } from './components';
 import { FlexDiv, FlexDivColumn, Image, Section, Side } from 'theme/common';
-import { Footer } from './components/Footer';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
 import img3 from 'assets/images/img3.svg';
+import Footer from './components/Footer';
 
-export const Home: React.FC = () => {
+const Home: React.FC = () => {
     const { t } = useTranslation();
 
     return (

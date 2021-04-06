@@ -36,7 +36,7 @@ const VerticalWrapper = styled(FlexDivColumnCentered)`
     margin: auto;
 `;
 
-export const Footer: React.FC = () => (
+const Footer: React.FC = () => (
     <Section>
         <VerticalWrapper>
             <FlexDiv>
@@ -54,3 +54,5 @@ export const Footer: React.FC = () => (
         </VerticalWrapper>
     </Section>
 );
+
+export default Footer;
