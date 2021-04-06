@@ -14,6 +14,7 @@ const Header = styled.div`
 `;
 
 const ConnectWallet = styled(Button)`
+    align-self: center;
     color: white;
     background: #3936c7;
     &:hover {

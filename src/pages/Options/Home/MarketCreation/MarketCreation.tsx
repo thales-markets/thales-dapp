@@ -5,9 +5,14 @@ import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
 import { navigateTo } from 'utils/routes';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import onboardConnector from 'utils/onboardConnector';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const Text = styled.h2`
         font-family: Open Sans !important;
@@ -20,16 +25,25 @@ const MarketCreation: React.FC = () => {
     `;
 
     const CreateMarket = styled(Button)`
+        margin-top: 80px;
+        margin-bottom: 50px;
         padding: 8px 40px;
         background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
+        color: white;
     `;
 
     return (
         <FlexDiv>
             <Side>
                 <Text>{t('options.home.market-creation.no-markets.title')}</Text>
-                <CreateMarket onClick={() => navigateTo(ROUTES.Options.CreateMarket)}>
-                    {t('options.home.market-creation.create-market-button-label')}
+                <CreateMarket
+                    onClick={() =>
+                        isWalletConnected ? navigateTo(ROUTES.Options.CreateMarket) : onboardConnector.connectWallet()
+                    }
+                >
+                    {isWalletConnected
+                        ? t('options.home.market-creation.create-market-button-label')
+                        : t('common.wallet.connect-your-wallet')}
                 </CreateMarket>
             </Side>
             <Side>
@@ -40,26 +54,3 @@ const MarketCreation: React.FC = () => {
 };
 
 export default MarketCreation;
-
-// const { t } = useTranslation();
-// const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-
-// <Segment placeholder textAlign="center">
-//     {!isWalletConnected ? (
-//         <>
-//             <Header as="h1">{t('options.home.market-creation.not-connected.title')}</Header>
-//             <NewToBinaryOptions />
-//             <Button primary onClick={() => onboardConnector.connectWallet()}>
-//                 {t('common.wallet.connect-your-wallet')}
-//             </Button>
-//         </>
-//     ) : (
-//         <>
-//             <Header as="h1">{t('options.home.market-creation.no-markets.title')}</Header>
-//             <NewToBinaryOptions />
-//             <Button primary onClick={() => navigateTo(ROUTES.Options.CreateMarket)}>
-//                 {t('options.home.market-creation.create-market-button-label')}
-//             </Button>
-//         </>
-//     )}
-// </Segment>
