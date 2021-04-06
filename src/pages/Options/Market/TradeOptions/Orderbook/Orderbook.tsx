@@ -41,10 +41,10 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     );
 
     const marketHeading = optionsMarket
-        ? `${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
+        ? `(${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
               USD_SIGN,
               optionsMarket.strikePrice
-          )} @ ${formatShortDate(optionsMarket.maturityDate)}`
+          )} @ ${formatShortDate(optionsMarket.maturityDate)})`
         : null;
 
     return (
