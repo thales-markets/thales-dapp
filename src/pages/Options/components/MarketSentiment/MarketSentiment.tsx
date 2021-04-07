@@ -21,6 +21,8 @@ const ProgressBar = styled.div`
         z-index: 2;
         width: ${(props) => props.color}%;
         border-radius: 20px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
         height: 100%;
         display: block;
         background: #4fbf67;

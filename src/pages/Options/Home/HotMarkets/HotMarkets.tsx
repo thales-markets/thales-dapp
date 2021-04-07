@@ -16,6 +16,14 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     const [currentMarketPage, setCurrentMarketPage] = useState(0);
 
+    const NextMarkets = () => {
+        currentMarketPage === 2 ? setCurrentMarketPage(0) : setCurrentMarketPage(currentMarketPage + 1);
+    };
+
+    const PreviousMarkets = () => {
+        currentMarketPage === 0 ? setCurrentMarketPage(2) : setCurrentMarketPage(currentMarketPage - 1);
+    };
+
     const Wrapper = styled(FlexDivColumn)`
         padding: 50px 110px;
     `;
@@ -41,14 +49,6 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         margin: 4px;
     `;
 
-    const NextMarkets = () => {
-        currentMarketPage === 2 ? setCurrentMarketPage(0) : setCurrentMarketPage(currentMarketPage + 1);
-    };
-
-    const PreviousMarkets = () => {
-        currentMarketPage === 0 ? setCurrentMarketPage(2) : setCurrentMarketPage(currentMarketPage - 1);
-    };
-
     return (
         <Wrapper>
             <SubTitle color="#04045a">{t('options.home.explore-markets.discover')}</SubTitle>
@@ -62,9 +62,9 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 <Arrow onClick={NextMarkets} src={next}></Arrow>
             </FlexDivCentered>
             <Pagination>
-                <PaginationPage className={currentMarketPage === 0 ? 'current' : ''}></PaginationPage>
-                <PaginationPage className={currentMarketPage === 1 ? 'current' : ''}></PaginationPage>
-                <PaginationPage className={currentMarketPage === 2 ? 'current' : ''}></PaginationPage>
+                <PaginationPage className={currentMarketPage === 0 ? 'current' : ''} />
+                <PaginationPage className={currentMarketPage === 1 ? 'current' : ''} />
+                <PaginationPage className={currentMarketPage === 2 ? 'current' : ''} />
             </Pagination>
         </Wrapper>
     );
