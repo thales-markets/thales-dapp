@@ -292,7 +292,9 @@
             "heading": {
                 "all-markets": "all markets",
                 "market-details": "market details",
-                "market-sentiment": "market sentiment:"
+                "market-sentiment": "market sentiment:",
+                "options-to-claim-tooltip": "You have options to claim",
+                "options-to-exercise-tooltip": "You have options to exercise"
             },
             "info-modal": {
                 "title": "market information:",
