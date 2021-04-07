@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { FlexDivColumn, Section } from 'theme/common';
 import MarketHeader from './MarketHeader';
 
-const MAX_HOT_MARKETS = 4;
+const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
