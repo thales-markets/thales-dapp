@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Progress } from 'semantic-ui-react';
+import styled from 'styled-components';
 import { formatCurrency } from 'utils/formatters/number';
 
 type Display = 'row' | 'col';
@@ -11,6 +11,33 @@ type MarketSentimentProps = {
     display?: Display;
 };
 
+const ProgressBar = styled.div`
+    width: 100%;
+    height: 15px;
+    margin-top: 2px;
+    &::before {
+        content: '';
+        position: relative;
+        z-index: 2;
+        width: ${(props) => props.color}%;
+        border-radius: 20px;
+        height: 100%;
+        display: block;
+        background: #4fbf67;
+    }
+    &:after {
+        content: '';
+        position: relative;
+        z-index: 1;
+        top: -15px;
+        background: #c62937;
+        border-radius: 20px;
+        height: 100%;
+        display: block;
+    }
+    margin-bottom: 30px;
+`;
+
 export const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display }) => {
     const { t } = useTranslation();
     const priceLong = long * 100;
@@ -19,26 +46,24 @@ export const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, d
         <>
             {display === 'row' && (
                 <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ color: '#10BA97' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 4px' }}>
+                        <span style={{ color: '#4fbf67' }}>
                             {t('common.val-in-cents', { val: formatCurrency(priceLong) })}
                         </span>
-                        <span style={{ color: '#D94454' }}>
+                        <span style={{ color: '#c62937' }}>
                             {t('common.val-in-cents', { val: formatCurrency(priceShort) })}
                         </span>
                     </div>
-                    <Progress percent={priceLong} color="green" size="small" />
+                    <ProgressBar color={priceLong.toFixed(0)} />
                 </>
             )}
             {display === 'col' && (
                 <span>
-                    <span style={{ color: '#10BA97' }}>
+                    <span style={{ color: '#4fbf67' }}>
                         {t('common.val-in-cents', { val: formatCurrency(priceLong) })}
                     </span>
-                    <span style={{ width: 200, display: 'inline-block' }}>
-                        <Progress percent={priceLong} color="green" size="small" />
-                    </span>
-                    <span style={{ color: '#D94454' }}>
+                    <ProgressBar color={priceLong.toFixed(0)} />
+                    <span style={{ color: '#c62937' }}>
                         {t('common.val-in-cents', { val: formatCurrency(priceShort) })}
                     </span>
                 </span>

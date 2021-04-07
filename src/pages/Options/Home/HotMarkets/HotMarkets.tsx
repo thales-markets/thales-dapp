@@ -24,9 +24,13 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         <Wrapper>
             <SubTitle color="#04045a">{t('options.home.explore-markets.discover')}</SubTitle>
             <FlexDivCentered>
-                {optionsMarkets.map((optionsMarket, index) => (
-                    <MarketCard key={index} optionMarket={optionsMarket} />
-                ))}
+                {optionsMarkets.map((optionsMarket, index) => {
+                    console.log(index);
+                    if (index < 3) {
+                        console.log('print');
+                        return <MarketCard key={index} optionMarket={optionsMarket} />;
+                    }
+                })}
             </FlexDivCentered>
         </Wrapper>
     );

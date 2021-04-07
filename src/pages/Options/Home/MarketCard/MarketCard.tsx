@@ -20,7 +20,7 @@ const Card = styled(FlexDivColumnCentered)`
     border-radius: 24px;
     color: white;
     width: 368px;
-    margin: 20px 20px;
+    margin: 120px 20px 280px 20px; ;
 `;
 
 const Header = styled(FlexDivCentered)`
@@ -62,7 +62,7 @@ const CryptoTime = styled.div`
     line-height: 24px;
     text-align: center;
     color: #355dff;
-    background: white;
+    background: #bceaff;
     border-radius: 20px;
     margin-right: 18px;
     height: 24px;
