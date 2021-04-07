@@ -192,7 +192,8 @@
                 "safe": "Safe",
                 "standard": "Standard",
                 "average": "Average",
-                "fast": "fast",
+                "fast": "Fast",
+                "fastest": "Fastest",
                 "price": "price"
             },
             "submit": "Submit changes"

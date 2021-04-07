@@ -21,7 +21,7 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <div
                     onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}
                     style={{ display: 'flex', justifyContent: 'center' }}

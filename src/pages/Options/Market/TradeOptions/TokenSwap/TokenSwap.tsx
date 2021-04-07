@@ -220,7 +220,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
 
     return (
         <Segment>
-            <div style={{ display: 'flex', justifyContent: 'end' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <span>
                     <WalletIcon />
                     {isWalletConnected

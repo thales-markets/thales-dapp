@@ -13,13 +13,13 @@ type GasMenuProps = {
 
 const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
     const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPriceSlow = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['slow'] : 0), [
-        ethGasPriceQuery.data,
-    ]);
     const gasPriceAverage = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['average'] : 0), [
         ethGasPriceQuery.data,
     ]);
     const gasPriceFast = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['fast'] : 0), [
+        ethGasPriceQuery.data,
+    ]);
+    const gasPriceFastest = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['fastest'] : 0), [
         ethGasPriceQuery.data,
     ]);
 
@@ -64,17 +64,10 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
             />
             {errorMessage && <Message negative>{errorMessage}</Message>}
             <div
-                onClick={() => setGasSpeedAndCloseDropdown('slow')}
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-            >
-                <div>{t('modals.gwei.table.safe')}</div>
-                <div>{gasPriceSlow}</div>
-            </div>
-            <div
                 onClick={() => setGasSpeedAndCloseDropdown('average')}
                 style={{ display: 'flex', justifyContent: 'space-between' }}
             >
-                <div>{t('modals.gwei.table.standard')}</div>
+                <div>{t('modals.gwei.table.average')}</div>
                 <div>{gasPriceAverage}</div>
             </div>
             <div
@@ -83,6 +76,13 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
             >
                 <div>{t('modals.gwei.table.fast')}</div>
                 <div>{gasPriceFast}</div>
+            </div>
+            <div
+                onClick={() => setGasSpeedAndCloseDropdown('fastest')}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+                <div>{t('modals.gwei.table.fastest')}</div>
+                <div>{gasPriceFastest}</div>
             </div>
         </div>
     );

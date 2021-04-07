@@ -20,6 +20,7 @@ import TradeOptions from './TradeOptions';
 import { getIsAppReady } from 'redux/modules/app';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import './temp.css';
 
 type MarketProps = {
     marketAddress: string;
