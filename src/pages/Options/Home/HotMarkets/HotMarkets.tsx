@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 import MarketCard from '../MarketCard';
+import SearchMarket from '../SearchMarket';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -26,6 +27,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     const Wrapper = styled(FlexDivColumn)`
         padding: 50px 110px;
+        position: relative;
     `;
 
     const Arrow = styled(Image)`
@@ -66,6 +68,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 <PaginationPage className={currentMarketPage === 1 ? 'current' : ''} />
                 <PaginationPage className={currentMarketPage === 2 ? 'current' : ''} />
             </Pagination>
+            <SearchMarket></SearchMarket>
         </Wrapper>
     );
 };

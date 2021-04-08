@@ -103,7 +103,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '470px' }}>
                 <div>
                     <Button
                         toggle

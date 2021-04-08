@@ -20,6 +20,7 @@ const ConnectWallet = styled(Button)`
     &:hover {
         background: #44e1e2;
     }
+    font-size: 16px;
 `;
 const MarketHeader: React.FC = () => {
     const { t } = useTranslation();

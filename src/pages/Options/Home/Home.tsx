@@ -42,7 +42,9 @@ export const Home: React.FC = () => {
                     <Section>
                         <HotMarkets optionsMarkets={hotMarkets} />
                     </Section>
-                    <ExploreMarkets optionsMarkets={optionsMarkets} />
+                    <Section>
+                        <ExploreMarkets optionsMarkets={optionsMarkets} />
+                    </Section>
                 </>
             ) : (
                 <Loader active />
