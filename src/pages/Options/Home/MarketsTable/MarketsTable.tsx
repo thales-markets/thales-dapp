@@ -162,7 +162,9 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noRes
             ]}
             data={optionsMarkets}
             onTableRowClick={(row: Row<HistoricalOptionsMarketInfo>) => {
-                navigateToOptionsMarket(row.original.address);
+                if (row.original.phase !== 'expiry') {
+                    navigateToOptionsMarket(row.original.address);
+                }
             }}
             isLoading={isLoading}
             noResultsMessage={noResultsMessage}

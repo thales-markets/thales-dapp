@@ -35,7 +35,8 @@ button {
     text-transform: uppercase;
 }
 ::placeholder,
-.divider.default.text {
+.divider.default.text,
+.accordion .title {
     text-transform: uppercase !important;
 }
 .selectable.table tr:hover,
@@ -50,4 +51,12 @@ button {
 
 .ui.right.visible.sidebar {
     box-shadow: none;
+}
+
+.ui.styled.accordion .title {
+    color: rgba(0, 0, 0, 0.95);
+}
+
+.icon {
+    font-family: Icons !important;
 }
