@@ -17,7 +17,7 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Form, Input, Segment, Button, Message } from 'semantic-ui-react';
+import { Form, Input, Segment, Button, Message, Divider } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 // import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -42,6 +42,7 @@ import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import NetworkFees from 'pages/Options/components/NetworkFees';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -66,6 +67,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [orderSide, setOrderSide] = useState<OrderSide>('buy');
     const [addressToApprove, setAddressToApprove] = useState<string | null>(null);
     const [swapQuote, setSwapQuote] = useState<any>();
+    const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
+    const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
@@ -119,6 +122,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
 
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
+
+    const insufficientBalance = isBuy ? total > sUSDBalance : amount > tokenBalance;
 
     useEffect(() => {
         if (addressToApprove) {
@@ -186,7 +191,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const onAmountChange = async (newAmount: string | number) => {
         setAmount(newAmount);
         if (newAmount !== '' && Number(newAmount) > 0) {
-            console.log(newAmount);
             const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(newAmount), DEFAULT_TOKEN_DECIMALS);
             try {
                 const swapUrl = isBuy
@@ -199,6 +203,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     setAddressToApprove(quote.allowanceTarget);
                     setTotal(Number(newAmount) * Number(quote.price));
                     setSwapQuote(quote);
+                    setInsufficientLiquidity(false);
+                    setGasLimit(quote.gas);
                 } else {
                     const quote = await response.json();
                     console.log(quote);
@@ -206,6 +212,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     setAddressToApprove('');
                     setTotal('');
                     setSwapQuote(undefined);
+                    setInsufficientLiquidity(true);
+                    setGasLimit(null);
                 }
             } catch (e) {
                 console.log(e);
@@ -215,6 +223,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             setAddressToApprove('');
             setTotal('');
             setSwapQuote(undefined);
+            setInsufficientLiquidity(false);
+            setGasLimit(null);
         }
     };
 
@@ -258,19 +268,21 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         min="0"
                         step="any"
                     />
-                    <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
-                        {AMOUNT_PERCENTAGE.map((percentage: number) => (
-                            <Button
-                                size="mini"
-                                key={percentage}
-                                onClick={() => calculateAmount(percentage)}
-                                color="teal"
-                                disabled={isBuy}
-                            >
-                                {`${percentage}%`}
-                            </Button>
-                        ))}
-                    </div>
+                    {!isBuy && (
+                        <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
+                            {AMOUNT_PERCENTAGE.map((percentage: number) => (
+                                <Button
+                                    size="mini"
+                                    key={percentage}
+                                    onClick={() => calculateAmount(percentage)}
+                                    color="teal"
+                                    disabled={isBuy}
+                                >
+                                    {`${percentage}%`}
+                                </Button>
+                            ))}
+                        </div>
+                    )}
                 </Form.Field>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>{t('options.market.trade-options.place-order.price-label')}</span>
@@ -281,10 +293,18 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</span>
                 </div>
             </Form>
+            <Divider />
+            <div style={{ marginTop: 10 }}>
+                <NetworkFees gasLimit={gasLimit} />
+            </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                 {hasAllowance ? (
                     <Button color={isBuy ? 'green' : 'red'} disabled={isButtonDisabled} onClick={handleSubmitOrder}>
-                        {!isSubmitting
+                        {insufficientBalance
+                            ? t('common.errors.insufficient-balance')
+                            : insufficientLiquidity
+                            ? t('common.errors.insufficient-liquidity')
+                            : !isSubmitting
                             ? t('options.market.trade-options.place-order.confirm-button.label')
                             : t('options.market.trade-options.place-order.confirm-button.progress-label')}
                     </Button>
