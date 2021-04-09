@@ -7,7 +7,7 @@ import { RootState } from 'redux/rootReducer';
 import { Icon, Table } from 'semantic-ui-react';
 import { Orders, OrderItem, OrderSide, OptionSide } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
-import CancelOrderModal from '../../MyOrders/CancelOrderModal';
+import CancelOrderModal from '../CancelOrderModal';
 import FillOrderModal from '../FillOrderModal';
 
 type OrderbookSideProps = {
