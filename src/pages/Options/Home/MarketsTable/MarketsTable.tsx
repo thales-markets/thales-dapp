@@ -7,6 +7,7 @@ import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import styled from 'styled-components';
+import { Button } from 'theme/common';
 
 dotenv.config();
 
@@ -15,20 +16,30 @@ type MarketsTableProps = {
     noResultsMessage?: React.ReactNode;
     isLoading?: boolean;
 };
-const getPhaseBackgroundColor = (phase: string) => {
-    switch (phase) {
-        case 'bidding':
-            return '#fbe6b8';
-        case 'trading':
-            return '#9fe3d5';
-        case 'maturity':
-            return '#c5d5ff';
-        case 'expiry':
-            return '#f5607066';
-        default:
-            break;
+
+const PhaseLabel = styled(Button)`
+    border-radius: 15px;
+    width: 135px;
+    text-transform: uppercase !important;
+    height: 40px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.25px;
+    color: #04045a;
+    &.bidding {
+        background: #ffd951;
     }
-};
+    &.trading {
+        background: #4fbf67;
+    }
+    &.maturity {
+        background: #355dff;
+    }
+    &.expiry {
+        background: #c62937;
+    }
+`;
 
 const StyledTableCell = withStyles(() => ({
     head: {
@@ -127,15 +138,9 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => 
                                         <TimeRemaining end={market.timeRemaining} />
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        <span
-                                            style={{
-                                                backgroundColor: getPhaseBackgroundColor(market.phase),
-                                                textTransform: 'uppercase',
-                                                padding: 5,
-                                            }}
-                                        >
+                                        <PhaseLabel className={market.phase}>
                                             {t(`options.phases.${market.phase}`)}
-                                        </span>
+                                        </PhaseLabel>
                                     </StyledTableCell>
                                 </StyledTableRow>
                                 <Divider />
