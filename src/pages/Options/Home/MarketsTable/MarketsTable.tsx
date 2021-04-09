@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import styled from 'styled-components';
 import { Button } from 'theme/common';
+import snxJSConnector from 'utils/snxJSConnector';
 
 dotenv.config();
 
@@ -50,6 +51,14 @@ const StyledTableCell = withStyles(() => ({
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#748BC6',
+        '&:first-child': {
+            borderTopLeftRadius: '8px',
+            borderBottomLeftRadius: '8px',
+        },
+        '&:last-child': {
+            borderTopRightRadius: '8px',
+            borderBottomRightRadius: '8px',
+        },
     },
     body: {
         border: 'none',
@@ -58,6 +67,14 @@ const StyledTableCell = withStyles(() => ({
         lineHeight: '24px',
         letterSpacing: ' 0.25px',
         color: '#F6F6FE',
+        '&:first-child': {
+            borderTopLeftRadius: '12px',
+            borderBottomLeftRadius: '12px',
+        },
+        '&:last-child': {
+            borderTopRightRadius: '12px',
+            borderBottomRightRadius: '12px',
+        },
     },
 }))(TableCell);
 
@@ -70,11 +87,12 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
+const Row = styled.tr`
+    height: 1px;
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+`;
+
 const Divider: React.FC = () => {
-    const Row = styled.tr`
-        height: 1px;
-        background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-    `;
     return (
         <Row>
             <td></td>
@@ -88,9 +106,10 @@ const Divider: React.FC = () => {
 };
 
 export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
+    console.log(snxJSConnector);
     const { t } = useTranslation();
     return (
-        <TableContainer component={Paper}>
+        <TableContainer style={{ background: 'transparent' }} component={Paper}>
             <Table aria-label="customized table">
                 <TableHead>
                     <TableRow>

@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import Tooltip from '@material-ui/core/Tooltip';
-import { ReactComponent as PencilIcon } from 'assets/images/pencil.svg';
-import { ReactComponent as PersonIcon } from 'assets/images/person.svg';
 import { ReactComponent as NoResultsIcon } from 'assets/images/no-results.svg';
 import MarketsTable from '../MarketsTable';
 import ROUTES from 'constants/routes';
@@ -14,9 +11,11 @@ import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import { PHASES } from 'constants/options';
 import { navigateTo } from 'utils/routes';
-import { Button, Container, Input } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
+import { Button } from 'theme/common';
+import styled from 'styled-components';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -30,6 +29,25 @@ type Filter = {
 const defaultFilter: Filter = {
     name: 'phase',
 };
+
+const FilterButton = styled(Button)`
+    width: 110px;
+    height: 40px;
+    margin: 24px 10px;
+    background: transparent;
+    border: 1px solid #04045a;
+    border-radius: 32px;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 13px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    text-transform: capitalize !important;
+    color: #f6f6fe;
+    &.selected {
+        background: #44e1e2;
+    }
+`;
 
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -86,92 +104,40 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         }
     }, [isWalletConnected, setDefaultFilter, filter]);
 
-    const userFilters: Array<{ filterName: Filter['name']; icon: JSX.Element }> = [
-        {
-            filterName: 'user-bids',
-            icon: <PersonIcon width="14px" height="14px" />,
-        },
-        {
-            filterName: 'creator',
-            icon: <PencilIcon width="14px" height="14px" />,
-        },
-    ];
+    // const userFilters: Array<{ filterName: Filter['name']; icon: JSX.Element }> = [
+    //     {
+    //         filterName: 'user-bids',
+    //         icon: <PersonIcon width="14px" height="14px" />,
+    //     },
+    //     {
+    //         filterName: 'creator',
+    //         icon: <PencilIcon width="14px" height="14px" />,
+    //     },
+    // ];
 
     const isPhaseFilter = filter.name === 'phase';
     const isCreatorFilter = filter.name === 'creator';
     const isUserBidsFilter = filter.name === 'user-bids';
 
     return (
-        <div style={{ width: '100%', padding: '0 120px' }}>
+        <div style={{ width: '100%', padding: '0 120px', paddingBottom: '190px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '470px' }}>
                 <div>
-                    <Button
-                        toggle
-                        basic
-                        active={isPhaseFilter && filter.value == null}
+                    <FilterButton
+                        className={isPhaseFilter && filter.value == null ? 'selected' : ''}
                         onClick={() => setFilter({ name: 'phase' })}
                     >
                         {t('common.filters.all')}
-                    </Button>
+                    </FilterButton>
                     {PHASES.map((phase) => (
-                        <Button
-                            toggle
-                            basic
-                            active={isPhaseFilter && filter.value === phase}
+                        <FilterButton
+                            className={isPhaseFilter && filter.value == phase ? 'selected' : ''}
                             onClick={() => setFilter({ name: 'phase', value: phase })}
                             key={phase}
                         >
                             {t(`options.phases.${phase}`)}
-                        </Button>
+                        </FilterButton>
                     ))}
-                </div>
-                <div>
-                    {userFilters.map(({ filterName, icon }) => {
-                        const isActive = filter.name === filterName;
-
-                        return (
-                            <Tooltip
-                                key={filterName}
-                                title={
-                                    <span>
-                                        {!isWalletConnected
-                                            ? t(
-                                                  `options.home.explore-markets.table.filters.${filterName}.tooltip-connected`
-                                              )
-                                            : t(
-                                                  `options.home.explore-markets.table.filters.${filterName}.tooltip-not-connected`
-                                              )}
-                                    </span>
-                                }
-                                placement="top"
-                                arrow={true}
-                            >
-                                <Button
-                                    toggle
-                                    basic
-                                    onClick={
-                                        isWalletConnected
-                                            ? () => {
-                                                  if (isActive) {
-                                                      // toggle off
-                                                      setDefaultFilter();
-                                                  } else {
-                                                      // toggle on
-                                                      setFilter({
-                                                          name: filterName,
-                                                      });
-                                                  }
-                                              }
-                                            : undefined
-                                    }
-                                    active={isActive}
-                                >
-                                    {icon}
-                                </Button>
-                            </Tooltip>
-                        );
-                    })}
-                    <Input onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} icon="search" />
                 </div>
             </div>
 
@@ -191,7 +157,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                     <>
                                         <div>{t('options.home.explore-markets.table.filters.creator.no-results')}</div>
                                         <div>
-                                            <Button primary onClick={() => navigateTo(ROUTES.Options.CreateMarket)}>
+                                            <Button onClick={() => navigateTo(ROUTES.Options.CreateMarket)}>
                                                 {t('options.home.market-creation.create-market-button-label')}
                                             </Button>
                                             <div>{t('common.or')}</div>
@@ -201,7 +167,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                 {isUserBidsFilter && (
                                     <div>{t('options.home.explore-markets.table.filters.user-bids.no-results')}</div>
                                 )}
-                                <Button primary basic onClick={setDefaultFilter}>
+                                <Button onClick={setDefaultFilter}>
                                     {isUserBidsFilter
                                         ? t('options.home.explore-markets.table.view-all-open-markets')
                                         : t('options.home.explore-markets.table.view-all-markets')}

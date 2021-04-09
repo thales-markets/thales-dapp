@@ -62,6 +62,7 @@ export const Button = styled.button`
     padding: 8px 24px;
     border-radius: 40px;
     border: none;
+    outline: none;
     align-self: flex-start;
     font-weight: bold;
     font-size: 20px;

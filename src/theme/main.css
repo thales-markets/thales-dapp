@@ -8,3 +8,8 @@
     font-family: 'Titillium Web' !important;
     font-style: normal;
 }
+
+body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
