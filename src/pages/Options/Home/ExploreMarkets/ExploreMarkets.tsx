@@ -102,7 +102,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isUserBidsFilter = filter.name === 'user-bids';
 
     return (
-        <div>
+        <div style={{ width: '100%', padding: '0 120px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '470px' }}>
                 <div>
                     <Button

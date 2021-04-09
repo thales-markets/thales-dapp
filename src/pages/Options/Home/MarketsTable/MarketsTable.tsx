@@ -1,16 +1,12 @@
 import React, { FC, memo } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
-import { CellProps, Row } from 'react-table';
-import { SYNTHS_MAP, FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
-import { formatCurrency } from 'utils/formatters/number';
-import { formatShortDate } from 'utils/formatters/date';
-import Table from 'components/Table';
-import { CurrencyCol } from 'components/Table/common';
-import { OptionsMarkets, HistoricalOptionsMarketInfo } from 'types/options';
-import TimeRemaining from '../../components/TimeRemaining';
-import Currency from 'components/Currency';
+import { OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
-import { navigateToOptionsMarket } from 'utils/routes';
+import { Paper, Table, TableContainer, TableHead, TableBody, TableRow, withStyles, TableCell } from '@material-ui/core';
+import Currency from 'components/Currency';
+import { formatCurrency } from 'utils/formatters/number';
+import { useTranslation } from 'react-i18next';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import styled from 'styled-components';
 
 dotenv.config();
 
@@ -34,139 +30,121 @@ const getPhaseBackgroundColor = (phase: string) => {
     }
 };
 
-export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, noResultsMessage, isLoading }) => {
-    const { t } = useTranslation();
+const StyledTableCell = withStyles(() => ({
+    head: {
+        border: 'none',
+        background: '#127',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        lineHeight: '16px',
+        letterSpacing: ' 0.5px',
+        color: '#748BC6',
+    },
+    body: {
+        border: 'none',
+        fontWeight: 'bold',
+        fontSize: '16px',
+        lineHeight: '24px',
+        letterSpacing: ' 0.25px',
+        color: '#F6F6FE',
+    },
+}))(TableCell);
 
+const StyledTableRow = withStyles(() => ({
+    root: {
+        background: '#126',
+        '&:nth-of-type(odd)': {
+            background: '#116',
+        },
+    },
+}))(TableRow);
+
+const Divider: React.FC = () => {
+    const Row = styled.tr`
+        height: 1px;
+        background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    `;
     return (
-        <Table
-            columns={[
-                {
-                    Header: <>{t('options.home.markets-table.asset-col')}</>,
-                    accessor: 'currencyKey',
-                    Cell: (
-                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['currencyKey']>
-                    ) => (
-                        <Currency.Name
-                            currencyKey={cellProps.cell.value}
-                            name={cellProps.row.original.asset}
-                            showIcon={true}
-                            iconProps={{ width: '24px', height: '24px', type: 'asset' }}
-                        />
-                    ),
-                    width: 150,
-                    sortable: true,
-                },
-                {
-                    Header: (
-                        <>
-                            {t('options.home.markets-table.strike-price-col', {
-                                currencyKey: `${FIAT_CURRENCY_MAP.USD}`,
-                            })}
-                        </>
-                    ),
-                    accessor: 'strikePrice',
-                    sortType: 'basic',
-                    Cell: (
-                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['strikePrice']>
-                    ) => <CurrencyCol sign={USD_SIGN} value={cellProps.cell.value} />,
-                    width: 150,
-                    sortable: true,
-                },
-                {
-                    Header: <>{t('options.home.markets-table.maturity-date-col')}</>,
-                    accessor: 'maturityDate',
-                    Cell: (
-                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['maturityDate']>
-                    ) => <span>{formatShortDate(cellProps.cell.value)}</span>,
-                    width: 150,
-                    sortable: true,
-                },
+        <Row>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </Row>
+    );
+};
 
-                {
-                    Header: <>{t('options.home.markets-table.long-short-col')}</>,
-                    id: 'long-short',
-                    Cell: (cellProps: CellProps<HistoricalOptionsMarketInfo>) => {
+export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
+    const { t } = useTranslation();
+    return (
+        <TableContainer component={Paper}>
+            <Table aria-label="customized table">
+                <TableHead>
+                    <TableRow>
+                        <StyledTableCell>Asset</StyledTableCell>
+                        <StyledTableCell>Strike Price</StyledTableCell>
+                        <StyledTableCell>Pool Size</StyledTableCell>
+                        <StyledTableCell>Long/Short</StyledTableCell>
+                        <StyledTableCell>Time Remaining</StyledTableCell>
+                        <StyledTableCell>Phase</StyledTableCell>
+                    </TableRow>
+                    <Divider />
+                </TableHead>
+                <TableBody>
+                    {optionsMarkets.map((market, index) => {
                         return (
-                            <div>
-                                <span style={{ color: '#10BA97' }}>
-                                    {t('common.val-in-cents', {
-                                        val: formatCurrency(cellProps.row.original.longPrice * 100),
-                                    })}
-                                </span>{' '}
-                                /{' '}
-                                <span style={{ color: '#D94454' }}>
-                                    {t('common.val-in-cents', {
-                                        val: formatCurrency(cellProps.row.original.shortPrice * 100),
-                                    })}
-                                </span>
-                            </div>
+                            <>
+                                <Divider />
+                                <StyledTableRow key={index}>
+                                    <StyledTableCell>
+                                        <Currency.Name
+                                            currencyKey={market.currencyKey}
+                                            name={market.asset}
+                                            showIcon={true}
+                                            iconProps={{ width: '24px', height: '24px', type: 'asset' }}
+                                        />
+                                    </StyledTableCell>
+                                    <StyledTableCell>{market.strikePrice.toFixed(2)}</StyledTableCell>
+                                    <StyledTableCell>{market.poolSize.toFixed(2)}</StyledTableCell>
+                                    <StyledTableCell>
+                                        <div>
+                                            <span style={{ color: '#10BA97' }}>
+                                                {t('common.val-in-cents', {
+                                                    val: formatCurrency(market.longPrice * 100),
+                                                })}
+                                            </span>{' '}
+                                            /{' '}
+                                            <span style={{ color: '#D94454' }}>
+                                                {t('common.val-in-cents', {
+                                                    val: formatCurrency(market.shortPrice * 100),
+                                                })}
+                                            </span>
+                                        </div>
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        <TimeRemaining end={market.timeRemaining} />
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        <span
+                                            style={{
+                                                backgroundColor: getPhaseBackgroundColor(market.phase),
+                                                textTransform: 'uppercase',
+                                                padding: 5,
+                                            }}
+                                        >
+                                            {t(`options.phases.${market.phase}`)}
+                                        </span>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                                <Divider />
+                            </>
                         );
-                    },
-                    width: 150,
-                },
-                {
-                    Header: (
-                        <Trans
-                            i18nKey="options.home.markets-table.pool-size-col"
-                            values={{ currencyKey: `${SYNTHS_MAP.sUSD}` }}
-                            components={[<span key="pool" />]}
-                        />
-                    ),
-                    accessor: 'poolSize',
-                    sortType: 'basic',
-                    Cell: (
-                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['poolSize']>
-                    ) => <CurrencyCol sign={USD_SIGN} value={cellProps.cell.value} />,
-                    width: 150,
-                    sortable: true,
-                },
-                {
-                    Header: <>{t('options.home.markets-table.phase-col')}</>,
-                    accessor: 'phase',
-                    Cell: (cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['phase']>) => (
-                        <span
-                            style={{
-                                backgroundColor: getPhaseBackgroundColor(cellProps.cell.value),
-                                textTransform: 'uppercase',
-                                padding: 5,
-                            }}
-                        >
-                            {t(`options.phases.${cellProps.cell.value}`)}
-                        </span>
-                    ),
-                    width: 150,
-                },
-                {
-                    Header: <>{t('options.home.markets-table.time-remaining-col')}</>,
-                    accessor: 'timeRemaining',
-                    Cell: (
-                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['timeRemaining']>
-                    ) => <TimeRemaining end={cellProps.cell.value} />,
-                    width: 150,
-                },
-                {
-                    Header: <>{t('options.home.markets-table.openorders')}</>,
-                    accessor: 'openOrders',
-                    Cell: (
-                        cellProps: CellProps<HistoricalOptionsMarketInfo, HistoricalOptionsMarketInfo['openOrders']>
-                    ) => (
-                        <span
-                            title={cellProps.row.original.orders ? JSON.stringify(cellProps.row.original.orders) : ''}
-                        >
-                            {cellProps.row.original.phase == 'trading' ? cellProps.cell.value : 'N/A'}
-                        </span>
-                    ),
-                    width: 150,
-                    sortable: true,
-                },
-            ]}
-            data={optionsMarkets}
-            onTableRowClick={(row: Row<HistoricalOptionsMarketInfo>) => {
-                navigateToOptionsMarket(row.original.address);
-            }}
-            isLoading={isLoading}
-            noResultsMessage={noResultsMessage}
-        />
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 });
 
