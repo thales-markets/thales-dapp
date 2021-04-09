@@ -342,6 +342,24 @@
                 "limit-tab-title": "Limit",
                 "orderbook": {
                     "title": "Orderbook",
+                    "buy": {
+                        "no-results": "No buy orders found."
+                    },
+                    "sell": {
+                        "no-results": "No sell orders found."
+                    },
+                    "filter": {
+                        "my-orders": {
+                            "tooltip-connected": "Orders you’ve created. Connect a wallet to start.",
+                            "tooltip-not-connected": "Orders you’ve created. Click on the row to enter or cancel order.",
+                            "buy": {
+                                "no-results": "You haven't created any buy order yet."
+                            },
+                            "sell": {
+                                "no-results": "You haven't created any sell order yet."
+                            }
+                        }
+                    },
                     "table": {
                         "type-col": "Type",
                         "price-col": "Price per sOPT (sUSD)",

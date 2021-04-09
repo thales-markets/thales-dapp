@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Grid, Menu, Segment } from 'semantic-ui-react';
 import { OptionSide } from 'types/options';
 import TokenSwap from './TokenSwap';
-import MyOrders from './MyOrders';
+// import MyOrders from './MyOrders';
 import Orderbook from './Orderbook';
 import PlaceOrder from './PlaceOrder';
 
@@ -56,11 +56,11 @@ const TradeOptionsSide: React.FC<TradeOptionsSideProps> = ({ optionSide }) => {
                         {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
                     </Grid.Column>
                 </Grid.Row>
-                <Grid.Row>
+                {/* <Grid.Row>
                     <Grid.Column>
                         <MyOrders optionSide={optionSide} />
                     </Grid.Column>
-                </Grid.Row>
+                </Grid.Row> */}
             </Grid>
         </Segment>
     );

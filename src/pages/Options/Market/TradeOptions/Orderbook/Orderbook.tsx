@@ -1,17 +1,18 @@
-import React, { useMemo } from 'react';
-import { Header, Table } from 'semantic-ui-react';
+import React, { useMemo, useState } from 'react';
+import { Button, Header, Icon, Table } from 'semantic-ui-react';
 import OrderbookSide from './OrderbookSide';
-import { OptionSide } from 'types/options';
+import { OptionSide, OrderItem } from 'types/options';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import { useMarketContext } from '../../contexts/MarketContext';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
+import { Tooltip } from '@material-ui/core';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -22,6 +23,9 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const optionsMarket = useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [filterMyOrders, setFilterMyOrders] = useState<boolean>(false);
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const orderbookSign = optionSide === 'long' ? '>' : '<';
@@ -30,15 +34,19 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
         enabled: isAppReady,
     });
 
-    const buyOrders = useMemo(
-        () => (orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.buyOrders : []),
-        [orderbookQuery.data]
-    );
+    const buyOrders = useMemo(() => {
+        const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.buyOrders : [];
+        return filterMyOrders
+            ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
+            : orders;
+    }, [orderbookQuery.data, filterMyOrders]);
 
-    const sellOrders = useMemo(
-        () => (orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.sellOrders : []),
-        [orderbookQuery.data]
-    );
+    const sellOrders = useMemo(() => {
+        const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.sellOrders : [];
+        return filterMyOrders
+            ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
+            : orders;
+    }, [orderbookQuery.data, filterMyOrders]);
 
     const marketHeading = optionsMarket
         ? `(${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
@@ -49,9 +57,39 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
     return (
         <>
-            <Header as="h3">
-                {t(`options.market.trade-options.orderbook.title`)} {marketHeading}
-            </Header>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <Header as="h3">
+                        {t(`options.market.trade-options.orderbook.title`)} {marketHeading}
+                    </Header>
+                </div>
+                <div>
+                    <Tooltip
+                        title={
+                            <span style={{ fontSize: 12 }}>
+                                {!isWalletConnected
+                                    ? t(`options.market.trade-options.orderbook.filter.my-orders.tooltip-connected`)
+                                    : t(
+                                          `options.market.trade-options.orderbook.filter.my-orders.tooltip-not-connected`
+                                      )}
+                            </span>
+                        }
+                        placement="top"
+                        arrow={true}
+                    >
+                        <Button
+                            toggle
+                            basic
+                            onClick={isWalletConnected ? () => setFilterMyOrders(!filterMyOrders) : undefined}
+                            active={filterMyOrders}
+                            size="tiny"
+                            icon
+                        >
+                            <Icon name="user" />
+                        </Button>
+                    </Tooltip>
+                </div>
+            </div>
             <Table compact selectable fixed striped size="small">
                 <Table.Header>
                     <Table.Row>
@@ -70,11 +108,24 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                         <Table.HeaderCell>
                             {t('options.market.trade-options.orderbook.table.time-remaining-col')}
                         </Table.HeaderCell>
+                        <Table.HeaderCell width={1} />
                     </Table.Row>
                 </Table.Header>
             </Table>
-            <OrderbookSide orders={buyOrders} orderSide="buy" optionSide={optionSide} />
-            <OrderbookSide orders={sellOrders} orderSide="sell" optionSide={optionSide} />
+            <OrderbookSide
+                orders={buyOrders}
+                orderSide="buy"
+                optionSide={optionSide}
+                optionsTokenAddress={optionsTokenAddress}
+                filterMyOrders={filterMyOrders}
+            />
+            <OrderbookSide
+                orders={sellOrders}
+                orderSide="sell"
+                optionSide={optionSide}
+                optionsTokenAddress={optionsTokenAddress}
+                filterMyOrders={filterMyOrders}
+            />
         </>
     );
 };
