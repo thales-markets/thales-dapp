@@ -9,6 +9,7 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import styled from 'styled-components';
 import { Button } from 'theme/common';
 import snxJSConnector from 'utils/snxJSConnector';
+import { navigateToOptionsMarket } from 'utils/routes';
 
 dotenv.config();
 
@@ -84,6 +85,12 @@ const StyledTableRow = withStyles(() => ({
         '&:nth-of-type(odd)': {
             background: '#116',
         },
+        '&.clickable': {
+            cursor: 'pointer',
+            '&:hover': {
+                background: '#129',
+            },
+        },
     },
 }))(TableRow);
 
@@ -127,7 +134,15 @@ export const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => 
                         return (
                             <>
                                 <Divider />
-                                <StyledTableRow key={index}>
+                                <StyledTableRow
+                                    onClick={() => {
+                                        if (market.phase !== 'expiry') {
+                                            navigateToOptionsMarket(market.address);
+                                        }
+                                    }}
+                                    className={market.phase !== 'expiry' ? 'clickable' : ''}
+                                    key={index}
+                                >
                                     <StyledTableCell>
                                         <Currency.Name
                                             currencyKey={market.currencyKey}
