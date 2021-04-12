@@ -26,7 +26,7 @@ const Background = styled.section`
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     }
     &:nth-child(even) {
-        background: white;
+        background: #f6f6fe;
     }
 `;
 

@@ -7,13 +7,10 @@ import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { getAssetIcon } from 'utils/currency';
+
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-
-type MarketCardPros = {
-    optionMarket: HistoricalOptionsMarketInfo;
-};
 
 const Card = styled(FlexDivColumnCentered)`
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
@@ -91,17 +88,17 @@ const ExpireDate = styled.p`
     color: #f6f6fe;
 `;
 
+type MarketCardPros = {
+    optionMarket: HistoricalOptionsMarketInfo;
+};
+
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
     const { t } = useTranslation();
-    const AssetIcon = styled(getAssetIcon(optionMarket.currencyKey))`
-        width: 48px;
-        height: 48px;
-        margin: 24px 12px 24px 35px;
-    `;
+    const AssetIcon = getAssetIcon(optionMarket.currencyKey);
     return (
         <Card>
             <Header>
-                <AssetIcon />
+                <AssetIcon style={{ width: '48px', height: '48px', margin: '24px 12px 24px 35px' }} />
                 <FlexDivColumnCentered>
                     <CryptoName>{snxJSConnector.synthsMap[optionMarket.currencyKey]?.description}</CryptoName>
                     <CryptoKey>{optionMarket.currencyKey}</CryptoKey>

@@ -15,7 +15,7 @@ import { FlexDiv, FlexDivColumn, Image, Section, Side, SubTitle } from 'theme/co
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
 import img3 from 'assets/images/img3.svg';
-import Footer from './components/Footer';
+import Footer from './Footer/Footer';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();

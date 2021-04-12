@@ -35,8 +35,8 @@ export const Home: React.FC = () => {
                 <>
                     <Section>
                         <FlexDivColumn>
-                            <MarketHeader></MarketHeader>
-                            <MarketCreation></MarketCreation>
+                            <MarketHeader />
+                            <MarketCreation />
                         </FlexDivColumn>
                     </Section>
                     <Section>

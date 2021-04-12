@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Button, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 
-const Header = styled.div`
+const MarketHeaderWrapper = styled.div`
     padding: 0 75px;
     width: 100%;
     display: flex;
@@ -22,15 +22,16 @@ const ConnectWallet = styled(Button)`
     }
     font-size: 16px;
 `;
+
 const MarketHeader: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <Header>
+        <MarketHeaderWrapper>
             <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
             <ConnectWallet onClick={() => onboardConnector.connectWallet()}>
                 {t('common.wallet.connect-your-wallet')}
             </ConnectWallet>
-        </Header>
+        </MarketHeaderWrapper>
     );
 };
 

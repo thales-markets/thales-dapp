@@ -40,7 +40,7 @@ const ProgressBar = styled.div`
     margin-bottom: 30px;
 `;
 
-export const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display }) => {
+const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display }) => {
     const { t } = useTranslation();
     const priceLong = long * 100;
     const priceShort = short * 100;

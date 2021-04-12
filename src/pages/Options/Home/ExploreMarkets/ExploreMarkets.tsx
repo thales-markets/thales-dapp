@@ -15,6 +15,7 @@ import { Container } from 'semantic-ui-react';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { Button } from 'theme/common';
+import MarketsFilters from './MarketFilters';
 import styled from 'styled-components';
 
 type ExploreMarketsProps = {
@@ -120,8 +121,10 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isUserBidsFilter = filter.name === 'user-bids';
 
     return (
-        <div style={{ width: '100%', padding: '0 120px', paddingBottom: '190px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '470px' }}>
+        <div style={{ width: '100%', padding: '400px 120px' }}>
+            <MarketsFilters></MarketsFilters>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '100px' }}>
                 <div>
                     <FilterButton
                         className={isPhaseFilter && filter.value == null ? 'selected' : ''}

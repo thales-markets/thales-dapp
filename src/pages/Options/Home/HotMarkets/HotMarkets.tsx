@@ -1,12 +1,39 @@
 import React, { useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import { useTranslation } from 'react-i18next';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, SubTitle } from 'theme/common';
-import styled from 'styled-components';
+import { FlexDivCentered, SubTitle } from 'theme/common';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 import MarketCard from '../MarketCard';
 import SearchMarket from '../SearchMarket';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivColumn, Image } from 'theme/common';
+
+const Wrapper = styled(FlexDivColumn)`
+    padding: 50px 110px;
+    position: relative;
+`;
+
+const Arrow = styled(Image)`
+    width: 24px;
+    height: 40px;
+    margin: 70px 10px 0 10px;
+    cursor: pointer;
+`;
+
+const Pagination = styled(FlexDiv)`
+    align-self: center;
+    margin-bottom: 320px;
+`;
+const PaginationPage = styled.span`
+    width: 24px;
+    height: 4px;
+    background: #b8c6e5;
+    &.current {
+        background: #04045a;
+    }
+    margin: 4px;
+`;
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -24,32 +51,6 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const PreviousMarkets = () => {
         currentMarketPage === 0 ? setCurrentMarketPage(2) : setCurrentMarketPage(currentMarketPage - 1);
     };
-
-    const Wrapper = styled(FlexDivColumn)`
-        padding: 50px 110px;
-        position: relative;
-    `;
-
-    const Arrow = styled(Image)`
-        width: 24px;
-        height: 40px;
-        margin: 70px 10px 0 10px;
-        cursor: pointer;
-    `;
-
-    const Pagination = styled(FlexDiv)`
-        align-self: center;
-        margin-bottom: 320px;
-    `;
-    const PaginationPage = styled.span`
-        width: 24px;
-        height: 4px;
-        background: #b8c6e5;
-        &.current {
-            background: #04045a;
-        }
-        margin: 4px;
-    `;
 
     return (
         <Wrapper>
