@@ -38,9 +38,9 @@ import {
     ORDER_PERIOD_ITEMS_MAP,
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
-import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -49,7 +49,6 @@ type PlaceOrderProps = {
 const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
-    const contractWrappers0x = useContractWrappers0xContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -64,6 +63,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [orderSide, setOrderSide] = useState<OrderSide>('buy');
+    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -108,7 +108,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
 
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
+    const addressToApprove: string = contractAddresses0x.exchangeProxy;
 
     const isButtonDisabled =
         price === '' ||

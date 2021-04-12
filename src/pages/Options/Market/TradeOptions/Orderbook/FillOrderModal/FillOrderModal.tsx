@@ -19,7 +19,7 @@ import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import { getIsAppReady } from 'redux/modules/app';
+import { getIs0xReady, getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
@@ -29,13 +29,14 @@ import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import { Tooltip } from '@material-ui/core';
-import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { calculate0xProtocolFee } from 'utils/0x';
 import { refetchOrderbook } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
+import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
+import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -47,7 +48,6 @@ type FillOrderModalProps = {
 export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, orderSide, optionSide }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
-    const contractWrappers0x = useContractWrappers0xContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -60,6 +60,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -98,6 +100,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
+    const { contractWrappers0x } = contractWrappers0xConnector;
+
     const isBuy = orderSide === 'buy';
 
     const isButtonDisabled =
@@ -105,10 +109,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         Number(amount) <= 0 ||
         isFilling ||
         !isWalletConnected ||
-        (isBuy ? !tokenBalance : !sUSDBalance);
+        (isBuy ? !tokenBalance : !sUSDBalance) ||
+        !is0xReady;
 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove: string = contractWrappers0x.exchangeProxy.address;
+    const addressToApprove: string = contractAddresses0x.exchangeProxy;
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -135,21 +140,23 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     }, [walletAddress, isWalletConnected]);
 
     useEffect(() => {
-        const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
-            IZeroExEvents.LimitOrderFilled,
-            { orderHash: order.displayOrder.orderHash },
-            (_, log) => {
-                if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-                    refetchOrderbook(baseToken);
-                    setIsFilling(false);
-                    onClose();
+        if (is0xReady) {
+            const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
+                IZeroExEvents.LimitOrderFilled,
+                { orderHash: order.displayOrder.orderHash },
+                (_, log) => {
+                    if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
+                        refetchOrderbook(baseToken);
+                        setIsFilling(false);
+                        onClose();
+                    }
                 }
-            }
-        );
-        return () => {
-            contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
-        };
-    }, []);
+            );
+            return () => {
+                contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
+            };
+        }
+    }, [is0xReady]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {

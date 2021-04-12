@@ -1,11 +1,27 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { set0xReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { Menu } from 'semantic-ui-react';
+import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import OptionSideIcon from '../components/OptionSideIcon';
 import TradeOptionsSide from './TradeOptionsSide';
 
 const TradeOptions: React.FC = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    useEffect(() => {
+        dispatch(set0xReady(false));
+        // TODO: For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering. Find a way to optimize this.
+        contractWrappers0xConnector.setContractWrappers0x(isWalletConnected, networkId);
+        dispatch(set0xReady(true));
+    }, [networkId, isWalletConnected]);
+
     const tabContent: Array<{
         id: 'long' | 'short';
         name: string;
