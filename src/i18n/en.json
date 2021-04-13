@@ -200,6 +200,7 @@
     },
     "options": {
         "phases": {
+            "all": "all",
             "bidding": "bidding",
             "trading": "trading",
             "maturity": "maturity",
