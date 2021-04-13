@@ -24,7 +24,6 @@ const Text = styled.h2`
 
 const CreateMarket = styled(Button)`
     margin-top: 80px;
-    margin-bottom: 50px;
     padding: 8px 40px;
     background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
     color: white;

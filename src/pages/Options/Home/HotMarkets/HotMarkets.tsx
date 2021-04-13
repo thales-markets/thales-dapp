@@ -5,7 +5,6 @@ import { FlexDivCentered, SubTitle } from 'theme/common';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 import MarketCard from '../MarketCard';
-import SearchMarket from '../SearchMarket';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, Image } from 'theme/common';
 
@@ -17,13 +16,13 @@ const Wrapper = styled(FlexDivColumn)`
 const Arrow = styled(Image)`
     width: 24px;
     height: 40px;
-    margin: 70px 10px 0 10px;
+    margin: 0 10px;
     cursor: pointer;
 `;
 
 const Pagination = styled(FlexDiv)`
     align-self: center;
-    margin-bottom: 320px;
+    margin-bottom: 40px;
 `;
 const PaginationPage = styled.span`
     width: 24px;
@@ -69,7 +68,6 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 <PaginationPage className={currentMarketPage === 1 ? 'current' : ''} />
                 <PaginationPage className={currentMarketPage === 2 ? 'current' : ''} />
             </Pagination>
-            <SearchMarket></SearchMarket>
         </Wrapper>
     );
 };

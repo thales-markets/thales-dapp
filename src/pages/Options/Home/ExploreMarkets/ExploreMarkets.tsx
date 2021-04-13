@@ -14,6 +14,7 @@ import myMarkets from 'assets/images/my-markets.svg';
 import myWatchlist from 'assets/images/my-watchlist.svg';
 import recentlyAdded from 'assets/images/recently-added.svg';
 import UserFilter from './UserFilters';
+import SearchMarket from '../SearchMarket';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -143,7 +144,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     };
 
     return (
-        <div style={{ width: '100%', padding: '400px 120px' }}>
+        <div style={{ width: '100%', padding: '50px 120px' }}>
             <FlexDivCentered>
                 {Object.keys(UserFilterEnum)
                     .filter(
@@ -165,7 +166,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     ))}
             </FlexDivCentered>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '100px' }}>
+            <SearchMarket></SearchMarket>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
                     {Object.keys(PhaseFilterEnum)
                         .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))

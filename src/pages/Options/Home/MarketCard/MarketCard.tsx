@@ -17,7 +17,7 @@ const Card = styled(FlexDivColumnCentered)`
     border-radius: 24px;
     color: white;
     width: 368px;
-    margin: 120px 20px 70px 20px; ;
+    margin: 70px 20px 70px 20px; ;
 `;
 
 const Header = styled(FlexDivCentered)`
