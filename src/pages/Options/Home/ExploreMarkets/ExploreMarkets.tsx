@@ -15,6 +15,8 @@ import myWatchlist from 'assets/images/my-watchlist.svg';
 import recentlyAdded from 'assets/images/recently-added.svg';
 import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
+import useDebouncedMemo from 'hooks/useDebouncedMemo';
+import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -63,7 +65,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
-
+    const [assetSearch, setAssetSearch] = useState<string>('');
     const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
     });
@@ -108,7 +110,17 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         walletAddress,
         userBidsMarketsQuery.data,
         userBidsMarketsQuery.isSuccess,
+        assetSearch,
     ]);
+
+    const searchFilteredOptionsMarkets = useDebouncedMemo(
+        () =>
+            assetSearch
+                ? filteredOptionsMarkets.filter(({ asset }) => asset.toLowerCase().includes(assetSearch.toLowerCase()))
+                : filteredOptionsMarkets,
+        [filteredOptionsMarkets, assetSearch],
+        DEFAULT_SEARCH_DEBOUNCE_MS
+    );
 
     const onClickUserFilter = (filter: UserFilterEnum) => {
         setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
@@ -166,7 +178,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     ))}
             </FlexDivCentered>
 
-            <SearchMarket></SearchMarket>
+            <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch}></SearchMarket>
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
@@ -188,7 +200,10 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 </div>
             </div>
 
-            <MarketsTable optionsMarkets={filteredOptionsMarkets} isLoading={userBidsMarketsQuery.isLoading} />
+            <MarketsTable
+                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
+                isLoading={userBidsMarketsQuery.isLoading}
+            />
         </div>
     );
 };
