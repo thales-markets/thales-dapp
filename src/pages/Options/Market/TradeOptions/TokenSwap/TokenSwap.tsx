@@ -151,7 +151,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         } else {
             setAllowance(false);
         }
-    }, [walletAddress, isWalletConnected, isBuy, addressToApprove]);
+    }, [walletAddress, isWalletConnected, isBuy, addressToApprove, optionSide]);
 
     useEffect(() => {
         onAmountChange(amount);

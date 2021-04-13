@@ -161,7 +161,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, isBuy]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -254,6 +254,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         const newAmount = (maxsOPTBalance * percentage) / 100;
         setAmount(newAmount);
     };
+
+    console.log('isBuy', isBuy);
 
     return (
         <>
