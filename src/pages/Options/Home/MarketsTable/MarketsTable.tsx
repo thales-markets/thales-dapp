@@ -1,24 +1,13 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo } from 'react';
 import { OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
-import {
-    Paper,
-    Table,
-    TableContainer,
-    TableHead,
-    TableBody,
-    TableRow,
-    withStyles,
-    TablePagination,
-} from '@material-ui/core';
+import { Paper, Table, TableContainer, TableHead, TableBody, TableRow, withStyles } from '@material-ui/core';
 import Currency from 'components/Currency';
 import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { PhaseLabel, Row, StyledTableCell } from './components';
-import styled from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
 
 dotenv.config();
 
@@ -56,19 +45,19 @@ const Divider: React.FC = () => {
     );
 };
 
-const NoMarkets = styled(FlexDivColumn)`
-    height: 500px;
-    background: #242731;
-    mix-blend-mode: normal;
-    opacity: 0.2;
-    border-radius: 20px;
-`;
+// const NoMarkets = styled(FlexDivColumn)`
+//     height: 500px;
+//     background: #242731;
+//     mix-blend-mode: normal;
+//     opacity: 0.2;
+//     border-radius: 20px;
+// `;
 
 const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
-    const [page, setPage] = useState(0);
-    const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
+    // const [page, setPage] = useState(0);
+    // const handleChangePage = (_event: unknown, newPage: number) => {
+    //     setPage(newPage);
+    // };
 
     const { t } = useTranslation();
     return (
@@ -89,7 +78,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                     </TableHead>
 
                     <TableBody>
-                        {optionsMarkets.slice(page * 10, page * 10 + 10).map((market, index) => {
+                        {optionsMarkets.map((market, index) => {
                             return (
                                 <StyledTableRow
                                     onClick={() => {
@@ -140,7 +129,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {optionsMarkets.length ? (
+            {/* {optionsMarkets.length ? (
                 <TablePagination
                     component="div"
                     count={optionsMarkets.length}
@@ -150,7 +139,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                 />
             ) : (
                 <NoMarkets></NoMarkets>
-            )}
+            )} */}
         </>
     );
 });
