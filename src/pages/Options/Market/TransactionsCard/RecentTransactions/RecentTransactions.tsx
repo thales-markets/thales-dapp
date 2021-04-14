@@ -24,7 +24,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
             optionsTransactions={transactionsQuery.data || []}
             isLoading={transactionsQuery.isLoading}
             noResultsMessage={
-                transactionsQuery.isSuccess && noResults ? (
+                noResults ? (
                     <span>{t('options.market.transactions-card.table.no-results-recent-activity')}</span>
                 ) : undefined
             }

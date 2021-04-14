@@ -1,0 +1,62 @@
+/* TEMP CSS until design is ready */
+
+button {
+    text-transform: uppercase !important;
+}
+.ui.menu {
+    margin-top: 10px !important;
+}
+.ui.menu a {
+    text-transform: uppercase !important;
+}
+.ui.card .header {
+    display: flex !important;
+    justify-content: space-between;
+}
+.ui.card .header span {
+    display: flex !important;
+    align-items: center;
+}
+.ui.card .header span svg {
+    margin-right: 10px;
+}
+.ui.card,
+.ui.cards > .card {
+    width: 271px;
+}
+.ui.progress {
+    margin-bottom: 0 !important;
+    background-color: #d94454;
+}
+.ui.message {
+    padding: 0.5em 1.5em;
+}
+.ui.form .field > label {
+    text-transform: uppercase;
+}
+::placeholder,
+.divider.default.text,
+.accordion .title {
+    text-transform: uppercase !important;
+}
+.selectable.table tr:hover,
+.icon.cancel:hover,
+.button-label:hover {
+    cursor: pointer;
+}
+
+.sidebar.visible + .pusher {
+    margin-left: 475px;
+}
+
+.ui.right.visible.sidebar {
+    box-shadow: none;
+}
+
+.ui.styled.accordion .title {
+    color: rgba(0, 0, 0, 0.95);
+}
+
+.icon {
+    font-family: Icons !important;
+}

@@ -7,11 +7,12 @@ import { getCustomGasPrice, getGasSpeed, getIsWalletConnected, getWalletAddress 
 import { OrderItem } from 'types/options';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import { useContractWrappers0xContext } from 'pages/Options/Market/contexts/ContractWrappers0xContext';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { refetchOrderbook } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
+import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
+import { getIs0xReady } from 'redux/modules/app';
 
 type CancelOrderModalProps = {
     order: OrderItem;
@@ -21,7 +22,6 @@ type CancelOrderModalProps = {
 
 export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, order, baseToken }) => {
     const { t } = useTranslation();
-    const contractWrappers0x = useContractWrappers0xContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
@@ -29,6 +29,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
 
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPrice = useMemo(
@@ -40,25 +41,28 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 : null,
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
+    const { contractWrappers0x } = contractWrappers0xConnector;
 
-    const isButtonDisabled = !isWalletConnected || isCanceling;
+    const isButtonDisabled = !isWalletConnected || isCanceling || !is0xReady;
 
     useEffect(() => {
-        const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
-            IZeroExEvents.OrderCancelled,
-            { orderHash: order.displayOrder.orderHash },
-            (_, log) => {
-                if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-                    refetchOrderbook(baseToken);
-                    setIsCanceling(false);
-                    onClose();
+        if (is0xReady) {
+            const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
+                IZeroExEvents.OrderCancelled,
+                { orderHash: order.displayOrder.orderHash },
+                (_, log) => {
+                    if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
+                        refetchOrderbook(baseToken);
+                        setIsCanceling(false);
+                        onClose();
+                    }
                 }
-            }
-        );
-        return () => {
-            contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
-        };
-    }, []);
+            );
+            return () => {
+                contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
+            };
+        }
+    }, [is0xReady]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
