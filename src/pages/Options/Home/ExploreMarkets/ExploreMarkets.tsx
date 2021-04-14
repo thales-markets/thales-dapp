@@ -1,35 +1,61 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Tooltip from '@material-ui/core/Tooltip';
-import { ReactComponent as PencilIcon } from 'assets/images/pencil.svg';
-import { ReactComponent as PersonIcon } from 'assets/images/person.svg';
-import { ReactComponent as NoResultsIcon } from 'assets/images/no-results.svg';
 import MarketsTable from '../MarketsTable';
-import ROUTES from 'constants/routes';
 import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import useDebouncedMemo from 'hooks/useDebouncedMemo';
-import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import { PHASES } from 'constants/options';
-import { navigateTo } from 'utils/routes';
-import { Button, Container, Input } from 'semantic-ui-react';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
+import { Button, FlexDivCentered } from 'theme/common';
+import styled from 'styled-components';
+import myBids from 'assets/images/my-bids.svg';
+import myMarkets from 'assets/images/my-markets.svg';
+import myWatchlist from 'assets/images/my-watchlist.svg';
+import recentlyAdded from 'assets/images/recently-added.svg';
+import UserFilter from './UserFilters';
+import SearchMarket from '../SearchMarket';
+import useDebouncedMemo from 'hooks/useDebouncedMemo';
+import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
 };
 
-type Filter = {
-    name: 'creator' | 'user-bids' | 'phase';
-    value?: string;
-};
+enum PhaseFilterEnum {
+    all = 'all',
+    bidding = 'bidding',
+    trading = 'trading',
+    maturity = 'maturity',
+    expiry = 'expiry',
+}
 
-const defaultFilter: Filter = {
-    name: 'phase',
-};
+enum UserFilterEnum {
+    All = 'All',
+    MyBids = 'My Bids',
+    MyMarkets = 'My Markets',
+    MyWatchlist = 'My Watchlist',
+    Recent = 'Recently Added',
+}
+
+const FilterButton = styled(Button)`
+    width: 110px;
+    height: 40px;
+    margin: 24px 10px;
+    background: transparent;
+    border: 1px solid #04045a;
+    border-radius: 32px;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 13px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    text-transform: capitalize !important;
+    color: #f6f6fe;
+    &.selected {
+        background: #44e1e2;
+    }
+`;
 
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -37,30 +63,54 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
+    const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
+    const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
-    const [filter, setFilter] = useState<Filter>(defaultFilter);
-
     const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && filter.name === 'user-bids',
+        enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
     });
 
     const filteredOptionsMarkets = useMemo(() => {
-        if (filter.name === 'creator' && isWalletConnected) {
-            return optionsMarkets.filter(({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase());
-        } else if (filter.name === 'user-bids' && isWalletConnected) {
-            return userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
-                ? optionsMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
-                : [];
+        let filteredMarkets = optionsMarkets;
+        switch (userFilter) {
+            case UserFilterEnum.MyBids:
+                if (isWalletConnected) {
+                    filteredMarkets =
+                        userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
+                            ? filteredMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
+                            : [];
+                }
+
+                break;
+            case UserFilterEnum.MyMarkets:
+                if (isWalletConnected) {
+                    filteredMarkets = filteredMarkets.filter(
+                        ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
+                    );
+                }
+
+                break;
+            case UserFilterEnum.MyWatchlist:
+                break;
+            case UserFilterEnum.Recent:
+                break;
         }
-        // phase filter
-        return filter.value == null ? optionsMarkets : optionsMarkets.filter(({ phase }) => phase === filter.value);
+
+        if (phaseFilter !== PhaseFilterEnum.all) {
+            filteredMarkets = filteredMarkets.filter((market) => {
+                return market.phase === phaseFilter;
+            });
+        }
+        return filteredMarkets;
     }, [
         optionsMarkets,
-        filter,
+        userFilter,
+        phaseFilter,
         isWalletConnected,
         walletAddress,
         userBidsMarketsQuery.data,
         userBidsMarketsQuery.isSuccess,
+        assetSearch,
     ]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
@@ -72,144 +122,87 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const setDefaultFilter = useCallback(() => setFilter(defaultFilter), []);
+    const onClickUserFilter = (filter: UserFilterEnum) => {
+        setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        return;
+    };
 
-    useEffect(() => {
-        setAssetSearch('');
-    }, [filter, setAssetSearch]);
+    const getImage = (filter: UserFilterEnum) => {
+        switch (filter) {
+            case UserFilterEnum.MyBids:
+                return myBids;
 
-    useEffect(() => {
-        if (!isWalletConnected) {
-            if (filter.name !== 'phase') {
-                setDefaultFilter();
-            }
+            case UserFilterEnum.MyMarkets:
+                return myMarkets;
+
+            case UserFilterEnum.MyWatchlist:
+                return myWatchlist;
+            case UserFilterEnum.Recent:
+                return recentlyAdded;
         }
-    }, [isWalletConnected, setDefaultFilter, filter]);
+    };
 
-    const userFilters: Array<{ filterName: Filter['name']; icon: JSX.Element }> = [
-        {
-            filterName: 'user-bids',
-            icon: <PersonIcon width="14px" height="14px" />,
-        },
-        {
-            filterName: 'creator',
-            icon: <PencilIcon width="14px" height="14px" />,
-        },
-    ];
-
-    const isPhaseFilter = filter.name === 'phase';
-    const isCreatorFilter = filter.name === 'creator';
-    const isUserBidsFilter = filter.name === 'user-bids';
+    const getColor = (filter: UserFilterEnum) => {
+        switch (filter) {
+            case UserFilterEnum.MyBids:
+                return 'linear-gradient(144.68deg, #86E1A0 9.9%, #4FBF67 84.58%)';
+            case UserFilterEnum.MyMarkets:
+                return 'linear-gradient(135deg, #FFA051 0%, #FF6628 100%)';
+            case UserFilterEnum.MyWatchlist:
+                return 'linear-gradient(135deg, #FF8FD8 0%, #4E47E2 100%)';
+            case UserFilterEnum.Recent:
+                return 'linear-gradient(146.29deg, #B2DEEF 14.84%, #3EDDDD 92.53%)';
+        }
+    };
 
     return (
-        <div>
+        <div style={{ width: '100%', padding: '50px 120px' }}>
+            <FlexDivCentered>
+                {Object.keys(UserFilterEnum)
+                    .filter(
+                        (key) =>
+                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
+                            key !== UserFilterEnum.All
+                    )
+                    .map((key) => (
+                        <UserFilter
+                            className={
+                                userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum] ? 'selected' : ''
+                            }
+                            onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                            key={key}
+                            color={getColor(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                            img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                            text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                        ></UserFilter>
+                    ))}
+            </FlexDivCentered>
+
+            <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch}></SearchMarket>
+
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
-                    <Button
-                        toggle
-                        basic
-                        active={isPhaseFilter && filter.value == null}
-                        onClick={() => setFilter({ name: 'phase' })}
-                    >
-                        {t('common.filters.all')}
-                    </Button>
-                    {PHASES.map((phase) => (
-                        <Button
-                            toggle
-                            basic
-                            active={isPhaseFilter && filter.value === phase}
-                            onClick={() => setFilter({ name: 'phase', value: phase })}
-                            key={phase}
-                        >
-                            {t(`options.phases.${phase}`)}
-                        </Button>
-                    ))}
-                </div>
-                <div>
-                    {userFilters.map(({ filterName, icon }) => {
-                        const isActive = filter.name === filterName;
-
-                        return (
-                            <Tooltip
-                                key={filterName}
-                                title={
-                                    <span>
-                                        {!isWalletConnected
-                                            ? t(
-                                                  `options.home.explore-markets.table.filters.${filterName}.tooltip-connected`
-                                              )
-                                            : t(
-                                                  `options.home.explore-markets.table.filters.${filterName}.tooltip-not-connected`
-                                              )}
-                                    </span>
+                    {Object.keys(PhaseFilterEnum)
+                        .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))
+                        .map((key) => (
+                            <FilterButton
+                                className={
+                                    phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
+                                        ? 'selected'
+                                        : ''
                                 }
-                                placement="top"
-                                arrow={true}
+                                onClick={() => setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])}
+                                key={key}
                             >
-                                <Button
-                                    toggle
-                                    basic
-                                    onClick={
-                                        isWalletConnected
-                                            ? () => {
-                                                  if (isActive) {
-                                                      // toggle off
-                                                      setDefaultFilter();
-                                                  } else {
-                                                      // toggle on
-                                                      setFilter({
-                                                          name: filterName,
-                                                      });
-                                                  }
-                                              }
-                                            : undefined
-                                    }
-                                    active={isActive}
-                                >
-                                    {icon}
-                                </Button>
-                            </Tooltip>
-                        );
-                    })}
-                    <Input onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} icon="search" />
+                                {t(`options.phases.${key}`)}
+                            </FilterButton>
+                        ))}
                 </div>
             </div>
 
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 isLoading={userBidsMarketsQuery.isLoading}
-                noResultsMessage={
-                    (assetSearch && searchFilteredOptionsMarkets.length === 0) ||
-                    filteredOptionsMarkets.length === 0 ? (
-                        <Container fluid style={{ display: 'flex', alignItems: 'center' }}>
-                            <div>
-                                <NoResultsIcon />
-                                {isPhaseFilter && (
-                                    <div>{t('options.home.explore-markets.table.filters.markets.no-results')}</div>
-                                )}
-                                {isCreatorFilter && (
-                                    <>
-                                        <div>{t('options.home.explore-markets.table.filters.creator.no-results')}</div>
-                                        <div>
-                                            <Button primary onClick={() => navigateTo(ROUTES.Options.CreateMarket)}>
-                                                {t('options.home.market-creation.create-market-button-label')}
-                                            </Button>
-                                            <div>{t('common.or')}</div>
-                                        </div>
-                                    </>
-                                )}
-                                {isUserBidsFilter && (
-                                    <div>{t('options.home.explore-markets.table.filters.user-bids.no-results')}</div>
-                                )}
-                                <Button primary basic onClick={setDefaultFilter}>
-                                    {isUserBidsFilter
-                                        ? t('options.home.explore-markets.table.view-all-open-markets')
-                                        : t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
-                            </div>
-                        </Container>
-                    ) : undefined
-                }
             />
         </div>
     );

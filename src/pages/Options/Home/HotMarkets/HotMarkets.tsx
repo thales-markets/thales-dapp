@@ -1,14 +1,38 @@
-import React from 'react';
-import { Card } from 'semantic-ui-react';
-import TimeRemaining from '../../components/TimeRemaining';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { formatShortDate } from 'utils/formatters/date';
-import { USD_SIGN } from 'constants/currency';
-import { useTranslation } from 'react-i18next';
-import { navigateToOptionsMarket } from 'utils/routes';
-import Currency from 'components/Currency';
+import React, { useState } from 'react';
 import { OptionsMarkets } from 'types/options';
-import MarketSentiment from '../../components/MarketSentiment';
+import { useTranslation } from 'react-i18next';
+import { FlexDivCentered, SubTitle } from 'theme/common';
+import previous from 'assets/images/previous-page.svg';
+import next from 'assets/images/next-page.svg';
+import MarketCard from '../MarketCard';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivColumn, Image } from 'theme/common';
+
+const Wrapper = styled(FlexDivColumn)`
+    padding: 50px 110px;
+    position: relative;
+`;
+
+const Arrow = styled(Image)`
+    width: 24px;
+    height: 40px;
+    margin: 0 10px;
+    cursor: pointer;
+`;
+
+const Pagination = styled(FlexDiv)`
+    align-self: center;
+    margin-bottom: 40px;
+`;
+const PaginationPage = styled.span`
+    width: 24px;
+    height: 4px;
+    background: #b8c6e5;
+    &.current {
+        background: #04045a;
+    }
+    margin: 4px;
+`;
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -16,35 +40,35 @@ type HotMarketsProps = {
 
 export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
+
+    const [currentMarketPage, setCurrentMarketPage] = useState(0);
+
+    const NextMarkets = () => {
+        currentMarketPage === 2 ? setCurrentMarketPage(0) : setCurrentMarketPage(currentMarketPage + 1);
+    };
+
+    const PreviousMarkets = () => {
+        currentMarketPage === 0 ? setCurrentMarketPage(2) : setCurrentMarketPage(currentMarketPage - 1);
+    };
+
     return (
-        <Card.Group>
-            {optionsMarkets.map((optionsMarket) => {
-                return (
-                    <Card key={optionsMarket.address} onClick={() => navigateToOptionsMarket(optionsMarket.address)}>
-                        <Card.Content>
-                            <Card.Header>
-                                <Currency.Name
-                                    currencyKey={optionsMarket.currencyKey}
-                                    name={optionsMarket.asset}
-                                    showIcon={true}
-                                    iconProps={{ width: '24px', height: '24px', type: 'asset' }}
-                                />
-                                <TimeRemaining end={optionsMarket.timeRemaining} />
-                            </Card.Header>
-                            <Card.Description textAlign="center">
-                                <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 5, marginTop: 10 }}>
-                                    {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
-                                </div>
-                                <div style={{ fontSize: 14, textTransform: 'uppercase' }}>
-                                    {t('common.by-date', { date: formatShortDate(optionsMarket.maturityDate) })}
-                                </div>
-                                <MarketSentiment long={optionsMarket.longPrice} short={optionsMarket.shortPrice} />
-                            </Card.Description>
-                        </Card.Content>
-                    </Card>
-                );
-            })}
-        </Card.Group>
+        <Wrapper>
+            <SubTitle color="#04045a">{t('options.home.explore-markets.discover')}</SubTitle>
+            <FlexDivCentered>
+                <Arrow onClick={PreviousMarkets} src={previous}></Arrow>
+                {optionsMarkets.map((optionsMarket, index) => {
+                    if (index >= currentMarketPage * 3 && index < currentMarketPage * 3 + 3) {
+                        return <MarketCard key={index} optionMarket={optionsMarket} />;
+                    }
+                })}
+                <Arrow onClick={NextMarkets} src={next}></Arrow>
+            </FlexDivCentered>
+            <Pagination>
+                <PaginationPage className={currentMarketPage === 0 ? 'current' : ''} />
+                <PaginationPage className={currentMarketPage === 1 ? 'current' : ''} />
+                <PaginationPage className={currentMarketPage === 2 ? 'current' : ''} />
+            </Pagination>
+        </Wrapper>
     );
 };
 
