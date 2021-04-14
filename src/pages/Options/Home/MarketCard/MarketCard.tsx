@@ -4,20 +4,23 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { getAssetIcon } from 'utils/currency';
 
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { navigateToOptionsMarket } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
+import { PhaseLabel } from '../MarketsTable/components';
 
 const Card = styled(FlexDivColumnCentered)`
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 24px;
     color: white;
     width: 368px;
-    margin: 70px 20px 70px 20px; ;
+    margin: 70px 20px 70px 20px;
+    cursor: pointer;
 `;
 
 const Header = styled(FlexDivCentered)`
@@ -88,6 +91,15 @@ const ExpireDate = styled.p`
     color: #f6f6fe;
 `;
 
+const Phase = styled(PhaseLabel)`
+    font-size: 12px;
+    height: 24px;
+    padding: 0;
+    margin-right: 18px;
+    margin-bottom: 4px;
+    flex: 1;
+`;
+
 type MarketCardPros = {
     optionMarket: HistoricalOptionsMarketInfo;
 };
@@ -96,16 +108,25 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
     const { t } = useTranslation();
     const AssetIcon = getAssetIcon(optionMarket.currencyKey);
     return (
-        <Card>
+        <Card
+            onClick={() => {
+                if (optionMarket.phase !== 'expiry') {
+                    navigateToOptionsMarket(optionMarket.address);
+                }
+            }}
+        >
             <Header>
                 <AssetIcon style={{ width: '48px', height: '48px', margin: '24px 12px 24px 35px' }} />
                 <FlexDivColumnCentered>
                     <CryptoName>{snxJSConnector.synthsMap[optionMarket.currencyKey]?.description}</CryptoName>
                     <CryptoKey>{optionMarket.currencyKey}</CryptoKey>
                 </FlexDivColumnCentered>
-                <CryptoTime>
-                    <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
-                </CryptoTime>
+                <FlexDivColumn>
+                    <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
+                    <CryptoTime>
+                        <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
+                    </CryptoTime>
+                </FlexDivColumn>
             </Header>
             <Content>
                 <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>

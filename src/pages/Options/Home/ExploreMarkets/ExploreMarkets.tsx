@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { Button, FlexDivCentered } from 'theme/common';
+import { Button, FlexDivCentered, FlexDivColumn } from 'theme/common';
 import styled from 'styled-components';
 import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
@@ -54,6 +54,31 @@ const FilterButton = styled(Button)`
     color: #f6f6fe;
     &.selected {
         background: #44e1e2;
+    }
+`;
+
+const NoMarkets = styled(FlexDivColumn)`
+    height: 500px;
+    background: #126;
+    border-radius: 20px;
+    justify-content: space-evenly;
+    align-items: center;
+    p {
+        font-weight: 600;
+        font-size: 31px;
+        line-height: 48px;
+        letter-spacing: 0.25px;
+        color: #f6f6fe;
+    }
+    Button {
+        background: #3936c7;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 32px;
+        width: 200px;
+        letter-spacing: 0.5px;
+        align-self: center;
     }
 `;
 
@@ -203,7 +228,16 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 isLoading={userBidsMarketsQuery.isLoading}
-            />
+            >
+                <NoMarkets>
+                    {phaseFilter !== PhaseFilterEnum.all && (
+                        <>
+                            <p>No markets available.</p>
+                            <Button onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>View all markets</Button>
+                        </>
+                    )}
+                </NoMarkets>
+            </MarketsTable>
         </div>
     );
 };

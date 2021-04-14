@@ -1,7 +1,16 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
-import { Paper, Table, TableContainer, TableHead, TableBody, TableRow, withStyles } from '@material-ui/core';
+import {
+    Paper,
+    Table,
+    TableContainer,
+    TableHead,
+    TableBody,
+    TableRow,
+    withStyles,
+    TablePagination,
+} from '@material-ui/core';
 import Currency from 'components/Currency';
 import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +22,6 @@ dotenv.config();
 
 type MarketsTableProps = {
     optionsMarkets: OptionsMarkets;
-    noResultsMessage?: React.ReactNode;
     isLoading?: boolean;
 };
 
@@ -45,24 +53,16 @@ const Divider: React.FC = () => {
     );
 };
 
-// const NoMarkets = styled(FlexDivColumn)`
-//     height: 500px;
-//     background: #242731;
-//     mix-blend-mode: normal;
-//     opacity: 0.2;
-//     border-radius: 20px;
-// `;
-
-const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
-    // const [page, setPage] = useState(0);
-    // const handleChangePage = (_event: unknown, newPage: number) => {
-    //     setPage(newPage);
-    // };
+const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children }) => {
+    const [page, setPage] = useState(0);
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
 
     const { t } = useTranslation();
     return (
         <>
-            <TableContainer style={{ background: 'transparent' }} component={Paper}>
+            <TableContainer style={{ background: 'transparent', boxShadow: 'none' }} component={Paper}>
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
@@ -129,7 +129,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {/* {optionsMarkets.length ? (
+            {optionsMarkets.length ? (
                 <TablePagination
                     component="div"
                     count={optionsMarkets.length}
@@ -138,8 +138,8 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                     onChangePage={handleChangePage}
                 />
             ) : (
-                <NoMarkets></NoMarkets>
-            )} */}
+                children
+            )}
         </>
     );
 });
