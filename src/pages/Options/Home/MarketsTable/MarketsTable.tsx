@@ -78,7 +78,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children }) 
                     </TableHead>
 
                     <TableBody>
-                        {optionsMarkets.map((market, index) => {
+                        {optionsMarkets.slice(page * 10, 10 * (page + 1)).map((market, index) => {
                             return (
                                 <StyledTableRow
                                     onClick={() => {
