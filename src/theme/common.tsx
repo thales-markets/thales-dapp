@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import bgDark from 'assets/images/background-dark.png';
 import bgLight from 'assets/images/background-light.png';
-import bgFooter from 'assets/images/background-footer.jpg';
 import React from 'react';
 
 export const FlexDiv = styled.div`
