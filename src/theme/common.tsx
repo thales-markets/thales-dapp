@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
+import backgroundDark from 'assets/images/background-dark.png';
+import backgroundLight from 'assets/images/background-light.png';
 import React from 'react';
 
 export const FlexDiv = styled.div`
@@ -22,11 +24,16 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
 `;
 
 const Background = styled.section`
+    background-size: cover !important;
+    /* &:first-child {
+        background-image: url(${backgroundDark}) !important;
+    } */
     &:nth-child(odd) {
-        background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+        background-image: linear-gradient(to top, #0e1069, #1c0f51);
+        background-image: url(${backgroundDark}) !important;
     }
     &:nth-child(even) {
-        background: #f6f6fe;
+        background: url(${backgroundLight});
     }
 `;
 

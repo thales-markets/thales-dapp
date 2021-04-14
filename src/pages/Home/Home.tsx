@@ -11,10 +11,9 @@ import {
     MarketButton,
     List,
 } from './components';
-import { FlexDiv, FlexDivColumn, Image, Section, Side, SubTitle } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Section, Side, SubTitle } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
-import img3 from 'assets/images/img3.svg';
 import Footer from './Footer/Footer';
 
 const Home: React.FC = () => {
@@ -62,9 +61,7 @@ const Home: React.FC = () => {
                 <Side></Side>
             </Section>
             <Section>
-                <Side>
-                    <Image src={img3}></Image>
-                </Side>
+                <Side></Side>
                 <Side>
                     <SubTitle color="#04045a">{t('landing-page.who-is-thales')}</SubTitle>
                     <SideContent color="#04045a">{t('landing-page.thales-is')}</SideContent>
