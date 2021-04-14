@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { PhaseLabel, Row, StyledTableCell } from './components';
+import styled from 'styled-components';
+import { FlexDivColumn } from 'theme/common';
 
 dotenv.config();
 
@@ -54,6 +56,14 @@ const Divider: React.FC = () => {
     );
 };
 
+const NoMarkets = styled(FlexDivColumn)`
+    height: 500px;
+    background: #242731;
+    mix-blend-mode: normal;
+    opacity: 0.2;
+    border-radius: 20px;
+`;
+
 const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
     const [page, setPage] = useState(0);
     const handleChangePage = (_event: unknown, newPage: number) => {
@@ -77,6 +87,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                         </TableRow>
                         <Divider />
                     </TableHead>
+
                     <TableBody>
                         {optionsMarkets.slice(page * 10, page * 10 + 10).map((market, index) => {
                             return (
@@ -129,13 +140,17 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                component="div"
-                count={optionsMarkets.length}
-                rowsPerPage={10}
-                page={page}
-                onChangePage={handleChangePage}
-            />
+            {optionsMarkets.length ? (
+                <TablePagination
+                    component="div"
+                    count={optionsMarkets.length}
+                    rowsPerPage={10}
+                    page={page}
+                    onChangePage={handleChangePage}
+                />
+            ) : (
+                <NoMarkets></NoMarkets>
+            )}
         </>
     );
 });

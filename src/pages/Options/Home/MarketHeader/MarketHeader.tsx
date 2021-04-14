@@ -91,7 +91,6 @@ const MarketHeader: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
     const eth = useETHBalanceQuery(walletAddress, network.networkId, { enabled: isAppReady && isWalletConnected });
-
     return (
         <MarketHeaderWrapper>
             <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
@@ -101,7 +100,7 @@ const MarketHeader: React.FC = () => {
                 </ConnectWallet>
             ) : (
                 <UserInfoWrapper>
-                    <EthBalance>{eth.data?.balance.toFixed(2)} ETH</EthBalance>
+                    <EthBalance>{eth.data?.usdBalance.toFixed(2)} SUSD</EthBalance>
                     <NetworkWrapper>
                         <AddressWrapper>
                             <p>{truncateAddress(walletAddress)}</p>
