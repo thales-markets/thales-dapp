@@ -56,8 +56,7 @@ const Divider: React.FC = () => {
 
 const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets }) => {
     const [page, setPage] = useState(0);
-    const handleChangePage = (event: unknown, newPage: number) => {
-        console.log(event, page);
+    const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
