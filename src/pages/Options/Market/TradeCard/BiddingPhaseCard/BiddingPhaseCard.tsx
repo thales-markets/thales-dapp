@@ -399,7 +399,7 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     };
 
     return (
-        <div>
+        <div style={{ overflow: 'hidden' }}>
             <div>
                 <Menu tabular>
                     <Menu.Item name="bid" active={isBid} onClick={() => handleTypeChange('bid')}>

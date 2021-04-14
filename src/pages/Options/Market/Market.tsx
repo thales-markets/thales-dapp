@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
 import { USD_SIGN } from 'constants/currency';
@@ -6,7 +6,7 @@ import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number'
 import { formatShortDate } from 'utils/formatters/date';
 import { MarketProvider } from './contexts/MarketContext';
 import { useBOMContractContext } from './contexts/BOMContractContext';
-import { Button, Icon, Label, Loader, Menu, Segment, Sidebar } from 'semantic-ui-react';
+import { Button, Icon, Label, Loader, Menu } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { Link } from 'react-router-dom';
 import MarketInfoModal from './MarketInfoModal';
@@ -24,7 +24,7 @@ import TradingPhaseCard from './TradeCard/TradingPhaseCard';
 import MaturityPhaseCard from './TradeCard/MaturityPhaseCard';
 import OptionSideIcon from './components/OptionSideIcon';
 import { Tooltip } from '@material-ui/core';
-import RGL, { WidthProvider } from 'react-grid-layout';
+import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import YourTransactions from './TransactionsCard/YourTransactions';
@@ -32,6 +32,16 @@ import RecentTransactions from './TransactionsCard/RecentTransactions';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import TradeOptionsSide from './TradeOptions/TradeOptionsSide';
 import Orderbook from './TradeOptions/Orderbook';
+import MarketWidget from './components/MarketWidget';
+import { MarketWidgetDefaultLayoutMap, MarketWidgetKey } from 'constants/ui';
+import {
+    getMarketWidgetVisibilityMap,
+    setMarketWidgetLayout,
+    getMarketWidgetLayout,
+    setMarketWidgetVisibility,
+} from 'redux/modules/ui';
+import { isMarketWidgetVisible } from 'utils/options';
+import CustomizeLayout from './components/CustomizeLayout';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -46,9 +56,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const [sidebarVisible, setSidebarVisible] = useState<boolean>(false);
     const dispatch = useDispatch();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const widgetVisibilityMap = useSelector((state: RootState) => getMarketWidgetVisibilityMap(state));
+    const widgetLayout = useSelector((state: RootState) => getMarketWidgetLayout(state));
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, BOMContract, {
         enabled: isAppReady,
@@ -102,23 +113,45 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         ((optionsMarket.phase === 'trading' && claimAvailable) ||
             (optionsMarket.phase === 'maturity' && exerciseAvailable));
 
-    const optionsAmountLabel = () => (
-        <Label onClick={() => setSidebarVisible(!sidebarVisible)} className="button-label">
-            <div>
-                <OptionSideIcon side="long" />{' '}
-                {t(`options.common.amount-long`, {
-                    amount: formatCurrency(longAmount),
-                })}
-            </div>
-            <br />
-            <div>
-                <OptionSideIcon side="short" />{' '}
-                {t(`options.common.amount-short`, {
-                    amount: formatCurrency(shortAmount),
-                })}
-            </div>
-            {userActionAvailable && <Label circular color="red" empty floating style={{ top: 18 }} />}
-        </Label>
+    const optionsAmountLabel = (phase: string) => (
+        <>
+            <Label
+                onClick={() => {
+                    const widgetKey =
+                        phase === 'trading' ? MarketWidgetKey.TRADING_PHASE : MarketWidgetKey.MATURITY_PHASE;
+                    dispatch(
+                        setMarketWidgetVisibility({
+                            marketWidget: widgetKey,
+                            isVisible: !widgetVisibilityMap[widgetKey],
+                        })
+                    );
+                }}
+                className="button-label"
+            >
+                <div>
+                    <OptionSideIcon side="long" />{' '}
+                    {t(`options.common.amount-long`, {
+                        amount: formatCurrency(longAmount),
+                    })}
+                </div>
+                <br />
+                <div>
+                    <OptionSideIcon side="short" />{' '}
+                    {t(`options.common.amount-short`, {
+                        amount: formatCurrency(shortAmount),
+                    })}
+                </div>
+            </Label>
+            {userActionAvailable && (
+                <Label
+                    circular
+                    color="red"
+                    empty
+                    floating
+                    style={{ position: 'relative', top: '-35px', left: '-10px' }}
+                />
+            )}
+        </>
     );
 
     const optionsTabContent: Array<{
@@ -142,90 +175,74 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     );
     const [optionsActiveTab, setOptionsActiveTab] = useState(optionsTabContent[0]);
 
-    const layout = [
-        { i: 'd', x: 0, y: 1, w: 12, h: 10 },
-        { i: 'e', x: 0, y: 1, w: 12, h: 10 },
-        { i: 'i', x: 0, y: 1, w: 12, h: 10 },
-    ];
-
     const aaaa = {
         className: 'layout',
         cols: 12,
         rowHeight: 30,
         isBounded: true,
+        draggableHandle: '.grid-component-header',
         // This turns off compaction so you can place items wherever.
         //verticalCompact: false,
         // This turns off rearrangement so items will not be pushed arround.
         //preventCollision: true,
     };
 
-    if (optionsMarket && optionsMarket.phase === 'bidding') {
-        layout.unshift({ i: 'b', x: 0, y: 0, w: 12, h: 17 });
-    }
-
-    if (optionsMarket && optionsMarket.phase === 'trading') {
-        layout.unshift({ i: 'b', x: 0, y: 0, w: 6, h: 17 }, { i: 'c', x: 6, y: 0, w: 6, h: 17 });
-    }
-
-    console.log(layout);
-
-    const renderGridLayoutItems = (optionsMarket: OptionsMarketInfo) => {
-        const items = [
-            <div key="d">
-                <section style={{ padding: '10px 10px', height: '100%' }}>
-                    <div style={{ overflow: 'auto', height: '100%', border: '1px solid #bbb', padding: '1rem' }}>
-                        <ChartCard />
-                    </div>
-                </section>
-            </div>,
-            <div key="e">
-                <section style={{ padding: '10px 10px', height: '100%' }}>
-                    <div style={{ overflow: 'auto', height: '100%', border: '1px solid #bbb', padding: '1rem' }}>
-                        <RecentTransactions marketAddress={optionsMarket.address} />
-                    </div>
-                </section>
-            </div>,
-            <div key="i">
-                <section style={{ padding: '10px 10px', height: '100%' }}>
-                    <div style={{ overflow: 'auto', height: '100%', border: '1px solid #bbb', padding: '1rem' }}>
-                        <YourTransactions marketAddress={optionsMarket.address} walletAddress={walletAddress} />
-                    </div>
-                </section>
-            </div>,
-        ];
-
-        if (optionsMarket && optionsMarket.phase === 'bidding') {
-            items.unshift(
-                <div key="b">
-                    <section style={{ padding: '10px 10px', height: '100%' }}>
-                        <div style={{ overflow: 'auto', height: '100%', border: '1px solid #bbb', padding: '1rem' }}>
-                            <BiddingPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
-                        </div>
-                    </section>
+    const wrapWidget = (phase: string, widgets: ReactElement[], widgetKey: MarketWidgetKey, widget: ReactElement) => {
+        if (isMarketWidgetVisible(widgetKey, widgetVisibilityMap, phase, isWalletConnected, false)) {
+            widgets.push(
+                <div key={widgetKey} data-grid={MarketWidgetDefaultLayoutMap[widgetKey]}>
+                    <MarketWidget widgetKey={widgetKey}>{widget}</MarketWidget>
                 </div>
             );
         }
+    };
 
-        if (optionsMarket && optionsMarket.phase === 'trading') {
-            items.unshift(
-                <div key="b">
-                    <section style={{ padding: '10px 10px', height: '100%' }}>
-                        <div style={{ overflow: 'auto', height: '100%', border: '1px solid #bbb', padding: '1rem' }}>
-                            <Orderbook optionSide={optionsActiveTab.id} />
-                        </div>
-                    </section>
-                </div>,
-                <div key="c">
-                    <section style={{ padding: '10px 10px', height: '100%' }}>
-                        <div style={{ overflow: 'auto', height: '100%', border: '1px solid #bbb', padding: '1rem' }}>
-                            <TradeOptionsSide optionSide={optionsActiveTab.id} />
-                        </div>
-                    </section>
-                </div>
-            );
-        }
-
-        return items;
+    const renderWidgets = (optionsMarket: OptionsMarketInfo) => {
+        const widgets: ReactElement[] = [];
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.BIDDING_PHASE,
+            <BiddingPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.TRADING_PHASE,
+            <TradingPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.MATURITY_PHASE,
+            <MaturityPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.ORDERBOOK,
+            <Orderbook optionSide={optionsActiveTab.id} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.TRADE,
+            <TradeOptionsSide optionSide={optionsActiveTab.id} />
+        );
+        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART, <ChartCard />);
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.RECENT_TRANSACTIONS,
+            <RecentTransactions marketAddress={optionsMarket.address} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.YOUR_TRANSACTIONS,
+            <YourTransactions marketAddress={optionsMarket.address} walletAddress={walletAddress} />
+        );
+        return widgets;
     };
 
     useEffect(() => {
@@ -237,53 +254,46 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         }
     }, [networkId, isWalletConnected]);
 
-    const onLayoutChange = (layout: any) => {
-        /*eslint no-console: 0*/
+    const onLayoutChange = (layout: Layout[]) => {
         console.log('layout', layout);
+        console.log('widgetLayout', widgetLayout);
+        dispatch(setMarketWidgetLayout(layout));
     };
 
     return optionsMarket ? (
         <MarketProvider optionsMarket={optionsMarket}>
-            <Sidebar.Pushable as={Segment}>
-                <Sidebar animation="slide along" visible={sidebarVisible} width="very wide" direction="right">
-                    {optionsMarket.phase === 'trading' && (
-                        <TradingPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
-                    )}
-                    {optionsMarket.phase === 'maturity' && (
-                        <MaturityPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
-                    )}
-                </Sidebar>
-
-                <Sidebar.Pusher>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <div>
-                            <span style={{ textTransform: 'uppercase' }}>
-                                <Link to={ROUTES.Options.Home} className="item">
-                                    <Icon name="long arrow alternate left"></Icon>
-                                    {t('options.market.heading.all-markets')}
-                                </Link>{' '}
-                                | {marketHeading}
-                                <Button
-                                    size="mini"
-                                    onClick={handleViewMarketDetails}
-                                    style={{ marginLeft: 10, marginRight: 10 }}
-                                >
-                                    {t('options.market.heading.market-details')}
-                                    {'  '}
-                                    <Icon name="info circle"></Icon>
-                                </Button>
-                            </span>
-                            <span style={{ textTransform: 'uppercase' }}>
-                                {t('options.market.heading.market-sentiment')}
-                                <MarketSentiment
-                                    long={optionsMarket.longPrice}
-                                    short={optionsMarket.shortPrice}
-                                    display="col"
-                                />
-                            </span>
-                        </div>
+            <div style={{ padding: '0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                        <span style={{ textTransform: 'uppercase' }}>
+                            <Link to={ROUTES.Options.Home} className="item">
+                                <Icon name="long arrow alternate left"></Icon>
+                                {t('options.market.heading.all-markets')}
+                            </Link>{' '}
+                            | {marketHeading}
+                            <Button
+                                size="mini"
+                                onClick={handleViewMarketDetails}
+                                style={{ marginLeft: 10, marginRight: 10 }}
+                            >
+                                {t('options.market.heading.market-details')}
+                                {'  '}
+                                <Icon name="info circle"></Icon>
+                            </Button>
+                        </span>
+                        <span style={{ textTransform: 'uppercase' }}>
+                            {t('options.market.heading.market-sentiment')}
+                            <MarketSentiment
+                                long={optionsMarket.longPrice}
+                                short={optionsMarket.shortPrice}
+                                display="col"
+                            />
+                        </span>
+                    </div>
+                    <div style={{ marginTop: 10, display: 'flex', flexDirection: 'row' }}>
+                        <CustomizeLayout phase={optionsMarket.phase} />
                         {(optionsMarket.phase === 'trading' || optionsMarket.phase === 'maturity') && (
-                            <div style={{ marginTop: 10 }}>
+                            <div>
                                 {userActionAvailable ? (
                                     <Tooltip
                                         title={
@@ -298,37 +308,37 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                         placement="top"
                                         arrow={true}
                                     >
-                                        {optionsAmountLabel()}
+                                        {optionsAmountLabel(optionsMarket.phase)}
                                     </Tooltip>
                                 ) : (
-                                    optionsAmountLabel()
+                                    optionsAmountLabel(optionsMarket.phase)
                                 )}
                             </div>
                         )}
                     </div>
-                    {optionsMarket.phase === 'trading' && (
-                        <Menu tabular>
-                            {optionsTabContent.map((tab) => (
-                                <Menu.Item
-                                    key={tab.id}
-                                    onClick={() => setOptionsActiveTab(tab)}
-                                    active={tab.id === optionsActiveTab.id}
-                                    name={tab.id}
-                                    color={tab.color}
-                                >
-                                    {tab.name}{' '}
-                                    <span style={{ marginLeft: 5, color: 'black' }}>
-                                        <OptionSideIcon side={tab.id} />
-                                    </span>
-                                </Menu.Item>
-                            ))}
-                        </Menu>
-                    )}
-                    <ReactGridLayout layout={layout} {...aaaa} onLayoutChange={onLayoutChange}>
-                        {renderGridLayoutItems(optionsMarket)}
-                    </ReactGridLayout>
-                </Sidebar.Pusher>
-            </Sidebar.Pushable>
+                </div>
+                {optionsMarket.phase === 'trading' && (
+                    <Menu tabular>
+                        {optionsTabContent.map((tab) => (
+                            <Menu.Item
+                                key={tab.id}
+                                onClick={() => setOptionsActiveTab(tab)}
+                                active={tab.id === optionsActiveTab.id}
+                                name={tab.id}
+                                color={tab.color}
+                            >
+                                {tab.name}{' '}
+                                <span style={{ marginLeft: 5, color: 'black' }}>
+                                    <OptionSideIcon side={tab.id} />
+                                </span>
+                            </Menu.Item>
+                        ))}
+                    </Menu>
+                )}
+                <ReactGridLayout layout={widgetLayout} {...aaaa} onLayoutChange={onLayoutChange}>
+                    {renderWidgets(optionsMarket)}
+                </ReactGridLayout>
+            </div>
             {marketInfoModalVisible && (
                 <MarketInfoModal
                     marketHeading={marketHeading}

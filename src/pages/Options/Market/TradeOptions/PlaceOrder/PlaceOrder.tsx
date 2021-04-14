@@ -255,8 +255,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         setAmount(newAmount);
     };
 
-    console.log('isBuy', isBuy);
-
     return (
         <>
             <Header as="h3">{t(`options.market.trade-options.place-order.${optionSide}.title`)}</Header>

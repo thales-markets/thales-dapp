@@ -1,3 +1,4 @@
+import { MarketWidgetKey } from 'constants/ui';
 import orderBy from 'lodash/orderBy';
 import { SynthsMap } from 'types/synthetix';
 import { PHASE } from '../constants/options';
@@ -55,4 +56,27 @@ export const getPhaseAndEndDate = (
         phase: 'expiry',
         timeRemaining: expiryDate,
     };
+};
+
+export const isMarketWidgetVisible = (
+    marketWidget: MarketWidgetKey,
+    marketWidgetVisibilityMap: Record<MarketWidgetKey, boolean>,
+    marketPhase: string,
+    isWalletConected: boolean,
+    isCustomizationVisibility: boolean
+) => {
+    switch (marketWidget) {
+        case MarketWidgetKey.BIDDING_PHASE:
+            return marketPhase === 'bidding' && (marketWidgetVisibilityMap[marketWidget] || isCustomizationVisibility);
+        case MarketWidgetKey.ORDERBOOK:
+        case MarketWidgetKey.TRADE:
+        case MarketWidgetKey.TRADING_PHASE:
+            return marketPhase === 'trading' && (marketWidgetVisibilityMap[marketWidget] || isCustomizationVisibility);
+        case MarketWidgetKey.MATURITY_PHASE:
+            return marketPhase === 'maturity' && (marketWidgetVisibilityMap[marketWidget] || isCustomizationVisibility);
+        case MarketWidgetKey.YOUR_TRANSACTIONS:
+            return isWalletConected && (marketWidgetVisibilityMap[marketWidget] || isCustomizationVisibility);
+        default:
+            return marketWidgetVisibilityMap[marketWidget] || isCustomizationVisibility;
+    }
 };
