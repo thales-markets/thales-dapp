@@ -2,8 +2,9 @@ import { MarketWidgetKey } from 'constants/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { setMarketWidgetVisibility } from 'redux/modules/ui';
+import { setMarketWidgetVisibility } from 'redux/modules/marketWidgets';
 import { Icon } from 'semantic-ui-react';
+
 type MarketWidgetProps = {
     children: React.ReactNode;
     widgetKey: MarketWidgetKey;

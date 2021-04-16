@@ -33,13 +33,14 @@ import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import TradeOptionsSide from './TradeOptions/TradeOptionsSide';
 import Orderbook from './TradeOptions/Orderbook';
 import MarketWidget from './components/MarketWidget';
-import { MarketWidgetDefaultLayoutMap, MarketWidgetKey } from 'constants/ui';
+import { MarketWidgetKey } from 'constants/ui';
 import {
-    getMarketWidgetVisibilityMap,
+    getVisibilityMap,
     setMarketWidgetLayout,
-    getMarketWidgetLayout,
+    getCurrentLayout,
     setMarketWidgetVisibility,
-} from 'redux/modules/ui';
+    getFullLayout,
+} from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
 import CustomizeLayout from './components/CustomizeLayout';
 
@@ -58,8 +59,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const dispatch = useDispatch();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const widgetVisibilityMap = useSelector((state: RootState) => getMarketWidgetVisibilityMap(state));
-    const widgetLayout = useSelector((state: RootState) => getMarketWidgetLayout(state));
+    const visibilityMap = useSelector((state: RootState) => getVisibilityMap(state));
+    const curentLayout = useSelector((state: RootState) => getCurrentLayout(state));
+    const fullLayout = useSelector((state: RootState) => getFullLayout(state));
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, BOMContract, {
         enabled: isAppReady,
@@ -122,7 +124,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                     dispatch(
                         setMarketWidgetVisibility({
                             marketWidget: widgetKey,
-                            isVisible: !widgetVisibilityMap[widgetKey],
+                            isVisible: !visibilityMap[widgetKey],
                         })
                     );
                 }}
@@ -175,22 +177,18 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     );
     const [optionsActiveTab, setOptionsActiveTab] = useState(optionsTabContent[0]);
 
-    const aaaa = {
+    const reactGridConfig = {
         className: 'layout',
         cols: 12,
         rowHeight: 30,
         isBounded: true,
         draggableHandle: '.grid-component-header',
-        // This turns off compaction so you can place items wherever.
-        //verticalCompact: false,
-        // This turns off rearrangement so items will not be pushed arround.
-        //preventCollision: true,
     };
 
     const wrapWidget = (phase: string, widgets: ReactElement[], widgetKey: MarketWidgetKey, widget: ReactElement) => {
-        if (isMarketWidgetVisible(widgetKey, widgetVisibilityMap, phase, isWalletConnected, false)) {
+        if (isMarketWidgetVisible(widgetKey, visibilityMap, phase, isWalletConnected, false)) {
             widgets.push(
-                <div key={widgetKey} data-grid={MarketWidgetDefaultLayoutMap[widgetKey]}>
+                <div key={widgetKey} data-grid={fullLayout.find((item: Layout) => item.i === widgetKey)}>
                     <MarketWidget widgetKey={widgetKey}>{widget}</MarketWidget>
                 </div>
             );
@@ -254,9 +252,16 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         }
     }, [networkId, isWalletConnected]);
 
+    useEffect(() => {
+        dispatch(
+            setMarketWidgetVisibility({
+                marketWidget: MarketWidgetKey.YOUR_TRANSACTIONS,
+                isVisible: isWalletConnected && visibilityMap[MarketWidgetKey.YOUR_TRANSACTIONS],
+            })
+        );
+    }, [isWalletConnected]);
+
     const onLayoutChange = (layout: Layout[]) => {
-        console.log('layout', layout);
-        console.log('widgetLayout', widgetLayout);
         dispatch(setMarketWidgetLayout(layout));
     };
 
@@ -335,7 +340,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         ))}
                     </Menu>
                 )}
-                <ReactGridLayout layout={widgetLayout} {...aaaa} onLayoutChange={onLayoutChange}>
+                <ReactGridLayout layout={curentLayout} {...reactGridConfig} onLayoutChange={onLayoutChange}>
                     {renderWidgets(optionsMarket)}
                 </ReactGridLayout>
             </div>

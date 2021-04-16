@@ -173,8 +173,12 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
         } = snxJSConnector.snxJS as any;
 
         const getAllowance = async () => {
-            const allowance = await SynthsUSD.allowance(walletAddress, BOMContract.address);
-            setAllowance(!!bigNumberFormatter(allowance));
+            try {
+                const allowance = await SynthsUSD.allowance(walletAddress, BOMContract.address);
+                setAllowance(!!bigNumberFormatter(allowance));
+            } catch (e) {
+                console.log(e);
+            }
         };
 
         const registerAllowanceListener = () => {

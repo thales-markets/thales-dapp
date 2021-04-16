@@ -129,8 +129,12 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         if (addressToApprove) {
             const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
             const getAllowance = async () => {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                try {
+                    const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                    setAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
+                }
             };
 
             const registerAllowanceListener = () => {

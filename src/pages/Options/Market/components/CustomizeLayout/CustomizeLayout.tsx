@@ -2,7 +2,7 @@ import { MarketWidgetKey } from 'constants/ui';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { resetMarketWidgetVisibilityMap } from 'redux/modules/ui';
+import { resetMarketWidgetVisibilityMap } from 'redux/modules/marketWidgets';
 import { Button } from 'semantic-ui-react';
 import SelectWidget from './SelectWidget';
 
