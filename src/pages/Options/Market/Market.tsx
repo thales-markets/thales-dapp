@@ -261,6 +261,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         );
     }, [isWalletConnected]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const onLayoutChange = (layout: Layout[]) => {
         dispatch(setMarketWidgetLayout(layout));
     };
