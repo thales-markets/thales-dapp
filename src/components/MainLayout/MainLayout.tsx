@@ -13,7 +13,7 @@ const Container = styled.div`
     margin: auto;
 `;
 
-export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     return <Container>{isAppReady ? children : <Loader active />}</Container>;
 };

@@ -1,13 +1,6 @@
 import styled from 'styled-components';
 import { Button } from 'theme/common';
 
-export const SideHeader = styled.h2`
-    font-weight: bold;
-    font-size: 49px;
-    line-height: 64px;
-    letter-spacing: -1px;
-    color: ${(props) => props.color};
-`;
 export const SideContent = styled.h2`
     font-weight: normal;
     font-size: 20px;
