@@ -10,6 +10,7 @@ import {
     TableRow,
     withStyles,
     TablePagination,
+    TableFooter,
 } from '@material-ui/core';
 import Currency from 'components/Currency';
 import { formatCurrency } from 'utils/formatters/number';
@@ -59,10 +60,11 @@ const Divider: React.FC = () => {
 
 const PaginationWrapper = styled(TablePagination)`
     border: none !important;
-
+    display: flex;
     .MuiToolbar-root {
         padding: 0;
         margin-top: 16px;
+        display: inline-block;
     }
 
     .MuiTablePagination-caption {
@@ -146,26 +148,29 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                             );
                         })}
                     </TableBody>
+                    {optionsMarkets.length !== 0 && (
+                        <TableFooter>
+                            <TableRow>
+                                <PaginationWrapper
+                                    rowsPerPageOptions={[]}
+                                    count={optionsMarkets.length}
+                                    rowsPerPage={10}
+                                    page={page}
+                                    onChangePage={handleChangePage}
+                                    ActionsComponent={() => (
+                                        <Pagination
+                                            page={page}
+                                            numberOfPages={Math.ceil(optionsMarkets.length / 10)}
+                                            setPage={setPage}
+                                        />
+                                    )}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    )}
                 </Table>
             </TableContainer>
-            {optionsMarkets.length ? (
-                <PaginationWrapper
-                    rowsPerPageOptions={[]}
-                    count={optionsMarkets.length}
-                    rowsPerPage={10}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    ActionsComponent={() => (
-                        <Pagination
-                            page={page}
-                            numberOfPages={Math.ceil(optionsMarkets.length / 10)}
-                            setPage={setPage}
-                        />
-                    )}
-                />
-            ) : (
-                children
-            )}
+            {optionsMarkets.length === 0 && children}
         </>
     );
 });
