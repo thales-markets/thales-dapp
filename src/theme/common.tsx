@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
-import bgDark from 'assets/images/background-dark.png';
-import bgLight from 'assets/images/background-light.png';
 import React from 'react';
 
 export const FlexDiv = styled.div`
@@ -26,10 +24,10 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
 export const Background = styled.section`
     background-size: cover !important;
     &:nth-child(odd) {
-        background-image: url(${bgDark}) !important;
+        background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     }
     &:nth-child(even) {
-        background: url(${bgLight});
+        background: white;
     }
 `;
 
@@ -111,4 +109,10 @@ export const SubTitle = styled.h2`
     line-height: 64px;
     letter-spacing: -1px;
     color: ${(props) => props.color};
+`;
+
+export const CreateMarketButton = styled(Button)`
+    padding: 8px 40px !important;
+    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%) !important;
+    color: white;
 `;

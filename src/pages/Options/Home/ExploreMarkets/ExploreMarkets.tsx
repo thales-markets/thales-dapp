@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { Button, FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { Button, CreateMarketButton, FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
 import styled from 'styled-components';
 import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
@@ -17,12 +17,15 @@ import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
+import { navigateTo } from 'utils/routes';
+import ROUTES from 'constants/routes';
+import onboardConnector from 'utils/onboardConnector';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
 };
 
-enum PhaseFilterEnum {
+export enum PhaseFilterEnum {
     all = 'all',
     bidding = 'bidding',
     trading = 'trading',
@@ -63,14 +66,14 @@ const NoMarkets = styled(FlexDivColumn)`
     border-radius: 20px;
     justify-content: space-evenly;
     align-items: center;
-    p {
+    .info {
         font-weight: 600;
         font-size: 31px;
         line-height: 48px;
         letter-spacing: 0.25px;
         color: #f6f6fe;
     }
-    Button {
+    .button {
         background: #3936c7;
         color: white;
         font-weight: bold;
@@ -180,6 +183,11 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         }
     };
 
+    const resetFilters = () => {
+        setPhaseFilter(PhaseFilterEnum.all);
+        setUserFilter(UserFilterEnum.All);
+    };
+
     return (
         <div style={{ width: '100%', padding: '50px 120px' }}>
             <FlexDivCentered>
@@ -228,12 +236,55 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 isLoading={userBidsMarketsQuery.isLoading}
+                phase={phaseFilter}
             >
                 <NoMarkets>
-                    {phaseFilter !== PhaseFilterEnum.all && (
+                    {userFilter === UserFilterEnum.All && phaseFilter !== PhaseFilterEnum.all && (
                         <>
-                            <p>No markets available.</p>
-                            <Button onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>View all markets</Button>
+                            <p className="info">No markets available.</p>
+                            <Button className="button" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
+                                View all markets
+                            </Button>
+                        </>
+                    )}
+                    {userFilter === UserFilterEnum.MyBids && (
+                        <>
+                            <p className="info">You haven’t placed any bids yet.</p>
+                            <Button className="button" onClick={resetFilters}>
+                                View all markets
+                            </Button>
+                        </>
+                    )}
+                    {userFilter === UserFilterEnum.MyMarkets && (
+                        <>
+                            <p className="info">You haven’t created any market yet.</p>
+                            <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
+                                <CreateMarketButton
+                                    onClick={() =>
+                                        isWalletConnected
+                                            ? navigateTo(ROUTES.Options.CreateMarket)
+                                            : onboardConnector.connectWallet()
+                                    }
+                                >
+                                    {isWalletConnected
+                                        ? t('options.home.market-creation.create-market-button-label')
+                                        : t('common.wallet.connect-your-wallet')}
+                                </CreateMarketButton>
+                                <p
+                                    style={{
+                                        fontSize: '25px',
+                                        fontWeight: 600,
+                                        lineHeight: '48px',
+                                        color: '#F6F6FE',
+                                        margin: 'auto 60px',
+                                    }}
+                                >
+                                    or
+                                </p>
+                                <Button className="button" onClick={resetFilters}>
+                                    View all markets
+                                </Button>
+                            </FlexDiv>
                         </>
                     )}
                 </NoMarkets>

@@ -7,10 +7,12 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumnCentered, Image, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
-import useETHBalanceQuery from 'queries/walletBalances/useETHBalanceQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { truncateAddress } from 'utils/formatters/string';
 import avatar from 'assets/images/avatar.svg';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import { SYNTHS_MAP } from 'constants/currency';
 
 const MarketHeaderWrapper = styled.div`
     padding: 0 75px;
@@ -90,7 +92,14 @@ const MarketHeader: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
-    const eth = useETHBalanceQuery(walletAddress, network.networkId, { enabled: isAppReady && isWalletConnected });
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
     return (
         <MarketHeaderWrapper>
             <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
@@ -100,7 +109,7 @@ const MarketHeader: React.FC = () => {
                 </ConnectWallet>
             ) : (
                 <UserInfoWrapper>
-                    <EthBalance>{eth.data?.usdBalance.toFixed(2)} SUSD</EthBalance>
+                    <EthBalance>{sUSDBalance.toFixed(2)} SUSD</EthBalance>
                     <NetworkWrapper>
                         <AddressWrapper>
                             <p>{truncateAddress(walletAddress)}</p>
