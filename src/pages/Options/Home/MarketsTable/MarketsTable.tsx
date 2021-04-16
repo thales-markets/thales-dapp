@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
@@ -17,12 +17,16 @@ import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { PhaseLabel, Row, StyledTableCell } from './components';
+import Pagination from './Pagination';
+import styled from 'styled-components';
+import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarkets';
 
 dotenv.config();
 
 type MarketsTableProps = {
     optionsMarkets: OptionsMarkets;
     isLoading?: boolean;
+    phase: PhaseFilterEnum;
 };
 
 const StyledTableRow = withStyles(() => ({
@@ -53,11 +57,26 @@ const Divider: React.FC = () => {
     );
 };
 
-const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children }) => {
-    const [page, setPage] = useState(0);
+const PaginationWrapper = styled(TablePagination)`
+    border: none !important;
+
+    .MuiToolbar-root {
+        padding: 0;
+        margin-top: 16px;
+    }
+
+    .MuiTablePagination-caption {
+        display: none;
+    }
+`;
+
+const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, phase }) => {
+    const [page, setPage] = useState<number>(0);
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
+
+    useEffect(() => setPage(0), [phase]);
 
     const { t } = useTranslation();
     return (
@@ -130,12 +149,19 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children }) 
                 </Table>
             </TableContainer>
             {optionsMarkets.length ? (
-                <TablePagination
-                    component="div"
+                <PaginationWrapper
+                    rowsPerPageOptions={[]}
                     count={optionsMarkets.length}
                     rowsPerPage={10}
                     page={page}
                     onChangePage={handleChangePage}
+                    ActionsComponent={() => (
+                        <Pagination
+                            page={page}
+                            numberOfPages={Math.ceil(optionsMarkets.length / 10)}
+                            setPage={setPage}
+                        />
+                    )}
                 />
             ) : (
                 children

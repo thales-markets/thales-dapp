@@ -22,7 +22,7 @@ type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
 };
 
-enum PhaseFilterEnum {
+export enum PhaseFilterEnum {
     all = 'all',
     bidding = 'bidding',
     trading = 'trading',
@@ -228,6 +228,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 isLoading={userBidsMarketsQuery.isLoading}
+                phase={phaseFilter}
             >
                 <NoMarkets>
                     {phaseFilter !== PhaseFilterEnum.all && (
