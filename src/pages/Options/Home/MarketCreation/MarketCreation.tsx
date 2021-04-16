@@ -8,9 +8,8 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import onboardConnector from 'utils/onboardConnector';
-
 import styled from 'styled-components';
-import { Button } from 'theme/common';
+import { CreateMarketButton } from 'theme/common';
 
 const Text = styled.h2`
     font-family: Open Sans !important;
@@ -22,13 +21,6 @@ const Text = styled.h2`
     color: #f6f6fe;
 `;
 
-const CreateMarket = styled(Button)`
-    margin-top: 80px;
-    padding: 8px 40px;
-    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
-    color: white;
-`;
-
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -37,7 +29,8 @@ const MarketCreation: React.FC = () => {
         <FlexDiv>
             <Side>
                 <Text>{t('options.home.market-creation.no-markets.title')}</Text>
-                <CreateMarket
+                <CreateMarketButton
+                    style={{ marginTop: '40px' }}
                     onClick={() =>
                         isWalletConnected ? navigateTo(ROUTES.Options.CreateMarket) : onboardConnector.connectWallet()
                     }
@@ -45,7 +38,7 @@ const MarketCreation: React.FC = () => {
                     {isWalletConnected
                         ? t('options.home.market-creation.create-market-button-label')
                         : t('common.wallet.connect-your-wallet')}
-                </CreateMarket>
+                </CreateMarketButton>
             </Side>
             <Side>
                 <Image src={image}></Image>

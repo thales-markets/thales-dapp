@@ -112,3 +112,9 @@ export const SubTitle = styled.h2`
     letter-spacing: -1px;
     color: ${(props) => props.color};
 `;
+
+export const CreateMarketButton = styled(Button)`
+    padding: 8px 40px !important;
+    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%) !important;
+    color: white;
+`;
