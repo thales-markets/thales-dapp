@@ -142,8 +142,12 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     useEffect(() => {
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
-            const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-            setAllowance(!!bigNumberFormatter(allowance));
+            try {
+                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                setAllowance(!!bigNumberFormatter(allowance));
+            } catch (e) {
+                console.log(e);
+            }
         };
 
         const registerAllowanceListener = () => {
@@ -161,7 +165,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, isBuy]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {

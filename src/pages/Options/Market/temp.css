@@ -39,11 +39,6 @@ button {
 .accordion .title {
     text-transform: uppercase !important;
 }
-.selectable.table tr:hover,
-.icon.cancel:hover,
-.button-label:hover {
-    cursor: pointer;
-}
 
 .sidebar.visible + .pusher {
     margin-left: 475px;
@@ -59,4 +54,31 @@ button {
 
 .icon {
     font-family: Icons !important;
+}
+
+.grid-component-header {
+    cursor: move;
+    height: 40px;
+    line-height: 30px;
+    font-weight: 600;
+    font-size: 1.0769230769rem;
+    background: #eee;
+    border: 1px solid #bbb;
+    border-bottom: none;
+    padding: 5px 0 5px 10px;
+    display: flex;
+    flex: 0 0 auto;
+    text-transform: uppercase;
+    justify-content: space-between;
+}
+
+.selectable.table tr:hover,
+.icon.cancel:hover,
+.icon.close:hover,
+.button-label:hover {
+    cursor: pointer;
+}
+
+.ui.floating.label {
+    margin: 0 !important;
 }

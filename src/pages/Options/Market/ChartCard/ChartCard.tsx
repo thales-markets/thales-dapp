@@ -6,7 +6,7 @@ import { ReactComponent as DollarSignIcon } from 'assets/images/dollar-sign.svg'
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { PeriodLabel, PERIOD_LABELS_MAP, PERIOD_LABELS } from 'constants/period';
 import Currency from 'components/Currency';
-import { Card, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import PriceChart from './PriceChart';
 import OptionsChart from './OptionsChart';
 import { useMarketContext } from '../contexts/MarketContext';
@@ -27,47 +27,53 @@ const ChartCard: React.FC = () => {
     };
 
     return (
-        <Card fluid>
-            <Card.Content>
-                <Card.Header>
-                    <span>
-                        <Currency.Pair
-                            baseCurrencyKey={optionsMarket.currencyKey}
-                            baseCurrencyAsset={optionsMarket.asset}
-                            quoteCurrencyKey={FIAT_CURRENCY_MAP.USD}
-                            iconProps={{
-                                type: 'asset',
-                            }}
-                        />
-                        <span style={{ marginLeft: 10, marginRight: 10 }}>|</span>
-                        {formatCurrencyWithSign(USD_SIGN, optionsMarket.currentPrice)}
-                    </span>
-                    <span>
-                        <Button size="mini" primary={chartType === 'price'} onClick={() => setChartType('price')}>
-                            <DollarSignIcon /> {t('options.market.chart-card.chart-types.price')}
+        <div>
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontWeight: 'bold',
+                    fontSize: '1.28571429em',
+                    marginBottom: 10,
+                }}
+            >
+                <span>
+                    <Currency.Pair
+                        baseCurrencyKey={optionsMarket.currencyKey}
+                        baseCurrencyAsset={optionsMarket.asset}
+                        quoteCurrencyKey={FIAT_CURRENCY_MAP.USD}
+                        iconProps={{
+                            type: 'asset',
+                        }}
+                    />
+                    <span style={{ marginLeft: 10, marginRight: 10 }}>|</span>
+                    {formatCurrencyWithSign(USD_SIGN, optionsMarket.currentPrice)}
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <Button size="mini" primary={chartType === 'price'} onClick={() => setChartType('price')}>
+                        <DollarSignIcon /> {t('options.market.chart-card.chart-types.price')}
+                    </Button>
+                    <Button size="mini" primary={chartType === 'options'} onClick={() => setChartType('options')}>
+                        <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
+                    </Button>
+                    <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
+                    {PERIOD_LABELS.map((period) => (
+                        <Button
+                            size="mini"
+                            key={period.value}
+                            primary={period.value === selectedPeriod.value}
+                            onClick={() => setSelectedPeriod(period)}
+                        >
+                            {t(period.i18nLabel)}
                         </Button>
-                        <Button size="mini" primary={chartType === 'options'} onClick={() => setChartType('options')}>
-                            <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
-                        </Button>
-                        <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
-                        {PERIOD_LABELS.map((period) => (
-                            <Button
-                                size="mini"
-                                key={period.value}
-                                primary={period.value === selectedPeriod.value}
-                                onClick={() => setSelectedPeriod(period)}
-                            >
-                                {t(period.i18nLabel)}
-                            </Button>
-                        ))}
-                    </span>
-                </Card.Header>
-                <Card.Description>
-                    {chartType === 'price' && <PriceChart {...chartProps} />}
-                    {chartType === 'options' && <OptionsChart {...chartProps} />}
-                </Card.Description>
-            </Card.Content>
-        </Card>
+                    ))}
+                </span>
+            </div>
+            <div>
+                {chartType === 'price' && <PriceChart {...chartProps} />}
+                {chartType === 'options' && <OptionsChart {...chartProps} />}
+            </div>
+        </div>
     );
 };
 

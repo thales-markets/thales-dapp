@@ -8,7 +8,7 @@ import { ReactComponent as FinishIcon } from 'assets/images/finish.svg';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN, SYNTHS_MAP } from 'constants/currency';
 import { ethers } from 'ethers';
-import { Button, Header, Message, Segment } from 'semantic-ui-react';
+import { Button, Header, Message } from 'semantic-ui-react';
 import { TradeCardPhaseProps } from 'types/options';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
@@ -109,12 +109,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     };
 
     return (
-        <Segment>
-            <div style={{ marginBottom: 30 }}>
-                <Header as="h3" style={{ textTransform: 'uppercase' }}>
-                    {t('options.market.trade-card.maturity.title')}
-                </Header>
-            </div>
+        <div style={{ overflow: 'hidden' }}>
             <div>
                 <ResultCard
                     icon={<FinishIcon />}
@@ -162,7 +157,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                     />
                 </span>
             </div>
-        </Segment>
+        </div>
     );
 };
 

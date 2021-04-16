@@ -25,5 +25,4 @@ export const { setTheme } = uiSlice.actions;
 
 export const getUIState = (state: RootState) => state[sliceName];
 export const getTheme = (state: RootState) => getUIState(state).theme;
-
 export default uiSlice.reducer;

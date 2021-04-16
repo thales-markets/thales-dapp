@@ -11,7 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Header, Message, Segment } from 'semantic-ui-react';
+import { Button, Message } from 'semantic-ui-react';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import ResultCard from '../components/ResultCard';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -123,12 +123,7 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
     };
 
     return (
-        <Segment>
-            <div style={{ marginBottom: 30 }}>
-                <Header as="h3" style={{ textTransform: 'uppercase' }}>
-                    {t('options.market.trade-card.trading.title')}
-                </Header>
-            </div>
+        <div style={{ overflow: 'hidden' }}>
             <div>
                 <ResultCard
                     icon={<ClockIcon />}
@@ -168,7 +163,7 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
                     />
                 </span>
             </div>
-        </Segment>
+        </div>
     );
 };
 
