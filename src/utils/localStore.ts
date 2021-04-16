@@ -4,7 +4,7 @@ export const set = (key: string, value: any) => {
     }
 };
 
-export function get<T>(key: string): T | null {
+export function get<T>(key: string): T | undefined {
     if (typeof window !== 'undefined') {
         const item = window.localStorage.getItem(key);
         try {
@@ -15,7 +15,7 @@ export function get<T>(key: string): T | null {
             console.error(e);
         }
     }
-    return null;
+    return undefined;
 }
 
 export default {
