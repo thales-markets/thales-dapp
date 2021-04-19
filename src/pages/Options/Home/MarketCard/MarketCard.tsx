@@ -19,6 +19,7 @@ const Card = styled(FlexDivColumnCentered)`
     border-radius: 24px;
     color: white;
     width: 368px;
+    max-width: 368px;
     margin: 70px 20px 70px 20px;
     cursor: pointer;
 `;
