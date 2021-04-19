@@ -13,7 +13,9 @@ type PaginationProps = {
 const Arrow = styled(Image)`
     width: 6px;
     height: 10px;
+    box-sizing: content-box;
     cursor: pointer;
+    padding: 10px;
     &.disabled {
         opacity: 0.2;
         cursor: default;
