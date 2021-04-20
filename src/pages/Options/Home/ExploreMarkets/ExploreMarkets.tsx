@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { Button, CreateMarketButton, FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { Button, FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
 import styled from 'styled-components';
 import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
@@ -259,7 +259,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                         <>
                             <p className="info">You haven’t created any market yet.</p>
                             <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                <CreateMarketButton
+                                <Button
+                                    className="primary"
                                     onClick={() =>
                                         isWalletConnected
                                             ? navigateTo(ROUTES.Options.CreateMarket)
@@ -269,9 +270,10 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                     {isWalletConnected
                                         ? t('options.home.market-creation.create-market-button-label')
                                         : t('common.wallet.connect-your-wallet')}
-                                </CreateMarketButton>
+                                </Button>
                                 <p
                                     style={{
+                                        padding: '8px 40px',
                                         fontSize: '25px',
                                         fontWeight: 600,
                                         lineHeight: '48px',

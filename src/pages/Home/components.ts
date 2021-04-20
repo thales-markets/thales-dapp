@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button } from 'theme/common';
 
 export const SideContent = styled.h2`
     font-weight: normal;
@@ -46,23 +45,4 @@ export const SideTitle = styled.h2`
     font-size: 72px;
     line-height: 84px;
     color: #f6f6fe;
-`;
-
-export const MarketButton = styled(Button)`
-    background: #3936c7;
-    color: #ffffff;
-    margin-top: 30px;
-`;
-
-export const LaunchApp = styled(Button)`
-    padding: 8px 35px;
-    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
-    color: white;
-    margin-right: 20px;
-`;
-
-export const WhoIsThales = styled(Button)`
-    background: transparent;
-    border: 1.5px solid #44e1e2;
-    color: #44e1e2;
 `;

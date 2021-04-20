@@ -35,13 +35,6 @@ const NavLink = styled(Link)`
     }
 `;
 
-const UsedApp = styled(Button)`
-    padding: 8px 35px;
-    margin-left: 60px;
-    color: white;
-    background: #3936c7;
-`;
-
 const Header: React.FC = () => {
     const { t } = useTranslation();
 
@@ -54,7 +47,9 @@ const Header: React.FC = () => {
                 <NavLink to="">Partners</NavLink>
                 <NavLink to="">Comunnity</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
-                    <UsedApp>Use dApp</UsedApp>
+                    <Button className="primary" style={{ padding: '8px 35px', marginLeft: '60px' }}>
+                        Use dApp
+                    </Button>
                 </NavLink>
             </Links>
         </HeaderWrapper>
