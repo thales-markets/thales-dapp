@@ -1,42 +1,28 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { set0xReady } from 'redux/modules/app';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
 import { Menu } from 'semantic-ui-react';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-import OptionSideIcon from '../components/OptionSideIcon';
-import TradeOptionsSide from './TradeOptionsSide';
+import { OptionSide } from 'types/options';
+import TokenSwap from './TokenSwap';
+import PlaceOrder from './PlaceOrder';
 
-const TradeOptions: React.FC = () => {
+type TradeOptionsProps = {
+    optionSide: OptionSide;
+};
+
+const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-
-    useEffect(() => {
-        dispatch(set0xReady(false));
-        // TODO: For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering. Find a way to optimize this.
-        contractWrappers0xConnector.setContractWrappers0x(isWalletConnected, networkId);
-        dispatch(set0xReady(true));
-    }, [networkId, isWalletConnected]);
-
     const tabContent: Array<{
-        id: 'long' | 'short';
+        id: 'market' | 'limit';
         name: string;
-        color: 'red' | 'green';
     }> = useMemo(
         () => [
             {
-                id: 'long',
-                name: t('options.market.trade-options.trade-long-options-tab-title'),
-                color: 'green',
+                id: 'limit',
+                name: t('options.market.trade-options.limit-tab-title'),
             },
             {
-                id: 'short',
-                name: t('options.market.trade-options.trade-short-options-tab-title'),
-                color: 'red',
+                id: 'market',
+                name: t('options.market.trade-options.market-tab-title'),
             },
         ],
         [t]
@@ -53,17 +39,13 @@ const TradeOptions: React.FC = () => {
                         onClick={() => setActiveTab(tab)}
                         active={tab.id === activeTab.id}
                         name={tab.id}
-                        color={tab.color}
                     >
-                        {tab.name}{' '}
-                        <span style={{ marginLeft: 5, color: 'black' }}>
-                            <OptionSideIcon side={tab.id} />
-                        </span>
+                        {tab.name}
                     </Menu.Item>
                 ))}
             </Menu>
-            {activeTab.id === 'long' && <TradeOptionsSide optionSide="long" />}
-            {activeTab.id === 'short' && <TradeOptionsSide optionSide="short" />}
+            {activeTab.id === 'market' && <TokenSwap optionSide={optionSide} />}
+            {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
         </>
     );
 };

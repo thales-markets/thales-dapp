@@ -30,7 +30,7 @@ import 'react-resizable/css/styles.css';
 import YourTransactions from './TransactionsCard/YourTransactions';
 import RecentTransactions from './TransactionsCard/RecentTransactions';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-import TradeOptionsSide from './TradeOptions/TradeOptionsSide';
+import TradeOptions from './TradeOptions';
 import Orderbook from './TradeOptions/Orderbook';
 import MarketWidget from './components/MarketWidget';
 import { MarketWidgetKey } from 'constants/ui';
@@ -225,7 +225,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             optionsMarket.phase,
             widgets,
             MarketWidgetKey.TRADE,
-            <TradeOptionsSide optionSide={optionsActiveTab.id} />
+            <TradeOptions optionSide={optionsActiveTab.id} />
         );
         wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART, <ChartCard />);
         wrapWidget(
