@@ -4,7 +4,7 @@ import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { ReactComponent as OptionsLineIcon } from 'assets/images/options-line.svg';
 import { ReactComponent as DollarSignIcon } from 'assets/images/dollar-sign.svg';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { PeriodLabel, PERIOD_LABELS_MAP, PERIOD_LABELS } from 'constants/period';
+// import { PeriodLabel, PERIOD_LABELS_MAP, PERIOD_LABELS } from 'constants/period';
 import Currency from 'components/Currency';
 import { Button } from 'semantic-ui-react';
 import PriceChart from './PriceChart';
@@ -14,7 +14,7 @@ import { useMarketContext } from '../contexts/MarketContext';
 type ChartType = 'price' | 'options';
 
 const ChartCard: React.FC = () => {
-    const [selectedPeriod, setSelectedPeriod] = useState<PeriodLabel>(PERIOD_LABELS_MAP.ONE_DAY);
+    // const [selectedPeriod, setSelectedPeriod] = useState<PeriodLabel>(PERIOD_LABELS_MAP.ONE_MONTH);
     const [chartType, setChartType] = useState<ChartType>('price');
 
     const optionsMarket = useMarketContext();
@@ -23,7 +23,7 @@ const ChartCard: React.FC = () => {
 
     const chartProps = {
         optionsMarket,
-        selectedPeriod,
+        // selectedPeriod,
     };
 
     return (
@@ -56,7 +56,7 @@ const ChartCard: React.FC = () => {
                     <Button size="mini" primary={chartType === 'options'} onClick={() => setChartType('options')}>
                         <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
                     </Button>
-                    <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
+                    {/* <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
                     {PERIOD_LABELS.map((period) => (
                         <Button
                             size="mini"
@@ -66,7 +66,7 @@ const ChartCard: React.FC = () => {
                         >
                             {t(period.i18nLabel)}
                         </Button>
-                    ))}
+                    ))} */}
                 </span>
             </div>
             <div>

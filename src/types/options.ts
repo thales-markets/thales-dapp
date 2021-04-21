@@ -6,18 +6,19 @@ export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
-export type OptionsTransactionType = 'refund' | 'bid' | 'exercise' | 'claim';
+export type OptionsTransactionType = 'refund' | 'bid' | 'exercise' | 'claim' | 'buy' | 'sell';
 
 export type OptionsTransaction = {
     hash: string;
     type: OptionsTransactionType;
-    account: string;
-    currencyKey: CurrencyKey;
+    account?: string;
+    currencyKey?: CurrencyKey;
     timestamp: number;
     side: OptionSide;
     amount: number | string;
     market: string;
     status?: 'pending' | 'confirmed';
+    price?: number;
 };
 
 export type OptionValue = {
@@ -144,3 +145,18 @@ export type DisplayOrder = {
 };
 
 export type OrderSide = 'buy' | 'sell';
+
+export type Trade = {
+    id: string;
+    transactionHash: string;
+    timestamp: number;
+    orderHash: string;
+    maker: string;
+    taker: string;
+    makerToken: string;
+    takerToken: string;
+    makerAmount: number;
+    takerAmount: number;
+};
+
+export type Trades = Trade[];

@@ -7,20 +7,18 @@ import get from 'lodash/get';
 import { USD_SIGN } from 'constants/currency';
 import { ReactComponent as ExclamationIcon } from 'assets/images/exclamation.svg';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { PeriodLabel, PERIOD_IN_HOURS } from 'constants/period';
 import { Loader } from 'semantic-ui-react';
 import { OptionsMarketInfo } from 'types/options';
 import useHistoricalRatesQuery from 'queries/rates/useHistoricalRatesQuery';
 
 type PriceChartProps = {
-    selectedPeriod: PeriodLabel;
     optionsMarket: OptionsMarketInfo;
 };
 
-const PriceChart: React.FC<PriceChartProps> = ({ selectedPeriod, optionsMarket }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
 
-    const historicalRatesQuery = useHistoricalRatesQuery(optionsMarket.currencyKey, selectedPeriod.period);
+    const historicalRatesQuery = useHistoricalRatesQuery(optionsMarket.currencyKey);
 
     const chartData = get(historicalRatesQuery, 'data.rates', []);
     const isLoading = historicalRatesQuery.isLoading;
@@ -53,10 +51,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ selectedPeriod, optionsMarket }
                                     if (!isNumber(val)) {
                                         return '';
                                     }
-                                    const periodOverOneDay =
-                                        selectedPeriod != null && selectedPeriod.value > PERIOD_IN_HOURS.ONE_DAY;
-
-                                    return format(val, periodOverOneDay ? 'dd MMM' : 'h:mma');
+                                    return format(val, 'dd MMM');
                                 }}
                             />
                             <YAxis

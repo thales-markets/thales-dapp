@@ -7,8 +7,8 @@ import { PERIOD_IN_HOURS, Period } from 'constants/period';
 
 const useBinaryOptionsHistoricalOptionPriceQuery = (
     marketAddress: string,
-    period: Period = Period.ONE_DAY,
     networkId: number,
+    period: Period = Period.ONE_MONTH,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
     const periodInHours = PERIOD_IN_HOURS[period];

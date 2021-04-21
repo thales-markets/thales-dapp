@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { ReactComponent as ExclamationIcon } from 'assets/images/exclamation.svg';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { PeriodLabel, PERIOD_IN_HOURS } from 'constants/period';
 import { Loader } from 'semantic-ui-react';
 import { OptionsMarketInfo } from 'types/options';
 import useBinaryOptionsHistoricalOptionPriceQuery from 'queries/options/useBinaryOptionsHistoricalOptionPriceQuery';
@@ -15,19 +14,14 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 
 type OptionsChartProps = {
-    selectedPeriod: PeriodLabel;
     optionsMarket: OptionsMarketInfo;
 };
 
-const OptionsChart: React.FC<OptionsChartProps> = ({ selectedPeriod, optionsMarket }) => {
+const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(
-        optionsMarket.address,
-        selectedPeriod.period,
-        networkId
-    );
+    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(optionsMarket.address, networkId);
 
     const chartData = useMemo(() => {
         const data = historicalOptionPriceQuery.data || [];
@@ -55,10 +49,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ selectedPeriod, optionsMark
                                     if (!isNumber(val)) {
                                         return '';
                                     }
-                                    const periodOverOneDay =
-                                        selectedPeriod != null && selectedPeriod.value > PERIOD_IN_HOURS.ONE_DAY;
-
-                                    return format(val, periodOverOneDay ? 'dd MMM' : 'h:mma');
+                                    return format(val, 'dd MMM');
                                 }}
                             />
                             <YAxis

@@ -250,7 +250,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             contractWrappers0xConnector.setContractWrappers0x(isWalletConnected, networkId);
             dispatch(set0xReady(true));
         }
-    }, [networkId, isWalletConnected]);
+    }, [networkId, isWalletConnected, marketQuery.isSuccess]);
 
     useEffect(() => {
         dispatch(

@@ -16,6 +16,20 @@ type TransactionsTableProps = {
     isLoading: boolean;
 };
 
+const getCellColor = (type: string) => {
+    switch (type) {
+        case 'buy':
+            return 'green';
+            break;
+        case 'sell':
+            return 'red';
+            break;
+        default:
+            return 'rgba(0,0,0,.95)';
+            break;
+    }
+};
+
 export const TransactionsTable: FC<TransactionsTableProps> = memo(
     ({ optionsTransactions, noResultsMessage, isLoading }) => {
         const { t } = useTranslation();
@@ -25,8 +39,9 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                     {
                         Header: <>{t('options.market.transactions-card.table.date-time-col')}</>,
                         accessor: 'timestamp',
-                        Cell: (cellProps: CellProps<OptionsTransaction, OptionsTransaction['timestamp']>) =>
-                            formatTxTimestamp(cellProps.cell.value),
+                        Cell: (cellProps: CellProps<OptionsTransaction, OptionsTransaction['timestamp']>) => (
+                            <span>{formatTxTimestamp(cellProps.cell.value)}</span>
+                        ),
                         width: 150,
                         sortable: true,
                     },
@@ -34,7 +49,9 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                         Header: <>{t('options.market.transactions-card.table.type-col')}</>,
                         accessor: 'type',
                         Cell: (cellProps: CellProps<OptionsTransaction, OptionsTransaction['type']>) => (
-                            <span>{t(`options.market.transactions-card.table.types.${cellProps.cell.value}`)}</span>
+                            <span style={{ color: getCellColor(cellProps.cell.row.original.type) }}>
+                                {t(`options.market.transactions-card.table.types.${cellProps.cell.value}`)}
+                            </span>
                         ),
                         width: 150,
                         sortable: true,
@@ -61,7 +78,27 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                         sortType: 'basic',
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<OptionsTransaction, OptionsTransaction['amount']>) => (
-                            <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}</span>
+                            <span style={{ color: getCellColor(cellProps.cell.row.original.type) }}>
+                                {cellProps.cell.row.original.type === 'buy' ||
+                                cellProps.cell.row.original.type === 'sell'
+                                    ? formatCurrencyWithKey('sOPT', cellProps.cell.value)
+                                    : formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}
+                            </span>
+                        ),
+                        width: 150,
+                        sortable: true,
+                    },
+                    {
+                        Header: <>{t('options.market.transactions-card.table.price-col')}</>,
+                        sortType: 'basic',
+                        accessor: 'price',
+                        Cell: (cellProps: CellProps<OptionsTransaction, OptionsTransaction['price']>) => (
+                            <span style={{ color: getCellColor(cellProps.cell.row.original.type) }}>
+                                {cellProps.cell.row.original.type === 'buy' ||
+                                cellProps.cell.row.original.type === 'sell'
+                                    ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value ?? 0)
+                                    : EMPTY_VALUE}
+                            </span>
                         ),
                         width: 150,
                         sortable: true,

@@ -270,6 +270,7 @@
                     "type-col": "type",
                     "position-col": "position",
                     "amount-col": "amount",
+                    "price-col": "price",
                     "tx-status-col": "tx status",
                     "no-results-your-activity": "No transactions associated with this wallet.",
                     "no-results-recent-activity": "No transactions associated with this market.",
@@ -278,8 +279,15 @@
                         "bid": "Bid",
                         "refund": "Withdrawal",
                         "claim": "Claim",
-                        "exercise": "Exercise"
+                        "exercise": "Exercise",
+                        "buy": "Buy",
+                        "sell": "Sell"
                     }
+                },
+                "filter": {
+                    "all": "all",
+                    "market": "market transactions",
+                    "trade": "trades"
                 }
             },
             "trade-card": {

@@ -13,7 +13,7 @@ import { HistoricalRatesUpdates } from '../../types/rates';
 
 const useHistoricalRatesQuery = (
     currencyKey: CurrencyKey | null,
-    period: Period = Period.ONE_DAY,
+    period: Period = Period.ONE_MONTH,
     options?: UseQueryOptions<HistoricalRatesUpdates>
 ) => {
     const periodInHours = PERIOD_IN_HOURS[period];
