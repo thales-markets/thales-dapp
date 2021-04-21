@@ -1,6 +1,6 @@
 .text-xxxs {
     font-size: 9px;
-    line-height: 9px;
+    line-height: 14px;
     letter-spacing: 0.4px;
 }
 .text-xxs {
@@ -40,7 +40,7 @@
 }
 .text-l {
     font-size: 31px;
-    line-height: 31px;
+    line-height: 48px;
     letter-spacing: 0.25px;
 }
 .text-xl {
