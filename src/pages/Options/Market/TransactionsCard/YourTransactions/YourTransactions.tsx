@@ -1,6 +1,4 @@
 import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import TransactionsTable from '../components/TransactionsTable';
 import { OptionsMarketInfo } from 'types/options';
 import useBinaryOptionsUserTransactionsQuery from 'queries/options/useBinaryOptionsUserTransactionsQuery';
 import { useSelector } from 'react-redux';
@@ -9,6 +7,9 @@ import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { getOptionsPendingTransactions } from 'redux/modules/options';
 import { uniqBy } from 'lodash';
+import { useMarketContext } from '../../contexts/MarketContext';
+import useBinaryOptionsUserTradesQuery from 'queries/options/useBinaryOptionsUserTradesQuery';
+import TransactionsWithFilters from '../components/TransactionsWithFilters';
 
 type YourTransactionsProps = {
     marketAddress: OptionsMarketInfo['address'];
@@ -16,21 +17,31 @@ type YourTransactionsProps = {
 };
 
 const YourTransactions: React.FC<YourTransactionsProps> = ({ marketAddress, walletAddress }) => {
-    const { t } = useTranslation();
+    const optionsMarket = useMarketContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const pendingTransactions = useSelector((state: RootState) => getOptionsPendingTransactions(state));
+    const isTradingEnabled = optionsMarket.phase === 'trading' || optionsMarket.phase === 'maturity';
 
-    const transactionsQuery = useBinaryOptionsUserTransactionsQuery(marketAddress, walletAddress, networkId, {
+    const marketTransactionsQuery = useBinaryOptionsUserTransactionsQuery(marketAddress, walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const transactions = useMemo(() => {
+    const tradesQuery = useBinaryOptionsUserTradesQuery(
+        marketAddress,
+        optionsMarket.longAddress,
+        optionsMarket.shortAddress,
+        networkId,
+        walletAddress,
+        { enabled: isAppReady && isTradingEnabled }
+    );
+
+    const marketTransactions = useMemo(() => {
         const filteredPendingTransactions = pendingTransactions.filter(
             ({ market, account }) => market === marketAddress && walletAddress === account
         );
-        const myTransactions = transactionsQuery.data || [];
+        const myTransactions = marketTransactionsQuery.data || [];
 
         const transactions = uniqBy(
             [...filteredPendingTransactions, ...myTransactions],
@@ -38,19 +49,14 @@ const YourTransactions: React.FC<YourTransactionsProps> = ({ marketAddress, wall
         );
 
         return transactions;
-    }, [transactionsQuery.data, pendingTransactions, marketAddress, walletAddress]);
-
-    const noResults = transactionsQuery.isSuccess && transactions.length === 0;
+    }, [marketTransactionsQuery.data, pendingTransactions, marketAddress, walletAddress]);
 
     return (
-        <TransactionsTable
-            optionsTransactions={transactions}
-            isLoading={transactionsQuery.isLoading}
-            noResultsMessage={
-                noResults ? (
-                    <span>{t('options.market.transactions-card.table.no-results-your-activity')}</span>
-                ) : undefined
-            }
+        <TransactionsWithFilters
+            marketTransactions={marketTransactions}
+            tradesTransactions={tradesQuery.data || []}
+            isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
+            type="your-activity"
         />
     );
 };

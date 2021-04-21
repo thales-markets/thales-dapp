@@ -272,9 +272,18 @@
                     "amount-col": "amount",
                     "price-col": "price",
                     "tx-status-col": "tx status",
-                    "no-results-your-activity": "No transactions associated with this wallet.",
-                    "no-results-recent-activity": "No transactions associated with this market.",
-                    "no-results-pending-transactions": "No pending transactions associated with this wallet.",
+                    "no-results": {
+                        "recent-activity": {
+                            "all": "No transactions associated with this market.",
+                            "market": "No transactions associated with this market.",
+                            "trade": "No trades associated with this market."
+                        },
+                        "your-activity": {
+                            "all": "No transactions associated with this wallet.",
+                            "market": "No transactions associated with this wallet.",
+                            "trade": "No trades associated with this wallet."
+                        }
+                    },
                     "types": {
                         "bid": "Bid",
                         "refund": "Withdrawal",
