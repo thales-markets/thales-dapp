@@ -17,12 +17,14 @@ import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { Arrow, ArrowsWrapper, PhaseLabel, Row, StyledTableCell } from './components';
+import { Arrow, ArrowsWrapper, PhaseLabel, Row, StyledTableCell, TableHeaderLabel } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarkets';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
+import downSelected from 'assets/images/down-selected.svg';
+import upSelected from 'assets/images/up-selected.svg';
 
 dotenv.config();
 
@@ -103,9 +105,10 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
         setPage(newPage);
     };
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
     const calcDirection = (cell: HeadCell) => {
+        console.log(cell, orderBy);
         if (orderBy === cell.id) {
             switch (orderDirection) {
                 case OrderDirection.DESC:
@@ -181,12 +184,24 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                             {headCells.map((cell: HeadCell, index) => {
                                 return (
                                     <StyledTableCell onClick={calcDirection.bind(this, cell)} key={index}>
-                                        <span style={{ verticalAlign: 'middle', marginRight: '4px' }}>
+                                        <TableHeaderLabel className={orderBy === cell.id ? 'selected' : ''}>
                                             {cell.label}
-                                        </span>
+                                        </TableHeaderLabel>
                                         <ArrowsWrapper>
-                                            <Arrow src={up}></Arrow>
-                                            <Arrow src={down}></Arrow>
+                                            {orderBy === cell.id ? (
+                                                <Arrow
+                                                    src={
+                                                        orderDirection === OrderDirection.ASC
+                                                            ? upSelected
+                                                            : downSelected
+                                                    }
+                                                ></Arrow>
+                                            ) : (
+                                                <>
+                                                    <Arrow src={up}></Arrow>
+                                                    <Arrow src={down}></Arrow>
+                                                </>
+                                            )}
                                         </ArrowsWrapper>
                                     </StyledTableCell>
                                 );
