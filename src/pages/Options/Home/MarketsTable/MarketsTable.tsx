@@ -79,16 +79,17 @@ const PaginationWrapper = styled(TablePagination)`
 interface HeadCell {
     id: keyof OptionsMarkets;
     label: string;
+    sortable: boolean;
 }
 
 const headCells: HeadCell[] = [
-    { id: 1, label: 'Asset' },
-    { id: 2, label: 'Strike Price' },
-    { id: 3, label: 'Pool Size' },
-    { id: 4, label: 'Long/Short' },
-    { id: 5, label: 'Time Remaining' },
-    { id: 6, label: 'Open Orders' },
-    { id: 7, label: 'Phase' },
+    { id: 1, label: 'Asset', sortable: true },
+    { id: 2, label: 'Strike Price', sortable: true },
+    { id: 3, label: 'Pool Size', sortable: true },
+    { id: 4, label: 'Long/Short', sortable: true },
+    { id: 5, label: 'Time Remaining', sortable: false },
+    { id: 6, label: 'Open Orders', sortable: true },
+    { id: 7, label: 'Phase', sortable: false },
 ];
 
 enum OrderDirection {
@@ -105,16 +106,17 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
         setPage(newPage);
     };
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
             switch (orderDirection) {
-                case OrderDirection.DESC:
-                    setOrderDirection(OrderDirection.ASC);
-                    break;
+                case OrderDirection.NONE:
                 case OrderDirection.ASC:
                     setOrderDirection(OrderDirection.DESC);
+                    break;
+                case OrderDirection.DESC:
+                    setOrderDirection(OrderDirection.ASC);
                     break;
             }
         } else {
@@ -154,18 +156,10 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                         return orderDirection === OrderDirection.ASC
                             ? a.longPrice - b.longPrice
                             : b.longPrice - a.longPrice;
-                    case 5:
-                        return orderDirection === OrderDirection.ASC
-                            ? a.timeRemaining - b.timeRemaining
-                            : b.timeRemaining - a.timeRemaining;
                     case 6:
                         return orderDirection === OrderDirection.ASC
                             ? a.openOrders - b.openOrders
                             : b.openOrders - a.openOrders;
-                    case 7:
-                        return orderDirection === OrderDirection.ASC
-                            ? a.phaseNum - b.phaseNum
-                            : b.phaseNum - a.phaseNum;
                     default:
                         return 0;
                 }
@@ -182,26 +176,34 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                         <TableRow>
                             {headCells.map((cell: HeadCell, index) => {
                                 return (
-                                    <StyledTableCell onClick={calcDirection.bind(this, cell)} key={index}>
-                                        <TableHeaderLabel className={orderBy === cell.id ? 'selected' : ''}>
+                                    <StyledTableCell
+                                        onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                        key={index}
+                                        style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                    >
+                                        <TableHeaderLabel
+                                            className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                        >
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        <ArrowsWrapper>
-                                            {orderBy === cell.id ? (
-                                                <Arrow
-                                                    src={
-                                                        orderDirection === OrderDirection.ASC
-                                                            ? upSelected
-                                                            : downSelected
-                                                    }
-                                                ></Arrow>
-                                            ) : (
-                                                <>
-                                                    <Arrow src={up}></Arrow>
-                                                    <Arrow src={down}></Arrow>
-                                                </>
-                                            )}
-                                        </ArrowsWrapper>
+                                        {cell.sortable && (
+                                            <ArrowsWrapper>
+                                                {orderBy === cell.id ? (
+                                                    <Arrow
+                                                        src={
+                                                            orderDirection === OrderDirection.ASC
+                                                                ? upSelected
+                                                                : downSelected
+                                                        }
+                                                    ></Arrow>
+                                                ) : (
+                                                    <>
+                                                        <Arrow src={up}></Arrow>
+                                                        <Arrow src={down}></Arrow>
+                                                    </>
+                                                )}
+                                            </ArrowsWrapper>
+                                        )}
                                     </StyledTableCell>
                                 );
                             })}

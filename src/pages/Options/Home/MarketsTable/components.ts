@@ -42,7 +42,6 @@ export const StyledTableCell = withStyles(() => ({
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#748BC6',
-        cursor: 'pointer',
         '&:first-child': {
             borderTopLeftRadius: '8px',
             borderBottomLeftRadius: '8px',
