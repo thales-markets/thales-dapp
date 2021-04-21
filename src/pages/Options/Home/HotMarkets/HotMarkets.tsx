@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import { useTranslation } from 'react-i18next';
-import { FlexDivCentered, SubTitle } from 'theme/common';
+import { FlexDivCentered, Text } from 'theme/common';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 import MarketCard from '../MarketCard';
@@ -64,7 +64,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <Wrapper>
-            <SubTitle color="#04045a">{t('options.home.explore-markets.discover')}</SubTitle>
+            <Text className="text-xxl dark">{t('options.home.explore-markets.discover')}</Text>
             <FlexDivCentered>
                 <Arrow onClick={PreviousMarkets} src={previous}></Arrow>
                 {optionsMarkets.map((optionsMarket, index) => {

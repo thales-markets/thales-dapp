@@ -51,7 +51,6 @@ const FilterButton = styled(Button)`
     font-weight: bold;
     font-size: 13px;
     line-height: 13px;
-    text-align: center;
     letter-spacing: 0.4px;
     text-transform: capitalize !important;
     color: #f6f6fe;

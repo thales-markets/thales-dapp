@@ -13,3 +13,6 @@ body {
     overflow-x: hidden !important;
     overflow-y: auto !important;
 }
+
+@import './text.css';
+@import './colors.css';

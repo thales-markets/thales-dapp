@@ -90,6 +90,9 @@ export const Button = styled.button`
     }
 `;
 
+export const Text = styled.p``;
+export const Li = styled.li``;
+
 export const Logo = styled(Link)`
     display: flex;
     flex: 1;
@@ -113,12 +116,4 @@ export const Logo = styled(Link)`
 export const Image = styled.img`
     width: 100%;
     height: 100%;
-`;
-
-export const SubTitle = styled.h2`
-    font-weight: bold;
-    font-size: 49px;
-    line-height: 64px;
-    letter-spacing: -1px;
-    color: ${(props) => props.color};
 `;
