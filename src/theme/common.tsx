@@ -71,12 +71,27 @@ export const Button = styled.button`
     text-align: center;
     letter-spacing: 0.5px;
     text-transform: none !important;
-    &:hover {
-        background: #44e1e2;
-        color: white;
-    }
+    color: white;
     cursor: pointer;
+    &.primary {
+        background: #3936c7;
+    }
+    &.secondary {
+        background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
+    }
+    &.tertiary {
+        background: transparent;
+        border: 1.5px solid #44e1e2;
+        color: #44e1e2;
+    }
+    &:hover {
+        color: white;
+        background: #44e1e2;
+    }
 `;
+
+export const Text = styled.p``;
+export const Li = styled.li``;
 
 export const Logo = styled(Link)`
     display: flex;
@@ -101,18 +116,4 @@ export const Logo = styled(Link)`
 export const Image = styled.img`
     width: 100%;
     height: 100%;
-`;
-
-export const SubTitle = styled.h2`
-    font-weight: bold;
-    font-size: 49px;
-    line-height: 64px;
-    letter-spacing: -1px;
-    color: ${(props) => props.color};
-`;
-
-export const CreateMarketButton = styled(Button)`
-    padding: 8px 40px !important;
-    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%) !important;
-    color: white;
 `;

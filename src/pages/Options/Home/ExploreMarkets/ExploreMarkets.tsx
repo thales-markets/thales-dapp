@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { Button, CreateMarketButton, FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
@@ -51,7 +51,6 @@ const FilterButton = styled(Button)`
     font-weight: bold;
     font-size: 13px;
     line-height: 13px;
-    text-align: center;
     letter-spacing: 0.4px;
     text-transform: capitalize !important;
     color: #f6f6fe;
@@ -66,21 +65,7 @@ const NoMarkets = styled(FlexDivColumn)`
     border-radius: 20px;
     justify-content: space-evenly;
     align-items: center;
-    .info {
-        font-weight: 600;
-        font-size: 31px;
-        line-height: 48px;
-        letter-spacing: 0.25px;
-        color: #f6f6fe;
-    }
-    .button {
-        background: #3936c7;
-        color: white;
-        font-weight: bold;
-        font-size: 20px;
-        line-height: 32px;
-        width: 200px;
-        letter-spacing: 0.5px;
+    .primary {
         align-self: center;
     }
 `;
@@ -241,25 +226,26 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 <NoMarkets>
                     {userFilter === UserFilterEnum.All && phaseFilter !== PhaseFilterEnum.all && (
                         <>
-                            <p className="info">No markets available.</p>
-                            <Button className="button" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
+                            <Text className="text-l bold pale-grey">No markets available.</Text>
+                            <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
                                 View all markets
                             </Button>
                         </>
                     )}
                     {userFilter === UserFilterEnum.MyBids && (
                         <>
-                            <p className="info">You haven’t placed any bids yet.</p>
-                            <Button className="button" onClick={resetFilters}>
+                            <Text className="text-l bold pale-grey">You haven’t placed any bids yet.</Text>
+                            <Button className="primary" onClick={resetFilters}>
                                 View all markets
                             </Button>
                         </>
                     )}
                     {userFilter === UserFilterEnum.MyMarkets && (
                         <>
-                            <p className="info">You haven’t created any market yet.</p>
+                            <Text className="text-l bold pale-grey">You haven’t created any market yet.</Text>
                             <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                <CreateMarketButton
+                                <Button
+                                    className="secondary"
                                     onClick={() =>
                                         isWalletConnected
                                             ? navigateTo(ROUTES.Options.CreateMarket)
@@ -269,19 +255,16 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                     {isWalletConnected
                                         ? t('options.home.market-creation.create-market-button-label')
                                         : t('common.wallet.connect-your-wallet')}
-                                </CreateMarketButton>
-                                <p
+                                </Button>
+                                <Text
+                                    className="text-l bold pale-grey"
                                     style={{
-                                        fontSize: '25px',
-                                        fontWeight: 600,
-                                        lineHeight: '48px',
-                                        color: '#F6F6FE',
                                         margin: 'auto 60px',
                                     }}
                                 >
                                     or
-                                </p>
-                                <Button className="button" onClick={resetFilters}>
+                                </Text>
+                                <Button className="primary" onClick={resetFilters}>
                                     View all markets
                                 </Button>
                             </FlexDiv>

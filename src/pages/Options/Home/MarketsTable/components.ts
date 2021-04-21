@@ -71,6 +71,14 @@ export const StyledTableCell = withStyles(() => ({
     },
 }))(TableCell);
 
+export const TableHeaderLabel = styled.span`
+    vertical-align: middle;
+    margin-right: 4px;
+    &.selected {
+        color: #44e1e2;
+    }
+`;
+
 export const ArrowsWrapper = styled.span`
     display: inline-block;
     vertical-align: middle;
@@ -82,6 +90,4 @@ export const Arrow = styled(Image)`
     width: 10px;
     padding: 2px;
     box-sizing: content-box;
-    &.selected {
-    }
 `;
