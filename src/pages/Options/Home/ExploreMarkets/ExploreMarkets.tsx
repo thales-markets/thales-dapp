@@ -65,6 +65,9 @@ const NoMarkets = styled(FlexDivColumn)`
     border-radius: 20px;
     justify-content: space-evenly;
     align-items: center;
+    .primary {
+        align-self: center;
+    }
 `;
 
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
@@ -224,7 +227,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     {userFilter === UserFilterEnum.All && phaseFilter !== PhaseFilterEnum.all && (
                         <>
                             <Text className="text-l bold pale-grey">No markets available.</Text>
-                            <Button className="button" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
+                            <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
                                 View all markets
                             </Button>
                         </>
@@ -232,7 +235,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     {userFilter === UserFilterEnum.MyBids && (
                         <>
                             <Text className="text-l bold pale-grey">You haven’t placed any bids yet.</Text>
-                            <Button className="button" onClick={resetFilters}>
+                            <Button className="primary" onClick={resetFilters}>
                                 View all markets
                             </Button>
                         </>

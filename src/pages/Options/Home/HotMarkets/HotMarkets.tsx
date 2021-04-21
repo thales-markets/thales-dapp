@@ -47,7 +47,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     const pages = [];
     for (let index = 0; index <= maxPages; index++) {
-        pages.push(<PaginationPage className={currentMarketPage === index ? 'current' : ''} />);
+        pages.push(<PaginationPage key={index} className={currentMarketPage === index ? 'current' : ''} />);
     }
 
     const NextMarkets = () => {

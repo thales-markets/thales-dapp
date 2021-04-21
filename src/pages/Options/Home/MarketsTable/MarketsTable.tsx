@@ -163,7 +163,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                     return 0;
             }
         });
-    }, [optionsMarkets, orderBy, orderDirection]);
+    }, [optionsMarkets, orderBy, orderDirection, page]);
 
     const { t } = useTranslation();
     return (
