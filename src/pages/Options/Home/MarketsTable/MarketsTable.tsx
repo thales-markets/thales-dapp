@@ -108,7 +108,6 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
     const calcDirection = (cell: HeadCell) => {
-        console.log(cell, orderBy);
         if (orderBy === cell.id) {
             switch (orderDirection) {
                 case OrderDirection.DESC:
