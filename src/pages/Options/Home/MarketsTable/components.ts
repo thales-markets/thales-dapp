@@ -1,6 +1,6 @@
 import { TableCell, withStyles } from '@material-ui/core';
 import styled from 'styled-components';
-import { Button } from 'theme/common';
+import { Button, Image } from 'theme/common';
 
 export const Row = styled.tr`
     height: 1px;
@@ -33,6 +33,7 @@ export const PhaseLabel = styled(Button)`
 
 export const StyledTableCell = withStyles(() => ({
     head: {
+        position: 'relative',
         border: 'none',
         background: '#127',
         textAlign: 'center',
@@ -41,6 +42,7 @@ export const StyledTableCell = withStyles(() => ({
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#748BC6',
+        cursor: 'pointer',
         '&:first-child': {
             borderTopLeftRadius: '8px',
             borderBottomLeftRadius: '8px',
@@ -68,3 +70,24 @@ export const StyledTableCell = withStyles(() => ({
         },
     },
 }))(TableCell);
+
+export const TableHeaderLabel = styled.span`
+    vertical-align: middle;
+    margin-right: 4px;
+    &.selected {
+        color: #44e1e2;
+    }
+`;
+
+export const ArrowsWrapper = styled.span`
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 1px;
+`;
+
+export const Arrow = styled(Image)`
+    display: block;
+    width: 10px;
+    padding: 2px;
+    box-sizing: content-box;
+`;

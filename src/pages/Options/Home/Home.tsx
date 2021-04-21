@@ -11,6 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { FlexDivColumn, Section } from 'theme/common';
 import MarketHeader from './MarketHeader';
+import { PHASE } from 'constants/options';
 
 const MAX_HOT_MARKETS = 9;
 
@@ -27,7 +28,16 @@ export const Home: React.FC = () => {
         [marketsQuery, synthsMap]
     );
 
-    const hotMarkets = useMemo(() => optionsMarkets.slice(0, MAX_HOT_MARKETS), [optionsMarkets]);
+    const hotMarkets = useMemo(
+        () =>
+            optionsMarkets
+                .filter((market) =>
+                    market.phaseNum !== PHASE.maturity && market.phaseNum !== PHASE.expiry ? market : undefined
+                )
+                .sort((a, b) => b.poolSize - a.poolSize)
+                .slice(0, MAX_HOT_MARKETS),
+        [optionsMarkets]
+    );
 
     return (
         <>

@@ -1,0 +1,82 @@
+.text-xxxs {
+    font-size: 9px;
+    line-height: 14px;
+    letter-spacing: 0.4px;
+}
+.text-xxs {
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.4px;
+}
+.text-xs {
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: 0.4px;
+}
+.text-ms {
+    font-size: 14px;
+    line-height: 14px;
+    letter-spacing: 0.4px;
+}
+.text-s {
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: 0.2px;
+}
+.text-sm {
+    font-size: 18px;
+    line-height: 18px;
+    letter-spacing: 0.2px;
+}
+.text-m {
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: 0.2px;
+}
+.text-lm {
+    font-size: 25px;
+    line-height: 48px;
+    letter-spacing: 0.25px;
+}
+.text-l {
+    font-size: 31px;
+    line-height: 48px;
+    letter-spacing: 0.25px;
+}
+.text-xl {
+    font-size: 36px;
+    line-height: 36px;
+}
+.text-xxl {
+    font-weight: bold;
+    font-size: 49px;
+    line-height: 64px;
+    letter-spacing: -1px;
+}
+
+.text-xxxl {
+    font-family: Open Sans !important;
+    font-size: 64px;
+    line-height: 80px;
+    font-weight: bold;
+    letter-spacing: -1.5px;
+    color: #f6f6fe;
+    margin: 0;
+}
+
+.title {
+    font-family: Open Sans !important;
+    font-size: 72px;
+    font-weight: bold;
+    line-height: 84px;
+    color: #f6f6fe;
+    margin: 0;
+}
+
+.text-normal {
+    font-weight: normal;
+}
+
+.bold {
+    font-weight: bold;
+}

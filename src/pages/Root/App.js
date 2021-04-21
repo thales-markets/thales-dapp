@@ -7,7 +7,6 @@ import { getEthereumNetwork, SUPPORTED_NETWORKS } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsWalletConnected, updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
-import FullScreenMainLayout from 'components/FullScreenMainLayout';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import queryConnector from 'utils/queryConnector';
@@ -128,9 +127,9 @@ const App = () => {
                             path={ROUTES.Options.CreateMarket}
                             render={() =>
                                 isWalletConnected ? (
-                                    <FullScreenMainLayout>
+                                    <MainLayout>
                                         <OptionsCreateMarket />
-                                    </FullScreenMainLayout>
+                                    </MainLayout>
                                 ) : (
                                     <Redirect to={ROUTES.Options.Home} />
                                 )
@@ -140,9 +139,9 @@ const App = () => {
                             exact
                             path={ROUTES.Options.MarketMatch}
                             render={(routeProps) => (
-                                <FullScreenMainLayout>
+                                <MainLayout>
                                     <OptionsMarket {...routeProps} />
-                                </FullScreenMainLayout>
+                                </MainLayout>
                             )}
                         />
                         <Route exact path={ROUTES.Options.Home}>

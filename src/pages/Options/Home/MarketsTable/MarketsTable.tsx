@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useMemo, useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
@@ -17,10 +17,14 @@ import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { PhaseLabel, Row, StyledTableCell } from './components';
+import { Arrow, ArrowsWrapper, PhaseLabel, Row, StyledTableCell, TableHeaderLabel } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarkets';
+import down from 'assets/images/down.svg';
+import up from 'assets/images/up.svg';
+import downSelected from 'assets/images/down-selected.svg';
+import upSelected from 'assets/images/up-selected.svg';
 
 dotenv.config();
 
@@ -72,13 +76,103 @@ const PaginationWrapper = styled(TablePagination)`
     }
 `;
 
+interface HeadCell {
+    id: keyof OptionsMarkets;
+    label: string;
+}
+
+const headCells: HeadCell[] = [
+    { id: 1, label: 'Asset' },
+    { id: 2, label: 'Strike Price' },
+    { id: 3, label: 'Pool Size' },
+    { id: 4, label: 'Long/Short' },
+    { id: 5, label: 'Time Remaining' },
+    { id: 6, label: 'Open Orders' },
+    { id: 7, label: 'Phase' },
+];
+
+enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
+const defaultOrderBy = 5; // time remaining
+
 const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, phase }) => {
-    const [page, setPage] = useState<number>(0);
+    const [page, setPage] = useState(0);
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
+    const [orderBy, setOrderBy] = useState(defaultOrderBy);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+
+    const calcDirection = (cell: HeadCell) => {
+        console.log(cell, orderBy);
+        if (orderBy === cell.id) {
+            switch (orderDirection) {
+                case OrderDirection.DESC:
+                    setOrderDirection(OrderDirection.ASC);
+                    break;
+                case OrderDirection.ASC:
+                    setOrderDirection(OrderDirection.DESC);
+                    break;
+            }
+        } else {
+            setOrderBy(parseInt(cell.id.toString()));
+            setOrderDirection(OrderDirection.DESC);
+        }
+    };
 
     useEffect(() => setPage(0), [phase]);
+
+    const compareStrings = (a: string, b: string) => {
+        if (a < b) {
+            return orderDirection === OrderDirection.ASC ? -1 : 1;
+        }
+        if (a > b) {
+            return orderDirection === OrderDirection.ASC ? 1 : -1;
+        }
+
+        return 0;
+    };
+
+    const sortedMArkets = useMemo(() => {
+        return optionsMarkets
+            .sort((a, b) => {
+                switch (orderBy) {
+                    case 1:
+                        return compareStrings(a.asset, b.asset);
+                    case 2:
+                        return orderDirection === OrderDirection.ASC
+                            ? a.strikePrice - b.strikePrice
+                            : b.strikePrice - a.strikePrice;
+                    case 3:
+                        return orderDirection === OrderDirection.ASC
+                            ? a.poolSize - b.poolSize
+                            : b.poolSize - a.poolSize;
+                    case 4:
+                        return orderDirection === OrderDirection.ASC
+                            ? a.longPrice - b.longPrice
+                            : b.longPrice - a.longPrice;
+                    case 5:
+                        return orderDirection === OrderDirection.ASC
+                            ? a.timeRemaining - b.timeRemaining
+                            : b.timeRemaining - a.timeRemaining;
+                    case 6:
+                        return orderDirection === OrderDirection.ASC
+                            ? a.openOrders - b.openOrders
+                            : b.openOrders - a.openOrders;
+                    case 7:
+                        return orderDirection === OrderDirection.ASC
+                            ? a.phaseNum - b.phaseNum
+                            : b.phaseNum - a.phaseNum;
+                    default:
+                        return 0;
+                }
+            })
+            .slice(page * 10, 10 * (page + 1));
+    }, [optionsMarkets, orderBy, orderDirection, page]);
 
     const { t } = useTranslation();
     return (
@@ -87,19 +181,37 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                 <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>Asset</StyledTableCell>
-                            <StyledTableCell>Strike Price</StyledTableCell>
-                            <StyledTableCell>Pool Size</StyledTableCell>
-                            <StyledTableCell>Long/Short</StyledTableCell>
-                            <StyledTableCell>Time Remaining</StyledTableCell>
-                            <StyledTableCell>Open Orders</StyledTableCell>
-                            <StyledTableCell>Phase</StyledTableCell>
+                            {headCells.map((cell: HeadCell, index) => {
+                                return (
+                                    <StyledTableCell onClick={calcDirection.bind(this, cell)} key={index}>
+                                        <TableHeaderLabel className={orderBy === cell.id ? 'selected' : ''}>
+                                            {cell.label}
+                                        </TableHeaderLabel>
+                                        <ArrowsWrapper>
+                                            {orderBy === cell.id ? (
+                                                <Arrow
+                                                    src={
+                                                        orderDirection === OrderDirection.ASC
+                                                            ? upSelected
+                                                            : downSelected
+                                                    }
+                                                ></Arrow>
+                                            ) : (
+                                                <>
+                                                    <Arrow src={up}></Arrow>
+                                                    <Arrow src={down}></Arrow>
+                                                </>
+                                            )}
+                                        </ArrowsWrapper>
+                                    </StyledTableCell>
+                                );
+                            })}
                         </TableRow>
                         <Divider />
                     </TableHead>
 
                     <TableBody>
-                        {optionsMarkets.slice(page * 10, 10 * (page + 1)).map((market, index) => {
+                        {sortedMArkets.map((market, index) => {
                             return (
                                 <StyledTableRow
                                     onClick={() => {
