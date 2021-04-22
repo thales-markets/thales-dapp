@@ -35,4 +35,8 @@ export const refetchTrades = (marketAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.Trades(marketAddress));
 };
 
+export const refetchUserTrades = (marketAddress: string, walletAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
+};
+
 export default queryConnector;

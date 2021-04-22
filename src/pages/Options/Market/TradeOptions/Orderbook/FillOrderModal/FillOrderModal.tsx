@@ -33,7 +33,7 @@ import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { calculate0xProtocolFee } from 'utils/0x';
-import { refetchOrderbook, refetchTrades } from 'utils/queryConnector';
+import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
@@ -152,6 +152,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
                         refetchOrderbook(baseToken);
                         refetchTrades(optionsMarket.address);
+                        refetchUserTrades(optionsMarket.address, walletAddress);
                         setIsFilling(false);
                         onClose();
                     }
