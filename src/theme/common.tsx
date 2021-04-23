@@ -107,7 +107,11 @@ export const Button = styled.button`
     }
 `;
 
-export const Text = styled.p``;
+export const Text = styled.p`
+    @media (max-width: 468px) {
+        margin: 0 0 0.5em;
+    }
+`;
 export const Li = styled.li``;
 
 export const Logo = styled(Link)`
