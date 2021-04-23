@@ -102,8 +102,9 @@ const NavLink = styled(Link)`
 
 const BurdgerIcon = styled.img`
     position: absolute;
-    right: 50px;
-    top: 44px;
+    right: 30px;
+    top: 32px;
+    padding: 10px;
     @media (min-width: 769px) {
         display: none;
     }
