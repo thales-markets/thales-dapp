@@ -81,13 +81,16 @@
     font-weight: bold;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 768px) {
     .title {
         font-size: 48px;
         line-height: 64px;
     }
-    .text-m {
-        font-size: 20px;
-        line-height: 32px;
+}
+
+@media (max-width: 468px) {
+    .title {
+        font-size: 38px;
+        line-height: 48px;
     }
 }

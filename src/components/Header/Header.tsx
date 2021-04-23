@@ -15,7 +15,7 @@ const HeaderWrapper = styled.div`
     @media (max-width: 768px) {
         padding: 0 50px;
     }
-    @media (max-width: 375px) {
+    @media (max-width: 468px) {
         padding: 0 30px;
     }
 `;
@@ -30,9 +30,9 @@ const Links = styled.div`
     }
     @media (max-width: 768px) {
         flex-direction: column;
-        position: absolute;
+        position: fixed;
         top: 0;
-        left: 100vw;
+        left: 102vw;
         width: 300px;
         height: 100vh;
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
@@ -43,7 +43,6 @@ const Links = styled.div`
             max-height: 140px;
         }
         &.show {
-            display: flex;
             animation-name: show;
             animation-duration: 300ms;
             left: calc(100vw - 300px);
@@ -51,12 +50,12 @@ const Links = styled.div`
         &.hide {
             animation-name: hide;
             animation-duration: 300ms;
-            left: 100vw;
+            left: 102vw;
         }
     }
     @keyframes show {
         from {
-            left: 100vw;
+            left: 102vw;
         }
         to {
             left: calc(100vw - 300px);
@@ -67,7 +66,7 @@ const Links = styled.div`
             left: calc(100vw - 300px);
         }
         to {
-            left: 100vw;
+            left: 102vw;
         }
     }
 `;

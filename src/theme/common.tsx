@@ -65,7 +65,7 @@ export const Side = styled(FlexDivColumnCentered)`
         padding: 40px !important;
         width: 100%;
     }
-    @media (max-width: 375px) {
+    @media (max-width: 468px) {
         padding: 30px !important;
     }
 `;
@@ -84,6 +84,7 @@ export const Button = styled.button`
     text-transform: none !important;
     color: white;
     cursor: pointer;
+    white-space: pre;
     &.primary {
         background: #3936c7;
     }
@@ -99,11 +100,10 @@ export const Button = styled.button`
         color: white;
         background: #44e1e2;
     }
-    @media (max-width: 375px) {
+    @media (max-width: 468px) {
         font-size: 16px;
         line-height: 24px;
         padding: 8px 16px !important;
-        max-width: 144px !important;
     }
 `;
 
