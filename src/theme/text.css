@@ -80,3 +80,14 @@
 .bold {
     font-weight: bold;
 }
+
+@media (max-width: 375px) {
+    .title {
+        font-size: 48px;
+        line-height: 64px;
+    }
+    .text-m {
+        font-size: 20px;
+        line-height: 32px;
+    }
+}

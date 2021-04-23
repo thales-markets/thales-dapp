@@ -5,6 +5,9 @@ export const FooterIcon = styled.img`
     width: 30px;
     height: 30px;
     margin: 60px;
+    @media (max-width: 375px) {
+        margin: 40px;
+    }
 `;
 
 export const PoweredBy = styled.div`
@@ -15,6 +18,10 @@ export const PoweredBy = styled.div`
     color: #f6f6fe;
     white-space: nowrap;
     margin: 60px;
+    @media (max-width: 375px) {
+        font-size: 9;
+        line-height: 13px;
+    }
 `;
 
 export const SyntetixLogo = styled.img`
@@ -22,6 +29,11 @@ export const SyntetixLogo = styled.img`
     height: 16px;
     position: relative;
     top: 2px;
+    @media (max-width: 375px) {
+        width: 160px;
+        top: 4px;
+        margin-left: 6px;
+    }
 `;
 
 export const VerticalWrapper = styled(FlexDivColumnCentered)`
