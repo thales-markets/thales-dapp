@@ -10,16 +10,26 @@ import ROUTES from 'constants/routes';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
+import { isMobile } from 'react-device-detect';
+import styled from 'styled-components';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const HeroSection = styled(FlexDiv)`
+        @media (max-width: 768px) {
+            flex-direction: column;
+            width: 100%;
+        }
+    `;
+
     return (
         <>
             <Section>
                 <FlexDivColumn>
                     <Header />
-                    <FlexDiv>
+                    <HeroSection>
                         <Side>
                             <Text className="title">{t('landing-page.title')}</Text>
                             <Text className="text-m bold pale-grey" style={{ margin: '40px 0' }}>
@@ -29,15 +39,17 @@ const Home: React.FC = () => {
                                 <Button
                                     className="secondary"
                                     style={{ padding: '8px 35px', marginRight: '20px' }}
-                                    onClick={() => onboardConnector.connectWallet()}
+                                    onClick={() =>
+                                        isMobile ? navigateTo(ROUTES.Options.Home) : onboardConnector.connectWallet()
+                                    }
                                 >
-                                    {t('common.wallet.connect-your-wallet')}
+                                    {!isMobile ? t('common.wallet.connect-your-wallet') : 'Start App'}
                                 </Button>
                                 <Button className="tertiary">{t('landing-page.who-is-thales')}</Button>
                             </FlexDiv>
                         </Side>
                         <Side></Side>
-                    </FlexDiv>
+                    </HeroSection>
                 </FlexDivColumn>
             </Section>
             <Section>

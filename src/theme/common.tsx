@@ -23,11 +23,17 @@ export const FlexDivColumnCentered = styled(FlexDivColumn)`
 
 export const Background = styled.section`
     background-size: cover !important;
+
     &:nth-child(odd) {
         background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     }
     &:nth-child(even) {
         background: white;
+        @media (max-width: 768px) {
+            & > div {
+                flex-flow: column-reverse;
+            }
+        }
     }
 `;
 
@@ -39,6 +45,7 @@ export const MainWrapper = styled.div`
     margin: auto;
     @media (max-width: 768px) {
         flex-direction: column;
+        width: 100%;
     }
 `;
 
@@ -56,6 +63,10 @@ export const Side = styled(FlexDivColumnCentered)`
     }
     @media (max-width: 768px) {
         padding: 40px !important;
+        width: 100%;
+    }
+    @media (max-width: 375px) {
+        padding: 30px !important;
     }
 `;
 
@@ -88,6 +99,12 @@ export const Button = styled.button`
         color: white;
         background: #44e1e2;
     }
+    @media (max-width: 375px) {
+        font-size: 16px;
+        line-height: 24px;
+        padding: 8px 16px !important;
+        max-width: 144px !important;
+    }
 `;
 
 export const Text = styled.p``;
@@ -95,6 +112,7 @@ export const Li = styled.li``;
 
 export const Logo = styled(Link)`
     display: flex;
+    align-items: center;
     flex: 1;
     &:before {
         content: ' ';
@@ -110,6 +128,10 @@ export const Logo = styled(Link)`
     color: white;
     &:hover {
         color: white;
+    }
+    @media (max-width: 768px) {
+        font-size: 24px;
+        line-height: 37px;
     }
 `;
 
