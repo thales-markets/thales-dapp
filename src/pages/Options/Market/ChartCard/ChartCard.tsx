@@ -17,7 +17,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
 import { calculateTimestampForPeriod } from 'utils/rates';
 import { Period, PERIOD_IN_HOURS } from 'constants/period';
-// import TradingViewWidget from 'react-tradingview-widget';
+import TradingViewWidget from 'react-tradingview-widget';
 
 type ChartType = 'price' | 'options' | 'trading-view';
 
@@ -83,13 +83,13 @@ const ChartCard: React.FC = () => {
                     <Button size="mini" primary={chartType === 'options'} onClick={() => setChartType('options')}>
                         <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
                     </Button>
-                    {/* <Button
+                    <Button
                         size="mini"
                         primary={chartType === 'trading-view'}
                         onClick={() => setChartType('trading-view')}
                     >
                         {t('options.market.chart-card.chart-types.trading-view')}
-                    </Button> */}
+                    </Button>
                     {/* <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
                     {PERIOD_LABELS.map((period) => (
                         <Button
@@ -106,7 +106,7 @@ const ChartCard: React.FC = () => {
             <div style={{ width: '100%', height: '90%' }}>
                 {chartType === 'price' && <PriceChart {...chartProps} />}
                 {chartType === 'options' && <OptionsChart {...chartProps} />}
-                {/* {chartType === 'trading-view' && (
+                {chartType === 'trading-view' && (
                     <div style={{ width: '100%', height: '100%' }}>
                         <TradingViewWidget
                             symbol="COINBASE:SNXUSD"
@@ -115,9 +115,11 @@ const ChartCard: React.FC = () => {
                             range="12m"
                             withdateranges={true}
                             autosize={true}
+                            hide_side_toolbar={false}
+                            theme="dark"
                         />
                     </div>
-                )} */}
+                )}
             </div>
         </div>
     );

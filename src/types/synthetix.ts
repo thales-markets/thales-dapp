@@ -1,4 +1,4 @@
-import { NetworkId } from '@synthetixio/js';
+import { NetworkId } from '@synthetixio/contracts-interface';
 import { ethers, Signer } from 'ethers';
 
 export type Token = {

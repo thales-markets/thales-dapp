@@ -2,7 +2,7 @@ import { ethers, Signer } from 'ethers';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import keyBy from 'lodash/keyBy';
-import initSynthetixJS, { Synth } from '@synthetixio/js';
+import initSynthetixJS, { Synth } from '@synthetixio/contracts-interface';
 import { SynthsMap, ContractSettings } from 'types/synthetix';
 
 type SnxJSConnector = {

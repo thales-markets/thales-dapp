@@ -156,18 +156,6 @@ export const CreateMarket: React.FC = () => {
                         label: CRYPTO_CURRENCY_MAP.KNC,
                         value: CRYPTO_CURRENCY_MAP.KNC,
                     },
-                    {
-                        label: CRYPTO_CURRENCY_MAP.COMP,
-                        value: CRYPTO_CURRENCY_MAP.COMP,
-                    },
-                    {
-                        label: CRYPTO_CURRENCY_MAP.REN,
-                        value: CRYPTO_CURRENCY_MAP.REN,
-                    },
-                    {
-                        label: CRYPTO_CURRENCY_MAP.LEND,
-                        value: CRYPTO_CURRENCY_MAP.LEND,
-                    },
                     ...Object.values(synths) //.sort(sortSynths)
                         .filter((synth) => !synth.inverted && synth.name !== SYNTHS_MAP.sUSD)
                         .map((synth) => ({
