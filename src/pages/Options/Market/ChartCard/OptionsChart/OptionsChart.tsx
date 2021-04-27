@@ -15,13 +15,24 @@ import { getNetworkId } from 'redux/modules/wallet';
 
 type OptionsChartProps = {
     optionsMarket: OptionsMarketInfo;
+    minTimestamp: number;
+    maxTimestamp: number;
+    isChartEnabled: boolean;
 };
 
-const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
+const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp, maxTimestamp, isChartEnabled }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(optionsMarket.address, networkId);
+    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(
+        optionsMarket.address,
+        networkId,
+        minTimestamp,
+        maxTimestamp,
+        {
+            enabled: isChartEnabled,
+        }
+    );
 
     const chartData = useMemo(() => {
         const data = historicalOptionPriceQuery.data || [];

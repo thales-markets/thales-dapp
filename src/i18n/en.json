@@ -257,7 +257,8 @@
             "chart-card": {
                 "chart-types": {
                     "price": "price",
-                    "options": "options"
+                    "options": "options",
+                    "trading-view": "trading view"
                 },
                 "no-chart-data": "No chart data"
             },

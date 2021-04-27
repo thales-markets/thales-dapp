@@ -2,25 +2,23 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
 import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsTransactions } from 'types/options';
-import { calculateTimestampForPeriod } from 'utils/rates';
-import { PERIOD_IN_HOURS, Period } from 'constants/period';
 
 const useBinaryOptionsHistoricalOptionPriceQuery = (
     marketAddress: string,
     networkId: number,
-    period: Period = Period.ONE_MONTH,
+    minTimestamp: number,
+    maxTimestamp: number,
     options?: UseQueryOptions<OptionsTransactions>
 ) => {
-    const periodInHours = PERIOD_IN_HOURS[period];
-
     return useQuery<OptionsTransactions>(
-        QUERY_KEYS.BinaryOptions.OptionPrices(marketAddress, period),
+        QUERY_KEYS.BinaryOptions.OptionPrices(marketAddress),
         () =>
             thalesData.binaryOptions.historicalOptionPrice({
                 market: marketAddress,
-                maxTimestamp: Math.trunc(Date.now() / 1000),
-                minTimestamp: calculateTimestampForPeriod(periodInHours),
+                maxTimestamp,
+                minTimestamp,
                 network: networkId,
+                max: 6000,
             }),
         options
     );

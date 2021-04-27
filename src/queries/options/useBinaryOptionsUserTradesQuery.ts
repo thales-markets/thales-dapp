@@ -77,8 +77,6 @@ const useBinaryOptionsUserTradesQuery = (
                 }),
             ]);
 
-            console.log(longSells);
-
             const trades = [
                 ...mapToOptionTransactions(
                     filterTrades(longBuys, walletAddress),

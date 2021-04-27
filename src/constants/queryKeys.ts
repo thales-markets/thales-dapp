@@ -1,6 +1,5 @@
 import { NetworkId } from 'utils/network';
 import { CurrencyKey } from './currency';
-import { Period } from './period';
 
 export const QUERY_KEYS = {
     WalletBalances: {
@@ -9,12 +8,7 @@ export const QUERY_KEYS = {
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
     },
     Rates: {
-        HistoricalRates: (currencyKey: CurrencyKey, period: Period) => [
-            'rates',
-            'historicalRates',
-            currencyKey,
-            period,
-        ],
+        HistoricalRates: (currencyKey: CurrencyKey) => ['rates', 'historicalRates', currencyKey],
         ExchangeRates: ['rates', 'exchangeRates'],
     },
     Synths: {
@@ -45,7 +39,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        OptionPrices: (marketAddress: string, period: Period) => ['binaryOptions', marketAddress, period],
+        OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
         MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
         Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
         UserTrades: (marketAddress: string, walletAddress: string) => [

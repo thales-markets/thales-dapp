@@ -13,12 +13,17 @@ import useHistoricalRatesQuery from 'queries/rates/useHistoricalRatesQuery';
 
 type PriceChartProps = {
     optionsMarket: OptionsMarketInfo;
+    minTimestamp: number;
+    maxTimestamp: number;
+    isChartEnabled: boolean;
 };
 
-const PriceChart: React.FC<PriceChartProps> = ({ optionsMarket }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ optionsMarket, minTimestamp, maxTimestamp, isChartEnabled }) => {
     const { t } = useTranslation();
 
-    const historicalRatesQuery = useHistoricalRatesQuery(optionsMarket.currencyKey);
+    const historicalRatesQuery = useHistoricalRatesQuery(optionsMarket.currencyKey, minTimestamp, maxTimestamp, {
+        enabled: isChartEnabled,
+    });
 
     const chartData = get(historicalRatesQuery, 'data.rates', []);
     const isLoading = historicalRatesQuery.isLoading;
