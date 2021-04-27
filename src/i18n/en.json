@@ -487,7 +487,7 @@
             "claimable-amount": "claimable: {{amount}}",
             "long-price": "Long price",
             "short-price": "Short price",
-            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read <0>how it works</0> first!",
+            "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read how it works first!",
             "withdrawals": "withdrawals",
             "order-periods": {
                 "10M": "10 minutes",

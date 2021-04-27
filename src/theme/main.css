@@ -15,5 +15,6 @@ body {
     overflow-y: auto !important;
 }
 
+@import './overrides.css';
 @import './text.css';
 @import './colors.css';

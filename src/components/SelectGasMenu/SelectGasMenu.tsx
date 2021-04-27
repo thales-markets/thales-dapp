@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Label } from 'semantic-ui-react';
+import styled from 'styled-components';
+import { FlexDiv, Text } from 'theme/common';
 import { formatCurrency } from 'utils/formatters/number';
+import dropDown from 'assets/images/drop-down.svg';
 import SelectGasMenuBody from './SelectGasMenuBody';
 
 type SelectGasMenuProps = {
@@ -9,8 +10,6 @@ type SelectGasMenuProps = {
 };
 
 export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: SelectGasMenuProps) => {
-    const { t } = useTranslation();
-
     const [gasDropdownIsOpen, setGasDropdownIsOpen] = useState(false);
     const setDropdownIsOpen = (isOpen: boolean) => {
         if (!isOpen && !gasDropdownIsOpen) {
@@ -19,19 +18,31 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
         setGasDropdownIsOpen(isOpen);
     };
 
+    const Select = styled(FlexDiv)`
+        position: relative;
+        display: block;
+        height: 24px;
+        padding-left: 6px;
+        padding-right: 30px;
+        background: #f6f6fe;
+        border-radius: 5px;
+
+        &:after {
+            content: url(${dropDown});
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 24px;
+            background: #44e1e2;
+            border-radius: 5px 0px 0px 5px;
+        }
+    `;
+
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <div
-                    onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}
-                    style={{ display: 'flex', justifyContent: 'center' }}
-                >
-                    <div>{formatCurrency(gasPrice || 0) || 0}</div>
-                    <Label size="tiny" style={{ textTransform: 'uppercase' }}>
-                        {t('common.actions.edit')}
-                    </Label>
-                </div>
-            </div>
+            <Select onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}>
+                <Text className="text-xs uppercase dark bold"> {formatCurrency(gasPrice || 0) || 0}</Text>
+            </Select>
             {gasDropdownIsOpen && <SelectGasMenuBody setDropdownIsOpen={setDropdownIsOpen} />}
         </div>
     );
