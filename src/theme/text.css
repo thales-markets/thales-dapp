@@ -9,7 +9,7 @@
     letter-spacing: 0.4px;
 }
 .text-xs {
-    font-size: 13px;
+    font-size: 13px !important;
     line-height: 24px;
     letter-spacing: 0.4px;
 }
