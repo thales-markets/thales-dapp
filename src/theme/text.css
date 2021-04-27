@@ -10,7 +10,7 @@
 }
 .text-xs {
     font-size: 13px;
-    line-height: 13px;
+    line-height: 24px;
     letter-spacing: 0.4px;
 }
 .text-ms {
@@ -73,12 +73,28 @@
     margin: 0;
 }
 
+.create-market {
+    font-family: Open Sans !important;
+    font-size: 38px;
+    line-height: 48px;
+    color: #f6f6fe;
+    margin: 0;
+}
+
 .text-normal {
     font-weight: normal;
 }
 
 .bold {
     font-weight: bold;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.capitalize {
+    text-transform: capitalize;
 }
 
 @media (max-width: 768px) {

@@ -100,6 +100,10 @@ export const Button = styled.button`
         color: white;
         background: #44e1e2;
     }
+    &:disabled {
+        background: #748bc6;
+        color: #b5bbc9;
+    }
     @media (max-width: 468px) {
         font-size: 16px;
         line-height: 24px;
@@ -142,4 +146,33 @@ export const Logo = styled(Link)`
 export const Image = styled.img`
     width: 100%;
     height: 100%;
+`;
+
+export const ProgressBar = styled.div`
+    width: 100%;
+    height: 15px;
+    margin-top: 2px;
+    &::before {
+        content: '';
+        position: relative;
+        z-index: 2;
+        width: ${(props) => props['aria-label']}%;
+        border-radius: 20px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        height: 100%;
+        display: block;
+        background: #4fbf67;
+    }
+    &:after {
+        content: '';
+        position: relative;
+        z-index: 1;
+        top: -15px;
+        background: #c62937;
+        border-radius: 20px;
+        height: 100%;
+        display: block;
+    }
+    margin-bottom: 30px;
 `;

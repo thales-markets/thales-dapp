@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import { ProgressBar } from 'theme/common';
 import { formatCurrency } from 'utils/formatters/number';
 
 type Display = 'row' | 'col';
@@ -10,35 +10,6 @@ type MarketSentimentProps = {
     short: number;
     display?: Display;
 };
-
-const ProgressBar = styled.div`
-    width: 100%;
-    height: 15px;
-    margin-top: 2px;
-    &::before {
-        content: '';
-        position: relative;
-        z-index: 2;
-        width: ${(props) => props.color}%;
-        border-radius: 20px;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        height: 100%;
-        display: block;
-        background: #4fbf67;
-    }
-    &:after {
-        content: '';
-        position: relative;
-        z-index: 1;
-        top: -15px;
-        background: #c62937;
-        border-radius: 20px;
-        height: 100%;
-        display: block;
-    }
-    margin-bottom: 30px;
-`;
 
 const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display }) => {
     const { t } = useTranslation();
@@ -56,7 +27,7 @@ const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display 
                             {t('common.val-in-cents', { val: formatCurrency(priceShort) })}
                         </span>
                     </div>
-                    <ProgressBar color={priceLong.toFixed(0)} />
+                    <ProgressBar aria-label={priceLong.toFixed(0)} />
                 </>
             )}
             {display === 'col' && (
@@ -64,7 +35,7 @@ const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display 
                     <span style={{ color: '#4fbf67' }}>
                         {t('common.val-in-cents', { val: formatCurrency(priceLong) })}
                     </span>
-                    <ProgressBar color={priceLong.toFixed(0)} />
+                    <ProgressBar aria-label={priceLong.toFixed(0)} />
                     <span style={{ color: '#c62937' }}>
                         {t('common.val-in-cents', { val: formatCurrency(priceShort) })}
                     </span>

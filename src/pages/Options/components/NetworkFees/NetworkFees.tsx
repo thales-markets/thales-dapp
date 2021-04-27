@@ -11,6 +11,7 @@ import { getTransactionPrice } from 'utils/network';
 import SelectGasMenu from 'components/SelectGasMenu';
 import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import { Text } from 'theme/common';
 
 type NetworkFeesProps = {
     gasLimit: number | null;
@@ -39,11 +40,13 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase' }}>
-                <div>{t('common.network-fee-gas')}</div>
-                <div>{formatCurrencyWithSign(USD_SIGN, getTransactionPrice(gasPrice, gasLimit, ethRate))}</div>
+                <Text className="text-xs dark bold capitalize">{t('common.network-fee-gas')}</Text>
+                <Text className="text-xs dark bold capitalize">
+                    {formatCurrencyWithSign(USD_SIGN, getTransactionPrice(gasPrice, gasLimit, ethRate))}
+                </Text>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase' }}>
-                <div>{t('common.gas-price-gwei')}</div>
+                <Text className="text-xs dark bold capitalize">{t('common.gas-price-gwei')}</Text>
                 <SelectGasMenu gasPrice={gasPrice} />
             </div>
         </div>

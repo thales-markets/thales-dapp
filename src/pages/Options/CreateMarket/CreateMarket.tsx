@@ -9,41 +9,39 @@ import orderBy from 'lodash/orderBy';
 import Tooltip from '@material-ui/core/Tooltip';
 import Slider from '@material-ui/core/Slider';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark.svg';
-import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
-import ROUTES from 'constants/routes';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, FIAT_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { formatPercentage } from 'utils/formatters/number';
-import { formatShortDate } from 'utils/formatters/date';
 import { bytesFormatter, parseBytes32String, bigNumberFormatter } from 'utils/formatters/ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
-import NewToBinaryOptions from '../components/NewToBinaryOptions';
-import OptionSideIcon from '../Market/components/OptionSideIcon';
-import { Link } from 'react-router-dom';
-import { Button, Container, Form, Grid, Header, Input, Segment, Divider, Message } from 'semantic-ui-react';
+import { Form, Message } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import { navigateToOptionsMarket } from 'utils/routes';
 import Currency from 'components/Currency';
 import Select from 'components/Select';
-import MarketSentiment from '../components/MarketSentiment';
 import { withStyles } from '@material-ui/core';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
+import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button } from 'theme/common';
+import MarketHeader from '../Home/MarketHeader';
+import MarketSummary from './MarketSummary';
+import { formatShortDate } from 'utils/formatters/date';
+import styled from 'styled-components';
 
 const StyledSlider = withStyles({
     root: {
-        color: '#10BA97',
-        height: 10,
+        color: '#4FBF67',
+        height: 15,
         padding: '0 0 2px 0',
     },
     thumb: {
-        height: 18,
-        width: 18,
+        width: 20,
+        height: 20,
+        top: 2,
         background: '#FFFFFF',
         boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
         '&:focus, &:hover, &$active': {
@@ -51,20 +49,56 @@ const StyledSlider = withStyles({
         },
     },
     track: {
-        height: 10,
-        borderRadius: 2,
+        height: 15,
+        borderRadius: 10,
     },
     rail: {
-        height: 10,
-        backgroundColor: '#D94454',
+        height: 15,
+        backgroundColor: '#C62937',
         opacity: 1,
-        borderRadius: 2,
+        borderRadius: 10,
     },
 })(Slider);
 
-type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
+const ToggleButton = styled.div`
+    position: relative;
+    width: 45px;
+    height: 15px;
+    background: darkgray;
+    border-radius: 80px;
+    cursor: pointer;
+    &.selected {
+        background: #44e1e2;
+        &:after {
+            left: calc(100% - 18px);
+            background: #04045a;
+        }
+    }
 
-type MarketFees = Record<string, number>;
+    &:after {
+        position: absolute;
+        display: block;
+        content: '';
+        width: 18px;
+        height: 18px;
+        background: #f6f6fe;
+        border-radius: 40px;
+        top: -2px;
+        left: 0;
+    }
+`;
+
+const Input = styled.input`
+    height: 56px;
+    font-weight: bold;
+    font-size: 18px !important;
+    line-height: 32px !important;
+    color: #04045a !important;
+`;
+
+export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
+
+export type MarketFees = Record<string, number>;
 
 type TooltipIconProps = {
     title: React.ReactNode;
@@ -314,264 +348,189 @@ export const CreateMarket: React.FC = () => {
         : EMPTY_VALUE;
 
     return (
-        <div>
-            <Grid>
-                <Grid.Column width={11}>
-                    <Container text>
-                        <div style={{ textTransform: 'uppercase', marginTop: 10, marginBottom: 20 }}>
-                            <Link to={ROUTES.Options.Home} className="item">
-                                <ArrowBackIcon />
-                                {t('options.create-market.back-to-markets')}
-                            </Link>
-                        </div>
-                        <Container style={{ marginBottom: 30 }}>
-                            <Header as="h1">{t('options.create-market.title')}</Header>
-                            <p>{t('options.create-market.subtitle')}</p>
-                            <NewToBinaryOptions />
-                        </Container>
-                        <Form>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <label>{t('options.create-market.details.select-asset-label')}</label>
-                                    <Select
-                                        formatOptionLabel={(option: any) => (
-                                            <Currency.Name
-                                                currencyKey={option.value}
-                                                name={option.label}
-                                                showIcon={true}
-                                                iconProps={{ type: 'asset' }}
-                                            />
-                                        )}
-                                        options={assetsOptions}
-                                        placeholder={t('common.eg-val', { val: CRYPTO_CURRENCY_MAP.BTC })}
-                                        value={currencyKey}
-                                        onChange={(option: any) => {
-                                            setCurrencyKey(option);
-                                        }}
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <label>{t('options.create-market.details.strike-price-label')}</label>
-                                    <Input
-                                        fluid
-                                        placeholder={t('common.eg-val', {
-                                            val: strikePricePlaceholderVal,
-                                        })}
-                                        value={strikePrice}
-                                        onChange={(e) => setStrikePrice(e.target.value)}
-                                        id="strike-price"
-                                        type="number"
-                                    />
-                                </Form.Field>
-                            </Form.Group>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <label>{t('options.create-market.details.bidding-end-date-label')}</label>
-                                    <DatePicker
-                                        id="end-of-bidding"
-                                        dateFormat="MMM d, yyyy h:mm aa"
-                                        selected={biddingEndDate}
-                                        showTimeSelect={true}
-                                        onChange={(d: Date) => setEndOfBidding(d)}
-                                        minDate={new Date()}
-                                        maxDate={maturityDate}
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <label>{t('options.create-market.details.market-maturity-date-label')}</label>
-                                    <DatePicker
-                                        disabled={!biddingEndDate}
-                                        id="maturity-date"
-                                        dateFormat="MMM d, yyyy h:mm aa"
-                                        selected={maturityDate}
-                                        showTimeSelect={true}
-                                        onChange={(d: Date) => setMaturityDate(d)}
-                                        minDate={biddingEndDate || null}
-                                    />
-                                </Form.Field>
-                            </Form.Group>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <label>{t('options.create-market.details.funding-amount.label')}</label>
-                                    <div>
-                                        <span>{t('options.create-market.details.funding-amount.desc')}</span>
-                                    </div>
-                                    <Input
-                                        fluid
-                                        value={initialFundingAmount}
-                                        onChange={(e) => setInitialFundingAmount(e.target.value)}
-                                        label={SYNTHS_MAP.sUSD}
-                                        id="funding-amount"
-                                        placeholder={t('common.eg-val', {
-                                            val: `${USD_SIGN}1000.00 ${SYNTHS_MAP.sUSD}`,
-                                        })}
-                                        type="number"
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <label>{t('options.create-market.details.long-short-skew-label')}</label>
-                                    <div style={{ marginTop: 43 }}>
-                                        <StyledSlider
-                                            value={initialLongShorts.long}
-                                            onChange={(_, newValue) => {
-                                                const long = newValue as number;
-                                                setInitialLongShorts({
-                                                    long,
-                                                    short: 100 - long,
-                                                });
+        <Background style={{ height: '100vh' }}>
+            <MainWrapper>
+                <FlexDivColumn>
+                    <MarketHeader />
+                    <Text className="create-market" style={{ padding: '50px 150px 0' }}>
+                        {t('options.create-market.title')}
+                    </Text>
+                    <FlexDiv style={{ padding: '50px 150px' }}>
+                        <FlexDivColumn style={{ flex: 1 }}>
+                            <Text className="text-m pale-grey">{t('options.create-market.subtitle')}</Text>
+                            <Text style={{ marginBottom: 115 }} className="text-m pale-grey">
+                                {t('options.common.new-to-binary-options')}
+                            </Text>
+                            <Form>
+                                <Form.Group widths="equal">
+                                    <Form.Field>
+                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
+                                            {t('options.create-market.details.select-asset-label')}
+                                        </Text>
+                                        <Select
+                                            className="select-override"
+                                            formatOptionLabel={(option: any) => (
+                                                <Currency.Name
+                                                    currencyKey={option.value}
+                                                    name={option.label}
+                                                    showIcon={true}
+                                                    iconProps={{ type: 'asset' }}
+                                                />
+                                            )}
+                                            options={assetsOptions}
+                                            placeholder={t('common.eg-val', { val: CRYPTO_CURRENCY_MAP.BTC })}
+                                            value={currencyKey}
+                                            onChange={(option: any) => {
+                                                setCurrencyKey(option);
                                             }}
                                         />
-                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <div>
-                                                <OptionSideIcon side="long" />{' '}
-                                                {t('common.val-in-cents', { val: initialLongShorts.long })}
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
+                                            {t('options.create-market.details.strike-price-label')}
+                                        </Text>
+                                        <Input
+                                            placeholder={t('common.eg-val', {
+                                                val: strikePricePlaceholderVal,
+                                            })}
+                                            value={strikePrice}
+                                            onChange={(e) => setStrikePrice(e.target.value)}
+                                            id="strike-price"
+                                            type="number"
+                                        />
+                                    </Form.Field>
+                                </Form.Group>
+                                <Form.Group widths="equal">
+                                    <Form.Field>
+                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
+                                            {t('options.create-market.details.bidding-end-date-label')}
+                                        </Text>
+                                        <DatePicker
+                                            id="end-of-bidding"
+                                            dateFormat="MMM d, yyyy h:mm aa"
+                                            selected={biddingEndDate}
+                                            showTimeSelect={true}
+                                            onChange={(d: Date) => setEndOfBidding(d)}
+                                            minDate={new Date()}
+                                            maxDate={maturityDate}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
+                                            {t('options.create-market.details.market-maturity-date-label')}
+                                        </Text>
+                                        <DatePicker
+                                            disabled={!biddingEndDate}
+                                            id="maturity-date"
+                                            dateFormat="MMM d, yyyy h:mm aa"
+                                            selected={maturityDate}
+                                            showTimeSelect={true}
+                                            onChange={(d: Date) => setMaturityDate(d)}
+                                            minDate={biddingEndDate || null}
+                                        />
+                                    </Form.Field>
+                                </Form.Group>
+                                <Form.Group widths="equal">
+                                    <Form.Field>
+                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '10px 0' }}>
+                                            {t('options.create-market.details.funding-amount.label')}
+                                        </Text>
+                                        <Text className=".text-xxxs grey" style={{ margin: '2px 0' }}>
+                                            {t('options.create-market.details.funding-amount.desc')}
+                                        </Text>
+                                        <Input
+                                            value={initialFundingAmount}
+                                            onChange={(e) => setInitialFundingAmount(e.target.value)}
+                                            id="funding-amount"
+                                            placeholder={t('common.eg-val', {
+                                                val: `${USD_SIGN}1000.00 ${SYNTHS_MAP.sUSD}`,
+                                            })}
+                                            type="number"
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <div style={{ position: 'relative', top: 'calc(100% - 54px)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Text className="text-ms green" style={{ margin: '4px' }}>
+                                                    {t('common.val-in-cents', { val: initialLongShorts.long })}
+                                                </Text>
+                                                <Text className="text-ms red" style={{ margin: '4px' }}>
+                                                    {t('common.val-in-cents', { val: initialLongShorts.short })}
+                                                </Text>
                                             </div>
-                                            <div>
-                                                {t('common.val-in-cents', { val: initialLongShorts.short })}{' '}
-                                                <OptionSideIcon side="short" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Form.Field>
-                            </Form.Group>
-                        </Form>
-                    </Container>
-                </Grid.Column>
-                <Grid.Column width={5} style={{ paddingRight: 40, marginTop: 50 }}>
-                    <Segment>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Header style={{ textTransform: 'uppercase' }}>
-                                {t('options.create-market.summary.title')}
-                            </Header>
-                        </div>
-                        <Divider />
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'center', fontSize: 18 }}>
-                                    {currencyKey ? (
-                                        <>
-                                            <Currency.Name
-                                                showIcon={true}
-                                                currencyKey={(currencyKey as CurrencyKeyOptionType).value}
-                                                name={(currencyKey as CurrencyKeyOptionType).label}
-                                                iconProps={{ type: 'asset' }}
+                                            <StyledSlider
+                                                value={initialLongShorts.long}
+                                                onChange={(_, newValue) => {
+                                                    const long = newValue as number;
+                                                    setInitialLongShorts({
+                                                        long,
+                                                        short: 100 - long,
+                                                    });
+                                                }}
                                             />
-                                            <span> &gt; </span>
-                                            {`${USD_SIGN}${strikePrice !== '' ? strikePrice : 0} ${
-                                                FIAT_CURRENCY_MAP.USD
-                                            }`}
-                                        </>
+                                        </div>
+                                    </Form.Field>
+                                </Form.Group>
+                            </Form>
+                        </FlexDivColumn>
+                        <MarketSummary
+                            currencyKey={currencyKey}
+                            strikingPrice={strikePrice}
+                            biddingEndDate={formattedBiddingEnd}
+                            maturityDate={formattedMaturityDate}
+                            initialLongShorts={initialLongShorts}
+                            initialFundingAmount={initialFundingAmount}
+                            timeLeftToExercise={timeLeftToExercise}
+                            marketFees={marketFees}
+                        >
+                            <div>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        textTransform: 'uppercase',
+                                    }}
+                                >
+                                    <Text className="text-xs dark bold capitalize">
+                                        {t('options.common.withdrawals')}{' '}
+                                        <TooltipIcon title={t('options.create-market.summary.withdrawals.tooltip')} />
+                                    </Text>
+                                    <ToggleButton
+                                        className={withdrawalsEnabled ? 'selected' : ''}
+                                        onClick={() => setWithdrawalsEnabled(!withdrawalsEnabled)}
+                                    />
+                                </div>
+                                <NetworkFees gasLimit={gasLimit} />
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                                    {hasAllowance ? (
+                                        <Button
+                                            className="primary"
+                                            disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
+                                            onClick={handleMarketCreation}
+                                        >
+                                            {isCreatingMarket
+                                                ? t('options.create-market.summary.creating-market-button-label')
+                                                : t('options.create-market.summary.create-market-button-label')}
+                                        </Button>
                                     ) : (
-                                        EMPTY_VALUE
+                                        <Button className="primary" disabled={isAllowing} onClick={handleAllowance}>
+                                            {isAllowing
+                                                ? t('options.create-market.summary.waiting-for-approval-button-label')
+                                                : t('options.create-market.summary.approve-manager-button-label')}
+                                        </Button>
                                     )}
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textTransform: 'capitalize' }}>
-                                    {t('common.by-date', { date: formattedMaturityDate })}
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                                    {txErrorMessage && (
+                                        <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
+                                    )}
                                 </div>
                             </div>
-                        </div>
-                        <Divider />
-                        <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('options.create-market.summary.dates.bidding-end')}</span>
-                                <span>{formattedBiddingEnd}</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('options.create-market.summary.dates.maturity-date')}</span>
-                                <span>{formattedMaturityDate}</span>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('options.create-market.summary.dates.time-to-exercise')}</span>
-                                <span>{timeLeftToExercise}</span>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <MarketSentiment
-                                long={initialLongShorts.long / 100}
-                                short={initialLongShorts.short / 100}
-                                display="col"
-                            />
-                        </div>
-                        <Divider />
-                        <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('options.create-market.summary.fees.bidding')}</span>
-                                <span>{formatPercentage(marketFees ? marketFees.bidding : 0)}</span>
-                            </div>
-                            <div style={{ paddingLeft: 10, fontSize: 12 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>{t('options.create-market.summary.fees.creator')}</span>
-                                    <span>{formatPercentage(marketFees ? marketFees.creator : 0)}</span>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>{t('options.create-market.summary.fees.pool')}</span>
-                                    <span>{formatPercentage(marketFees ? marketFees.pool : 0)}</span>
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{t('options.create-market.summary.fees.refund')}</span>
-                                <span>{formatPercentage(marketFees ? marketFees.refund : 0)}</span>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase' }}>
-                            <span>
-                                {t('options.common.withdrawals')}{' '}
-                                <TooltipIcon title={t('options.create-market.summary.withdrawals.tooltip')} />
-                            </span>
-                            <span>
-                                <span
-                                    style={{
-                                        backgroundColor: withdrawalsEnabled ? '#795df5' : '#e8e7fd',
-                                        color: withdrawalsEnabled ? 'white' : 'grey',
-                                        padding: 2,
-                                    }}
-                                    onClick={() => setWithdrawalsEnabled(true)}
-                                >
-                                    {t('common.toggle.on')}
-                                </span>
-                                <span
-                                    style={{
-                                        backgroundColor: !withdrawalsEnabled ? '#795df5' : '#e8e7fd',
-                                        color: !withdrawalsEnabled ? 'white' : 'grey',
-                                        padding: 2,
-                                    }}
-                                    onClick={() => setWithdrawalsEnabled(false)}
-                                >
-                                    {t('common.toggle.off')}
-                                </span>
-                            </span>
-                        </div>
-                        <NetworkFees gasLimit={gasLimit} />
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                            {hasAllowance ? (
-                                <Button
-                                    primary
-                                    disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
-                                    onClick={handleMarketCreation}
-                                >
-                                    {isCreatingMarket
-                                        ? t('options.create-market.summary.creating-market-button-label')
-                                        : t('options.create-market.summary.create-market-button-label')}
-                                </Button>
-                            ) : (
-                                <Button primary disabled={isAllowing} onClick={handleAllowance}>
-                                    {isAllowing
-                                        ? t('options.create-market.summary.waiting-for-approval-button-label')
-                                        : t('options.create-market.summary.approve-manager-button-label')}
-                                </Button>
-                            )}
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                            {txErrorMessage && (
-                                <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                            )}
-                        </div>
-                    </Segment>
-                </Grid.Column>
-            </Grid>
-        </div>
+                        </MarketSummary>
+                    </FlexDiv>
+                </FlexDivColumn>
+            </MainWrapper>
+        </Background>
     );
 };
 export default CreateMarket;
