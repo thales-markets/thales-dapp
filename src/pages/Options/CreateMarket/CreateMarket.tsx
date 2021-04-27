@@ -348,7 +348,7 @@ export const CreateMarket: React.FC = () => {
         : EMPTY_VALUE;
 
     return (
-        <Background style={{ height: '100vh' }}>
+        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto' }}>
             <MainWrapper>
                 <FlexDivColumn>
                     <MarketHeader />
