@@ -45,7 +45,9 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
                     {formatCurrencyWithSign(USD_SIGN, getTransactionPrice(gasPrice, gasLimit, ethRate))}
                 </Text>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase' }}>
+            <div
+                style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase', marginTop: 10 }}
+            >
                 <Text className="text-xs dark bold capitalize">{t('common.gas-price-gwei')}</Text>
                 <SelectGasMenu gasPrice={gasPrice} />
             </div>

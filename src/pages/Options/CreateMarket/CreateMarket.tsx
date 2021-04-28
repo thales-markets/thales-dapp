@@ -346,7 +346,7 @@ export const CreateMarket: React.FC = () => {
                     <FlexDiv style={{ padding: '50px 150px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
                             <Text className="text-m pale-grey">{t('options.create-market.subtitle')}</Text>
-                            <Text style={{ marginBottom: 115 }} className="text-m pale-grey">
+                            <Text style={{ marginBottom: 115, marginTop: 30 }} className="text-m pale-grey">
                                 {t('options.common.new-to-binary-options')}
                             </Text>
                             <Form>
@@ -477,6 +477,7 @@ export const CreateMarket: React.FC = () => {
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         textTransform: 'uppercase',
+                                        marginBottom: 10,
                                     }}
                                 >
                                     <Text className="text-xs dark bold capitalize">
@@ -489,7 +490,7 @@ export const CreateMarket: React.FC = () => {
                                     />
                                 </div>
                                 <NetworkFees gasLimit={gasLimit} />
-                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     {hasAllowance ? (
                                         <Button
                                             className="primary"
