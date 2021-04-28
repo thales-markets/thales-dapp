@@ -32,7 +32,7 @@ const Home: React.FC = () => {
                     <HeroSection>
                         <Side>
                             <Text className="title">{t('landing-page.title')}</Text>
-                            <Text className="text-m bold pale-grey" style={{ margin: '40px 0' }}>
+                            <Text className="text-m pale-grey" style={{ marginBottom: 60 }}>
                                 {t('landing-page.description')}
                             </Text>
                             <FlexDiv>
@@ -55,11 +55,13 @@ const Home: React.FC = () => {
             <Section>
                 <Side></Side>
                 <Side>
-                    <Text className="text-xxl dark">{t('landing-page.markets.title')}</Text>
+                    <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
+                        {t('landing-page.markets.title')}
+                    </Text>
                     <SideContent className="text-m dark">{t('landing-page.markets.description')}</SideContent>
                     <Button
                         className="primary"
-                        style={{ marginTop: '30px' }}
+                        style={{ marginTop: '40px' }}
                         onClick={() =>
                             isWalletConnected
                                 ? navigateTo(ROUTES.Options.CreateMarket)
@@ -72,14 +74,18 @@ const Home: React.FC = () => {
             </Section>
             <Section>
                 <Side>
-                    <Text className="text-xxl white">{t('landing-page.options.title')}</Text>
-                    <Text className="text-lm bold white">{t('landing-page.options.description')}</Text>
+                    <Text className="text-xxl white" style={{ marginBottom: 26 }}>
+                        {t('landing-page.options.title')}
+                    </Text>
+                    <Text className="text-lm bold white" style={{ marginBottom: 26 }}>
+                        {t('landing-page.options.description')}
+                    </Text>
                     <List>
                         <Li className="text-m white">{t('landing-page.options.option1')}</Li>
                         <Li className="text-m white">{t('landing-page.options.option2')}</Li>
                         <Li className="text-m white">{t('landing-page.options.option3')}</Li>
                     </List>
-                    <Button className="primary" style={{ marginTop: '30px' }}>
+                    <Button className="primary" style={{ marginTop: '40px' }}>
                         {t('landing-page.options.view-market')}
                     </Button>
                 </Side>
@@ -88,7 +94,9 @@ const Home: React.FC = () => {
             <Section>
                 <Side></Side>
                 <Side>
-                    <Text className="text-xxl dark">{t('landing-page.who-is-thales')}</Text>
+                    <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
+                        {t('landing-page.who-is-thales')}
+                    </Text>
                     <SideContent className="text-m dark">{t('landing-page.thales-is')}</SideContent>
                 </Side>
             </Section>

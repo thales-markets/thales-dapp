@@ -10,4 +10,5 @@ export const SideContent = styled.p`
 export const List = styled.ul`
     list-style-position: outside;
     padding-left: 20px;
+    list-style: disc;
 `;

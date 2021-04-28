@@ -20,3 +20,7 @@
     line-height: 32px !important;
     color: #04045a !important;
 }
+
+.bn-onboard-custom {
+    z-index: 1301;
+}

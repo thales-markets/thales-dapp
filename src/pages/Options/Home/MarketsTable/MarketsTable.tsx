@@ -112,11 +112,14 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
         if (orderBy === cell.id) {
             switch (orderDirection) {
                 case OrderDirection.NONE:
-                case OrderDirection.ASC:
                     setOrderDirection(OrderDirection.DESC);
                     break;
                 case OrderDirection.DESC:
                     setOrderDirection(OrderDirection.ASC);
+                    break;
+                case OrderDirection.ASC:
+                    setOrderDirection(OrderDirection.NONE);
+                    setOrderBy(defaultOrderBy);
                     break;
             }
         } else {
@@ -156,6 +159,9 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                         return orderDirection === OrderDirection.ASC
                             ? a.longPrice - b.longPrice
                             : b.longPrice - a.longPrice;
+                    case 5:
+                        const phaseDiff = a.phaseNum - b.phaseNum;
+                        return phaseDiff === 0 ? a.timeRemaining - b.timeRemaining : phaseDiff;
                     case 6:
                         return orderDirection === OrderDirection.ASC
                             ? a.openOrders - b.openOrders
@@ -188,7 +194,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                                         </TableHeaderLabel>
                                         {cell.sortable && (
                                             <ArrowsWrapper>
-                                                {orderBy === cell.id ? (
+                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
                                                         src={
                                                             orderDirection === OrderDirection.ASC

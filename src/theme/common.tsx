@@ -5,6 +5,7 @@ import React from 'react';
 
 export const FlexDiv = styled.div`
     display: flex;
+    outline: none !important;
 `;
 
 export const FlexDivCentered = styled(FlexDiv)`
