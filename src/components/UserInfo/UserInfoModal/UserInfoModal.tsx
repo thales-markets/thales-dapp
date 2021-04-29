@@ -37,7 +37,6 @@ const WalletWrapper = styled(FlexDiv)`
 `;
 
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, address, network }) => {
-    console.log(onboardConnector);
     return (
         <Modal
             open={open}
