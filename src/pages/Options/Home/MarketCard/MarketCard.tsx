@@ -1,3 +1,4 @@
+import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import MarketSentiment from 'pages/Options/components/MarketSentiment';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -6,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
-import { getAssetIcon } from 'utils/currency';
 
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -27,6 +27,11 @@ const Card = styled(FlexDivColumnCentered)`
 const Header = styled(FlexDivCentered)`
     height: 96px;
     border-bottom: 1px solid #748bc6;
+    img {
+        margin: 24px 24px 24px 24px;
+        width: 48px;
+        height: 48px;
+    }
 `;
 const Content = styled(FlexDivColumnCentered)`
     height: 195px;
@@ -107,7 +112,6 @@ type MarketCardPros = {
 
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
     const { t } = useTranslation();
-    const AssetIcon = getAssetIcon(optionMarket.currencyKey);
     return (
         <Card
             onClick={() => {
@@ -117,7 +121,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
             }}
         >
             <Header>
-                <AssetIcon style={{ width: '48px', height: '48px', margin: '24px 12px 24px 35px' }} />
+                <CurrencyIcon currencyKey={optionMarket.currencyKey} />
                 <FlexDivColumnCentered>
                     <CryptoName>{snxJSConnector.synthsMap[optionMarket.currencyKey]?.description}</CryptoName>
                     <CryptoKey>{optionMarket.currencyKey}</CryptoKey>
