@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
+import xSign from 'assets/images/x-sign.svg';
 import React from 'react';
 
 export const FlexDiv = styled.div`
@@ -147,6 +148,15 @@ export const Logo = styled(Link)`
 export const Image = styled.img`
     width: 100%;
     height: 100%;
+`;
+
+export const XButton = styled.img`
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    padding: 8px;
+    background-image: url(${xSign});
+    background-size: cover;
 `;
 
 export const ProgressBar = styled.div`

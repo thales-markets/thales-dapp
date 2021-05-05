@@ -1,8 +1,7 @@
 import React from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
-import xSign from 'assets/images/x-sign.svg';
 import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
 
@@ -47,7 +46,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, addres
             <ModalWrapper>
                 <Header>
                     <Text className="text-m bold pale-grey">Connected Wallet</Text>
-                    <Image src={xSign} style={{ width: 14, height: 14 }}></Image>
+                    <XButton onClick={() => handleClose(false)} />
                 </Header>
                 <WalletWrapper>
                     <Image src={metamask} style={{ width: 55, height: 49 }}></Image>

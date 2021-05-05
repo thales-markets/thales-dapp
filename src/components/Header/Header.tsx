@@ -154,7 +154,7 @@ const Header: React.FC = () => {
                 <NavLink to="">Partners</NavLink>
                 <NavLink to="">Comunnity</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
-                    <Button className="primary" style={{ padding: '8px 35px', marginLeft: '60px' }}>
+                    <Button className="primary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
                         Use dApp
                     </Button>
                 </NavLink>
