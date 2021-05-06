@@ -32,6 +32,12 @@ import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
 import styled from 'styled-components';
 
+const roundMinutes = (date: Date) => {
+    date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
+    date.setMinutes(0, 0, 0);
+    return date;
+};
+
 const StyledSlider = withStyles({
     root: {
         color: '#4FBF67',
@@ -110,6 +116,8 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
     </Tooltip>
 );
 
+const Today: Date = new Date();
+
 export const CreateMarket: React.FC = () => {
     const { t } = useTranslation();
     const { synthsMap: synths } = snxJSConnector;
@@ -118,8 +126,12 @@ export const CreateMarket: React.FC = () => {
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
     const [strikePrice, setStrikePrice] = useState<number | string>('');
-    const [biddingEndDate, setEndOfBidding] = useState<Date | null | undefined>(null);
-    const [maturityDate, setMaturityDate] = useState<Date | null | undefined>(null);
+    const [biddingEndDate, setEndOfBidding] = useState<Date>(
+        roundMinutes(new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000))
+    );
+    const [maturityDate, setMaturityDate] = useState<Date>(
+        roundMinutes(new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000))
+    );
     const [initialLongShorts, setInitialLongShorts] = useState<{ long: number; short: number }>({
         long: 50,
         short: 50,
@@ -396,11 +408,27 @@ export const CreateMarket: React.FC = () => {
                                         <DatePicker
                                             id="end-of-bidding"
                                             dateFormat="MMM d, yyyy h:mm aa"
-                                            selected={biddingEndDate}
                                             showTimeSelect={true}
-                                            onChange={(d: Date) => setEndOfBidding(d)}
+                                            onChange={(d: any) => {
+                                                if (d instanceof Date) {
+                                                    setEndOfBidding(d);
+                                                } else {
+                                                    d[1] ? setEndOfBidding(d[1]) : setEndOfBidding(d[0]);
+                                                }
+                                                if (biddingEndDate) {
+                                                    setMaturityDate(
+                                                        roundMinutes(
+                                                            new Date(biddingEndDate.getTime() + 5 * 24 * 60 * 60 * 1000)
+                                                        )
+                                                    );
+                                                }
+                                            }}
                                             minDate={new Date()}
                                             maxDate={maturityDate}
+                                            selected={biddingEndDate}
+                                            startDate={Today}
+                                            endDate={biddingEndDate}
+                                            selectsRange
                                         />
                                     </Form.Field>
                                     <Form.Field>
@@ -411,10 +439,12 @@ export const CreateMarket: React.FC = () => {
                                             disabled={!biddingEndDate}
                                             id="maturity-date"
                                             dateFormat="MMM d, yyyy h:mm aa"
-                                            selected={maturityDate}
-                                            showTimeSelect={true}
-                                            onChange={(d: Date) => setMaturityDate(d)}
                                             minDate={biddingEndDate || null}
+                                            showTimeSelect={true}
+                                            startDate={biddingEndDate || null}
+                                            selected={maturityDate}
+                                            endDate={maturityDate}
+                                            onChange={(d: Date) => setMaturityDate(d)}
                                         />
                                     </Form.Field>
                                 </Form.Group>
