@@ -79,13 +79,13 @@
 }
 
 .react-datepicker__day--in-range:first-child {
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
+    border-top-left-radius: 16px !important;
+    border-bottom-left-radius: 16px !important;
 }
 
 .react-datepicker__day--in-range:last-child {
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
+    border-top-right-radius: 16px !important;
+    border-bottom-right-radius: 16px !important;
 }
 
 .react-datepicker__navigation {
