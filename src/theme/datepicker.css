@@ -60,7 +60,7 @@
 .react-datepicker__week .react-datepicker__day--keyboard-selected,
 .react-datepicker__week .react-datepicker__day--range-start {
     background: #44e1e2 !important;
-    border: 2px solid #04045a !important;
+    border: 1.5px solid #04045a !important;
     border-radius: 50% !important;
     width: 1.7rem !important;
     margin: 0.166rem !important;
