@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense } from 'react';
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import { QueryClientProvider } from 'react-query';
@@ -16,6 +16,7 @@ import { ethers } from 'ethers';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import onboardConnector from 'utils/onboardConnector';
+import { history } from 'utils/routes';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -120,7 +121,7 @@ const App = () => {
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
             <Suspense fallback={<Loader active />}>
-                <Router>
+                <Router history={history}>
                     <Switch>
                         <Route
                             exact

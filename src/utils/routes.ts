@@ -1,8 +1,7 @@
 import ROUTES from 'constants/routes';
-import { createHashHistory } from 'history';
+import { createBrowserHistory } from 'history';
 
-// TODO try with browser history
-const history = createHashHistory();
+const history = createBrowserHistory();
 
 export const navigateTo = (path: string, replacePath = false, scrollToTop = false) => {
     if (scrollToTop) {
@@ -15,3 +14,5 @@ export const buildOptionsMarketLink = (marketAddress: string) => `${ROUTES.Optio
 
 export const navigateToOptionsMarket = (marketAddress: string, replacePath = false) =>
     navigateTo(buildOptionsMarketLink(marketAddress), replacePath);
+
+export { history };
