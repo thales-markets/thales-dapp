@@ -424,7 +424,6 @@ export const CreateMarket: React.FC = () => {
                                                 }
                                             }}
                                             minDate={new Date()}
-                                            maxDate={maturityDate}
                                             selected={biddingEndDate}
                                             startDate={Today}
                                             endDate={biddingEndDate}
