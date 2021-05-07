@@ -4,6 +4,7 @@ import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketData
 import keyBy from 'lodash/keyBy';
 import initSynthetixJS, { Synth } from '@synthetixio/contracts-interface';
 import { SynthsMap, ContractSettings } from 'types/synthetix';
+import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -39,6 +40,17 @@ const snxJSConnector: SnxJSConnector = {
             this.provider
         );
     },
+};
+
+export const getSynthName = (currencyKey: string) => {
+    switch (currencyKey) {
+        case CRYPTO_CURRENCY_MAP.SNX:
+            return 'Synthetix Network Token';
+        case CRYPTO_CURRENCY_MAP.SNX:
+            return 'Kyber Network Crystal';
+        default:
+            return snxJSConnector.synthsMap[currencyKey]?.description;
+    }
 };
 
 export default snxJSConnector;
