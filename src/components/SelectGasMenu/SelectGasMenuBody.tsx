@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'semantic-ui-react';
 import { setGasSpeed, setCustomGasPrice } from 'redux/modules/wallet';
 import useEthGasPriceQuery, { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 import styled from 'styled-components';
@@ -14,42 +13,62 @@ type GasMenuProps = {
 
 const DropDown = styled.ul`
     position: absolute;
-    background: #f6f6fe;
-    border-radius: 5px;
-    list-style: none;
-    width: 70px;
+    right: 0;
+    width: 132px;
+    height: 140px;
     padding: 3px;
     margin: 2px 0;
+    background: #f6f6fe;
+    border-radius: 10px;
+    list-style: none;
 `;
 
 const Option = styled.li`
-    background: #f6f6fe;
-    border: 0.5px solid #04045a;
-    box-sizing: border-box;
-    border-radius: 5px;
-    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
     font-weight: bold;
     color: #04045a;
-    width: 64px;
-    margin: 1px;
-    text-align: center;
-    margin: 2px 0;
+
     cursor: pointer;
-    &:first-child,
-    &:last-child {
-        margin: 0;
+    &:not(:first-child) {
+        padding: 8px 6px;
+        &:hover {
+            background: lightgray;
+        }
+    }
+
+    &:first-child {
+        margin: 0 0 14px 0;
     }
 `;
 
 const Input = styled.input`
     display: block;
-    height: 22px;
-    width: 55px;
-    margin: 2px;
-    border: none !important;
+    height: 28px;
+    margin: 2px 4px;
+    padding: 0 6px;
+    border: 1px solid #04045a;
+    border-radius: 5px;
     outline: none !important;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: bold;
+    width: 100%;
+    &.error {
+        border: 1px solid #c62937;
+        color: #c62937;
+    }
+`;
+
+const ErrorMaxInput = styled.span`
+    position: absolute;
+    top: 34px;
+    left: 10px;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    color: #c62937;
 `;
 
 const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
@@ -93,7 +112,6 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
 
     return (
         <div style={{ position: 'relative' }}>
-            {errorMessage && <Message negative>{errorMessage}</Message>}
             <DropDown>
                 <Option>
                     <Input
@@ -102,19 +120,24 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
                             setLocalCustomGasPrice(e.target.value);
                         }}
                         placeholder={t('modals.gwei.placeholder')}
+                        className={errorMessage ? 'error' : ''}
                         type="number"
                         step="0.1"
                         min="0"
                     />
+                    {errorMessage && <ErrorMaxInput>{errorMessage}</ErrorMaxInput>}
                 </Option>
                 <Option onClick={() => setGasSpeedAndCloseDropdown('average')}>
-                    {t('modals.gwei.table.average')} {gasPriceAverage}
+                    <span>{t('modals.gwei.table.average')} </span>
+                    <span>{gasPriceAverage}</span>
                 </Option>
                 <Option onClick={() => setGasSpeedAndCloseDropdown('fast')}>
-                    {t('modals.gwei.table.fast')} {gasPriceFast}
+                    <span> {t('modals.gwei.table.fast')}</span>
+                    <span> {gasPriceFast}</span>
                 </Option>
                 <Option onClick={() => setGasSpeedAndCloseDropdown('fastest')}>
-                    {t('modals.gwei.table.fastest')} {gasPriceFastest}
+                    <span> {t('modals.gwei.table.fastest')}</span>
+                    <span> {gasPriceFastest}</span>
                 </Option>
             </DropDown>
         </div>
