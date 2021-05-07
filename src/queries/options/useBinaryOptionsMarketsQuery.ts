@@ -20,6 +20,7 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
             });
             for (const o of optionsMarkets) {
                 if ('trading' == getPhaseAndEndDate(o.biddingEndDate, o.maturityDate, o.expiryDate).phase) {
+                    // TODO move this to the config
                     const baseUrl = 'https://api.thales.market/options/' + networkId;
                     const response = await fetch(baseUrl + '/' + o.address);
                     const count = await response.text();

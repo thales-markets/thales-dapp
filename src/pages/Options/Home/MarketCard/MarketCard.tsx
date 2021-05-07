@@ -11,7 +11,7 @@ import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
-import snxJSConnector from 'utils/snxJSConnector';
+import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
 
 const Card = styled(FlexDivColumnCentered)`
@@ -28,6 +28,11 @@ const Header = styled(FlexDivCentered)`
     height: 96px;
     border-bottom: 1px solid #748bc6;
     img {
+        margin: 24px 24px 24px 24px;
+        width: 48px;
+        height: 48px;
+    }
+    svg {
         margin: 24px 24px 24px 24px;
         width: 48px;
         height: 48px;
@@ -123,8 +128,8 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
             <Header>
                 <CurrencyIcon currencyKey={optionMarket.currencyKey} />
                 <FlexDivColumnCentered>
-                    <CryptoName>{snxJSConnector.synthsMap[optionMarket.currencyKey]?.description}</CryptoName>
-                    <CryptoKey>{optionMarket.currencyKey}</CryptoKey>
+                    <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
+                    <CryptoKey>{optionMarket.asset}</CryptoKey>
                 </FlexDivColumnCentered>
                 <FlexDivColumn>
                     <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>

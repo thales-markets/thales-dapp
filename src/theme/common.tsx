@@ -9,6 +9,15 @@ export const FlexDiv = styled.div`
     outline: none !important;
 `;
 
+export const FlexDivRow = styled(FlexDiv)`
+    flex: 1;
+    justify-content: center;
+`;
+
+export const FlexDivRowCentered = styled(FlexDivRow)`
+    align-items: center;
+`;
+
 export const FlexDivCentered = styled(FlexDiv)`
     align-items: center;
     justify-content: center;

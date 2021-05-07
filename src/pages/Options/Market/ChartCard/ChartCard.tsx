@@ -117,7 +117,7 @@ const ChartCard: React.FC = () => {
                             withdateranges={true}
                             autosize={true}
                             hide_side_toolbar={false}
-                            theme="dark"
+                            theme="Dark"
                         />
                     </div>
                 )}
