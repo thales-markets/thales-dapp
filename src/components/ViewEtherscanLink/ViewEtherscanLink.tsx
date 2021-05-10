@@ -5,6 +5,7 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import { getEtherscanTxLink } from 'utils/etherscan';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
+import styled from 'styled-components';
 
 type ViewEtherscanLinkProps = {
     isDisabled?: boolean;
@@ -17,12 +18,26 @@ export const ViewEtherscanLink: React.FC<ViewEtherscanLinkProps> = ({ hash }) =>
 
     return (
         <>
-            <a href={getEtherscanTxLink(networkId, hash)} target="_blank" rel="noreferrer">
+            <StyledLink href={getEtherscanTxLink(networkId, hash)} target="_blank" rel="noreferrer">
                 {t('common.transaction.view')}
-            </a>
-            <ArrowHyperlinkIcon width="8" height="8" />
+                <ArrowIcon width="8" height="8" />
+            </StyledLink>
         </>
     );
 };
+
+const StyledLink = styled.a`
+    color: #f6f6fe;
+    &:hover {
+        color: #4564ae;
+    }
+`;
+
+export const ArrowIcon = styled(ArrowHyperlinkIcon)`
+    margin-left: 5px;
+    ${StyledLink}:hover & path {
+        fill: #4564ae;
+    }
+`;
 
 export default ViewEtherscanLink;

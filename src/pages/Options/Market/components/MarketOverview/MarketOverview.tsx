@@ -8,7 +8,7 @@ import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
-import { getSynthName } from 'utils/snxJSConnector';
+// import { getSynthName } from 'utils/snxJSConnector';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -25,26 +25,26 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <FlexDivCentered>
                         <CurrencyIcon currencyKey={optionsMarket.currencyKey} {...iconProps} />
                         <FlexDivColumnCentered>
-                            <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName>
+                            {/* <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName> */}
                             <CryptoKey>{optionsMarket.asset}</CryptoKey>
                         </FlexDivColumnCentered>
                     </FlexDivCentered>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>Strike price</Title>
+                    <Title>{t(`options.market.overview.strike-price-label`)}</Title>
                     <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.strikePrice)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>Current market price</Title>
+                    <Title>{t(`options.market.overview.current-market-price`)}</Title>
                     <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.currentPrice)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>Maturity</Title>
+                    <Title>{t(`options.market.overview.maturity-label`)}</Title>
                     <Content>{formatShortDate(optionsMarket.maturityDate)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>Current result</Title>
-                    <Result isLong={isLong}>{isLong ? 'LONG' : 'SHORT'}</Result>
+                    <Title>{t(`options.market.overview.result-label`)}</Title>
+                    <Result isLong={isLong}>{isLong ? t('options.common.long') : t('options.common.short')}</Result>
                 </ItemContainer>
                 <ItemContainer>
                     <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
@@ -62,7 +62,9 @@ const ItemContainer: React.FC = (props) => (
 
 const Container = styled(FlexDiv)`
     background: #04045a;
+    border: 1px solid #e4e4e4;
     border-radius: 16px;
+    margin-bottom: 20px;
 `;
 const InnerItemContainer = styled(FlexDivRowCentered)`
     height: 112px;
@@ -80,6 +82,7 @@ const Title = styled.p`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.5px;
+    color: #b8c6e5;
 `;
 const Content = styled.p`
     font-style: normal;
@@ -87,6 +90,7 @@ const Content = styled.p`
     font-size: 20px;
     line-height: 25px;
     letter-spacing: 0.15px;
+    color: #f6f6fe;
 `;
 const Phase = styled(PhaseLabel)`
     cursor: default;
@@ -95,21 +99,21 @@ const Result = styled(Content)<{ isLong: boolean }>`
     color: ${(props) => (props.isLong ? '#10BA97' : '#D94454')};
     text-transform: uppercase;
 `;
-const CryptoName = styled.p`
+// const CryptoName = styled.p`
+//     font-style: normal;
+//     font-weight: bold;
+//     font-size: 20px;
+//     line-height: 20px;
+//     letter-spacing: 0.5px;
+//     color: #f6f6fe;
+// `;
+const CryptoKey = styled.p`
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
     line-height: 20px;
     letter-spacing: 0.5px;
     color: #f6f6fe;
-`;
-const CryptoKey = styled.p`
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 0.5px;
-    color: #b8c6e5;
 `;
 
 export default MarketOverview;
