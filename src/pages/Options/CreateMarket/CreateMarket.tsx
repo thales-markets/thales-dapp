@@ -334,7 +334,7 @@ export const CreateMarket: React.FC = () => {
                 setUserHasEnoughFunds(true);
             } catch (e) {
                 console.log(e);
-                if (e.data.originalError.code === 3) {
+                if (e.data?.originalError.code === 3) {
                     setUserHasEnoughFunds(false);
                 }
                 setGasLimit(null);
