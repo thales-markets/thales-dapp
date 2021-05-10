@@ -213,6 +213,12 @@
             }
         },
         "market": {
+            "overview": {
+                "strike-price-label": "Strike price",
+                "current-market-price": "Current market price",
+                "maturity-label": "Maturity",
+                "result-label": "Current result"
+            },
             "heading": {
                 "all-markets": "all markets",
                 "market-details": "market details",
