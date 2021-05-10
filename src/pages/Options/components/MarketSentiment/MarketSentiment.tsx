@@ -19,7 +19,7 @@ const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display 
         <>
             {display === 'row' && (
                 <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 6px' }}>
                         <span style={{ color: '#4fbf67' }}>
                             {t('common.val-in-cents', { val: formatCurrency(priceLong) })}
                         </span>

@@ -208,8 +208,8 @@
                 "wallet-access": "Before you can create a new market, enable wallet access:",
                 "create-market-button-label": "Create market",
                 "creating-market-button-label": "creating market...",
-                "approve-manager-button-label": "enable wallet access",
-                "waiting-for-approval-button-label": "enabling wallet access..."
+                "approve-manager-button-label": "Approve",
+                "waiting-for-approval-button-label": "Approving..."
             }
         },
         "market": {

@@ -31,6 +31,7 @@ import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
 import styled from 'styled-components';
+import { LINKS } from 'constants/links';
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
@@ -102,6 +103,32 @@ const Input = styled.input`
     color: #04045a !important;
 `;
 
+const Field = styled(Form.Field)`
+    &.error {
+        color: #c62937 !important;
+        position: relative;
+        margin-bottom: 4px;
+        .select-override,
+        .input-override {
+            border: 2px solid #c62937 !important;
+            border-radius: 5px !important;
+            color: #c62937 !important;
+            .react-select__indicator {
+                color: #c62937 !important;
+            }
+        }
+        .text-error {
+            color: red !important;
+        }
+    }
+`;
+
+const Error = styled(Text)`
+    position: absolute;
+    bottom: -14px;
+    left: 8px;
+`;
+
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
 export type MarketFees = Record<string, number>;
@@ -110,13 +137,36 @@ type TooltipIconProps = {
     title: React.ReactNode;
 };
 
+const LightTooltip = withStyles(() => ({
+    arrow: {
+        color: '#748BC6',
+    },
+    tooltip: {
+        backgroundColor: '#748BC6',
+        border: '1px solid #748BC6',
+        padding: 10,
+    },
+}))(Tooltip);
+
 const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
-    <Tooltip title={<span>{title}</span>} placement="top" arrow={true}>
-        <QuestionMarkIcon width="12" height="12" />
-    </Tooltip>
+    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
+        <QuestionMarkIcon
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            width="12"
+            height="12"
+        />
+    </LightTooltip>
 );
 
 const Today: Date = new Date();
+
+const HowItWorks = styled.a`
+    cursor: pointer;
+    color: #44e1e2 !important;
+    &:hover {
+        text-decoration: underline;
+    }
+`;
 
 export const CreateMarket: React.FC = () => {
     const { t } = useTranslation();
@@ -125,7 +175,9 @@ export const CreateMarket: React.FC = () => {
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
+    const [isCurrencyKeyValid, setIsCurrencyKeyValid] = useState(true);
     const [strikePrice, setStrikePrice] = useState<number | string>('');
+    const [isStrikePriceValid, setIsStrikePriceValid] = useState(true);
     const [biddingEndDate, setEndOfBidding] = useState<Date>(
         roundMinutes(new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000))
     );
@@ -137,6 +189,8 @@ export const CreateMarket: React.FC = () => {
         short: 50,
     });
     const [initialFundingAmount, setInitialFundingAmount] = useState<number | string>('');
+    const [isAmountValid, setIsAmountValid] = useState(true);
+    const [userHasEnoughFunds, setUserHasEnoughFunds] = useState(true);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
@@ -277,8 +331,12 @@ export const CreateMarket: React.FC = () => {
                     bids
                 );
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setUserHasEnoughFunds(true);
             } catch (e) {
                 console.log(e);
+                if (e.data.originalError.code === 3) {
+                    setUserHasEnoughFunds(false);
+                }
                 setGasLimit(null);
             }
         };
@@ -357,14 +415,20 @@ export const CreateMarket: React.FC = () => {
                     </Text>
                     <FlexDiv style={{ padding: '50px 150px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
-                            <Text className="text-m pale-grey">{t('options.create-market.subtitle')}</Text>
-                            <Text style={{ marginBottom: 115, marginTop: 30 }} className="text-m pale-grey">
-                                {t('options.common.new-to-binary-options')}
+                            <Text className="text-s pale-grey" style={{ lineHeight: '24px' }}>
+                                {t('options.create-market.subtitle')}
+                            </Text>
+                            <Text style={{ marginBottom: 115, marginTop: 30 }} className="text-s pale-grey">
+                                New to Binary Options? Make sure to read{' '}
+                                <HowItWorks href={LINKS.Blog.HowBinaryOptionsWork}>how it works</HowItWorks> first!
                             </Text>
                             <Form>
                                 <Form.Group widths="equal">
-                                    <Form.Field>
-                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
+                                    <Field className={isCurrencyKeyValid ? '' : 'error'}>
+                                        <Text
+                                            className="text-ms pale-grey uppercase text-error"
+                                            style={{ margin: '5px 0' }}
+                                        >
                                             {t('options.create-market.details.select-asset-label')}
                                         </Text>
                                         <Select
@@ -377,31 +441,57 @@ export const CreateMarket: React.FC = () => {
                                                     iconProps={{ type: 'asset' }}
                                                 />
                                             )}
+                                            onBlur={() => {
+                                                currencyKey
+                                                    ? setIsCurrencyKeyValid(true)
+                                                    : setIsCurrencyKeyValid(false);
+                                            }}
                                             options={assetsOptions}
                                             placeholder={t('common.eg-val', { val: CRYPTO_CURRENCY_MAP.BTC })}
                                             value={currencyKey}
                                             onChange={(option: any) => {
                                                 setCurrencyKey(option);
+                                                setIsCurrencyKeyValid(true);
                                             }}
                                         />
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
+                                        {!isCurrencyKeyValid && (
+                                            <Error className="text-xxxs red">Please select asset.</Error>
+                                        )}
+                                    </Field>
+                                    <Field className={isStrikePriceValid ? '' : 'error'}>
+                                        <Text
+                                            className="text-ms pale-grey uppercase text-error"
+                                            style={{ margin: '5px 0' }}
+                                        >
                                             {t('options.create-market.details.strike-price-label')}
                                         </Text>
                                         <Input
+                                            className=" input-override"
                                             placeholder={t('common.eg-val', {
                                                 val: strikePricePlaceholderVal,
                                             })}
                                             value={strikePrice}
-                                            onChange={(e) => setStrikePrice(e.target.value)}
+                                            onChange={(e) => {
+                                                setStrikePrice(parseInt(e.target.value, 10));
+                                                parseInt(e.target.value) > 0
+                                                    ? setIsStrikePriceValid(true)
+                                                    : setIsStrikePriceValid(false);
+                                            }}
+                                            onBlur={() => {
+                                                strikePrice
+                                                    ? setIsStrikePriceValid(true)
+                                                    : setIsStrikePriceValid(false);
+                                            }}
                                             id="strike-price"
                                             type="number"
                                         />
-                                    </Form.Field>
+                                        {!isStrikePriceValid && (
+                                            <Error className="text-xxxs red">Please enter strike price.</Error>
+                                        )}
+                                    </Field>
                                 </Form.Group>
                                 <Form.Group widths="equal">
-                                    <Form.Field>
+                                    <Field>
                                         <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
                                             {t('options.create-market.details.bidding-end-date-label')}
                                         </Text>
@@ -429,8 +519,8 @@ export const CreateMarket: React.FC = () => {
                                             endDate={biddingEndDate}
                                             selectsRange
                                         />
-                                    </Form.Field>
-                                    <Form.Field>
+                                    </Field>
+                                    <Field>
                                         <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
                                             {t('options.create-market.details.market-maturity-date-label')}
                                         </Text>
@@ -445,27 +535,54 @@ export const CreateMarket: React.FC = () => {
                                             endDate={maturityDate}
                                             onChange={(d: Date) => setMaturityDate(d)}
                                         />
-                                    </Form.Field>
+                                    </Field>
                                 </Form.Group>
                                 <Form.Group widths="equal">
-                                    <Form.Field>
-                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '10px 0' }}>
+                                    <Field className={isAmountValid && userHasEnoughFunds ? '' : 'error'}>
+                                        <Text
+                                            className="text-ms pale-grey uppercase text-error"
+                                            style={{ margin: '10px 0' }}
+                                        >
                                             {t('options.create-market.details.funding-amount.label')}
                                         </Text>
-                                        <Text className=".text-xxxs grey" style={{ margin: '2px 0' }}>
+                                        <Text
+                                            className="text-xxxs grey"
+                                            style={{ margin: '6px 0px 8px', lineHeight: '16px' }}
+                                        >
                                             {t('options.create-market.details.funding-amount.desc')}
                                         </Text>
                                         <Input
+                                            className="input-override"
                                             value={initialFundingAmount}
-                                            onChange={(e) => setInitialFundingAmount(e.target.value)}
+                                            onChange={(e) => {
+                                                setInitialFundingAmount(parseInt(e.target.value, 10));
+                                                parseInt(e.target.value) >= 1000
+                                                    ? setIsAmountValid(true)
+                                                    : setIsAmountValid(false);
+                                            }}
                                             id="funding-amount"
                                             placeholder={t('common.eg-val', {
                                                 val: `${USD_SIGN}1000.00 ${SYNTHS_MAP.sUSD}`,
                                             })}
+                                            onBlur={() => {
+                                                initialFundingAmount >= 1000
+                                                    ? setIsAmountValid(true)
+                                                    : setIsAmountValid(false);
+                                            }}
                                             type="number"
                                         />
-                                    </Form.Field>
-                                    <Form.Field>
+                                        {userHasEnoughFunds && !isAmountValid && (
+                                            <Error className="text-xxxs red">
+                                                Please enter funding amount. MIn 1000.00 sUSD is required.
+                                            </Error>
+                                        )}
+                                        {!userHasEnoughFunds && (
+                                            <Error className="text-xxxs red">
+                                                Please ensure your wallet has sufficient sUSD.
+                                            </Error>
+                                        )}
+                                    </Field>
+                                    <Field>
                                         <div style={{ position: 'relative', top: 'calc(100% - 54px)' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                                 <Text className="text-ms green" style={{ margin: '4px' }}>
@@ -486,7 +603,7 @@ export const CreateMarket: React.FC = () => {
                                                 }}
                                             />
                                         </div>
-                                    </Form.Field>
+                                    </Field>
                                 </Form.Group>
                             </Form>
                         </FlexDivColumn>
@@ -522,6 +639,7 @@ export const CreateMarket: React.FC = () => {
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     {hasAllowance ? (
                                         <Button
+                                            style={{ padding: '8px 24px' }}
                                             className="primary"
                                             disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
                                             onClick={handleMarketCreation}
@@ -531,7 +649,12 @@ export const CreateMarket: React.FC = () => {
                                                 : t('options.create-market.summary.create-market-button-label')}
                                         </Button>
                                     ) : (
-                                        <Button className="primary" disabled={isAllowing} onClick={handleAllowance}>
+                                        <Button
+                                            style={{ padding: '8px 24px' }}
+                                            className="primary"
+                                            disabled={isAllowing}
+                                            onClick={handleAllowance}
+                                        >
                                             {isAllowing
                                                 ? t('options.create-market.summary.waiting-for-approval-button-label')
                                                 : t('options.create-market.summary.approve-manager-button-label')}

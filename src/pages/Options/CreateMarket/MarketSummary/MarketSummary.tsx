@@ -44,24 +44,24 @@ const MarketInfo = styled(FlexDivColumn)`
     border-top: 1.5px solid #748bc6;
     border-bottom: 1.5px solid #748bc6;
     padding: 20px 38px;
+    font-size: 12px;
 `;
 
 const LongShortWrapper = styled.div`
     border-top: 1.5px solid #748bc6;
     border-bottom: 1.5px solid #748bc6;
-    padding-top: 20px;
+    padding-top: 10px;
 `;
 
 const Footer = styled(FlexDivColumn)`
     background: #b8c6e5;
     padding: 20px 38px;
-    border-radius: 0 0 20px 20px;
 `;
 
 const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     const { t } = useTranslation();
     return (
-        <FlexDivColumn style={{ borderRadius: '20px', marginLeft: '40px', maxWidth: '460px' }}>
+        <FlexDivColumn style={{ border: '1px solid #748BC6', marginLeft: '40px', maxWidth: '460px' }}>
             <SummaryHeader>
                 <Text className="text-s pale-grey">Market Summary</Text>
             </SummaryHeader>
@@ -100,16 +100,18 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             </StrikeBy>
             <MarketInfo>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Text className="text-xs dark">{t('options.create-market.summary.dates.bidding-end')}</Text>
-                    <Text className="text-xs dark bold">{props.biddingEndDate}</Text>
+                    <Text className="text-xxs dark lh24">{t('options.create-market.summary.dates.bidding-end')}</Text>
+                    <Text className="text-xxs dark bold lh24">{props.biddingEndDate}</Text>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Text className="text-xs dark">{t('options.create-market.summary.dates.maturity-date')}</Text>
-                    <Text className="text-xs dark bold">{props.maturityDate}</Text>
+                    <Text className="text-xxs dark lh24">{t('options.create-market.summary.dates.maturity-date')}</Text>
+                    <Text className="text-xxs dark bold lh24">{props.maturityDate}</Text>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
-                    <Text className="text-xs dark">{t('options.create-market.summary.dates.time-to-exercise')}</Text>
-                    <Text className="text-xs dark bold">{props.timeLeftToExercise}</Text>
+                    <Text className="text-xxs dark lh24">
+                        {t('options.create-market.summary.dates.time-to-exercise')}
+                    </Text>
+                    <Text className="text-xxs dark bold lh24">{props.timeLeftToExercise}</Text>
                 </div>
                 <LongShortWrapper>
                     <MarketSentiment
@@ -119,28 +121,30 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                 </LongShortWrapper>
                 <div style={{ padding: '20px 0 0 0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Text className="text-xs dark">{t('options.create-market.summary.fees.bidding')}</Text>
-                        <Text className="text-xs dark bold">
+                        <Text className="text-xxs dark lh24">{t('options.create-market.summary.fees.bidding')}</Text>
+                        <Text className="text-xxs dark bold lh24">
                             {formatPercentage(props.marketFees ? props.marketFees.bidding : 0)}
                         </Text>
                     </div>
                     <div style={{ paddingLeft: 10 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Text className="text-xs dark">{t('options.create-market.summary.fees.creator')}</Text>
-                            <Text className="text-xs dark bold">
+                            <Text className="text-xxs dark lh24">
+                                {t('options.create-market.summary.fees.creator')}
+                            </Text>
+                            <Text className="text-xxs dark bold lh24">
                                 {formatPercentage(props.marketFees ? props.marketFees.creator : 0)}
                             </Text>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Text className="text-xs dark">{t('options.create-market.summary.fees.pool')}</Text>
-                            <Text className="text-xs dark bold">
+                            <Text className="text-xxs dark lh24">{t('options.create-market.summary.fees.pool')}</Text>
+                            <Text className="text-xxs dark bold lh24">
                                 {formatPercentage(props.marketFees ? props.marketFees.pool : 0)}
                             </Text>
                         </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Text className="text-xs dark">{t('options.create-market.summary.fees.refund')}</Text>
-                        <Text className="text-xs dark bold">
+                        <Text className="text-xxs dark lh24">{t('options.create-market.summary.fees.refund')}</Text>
+                        <Text className="text-xxs dark bold lh24">
                             {formatPercentage(props.marketFees ? props.marketFees.refund : 0)}
                         </Text>
                     </div>

@@ -1,5 +1,5 @@
 .text-xxxs {
-    font-size: 9px;
+    font-size: 10px;
     line-height: 14px;
     letter-spacing: 0.4px;
 }
@@ -79,6 +79,14 @@
     line-height: 48px;
     color: #f6f6fe;
     margin: 0;
+}
+
+.lh16 {
+    line-height: 16px;
+}
+
+.lh24 {
+    line-height: 24px;
 }
 
 .text-normal {

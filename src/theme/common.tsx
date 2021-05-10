@@ -194,5 +194,5 @@ export const ProgressBar = styled.div`
         height: 100%;
         display: block;
     }
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 `;
