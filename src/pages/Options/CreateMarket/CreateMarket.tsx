@@ -6,9 +6,6 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import Tooltip from '@material-ui/core/Tooltip';
-import Slider from '@material-ui/core/Slider';
-import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark.svg';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, FIAT_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
@@ -23,16 +20,24 @@ import { getWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/
 import { navigateToOptionsMarket } from 'utils/routes';
 import Currency from 'components/Currency';
 import Select from 'components/Select';
-import { withStyles } from '@material-ui/core';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
 import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
-import styled from 'styled-components';
 import { LINKS } from 'constants/links';
-import sUsd from 'assets/images/sUsd.svg';
+import {
+    HowItWorks,
+    SUSDSign,
+    Error,
+    StyledSlider,
+    Field,
+    FundingInput,
+    TooltipIcon,
+    Input,
+    ToggleButton,
+} from './components';
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
@@ -40,172 +45,11 @@ const roundMinutes = (date: Date) => {
     return date;
 };
 
+const Today: Date = new Date();
+
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
 export type MarketFees = Record<string, number>;
-
-type TooltipIconProps = {
-    title: React.ReactNode;
-};
-
-const LightTooltip = withStyles(() => ({
-    arrow: {
-        color: '#748BC6',
-    },
-    tooltip: {
-        backgroundColor: '#748BC6',
-        border: '1px solid #748BC6',
-        padding: 10,
-    },
-}))(Tooltip);
-
-const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
-    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
-        <QuestionMarkIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
-            width="12"
-            height="12"
-        />
-    </LightTooltip>
-);
-
-const Today: Date = new Date();
-
-const StyledSlider = withStyles({
-    root: {
-        color: '#4FBF67',
-        height: 15,
-        padding: '0 0 2px 0',
-    },
-    thumb: {
-        width: 20,
-        height: 20,
-        top: 2,
-        background: '#FFFFFF',
-        boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
-        '&:focus, &:hover, &$active': {
-            boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
-        },
-    },
-    track: {
-        height: 15,
-        borderRadius: 10,
-    },
-    rail: {
-        height: 15,
-        backgroundColor: '#C62937',
-        opacity: 1,
-        borderRadius: 10,
-    },
-})(Slider);
-
-const ToggleButton = styled.div`
-    position: relative;
-    width: 45px;
-    height: 15px;
-    background: darkgray;
-    border-radius: 80px;
-    cursor: pointer;
-    &.selected {
-        background: #44e1e2;
-        &:after {
-            left: calc(100% - 18px);
-            background: #04045a;
-        }
-    }
-
-    &:after {
-        position: absolute;
-        display: block;
-        content: '';
-        width: 18px;
-        height: 18px;
-        background: #f6f6fe;
-        border-radius: 40px;
-        top: -2px;
-        left: 0;
-    }
-`;
-
-const Input = styled.input`
-    height: 56px;
-    font-weight: bold;
-    font-size: 18px !important;
-    line-height: 32px !important;
-    color: #04045a !important;
-`;
-
-const Field = styled(Form.Field)`
-    &.error {
-        color: #c62937 !important;
-        position: relative;
-        margin-bottom: 4px;
-        .select-override,
-        .input-override {
-            border: 2px solid #c62937 !important;
-            border-radius: 5px !important;
-            color: #c62937 !important;
-            .react-select__indicator {
-                color: #c62937 !important;
-            }
-        }
-        .text-error {
-            color: red !important;
-        }
-        .susd {
-            height: 52px;
-            bottom: 2px;
-            left: 10px;
-            &:before {
-                left: 2px;
-                top: 12px;
-            }
-        }
-    }
-`;
-
-const SUSDSign = styled.div`
-    position: absolute;
-    width: 85px;
-    height: 56px;
-    background: #44e1e2;
-    border-radius: 5px;
-    z-index: 1;
-    bottom: 16px;
-    left: 0px;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.25px;
-    color: #04045a;
-    padding-left: 36px;
-    padding-top: 12px;
-    &:before {
-        content: url(${sUsd});
-        position: absolute;
-        z-index: 2;
-        top: 14px;
-        left: 4px;
-    }
-`;
-
-const HowItWorks = styled.a`
-    cursor: pointer;
-    color: #44e1e2 !important;
-    &:hover {
-        text-decoration: underline;
-    }
-`;
-
-const Error = styled(Text)`
-    position: absolute;
-    bottom: -14px;
-    left: 8px;
-`;
-
-const FundingInput = styled(Input)`
-    position: relative;
-    padding-left: 100px !important;
-`;
 
 export const CreateMarket: React.FC = () => {
     const { t } = useTranslation();
