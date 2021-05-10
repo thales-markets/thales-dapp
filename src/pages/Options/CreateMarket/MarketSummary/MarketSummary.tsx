@@ -63,7 +63,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     return (
         <FlexDivColumn style={{ border: '1px solid #748BC6', marginLeft: '40px', maxWidth: '460px' }}>
             <SummaryHeader>
-                <Text className="text-s pale-grey">Market Summary</Text>
+                <Text className="text-s pale-grey uppercase bold">Market Summary</Text>
             </SummaryHeader>
             <StrikeBy>
                 <div style={{ flex: 1, textAlign: 'center' }}>
