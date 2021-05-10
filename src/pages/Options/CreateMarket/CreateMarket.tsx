@@ -32,12 +32,44 @@ import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
 import styled from 'styled-components';
 import { LINKS } from 'constants/links';
+import sUsd from 'assets/images/sUsd.svg';
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
     date.setMinutes(0, 0, 0);
     return date;
 };
+
+export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
+
+export type MarketFees = Record<string, number>;
+
+type TooltipIconProps = {
+    title: React.ReactNode;
+};
+
+const LightTooltip = withStyles(() => ({
+    arrow: {
+        color: '#748BC6',
+    },
+    tooltip: {
+        backgroundColor: '#748BC6',
+        border: '1px solid #748BC6',
+        padding: 10,
+    },
+}))(Tooltip);
+
+const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
+    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
+        <QuestionMarkIcon
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            width="12"
+            height="12"
+        />
+    </LightTooltip>
+);
+
+const Today: Date = new Date();
 
 const StyledSlider = withStyles({
     root: {
@@ -120,6 +152,47 @@ const Field = styled(Form.Field)`
         .text-error {
             color: red !important;
         }
+        .susd {
+            height: 52px;
+            bottom: 2px;
+            left: 10px;
+            &:before {
+                left: 2px;
+                top: 12px;
+            }
+        }
+    }
+`;
+
+const SUSDSign = styled.div`
+    position: absolute;
+    width: 85px;
+    height: 56px;
+    background: #44e1e2;
+    border-radius: 5px;
+    z-index: 1;
+    bottom: 16px;
+    left: 0px;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.25px;
+    color: #04045a;
+    padding-left: 36px;
+    padding-top: 12px;
+    &:before {
+        content: url(${sUsd});
+        position: absolute;
+        z-index: 2;
+        top: 14px;
+        left: 4px;
+    }
+`;
+
+const HowItWorks = styled.a`
+    cursor: pointer;
+    color: #44e1e2 !important;
+    &:hover {
+        text-decoration: underline;
     }
 `;
 
@@ -129,43 +202,9 @@ const Error = styled(Text)`
     left: 8px;
 `;
 
-export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
-
-export type MarketFees = Record<string, number>;
-
-type TooltipIconProps = {
-    title: React.ReactNode;
-};
-
-const LightTooltip = withStyles(() => ({
-    arrow: {
-        color: '#748BC6',
-    },
-    tooltip: {
-        backgroundColor: '#748BC6',
-        border: '1px solid #748BC6',
-        padding: 10,
-    },
-}))(Tooltip);
-
-const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
-    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
-        <QuestionMarkIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
-            width="12"
-            height="12"
-        />
-    </LightTooltip>
-);
-
-const Today: Date = new Date();
-
-const HowItWorks = styled.a`
-    cursor: pointer;
-    color: #44e1e2 !important;
-    &:hover {
-        text-decoration: underline;
-    }
+const FundingInput = styled(Input)`
+    position: relative;
+    padding-left: 100px !important;
 `;
 
 export const CreateMarket: React.FC = () => {
@@ -551,7 +590,8 @@ export const CreateMarket: React.FC = () => {
                                         >
                                             {t('options.create-market.details.funding-amount.desc')}
                                         </Text>
-                                        <Input
+                                        <SUSDSign className="susd">sUSD</SUSDSign>
+                                        <FundingInput
                                             className="input-override"
                                             value={initialFundingAmount}
                                             onChange={(e) => {
