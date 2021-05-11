@@ -4,9 +4,10 @@ import styled from 'styled-components';
 const FiltersWrapper = styled.div`
     background: #04045a;
     border-radius: 20px;
-    width: 192px;
-    height: 240px;
-    padding: 36px 40px;
+    padding: 20px 40px;
+    height: 160px;
+    max-width: 140px;
+    min-width: 140px;
     margin: 24px;
     cursor: pointer;
     &.selected,
@@ -14,33 +15,35 @@ const FiltersWrapper = styled.div`
         box-sizing: border-box;
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         border: 4px solid #44e1e2;
-        padding: 32px 36px;
+        padding: 16px 36px;
     }
 `;
 
 const FiltersIconWrapper = styled.div`
-    width: 112px;
-    height: 112px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: ${(props) => props.color};
+    margin: auto;
 `;
 
 const FiltersIcon = styled.img`
     display: block;
     position: relative;
     margin: auto;
-    top: 42px;
-    width: 28px;
-    height: 28px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
 `;
 
 const FiltersText = styled.p`
     font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 14px;
+    line-height: 20px;
     text-align: center;
     color: #f6f6fe;
-    margin-top: 20px;
+    margin-top: 16px;
+    word-spacing: 100vw;
 `;
 
 type UserFilterProps = {

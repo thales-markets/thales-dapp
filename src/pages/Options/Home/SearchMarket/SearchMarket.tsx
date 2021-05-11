@@ -1,37 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv } from 'theme/common';
+import searchIcon from 'assets/images/search-icon.svg';
 
-const Wrapper = styled(FlexDivColumnCentered)`
-    background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
-    border-radius: 24px;
-    width: 840px;
-    height: 150px;
-    margin: 50px auto 75px;
-    text-align: center;
+const Wrapper = styled(FlexDiv)`
+    align-items: center;
+    position: relative;
+    &:before {
+        content: url(${searchIcon});
+        position: absolute;
+        height: 28px;
+        left: 4px;
+        transform: scale(0.8);
+    }
 `;
 
-const SearchTitle = styled.p`
-    width: 100%;
-    margin: 9px;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 48px;
-    color: #f6f6fe;
-`;
 const SearchInput = styled.input`
-    height: 65px;
-    width: 520px;
-    margin: 0 auto 16px;
+    height: 40px;
     border-radius: 16px;
     border: none !important;
     outline: none !important;
     font-weight: 600;
-    font-size: 20px;
-    line-height: 40px;
-    padding: 0 20px;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 0 10px;
     letter-spacing: 0.15px;
-    color: #748bc6;
+    background: #3936c7;
+    color: #f6f6f6;
+    padding-left: 40px;
+    &::placeholder {
+        font-size: 14px;
+        color: #f6f6f6;
+        opacity: 0.7;
+    }
 `;
 
 type SearchMarketProp = {
@@ -41,8 +42,7 @@ type SearchMarketProp = {
 
 const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch }) => (
     <Wrapper>
-        <SearchTitle>Search by asset name or ticker symbol</SearchTitle>
-        <SearchInput onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} placeholder="Try ETH" />
+        <SearchInput onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} placeholder="Search" />
     </Wrapper>
 );
 

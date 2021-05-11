@@ -40,7 +40,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         setCurrentMarket(() => {
             return currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1;
         });
-    }, 5000);
+    }, 3000);
 
     return (
         <Wrapper>

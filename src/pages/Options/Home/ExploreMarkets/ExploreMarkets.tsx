@@ -196,27 +196,28 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     ))}
             </FlexDivCentered>
 
-            <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch}></SearchMarket>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    {Object.keys(PhaseFilterEnum)
-                        .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))
-                        .map((key) => (
-                            <FilterButton
-                                className={
-                                    phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
-                                        ? 'selected'
-                                        : ''
-                                }
-                                onClick={() => setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])}
-                                key={key}
-                            >
-                                {t(`options.phases.${key}`)}
-                            </FilterButton>
-                        ))}
+            <FlexDiv style={{ justifyContent: 'space-between', marginTop: 40 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                        {Object.keys(PhaseFilterEnum)
+                            .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))
+                            .map((key) => (
+                                <FilterButton
+                                    className={
+                                        phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
+                                            ? 'selected'
+                                            : ''
+                                    }
+                                    onClick={() => setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])}
+                                    key={key}
+                                >
+                                    {t(`options.phases.${key}`)}
+                                </FilterButton>
+                            ))}
+                    </div>
                 </div>
-            </div>
+                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch}></SearchMarket>
+            </FlexDiv>
 
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
