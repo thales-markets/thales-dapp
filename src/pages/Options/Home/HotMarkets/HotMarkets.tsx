@@ -1,38 +1,18 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import { useTranslation } from 'react-i18next';
 import { FlexDivCentered, Text } from 'theme/common';
-import previous from 'assets/images/previous-page.svg';
-import next from 'assets/images/next-page.svg';
 import MarketCard from '../MarketCard';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, Image } from 'theme/common';
+import { FlexDivColumn } from 'theme/common';
 import useInterval from 'hooks/useInterval';
 
 const Wrapper = styled(FlexDivColumn)`
     padding: 50px 110px;
     position: relative;
-`;
-
-const Arrow = styled(Image)`
-    width: 24px;
-    height: 40px;
-    margin: 0 10px;
-    cursor: pointer;
-`;
-
-const Pagination = styled(FlexDiv)`
-    align-self: center;
-    margin-bottom: 40px;
-`;
-const PaginationPage = styled.span`
-    width: 24px;
-    height: 4px;
-    background: #b8c6e5;
-    &.current {
-        background: #04045a;
+    @media (max-width: 1200px) {
+        padding: 30px 50px;
     }
-    margin: 4px;
 `;
 
 type HotMarketsProps = {
@@ -41,42 +21,44 @@ type HotMarketsProps = {
 
 export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
-    const [currentMarketPage, setCurrentMarketPage] = useState(0);
+    const [currentMarket, setCurrentMarket] = useState(0);
 
-    const maxPages = Math.ceil(optionsMarkets.length / 3) > 3 ? 3 : Math.ceil(optionsMarkets.length / 3);
-
-    const pages = [];
-    for (let index = 0; index < maxPages; index++) {
-        pages.push(<PaginationPage key={index} className={currentMarketPage === index ? 'current' : ''} />);
-    }
-
-    const NextMarkets = () => {
-        currentMarketPage === maxPages - 1 ? setCurrentMarketPage(0) : setCurrentMarketPage(currentMarketPage + 1);
-    };
-
-    const PreviousMarkets = () => {
-        currentMarketPage === 0 ? setCurrentMarketPage(maxPages - 1) : setCurrentMarketPage(currentMarketPage - 1);
-    };
+    const currentMarkets = useMemo(() => {
+        const markets = [];
+        markets.push(optionsMarkets[currentMarket]);
+        if (currentMarket === optionsMarkets.length - 1) {
+            markets.push(optionsMarkets[0], optionsMarkets[1]);
+        } else if (currentMarket === optionsMarkets.length - 2) {
+            markets.push(optionsMarkets[currentMarket + 1], optionsMarkets[0]);
+        } else {
+            markets.push(optionsMarkets[currentMarket + 1], optionsMarkets[currentMarket + 2]);
+        }
+        return markets;
+    }, [currentMarket]);
 
     useInterval(() => {
-        NextMarkets();
+        setCurrentMarket(() => {
+            return currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1;
+        });
     }, 5000);
 
     return (
         <Wrapper>
-            <Text className="text-xxl dark">{t('options.home.explore-markets.discover')}</Text>
+            <DiscoverText className="text-xxl dark">{t('options.home.explore-markets.discover')}</DiscoverText>
             <FlexDivCentered>
-                <Arrow onClick={PreviousMarkets} src={previous}></Arrow>
-                {optionsMarkets.map((optionsMarket, index) => {
-                    if (index >= currentMarketPage * 3 && index < currentMarketPage * 3 + 3) {
-                        return <MarketCard key={index} optionMarket={optionsMarket} />;
-                    }
+                {currentMarkets.map((optionsMarket, index) => {
+                    return <MarketCard key={index} optionMarket={optionsMarket} />;
                 })}
-                <Arrow onClick={NextMarkets} src={next}></Arrow>
             </FlexDivCentered>
-            <Pagination>{pages}</Pagination>
         </Wrapper>
     );
 };
+
+const DiscoverText = styled(Text)`
+    @media (max-width: 1200px) {
+        font-size: 41px;
+        margin-left: 20px;
+    }
+`;
 
 export default HotMarkets;

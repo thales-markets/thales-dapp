@@ -14,103 +14,6 @@ import { navigateToOptionsMarket } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
 
-const Card = styled(FlexDivColumnCentered)`
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-    border-radius: 24px;
-    color: white;
-    width: 368px;
-    max-width: 368px;
-    margin: 70px 20px 70px 20px;
-    cursor: pointer;
-`;
-
-const Header = styled(FlexDivCentered)`
-    height: 96px;
-    border-bottom: 1px solid #748bc6;
-    img {
-        margin: 24px 24px 24px 24px;
-        width: 48px;
-        height: 48px;
-    }
-    svg {
-        margin: 24px 24px 24px 24px;
-        width: 48px;
-        height: 48px;
-    }
-`;
-const Content = styled(FlexDivColumnCentered)`
-    height: 195px;
-`;
-const Footer = styled(FlexDivColumnCentered)`
-    height: 67px;
-    padding: 0 24px;
-`;
-
-const CryptoName = styled.p`
-    font-family: Titillium Web;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 20px;
-    letter-spacing: 0.15px;
-    color: #ffffff;
-    margin-bottom: 4px;
-`;
-const CryptoKey = styled.p`
-    font-family: Inter !important;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    /* identical to box height, or 171% */
-
-    /* State/Light */
-
-    color: #808191;
-`;
-
-const CryptoTime = styled.div`
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 24px;
-    text-align: center;
-    color: #355dff;
-    background: #bceaff;
-    border-radius: 20px;
-    margin-right: 18px;
-    height: 24px;
-    min-width: 95px;
-    padding: 0 6px;
-`;
-
-const Price = styled.p`
-    margin: 0;
-    margin-top: 18px !important;
-    text-align: center;
-    font-weight: bold;
-    font-size: 31px;
-    line-height: 48px;
-    letter-spacing: 0.25px;
-    color: #f6f6fe;
-`;
-const ExpireDate = styled.p`
-    margin: 0;
-    margin-bottom: 30px !important;
-    text-align: center;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 20px;
-    letter-spacing: 0.15px;
-    color: #f6f6fe;
-`;
-
-const Phase = styled(PhaseLabel)`
-    font-size: 12px;
-    height: 24px;
-    padding: 0;
-    margin-right: 18px;
-    margin-bottom: 4px;
-    flex: 1;
-`;
-
 type MarketCardPros = {
     optionMarket: HistoricalOptionsMarketInfo;
 };
@@ -131,7 +34,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                     <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
                     <CryptoKey>{optionMarket.asset}</CryptoKey>
                 </FlexDivColumnCentered>
-                <FlexDivColumn>
+                <FlexDivColumn style={{ paddingRight: 20 }}>
                     <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
                     <CryptoTime>
                         <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
@@ -148,5 +51,122 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
         </Card>
     );
 };
+
+const Card = styled(FlexDivColumnCentered)`
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    border-radius: 24px;
+    color: white;
+    min-width: 250px;
+    max-width: 368px;
+    margin: 70px 20px 70px 20px;
+    cursor: pointer;
+    @media (max-width: 1200px) {
+        margin: 50px 20px 50px 20px;
+    }
+`;
+
+const Header = styled(FlexDivCentered)`
+    height: 96px;
+    border-bottom: 1px solid #748bc6;
+    @media (max-width: 1200px) {
+        height: 75px;
+    }
+    img,
+    svg {
+        margin: 24px;
+        width: 48px;
+        height: 48px;
+        @media (max-width: 1200px) {
+            margin: 10px;
+            width: 36px;
+            height: 36px;
+        }
+    }
+`;
+const Content = styled(FlexDivColumnCentered)`
+    height: 195px;
+`;
+const Footer = styled(FlexDivColumnCentered)`
+    height: 67px;
+    padding: 0 24px;
+`;
+
+const CryptoName = styled.p`
+    font-family: Titillium Web;
+    font-weight: 600;
+    font-size: 20px;
+    @media (max-width: 1200px) {
+        font-size: 16px;
+        line-height: 16px;
+    }
+    line-height: 20px;
+    letter-spacing: 0.15px;
+    color: #ffffff;
+    margin-bottom: 4px;
+`;
+const CryptoKey = styled.p`
+    font-family: Inter !important;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 14px;
+    @media (max-width: 1200px) {
+        font-size: 10px;
+        line-height: 10px;
+    }
+    color: #808191;
+`;
+
+const CryptoTime = styled.div`
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 24px;
+    text-align: center;
+    color: #355dff;
+    background: #bceaff;
+    border-radius: 20px;
+    height: 24px;
+    min-width: 70px;
+    padding: 0 6px;
+`;
+
+const Price = styled.p`
+    margin: 0;
+    margin-top: 18px !important;
+    text-align: center;
+    font-weight: bold;
+    font-size: 31px;
+    line-height: 48px;
+    @media (max-width: 1200px) {
+        font-size: 24px;
+        line-height: 30px;
+    }
+    letter-spacing: 0.25px;
+    color: #f6f6fe;
+`;
+const ExpireDate = styled.p`
+    margin: 0;
+    margin-bottom: 30px !important;
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 20px;
+    @media (max-width: 1200px) {
+        font-size: 16px;
+        line-height: 16px;
+        margin-bottom: 16px !important;
+    }
+    letter-spacing: 0.15px;
+    color: #f6f6fe;
+`;
+
+const Phase = styled(PhaseLabel)`
+    font-size: 12px;
+    height: 24px;
+    padding: 0;
+    flex: 1;
+    margin-bottom: 4px;
+    min-width: 70px;
+    width: 100%;
+`;
 
 export default MarketCard;
