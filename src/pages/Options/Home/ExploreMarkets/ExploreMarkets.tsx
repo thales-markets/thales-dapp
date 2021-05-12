@@ -174,7 +174,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     };
 
     return (
-        <div style={{ width: '100%', padding: '50px 120px' }}>
+        <div id="explore-markets" style={{ width: '100%', padding: '50px 120px' }}>
             <FlexDivCentered>
                 {Object.keys(UserFilterEnum)
                     .filter(

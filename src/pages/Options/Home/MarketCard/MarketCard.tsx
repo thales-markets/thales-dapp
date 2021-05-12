@@ -34,7 +34,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                     <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
                     <CryptoKey>{optionMarket.asset}</CryptoKey>
                 </FlexDivColumnCentered>
-                <FlexDivColumn style={{ paddingRight: 20 }}>
+                <FlexDivColumn style={{ paddingRight: 20, maxWidth: 120 }}>
                     <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
                     <CryptoTime>
                         <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
@@ -59,12 +59,9 @@ const Card = styled(FlexDivColumnCentered)`
     border-radius: 24px;
     color: white;
     min-width: 250px;
-    max-width: 368px;
-    margin: 70px 20px 70px 20px;
+    max-width: 320px;
+    margin: 50px 20px 50px 20px;
     cursor: pointer;
-    @media (max-width: 1200px) {
-        margin: 50px 20px 50px 20px;
-    }
     &:hover {
         .footer {
             padding: 0;
@@ -91,21 +88,14 @@ const Card = styled(FlexDivColumnCentered)`
 `;
 
 const Header = styled(FlexDivCentered)`
-    height: 96px;
+    height: 75px;
     border-bottom: 1px solid #748bc6;
-    @media (max-width: 1200px) {
-        height: 75px;
-    }
+
     img,
     svg {
-        margin: 24px;
-        width: 48px;
-        height: 48px;
-        @media (max-width: 1200px) {
-            margin: 10px;
-            width: 36px;
-            height: 36px;
-        }
+        margin: 20px;
+        width: 36px;
+        height: 36px;
     }
 `;
 const Content = styled(FlexDivColumnCentered)`
@@ -138,12 +128,8 @@ const ViewMarket = styled.div`
 const CryptoName = styled.p`
     font-family: Titillium Web;
     font-weight: 600;
-    font-size: 20px;
-    @media (max-width: 1200px) {
-        font-size: 16px;
-        line-height: 16px;
-    }
-    line-height: 20px;
+    font-size: 16px;
+    line-height: 16px;
     letter-spacing: 0.15px;
     color: #ffffff;
     margin-bottom: 4px;
@@ -153,10 +139,6 @@ const CryptoKey = styled.p`
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
-    @media (max-width: 1200px) {
-        font-size: 10px;
-        line-height: 10px;
-    }
     color: #808191;
 `;
 
@@ -178,27 +160,20 @@ const Price = styled.p`
     margin-top: 18px !important;
     text-align: center;
     font-weight: bold;
-    font-size: 31px;
-    line-height: 48px;
-    @media (max-width: 1200px) {
-        font-size: 24px;
-        line-height: 30px;
-    }
+    font-size: 24px;
+    line-height: 30px;
+
     letter-spacing: 0.25px;
     color: #f6f6fe;
 `;
 const ExpireDate = styled.p`
     margin: 0;
-    margin-bottom: 30px !important;
     text-align: center;
     font-weight: 600;
-    font-size: 20px;
-    line-height: 20px;
-    @media (max-width: 1200px) {
-        font-size: 16px;
-        line-height: 16px;
-        margin-bottom: 16px !important;
-    }
+    font-size: 16px;
+    line-height: 16px;
+    margin-bottom: 16px !important;
+
     letter-spacing: 0.15px;
     color: #f6f6fe;
 `;

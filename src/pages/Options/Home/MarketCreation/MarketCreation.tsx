@@ -18,20 +18,32 @@ const MarketCreation: React.FC = () => {
         <FlexDiv>
             <SideWrapper>
                 <Text className="text-xxxl">{t('options.home.market-creation.no-markets.title')}</Text>
-                <Button
-                    className="primary"
-                    style={{ padding: '8px 40px', marginTop: '40px' }}
-                    onClick={() =>
-                        isWalletConnected ? navigateTo(ROUTES.Options.CreateMarket) : onboardConnector.connectWallet()
-                    }
-                >
-                    {isWalletConnected
-                        ? t('options.home.market-creation.create-market-button-label')
-                        : t('common.wallet.connect-your-wallet')}
-                </Button>
+                <FlexDiv style={{ marginTop: '40px' }}>
+                    <Button
+                        className="secondary"
+                        style={{ marginRight: 20 }}
+                        onClick={() =>
+                            isWalletConnected
+                                ? navigateTo(ROUTES.Options.CreateMarket)
+                                : onboardConnector.connectWallet()
+                        }
+                    >
+                        {isWalletConnected
+                            ? t('options.home.market-creation.create-market-button-label')
+                            : t('common.wallet.connect-your-wallet')}
+                    </Button>
+                    <Button
+                        className="tertiary"
+                        onClick={() =>
+                            document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' })
+                        }
+                    >
+                        View Markets
+                    </Button>
+                </FlexDiv>
             </SideWrapper>
             <SideWrapper>
-                <Image style={{ marginLeft: 50 }} src={image}></Image>
+                <Image style={{ marginLeft: 90, height: 380, objectFit: 'contain' }} src={image}></Image>
             </SideWrapper>
         </FlexDiv>
     );
