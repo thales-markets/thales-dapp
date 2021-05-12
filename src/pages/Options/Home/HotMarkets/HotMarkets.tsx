@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import { useTranslation } from 'react-i18next';
-import { FlexDivCentered, Text } from 'theme/common';
+import { FlexDivCentered, Image, Text } from 'theme/common';
 import MarketCard from '../MarketCard';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import useInterval from 'hooks/useInterval';
+import previous from 'assets/images/previous-page.svg';
+import next from 'assets/images/next-page.svg';
 
 const Wrapper = styled(FlexDivColumn)`
     padding: 50px 110px;
@@ -15,6 +17,13 @@ const Wrapper = styled(FlexDivColumn)`
     }
 `;
 
+const Arrow = styled(Image)`
+    width: 24px;
+    height: 40px;
+    margin: 0 10px;
+    cursor: pointer;
+`;
+
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
 };
@@ -22,6 +31,7 @@ type HotMarketsProps = {
 export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [currentMarket, setCurrentMarket] = useState(0);
+    const [shouldUseInterval, setShoudUseInterval] = useState(true);
 
     const currentMarkets = useMemo(() => {
         const markets = [];
@@ -37,18 +47,33 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     }, [currentMarket]);
 
     useInterval(() => {
-        setCurrentMarket(() => {
-            return currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1;
-        });
+        if (shouldUseInterval)
+            setCurrentMarket(() => {
+                return currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1;
+            });
     }, 3000);
 
     return (
         <Wrapper>
             <DiscoverText className="text-xxl dark">{t('options.home.explore-markets.discover')}</DiscoverText>
             <FlexDivCentered>
+                <Arrow
+                    onClick={() => {
+                        setShoudUseInterval(false);
+                        setCurrentMarket(currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1);
+                    }}
+                    src={previous}
+                ></Arrow>
                 {currentMarkets.map((optionsMarket, index) => {
                     return <MarketCard key={index} optionMarket={optionsMarket} />;
                 })}
+                <Arrow
+                    onClick={() => {
+                        setShoudUseInterval(false);
+                        setCurrentMarket(currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1);
+                    }}
+                    src={next}
+                ></Arrow>
             </FlexDivCentered>
         </Wrapper>
     );

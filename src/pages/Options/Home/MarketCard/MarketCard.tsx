@@ -45,14 +45,16 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                 <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
                 <ExpireDate>{t('common.by-date', { date: formatShortDate(optionMarket.maturityDate) })}</ExpireDate>
             </Content>
-            <Footer>
+            <Footer className="footer">
                 <MarketSentiment long={optionMarket.longPrice} short={optionMarket.shortPrice}></MarketSentiment>
+                <ViewMarket className="view-market">View Market</ViewMarket>
             </Footer>
         </Card>
     );
 };
 
 const Card = styled(FlexDivColumnCentered)`
+    position: relative;
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 24px;
     color: white;
@@ -62,6 +64,29 @@ const Card = styled(FlexDivColumnCentered)`
     cursor: pointer;
     @media (max-width: 1200px) {
         margin: 50px 20px 50px 20px;
+    }
+    &:hover {
+        .footer {
+            padding: 0;
+            .sentiment {
+                display: none;
+            }
+            .view-market {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 31, 31, 0.4);
+            border-radius: 24px;
+        }
     }
 `;
 
@@ -87,8 +112,27 @@ const Content = styled(FlexDivColumnCentered)`
     height: 195px;
 `;
 const Footer = styled(FlexDivColumnCentered)`
-    height: 67px;
+    position: relative;
+    min-height: 67px;
     padding: 0 24px;
+`;
+
+const ViewMarket = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: #44e1e2;
+    border-radius: 0px 0px 24px 24px;
+    height: 67px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: #f6f6fe;
+    display: none;
 `;
 
 const CryptoName = styled.p`

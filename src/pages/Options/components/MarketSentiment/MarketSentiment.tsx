@@ -16,7 +16,7 @@ const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display 
     const priceLong = long * 100;
     const priceShort = short * 100;
     return (
-        <>
+        <div className="sentiment">
             {display === 'row' && (
                 <>
                     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2px 6px' }}>
@@ -41,7 +41,7 @@ const MarketSentiment: React.FC<MarketSentimentProps> = ({ long, short, display 
                     </span>
                 </span>
             )}
-        </>
+        </div>
     );
 };
 
