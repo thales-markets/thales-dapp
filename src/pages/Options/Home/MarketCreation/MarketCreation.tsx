@@ -15,7 +15,7 @@ const MarketCreation: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
-        <FlexDiv>
+        <FlexDiv style={{ height: 'calc((100vh - 100px)/2)' }}>
             <SideWrapper>
                 <Text className="text-xxxl">{t('options.home.market-creation.no-markets.title')}</Text>
                 <FlexDiv style={{ marginTop: '40px' }}>

@@ -9,21 +9,6 @@ import useInterval from 'hooks/useInterval';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 
-const Wrapper = styled(FlexDivColumn)`
-    padding: 50px 110px;
-    position: relative;
-    @media (max-width: 1200px) {
-        padding: 30px 50px;
-    }
-`;
-
-const Arrow = styled(Image)`
-    width: 24px;
-    height: 40px;
-    margin: 0 10px;
-    cursor: pointer;
-`;
-
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
 };
@@ -79,11 +64,28 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     );
 };
 
+const Wrapper = styled(FlexDivColumn)`
+    padding: 50px 110px;
+    position: relative;
+    height: calc((100vh - 100px) / 2);
+    max-height: 490px;
+    @media (max-width: 1200px) {
+        padding: 30px 50px;
+    }
+`;
+
 const DiscoverText = styled(Text)`
     @media (max-width: 1200px) {
         font-size: 41px;
         margin-left: 20px;
     }
+`;
+
+const Arrow = styled(Image)`
+    width: 24px;
+    height: 40px;
+    margin: 0 10px;
+    cursor: pointer;
 `;
 
 export default HotMarkets;
