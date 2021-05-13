@@ -17,19 +17,27 @@ import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { Arrow, ArrowsWrapper, PhaseLabel, Row, StyledTableCell, TableHeaderLabel } from './components';
+import { Arrow, ArrowsWrapper, PhaseLabel, Row, StyledTableCell, TableHeaderLabel, Star } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarkets';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
+import star from 'assets/images/star.svg';
+import fullStar from 'assets/images/full-star.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import upSelected from 'assets/images/up-selected.svg';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import axios from 'axios';
+import { refetchWatchlistedMarkets } from 'utils/queryConnector';
 
 dotenv.config();
 
 type MarketsTableProps = {
     optionsMarkets: OptionsMarkets;
+    watchlistedMarkets: string[];
     isLoading?: boolean;
     phase: PhaseFilterEnum;
 };
@@ -83,13 +91,14 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-    { id: 1, label: 'Asset', sortable: true },
-    { id: 2, label: 'Strike Price', sortable: true },
-    { id: 3, label: 'Pool Size', sortable: true },
-    { id: 4, label: 'Long/Short', sortable: true },
-    { id: 5, label: 'Time Remaining', sortable: false },
-    { id: 6, label: 'Open Orders', sortable: true },
-    { id: 7, label: 'Phase', sortable: false },
+    { id: 1, label: '', sortable: false },
+    { id: 2, label: 'Asset', sortable: true },
+    { id: 3, label: 'Strike Price', sortable: true },
+    { id: 4, label: 'Pool Size', sortable: true },
+    { id: 5, label: 'Long/Short', sortable: true },
+    { id: 6, label: 'Time Remaining', sortable: false },
+    { id: 7, label: 'Open Orders', sortable: true },
+    { id: 8, label: 'Phase', sortable: false },
 ];
 
 enum OrderDirection {
@@ -100,13 +109,16 @@ enum OrderDirection {
 
 const defaultOrderBy = 5; // time remaining
 
-const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, phase }) => {
+const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedMarkets, children, phase }) => {
     const [page, setPage] = useState(0);
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const [wMarkets, setWMarkets] = useState(watchlistedMarkets);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -129,6 +141,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
     };
 
     useEffect(() => setPage(0), [phase]);
+    useEffect(() => setWMarkets(watchlistedMarkets), [watchlistedMarkets]);
 
     const compareStrings = (a: string, b: string) => {
         if (a < b) {
@@ -139,6 +152,20 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
         }
 
         return 0;
+    };
+
+    const toggleWatchlist = async (marketAddress: string) => {
+        try {
+            const response = await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
+                networkId,
+                walletAddress,
+                marketAddress,
+            });
+            setWMarkets(response.data.data);
+            refetchWatchlistedMarkets(walletAddress, networkId);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const sortedMArkets = useMemo(() => {
@@ -229,6 +256,14 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                                     className={market.phase !== 'expiry' ? 'clickable' : ''}
                                     key={index}
                                 >
+                                    <StyledTableCell
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleWatchlist(market.address);
+                                        }}
+                                    >
+                                        <Star src={wMarkets?.includes(market.address) ? fullStar : star}></Star>
+                                    </StyledTableCell>
                                     <StyledTableCell>
                                         <Currency.Name
                                             currencyKey={market.currencyKey}

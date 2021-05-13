@@ -90,3 +90,7 @@ export const Arrow = styled(Image)`
     padding: 2px;
     box-sizing: content-box;
 `;
+
+export const Star = styled(Image)`
+    display: block;
+`;

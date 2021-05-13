@@ -20,6 +20,7 @@ import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
+import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -83,6 +84,10 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
     });
 
+    const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId);
+    const watchlistedMarkets =
+        watchlistedMarketsQuery && watchlistedMarketsQuery.data ? JSON.parse(watchlistedMarketsQuery.data).data : [];
+
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
@@ -104,6 +109,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
                 break;
             case UserFilterEnum.MyWatchlist:
+                if (isWalletConnected) {
+                    filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
+                }
                 break;
             case UserFilterEnum.Recent:
                 break;
@@ -123,6 +131,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         walletAddress,
         userBidsMarketsQuery.data,
         userBidsMarketsQuery.isSuccess,
+        watchlistedMarketsQuery?.data,
         assetSearch,
     ]);
 
@@ -220,6 +229,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
+                watchlistedMarkets={watchlistedMarkets}
                 isLoading={userBidsMarketsQuery.isLoading}
                 phase={phaseFilter}
             >

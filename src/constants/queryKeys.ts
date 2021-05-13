@@ -49,6 +49,9 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
     },
+    User: {
+        Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
+    },
 };
 
 export default QUERY_KEYS;
