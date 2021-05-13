@@ -39,8 +39,8 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     }, 3000);
 
     return (
-        <Wrapper>
-            <DiscoverText className="text-xxl dark">{t('options.home.explore-markets.discover')}</DiscoverText>
+        <Wrapper id="hot-markets">
+            <Text className="text-xxl dark">{t('options.home.explore-markets.discover')}</Text>
             <FlexDivCentered>
                 <Arrow
                     onClick={() => {
@@ -67,18 +67,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 const Wrapper = styled(FlexDivColumn)`
     padding: 50px 110px;
     position: relative;
-    height: calc((100vh - 100px) / 2);
     max-height: 490px;
-    @media (max-width: 1200px) {
-        padding: 30px 50px;
-    }
-`;
-
-const DiscoverText = styled(Text)`
-    @media (max-width: 1200px) {
-        font-size: 41px;
-        margin-left: 20px;
-    }
 `;
 
 const Arrow = styled(Image)`

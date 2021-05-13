@@ -15,7 +15,7 @@ const MarketCreation: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
-        <FlexDiv style={{ height: 'calc((100vh - 100px)/2)' }}>
+        <FlexDiv id="market-creation">
             <SideWrapper>
                 <Text className="text-xxxl">{t('options.home.market-creation.no-markets.title')}</Text>
                 <FlexDiv style={{ marginTop: '40px' }}>
@@ -52,13 +52,13 @@ const MarketCreation: React.FC = () => {
 const SideWrapper = styled(Side)`
     padding-top: 40px !important;
     padding-bottom: 80px !important;
-    @media (max-width: 1200px) {
+    /* @media (max-width: 1200px) {
         width: 100%;
         .text-xxxl {
             font-size: 42px;
             line-height: 60px;
         }
-    }
+    } */
 `;
 
 export default MarketCreation;

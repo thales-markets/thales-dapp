@@ -22,7 +22,7 @@ const MarketHeader: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
-        <MarketHeaderWrapper>
+        <MarketHeaderWrapper id="market-header">
             <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
             {!isWalletConnected ? (
                 <Button

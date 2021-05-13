@@ -22,6 +22,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
     const { t } = useTranslation();
     return (
         <Card
+            id="market-card"
             onClick={() => {
                 if (optionMarket.phase !== 'expiry') {
                     navigateToOptionsMarket(optionMarket.address);
@@ -58,7 +59,7 @@ const Card = styled(FlexDivColumnCentered)`
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 24px;
     color: white;
-    min-width: 250px;
+    min-width: 300px;
     max-width: 320px;
     margin: 50px 20px 50px 20px;
     cursor: pointer;
