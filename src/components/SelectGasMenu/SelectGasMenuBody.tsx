@@ -11,66 +11,6 @@ type GasMenuProps = {
     setDropdownIsOpen: (isOpen: boolean) => void;
 };
 
-const DropDown = styled.ul`
-    position: absolute;
-    right: 0;
-    width: 132px;
-    height: 140px;
-    padding: 3px;
-    margin: 2px 0;
-    background: #f6f6fe;
-    border-radius: 10px;
-    list-style: none;
-`;
-
-const Option = styled.li`
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    font-weight: bold;
-    color: #04045a;
-
-    cursor: pointer;
-    &:not(:first-child) {
-        padding: 8px 6px;
-        &:hover {
-            background: lightgray;
-        }
-    }
-
-    &:first-child {
-        margin: 0 0 14px 0;
-    }
-`;
-
-const Input = styled.input`
-    display: block;
-    height: 28px;
-    margin: 2px 4px;
-    padding: 0 6px;
-    border: 1px solid #04045a;
-    border-radius: 5px;
-    outline: none !important;
-    font-size: 13px;
-    font-weight: bold;
-    width: 100%;
-    &.error {
-        border: 1px solid #c62937;
-        color: #c62937;
-    }
-`;
-
-const ErrorMaxInput = styled.span`
-    position: absolute;
-    top: 34px;
-    left: 10px;
-    font-weight: normal;
-    font-size: 10px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-    color: #c62937;
-`;
-
 const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPriceAverage = useMemo(() => (ethGasPriceQuery.data != null ? ethGasPriceQuery.data['average'] : 0), [
@@ -143,5 +83,65 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
         </div>
     );
 };
+
+const DropDown = styled.ul`
+    position: absolute;
+    right: 0;
+    width: 132px;
+    height: 140px;
+    padding: 3px;
+    margin: 2px 0;
+    background: #f6f6fe;
+    border-radius: 10px;
+    list-style: none;
+`;
+
+const Option = styled.li`
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: bold;
+    color: #04045a;
+
+    cursor: pointer;
+    &:not(:first-child) {
+        padding: 8px 6px;
+        &:hover {
+            background: lightgray;
+        }
+    }
+
+    &:first-child {
+        margin: 0 0 14px 0;
+    }
+`;
+
+const Input = styled.input`
+    display: block;
+    height: 28px;
+    margin: 2px 4px;
+    padding: 0 6px;
+    border: 1px solid #04045a;
+    border-radius: 5px;
+    outline: none !important;
+    font-size: 13px;
+    font-weight: bold;
+    width: 100%;
+    &.error {
+        border: 1px solid #c62937;
+        color: #c62937;
+    }
+`;
+
+const ErrorMaxInput = styled.span`
+    position: absolute;
+    top: 34px;
+    left: 10px;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    color: #c62937;
+`;
 
 export default SelectGasMenuBody;

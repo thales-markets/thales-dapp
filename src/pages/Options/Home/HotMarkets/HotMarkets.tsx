@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { OptionsMarkets } from 'types/options';
 import { useTranslation } from 'react-i18next';
-import { FlexDivCentered, Image, Text } from 'theme/common';
+import { FlexDiv, FlexDivCentered, Image, Text } from 'theme/common';
 import MarketCard from '../MarketCard';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 import useInterval from 'hooks/useInterval';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
+import coins from 'assets/images/coins-mono.png';
 
 type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -41,7 +42,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     return (
         <Wrapper id="hot-markets">
             <Text className="text-xxl dark">{t('options.home.explore-markets.discover')}</Text>
-            <FlexDivCentered>
+            <FlexDivCentered className="hot-markets__desktop">
                 <Arrow
                     onClick={() => {
                         setShoudUseInterval(false);
@@ -60,6 +61,10 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                     src={next}
                 ></Arrow>
             </FlexDivCentered>
+            <FlexDiv className="hot-markets__mobile">
+                <MarketCard optionMarket={currentMarkets[0]}></MarketCard>
+                <Image src={coins}></Image>
+            </FlexDiv>
         </Wrapper>
     );
 };

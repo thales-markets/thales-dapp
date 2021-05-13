@@ -182,7 +182,7 @@ const ExpireDate = styled.p`
 const Phase = styled(PhaseLabel)`
     font-size: 12px;
     height: 24px;
-    padding: 0;
+    padding: 0 !important;
     flex: 1;
     margin-bottom: 4px;
     min-width: 70px;

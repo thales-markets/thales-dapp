@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
 import React from 'react';
+import background from 'assets/images/background-dark.png';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -58,6 +59,9 @@ export const GridDivCenteredCol = styled(GridDivCentered)`
 
 export const Background = styled.section`
     background-size: cover !important;
+    &.hero {
+        background-image: url(${background}) !important;
+    }
 
     &:nth-child(odd) {
         background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
@@ -84,8 +88,11 @@ export const MainWrapper = styled.div`
     }
 `;
 
-export const Section: React.FC = (props) => (
-    <Background>
+type SectionProps = {
+    class?: string;
+};
+export const Section: React.FC<SectionProps> = (props) => (
+    <Background className={props.class}>
         <MainWrapper>{props.children}</MainWrapper>
     </Background>
 );

@@ -6,6 +6,51 @@ import styled from 'styled-components';
 import { Button, Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
 
+enum BurgerState {
+    Init,
+    Show,
+    Hide,
+}
+
+const Header: React.FC = () => {
+    const { t } = useTranslation();
+    const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
+
+    return (
+        <HeaderWrapper>
+            <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
+            <Links
+                className={
+                    (showBurgerMenu === BurgerState.Show ? 'show' : '') +
+                    ' ' +
+                    (showBurgerMenu === BurgerState.Hide ? 'hide' : '')
+                }
+            >
+                <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home}>
+                    {t('header.links.home')}
+                </Logo>
+                <NavLink to="">Products</NavLink>
+                <NavLink to="">Markets</NavLink>
+                <NavLink to="">Partners</NavLink>
+                <NavLink to="">Community</NavLink>
+                <NavLink to={ROUTES.Options.Home}>
+                    <Button className="primary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
+                        Use dApp
+                    </Button>
+                </NavLink>
+            </Links>
+            <BurdgerIcon
+                onClick={() =>
+                    setShowBurdgerMenu(showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show)
+                }
+                hidden={showBurgerMenu === BurgerState.Show}
+                src={burger}
+            />
+            <Overlay className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}></Overlay>
+        </HeaderWrapper>
+    );
+};
+
 const HeaderWrapper = styled.div`
     padding: 0 75px;
     width: 100%;
@@ -125,50 +170,5 @@ const Overlay = styled.div`
         display: none;
     }
 `;
-
-enum BurgerState {
-    Init,
-    Show,
-    Hide,
-}
-
-const Header: React.FC = () => {
-    const { t } = useTranslation();
-    const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
-
-    return (
-        <HeaderWrapper>
-            <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
-            <Links
-                className={
-                    (showBurgerMenu === BurgerState.Show ? 'show' : '') +
-                    ' ' +
-                    (showBurgerMenu === BurgerState.Hide ? 'hide' : '')
-                }
-            >
-                <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home}>
-                    {t('header.links.home')}
-                </Logo>
-                <NavLink to="">Products</NavLink>
-                <NavLink to="">Markets</NavLink>
-                <NavLink to="">Partners</NavLink>
-                <NavLink to="">Comunnity</NavLink>
-                <NavLink to={ROUTES.Options.Home}>
-                    <Button className="primary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
-                        Use dApp
-                    </Button>
-                </NavLink>
-            </Links>
-            <BurdgerIcon
-                onClick={() =>
-                    setShowBurdgerMenu(showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show)
-                }
-                hidden={showBurgerMenu === BurgerState.Show}
-                src={burger}
-            />
-            <Overlay className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}></Overlay>
-        </HeaderWrapper>
-    );
-};
 
 export default Header;

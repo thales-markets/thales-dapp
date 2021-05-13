@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from 'components/Header';
 import { SideContent, List } from './components';
-import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li, Image } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
 import Footer from './Footer/Footer';
@@ -11,7 +11,7 @@ import { getIsWalletConnected } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-
+import ethOlive from 'assets/images/eth-olive.svg';
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -25,10 +25,10 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <Section>
+            <Section class="hero">
                 <FlexDivColumn>
                     <Header />
-                    <HeroSection>
+                    <HeroSection className="landing-hero">
                         <Side>
                             <Text className="title">{t('landing-page.title')}</Text>
                             <Text className="text-m pale-grey" style={{ marginBottom: 60 }}>
@@ -50,7 +50,9 @@ const Home: React.FC = () => {
                 </FlexDivColumn>
             </Section>
             <Section>
-                <Side></Side>
+                <Side>
+                    <Image src={ethOlive}></Image>
+                </Side>
                 <Side>
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
                         {t('landing-page.markets.title')}
