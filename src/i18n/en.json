@@ -27,6 +27,9 @@
             "view-market": "View trading markets"
         }
     },
+    "maintenance-page": {
+        "title": "Thales is coming soon!"
+    },
     "common": {
         "max": "max",
         "gas-limit": "gas limit",
