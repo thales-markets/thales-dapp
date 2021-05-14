@@ -118,7 +118,6 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedM
     const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [wMarkets, setWMarkets] = useState(watchlistedMarkets);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -141,7 +140,6 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedM
     };
 
     useEffect(() => setPage(0), [phase]);
-    useEffect(() => setWMarkets(watchlistedMarkets), [watchlistedMarkets]);
 
     const compareStrings = (a: string, b: string) => {
         if (a < b) {
@@ -156,12 +154,11 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedM
 
     const toggleWatchlist = async (marketAddress: string) => {
         try {
-            const response = await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
+            await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
                 networkId,
                 walletAddress,
                 marketAddress,
             });
-            setWMarkets(response.data.data);
             refetchWatchlistedMarkets(walletAddress, networkId);
         } catch (e) {
             console.log(e);
@@ -262,7 +259,9 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedM
                                             toggleWatchlist(market.address);
                                         }}
                                     >
-                                        <Star src={wMarkets?.includes(market.address) ? fullStar : star}></Star>
+                                        <Star
+                                            src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
+                                        ></Star>
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Currency.Name

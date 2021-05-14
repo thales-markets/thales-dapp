@@ -84,7 +84,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
     });
 
-    const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId);
+    const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
     const watchlistedMarkets =
         watchlistedMarketsQuery && watchlistedMarketsQuery.data ? JSON.parse(watchlistedMarketsQuery.data).data : [];
 
