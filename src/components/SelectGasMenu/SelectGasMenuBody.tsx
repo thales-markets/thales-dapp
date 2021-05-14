@@ -5,8 +5,6 @@ import { setGasSpeed, setCustomGasPrice } from 'redux/modules/wallet';
 import useEthGasPriceQuery, { GasSpeed } from 'queries/network/useEthGasPriceQuery';
 import styled from 'styled-components';
 
-const MAX_GAS_MULTIPLE = 1.5;
-
 type GasMenuProps = {
     setDropdownIsOpen: (isOpen: boolean) => void;
 };
@@ -26,7 +24,6 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const [localCustomGasPrice, setLocalCustomGasPrice] = useState<string>('');
-    const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
     const setGasSpeedAndCloseDropdown = (gasSpeed: GasSpeed) => {
         dispatch(setGasSpeed(gasSpeed));
@@ -34,21 +31,11 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
         setDropdownIsOpen(false);
     };
 
-    const gasPriceLimit = useMemo(
-        () => Math.floor(ethGasPriceQuery.data != null ? ethGasPriceQuery.data.fast * MAX_GAS_MULTIPLE : 0),
-        [ethGasPriceQuery]
-    );
-
     useEffect(() => {
         if (localCustomGasPrice) {
-            const customGasPriceNum = Number(localCustomGasPrice);
-            const exceedsGasLimit = customGasPriceNum > gasPriceLimit;
-            dispatch(setCustomGasPrice(exceedsGasLimit ? gasPriceLimit : Math.max(0, customGasPriceNum)));
-            setErrorMessage(
-                exceedsGasLimit ? t('common.errors.gas-exceeds-limit', { gasPrice: gasPriceLimit }) : undefined
-            );
+            dispatch(setCustomGasPrice(Math.max(0, Number(localCustomGasPrice))));
         }
-    }, [setCustomGasPrice, localCustomGasPrice, gasPriceLimit, t]);
+    }, [setCustomGasPrice, localCustomGasPrice, t]);
 
     return (
         <div style={{ position: 'relative' }}>
@@ -60,12 +47,10 @@ const SelectGasMenuBody: React.FC<GasMenuProps> = ({ setDropdownIsOpen }) => {
                             setLocalCustomGasPrice(e.target.value);
                         }}
                         placeholder={t('modals.gwei.placeholder')}
-                        className={errorMessage ? 'error' : ''}
                         type="number"
                         step="0.1"
                         min="0"
                     />
-                    {errorMessage && <ErrorMaxInput>{errorMessage}</ErrorMaxInput>}
                 </Option>
                 <Option onClick={() => setGasSpeedAndCloseDropdown('average')}>
                     <span>{t('modals.gwei.table.average')} </span>
@@ -127,21 +112,6 @@ const Input = styled.input`
     font-size: 13px;
     font-weight: bold;
     width: 100%;
-    &.error {
-        border: 1px solid #c62937;
-        color: #c62937;
-    }
-`;
-
-const ErrorMaxInput = styled.span`
-    position: absolute;
-    top: 34px;
-    left: 10px;
-    font-weight: normal;
-    font-size: 10px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-    color: #c62937;
 `;
 
 export default SelectGasMenuBody;
