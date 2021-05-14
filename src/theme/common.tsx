@@ -58,7 +58,6 @@ export const GridDivCenteredCol = styled(GridDivCentered)`
 `;
 
 export const Background = styled.section`
-    background-size: cover !important;
     &.hero {
         background-image: url(${background}) !important;
     }

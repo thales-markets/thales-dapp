@@ -2,7 +2,10 @@
     "header": {
         "links": {
             "home": "Thales",
-            "options": "Options"
+            "options": "Options",
+            "faq": "FAQ",
+            "partners": "Partners",
+            "community": "Community"
         },
         "connect-wallet": "Connect wallet",
         "disconnect-wallet": "Disconnect wallet"

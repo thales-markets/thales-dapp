@@ -29,10 +29,9 @@ const Header: React.FC = () => {
                 <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home}>
                     {t('header.links.home')}
                 </Logo>
-                <NavLink to="">Products</NavLink>
-                <NavLink to="">Markets</NavLink>
-                <NavLink to="">Partners</NavLink>
-                <NavLink to="">Community</NavLink>
+                <NavLink to="">{t('header.links.faq')}</NavLink>
+                <NavLink to="">{t('header.links.community')}</NavLink>
+                <NavLink to="">{t('header.links.partners')}</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
                         {t('landing-page.use-app')}

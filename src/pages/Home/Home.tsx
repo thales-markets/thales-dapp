@@ -12,16 +12,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import ethOlive from 'assets/images/eth-olive.svg';
+import scaleSstars from 'assets/images/weight-scale-stars.png';
+import thalesTheWhite from 'assets/images/thales-white.png';
+
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-
-    const HeroSection = styled(FlexDiv)`
-        @media (max-width: 768px) {
-            flex-direction: column;
-            width: 100%;
-        }
-    `;
 
     return (
         <>
@@ -51,7 +47,7 @@ const Home: React.FC = () => {
             </Section>
             <Section>
                 <Side>
-                    <Image src={ethOlive}></Image>
+                    <Olive src={ethOlive} />
                 </Side>
                 <Side>
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
@@ -88,10 +84,14 @@ const Home: React.FC = () => {
                         {t('landing-page.options.view-market')}
                     </Button>
                 </Side>
-                <Side></Side>
+                <Side>
+                    <Image src={scaleSstars} />
+                </Side>
             </Section>
             <Section>
-                <Side></Side>
+                <Side>
+                    <ThalesTheWhite src={thalesTheWhite} />
+                </Side>
                 <Side>
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
                         {t('landing-page.who-is-thales')}
@@ -103,5 +103,22 @@ const Home: React.FC = () => {
         </>
     );
 };
+
+const HeroSection = styled(FlexDiv)`
+    @media (max-width: 768px) {
+        flex-direction: column;
+        width: 100%;
+    }
+`;
+
+const ThalesTheWhite = styled(Image)`
+    object-fit: contain;
+    max-height: 500px;
+`;
+
+const Olive = styled(Image)`
+    object-fit: contain;
+    max-height: 400px;
+`;
 
 export default Home;
