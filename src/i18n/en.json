@@ -407,7 +407,7 @@
                     },
                     "table": {
                         "type-col": "Type",
-                        "price-col": "Price per sOPT (sUSD)",
+                        "price-col": "Price (sUSD)",
                         "amount-col": "Amount (sOPT)",
                         "filled-col": "Filled (%)",
                         "total-col": "Total (sUSD)",

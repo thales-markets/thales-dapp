@@ -1,6 +1,6 @@
 import React from 'react';
 import { OptionsMarketInfo } from 'types/options';
-import { FlexDiv, FlexDivRowCentered, FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { FIAT_CURRENCY_MAP } from 'constants/currency';
@@ -66,7 +66,8 @@ const Container = styled(FlexDiv)`
     border-radius: 16px;
     margin-bottom: 20px;
 `;
-const InnerItemContainer = styled(FlexDivRowCentered)`
+const InnerItemContainer = styled(FlexDivCentered)`
+    flex: 1;
     height: 112px;
     &:not(:last-child) {
         border-right: 1px solid #748bc6;

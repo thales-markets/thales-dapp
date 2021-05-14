@@ -142,6 +142,7 @@ export type DisplayOrder = {
     total: number;
     timeRemaining: number;
     orderHash: string;
+    percentageOfMaximum?: number;
 };
 
 export type OrderSide = 'buy' | 'sell';

@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Header, Icon, Table } from 'semantic-ui-react';
 import OrderbookSide from './OrderbookSide';
 import { OptionSide, OrderItem } from 'types/options';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
@@ -13,9 +12,24 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
 import { Tooltip } from '@material-ui/core';
+import styled from 'styled-components';
+import { FlexDivCentered, FlexDivColumn, FlexDivRowCentered, FlexDiv } from 'theme/common';
+import { ReactComponent as OrderbookBuyIcon } from 'assets/images/orderbook-buy.svg';
+import { ReactComponent as OrderbookSellIcon } from 'assets/images/orderbook-sell.svg';
+import { ReactComponent as OrderbookAllIcon } from 'assets/images/orderbook-all.svg';
+import { ReactComponent as UserIcon } from 'assets/images/user.svg';
+import OrderbookTableHeader from '../components/OrderbookTable/OrderbookTableHeader';
+import { maxBy } from 'lodash';
+import { OrderbookFilterEnum } from 'constants/options';
 
 type OrderbookProps = {
     optionSide: OptionSide;
+};
+
+const orderbookFilterIconMap = {
+    [OrderbookFilterEnum.ALL]: <OrderbookAllIcon />,
+    [OrderbookFilterEnum.BUY]: <OrderbookBuyIcon />,
+    [OrderbookFilterEnum.SELL]: <OrderbookSellIcon />,
 };
 
 const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
@@ -26,6 +40,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const [filterMyOrders, setFilterMyOrders] = useState<boolean>(false);
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const [filter, setFilter] = useState<string>(OrderbookFilterEnum.ALL);
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const orderbookSign = optionSide === 'long' ? '>' : '<';
@@ -36,6 +51,15 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
     const buyOrders = useMemo(() => {
         const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.buyOrders : [];
+        if (orders.length > 0) {
+            const maxTotalItem = maxBy(orders, (order: OrderItem) => order.displayOrder.total);
+            if (maxTotalItem) {
+                orders.forEach((order: OrderItem) => {
+                    order.displayOrder.percentageOfMaximum =
+                        (order.displayOrder.total / maxTotalItem.displayOrder.total) * 100;
+                });
+            }
+        }
         return filterMyOrders
             ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
             : orders;
@@ -43,27 +67,41 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
     const sellOrders = useMemo(() => {
         const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.sellOrders : [];
+        if (orders.length > 0) {
+            const maxTotalItem = maxBy(orders, (order: OrderItem) => order.displayOrder.total);
+            if (maxTotalItem) {
+                orders.forEach((order: OrderItem) => {
+                    order.displayOrder.percentageOfMaximum =
+                        (order.displayOrder.total / maxTotalItem.displayOrder.total) * 100;
+                });
+            }
+        }
         return filterMyOrders
             ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
             : orders;
-    }, [orderbookQuery.data, filterMyOrders]);
+    }, [orderbookQuery.data, filterMyOrders, walletAddress]);
 
     const marketHeading = optionsMarket
-        ? `(${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
+        ? `${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
               USD_SIGN,
               optionsMarket.strikePrice
-          )} @ ${formatShortDate(optionsMarket.maturityDate)})`
+          )} @ ${formatShortDate(optionsMarket.maturityDate)}`
         : null;
 
     return (
-        <>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    <Header as="h3">
-                        {t(`options.market.trade-options.orderbook.title`)} {marketHeading}
-                    </Header>
-                </div>
-                <div>
+        <Container>
+            <WidgetHeader>
+                <WidgetTitle>Orderbook</WidgetTitle>
+                <ButtonsContainer>
+                    {Object.values(OrderbookFilterEnum).map((filterItem) => (
+                        <FilterButton
+                            className={filter === filterItem ? 'selected' : ''}
+                            onClick={() => setFilter(filterItem)}
+                            key={filterItem}
+                        >
+                            {orderbookFilterIconMap[filterItem]}
+                        </FilterButton>
+                    ))}
                     <Tooltip
                         title={
                             <span style={{ fontSize: 12 }}>
@@ -77,57 +115,113 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                         placement="top"
                         arrow={true}
                     >
-                        <Button
-                            toggle
-                            basic
+                        <FilterButton
                             onClick={isWalletConnected ? () => setFilterMyOrders(!filterMyOrders) : undefined}
-                            active={filterMyOrders}
-                            size="tiny"
-                            icon
+                            className={filterMyOrders ? 'selected' : ''}
                         >
-                            <Icon name="user" />
-                        </Button>
+                            <UserIcon />
+                        </FilterButton>
                     </Tooltip>
-                </div>
-            </div>
-            <Table compact selectable fixed striped size="small">
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell textAlign="right">
-                            {t('options.market.trade-options.orderbook.table.price-col')}
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="right">
-                            {t('options.market.trade-options.orderbook.table.amount-col')}
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="right">
-                            {t('options.market.trade-options.orderbook.table.total-col')}
-                        </Table.HeaderCell>
-                        <Table.HeaderCell textAlign="right" width={3}>
-                            {t('options.market.trade-options.orderbook.table.filled-col')}
-                        </Table.HeaderCell>
-                        <Table.HeaderCell>
-                            {t('options.market.trade-options.orderbook.table.time-remaining-col')}
-                        </Table.HeaderCell>
-                        <Table.HeaderCell width={1} />
-                    </Table.Row>
-                </Table.Header>
-            </Table>
-            <OrderbookSide
-                orders={buyOrders}
-                orderSide="buy"
-                optionSide={optionSide}
-                optionsTokenAddress={optionsTokenAddress}
-                filterMyOrders={filterMyOrders}
-            />
-            <OrderbookSide
-                orders={sellOrders}
-                orderSide="sell"
-                optionSide={optionSide}
-                optionsTokenAddress={optionsTokenAddress}
-                filterMyOrders={filterMyOrders}
-            />
-        </>
+                </ButtonsContainer>
+            </WidgetHeader>
+            <MainContent>
+                <Header>{marketHeading}</Header>
+                <OrderbookTableHeader />
+                <SidesContainer>
+                    {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.SELL) && (
+                        <OrderbookSide
+                            orders={sellOrders}
+                            orderSide="sell"
+                            optionSide={optionSide}
+                            optionsTokenAddress={optionsTokenAddress}
+                            filterMyOrders={filterMyOrders}
+                            filter={filter}
+                        />
+                    )}
+                    {filter === OrderbookFilterEnum.ALL && <Divider />}
+                    {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.BUY) && (
+                        <OrderbookSide
+                            orders={buyOrders}
+                            orderSide="buy"
+                            optionSide={optionSide}
+                            optionsTokenAddress={optionsTokenAddress}
+                            filterMyOrders={filterMyOrders}
+                            filter={filter}
+                        />
+                    )}
+                </SidesContainer>
+            </MainContent>
+        </Container>
     );
 };
+
+const SidesContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: calc(100% - 86px);
+`;
+
+const Container = styled(FlexDivColumn)`
+    background: rgba(196, 196, 196, 0.1);
+    border-radius: 15px;
+    padding: 0 10px 10px 10px;
+    height: 100%;
+`;
+
+const MainContent = styled(FlexDivColumn)`
+    background: #04045a;
+    box-sizing: border-box;
+    border-radius: 12px;
+    height: calc(100% - 76px);
+`;
+
+const Header = styled(FlexDivCentered)`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    color: #f6f6fe;
+    padding: 10px 0;
+`;
+
+const ButtonsContainer = styled(FlexDiv)`
+    &:last-child {
+        margin-right: 20px;
+    }
+`;
+
+const FilterButton = styled.button`
+    border: 2px solid rgba(1, 38, 81, 0.5);
+    border-radius: 23px;
+    height: 32px;
+    width: 54px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 10px;
+    &.selected,
+    &:hover {
+        background: rgba(1, 38, 81, 0.5);
+        border: 2px solid #355dff;
+        border-radius: 23px;
+    }
+`;
+
+const WidgetHeader = styled(FlexDivRowCentered)``;
+
+const WidgetTitle = styled.div`
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 40px;
+    text-align: center;
+    letter-spacing: 0.15px;
+    color: #f6f6fe;
+    padding: 10px 20px;
+`;
+
+const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 2px solid rgba(228, 228, 228, 0.1);
+`;
 
 export default Orderbook;
