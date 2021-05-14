@@ -31,7 +31,7 @@ const Home: React.FC = () => {
                     <HeroSection className="landing-hero">
                         <Side>
                             <Text className="title">{t('landing-page.title')}</Text>
-                            <Text className="text-m pale-grey" style={{ marginBottom: 60 }}>
+                            <Text className="text-m pale-grey" style={{ marginBottom: 60, marginTop: 6 }}>
                                 {t('landing-page.description')}
                             </Text>
                             <FlexDiv>
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
                                     style={{ padding: '8px 35px', marginRight: '20px' }}
                                     onClick={() => navigateTo(ROUTES.Options.Home)}
                                 >
-                                    Start App
+                                    {t('landing-page.use-app')}
                                 </Button>
                                 <Button className="tertiary">{t('landing-page.who-is-thales')}</Button>
                             </FlexDiv>

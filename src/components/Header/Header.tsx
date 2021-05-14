@@ -35,7 +35,7 @@ const Header: React.FC = () => {
                 <NavLink to="">Community</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
-                        Use dApp
+                        {t('landing-page.use-app')}
                     </Button>
                 </NavLink>
             </Links>
