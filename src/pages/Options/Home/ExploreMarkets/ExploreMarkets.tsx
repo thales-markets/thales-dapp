@@ -155,9 +155,11 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     )
                     .map((key) => (
                         <UserFilter
-                            className={
-                                userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum] ? 'selected' : ''
-                            }
+                            className={`${
+                                isWalletConnected && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                    ? 'selected'
+                                    : ''
+                            } ${!isWalletConnected ? 'disabled' : ''}`}
                             onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             key={key}
                             color={getColor(UserFilterEnum[key as keyof typeof UserFilterEnum])}
