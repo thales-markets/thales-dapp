@@ -42,35 +42,6 @@ enum UserFilterEnum {
     Recent = 'Recently Added',
 }
 
-const FilterButton = styled(Button)`
-    width: 110px;
-    height: 40px;
-    margin: 24px 10px;
-    background: transparent;
-    border: 1px solid #04045a;
-    border-radius: 32px;
-    font-weight: bold;
-    font-size: 13px;
-    line-height: 13px;
-    letter-spacing: 0.4px;
-    text-transform: capitalize !important;
-    color: #f6f6fe;
-    &.selected {
-        background: #44e1e2;
-    }
-`;
-
-const NoMarkets = styled(FlexDivColumn)`
-    height: 500px;
-    background: #126;
-    border-radius: 20px;
-    justify-content: space-evenly;
-    align-items: center;
-    .primary {
-        align-self: center;
-    }
-`;
-
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -195,9 +166,11 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     )
                     .map((key) => (
                         <UserFilter
-                            className={
-                                userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum] ? 'selected' : ''
-                            }
+                            className={`${
+                                isWalletConnected && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                    ? 'selected'
+                                    : ''
+                            } ${!isWalletConnected ? 'disabled' : ''}`}
                             onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             key={key}
                             color={getColor(UserFilterEnum[key as keyof typeof UserFilterEnum])}
@@ -207,7 +180,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                     ))}
             </FlexDivCentered>
 
-            <FlexDiv style={{ justifyContent: 'space-between', marginTop: 40 }}>
+            <FlexDiv className="table-filters" style={{ justifyContent: 'space-between', marginTop: 40 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div>
                         {Object.keys(PhaseFilterEnum)
@@ -288,5 +261,34 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         </div>
     );
 };
+
+const FilterButton = styled(Button)`
+    width: 110px;
+    height: 40px;
+    margin: 24px 10px;
+    background: transparent;
+    border: 1px solid #04045a;
+    border-radius: 32px;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: 0.4px;
+    text-transform: capitalize !important;
+    color: #f6f6fe;
+    &.selected {
+        background: #44e1e2;
+    }
+`;
+
+const NoMarkets = styled(FlexDivColumn)`
+    height: 500px;
+    background: #126;
+    border-radius: 20px;
+    justify-content: space-evenly;
+    align-items: center;
+    .primary {
+        align-self: center;
+    }
+`;
 
 export default ExploreMarkets;

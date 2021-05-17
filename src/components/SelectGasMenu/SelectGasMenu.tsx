@@ -18,26 +18,6 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
         setGasDropdownIsOpen(isOpen);
     };
 
-    const Select = styled(FlexDiv)`
-        position: relative;
-        display: block;
-        height: 24px;
-        padding-left: 6px;
-        padding-right: 30px;
-        background: #f6f6fe;
-        border-radius: 5px;
-
-        &:after {
-            content: url(${dropDown});
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 24px;
-            background: #44e1e2;
-            border-radius: 5px 0px 0px 5px;
-        }
-    `;
-
     return (
         <div>
             <Select onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}>
@@ -47,5 +27,25 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
         </div>
     );
 };
+
+const Select = styled(FlexDiv)`
+    position: relative;
+    display: block;
+    height: 24px;
+    padding-left: 6px;
+    padding-right: 30px;
+    background: #f6f6fe;
+    border-radius: 5px;
+
+    &:after {
+        content: url(${dropDown});
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 24px;
+        background: #44e1e2;
+        border-radius: 5px 0px 0px 5px;
+    }
+`;
 
 export default SelectGasMenu;

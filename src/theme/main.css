@@ -58,6 +58,12 @@ table {
     src: local('Titillium Web'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf) format('truetype');
 }
 
+
+@font-face {
+    font-family: 'Open Sans';
+    src: local('Open Sans'), url(../assets/fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
+}
+
 * {
     box-sizing: border-box;
     font-family: 'Titillium Web' !important;
@@ -69,3 +75,4 @@ table {
 @import './text.css';
 @import './colors.css';
 @import './datepicker.css';
+@import './media.css';

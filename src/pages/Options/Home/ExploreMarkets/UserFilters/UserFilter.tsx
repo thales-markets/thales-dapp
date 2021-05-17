@@ -1,7 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
+type UserFilterProps = {
+    color?: string;
+    img?: string;
+    text?: string;
+    className?: string;
+    onClick?: (param: any) => void;
+};
+
+const UserFilter: React.FC<UserFilterProps> = ({ color, img, text, className, onClick }) => {
+    return (
+        <FiltersWrapper className={className} onClick={onClick}>
+            <FiltersIconWrapper color={color}>
+                <FiltersIcon src={img}></FiltersIcon>
+            </FiltersIconWrapper>
+            <FiltersText>{text}</FiltersText>
+        </FiltersWrapper>
+    );
+};
+
 const FiltersWrapper = styled.div`
+    position: relative;
     background: #04045a;
     border-radius: 20px;
     padding: 20px 40px;
@@ -16,6 +36,19 @@ const FiltersWrapper = styled.div`
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         border: 4px solid #44e1e2;
         padding: 16px 36px;
+    }
+    &.disabled {
+        pointer-events: none;
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 31, 31, 0.4);
+            border-radius: 24px;
+        }
     }
 `;
 
@@ -45,24 +78,5 @@ const FiltersText = styled.p`
     margin-top: 16px;
     word-spacing: 100vw;
 `;
-
-type UserFilterProps = {
-    color?: string;
-    img?: string;
-    text?: string;
-    className?: string;
-    onClick?: (param: any) => void;
-};
-
-const UserFilter: React.FC<UserFilterProps> = ({ color, img, text, className, onClick }) => {
-    return (
-        <FiltersWrapper className={className} onClick={onClick}>
-            <FiltersIconWrapper color={color}>
-                <FiltersIcon src={img}></FiltersIcon>
-            </FiltersIconWrapper>
-            <FiltersText>{text}</FiltersText>
-        </FiltersWrapper>
-    );
-};
 
 export default UserFilter;

@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from 'components/Header';
-import { SideContent, List } from './components';
-import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li, Image } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
 import Footer from './Footer/Footer';
@@ -11,27 +10,23 @@ import { getIsWalletConnected } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import market from 'assets/images/market.png';
+import scaleSstars from 'assets/images/weight-scale-stars.png';
+import thalesTheWhite from 'assets/images/thales-white.png';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const HeroSection = styled(FlexDiv)`
-        @media (max-width: 768px) {
-            flex-direction: column;
-            width: 100%;
-        }
-    `;
-
     return (
         <>
-            <Section>
+            <Section class="hero">
                 <FlexDivColumn>
                     <Header />
-                    <HeroSection>
+                    <HeroSection className="landing-hero">
                         <Side>
                             <Text className="title">{t('landing-page.title')}</Text>
-                            <Text className="text-m pale-grey" style={{ marginBottom: 60 }}>
+                            <Text className="text-m pale-grey" style={{ marginBottom: 60, marginTop: 6 }}>
                                 {t('landing-page.description')}
                             </Text>
                             <FlexDiv>
@@ -40,7 +35,7 @@ const Home: React.FC = () => {
                                     style={{ padding: '8px 35px', marginRight: '20px' }}
                                     onClick={() => navigateTo(ROUTES.Options.Home)}
                                 >
-                                    Start App
+                                    {t('landing-page.use-app')}
                                 </Button>
                                 <Button className="tertiary">{t('landing-page.who-is-thales')}</Button>
                             </FlexDiv>
@@ -50,12 +45,14 @@ const Home: React.FC = () => {
                 </FlexDivColumn>
             </Section>
             <Section>
-                <Side></Side>
+                <Side>
+                    <Scale src={scaleSstars} />
+                </Side>
                 <Side>
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
                         {t('landing-page.markets.title')}
                     </Text>
-                    <SideContent className="text-m dark">{t('landing-page.markets.description')}</SideContent>
+                    <Text className="text-m dark">{t('landing-page.markets.description')}</Text>
                     <Button
                         className="primary"
                         style={{ marginTop: '40px' }}
@@ -86,20 +83,58 @@ const Home: React.FC = () => {
                         {t('landing-page.options.view-market')}
                     </Button>
                 </Side>
-                <Side></Side>
+                <Side>
+                    <Market src={market} />
+                </Side>
             </Section>
             <Section>
-                <Side></Side>
+                <Side>
+                    <ThalesTheWhite src={thalesTheWhite} />
+                </Side>
                 <Side>
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
                         {t('landing-page.who-is-thales')}
                     </Text>
-                    <SideContent className="text-m dark">{t('landing-page.thales-is')}</SideContent>
+                    <Text className="text-m dark">{t('landing-page.thales-is')}</Text>
                 </Side>
             </Section>
             <Footer></Footer>
         </>
     );
 };
+
+const HeroSection = styled(FlexDiv)`
+    @media (max-width: 768px) {
+        flex-direction: column;
+        width: 100%;
+    }
+`;
+
+const Scale = styled(Image)`
+    object-fit: contain;
+    max-height: 500px;
+    min-height: 400px;
+    min-width: 300px;
+`;
+
+const ThalesTheWhite = styled(Image)`
+    object-fit: contain;
+    max-height: 500px;
+    min-height: 400px;
+    min-width: 300px;
+`;
+
+const Market = styled(Image)`
+    object-fit: contain;
+    max-height: 400px;
+    min-height: 400px;
+    min-width: 300px;
+`;
+
+const List = styled.ul`
+    list-style-position: outside;
+    padding-left: 20px;
+    list-style: disc;
+`;
 
 export default Home;

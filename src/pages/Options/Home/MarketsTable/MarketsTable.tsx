@@ -266,7 +266,6 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedM
                                     <StyledTableCell>
                                         <Currency.Name
                                             currencyKey={market.currencyKey}
-                                            name={market.asset}
                                             showIcon={true}
                                             iconProps={{ width: '24px', height: '24px', type: 'asset' }}
                                         />

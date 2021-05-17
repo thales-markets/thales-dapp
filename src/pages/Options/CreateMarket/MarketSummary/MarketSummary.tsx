@@ -85,7 +85,6 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     {props.currencyKey && (
                         <Currency.Name
                             currencyKey={props.currencyKey.value}
-                            name={props.currencyKey.label}
                             showIcon={true}
                             iconProps={{ type: 'asset' }}
                         />

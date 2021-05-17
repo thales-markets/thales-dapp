@@ -10,6 +10,14 @@
     color: #04045a !important;
 }
 
+.react-datepicker-popper {
+    z-index: 3 !important;
+}
+
+.select-override {
+    z-index: 3;
+}
+
 .select-override > div:first-of-type {
     height: 56px;
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
 import React from 'react';
+import background from 'assets/images/background-dark.png';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -56,7 +57,16 @@ export const GridDivCenteredCol = styled(GridDivCentered)`
 `;
 
 export const Background = styled.section`
-    background-size: cover !important;
+    @media (min-width: 1440px) {
+        background-size: cover !important;
+    }
+
+    &.hero {
+        @media (min-height: 1000px) and (min-width: 1200px) {
+            min-height: 800px;
+        }
+        background-image: url(${background}) !important;
+    }
 
     &:nth-child(odd) {
         background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
@@ -83,8 +93,11 @@ export const MainWrapper = styled.div`
     }
 `;
 
-export const Section: React.FC = (props) => (
-    <Background>
+type SectionProps = {
+    class?: string;
+};
+export const Section: React.FC<SectionProps> = (props) => (
+    <Background className={props.class}>
         <MainWrapper>{props.children}</MainWrapper>
     </Background>
 );
@@ -153,28 +166,13 @@ export const Text = styled.p`
 export const Li = styled.li``;
 
 export const Logo = styled(Link)`
-    display: flex;
-    align-items: center;
     flex: 1;
-    &:before {
-        content: ' ';
-        background-image: url(${logo});
-        height: 52px;
-        width: 52px;
-        margin-right: 20px;
-    }
-
-    font-weight: bold;
-    font-size: 36px;
-    line-height: 55px;
-    color: white;
-    &:hover {
-        color: white;
-    }
-    @media (max-width: 768px) {
-        font-size: 24px;
-        line-height: 37px;
-    }
+    content: ' ';
+    background-image: url(${logo});
+    height: 52px;
+    width: 214px;
+    margin-right: 20px;
+    background-repeat: no-repeat;
 `;
 
 export const Image = styled.img`
