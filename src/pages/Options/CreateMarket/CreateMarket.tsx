@@ -289,7 +289,7 @@ export const CreateMarket: React.FC = () => {
         : EMPTY_VALUE;
 
     return (
-        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto' }}>
+        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
             <MainWrapper>
                 <FlexDivColumn>
                     <MarketHeader />
@@ -477,6 +477,8 @@ export const CreateMarket: React.FC = () => {
                                             </div>
                                             <StyledSlider
                                                 value={initialLongShorts.long}
+                                                max={95}
+                                                min={5}
                                                 onChange={(_, newValue) => {
                                                     const long = newValue as number;
                                                     setInitialLongShorts({
