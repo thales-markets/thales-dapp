@@ -1,5 +1,6 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { QueryClient } from 'react-query';
+import { NetworkId } from 'utils/network';
 
 type QueryConnector = {
     queryClient: QueryClient;
@@ -37,6 +38,10 @@ export const refetchTrades = (marketAddress: string) => {
 
 export const refetchUserTrades = (marketAddress: string, walletAddress: string) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.UserTrades(marketAddress, walletAddress));
+};
+
+export const refetchWatchlistedMarkets = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Watchlist(walletAddress, networkId));
 };
 
 export default queryConnector;
