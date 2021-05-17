@@ -23,7 +23,7 @@ const MarketHeader: React.FC = () => {
 
     return (
         <MarketHeaderWrapper id="market-header">
-            <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
+            <Logo to={ROUTES.Home} />
             {!isWalletConnected ? (
                 <Button
                     className="primary"

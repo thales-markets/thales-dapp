@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from 'components/Header';
-import { SideContent, List } from './components';
 import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li, Image } from 'theme/common';
 import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
@@ -11,7 +10,7 @@ import { getIsWalletConnected } from 'redux/modules/wallet';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import ethOlive from 'assets/images/eth-olive.svg';
+import market from 'assets/images/market.png';
 import scaleSstars from 'assets/images/weight-scale-stars.png';
 import thalesTheWhite from 'assets/images/thales-white.png';
 
@@ -47,13 +46,13 @@ const Home: React.FC = () => {
             </Section>
             <Section>
                 <Side>
-                    <Olive src={ethOlive} />
+                    <Scale src={scaleSstars} />
                 </Side>
                 <Side>
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
                         {t('landing-page.markets.title')}
                     </Text>
-                    <SideContent className="text-m dark">{t('landing-page.markets.description')}</SideContent>
+                    <Text className="text-m dark">{t('landing-page.markets.description')}</Text>
                     <Button
                         className="primary"
                         style={{ marginTop: '40px' }}
@@ -85,7 +84,7 @@ const Home: React.FC = () => {
                     </Button>
                 </Side>
                 <Side>
-                    <Image src={scaleSstars} />
+                    <Market src={market} />
                 </Side>
             </Section>
             <Section>
@@ -96,7 +95,7 @@ const Home: React.FC = () => {
                     <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
                         {t('landing-page.who-is-thales')}
                     </Text>
-                    <SideContent className="text-m dark">{t('landing-page.thales-is')}</SideContent>
+                    <Text className="text-m dark">{t('landing-page.thales-is')}</Text>
                 </Side>
             </Section>
             <Footer></Footer>
@@ -111,14 +110,31 @@ const HeroSection = styled(FlexDiv)`
     }
 `;
 
+const Scale = styled(Image)`
+    object-fit: contain;
+    max-height: 500px;
+    min-height: 400px;
+    min-width: 300px;
+`;
+
 const ThalesTheWhite = styled(Image)`
     object-fit: contain;
     max-height: 500px;
+    min-height: 400px;
+    min-width: 300px;
 `;
 
-const Olive = styled(Image)`
+const Market = styled(Image)`
     object-fit: contain;
     max-height: 400px;
+    min-height: 400px;
+    min-width: 300px;
+`;
+
+const List = styled.ul`
+    list-style-position: outside;
+    padding-left: 20px;
+    list-style: disc;
 `;
 
 export default Home;

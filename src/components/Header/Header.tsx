@@ -18,7 +18,7 @@ const Header: React.FC = () => {
 
     return (
         <HeaderWrapper>
-            <Logo to={ROUTES.Home}>{t('header.links.home')}</Logo>
+            <Logo to={ROUTES.Home} />
             <Links
                 className={
                     (showBurgerMenu === BurgerState.Show ? 'show' : '') +
@@ -26,9 +26,7 @@ const Header: React.FC = () => {
                     (showBurgerMenu === BurgerState.Hide ? 'hide' : '')
                 }
             >
-                <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home}>
-                    {t('header.links.home')}
-                </Logo>
+                <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home} />
                 <NavLink to="">{t('header.links.faq')}</NavLink>
                 <NavLink to="">{t('header.links.community')}</NavLink>
                 <NavLink to="">{t('header.links.partners')}</NavLink>
