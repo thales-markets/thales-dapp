@@ -10,18 +10,17 @@ export const FlexDiv = styled.div`
     outline: none !important;
 `;
 
-export const FlexDivRow = styled(FlexDiv)`
-    flex: 1;
+export const FlexDivCentered = styled(FlexDiv)`
+    align-items: center;
     justify-content: center;
+`;
+
+export const FlexDivRow = styled(FlexDiv)`
+    justify-content: space-between;
 `;
 
 export const FlexDivRowCentered = styled(FlexDivRow)`
     align-items: center;
-`;
-
-export const FlexDivCentered = styled(FlexDiv)`
-    align-items: center;
-    justify-content: center;
 `;
 
 export const FlexDivColumn = styled(FlexDiv)`

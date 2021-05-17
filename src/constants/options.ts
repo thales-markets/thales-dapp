@@ -64,3 +64,9 @@ export const ORDER_PERIOD_ITEMS_MAP: OrderPeriodItem[] = [
         i18nLabel: 'options.common.order-periods.trading-end',
     },
 ];
+
+export enum OrderbookFilterEnum {
+    ALL = 'all',
+    BUY = 'buy',
+    SELL = 'sell',
+}

@@ -5,7 +5,7 @@ import { orderBy } from 'lodash';
 import TransactionsTable from '../TransactionsTable';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import styled from 'styled-components';
-import { Button, FlexDivColumn } from 'theme/common';
+import { FlexDivColumn } from 'theme/common';
 
 type TransactionsWithFiltersProps = {
     marketTransactions: OptionsTransactions;
@@ -92,20 +92,27 @@ const FilterContainer = styled.div`
     }
 `;
 
-const FilterButton = styled(Button)`
+const FilterButton = styled.button`
+    border: 2px solid rgba(1, 38, 81, 0.5);
+    border-radius: 23px;
+    min-height: 32px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 10px;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     text-align: center;
     letter-spacing: 0.5px;
     color: #f6f6fe;
-    background: #3936c7;
-    border-radius: 20px;
-    text-transform: capitalize !important;
     margin: 14px 9px;
-    height: 32px;
-    &.selected {
-        background: #44e1e2;
+    padding: 5px 20px;
+    &.selected,
+    &:hover {
+        background: rgba(1, 38, 81, 0.5);
+        border: 2px solid #355dff;
+        border-radius: 23px;
+        color: #355dff;
     }
 `;
 

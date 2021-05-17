@@ -3,7 +3,6 @@ import { LineChart, XAxis, YAxis, Line, Tooltip, ResponsiveContainer } from 'rec
 import format from 'date-fns/format';
 import isNumber from 'lodash/isNumber';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as ExclamationIcon } from 'assets/images/exclamation.svg';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Loader } from 'semantic-ui-react';
@@ -12,6 +11,8 @@ import useBinaryOptionsHistoricalOptionPriceQuery from 'queries/options/useBinar
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
+import styled from 'styled-components';
+import { GridDivCenteredRow } from 'theme/common';
 
 type OptionsChartProps = {
     optionsMarket: OptionsMarketInfo;
@@ -53,7 +54,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp
                         <LineChart data={noChartData ? [] : chartData}>
                             <XAxis
                                 dataKey="timestamp"
-                                //tick={fontStyleMedium}
+                                tick={xAxisFontStyle}
                                 axisLine={false}
                                 tickLine={false}
                                 tickFormatter={(val: any) => {
@@ -67,7 +68,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp
                                 type="number"
                                 domain={[0, 1]}
                                 orientation="right"
-                                //tick={fontStyleMedium}
+                                tick={yAxisFontStyle}
                                 axisLine={false}
                                 tickLine={false}
                                 tickFormatter={(val: any) => t('common.val-in-cents', { val })}
@@ -76,7 +77,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp
                                 type="linear"
                                 name={t('options.common.long-price')}
                                 dataKey="longPrice"
-                                stroke="#10BA97"
+                                stroke="#4FBF67"
                                 strokeWidth={1.5}
                                 isAnimationActive={false}
                             />
@@ -84,24 +85,17 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp
                                 type="linear"
                                 name={t('options.common.short-price')}
                                 dataKey="shortPrice"
-                                stroke="#D94454"
+                                stroke="#C62937"
                                 strokeWidth={1.5}
                                 isAnimationActive={false}
                             />
                             {!noChartData && (
                                 <Tooltip
                                     // @ts-ignore
-                                    cursor={{ strokeWidth: 1, stroke: '#9492C4' }}
-                                    contentStyle={{
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        backgroundColor: '#F3F3FE',
-                                    }}
-                                    itemStyle={{
-                                        //...fontStyle,
-                                        textTransform: 'capitalize',
-                                    }}
-                                    //labelStyle={fontStyle}
+                                    cursor={{ strokeWidth: 2, stroke: '#F6F6FE' }}
+                                    contentStyle={tooltipContentStyle}
+                                    itemStyle={tooltipItemStyle}
+                                    labelStyle={tooltipLabelStyle}
                                     formatter={(val: string | number) => formatCurrencyWithSign(USD_SIGN, val)}
                                     labelFormatter={(label: any) => {
                                         if (!isNumber(label)) {
@@ -115,23 +109,63 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp
                     </ResponsiveContainer>
                     {isLoading && <Loader active />}
                     {noChartData && (
-                        <div
-                            style={{
-                                justifyItems: 'center',
-                                left: '50%',
-                                top: '50%',
-                                position: 'absolute',
-                                display: 'grid',
-                            }}
-                        >
-                            <ExclamationIcon />
-                            {t('options.market.chart-card.no-chart-data')}
-                        </div>
+                        <NoCharDataContainer>{t('options.market.chart-card.no-chart-data')}</NoCharDataContainer>
                     )}
                 </div>
             </div>
         </div>
     );
 };
+
+const xAxisFontStyle = {
+    fontWeight: 'bold',
+    fontSize: 10,
+    lineHeight: 16,
+    letterSpacing: 1,
+    fill: '#F6F6FE',
+};
+
+const yAxisFontStyle = {
+    fontWeight: 'bold',
+    fontSize: 13,
+    lineHeight: 24,
+    letterSpacing: 0.4,
+    fill: '#F6F6FE',
+};
+
+const tooltipContentStyle = {
+    background: '#F6F6FE',
+    border: '1px solid #44E1E2',
+    borderRadius: 10,
+};
+
+const tooltipItemStyle = {
+    fontWeight: 600,
+    fontSize: 12,
+    letterSpacing: 0.4,
+    fill: '#04045A',
+};
+
+const tooltipLabelStyle = {
+    fontWeight: 600,
+    fontSize: 12,
+    lineHeight: 1.8,
+    letterSpacing: 1,
+    color: '#04045A',
+};
+
+const NoCharDataContainer = styled(GridDivCenteredRow)`
+    grid-gap: 10px;
+    color: #f6f6fe;
+    padding: 20px;
+    justify-items: center;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 48px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+`;
 
 export default OptionsChart;

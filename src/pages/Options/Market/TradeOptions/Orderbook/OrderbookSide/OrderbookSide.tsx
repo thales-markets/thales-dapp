@@ -4,11 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Icon, Table } from 'semantic-ui-react';
-import { Orders, OrderItem, OrderSide, OptionSide } from 'types/options';
+import { Icon } from 'semantic-ui-react';
+import { Orders, OrderItem, OrderSide, OptionSide, DisplayOrder } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 import CancelOrderModal from '../CancelOrderModal';
 import FillOrderModal from '../FillOrderModal';
+import { CellProps, Row } from 'react-table';
+import OrderbookTable from '../../components/OrderbookTable';
+import styled from 'styled-components';
+import { OrderbookFilterEnum } from 'constants/options';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -16,6 +20,7 @@ type OrderbookSideProps = {
     optionSide: OptionSide;
     optionsTokenAddress: string;
     filterMyOrders: boolean;
+    filter: OrderbookFilterEnum;
 };
 
 const OrderbookSide: React.FC<OrderbookSideProps> = ({
@@ -24,6 +29,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
     optionSide,
     optionsTokenAddress,
     filterMyOrders,
+    filter,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -40,79 +46,146 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
     }, []);
 
     return (
-        <Table compact selectable fixed striped size="small">
-            {orders.length === 0 ? (
-                <div style={{ color: orderSide === 'buy' ? 'green' : 'red' }}>
-                    {filterMyOrders
-                        ? t(`options.market.trade-options.orderbook.filter.my-orders.${orderSide}.no-results`)
-                        : t(`options.market.trade-options.orderbook.${orderSide}.no-results`)}
-                </div>
-            ) : (
-                <Table.Body>
-                    {orders.map((orderItem: OrderItem, index: number) => {
-                        return (
-                            <Table.Row
-                                key={index}
-                                onClick={() => openFillOrderModal(orderItem)}
-                                style={{
-                                    color: orderSide === 'buy' ? 'green' : 'red',
-                                    backgroundColor:
-                                        orderItem.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase()
-                                            ? '#e9f8fd'
-                                            : index % 2 == 0
-                                            ? '#fff'
-                                            : 'rgba(0,0,50,.02)',
-                                }}
-                            >
-                                <Table.Cell textAlign="right">
-                                    {formatCurrency(orderItem.displayOrder.price)}
-                                </Table.Cell>
-                                <Table.Cell textAlign="right">
-                                    {formatCurrency(orderItem.displayOrder.amount)}
-                                </Table.Cell>
-                                <Table.Cell textAlign="right">
-                                    {formatCurrency(orderItem.displayOrder.total)}
-                                </Table.Cell>
-                                <Table.Cell textAlign="right" width={3}>
-                                    {formatPercentage(orderItem.displayOrder.filled)}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <TimeRemaining end={orderItem.displayOrder.timeRemaining} />
-                                </Table.Cell>
-                                <Table.Cell width={1}>
-                                    {orderItem.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && (
-                                        <Icon
-                                            name="cancel"
-                                            color="red"
-                                            onClick={(e: any) => {
-                                                e.stopPropagation();
-                                                openCancelOrderModal(orderItem);
-                                            }}
-                                        />
-                                    )}
-                                </Table.Cell>
-                            </Table.Row>
-                        );
-                    })}
-                    {fillOrderModalVisible && selectedOrder !== null && (
-                        <FillOrderModal
-                            order={selectedOrder}
-                            optionSide={optionSide}
-                            orderSide={orderSide}
-                            onClose={() => setFillOrderModalVisible(false)}
-                        />
-                    )}
-                    {cancelOrderModalVisible && selectedOrder !== null && (
-                        <CancelOrderModal
-                            order={selectedOrder}
-                            baseToken={optionsTokenAddress}
-                            onClose={() => setCancelOrderModalVisible(false)}
-                        />
-                    )}
-                </Table.Body>
+        <TableContainer filter={filter}>
+            <OrderbookTable
+                columns={[
+                    {
+                        id: 'dot',
+                        Cell: (cellProps: CellProps<OrderItem>) =>
+                            cellProps.cell.row.original.rawOrder.maker.toLowerCase() ===
+                                walletAddress.toLowerCase() && (
+                                <YellowDotContainer>
+                                    <YellowDot />
+                                </YellowDotContainer>
+                            ),
+                        width: 14,
+                        sortable: false,
+                    },
+                    {
+                        Header: <>{t('options.market.trade-options.orderbook.table.price-col')}</>,
+                        accessor: 'displayOrder.price',
+                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['price']>) => (
+                            <Price orderSide={orderSide}>{formatCurrency(cellProps.cell.value)}</Price>
+                        ),
+                        width: 300,
+                        sortable: false,
+                    },
+                    {
+                        Header: <>{t('options.market.trade-options.orderbook.table.amount-col')}</>,
+                        accessor: 'displayOrder.amount',
+                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['amount']>) => (
+                            <p>{formatCurrency(cellProps.cell.value)}</p>
+                        ),
+                        width: 300,
+                        sortable: false,
+                    },
+                    {
+                        Header: <>{t('options.market.trade-options.orderbook.table.total-col')}</>,
+                        accessor: 'displayOrder.total',
+                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['total']>) => (
+                            <p>{formatCurrency(cellProps.cell.value)}</p>
+                        ),
+                        width: 300,
+                        sortable: false,
+                    },
+                    {
+                        Header: <>{t('options.market.trade-options.orderbook.table.filled-col')}</>,
+                        accessor: 'displayOrder.filled',
+                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['filled']>) => (
+                            <p>{formatPercentage(cellProps.cell.value)}</p>
+                        ),
+                        width: 300,
+                        sortable: false,
+                    },
+                    {
+                        Header: <>{t('options.market.trade-options.orderbook.table.time-remaining-col')}</>,
+                        accessor: 'displayOrder.timeRemaining',
+                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['timeRemaining']>) => (
+                            <TimeRemaining end={cellProps.cell.value} />
+                        ),
+                        width: 300,
+                        sortable: false,
+                    },
+                    {
+                        id: 'cancel',
+                        Cell: (cellProps: CellProps<OrderItem>) =>
+                            cellProps.cell.row.original.rawOrder.maker.toLowerCase() ===
+                                walletAddress.toLowerCase() && (
+                                <IconContainer
+                                    name="cancel"
+                                    color="red"
+                                    onClick={(e: any) => {
+                                        e.stopPropagation();
+                                        openCancelOrderModal(cellProps.cell.row.original);
+                                    }}
+                                />
+                            ),
+                        width: 30,
+                        sortable: false,
+                    },
+                ]}
+                data={orders}
+                noResultsMessage={
+                    orders.length === 0 ? (
+                        <NoResultContainer orderSide={orderSide}>
+                            {filterMyOrders
+                                ? t(`options.market.trade-options.orderbook.filter.my-orders.${orderSide}.no-results`)
+                                : t(`options.market.trade-options.orderbook.${orderSide}.no-results`)}
+                        </NoResultContainer>
+                    ) : null
+                }
+                onTableRowClick={(row: Row<OrderItem>) => {
+                    openFillOrderModal(row.original);
+                }}
+                orderSide={orderSide}
+            />
+            {fillOrderModalVisible && selectedOrder !== null && (
+                <FillOrderModal
+                    order={selectedOrder}
+                    optionSide={optionSide}
+                    orderSide={orderSide}
+                    onClose={() => setFillOrderModalVisible(false)}
+                />
             )}
-        </Table>
+            {cancelOrderModalVisible && selectedOrder !== null && (
+                <CancelOrderModal
+                    order={selectedOrder}
+                    baseToken={optionsTokenAddress}
+                    onClose={() => setCancelOrderModalVisible(false)}
+                />
+            )}
+        </TableContainer>
     );
 };
+
+const TableContainer = styled.div<{ filter: OrderbookFilterEnum }>`
+    height: ${(props) => (props.filter === OrderbookFilterEnum.ALL ? 'calc(50% - 9px)' : '100%')};
+`;
+
+const Price = styled.p<{ orderSide: OrderSide }>`
+    margin-left: 14px;
+    color: ${(props) => (props.orderSide === 'buy' ? '#3DBAA2' : '#FF7A68')};
+`;
+
+const YellowDotContainer = styled.div`
+    margin-left: 7px;
+    padding-bottom: 3px;
+`;
+
+const YellowDot = styled.span`
+    height: 4px;
+    width: 4px;
+    background-color: rgb(240, 185, 11);
+    border-radius: 50%;
+    display: inline-block;
+`;
+
+const IconContainer = styled(Icon)`
+    z-index: 2;
+`;
+
+const NoResultContainer = styled.div<{ orderSide: OrderSide }>`
+    color: ${(props) => (props.orderSide === 'buy' ? '#3DBAA2' : '#FF7A68')};
+`;
 
 export default OrderbookSide;
