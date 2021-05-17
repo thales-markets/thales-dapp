@@ -87,8 +87,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-    const watchlistedMarkets =
-        watchlistedMarketsQuery && watchlistedMarketsQuery.data ? JSON.parse(watchlistedMarketsQuery.data).data : [];
+
+    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;

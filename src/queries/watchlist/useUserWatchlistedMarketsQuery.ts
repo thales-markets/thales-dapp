@@ -5,18 +5,23 @@ import { NetworkId } from 'utils/network';
 
 dotenv.config();
 
+interface Watchlist {
+    data: string[];
+}
+
 const useUserWatchlistedMarketsQuery = (
     walletAddress: string,
     networkId: NetworkId,
-    options?: UseQueryOptions<string>
+    options?: UseQueryOptions<Watchlist>
 ) => {
-    return useQuery(
+    return useQuery<Watchlist>(
         QUERY_KEYS.User.Watchlist(walletAddress, networkId),
         async () => {
             const baseUrl = process.env.REACT_APP_THALES_API_URL + '/watchlist/' + networkId;
             const response = await fetch(baseUrl + '/' + walletAddress);
             const result = await response.text();
-            return result;
+
+            return JSON.parse(result);
         },
         options
     );
