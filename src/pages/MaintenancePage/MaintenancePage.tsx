@@ -1,13 +1,10 @@
-import { FooterIcon, PoweredBy, SyntetixLogo, VerticalWrapper } from 'pages/Home/Footer/components';
+import { PoweredBy, SyntetixLogo, VerticalWrapper } from 'pages/Home/Footer/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import github from 'assets/images/github.svg';
-import twitter from 'assets/images/twitter.svg';
-import discord from 'assets/images/discord.svg';
 import synthetix from 'assets/images/synthetix.svg';
-import logo from 'assets/images/logo.svg';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, Image, MainWrapper, Section, Text } from 'theme/common';
+import image from 'assets/images/coming-soon-bg.png';
+import { FlexDiv, FlexDivColumn, MainWrapper, Side } from 'theme/common';
 
 const MaintenancePage: React.FC = () => {
     const { t } = useTranslation();
@@ -20,44 +17,44 @@ const MaintenancePage: React.FC = () => {
 
     const Background = styled.section`
         background-size: cover !important;
-        background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+        background: url('${image}') no-repeat;
+        height: 100vh;
     `;
 
-    const Logo = styled(Image)`
-        width: 60px;
-        margin: 0 auto;
-        padding-bottom: 20px;
+    const Section: React.FC = (props) => (
+        <Background>
+            <MainWrapper>{props.children}</MainWrapper>
+        </Background>
+    );
+
+    const Text = styled.p`
+        @media (max-width: 468px) {
+            margin: 0 0 0.5em;
+        }
+
+        @media only screen and (max-width: 992px) {
+            font-size: 60px;
+        }
     `;
 
     return (
         <>
             <Section>
                 <FlexDivColumn>
-                    <HeroSection>
-                        <FlexDivColumnCentered style={{ paddingTop: '130px', paddingBottom: '130px' }}>
-                            <Logo src={logo}></Logo>
-                            <Text className="title" style={{ textAlign: 'center' }}>
-                                {t('maintenance-page.title')}
-                            </Text>
-                        </FlexDivColumnCentered>
+                    <HeroSection style={{ width: '100%', position: 'fixed', bottom: '10%' }}>
+                        <Side>
+                            <Text className="title">{t('maintenance-page.title')}</Text>
+                        </Side>
+                        <Side></Side>
                     </HeroSection>
                 </FlexDivColumn>
+                <VerticalWrapper style={{ position: 'fixed', bottom: 0 }}>
+                    <PoweredBy>
+                        Powered by
+                        <SyntetixLogo src={synthetix}></SyntetixLogo>
+                    </PoweredBy>
+                </VerticalWrapper>
             </Section>
-            <Background>
-                <MainWrapper>
-                    <VerticalWrapper>
-                        <FlexDiv>
-                            <FooterIcon src={github}></FooterIcon>
-                            <FooterIcon src={twitter}></FooterIcon>
-                            <FooterIcon src={discord}></FooterIcon>
-                        </FlexDiv>
-                        <PoweredBy>
-                            Powered by
-                            <SyntetixLogo src={synthetix}></SyntetixLogo>
-                        </PoweredBy>
-                    </VerticalWrapper>
-                </MainWrapper>
-            </Background>
         </>
     );
 };
