@@ -45,9 +45,9 @@ const snxJSConnector: SnxJSConnector = {
 export const getSynthName = (currencyKey: string) => {
     switch (currencyKey) {
         case CRYPTO_CURRENCY_MAP.SNX:
-            return 'Synthetix Network Token';
+            return 'Synthetix';
         case CRYPTO_CURRENCY_MAP.SNX:
-            return 'Kyber Network Crystal';
+            return 'KNCL';
         default:
             return snxJSConnector.synthsMap[currencyKey]?.description;
     }

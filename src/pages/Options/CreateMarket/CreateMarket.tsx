@@ -319,7 +319,6 @@ export const CreateMarket: React.FC = () => {
                                             formatOptionLabel={(option: any) => (
                                                 <Currency.Name
                                                     currencyKey={option.value}
-                                                    name={option.label}
                                                     showIcon={true}
                                                     iconProps={{ type: 'asset' }}
                                                 />

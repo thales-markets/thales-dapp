@@ -55,7 +55,7 @@ export const StyledTableCell = withStyles(() => ({
         border: 'none',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: '16px',
+        fontSize: '14px',
         lineHeight: '24px',
         letterSpacing: ' 0.25px',
         color: '#F6F6FE',

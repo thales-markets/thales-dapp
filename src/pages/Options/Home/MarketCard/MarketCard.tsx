@@ -35,7 +35,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                     <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
                     <CryptoKey>{optionMarket.asset}</CryptoKey>
                 </FlexDivColumnCentered>
-                <FlexDivColumn style={{ paddingRight: 20, maxWidth: 120 }}>
+                <FlexDivColumn style={{ paddingRight: 20, maxWidth: 130 }}>
                     <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
                     <CryptoTime>
                         <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>

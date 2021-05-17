@@ -232,7 +232,6 @@ const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, children, ph
                                     <StyledTableCell>
                                         <Currency.Name
                                             currencyKey={market.currencyKey}
-                                            name={market.asset}
                                             showIcon={true}
                                             iconProps={{ width: '24px', height: '24px', type: 'asset' }}
                                         />
