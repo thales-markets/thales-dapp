@@ -113,7 +113,25 @@ xl: 1300, */
         padding: 0 !important;
     }
     #explore-markets {
-        transform: scale(0.8);
+        transform: scale(0.75) !important;
+        position: relative;
+        top: -140px;
+    }
+}
+
+@media (max-width: 640px) {
+    #explore-markets {
+        transform: scale(0.65) !important;
+        position: relative;
+        top: -200px;
+    }
+}
+
+@media (max-width: 550px) {
+    #explore-markets {
+        transform: scale(0.55) !important;
+        position: relative;
+        top: -250px;
     }
 }
 
@@ -125,6 +143,11 @@ xl: 1300, */
 
     #hot-markets .hot-markets__mobile {
         transform: scale(0.86);
+    }
+    #explore-markets {
+        transform: scale(0.45) !important;
+        position: relative;
+        top: -350px;
     }
 }
 

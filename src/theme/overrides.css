@@ -32,3 +32,12 @@
 .bn-onboard-custom {
     z-index: 1301;
 }
+
+.bn-onboard-custom.bn-onboard-dark-mode {
+    background: #0e1069 !important;
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
+.bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
+    background: #0e107b !important;
+}

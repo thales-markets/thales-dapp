@@ -20,44 +20,6 @@ type MarketSummaryProps = {
     marketFees: MarketFees | null;
 };
 
-const SummaryHeader = styled.div`
-    background: #04045a;
-    white-space: pre;
-    padding: 20px 160px;
-    border-radius: 20px 20px 0 0;
-    width: 100%;
-    border-bottom: 1px solid #748bc6;
-    text-align: center;
-`;
-
-const StrikeBy = styled(FlexDiv)`
-    background: #f6f6fe;
-    border-top: 1.5px solid #748bc6;
-    border-bottom: 1.5px solid #748bc6;
-    padding: 10px 35px;
-    height: 82px;
-    align-items: flex-end;
-`;
-
-const MarketInfo = styled(FlexDivColumn)`
-    background: #f6f6fe;
-    border-top: 1.5px solid #748bc6;
-    border-bottom: 1.5px solid #748bc6;
-    padding: 20px 38px;
-    font-size: 12px;
-`;
-
-const LongShortWrapper = styled.div`
-    border-top: 1.5px solid #748bc6;
-    border-bottom: 1.5px solid #748bc6;
-    padding-top: 10px;
-`;
-
-const Footer = styled(FlexDivColumn)`
-    background: #b8c6e5;
-    padding: 20px 38px;
-`;
-
 const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     const { t } = useTranslation();
     return (
@@ -67,9 +29,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             </SummaryHeader>
             <StrikeBy>
                 <div style={{ flex: 1, textAlign: 'center' }}>
-                    <Text className="text-xxxs dusty bold" style={{ marginBottom: '-2px' }}>
-                        Strike price:
-                    </Text>
+                    <Text className="text-xxs dusty bold">Strike price:</Text>
                     <Text className="text-s dark bold">
                         {`${USD_SIGN}  ${
                             props.strikingPrice !== ''
@@ -91,9 +51,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     )}
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
-                    <Text className="text-xxxs dusty bold" style={{ marginBottom: '-2px' }}>
-                        By:
-                    </Text>
+                    <Text className="text-xxs dusty bold">By:</Text>
                     <Text className="text-s dark bold">{props.maturityDate}</Text>
                 </div>
             </StrikeBy>
@@ -153,5 +111,43 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
         </FlexDivColumn>
     );
 };
+
+const SummaryHeader = styled.div`
+    background: #04045a;
+    white-space: pre;
+    padding: 20px 160px;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    border-bottom: 1px solid #748bc6;
+    text-align: center;
+`;
+
+const StrikeBy = styled(FlexDiv)`
+    background: #f6f6fe;
+    border-top: 1.5px solid #748bc6;
+    border-bottom: 1.5px solid #748bc6;
+    padding: 10px 35px;
+    height: 82px;
+    align-items: flex-end;
+`;
+
+const MarketInfo = styled(FlexDivColumn)`
+    background: #f6f6fe;
+    border-top: 1.5px solid #748bc6;
+    border-bottom: 1.5px solid #748bc6;
+    padding: 20px 38px;
+    font-size: 12px;
+`;
+
+const LongShortWrapper = styled.div`
+    border-top: 1.5px solid #748bc6;
+    border-bottom: 1.5px solid #748bc6;
+    padding-top: 10px;
+`;
+
+const Footer = styled(FlexDivColumn)`
+    background: #b8c6e5;
+    padding: 20px 38px;
+`;
 
 export default MarketSummary;
