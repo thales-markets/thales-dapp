@@ -38,6 +38,8 @@ import {
     Input,
     ToggleButton,
 } from './components';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import { get } from 'lodash';
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
@@ -81,6 +83,9 @@ export const CreateMarket: React.FC = () => {
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [withdrawalsEnabled, setWithdrawalsEnabled] = useState<boolean>(true);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+
+    const exchangeRatesQuery = useExchangeRatesQuery();
+    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
 
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPrice = useMemo(
@@ -334,6 +339,8 @@ export const CreateMarket: React.FC = () => {
                                             onChange={(option: any) => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
+                                                const price = get(exchangeRates, option.value, null);
+                                                if (price) setStrikePrice(price);
                                             }}
                                         />
                                         {!isCurrencyKeyValid && (
@@ -354,8 +361,8 @@ export const CreateMarket: React.FC = () => {
                                             })}
                                             value={strikePrice}
                                             onChange={(e) => {
-                                                setStrikePrice(parseInt(e.target.value, 10));
-                                                parseInt(e.target.value) > 0
+                                                setStrikePrice(Number(e.target.value).toString());
+                                                Number(e.target.value) > 0
                                                     ? setIsStrikePriceValid(true)
                                                     : setIsStrikePriceValid(false);
                                             }}
