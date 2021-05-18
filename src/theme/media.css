@@ -7,6 +7,11 @@ xl: 1300, */
 #hot-markets .hot-markets__mobile {
     display: none;
 }
+#explore-markets {
+    -moz-transform-origin: top;
+    -o-transform-origin: top;
+    -webkit-transform-origin: top;
+}
 
 @media (max-width: 1260px) {
     #market-header,
@@ -36,8 +41,15 @@ xl: 1300, */
         padding: 20px 80px;
     }
     #explore-markets {
+        position: absolute;
+        top: 0;
         transform: scale(0.9);
-        padding: 0 20px !important;
+    }
+    .explore-markets {
+        position: relative;
+    }
+    .explore-markets > div:first-child {
+        height: 1290px;
     }
     #explore-markets .table-filters {
         flex-direction: column;
@@ -78,7 +90,6 @@ xl: 1300, */
     }
     #explore-markets {
         transform: scale(0.85);
-        padding: 0 !important;
     }
 }
 
@@ -114,24 +125,27 @@ xl: 1300, */
     }
     #explore-markets {
         transform: scale(0.75) !important;
-        position: relative;
-        top: -140px;
+    }
+    .explore-markets > div:first-child {
+        height: 1100px;
     }
 }
 
 @media (max-width: 640px) {
     #explore-markets {
         transform: scale(0.65) !important;
-        position: relative;
-        top: -200px;
+    }
+    .explore-markets > div:first-child {
+        height: 950px;
     }
 }
 
 @media (max-width: 550px) {
     #explore-markets {
         transform: scale(0.55) !important;
-        position: relative;
-        top: -250px;
+    }
+    .explore-markets > div:first-child {
+        height: 790px;
     }
 }
 
@@ -146,8 +160,9 @@ xl: 1300, */
     }
     #explore-markets {
         transform: scale(0.45) !important;
-        position: relative;
-        top: -350px;
+    }
+    .explore-markets > div:first-child {
+        height: 650px;
     }
 }
 
@@ -181,7 +196,6 @@ xl: 1300, */
     }
     #explore-markets {
         transform: scale(0.9);
-        padding: 0 20px !important;
     }
 }
 
