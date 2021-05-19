@@ -25,7 +25,7 @@ const Footer: React.FC = () => (
                     <FooterIcon src={discord}></FooterIcon>
                 </FlexDiv>
                 <FlexDiv>
-                    <Logo to={ROUTES.Home}>Thales</Logo>
+                    <Logo to={ROUTES.Home} />
                 </FlexDiv>
                 <PoweredBy>
                     Powered by

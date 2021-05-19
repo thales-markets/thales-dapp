@@ -9,11 +9,10 @@ export const Row = styled.tr`
 
 export const PhaseLabel = styled(Button)`
     border-radius: 15px;
-    width: 135px;
     text-transform: uppercase !important;
     height: 40px;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
     letter-spacing: 0.25px;
     color: #04045a !important;
@@ -55,7 +54,7 @@ export const StyledTableCell = withStyles(() => ({
         border: 'none',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: '16px',
+        fontSize: '14px',
         lineHeight: '24px',
         letterSpacing: ' 0.25px',
         color: '#F6F6FE',
@@ -89,4 +88,9 @@ export const Arrow = styled(Image)`
     width: 10px;
     padding: 2px;
     box-sizing: content-box;
+`;
+
+export const Star = styled(Image)`
+    display: block;
+    width: 14px;
 `;

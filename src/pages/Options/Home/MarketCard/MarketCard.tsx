@@ -22,6 +22,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
     const { t } = useTranslation();
     return (
         <Card
+            id="market-card"
             onClick={() => {
                 if (optionMarket.phase !== 'expiry') {
                     navigateToOptionsMarket(optionMarket.address);
@@ -34,7 +35,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                     <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
                     <CryptoKey>{optionMarket.asset}</CryptoKey>
                 </FlexDivColumnCentered>
-                <FlexDivColumn style={{ paddingRight: 20, maxWidth: 120 }}>
+                <FlexDivColumn style={{ paddingRight: 20, maxWidth: 130 }}>
                     <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
                     <CryptoTime>
                         <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
@@ -58,7 +59,7 @@ const Card = styled(FlexDivColumnCentered)`
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 24px;
     color: white;
-    min-width: 250px;
+    min-width: 300px;
     max-width: 320px;
     margin: 50px 20px 50px 20px;
     cursor: pointer;
@@ -181,7 +182,7 @@ const ExpireDate = styled.p`
 const Phase = styled(PhaseLabel)`
     font-size: 12px;
     height: 24px;
-    padding: 0;
+    padding: 0 !important;
     flex: 1;
     margin-bottom: 4px;
     min-width: 70px;

@@ -2,6 +2,8 @@ import React from 'react';
 import { CurrencyKey } from 'constants/currency';
 import { formatCurrencyPair } from 'utils/formatters/string';
 import CurrencyIcon from './CurrencyIcon';
+import { FlexDivCentered } from 'theme/common';
+import styled from 'styled-components';
 
 type CurrencyPairProps = {
     baseCurrencyKey: CurrencyKey;
@@ -18,10 +20,12 @@ export const CurrencyPair: React.FC<CurrencyPairProps> = ({
     showIcon = true,
     iconProps = {},
 }) => (
-    <span>
+    <Container>
         {showIcon && <CurrencyIcon currencyKey={baseCurrencyKey} {...iconProps} />}
         {formatCurrencyPair(baseCurrencyAsset || baseCurrencyKey, quoteCurrencyKey)}
-    </span>
+    </Container>
 );
+
+const Container = styled(FlexDivCentered)``;
 
 export default CurrencyPair;

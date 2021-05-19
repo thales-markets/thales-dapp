@@ -10,6 +10,14 @@
     color: #04045a !important;
 }
 
+.react-datepicker-popper {
+    z-index: 3 !important;
+}
+
+.select-override {
+    z-index: 3;
+}
+
 .select-override > div:first-of-type {
     height: 56px;
 }
@@ -23,4 +31,13 @@
 
 .bn-onboard-custom {
     z-index: 1301;
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode {
+    background: #0e1069 !important;
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
+.bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
+    background: #0e107b !important;
 }
