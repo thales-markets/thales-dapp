@@ -50,9 +50,6 @@ table {
 	border-spacing: 0;
 }
 
-
-
-
 @font-face {
     font-family: 'Titillium Web';
     src: local('Titillium Web'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf) format('truetype');

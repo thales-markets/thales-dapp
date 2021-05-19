@@ -1,51 +1,44 @@
 import { PoweredBy, SyntetixLogo, VerticalWrapper } from 'pages/Home/Footer/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import { FlexDivColumn } from 'theme/common';
+import { HeroSection, Section, Text, HeaderWrapper, ThalesLogo, Logo, Side } from './components';
+import 'theme/flashlight.css';
 import synthetix from 'assets/images/synthetix.svg';
-import image from 'assets/images/coming-soon-bg.png';
-import { FlexDiv, FlexDivColumn, MainWrapper, Side } from 'theme/common';
+import bigLogo from 'assets/images/thales-logo.svg';
+import smallLogo from 'assets/images/small-logo.svg';
 
 const MaintenancePage: React.FC = () => {
     const { t } = useTranslation();
-    const HeroSection = styled(FlexDiv)`
-        @media (max-width: 768px) {
-            flex-direction: column;
-            width: 100%;
-        }
-    `;
 
-    const Background = styled.section`
-        background-size: cover !important;
-        background: url('${image}') no-repeat;
-        height: 100vh;
-    `;
+    useEffect(() => {
+        document.addEventListener('mousemove', update);
+        document.addEventListener('touchmove', update);
+    });
 
-    const Section: React.FC = (props) => (
-        <Background>
-            <MainWrapper>{props.children}</MainWrapper>
-        </Background>
-    );
+    function update(e: any) {
+        let x = e.clientX || (e.touches && e.touches[0].clientX);
+        let y = e.clientY || (e.touches && e.touches[0].clientY);
 
-    const Text = styled.p`
-        @media (max-width: 468px) {
-            margin: 0 0 0.5em;
-        }
+        if (x === undefined) x = 0;
+        if (y === undefined) y = 0;
 
-        @media only screen and (max-width: 992px) {
-            font-size: 60px;
-        }
-    `;
+        document.documentElement.style.setProperty('--cursorX', x + 'px');
+        document.documentElement.style.setProperty('--cursorY', y + 'px');
+    }
 
     return (
         <>
             <Section>
                 <FlexDivColumn>
-                    <HeroSection style={{ width: '100%', position: 'fixed', bottom: '10%' }}>
+                    <HeaderWrapper>
+                        <ThalesLogo src={bigLogo}></ThalesLogo>
+                    </HeaderWrapper>
+                    <HeroSection>
                         <Side>
+                            <Logo src={smallLogo}></Logo>
                             <Text className="title">{t('maintenance-page.title')}</Text>
                         </Side>
-                        <Side></Side>
                     </HeroSection>
                 </FlexDivColumn>
                 <VerticalWrapper style={{ position: 'fixed', bottom: 0 }}>
