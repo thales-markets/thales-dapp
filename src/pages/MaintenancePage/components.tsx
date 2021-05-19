@@ -26,6 +26,7 @@ export const Section: React.FC = (props) => (
 );
 
 export const Text = styled.p`
+    font-family: 'Titillium Web' !important;
     @media (max-width: 468px) {
         margin: 0 0 0.5em;
     }
