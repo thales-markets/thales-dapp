@@ -98,6 +98,10 @@ export const Input = styled.input`
 `;
 
 export const Field = styled(Form.Field)`
+    &.warning {
+        color: orange !important;
+        position: relative;
+    }
     &.error {
         color: #c62937 !important;
         position: relative;

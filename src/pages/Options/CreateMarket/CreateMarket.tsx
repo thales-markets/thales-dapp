@@ -38,6 +38,8 @@ import {
     Input,
     ToggleButton,
 } from './components';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import { get } from 'lodash';
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
@@ -81,6 +83,10 @@ export const CreateMarket: React.FC = () => {
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [withdrawalsEnabled, setWithdrawalsEnabled] = useState<boolean>(true);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [showWarning, setShowWarning] = useState(false);
+
+    const exchangeRatesQuery = useExchangeRatesQuery();
+    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
 
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPrice = useMemo(
@@ -334,13 +340,19 @@ export const CreateMarket: React.FC = () => {
                                             onChange={(option: any) => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
+                                                const price = get(exchangeRates, option.value, null);
+                                                if (price) setStrikePrice(price);
                                             }}
                                         />
                                         {!isCurrencyKeyValid && (
                                             <Error className="text-xxxs red">Please select asset.</Error>
                                         )}
                                     </Field>
-                                    <Field className={isStrikePriceValid ? '' : 'error'}>
+                                    <Field
+                                        className={`${isStrikePriceValid ? '' : 'error'} ${
+                                            showWarning ? 'warning' : ''
+                                        }`}
+                                    >
                                         <Text
                                             className="text-ms pale-grey uppercase text-error"
                                             style={{ margin: '5px 0' }}
@@ -354,10 +366,22 @@ export const CreateMarket: React.FC = () => {
                                             })}
                                             value={strikePrice}
                                             onChange={(e) => {
-                                                setStrikePrice(parseInt(e.target.value, 10));
-                                                parseInt(e.target.value) > 0
+                                                Number(e.target.value) > 0
                                                     ? setIsStrikePriceValid(true)
                                                     : setIsStrikePriceValid(false);
+                                                if (Number(e.target.value) > 0 && currencyKey) {
+                                                    const currentPrice = get(exchangeRates, currencyKey.value, null);
+                                                    if (currentPrice) {
+                                                        const show =
+                                                            currentPrice * 100 < Number(e.target.value) ||
+                                                            currentPrice / 100 > Number(e.target.value);
+                                                        setShowWarning(show);
+                                                    }
+                                                } else {
+                                                    setShowWarning(false);
+                                                }
+
+                                                setStrikePrice(Number(e.target.value).toString());
                                             }}
                                             onBlur={() => {
                                                 strikePrice
@@ -369,6 +393,11 @@ export const CreateMarket: React.FC = () => {
                                         />
                                         {!isStrikePriceValid && (
                                             <Error className="text-xxxs red">Please enter strike price.</Error>
+                                        )}
+                                        {showWarning && (
+                                            <Error className="text-xxxs warning">
+                                                Difference is greater than 100 times.
+                                            </Error>
                                         )}
                                     </Field>
                                 </Form.Group>
