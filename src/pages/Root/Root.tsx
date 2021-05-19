@@ -8,13 +8,12 @@ dotenv.config();
 
 import App from './App';
 import MaintenancePage from 'pages/MaintenancePage';
-
 interface RootProps {
     store: Store;
 }
 
 const Root: React.FC<RootProps> = ({ store }) => {
-    return process.env.REACT_APP_MAINTENANCE_MODE ? (
+    return process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? (
         <MaintenancePage />
     ) : (
         <Provider store={store}>

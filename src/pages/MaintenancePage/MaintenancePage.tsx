@@ -3,13 +3,19 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlexDivColumn } from 'theme/common';
 import { HeroSection, Section, Text, HeaderWrapper, ThalesLogo, Logo, Side } from './components';
-import 'theme/flashlight.css';
 import synthetix from 'assets/images/synthetix.svg';
 import bigLogo from 'assets/images/thales-logo.svg';
 import smallLogo from 'assets/images/small-logo.svg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const MaintenancePage: React.FC = () => {
     const { t } = useTranslation();
+
+    if (process.env.REACT_APP_MAINTENANCE_MODE === 'true') {
+        require('theme/flashlight.css');
+    }
 
     useEffect(() => {
         document.addEventListener('mousemove', update);

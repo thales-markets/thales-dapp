@@ -3,19 +3,19 @@
 	cursor: none;
 	--cursorX: 50vw;
 	--cursorY: 50vh;
-  }
-  :root:before {
-	content: '';
-	display: block;
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	pointer-events: none;
+}
+:root:before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    pointer-events: none;
     z-index: 10000;
-	background: radial-gradient(
+    background: radial-gradient(
         circle 10vmax at var(--cursorX) var(--cursorY),
-	  rgba(0,0,0,0) 0%,
-	  rgba(0,0,0,.5) 80%,
-	  rgba(0,0,0,.95) 100%
-	);
-  }
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,.5) 80%,
+        rgba(0,0,0,.95) 100%
+    );
+}
