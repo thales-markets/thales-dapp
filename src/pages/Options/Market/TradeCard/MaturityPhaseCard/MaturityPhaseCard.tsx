@@ -19,6 +19,9 @@ import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } f
 import ResultCard from '../components/ResultCard';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
+import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
@@ -109,55 +112,65 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     };
 
     return (
-        <div style={{ overflow: 'hidden' }}>
-            <div>
-                <ResultCard
-                    icon={<FinishIcon />}
-                    title={t('options.market.trade-card.maturity.card-title')}
-                    subTitle={t('options.market.trade-card.maturity.card-subtitle')}
-                    longAmount={longAmount}
-                    shortAmount={shortAmount}
-                    result={result}
-                />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Header as="h3" style={{ textTransform: 'uppercase' }}>
-                    {t('options.market.trade-card.maturity.payout-amount')}
-                </Header>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 5, marginBottom: 20 }}>
-                <Header as="h2">
-                    {formatCurrencyWithSign(USD_SIGN, isLongResult ? longAmount : shortAmount)} {SYNTHS_MAP.sUSD}
-                </Header>
-            </div>
-            <NetworkFees gasLimit={gasLimit} />
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Button primary disabled={isButtonDisabled} onClick={handleExercise}>
-                    {nothingToExercise
-                        ? t('options.market.trade-card.maturity.confirm-button.success-label')
-                        : !isExercising
-                        ? t('options.market.trade-card.maturity.confirm-button.label')
-                        : t('options.market.trade-card.maturity.confirm-button.progress-label')}
-                </Button>
-            </div>
+        <>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.MATURITY_PHASE}></MarketWidgetHeader>
+            <MarketWidgetContent>
+                <div style={{ overflow: 'hidden' }}>
+                    <div>
+                        <ResultCard
+                            icon={<FinishIcon />}
+                            title={t('options.market.trade-card.maturity.card-title')}
+                            subTitle={t('options.market.trade-card.maturity.card-subtitle')}
+                            longAmount={longAmount}
+                            shortAmount={shortAmount}
+                            result={result}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                        <Header as="h3" style={{ textTransform: 'uppercase' }}>
+                            {t('options.market.trade-card.maturity.payout-amount')}
+                        </Header>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 5, marginBottom: 20 }}>
+                        <Header as="h2">
+                            {formatCurrencyWithSign(USD_SIGN, isLongResult ? longAmount : shortAmount)}{' '}
+                            {SYNTHS_MAP.sUSD}
+                        </Header>
+                    </div>
+                    <NetworkFees gasLimit={gasLimit} />
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                        <Button primary disabled={isButtonDisabled} onClick={handleExercise}>
+                            {nothingToExercise
+                                ? t('options.market.trade-card.maturity.confirm-button.success-label')
+                                : !isExercising
+                                ? t('options.market.trade-card.maturity.confirm-button.label')
+                                : t('options.market.trade-card.maturity.confirm-button.progress-label')}
+                        </Button>
+                    </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}>
-                <span>
-                    {t('options.market.trade-card.maturity.footer.end-label')}{' '}
-                    <TimeRemaining
-                        end={optionsMarket.timeRemaining}
-                        onEnded={() =>
-                            queryConnector.queryClient.invalidateQueries(
-                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
-                            )
-                        }
-                    />
-                </span>
-            </div>
-        </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                        {txErrorMessage && (
+                            <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
+                        )}
+                    </div>
+                    <div
+                        style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}
+                    >
+                        <span>
+                            {t('options.market.trade-card.maturity.footer.end-label')}{' '}
+                            <TimeRemaining
+                                end={optionsMarket.timeRemaining}
+                                onEnded={() =>
+                                    queryConnector.queryClient.invalidateQueries(
+                                        QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                                    )
+                                }
+                            />
+                        </span>
+                    </div>
+                </div>
+            </MarketWidgetContent>
+        </>
     );
 };
 

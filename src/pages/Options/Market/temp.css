@@ -58,18 +58,6 @@ button {
 
 .grid-component-header {
     cursor: move;
-    height: 40px;
-    line-height: 30px;
-    font-weight: 600;
-    font-size: 1.0769230769rem;
-    background: #eee;
-    border: 1px solid #bbb;
-    border-bottom: none;
-    padding: 5px 0 5px 10px;
-    display: flex;
-    flex: 0 0 auto;
-    text-transform: uppercase;
-    justify-content: space-between;
 }
 
 .selectable.table tr:hover,
@@ -81,4 +69,24 @@ button {
 
 .ui.floating.label {
     margin: 0 !important;
+}
+
+.react-grid-item.react-grid-placeholder {
+    background: rgba(53, 93, 255, 0.2);
+    opacity: 1;
+    border: 3px dashed #4564ae;
+    border-radius: 23px;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+    right: 1px;
+    bottom: 1px;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid #f6f6fe;
+    border-bottom: 2px solid #f6f6fe;
+}
+
+.react-resizable-handle {
+    padding: 0 1px 1px 0;
 }

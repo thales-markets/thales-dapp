@@ -47,7 +47,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp
     const noChartData = historicalOptionPriceQuery.isSuccess && chartData.length < 2;
 
     return (
-        <div style={{ height: 300 }}>
+        <div style={{ height: 300, paddingLeft: '30px' }}>
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
                 <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
                     <ResponsiveContainer width="100%" height="100%">

@@ -8,9 +8,7 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-// import OptionSideIcon from '../../../components/OptionSideIcon';
 import styled from 'styled-components';
-// import { GridDivCenteredCol } from 'theme/common';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 
@@ -38,7 +36,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
     ({ optionsTransactions, noResultsMessage, isLoading }) => {
         const { t } = useTranslation();
         return (
-            <TableContainer>
+            <>
                 <Table
                     columns={[
                         {
@@ -75,10 +73,6 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                                         ) : (
                                             <PositionImage src={shortIcon} />
                                         )}
-                                        {/* <Position>
-                                            <OptionSideIcon side={side} />
-                                            <span>{side}</span>
-                                        </Position> */}
                                     </>
                                 );
                             },
@@ -132,19 +126,10 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                     isLoading={isLoading}
                     noResultsMessage={noResultsMessage}
                 />
-            </TableContainer>
+            </>
         );
     }
 );
-export const TableContainer = styled.div`
-    overflow: auto;
-    height: 100%;
-`;
-
-// const Position = styled(GridDivCenteredCol)`
-//     grid-gap: 8px;
-//     text-transform: uppercase;
-// `;
 
 const PositionImage = styled.img``;
 

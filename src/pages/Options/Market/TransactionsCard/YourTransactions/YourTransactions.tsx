@@ -10,6 +10,9 @@ import { uniqBy } from 'lodash';
 import { useMarketContext } from '../../contexts/MarketContext';
 import useBinaryOptionsUserTradesQuery from 'queries/options/useBinaryOptionsUserTradesQuery';
 import TransactionsWithFilters from '../components/TransactionsWithFilters';
+import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 
 type YourTransactionsProps = {
     marketAddress: OptionsMarketInfo['address'];
@@ -52,12 +55,17 @@ const YourTransactions: React.FC<YourTransactionsProps> = ({ marketAddress, wall
     }, [marketTransactionsQuery.data, pendingTransactions, marketAddress, walletAddress]);
 
     return (
-        <TransactionsWithFilters
-            marketTransactions={marketTransactions}
-            tradesTransactions={tradesQuery.data || []}
-            isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
-            type="your-activity"
-        />
+        <>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.YOUR_TRANSACTIONS}></MarketWidgetHeader>
+            <MarketWidgetContent>
+                <TransactionsWithFilters
+                    marketTransactions={marketTransactions}
+                    tradesTransactions={tradesQuery.data || []}
+                    isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
+                    type="your-activity"
+                />
+            </MarketWidgetContent>
+        </>
     );
 };
 

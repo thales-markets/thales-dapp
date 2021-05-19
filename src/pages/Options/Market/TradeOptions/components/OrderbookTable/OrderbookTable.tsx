@@ -92,8 +92,6 @@ const TableBody = styled.div<{ orderSide: OrderSide }>`
     display: flex;
     flex-direction: ${(props) => (props.orderSide === 'buy' ? 'column' : 'column-reverse')};
     overflow: auto;
-    scrollbar-color: #355dff #04045a;
-    scrollbar-width: thin;
     ::-webkit-scrollbar {
         width: 5px;
     }
@@ -103,12 +101,12 @@ const TableBody = styled.div<{ orderSide: OrderSide }>`
     ::-webkit-scrollbar-thumb {
         border-radius: 15px;
         background: #355dff;
-        &:active {
-            background: #44e1e2;
-        }
-        &:hover {
-            background: rgb(67, 116, 255);
-        }
+    }
+    ::-webkit-scrollbar-thumb:active {
+        background: #44e1e2;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(67, 116, 255);
     }
 `;
 

@@ -20,6 +20,9 @@ import TradingViewWidget from 'react-tradingview-widget';
 import { assetToTradingViewMap } from 'config/tradingView';
 import { FlexDivColumn, FlexDivRowCentered, FlexDiv } from 'theme/common';
 import styled from 'styled-components';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetContent from '../components/MarketWidget/MarketWidgetContent';
+import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 
 type ChartType = 'price' | 'options' | 'trading-view';
 
@@ -54,36 +57,39 @@ const ChartCard: React.FC = () => {
     };
 
     return (
-        <Container style={{ width: '100%', height: '100%' }}>
-            <WidgetHeader>
-                <WidgetTitle>
-                    <Currency.Pair
-                        baseCurrencyKey={optionsMarket.currencyKey}
-                        baseCurrencyAsset={optionsMarket.asset}
-                        quoteCurrencyKey={FIAT_CURRENCY_MAP.USD}
-                        iconProps={{
-                            type: 'asset',
-                        }}
-                    />
-                    <Splitter>|</Splitter> {formatCurrencyWithSign(USD_SIGN, optionsMarket.currentPrice)}
-                </WidgetTitle>
-                <FilterContainer>
-                    <FilterButton
-                        className={chartType === 'trading-view' ? 'selected' : ''}
-                        onClick={() => setChartType('trading-view')}
-                    >
-                        {t('options.market.chart-card.chart-types.trading-view')}
-                    </FilterButton>
-                    {/* <Button size="mini" primary={chartType === 'price'} onClick={() => setChartType('price')}>
+        <>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.CHART}></MarketWidgetHeader>
+            <MarketWidgetContent>
+                <Container style={{ width: '100%', height: '100%' }}>
+                    <WidgetHeader>
+                        <WidgetTitle>
+                            <Currency.Pair
+                                baseCurrencyKey={optionsMarket.currencyKey}
+                                baseCurrencyAsset={optionsMarket.asset}
+                                quoteCurrencyKey={FIAT_CURRENCY_MAP.USD}
+                                iconProps={{
+                                    type: 'asset',
+                                }}
+                            />
+                            <Splitter>|</Splitter> {formatCurrencyWithSign(USD_SIGN, optionsMarket.currentPrice)}
+                        </WidgetTitle>
+                        <FilterContainer>
+                            <FilterButton
+                                className={chartType === 'trading-view' ? 'selected' : ''}
+                                onClick={() => setChartType('trading-view')}
+                            >
+                                {t('options.market.chart-card.chart-types.trading-view')}
+                            </FilterButton>
+                            {/* <Button size="mini" primary={chartType === 'price'} onClick={() => setChartType('price')}>
                         <DollarSignIcon /> {t('options.market.chart-card.chart-types.price')}
                     </Button> */}
-                    <FilterButton
-                        className={chartType === 'options' ? 'selected' : ''}
-                        onClick={() => setChartType('options')}
-                    >
-                        <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
-                    </FilterButton>
-                    {/* <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
+                            <FilterButton
+                                className={chartType === 'options' ? 'selected' : ''}
+                                onClick={() => setChartType('options')}
+                            >
+                                <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
+                            </FilterButton>
+                            {/* <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
                     {PERIOD_LABELS.map((period) => (
                         <Button
                             size="mini"
@@ -94,27 +100,29 @@ const ChartCard: React.FC = () => {
                             {t(period.i18nLabel)}
                         </Button>
                     ))} */}
-                </FilterContainer>
-            </WidgetHeader>
-            <div style={{ width: '100%', height: '90%' }}>
-                {chartType === 'price' && <PriceChart {...chartProps} />}
-                {chartType === 'options' && <OptionsChart {...chartProps} />}
-                {chartType === 'trading-view' && (
-                    <div style={{ width: '100%', height: '100%' }}>
-                        <TradingViewWidget
-                            symbol={assetToTradingViewMap[optionsMarket.currencyKey]}
-                            save_image={false}
-                            style="2"
-                            range="12m"
-                            withdateranges={true}
-                            autosize={true}
-                            hide_side_toolbar={false}
-                            theme="Dark"
-                        />
+                        </FilterContainer>
+                    </WidgetHeader>
+                    <div style={{ width: '100%', height: 'calc(100% - 60px)' }}>
+                        {chartType === 'price' && <PriceChart {...chartProps} />}
+                        {chartType === 'options' && <OptionsChart {...chartProps} />}
+                        {chartType === 'trading-view' && (
+                            <div style={{ width: '100%', height: '100%' }}>
+                                <TradingViewWidget
+                                    symbol={assetToTradingViewMap[optionsMarket.currencyKey]}
+                                    save_image={false}
+                                    style="2"
+                                    range="12m"
+                                    withdateranges={true}
+                                    autosize={true}
+                                    hide_side_toolbar={false}
+                                    theme="Dark"
+                                />
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
-        </Container>
+                </Container>
+            </MarketWidgetContent>
+        </>
     );
 };
 

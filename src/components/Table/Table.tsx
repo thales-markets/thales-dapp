@@ -42,9 +42,9 @@ const Table: React.FC<TableProps> = ({
     );
 
     return (
-        <ReactTable {...getTableProps()}>
+        <>
             {headerGroups.map((headerGroup, headerGroupIndex: any) => (
-                <TableRow {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                <TableRowHead {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                     {headerGroup.headers.map((column: any, headerIndex: any) => (
                         <TableCellHead
                             {...column.getHeaderProps(column.sortable ? column.getSortByToggleProps() : undefined)}
@@ -67,34 +67,36 @@ const Table: React.FC<TableProps> = ({
                             )}
                         </TableCellHead>
                     ))}
-                </TableRow>
+                </TableRowHead>
             ))}
-            {isLoading ? (
-                <Loader active />
-            ) : noResultsMessage != null ? (
-                <NoResultContainer>{noResultsMessage}</NoResultContainer>
-            ) : (
-                <TableBody {...getTableBodyProps()}>
-                    {rows.map((row, rowIndex: any) => {
-                        prepareRow(row);
+            <ReactTable {...getTableProps()}>
+                {isLoading ? (
+                    <Loader active />
+                ) : noResultsMessage != null ? (
+                    <NoResultContainer>{noResultsMessage}</NoResultContainer>
+                ) : (
+                    <TableBody {...getTableBodyProps()}>
+                        {rows.map((row, rowIndex: any) => {
+                            prepareRow(row);
 
-                        return (
-                            <TableRow
-                                {...row.getRowProps()}
-                                onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
-                                key={rowIndex}
-                            >
-                                {row.cells.map((cell, cellIndex: any) => (
-                                    <TableCell {...cell.getCellProps()} key={cellIndex}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            )}
-        </ReactTable>
+                            return (
+                                <TableRow
+                                    {...row.getRowProps()}
+                                    onClick={onTableRowClick ? () => onTableRowClick(row) : undefined}
+                                    key={rowIndex}
+                                >
+                                    {row.cells.map((cell, cellIndex: any) => (
+                                        <TableCell {...cell.getCellProps()} key={cellIndex}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                )}
+            </ReactTable>
+        </>
     );
 };
 
@@ -103,18 +105,45 @@ const ReactTable = styled.div`
     height: 100%;
     overflow-x: auto;
     position: relative;
+    display: flex;
 `;
 
-const TableBody = styled.div``;
+const TableBody = styled.div`
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+    width: 100%;
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #04045a;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 15px;
+        background: #355dff;
+    }
+    ::-webkit-scrollbar-thumb:active {
+        background: #44e1e2;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(67, 116, 255);
+    }
+`;
 
 const TableRow = styled(FlexDiv)`
-    height: 40px;
+    min-height: 40px;
     font-weight: 600;
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
+    border-bottom: 1px solid rgba(228, 228, 228, 0.1);
+`;
+
+const TableRowHead = styled(TableRow)`
     border-top: 1px solid rgba(228, 228, 228, 0.1);
+    border-bottom: 1px solid rgba(228, 228, 228, 0.1);
 `;
 
 const TableCell = styled(FlexDivCentered)`
@@ -150,6 +179,7 @@ const NoResultContainer = styled(TableRow)`
     padding-top: 20px;
     padding-left: 18px;
     font-size: 14px;
+    border: none;
 `;
 
 export default Table;

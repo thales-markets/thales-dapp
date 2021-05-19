@@ -17,6 +17,9 @@ import ResultCard from '../components/ResultCard';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
+import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 
 type TradingPhaseCardProps = TradeCardPhaseProps;
 
@@ -123,47 +126,56 @@ const TradingPhaseCard: React.FC<TradingPhaseCardProps> = ({ optionsMarket, acco
     };
 
     return (
-        <div style={{ overflow: 'hidden' }}>
-            <div>
-                <ResultCard
-                    icon={<ClockIcon />}
-                    title={t('options.market.trade-card.trading.card-title')}
-                    subTitle={t('options.market.trade-card.trading.card-subtitle')}
-                    longAmount={balances.long}
-                    shortAmount={balances.short}
-                    longPrice={optionsMarket.longPrice}
-                    shortPrice={optionsMarket.shortPrice}
-                    claimableLongAmount={claimable.long}
-                    claimableShortAmount={claimable.short}
-                />
-            </div>
-            <NetworkFees gasLimit={gasLimit} />
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Button primary disabled={isButtonDisabled} onClick={handleClaim}>
-                    {nothingToClaim
-                        ? t('options.market.trade-card.trading.confirm-button.success-label')
-                        : !isClaiming
-                        ? t('options.market.trade-card.trading.confirm-button.label')
-                        : t('options.market.trade-card.trading.confirm-button.progress-label')}
-                </Button>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}>
-                <span>
-                    {t('options.market.trade-card.trading.footer.end-label')}{' '}
-                    <TimeRemaining
-                        end={optionsMarket.timeRemaining}
-                        onEnded={() =>
-                            queryConnector.queryClient.invalidateQueries(
-                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
-                            )
-                        }
-                    />
-                </span>
-            </div>
-        </div>
+        <>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.TRADING_PHASE}></MarketWidgetHeader>
+            <MarketWidgetContent>
+                <div style={{ overflow: 'hidden' }}>
+                    <div>
+                        <ResultCard
+                            icon={<ClockIcon />}
+                            title={t('options.market.trade-card.trading.card-title')}
+                            subTitle={t('options.market.trade-card.trading.card-subtitle')}
+                            longAmount={balances.long}
+                            shortAmount={balances.short}
+                            longPrice={optionsMarket.longPrice}
+                            shortPrice={optionsMarket.shortPrice}
+                            claimableLongAmount={claimable.long}
+                            claimableShortAmount={claimable.short}
+                        />
+                    </div>
+                    <NetworkFees gasLimit={gasLimit} />
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+                        <Button primary disabled={isButtonDisabled} onClick={handleClaim}>
+                            {nothingToClaim
+                                ? t('options.market.trade-card.trading.confirm-button.success-label')
+                                : !isClaiming
+                                ? t('options.market.trade-card.trading.confirm-button.label')
+                                : t('options.market.trade-card.trading.confirm-button.progress-label')}
+                        </Button>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                        {txErrorMessage && (
+                            <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
+                        )}
+                    </div>
+                    <div
+                        style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}
+                    >
+                        <span>
+                            {t('options.market.trade-card.trading.footer.end-label')}{' '}
+                            <TimeRemaining
+                                end={optionsMarket.timeRemaining}
+                                onEnded={() =>
+                                    queryConnector.queryClient.invalidateQueries(
+                                        QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                                    )
+                                }
+                            />
+                        </span>
+                    </div>
+                </div>
+            </MarketWidgetContent>
+        </>
     );
 };
 

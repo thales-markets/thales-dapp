@@ -82,8 +82,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
 };
 
 const Container = styled(FlexDivColumn)`
-    background: #04045a;
-    border-radius: 20px;
+    height: 100%;
 `;
 
 const FilterContainer = styled.div`

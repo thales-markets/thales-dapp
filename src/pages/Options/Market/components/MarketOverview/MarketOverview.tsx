@@ -62,7 +62,6 @@ const ItemContainer: React.FC = (props) => (
 
 const Container = styled(FlexDiv)`
     background: #04045a;
-    border: 1px solid #e4e4e4;
     border-radius: 16px;
     margin-bottom: 20px;
 `;
@@ -70,7 +69,7 @@ const InnerItemContainer = styled(FlexDivCentered)`
     flex: 1;
     height: 112px;
     &:not(:last-child) {
-        border-right: 1px solid #748bc6;
+        border-right: 2px solid rgba(1, 38, 81, 0.5);
     }
     color: #b8c6e5;
 `;

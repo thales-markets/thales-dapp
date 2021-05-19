@@ -37,6 +37,9 @@ import BidNetworkFees from '../components/BidNetworkFees';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
 import { bidOrRefundForPrice, pricesAfterBidOrRefund } from 'utils/binaryOptions';
+import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 
 const TIMEOUT_DELAY = 2500;
 
@@ -403,127 +406,138 @@ const BiddingPhaseCard: React.FC<BiddingPhaseCardProps> = ({ optionsMarket, acco
     };
 
     return (
-        <div style={{ overflow: 'hidden' }}>
-            <div>
-                <Menu tabular>
-                    <Menu.Item name="bid" active={isBid} onClick={() => handleTypeChange('bid')}>
-                        {t('options.market.trade-card.bidding.bid.title')}
-                    </Menu.Item>
-                    {optionsMarket.withdrawalsEnabled ? (
-                        <Menu.Item name="refund" active={isRefund} onClick={() => handleTypeChange('refund')}>
-                            {t('options.market.trade-card.bidding.refund.title')}
-                        </Menu.Item>
-                    ) : (
-                        <Tooltip
-                            title={<span>{t('options.market.trade-card.bidding.refund.disabled.tooltip')}</span>}
-                            placement="top"
-                            arrow={true}
-                        >
-                            <Menu.Item
-                                name="refund"
-                                active={isRefund}
-                                disabled={true}
-                                style={{ textTransform: 'uppercase' }}
-                            >
-                                {t('options.market.trade-card.bidding.refund.title')} <BlockedIcon />
+        <>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.BIDDING_PHASE}></MarketWidgetHeader>
+            <MarketWidgetContent>
+                <div style={{ overflow: 'hidden' }}>
+                    <div>
+                        <Menu tabular>
+                            <Menu.Item name="bid" active={isBid} onClick={() => handleTypeChange('bid')}>
+                                {t('options.market.trade-card.bidding.bid.title')}
                             </Menu.Item>
-                        </Tooltip>
-                    )}
-                </Menu>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 30 }}>
-                <Header as="h3">{t(`${transKey}.subtitle`)}</Header>
-                <span>
-                    <WalletIcon />
-                    {isWalletConnected ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance) : EMPTY_VALUE}
-                </span>
-            </div>
-            <Grid centered>
-                <Grid.Column width={8}>
-                    <TradeSide
-                        side="long"
+                            {optionsMarket.withdrawalsEnabled ? (
+                                <Menu.Item name="refund" active={isRefund} onClick={() => handleTypeChange('refund')}>
+                                    {t('options.market.trade-card.bidding.refund.title')}
+                                </Menu.Item>
+                            ) : (
+                                <Tooltip
+                                    title={
+                                        <span>{t('options.market.trade-card.bidding.refund.disabled.tooltip')}</span>
+                                    }
+                                    placement="top"
+                                    arrow={true}
+                                >
+                                    <Menu.Item
+                                        name="refund"
+                                        active={isRefund}
+                                        disabled={true}
+                                        style={{ textTransform: 'uppercase' }}
+                                    >
+                                        {t('options.market.trade-card.bidding.refund.title')} <BlockedIcon />
+                                    </Menu.Item>
+                                </Tooltip>
+                            )}
+                        </Menu>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 30 }}>
+                        <Header as="h3">{t(`${transKey}.subtitle`)}</Header>
+                        <span>
+                            <WalletIcon />
+                            {isWalletConnected ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance) : EMPTY_VALUE}
+                        </span>
+                    </div>
+                    <Grid centered>
+                        <Grid.Column width={8}>
+                            <TradeSide
+                                side="long"
+                                type={type}
+                                isActive={isLong}
+                                amount={longSideAmount}
+                                onAmountChange={(e) => handleBidAmount(e.target.value)}
+                                onMaxClick={() => handleBidAmount(isRefund ? longPosition.bid : sUSDBalance)}
+                                price={longPriceAmount}
+                                onPriceChange={(e) => handleTargetPrice(e.target.value, false, false, isRefund)}
+                                onClick={() => handleSideChange('long')}
+                                transKey={transKey}
+                                currentPosition={longPosition}
+                                priceShift={isLong ? priceShift : 0}
+                            />
+                        </Grid.Column>
+                        <Grid.Column width={8}>
+                            <TradeSide
+                                side="short"
+                                type={type}
+                                isActive={isShort}
+                                amount={shortSideAmount}
+                                onAmountChange={(e) => handleBidAmount(e.target.value)}
+                                onMaxClick={() => handleBidAmount(isRefund ? shortPosition.bid : sUSDBalance)}
+                                price={shortPriceAmount}
+                                onPriceChange={(e) => handleTargetPrice(e.target.value, true, true, isRefund)}
+                                onClick={() => handleSideChange('short')}
+                                transKey={transKey}
+                                currentPosition={shortPosition}
+                                priceShift={isShort ? priceShift : 0}
+                            />
+                        </Grid.Column>
+                    </Grid>
+                    <BidNetworkFees
+                        gasLimit={gasLimit}
                         type={type}
-                        isActive={isLong}
-                        amount={longSideAmount}
-                        onAmountChange={(e) => handleBidAmount(e.target.value)}
-                        onMaxClick={() => handleBidAmount(isRefund ? longPosition.bid : sUSDBalance)}
-                        price={longPriceAmount}
-                        onPriceChange={(e) => handleTargetPrice(e.target.value, false, false, isRefund)}
-                        onClick={() => handleSideChange('long')}
-                        transKey={transKey}
-                        currentPosition={longPosition}
-                        priceShift={isLong ? priceShift : 0}
+                        fees={fees}
+                        amount={isLong ? longSideAmount : shortSideAmount}
                     />
-                </Grid.Column>
-                <Grid.Column width={8}>
-                    <TradeSide
-                        side="short"
-                        type={type}
-                        isActive={isShort}
-                        amount={shortSideAmount}
-                        onAmountChange={(e) => handleBidAmount(e.target.value)}
-                        onMaxClick={() => handleBidAmount(isRefund ? shortPosition.bid : sUSDBalance)}
-                        price={shortPriceAmount}
-                        onPriceChange={(e) => handleTargetPrice(e.target.value, true, true, isRefund)}
-                        onClick={() => handleSideChange('short')}
-                        transKey={transKey}
-                        currentPosition={shortPosition}
-                        priceShift={isShort ? priceShift : 0}
-                    />
-                </Grid.Column>
-            </Grid>
-            <BidNetworkFees
-                gasLimit={gasLimit}
-                type={type}
-                fees={fees}
-                amount={isLong ? longSideAmount : shortSideAmount}
-            />
-            {optionsMarket.withdrawalsEnabled
-                ? false
-                : !withdrawalsDisabledTooltipDismissed && (
-                      <Message onDismiss={handleDismissWithdrawalsTooltip}>
-                          {t('options.market.trade-card.bidding.refund.disabled.first-time-tooltip')}
-                      </Message>
-                  )}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                {hasAllowance ? (
-                    <Tooltip
-                        open={isBid && Math.abs(priceShift) > SLIPPAGE_THRESHOLD}
-                        title={<span>{t(`${transKey}.confirm-button.high-slippage`)}</span>}
-                        arrow={true}
-                        placement="bottom"
+                    {optionsMarket.withdrawalsEnabled
+                        ? false
+                        : !withdrawalsDisabledTooltipDismissed && (
+                              <Message onDismiss={handleDismissWithdrawalsTooltip}>
+                                  {t('options.market.trade-card.bidding.refund.disabled.first-time-tooltip')}
+                              </Message>
+                          )}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                        {hasAllowance ? (
+                            <Tooltip
+                                open={isBid && Math.abs(priceShift) > SLIPPAGE_THRESHOLD}
+                                title={<span>{t(`${transKey}.confirm-button.high-slippage`)}</span>}
+                                arrow={true}
+                                placement="bottom"
+                            >
+                                <Button primary disabled={isButtonDisabled} onClick={handleBidOrRefund}>
+                                    {!isBidding
+                                        ? t(`${transKey}.confirm-button.label`)
+                                        : t(`${transKey}.confirm-button.progress-label`)}
+                                </Button>
+                            </Tooltip>
+                        ) : (
+                            <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
+                                {!isAllowing
+                                    ? t('common.enable-wallet-access.label')
+                                    : t('common.enable-wallet-access.progress-label')}
+                            </Button>
+                        )}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                        {txErrorMessage && (
+                            <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
+                        )}
+                    </div>
+                    <div
+                        style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}
                     >
-                        <Button primary disabled={isButtonDisabled} onClick={handleBidOrRefund}>
-                            {!isBidding
-                                ? t(`${transKey}.confirm-button.label`)
-                                : t(`${transKey}.confirm-button.progress-label`)}
-                        </Button>
-                    </Tooltip>
-                ) : (
-                    <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
-                        {!isAllowing
-                            ? t('common.enable-wallet-access.label')
-                            : t('common.enable-wallet-access.progress-label')}
-                    </Button>
-                )}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}>
-                <span>
-                    {t('options.market.trade-card.bidding.footer.end-label')}{' '}
-                    <TimeRemaining
-                        end={optionsMarket.timeRemaining}
-                        onEnded={() =>
-                            queryConnector.queryClient.invalidateQueries(
-                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
-                            )
-                        }
-                    />
-                </span>
-            </div>
-        </div>
+                        <span>
+                            {t('options.market.trade-card.bidding.footer.end-label')}{' '}
+                            <TimeRemaining
+                                end={optionsMarket.timeRemaining}
+                                onEnded={() =>
+                                    queryConnector.queryClient.invalidateQueries(
+                                        QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                                    )
+                                }
+                            />
+                        </span>
+                    </div>
+                </div>
+            </MarketWidgetContent>
+        </>
     );
 };
 

@@ -13,7 +13,7 @@ import { USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
 import { Tooltip } from '@material-ui/core';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRowCentered, FlexDiv } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
 import { ReactComponent as OrderbookBuyIcon } from 'assets/images/orderbook-buy.svg';
 import { ReactComponent as OrderbookSellIcon } from 'assets/images/orderbook-sell.svg';
 import { ReactComponent as OrderbookAllIcon } from 'assets/images/orderbook-all.svg';
@@ -21,6 +21,9 @@ import { ReactComponent as UserIcon } from 'assets/images/user.svg';
 import OrderbookTableHeader from '../components/OrderbookTable/OrderbookTableHeader';
 import { maxBy } from 'lodash';
 import { OrderbookFilterEnum } from 'constants/options';
+import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -89,9 +92,8 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
         : null;
 
     return (
-        <Container>
-            <WidgetHeader>
-                <WidgetTitle>Orderbook</WidgetTitle>
+        <>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.ORDERBOOK}>
                 <ButtonsContainer>
                     {Object.values(OrderbookFilterEnum).map((filterItem) => (
                         <FilterButton
@@ -123,35 +125,37 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                         </FilterButton>
                     </Tooltip>
                 </ButtonsContainer>
-            </WidgetHeader>
-            <MainContent>
-                <Header>{marketHeading}</Header>
-                <OrderbookTableHeader />
-                <SidesContainer>
-                    {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.SELL) && (
-                        <OrderbookSide
-                            orders={sellOrders}
-                            orderSide="sell"
-                            optionSide={optionSide}
-                            optionsTokenAddress={optionsTokenAddress}
-                            filterMyOrders={filterMyOrders}
-                            filter={filter}
-                        />
-                    )}
-                    {filter === OrderbookFilterEnum.ALL && <Divider />}
-                    {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.BUY) && (
-                        <OrderbookSide
-                            orders={buyOrders}
-                            orderSide="buy"
-                            optionSide={optionSide}
-                            optionsTokenAddress={optionsTokenAddress}
-                            filterMyOrders={filterMyOrders}
-                            filter={filter}
-                        />
-                    )}
-                </SidesContainer>
-            </MainContent>
-        </Container>
+            </MarketWidgetHeader>
+            <MarketWidgetContent>
+                <Container>
+                    <Header>{marketHeading}</Header>
+                    <OrderbookTableHeader />
+                    <SidesContainer>
+                        {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.SELL) && (
+                            <OrderbookSide
+                                orders={sellOrders}
+                                orderSide="sell"
+                                optionSide={optionSide}
+                                optionsTokenAddress={optionsTokenAddress}
+                                filterMyOrders={filterMyOrders}
+                                filter={filter}
+                            />
+                        )}
+                        {filter === OrderbookFilterEnum.ALL && <Divider />}
+                        {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.BUY) && (
+                            <OrderbookSide
+                                orders={buyOrders}
+                                orderSide="buy"
+                                optionSide={optionSide}
+                                optionsTokenAddress={optionsTokenAddress}
+                                filterMyOrders={filterMyOrders}
+                                filter={filter}
+                            />
+                        )}
+                    </SidesContainer>
+                </Container>
+            </MarketWidgetContent>
+        </>
     );
 };
 
@@ -159,21 +163,11 @@ const SidesContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: calc(100% - 86px);
+    height: calc(100% - 76px);
 `;
 
 const Container = styled(FlexDivColumn)`
-    background: rgba(196, 196, 196, 0.1);
-    border-radius: 15px;
-    padding: 0 10px 10px 10px;
     height: 100%;
-`;
-
-const MainContent = styled(FlexDivColumn)`
-    background: #04045a;
-    box-sizing: border-box;
-    border-radius: 12px;
-    height: calc(100% - 76px);
 `;
 
 const Header = styled(FlexDivCentered)`
@@ -204,18 +198,9 @@ const FilterButton = styled.button`
         border: 2px solid #355dff;
         border-radius: 23px;
     }
-`;
-
-const WidgetHeader = styled(FlexDivRowCentered)``;
-
-const WidgetTitle = styled.div`
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 40px;
-    text-align: center;
-    letter-spacing: 0.15px;
-    color: #f6f6fe;
-    padding: 10px 20px;
+    &:last-child {
+        margin-right: 15px;
+    }
 `;
 
 const Divider = styled.hr`

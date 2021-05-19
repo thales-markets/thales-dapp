@@ -4,6 +4,9 @@ import { Menu } from 'semantic-ui-react';
 import { OptionSide } from 'types/options';
 import TokenSwap from './TokenSwap';
 import PlaceOrder from './PlaceOrder';
+import MarketWidgetContent from '../components/MarketWidget/MarketWidgetContent';
+import { MarketWidgetKey } from 'constants/ui';
+import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 
 type TradeOptionsProps = {
     optionSide: OptionSide;
@@ -32,20 +35,23 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
 
     return (
         <>
-            <Menu tabular>
-                {tabContent.map((tab) => (
-                    <Menu.Item
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab)}
-                        active={tab.id === activeTab.id}
-                        name={tab.id}
-                    >
-                        {tab.name}
-                    </Menu.Item>
-                ))}
-            </Menu>
-            {activeTab.id === 'market' && <TokenSwap optionSide={optionSide} />}
-            {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.TRADE}></MarketWidgetHeader>
+            <MarketWidgetContent>
+                <Menu tabular>
+                    {tabContent.map((tab) => (
+                        <Menu.Item
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab)}
+                            active={tab.id === activeTab.id}
+                            name={tab.id}
+                        >
+                            {tab.name}
+                        </Menu.Item>
+                    ))}
+                </Menu>
+                {activeTab.id === 'market' && <TokenSwap optionSide={optionSide} />}
+                {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
+            </MarketWidgetContent>
         </>
     );
 };
