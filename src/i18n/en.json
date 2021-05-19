@@ -30,6 +30,9 @@
             "view-market": "View trading markets"
         }
     },
+    "maintenance-page": {
+        "title": "Stay tuned, coming soon..."
+    },
     "common": {
         "max": "max",
         "gas-limit": "gas limit",
