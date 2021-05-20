@@ -79,7 +79,11 @@ const Home: React.FC = () => {
                         <Li className="text-m white">{t('landing-page.options.option2')}</Li>
                         <Li className="text-m white">{t('landing-page.options.option3')}</Li>
                     </List>
-                    <Button className="primary" style={{ marginTop: '40px' }}>
+                    <Button
+                        className="primary"
+                        style={{ marginTop: '40px' }}
+                        onClick={() => navigateTo(ROUTES.Options.Home + '#explore-markets')}
+                    >
                         {t('landing-page.options.view-market')}
                     </Button>
                 </Side>
