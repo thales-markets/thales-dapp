@@ -42,7 +42,7 @@ import {
 } from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
 import CustomizeLayout from './components/CustomizeLayout';
-import { FlexDivCentered, FlexDivColumn, GridDivCol } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketOverview from './components/MarketOverview';
 import styled from 'styled-components';
@@ -336,6 +336,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab
+                                            isActive={tab.id === optionsActiveTab.id}
                                             key={tab.id}
                                             onClick={() => setOptionsActiveTab(tab)}
                                             className={tab.id === optionsActiveTab.id ? 'selected' : ''}
@@ -405,10 +406,12 @@ const MainContentContainer = styled.div`
     overflow: hidden;
 `;
 
-const OptionsTabContainer = styled(GridDivCol)``;
+const OptionsTabContainer = styled(FlexDiv)``;
 
-const OptionsTab = styled(FlexDivCentered)`
+const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean }>`
     background-color: transparent;
+    width: ${(props) => (props.isActive ? '70%' : '30%')};
+    transition: 0.5s;
     height: 74px;
     border-radius: 15px 15px 0px 0px;
     font-style: normal;
