@@ -90,7 +90,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 break;
             case UserFilterEnum.MyWatchlist:
                 if (isWalletConnected) {
-                    console.log('filter mywatchlist');
                     filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 }
                 break;
