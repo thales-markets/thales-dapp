@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketsTable from '../MarketsTable';
 import { OptionsMarkets } from 'types/options';
@@ -51,18 +51,16 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
-    const [watchlistedMarkets, setWatchlistedMarkets] = useState<string[]>([]);
-    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
-    });
 
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-
     const watchlistedMarketsData = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+    const [watchlistedMarkets, setWatchlistedMarkets] = useState<string[]>(watchlistedMarketsData);
 
-    useEffect(() => setWatchlistedMarkets(watchlistedMarketsData), [watchlistedMarketsData]);
+    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
+    });
 
     const handleWatchlistedMarketsChange = (newWatchlist: string[]) => {
         setWatchlistedMarkets(newWatchlist);
