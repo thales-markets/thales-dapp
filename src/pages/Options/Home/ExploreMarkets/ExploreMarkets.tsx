@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketsTable from '../MarketsTable';
 import { OptionsMarkets } from 'types/options';
@@ -51,6 +51,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const [watchlistedMarkets, setWatchlistedMarkets] = useState<string[]>([]);
     const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
     });
@@ -59,7 +60,13 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+    const watchlistedMarketsData = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+
+    useEffect(() => setWatchlistedMarkets(watchlistedMarketsData), [watchlistedMarketsData]);
+
+    const handleWatchlistedMarketsChange = (newWatchlist: string[]) => {
+        setWatchlistedMarkets(newWatchlist);
+    };
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
@@ -83,6 +90,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 break;
             case UserFilterEnum.MyWatchlist:
                 if (isWalletConnected) {
+                    console.log('filter mywatchlist');
                     filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 }
                 break;
@@ -104,7 +112,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         walletAddress,
         userBidsMarketsQuery.data,
         userBidsMarketsQuery.isSuccess,
-        watchlistedMarketsQuery?.data,
+        watchlistedMarkets,
         assetSearch,
     ]);
 
@@ -206,6 +214,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 watchlistedMarkets={watchlistedMarkets}
+                onChange={handleWatchlistedMarketsChange}
                 isLoading={userBidsMarketsQuery.isLoading}
                 phase={phaseFilter}
             >
