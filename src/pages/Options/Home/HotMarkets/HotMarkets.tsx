@@ -21,23 +21,32 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     const currentMarkets = useMemo(() => {
         const markets = [];
+        markets.push(
+            currentMarket - 1 < 0 ? optionsMarkets[optionsMarkets.length - 1] : optionsMarkets[currentMarket - 1]
+        );
         markets.push(optionsMarkets[currentMarket]);
-        if (currentMarket === optionsMarkets.length - 1) {
-            markets.push(optionsMarkets[0], optionsMarkets[1]);
-        } else if (currentMarket === optionsMarkets.length - 2) {
-            markets.push(optionsMarkets[currentMarket + 1], optionsMarkets[0]);
-        } else {
-            markets.push(optionsMarkets[currentMarket + 1], optionsMarkets[currentMarket + 2]);
+        for (let index = 1; index < 4; index++) {
+            markets.push(
+                currentMarket + index > optionsMarkets.length - 1
+                    ? optionsMarkets[currentMarket + index - optionsMarkets.length]
+                    : optionsMarkets[currentMarket + index]
+            );
         }
+
         return markets;
     }, [currentMarket]);
 
     useInterval(() => {
-        if (shouldUseInterval)
-            setCurrentMarket(() => {
-                return currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1;
-            });
-    }, 3000);
+        if (shouldUseInterval) {
+            document.getElementById('market-cards-wrapper')?.classList.add('next');
+            setTimeout(() => {
+                document.getElementById('market-cards-wrapper')?.classList.remove('next');
+                setCurrentMarket(() => {
+                    return currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1;
+                });
+            }, 1000);
+        }
+    }, 5000);
 
     return (
         <Wrapper id="hot-markets">
@@ -46,17 +55,30 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 <Arrow
                     onClick={() => {
                         setShoudUseInterval(false);
-                        setCurrentMarket(currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1);
+                        document.getElementById('market-cards-wrapper')?.classList.add('previous');
+                        setTimeout(() => {
+                            document.getElementById('market-cards-wrapper')?.classList.remove('previous');
+                            setCurrentMarket(currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1);
+                        }, 1000);
                     }}
                     src={previous}
                 ></Arrow>
-                {currentMarkets.map((optionsMarket, index) => {
-                    return <MarketCard key={index} optionMarket={optionsMarket} />;
-                })}
+                <div style={{ width: 1020, overflow: 'hidden' }}>
+                    <Cards id="market-cards-wrapper">
+                        {currentMarkets.map((optionsMarket, index) => {
+                            return <MarketCard key={index} optionMarket={optionsMarket} />;
+                        })}
+                    </Cards>
+                </div>
+
                 <Arrow
                     onClick={() => {
                         setShoudUseInterval(false);
-                        setCurrentMarket(currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1);
+                        document.getElementById('market-cards-wrapper')?.classList.add('next');
+                        setTimeout(() => {
+                            document.getElementById('market-cards-wrapper')?.classList.remove('next');
+                            setCurrentMarket(currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1);
+                        }, 1000);
                     }}
                     src={next}
                 ></Arrow>
@@ -80,6 +102,19 @@ const Arrow = styled(Image)`
     height: 40px;
     margin: 0 10px;
     cursor: pointer;
+`;
+
+const Cards = styled(FlexDiv)`
+    position: relative;
+    left: -340px;
+    &.next {
+        transition: left 1s;
+        left: -680px;
+    }
+    &.previous {
+        transition: left 1s;
+        left: 0;
+    }
 `;
 
 export default HotMarkets;
