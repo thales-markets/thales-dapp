@@ -51,15 +51,20 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
-    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
-    });
 
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+    const watchlistedMarketsData = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+    const [watchlistedMarkets, setWatchlistedMarkets] = useState<string[]>(watchlistedMarketsData);
 
-    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
+    });
+
+    const handleWatchlistedMarketsChange = (newWatchlist: string[]) => {
+        setWatchlistedMarkets(newWatchlist);
+    };
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
@@ -104,7 +109,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         walletAddress,
         userBidsMarketsQuery.data,
         userBidsMarketsQuery.isSuccess,
-        watchlistedMarketsQuery?.data,
+        watchlistedMarkets,
         assetSearch,
     ]);
 
@@ -206,6 +211,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 watchlistedMarkets={watchlistedMarkets}
+                onChange={handleWatchlistedMarketsChange}
                 isLoading={userBidsMarketsQuery.isLoading}
                 phase={phaseFilter}
             >

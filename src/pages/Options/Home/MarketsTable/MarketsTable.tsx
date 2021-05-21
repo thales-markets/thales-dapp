@@ -31,7 +31,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
-import { refetchWatchlistedMarkets } from 'utils/queryConnector';
 
 dotenv.config();
 
@@ -40,6 +39,7 @@ type MarketsTableProps = {
     watchlistedMarkets: string[];
     isLoading?: boolean;
     phase: PhaseFilterEnum;
+    onChange: any;
 };
 
 const StyledTableRow = withStyles(() => ({
@@ -109,222 +109,224 @@ enum OrderDirection {
 
 const defaultOrderBy = 5; // time remaining
 
-const MarketsTable: FC<MarketsTableProps> = memo(({ optionsMarkets, watchlistedMarkets, children, phase }) => {
-    const [page, setPage] = useState(0);
-    const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-    const [orderBy, setOrderBy] = useState(defaultOrderBy);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+const MarketsTable: FC<MarketsTableProps> = memo(
+    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange }) => {
+        const [page, setPage] = useState(0);
+        const handleChangePage = (_event: unknown, newPage: number) => {
+            setPage(newPage);
+        };
+        const [orderBy, setOrderBy] = useState(defaultOrderBy);
+        const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
+        const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+        const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const calcDirection = (cell: HeadCell) => {
-        if (orderBy === cell.id) {
-            switch (orderDirection) {
-                case OrderDirection.NONE:
-                    setOrderDirection(OrderDirection.DESC);
-                    break;
-                case OrderDirection.DESC:
-                    setOrderDirection(OrderDirection.ASC);
-                    break;
-                case OrderDirection.ASC:
-                    setOrderDirection(OrderDirection.NONE);
-                    setOrderBy(defaultOrderBy);
-                    break;
-            }
-        } else {
-            setOrderBy(parseInt(cell.id.toString()));
-            setOrderDirection(OrderDirection.DESC);
-        }
-    };
-
-    useEffect(() => setPage(0), [phase]);
-
-    const compareStrings = (a: string, b: string) => {
-        if (a < b) {
-            return orderDirection === OrderDirection.ASC ? -1 : 1;
-        }
-        if (a > b) {
-            return orderDirection === OrderDirection.ASC ? 1 : -1;
-        }
-
-        return 0;
-    };
-
-    const toggleWatchlist = async (marketAddress: string) => {
-        try {
-            await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
-                networkId,
-                walletAddress,
-                marketAddress,
-            });
-            refetchWatchlistedMarkets(walletAddress, networkId);
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const sortedMArkets = useMemo(() => {
-        return optionsMarkets
-            .sort((a, b) => {
-                switch (orderBy) {
-                    case 1:
-                        return compareStrings(a.asset, b.asset);
-                    case 2:
-                        return orderDirection === OrderDirection.ASC
-                            ? a.strikePrice - b.strikePrice
-                            : b.strikePrice - a.strikePrice;
-                    case 3:
-                        return orderDirection === OrderDirection.ASC
-                            ? a.poolSize - b.poolSize
-                            : b.poolSize - a.poolSize;
-                    case 4:
-                        return orderDirection === OrderDirection.ASC
-                            ? a.longPrice - b.longPrice
-                            : b.longPrice - a.longPrice;
-                    case 5:
-                        const phaseDiff = a.phaseNum - b.phaseNum;
-                        return phaseDiff === 0 ? a.timeRemaining - b.timeRemaining : phaseDiff;
-                    case 6:
-                        return orderDirection === OrderDirection.ASC
-                            ? a.openOrders - b.openOrders
-                            : b.openOrders - a.openOrders;
-                    default:
-                        return 0;
+        const calcDirection = (cell: HeadCell) => {
+            if (orderBy === cell.id) {
+                switch (orderDirection) {
+                    case OrderDirection.NONE:
+                        setOrderDirection(OrderDirection.DESC);
+                        break;
+                    case OrderDirection.DESC:
+                        setOrderDirection(OrderDirection.ASC);
+                        break;
+                    case OrderDirection.ASC:
+                        setOrderDirection(OrderDirection.NONE);
+                        setOrderBy(defaultOrderBy);
+                        break;
                 }
-            })
-            .slice(page * 10, 10 * (page + 1));
-    }, [optionsMarkets, orderBy, orderDirection, page]);
+            } else {
+                setOrderBy(parseInt(cell.id.toString()));
+                setOrderDirection(OrderDirection.DESC);
+            }
+        };
 
-    const { t } = useTranslation();
-    return (
-        <>
-            <TableContainer style={{ background: 'transparent', boxShadow: 'none' }} component={Paper}>
-                <Table aria-label="customized table">
-                    <TableHead>
-                        <TableRow>
-                            {headCells.map((cell: HeadCell, index) => {
-                                return (
-                                    <StyledTableCell
-                                        onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                        key={index}
-                                        style={cell.sortable ? { cursor: 'pointer' } : {}}
-                                    >
-                                        <TableHeaderLabel
-                                            className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+        useEffect(() => setPage(0), [phase]);
+
+        const compareStrings = (a: string, b: string) => {
+            if (a < b) {
+                return orderDirection === OrderDirection.ASC ? -1 : 1;
+            }
+            if (a > b) {
+                return orderDirection === OrderDirection.ASC ? 1 : -1;
+            }
+
+            return 0;
+        };
+
+        const toggleWatchlist = async (marketAddress: string) => {
+            try {
+                const result = await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
+                    networkId,
+                    walletAddress,
+                    marketAddress,
+                });
+                onChange(result.data.data);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const sortedMArkets = useMemo(() => {
+            return optionsMarkets
+                .sort((a, b) => {
+                    switch (orderBy) {
+                        case 1:
+                            return compareStrings(a.asset, b.asset);
+                        case 2:
+                            return orderDirection === OrderDirection.ASC
+                                ? a.strikePrice - b.strikePrice
+                                : b.strikePrice - a.strikePrice;
+                        case 3:
+                            return orderDirection === OrderDirection.ASC
+                                ? a.poolSize - b.poolSize
+                                : b.poolSize - a.poolSize;
+                        case 4:
+                            return orderDirection === OrderDirection.ASC
+                                ? a.longPrice - b.longPrice
+                                : b.longPrice - a.longPrice;
+                        case 5:
+                            const phaseDiff = a.phaseNum - b.phaseNum;
+                            return phaseDiff === 0 ? a.timeRemaining - b.timeRemaining : phaseDiff;
+                        case 6:
+                            return orderDirection === OrderDirection.ASC
+                                ? a.openOrders - b.openOrders
+                                : b.openOrders - a.openOrders;
+                        default:
+                            return 0;
+                    }
+                })
+                .slice(page * 10, 10 * (page + 1));
+        }, [optionsMarkets, orderBy, orderDirection, page]);
+
+        const { t } = useTranslation();
+        return (
+            <>
+                <TableContainer style={{ background: 'transparent', boxShadow: 'none' }} component={Paper}>
+                    <Table aria-label="customized table">
+                        <TableHead>
+                            <TableRow>
+                                {headCells.map((cell: HeadCell, index) => {
+                                    return (
+                                        <StyledTableCell
+                                            onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                            key={index}
+                                            style={cell.sortable ? { cursor: 'pointer' } : {}}
                                         >
-                                            {cell.label}
-                                        </TableHeaderLabel>
-                                        {cell.sortable && (
-                                            <ArrowsWrapper>
-                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                                    <Arrow
-                                                        src={
-                                                            orderDirection === OrderDirection.ASC
-                                                                ? upSelected
-                                                                : downSelected
-                                                        }
-                                                    ></Arrow>
-                                                ) : (
-                                                    <>
-                                                        <Arrow src={up}></Arrow>
-                                                        <Arrow src={down}></Arrow>
-                                                    </>
-                                                )}
-                                            </ArrowsWrapper>
-                                        )}
-                                    </StyledTableCell>
+                                            <TableHeaderLabel
+                                                className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                            >
+                                                {cell.label}
+                                            </TableHeaderLabel>
+                                            {cell.sortable && (
+                                                <ArrowsWrapper>
+                                                    {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                        <Arrow
+                                                            src={
+                                                                orderDirection === OrderDirection.ASC
+                                                                    ? upSelected
+                                                                    : downSelected
+                                                            }
+                                                        ></Arrow>
+                                                    ) : (
+                                                        <>
+                                                            <Arrow src={up}></Arrow>
+                                                            <Arrow src={down}></Arrow>
+                                                        </>
+                                                    )}
+                                                </ArrowsWrapper>
+                                            )}
+                                        </StyledTableCell>
+                                    );
+                                })}
+                            </TableRow>
+                            <Divider />
+                        </TableHead>
+
+                        <TableBody>
+                            {sortedMArkets.map((market, index) => {
+                                return (
+                                    <StyledTableRow
+                                        onClick={() => {
+                                            if (market.phase !== 'expiry') {
+                                                navigateToOptionsMarket(market.address);
+                                            }
+                                        }}
+                                        className={market.phase !== 'expiry' ? 'clickable' : ''}
+                                        key={index}
+                                    >
+                                        <StyledTableCell
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleWatchlist(market.address);
+                                            }}
+                                        >
+                                            <Star
+                                                src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
+                                            ></Star>
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            <Currency.Name
+                                                currencyKey={market.currencyKey}
+                                                showIcon={true}
+                                                iconProps={{ width: '24px', height: '24px', type: 'asset' }}
+                                            />
+                                        </StyledTableCell>
+                                        <StyledTableCell>{market.strikePrice.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>{market.poolSize.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>
+                                            <div>
+                                                <span style={{ color: '#10BA97' }}>
+                                                    {t('common.val-in-cents', {
+                                                        val: formatCurrency(market.longPrice * 100),
+                                                    })}
+                                                </span>{' '}
+                                                /{' '}
+                                                <span style={{ color: '#D94454' }}>
+                                                    {t('common.val-in-cents', {
+                                                        val: formatCurrency(market.shortPrice * 100),
+                                                    })}
+                                                </span>
+                                            </div>
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            <TimeRemaining end={market.timeRemaining} />
+                                        </StyledTableCell>
+                                        <StyledTableCell>{market.openOrders}</StyledTableCell>
+                                        <StyledTableCell>
+                                            <PhaseLabel className={market.phase}>
+                                                {t(`options.phases.${market.phase}`)}
+                                            </PhaseLabel>
+                                        </StyledTableCell>
+                                    </StyledTableRow>
                                 );
                             })}
-                        </TableRow>
-                        <Divider />
-                    </TableHead>
-
-                    <TableBody>
-                        {sortedMArkets.map((market, index) => {
-                            return (
-                                <StyledTableRow
-                                    onClick={() => {
-                                        if (market.phase !== 'expiry') {
-                                            navigateToOptionsMarket(market.address);
-                                        }
-                                    }}
-                                    className={market.phase !== 'expiry' ? 'clickable' : ''}
-                                    key={index}
-                                >
-                                    <StyledTableCell
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleWatchlist(market.address);
-                                        }}
-                                    >
-                                        <Star
-                                            src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
-                                        ></Star>
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Currency.Name
-                                            currencyKey={market.currencyKey}
-                                            showIcon={true}
-                                            iconProps={{ width: '24px', height: '24px', type: 'asset' }}
-                                        />
-                                    </StyledTableCell>
-                                    <StyledTableCell>{market.strikePrice.toFixed(2)}</StyledTableCell>
-                                    <StyledTableCell>{market.poolSize.toFixed(2)}</StyledTableCell>
-                                    <StyledTableCell>
-                                        <div>
-                                            <span style={{ color: '#10BA97' }}>
-                                                {t('common.val-in-cents', {
-                                                    val: formatCurrency(market.longPrice * 100),
-                                                })}
-                                            </span>{' '}
-                                            /{' '}
-                                            <span style={{ color: '#D94454' }}>
-                                                {t('common.val-in-cents', {
-                                                    val: formatCurrency(market.shortPrice * 100),
-                                                })}
-                                            </span>
-                                        </div>
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <TimeRemaining end={market.timeRemaining} />
-                                    </StyledTableCell>
-                                    <StyledTableCell>{market.openOrders}</StyledTableCell>
-                                    <StyledTableCell>
-                                        <PhaseLabel className={market.phase}>
-                                            {t(`options.phases.${market.phase}`)}
-                                        </PhaseLabel>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            );
-                        })}
-                    </TableBody>
-                    {optionsMarkets.length !== 0 && (
-                        <TableFooter>
-                            <TableRow>
-                                <PaginationWrapper
-                                    rowsPerPageOptions={[]}
-                                    count={optionsMarkets.length}
-                                    rowsPerPage={10}
-                                    page={page}
-                                    onChangePage={handleChangePage}
-                                    ActionsComponent={() => (
-                                        <Pagination
-                                            page={page}
-                                            numberOfPages={Math.ceil(optionsMarkets.length / 10)}
-                                            setPage={setPage}
-                                        />
-                                    )}
-                                />
-                            </TableRow>
-                        </TableFooter>
-                    )}
-                </Table>
-            </TableContainer>
-            {optionsMarkets.length === 0 && children}
-        </>
-    );
-});
+                        </TableBody>
+                        {optionsMarkets.length !== 0 && (
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationWrapper
+                                        rowsPerPageOptions={[]}
+                                        count={optionsMarkets.length}
+                                        rowsPerPage={10}
+                                        page={page}
+                                        onChangePage={handleChangePage}
+                                        ActionsComponent={() => (
+                                            <Pagination
+                                                page={page}
+                                                numberOfPages={Math.ceil(optionsMarkets.length / 10)}
+                                                setPage={setPage}
+                                            />
+                                        )}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                    </Table>
+                </TableContainer>
+                {optionsMarkets.length === 0 && children}
+            </>
+        );
+    }
+);
 
 export default MarketsTable;
