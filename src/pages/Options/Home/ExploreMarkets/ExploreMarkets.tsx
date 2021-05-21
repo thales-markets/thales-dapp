@@ -66,28 +66,25 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
             case UserFilterEnum.MyBids:
-                if (isWalletConnected) {
-                    filteredMarkets =
-                        userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
-                            ? filteredMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
-                            : [];
-                }
+                filteredMarkets =
+                    userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
+                        ? filteredMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
+                        : [];
 
                 break;
             case UserFilterEnum.MyMarkets:
-                if (isWalletConnected) {
-                    filteredMarkets = filteredMarkets.filter(
-                        ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
-                    );
-                }
+                filteredMarkets = filteredMarkets.filter(
+                    ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
+                );
 
                 break;
             case UserFilterEnum.MyWatchlist:
-                if (isWalletConnected) {
-                    filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
-                }
+                filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 break;
             case UserFilterEnum.Recent:
+                filteredMarkets = filteredMarkets.filter(({ timestamp }) =>
+                    isRecentlyAdded(new Date(), new Date(timestamp))
+                );
                 break;
         }
 
@@ -297,5 +294,14 @@ const NoMarkets = styled(FlexDivColumn)`
         align-self: center;
     }
 `;
+
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+const isRecentlyAdded = (a: Date, b: Date) => {
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY)) <= 7;
+};
 
 export default ExploreMarkets;
