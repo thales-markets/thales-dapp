@@ -21,6 +21,7 @@ import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
+import { getSynthName } from 'utils/snxJSConnector';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -109,10 +110,16 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     ]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
-        () =>
-            assetSearch
-                ? filteredOptionsMarkets.filter(({ asset }) => asset.toLowerCase().includes(assetSearch.toLowerCase()))
-                : filteredOptionsMarkets,
+        () => {
+            return assetSearch
+                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                      return (
+                          asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          getSynthName(currencyKey).toLowerCase().includes(assetSearch.toLowerCase())
+                      );
+                  })
+                : filteredOptionsMarkets;
+        },
         [filteredOptionsMarkets, assetSearch],
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
