@@ -1,13 +1,25 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { OptionSide } from 'types/options';
+import { AccountMarketInfo, OptionSide } from 'types/options';
 import TokenSwap from './TokenSwap';
 import PlaceOrder from './PlaceOrder';
 import MarketWidgetContent from '../components/MarketWidget/MarketWidgetContent';
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 import styled from 'styled-components';
-import { FlexDivColumn } from 'theme/common';
+import { FlexDivColumn, FlexDivRowCentered, FlexDivCentered } from 'theme/common';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
+import { RootState } from 'redux/rootReducer';
+import { SYNTHS_MAP } from 'constants/currency';
+import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
+import { getCurrencyKeyBalance } from 'utils/balances';
+import { useMarketContext } from '../contexts/MarketContext';
+import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { EMPTY_VALUE } from 'constants/placeholder';
 
 type TradeOptionsProps = {
     optionSide: OptionSide;
@@ -15,6 +27,35 @@ type TradeOptionsProps = {
 
 const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
     const { t } = useTranslation();
+    const optionsMarket = useMarketContext();
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    let optBalances = {
+        long: 0,
+        short: 0,
+    };
+
+    if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
+        const { balances } = accountMarketInfoQuery.data as AccountMarketInfo;
+        optBalances = balances;
+    }
+    const tokenBalance = optionSide === 'long' ? optBalances.long : optBalances.short;
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+
     const tabContent: Array<{
         id: 'market' | 'limit';
         name: string;
@@ -39,18 +80,33 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
             <MarketWidgetHeader widgetKey={MarketWidgetKey.TRADE}></MarketWidgetHeader>
             <MarketWidgetContent>
                 <Container>
-                    <FilterContainer>
-                        {tabContent.map((tab) => (
-                            <FilterButton
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab)}
-                                className={tab.id === activeTab.id ? 'selected' : ''}
-                                name={tab.id}
-                            >
-                                {tab.name}
-                            </FilterButton>
-                        ))}
-                    </FilterContainer>
+                    <FlexDivRowCentered>
+                        <FilterContainer>
+                            {tabContent.map((tab) => (
+                                <FilterButton
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={tab.id === activeTab.id ? 'selected' : ''}
+                                    name={tab.id}
+                                >
+                                    {tab.name}
+                                </FilterButton>
+                            ))}
+                        </FilterContainer>
+                        <FlexDivCentered>
+                            <WalletIcon />
+                            <WalletContainer>
+                                <Wallet>
+                                    {isWalletConnected
+                                        ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)
+                                        : EMPTY_VALUE}
+                                </Wallet>
+                                <Wallet>
+                                    {isWalletConnected ? formatCurrencyWithKey('sOPT', tokenBalance) : EMPTY_VALUE}
+                                </Wallet>
+                            </WalletContainer>
+                        </FlexDivCentered>
+                    </FlexDivRowCentered>
                     {activeTab.id === 'market' && <TokenSwap optionSide={optionSide} />}
                     {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
                 </Container>
@@ -89,6 +145,20 @@ const FilterButton = styled.button`
         border-radius: 20px;
         color: #04045a;
     }
+`;
+
+const WalletContainer = styled(FlexDivColumn)`
+    align-items: end;
+    margin-right: 20px;
+    margin-left: 5px;
+`;
+
+const Wallet = styled.div`
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    color: #f6f6fe;
 `;
 
 export default TradeOptions;

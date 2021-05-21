@@ -13,10 +13,10 @@ export const get0xBaseURL = (networkId: NetworkId) => {
     const network = SUPPORTED_NETWORKS_0X[networkId];
 
     if (isMainNet(networkId) || network == null) {
-        return 'https://api.0x.org/sra/v4/';
+        return 'https://api.0x.org/';
     }
 
-    return `https://${network.toLowerCase()}.api.0x.org/sra/v4/`;
+    return `https://${network.toLowerCase()}.api.0x.org/`;
 };
 
 const PROTOCOL_FEE_MULTIPLIER = toBigNumber(70000);

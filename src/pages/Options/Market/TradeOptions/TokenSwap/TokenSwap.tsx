@@ -19,7 +19,7 @@ import {
 import { RootState } from 'redux/rootReducer';
 import { Message } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
-// import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -153,6 +153,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
 
     const insufficientBalance = isBuy ? total > sUSDBalance : amount > tokenBalance;
+    const baseUrl = get0xBaseURL(networkId);
 
     useEffect(() => {
         if (addressToApprove) {
@@ -227,8 +228,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(newAmount), DEFAULT_TOKEN_DECIMALS);
             try {
                 const swapUrl = isBuy
-                    ? `https://api.0x.org/swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&buyAmount=${tokenAmount}`
-                    : `https://api.0x.org/swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&sellAmount=${tokenAmount}`;
+                    ? `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&buyAmount=${tokenAmount}`
+                    : `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&sellAmount=${tokenAmount}`;
                 const response = await fetch(swapUrl);
                 if (response.status == 200) {
                     const quote = await response.json();

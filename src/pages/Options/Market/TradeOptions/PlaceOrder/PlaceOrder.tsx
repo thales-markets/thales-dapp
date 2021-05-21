@@ -223,7 +223,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         setIsSubmitting(true);
 
         const baseUrl = get0xBaseURL(networkId);
-        const placeOrderUrl = `${baseUrl}order`;
+        const placeOrderUrl = `${baseUrl}sra/v4/order`;
 
         const makerAmount = Web3Wrapper.toBaseUnitAmount(
             toBigNumber(isBuy ? Number(amount) * Number(price) : amount),
