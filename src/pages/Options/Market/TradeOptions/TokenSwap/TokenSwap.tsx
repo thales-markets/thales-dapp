@@ -3,7 +3,7 @@
 // import { Web3Wrapper } from '@0x/web3-wrapper';
 // import axios from 'axios';
 import { SYNTHS_MAP } from 'constants/currency';
-import { EMPTY_VALUE } from 'constants/placeholder';
+// import { EMPTY_VALUE } from 'constants/placeholder';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,13 +17,13 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Form, Input, Segment, Button, Message, Divider } from 'semantic-ui-react';
+import { Message } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 // import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
+// import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
@@ -43,10 +43,29 @@ import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOpt
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
+import {
+    Container,
+    InputContainer,
+    GridContainer,
+    InputLabel,
+    SubmitButtonContainer,
+    Input,
+    ReactSelect,
+    CurrencyLabel,
+    AmountButton,
+    AmountButtonContainer,
+    TotalLabel,
+    TotalContainer,
+    Total,
+    SubmitButton,
+} from '../components';
+import styled from 'styled-components';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
 };
+
+export type OrderSideOptionType = { value: OrderSide; label: string };
 
 const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const { t } = useTranslation();
@@ -64,11 +83,21 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [isSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [orderSide, setOrderSide] = useState<OrderSide>('buy');
     const [addressToApprove, setAddressToApprove] = useState<string | null>(null);
     const [swapQuote, setSwapQuote] = useState<any>();
     const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const orderSideOptions = [
+        {
+            value: 'buy' as OrderSide,
+            label: t('common.buy'),
+        },
+        {
+            value: 'sell' as OrderSide,
+            label: t('common.sell'),
+        },
+    ];
+    const [orderSide, setOrderSide] = useState<OrderSideOptionType>(orderSideOptions[0]);
 
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
 
@@ -109,7 +138,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const isBuy = orderSide === 'buy';
+    const isBuy = orderSide.value === 'buy';
 
     const isButtonDisabled =
         // price === '' ||
@@ -233,8 +262,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     };
 
     return (
-        <Segment>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Container>
+            {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <span>
                     <WalletIcon />
                     {isWalletConnected
@@ -243,67 +272,65 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                             : formatCurrencyWithKey('sOPT', tokenBalance)
                         : EMPTY_VALUE}
                 </span>
-            </div>
-            <Form>
-                <Form.Field>
-                    <label style={{ textTransform: 'none' }}>
-                        {t('options.market.trade-options.place-order.order-type-label')}
-                    </label>
-                    <span>
-                        <Button size="mini" positive={orderSide === 'buy'} onClick={() => setOrderSide('buy')}>
-                            {t('common.buy')}
-                        </Button>
-                        <Button size="mini" negative={orderSide === 'sell'} onClick={() => setOrderSide('sell')}>
-                            {t('common.sell')}
-                        </Button>
-                    </span>
-                </Form.Field>
-                <Form.Field>
-                    <label style={{ textTransform: 'none' }}>
-                        {t('options.market.trade-options.place-order.amount-label', { orderSide })}
-                    </label>
+            </div> */}
+            <InputContainer>
+                <ReactSelect
+                    formatOptionLabel={(option: any) => option.label}
+                    options={orderSideOptions}
+                    value={orderSide}
+                    onChange={(option: any) => setOrderSide(option)}
+                    isSearchable={false}
+                    isUppercase
+                />
+                <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
+            </InputContainer>
+            <GridContainer>
+                <InputContainer>
                     <Input
-                        fluid
                         value={amount}
                         onChange={(e) => onAmountChange(e.target.value)}
-                        label="sOPT"
                         id="amount"
                         type="number"
                         min="0"
                         step="any"
                     />
-                    {!isBuy && (
-                        <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
-                            {AMOUNT_PERCENTAGE.map((percentage: number) => (
-                                <Button
-                                    size="mini"
-                                    key={percentage}
-                                    onClick={() => calculateAmount(percentage)}
-                                    color="teal"
-                                    disabled={isBuy}
-                                >
-                                    {`${percentage}%`}
-                                </Button>
-                            ))}
-                        </div>
-                    )}
-                </Form.Field>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>{t('options.market.trade-options.place-order.price-label')}</span>
-                    <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>{t('options.market.trade-options.place-order.total-label')}</span>
-                    <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</span>
-                </div>
-            </Form>
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
+                    </InputLabel>
+                    <CurrencyLabel>{'sOPT'}</CurrencyLabel>
+                </InputContainer>
+            </GridContainer>
+            {!isBuy && (
+                <AmountButtonContainer>
+                    {AMOUNT_PERCENTAGE.map((percentage: number) => (
+                        <AmountButton
+                            key={percentage}
+                            onClick={() => calculateAmount(percentage)}
+                            disabled={!isWalletConnected || (isBuy && price === '')}
+                        >
+                            {`${percentage}%`}
+                        </AmountButton>
+                    ))}
+                </AmountButtonContainer>
+            )}
+
+            <TotalContainer>
+                <TotalLabel>{t('options.market.trade-options.place-order.price-label')}</TotalLabel>
+                <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))}</Total>
+            </TotalContainer>
+
+            <TotalContainer>
+                <TotalLabel>{t('options.market.trade-options.place-order.total-label')}</TotalLabel>
+                <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</Total>
+            </TotalContainer>
             <Divider />
-            <div style={{ marginTop: 10 }}>
-                <NetworkFees gasLimit={gasLimit} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+            <NetworkFeesContainer>
+                <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
+            </NetworkFeesContainer>
+            <SubmitButtonContainer>
+                {' '}
                 {hasAllowance ? (
-                    <Button color={isBuy ? 'green' : 'red'} disabled={isButtonDisabled} onClick={handleSubmitOrder}>
+                    <SubmitButton isBuy={isBuy} disabled={isButtonDisabled} onClick={handleSubmitOrder}>
                         {insufficientBalance
                             ? t('common.errors.insufficient-balance')
                             : insufficientLiquidity
@@ -311,24 +338,34 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                             : !isSubmitting
                             ? t('options.market.trade-options.place-order.confirm-button.label')
                             : t('options.market.trade-options.place-order.confirm-button.progress-label')}
-                    </Button>
+                    </SubmitButton>
                 ) : (
-                    <Button
-                        color={isBuy ? 'green' : 'red'}
+                    <SubmitButton
+                        isBuy={isBuy}
                         disabled={isAllowing || !isWalletConnected || addressToApprove === ''}
                         onClick={handleAllowance}
                     >
                         {!isAllowing
                             ? t('common.enable-wallet-access.label')
                             : t('common.enable-wallet-access.progress-label')}
-                    </Button>
+                    </SubmitButton>
                 )}
-            </div>
+            </SubmitButtonContainer>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
                 {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
             </div>
-        </Segment>
+        </Container>
     );
 };
+
+const NetworkFeesContainer = styled.div`
+    padding: 0 45px;
+`;
+
+const Divider = styled.hr`
+    width: 90%;
+    border: none;
+    border-top: 2px solid rgba(1, 38, 81, 0.5);
+`;
 
 export default TokenSwap;

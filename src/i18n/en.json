@@ -440,7 +440,7 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "price-label": "Price per sOPT",
                     "expiration-label": "Expires in",
-                    "total-label": "Total (sUSD):",
+                    "total-label": "Total (sUSD)",
                     "confirm-button": {
                         "label": "Submit order",
                         "progress-label": "Submitting order in progress..."

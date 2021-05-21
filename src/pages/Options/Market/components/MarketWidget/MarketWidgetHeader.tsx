@@ -3,9 +3,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { setMarketWidgetVisibility } from 'redux/modules/marketWidgets';
-import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { FlexDivRowCentered } from 'theme/common';
+import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
 
 type MarketWidgetHeaderProps = {
     widgetKey: MarketWidgetKey;
@@ -21,10 +21,8 @@ export const MarketWidgetHeader: React.FC<MarketWidgetHeaderProps> = ({ widgetKe
             <WidgetTitle>{t(`options.market.widgets.${widgetKey}`)}</WidgetTitle>
             <FlexDivRowCentered>
                 {children}
-                <Icon
-                    name="close"
+                <CloseIconContainer
                     onClick={() => dispatch(setMarketWidgetVisibility({ marketWidget: widgetKey, isVisible: false }))}
-                    size="small"
                 />
             </FlexDivRowCentered>
         </WidgetHeader>
@@ -42,5 +40,11 @@ const WidgetHeader = styled(FlexDivRowCentered)`
 `;
 
 const WidgetTitle = styled.div``;
+
+const CloseIconContainer = styled(CloseIcon)`
+    :hover {
+        cursor: pointer;
+    }
+`;
 
 export default MarketWidgetHeader;
