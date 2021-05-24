@@ -15,6 +15,7 @@ import Currency from 'components/Currency';
 import { formatShortDate } from 'utils/formatters/date';
 import { USD_SIGN } from 'constants/currency';
 import { navigateToOptionsMarket } from 'utils/routes';
+import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -35,6 +36,10 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
 
+    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
+        enabled: filter === Filters.ORDERS,
+    });
+
     const optionsMarkets = useMemo(
         () =>
             marketsQuery.isSuccess && Array.isArray(marketsQuery.data)
@@ -46,20 +51,18 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const filteredMarkets = useMemo(() => {
         switch (filter) {
             case Filters.MARKETS:
-                const markets = optionsMarkets.filter((market) => {
-                    console.log(market.creator.toLowerCase() === walletAddress.toLowerCase());
+                return optionsMarkets.filter((market) => {
                     return market.creator.toLowerCase() === walletAddress.toLowerCase();
                 });
-                console.log(markets);
-                return markets;
             case Filters.ORDERS:
+                return optionsMarkets.filter((market) => {
+                    return userBidsMarketsQuery.data?.includes(market.address);
+                });
                 break;
             case Filters.ASSETS:
                 break;
         }
     }, [optionsMarkets, filter]);
-
-    console.log(optionsMarkets);
 
     return (
         <Modal
