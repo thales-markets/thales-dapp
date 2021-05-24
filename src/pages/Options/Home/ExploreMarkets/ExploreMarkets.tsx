@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
@@ -265,24 +265,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         </div>
     );
 };
-
-const FilterButton = styled(Button)`
-    width: 110px;
-    height: 40px;
-    margin: 24px 10px;
-    background: transparent;
-    border: 1px solid #04045a;
-    border-radius: 32px;
-    font-weight: bold;
-    font-size: 13px;
-    line-height: 13px;
-    letter-spacing: 0.4px;
-    text-transform: capitalize !important;
-    color: #f6f6fe;
-    &.selected {
-        background: #44e1e2;
-    }
-`;
 
 const NoMarkets = styled(FlexDivColumn)`
     height: 500px;

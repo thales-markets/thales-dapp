@@ -96,7 +96,7 @@ const UserInfo: React.FC = () => {
                 </NetworkWrapper>
             </UserInfoWrapper>
             <UserInfoModal
-                address={truncateAddress(walletAddress, 13, 4)}
+                walletAddress={walletAddress}
                 network={network.networkName}
                 open={open}
                 handleClose={setOpen.bind(this, false)}
