@@ -15,7 +15,7 @@ import Currency from 'components/Currency';
 import { formatShortDate } from 'utils/formatters/date';
 import { USD_SIGN } from 'constants/currency';
 import { navigateToOptionsMarket } from 'utils/routes';
-import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
+// import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -32,13 +32,12 @@ enum Filters {
 
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, walletAddress, network }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
+        enabled: open,
+    });
+    console.log(marketsQuery);
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
-
-    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
-        enabled: filter === Filters.ORDERS,
-    });
 
     const optionsMarkets = useMemo(
         () =>
@@ -55,9 +54,12 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     return market.creator.toLowerCase() === walletAddress.toLowerCase();
                 });
             case Filters.ORDERS:
-                return optionsMarkets.filter((market) => {
-                    return userBidsMarketsQuery.data?.includes(market.address);
-                });
+                // optionsMarkets.map((market) => {
+                //     const orderbookQueryLong = useBinaryOptionsMarketOrderbook(networkId, market.longAddress);
+                //     console.log('Long orders: ', orderbookQueryLong);
+                //     const orderbookQueryShort = useBinaryOptionsMarketOrderbook(networkId, market.shortAddress);
+                //     console.log('Short orders: ', orderbookQueryShort);
+                // });
                 break;
             case Filters.ASSETS:
                 break;

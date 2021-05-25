@@ -74,7 +74,7 @@ const useBinaryOptionsMarketOrderbook = (
         QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress),
         async () => {
             const orderbookUrl = `${baseUrl}orderbook?baseToken=${optionsTokenAddress}&quoteToken=${SynthsUSD.address}`;
-
+            console.log(orderbookUrl);
             const response = await fetch(orderbookUrl);
 
             const responseJ = await response.json();
