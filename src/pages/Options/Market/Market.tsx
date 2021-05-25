@@ -190,11 +190,17 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         draggableHandle: '.grid-component-header',
     };
 
-    const wrapWidget = (phase: string, widgets: ReactElement[], widgetKey: MarketWidgetKey, widget: ReactElement) => {
+    const wrapWidget = (
+        phase: string,
+        widgets: ReactElement[],
+        widgetKey: MarketWidgetKey,
+        widget: ReactElement,
+        background?: string
+    ) => {
         if (isMarketWidgetVisible(widgetKey, visibilityMap, phase, isWalletConnected, false)) {
             widgets.push(
                 <div key={widgetKey} data-grid={fullLayout.find((item: Layout) => item.i === widgetKey)}>
-                    <MarketWidget>{widget}</MarketWidget>
+                    <MarketWidget background={background}>{widget}</MarketWidget>
                 </div>
             );
         }
@@ -230,7 +236,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             optionsMarket.phase,
             widgets,
             MarketWidgetKey.TRADE,
-            <TradeOptions optionSide={optionsActiveTab.id} />
+            <TradeOptions optionSide={optionsActiveTab.id} />,
+            'linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%)'
         );
         wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART, <ChartCard />);
         wrapWidget(
@@ -410,13 +417,13 @@ const OptionsTabContainer = styled(FlexDiv)``;
 
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean }>`
     background-color: transparent;
-    width: ${(props) => (props.isActive ? '70%' : '30%')};
+    width: ${(props) => (props.isActive ? '60%' : '40%')};
     transition: 0.5s;
     height: 74px;
     border-radius: 15px 15px 0px 0px;
     font-style: normal;
     font-weight: 600;
-    font-size: 31px;
+    font-size: 25px;
     line-height: 48px;
     text-align: center;
     letter-spacing: 0.25px;

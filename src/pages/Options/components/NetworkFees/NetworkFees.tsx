@@ -15,9 +15,11 @@ import { Text } from 'theme/common';
 
 type NetworkFeesProps = {
     gasLimit: number | null;
+    labelColor?: string;
+    priceColor?: string;
 };
 
-const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
+const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, labelColor, priceColor }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
@@ -40,15 +42,15 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase' }}>
-                <Text className="text-xs dark bold capitalize">{t('common.network-fee-gas')}</Text>
-                <Text className="text-xs dark bold capitalize">
+                <Text className={`text-xs ${labelColor || 'dark'} bold capitalize`}>{t('common.network-fee-gas')}</Text>
+                <Text className={`text-xs ${priceColor || 'dark'} bold capitalize`}>
                     {formatCurrencyWithSign(USD_SIGN, getTransactionPrice(gasPrice, gasLimit, ethRate))}
                 </Text>
             </div>
             <div
                 style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase', marginTop: 10 }}
             >
-                <Text className="text-xs dark bold capitalize">{t('common.gas-price-gwei')}</Text>
+                <Text className={`text-xs ${labelColor || 'dark'} bold capitalize`}>{t('common.gas-price-gwei')}</Text>
                 <SelectGasMenu gasPrice={gasPrice} />
             </div>
         </div>

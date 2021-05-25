@@ -15,7 +15,7 @@ const useBinaryOptionsMarketOrderbook = (
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const baseUrl = get0xBaseURL(networkId);
+    const baseUrl = `${get0xBaseURL(networkId)}sra/v4/`;
 
     const orderbook: OrderbookInfo = {
         buyOrders: [],

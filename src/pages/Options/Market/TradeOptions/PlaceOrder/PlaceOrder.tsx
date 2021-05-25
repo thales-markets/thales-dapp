@@ -3,7 +3,7 @@ import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
 import { SYNTHS_MAP } from 'constants/currency';
-import { EMPTY_VALUE } from 'constants/placeholder';
+// import { EMPTY_VALUE } from 'constants/placeholder';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,13 +17,13 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Form, Input, Segment, Button, Message, Dropdown, Header } from 'semantic-ui-react';
+import { Message } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
+// import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
@@ -41,10 +41,30 @@ import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import { ValueType } from 'react-select';
+import {
+    Container,
+    InputContainer,
+    GridContainer,
+    InputLabel,
+    SubmitButtonContainer,
+    Input,
+    ReactSelect,
+    CurrencyLabel,
+    AmountButton,
+    AmountButtonContainer,
+    TotalLabel,
+    TotalContainer,
+    Total,
+    SubmitButton,
+} from '../components';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
 };
+
+export type ExpirationOptionType = { value: string; label: string };
+export type OrderSideOptionType = { value: OrderSide; label: string };
 
 const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const { t } = useTranslation();
@@ -57,13 +77,24 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [price, setPrice] = useState<number | string>('');
     const [amount, setAmount] = useState<number | string>('');
-    const [expiration, setExpiration] = useState<string | undefined>(undefined);
+    const [expiration, setExpiration] = useState<ValueType<ExpirationOptionType, false>>();
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [orderSide, setOrderSide] = useState<OrderSide>('buy');
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+
+    const orderSideOptions = [
+        {
+            value: 'buy' as OrderSide,
+            label: t('common.buy'),
+        },
+        {
+            value: 'sell' as OrderSide,
+            label: t('common.sell'),
+        },
+    ];
+    const [orderSide, setOrderSide] = useState<OrderSideOptionType>(orderSideOptions[0]);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -100,7 +131,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     }
     const tokenBalance = optionSide === 'long' ? optBalances.long : optBalances.short;
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
-    const isBuy = orderSide === 'buy';
+    const isBuy = orderSide.value === 'buy';
 
     const {
         contracts: { SynthsUSD },
@@ -122,9 +153,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
-            key: period.value,
             value: period.value,
-            text: t(period.i18nLabel),
+            label: t(period.i18nLabel),
         };
     });
 
@@ -132,9 +162,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         let orderEndDate = 0;
         if (expiration) {
             orderEndDate =
-                expiration === OrderPeriod.TRADING_END
+                expiration.value === OrderPeriod.TRADING_END
                     ? Math.round(optionsMarket.timeRemaining / 1000)
-                    : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
+                    : Math.round(new Date().getTime() / 1000) +
+                      ORDER_PERIOD_IN_SECONDS[expiration.value as OrderPeriod];
         }
         return toBigNumber(orderEndDate);
     };
@@ -192,7 +223,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         setIsSubmitting(true);
 
         const baseUrl = get0xBaseURL(networkId);
-        const placeOrderUrl = `${baseUrl}order`;
+        const placeOrderUrl = `${baseUrl}sra/v4/order`;
 
         const makerAmount = Web3Wrapper.toBaseUnitAmount(
             toBigNumber(isBuy ? Number(amount) * Number(price) : amount),
@@ -260,117 +291,94 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     };
 
     return (
-        <>
-            <Header as="h3">{t(`options.market.trade-options.place-order.${optionSide}.title`)}</Header>
-            <Segment>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <span>
-                        <WalletIcon />
-                        {isWalletConnected
-                            ? isBuy
-                                ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)
-                                : formatCurrencyWithKey('sOPT', tokenBalance)
-                            : EMPTY_VALUE}
-                    </span>
-                </div>
-                <Form>
-                    <Form.Field>
-                        <label style={{ textTransform: 'none' }}>
-                            {t('options.market.trade-options.place-order.order-type-label')}
-                        </label>
-                        <span>
-                            <Button size="mini" positive={orderSide === 'buy'} onClick={() => setOrderSide('buy')}>
-                                {t('common.buy')}
-                            </Button>
-                            <Button size="mini" negative={orderSide === 'sell'} onClick={() => setOrderSide('sell')}>
-                                {t('common.sell')}
-                            </Button>
-                        </span>
-                    </Form.Field>
-                    <Form.Field>
-                        <label style={{ textTransform: 'none' }}>
-                            {t('options.market.trade-options.place-order.price-label')}
-                        </label>
-                        <Input
-                            fluid
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            label={SYNTHS_MAP.sUSD}
-                            id="price"
-                            type="number"
-                            min="0"
-                            step="any"
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label style={{ textTransform: 'none' }}>
-                            {t('options.market.trade-options.place-order.amount-label', { orderSide })}
-                        </label>
-                        <Input
-                            fluid
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            label="sOPT"
-                            id="amount"
-                            type="number"
-                            min="0"
-                            step="any"
-                        />
-                        <div style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
-                            {AMOUNT_PERCENTAGE.map((percentage: number) => (
-                                <Button
-                                    size="mini"
-                                    key={percentage}
-                                    onClick={() => calculateAmount(percentage)}
-                                    color="teal"
-                                    disabled={isBuy && price === ''}
-                                >
-                                    {`${percentage}%`}
-                                </Button>
-                            ))}
-                        </div>
-                    </Form.Field>
-                    <Form.Field>
-                        <label style={{ textTransform: 'none' }}>
-                            {t('options.market.trade-options.place-order.expiration-label')}
-                        </label>
-                        <Dropdown
-                            value={expiration}
-                            onChange={(_, data) => setExpiration(data.value?.toString())}
-                            placeholder={t('common.select')}
-                            selection
-                            options={expirationOptions}
-                        />
-                    </Form.Field>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span>{t('options.market.trade-options.place-order.total-label')}</span>
-                        <span>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}</span>
-                    </div>
-                </Form>
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                    {hasAllowance ? (
-                        <Button color={isBuy ? 'green' : 'red'} disabled={isButtonDisabled} onClick={handleSubmitOrder}>
-                            {!isSubmitting
-                                ? t('options.market.trade-options.place-order.confirm-button.label')
-                                : t('options.market.trade-options.place-order.confirm-button.progress-label')}
-                        </Button>
-                    ) : (
-                        <Button
-                            color={isBuy ? 'green' : 'red'}
-                            disabled={isAllowing || !isWalletConnected}
-                            onClick={handleAllowance}
-                        >
-                            {!isAllowing
-                                ? t('common.enable-wallet-access.label')
-                                : t('common.enable-wallet-access.progress-label')}
-                        </Button>
-                    )}
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                    {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-                </div>
-            </Segment>
-        </>
+        <Container>
+            {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <span>
+                    <WalletIcon />
+                    {isWalletConnected
+                        ? isBuy
+                            ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)
+                            : formatCurrencyWithKey('sOPT', tokenBalance)
+                        : EMPTY_VALUE}
+                </span>
+            </div> */}
+            <InputContainer>
+                <ReactSelect
+                    formatOptionLabel={(option: any) => option.label}
+                    options={orderSideOptions}
+                    value={orderSide}
+                    onChange={(option: any) => setOrderSide(option)}
+                    isSearchable={false}
+                    isUppercase
+                />
+                <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
+            </InputContainer>
+            <GridContainer>
+                <InputContainer>
+                    <Input value={price} onChange={(e) => setPrice(e.target.value)} type="number" min="0" step="any" />
+                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                </InputContainer>
+                <InputContainer>
+                    <Input
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        id="amount"
+                        type="number"
+                        min="0"
+                        step="any"
+                    />
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
+                    </InputLabel>
+                    <CurrencyLabel>{'sOPT'}</CurrencyLabel>
+                </InputContainer>
+            </GridContainer>
+            <AmountButtonContainer>
+                {AMOUNT_PERCENTAGE.map((percentage: number) => (
+                    <AmountButton
+                        key={percentage}
+                        onClick={() => calculateAmount(percentage)}
+                        disabled={!isWalletConnected || (isBuy && price === '')}
+                    >
+                        {`${percentage}%`}
+                    </AmountButton>
+                ))}
+            </AmountButtonContainer>
+            <InputContainer>
+                <ReactSelect
+                    formatOptionLabel={(option: any) => option.label}
+                    options={expirationOptions}
+                    placeholder={''}
+                    value={expiration}
+                    onChange={(option: any) => setExpiration(option)}
+                    isSearchable={false}
+                />
+                <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
+            </InputContainer>
+            <TotalContainer>
+                <TotalLabel>{t('options.market.trade-options.place-order.total-label')}</TotalLabel>
+                <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}</Total>
+            </TotalContainer>
+            <SubmitButtonContainer>
+                {hasAllowance ? (
+                    <SubmitButton isBuy={isBuy} disabled={isButtonDisabled} onClick={handleSubmitOrder}>
+                        {!isSubmitting
+                            ? t('options.market.trade-options.place-order.confirm-button.label')
+                            : t('options.market.trade-options.place-order.confirm-button.progress-label')}
+                    </SubmitButton>
+                ) : (
+                    <SubmitButton isBuy={isBuy} disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
+                        {!isAllowing
+                            ? t('common.enable-wallet-access.label')
+                            : t('common.enable-wallet-access.progress-label')}
+                    </SubmitButton>
+                )}
+            </SubmitButtonContainer>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
+            </div>
+        </Container>
     );
 };
 
