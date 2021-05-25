@@ -51,6 +51,7 @@ export const QUERY_KEYS = {
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
+        Orders: (walletAddress: string) => ['user', 'orders', walletAddress],
     },
 };
 

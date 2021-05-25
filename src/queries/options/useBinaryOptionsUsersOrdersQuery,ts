@@ -1,0 +1,24 @@
+import snxJSConnector from '../../utils/snxJSConnector';
+import { get0xBaseURL } from 'utils/0x';
+import { NetworkId } from 'utils/network';
+import { useQuery } from 'react-query';
+import QUERY_KEYS from 'constants/queryKeys';
+
+const useBinaryOptionsUsersOrdersQuery = (networkId: NetworkId, walletAddress: string) => {
+    const {
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
+    const baseUrl = `${get0xBaseURL(networkId)}sra/v4/`;
+    console.log('Base url: ', baseUrl);
+
+    return useQuery<string[]>(QUERY_KEYS.User.Orders(walletAddress), async () => {
+        const ordersUrl = `${baseUrl}orders?makerToken==${walletAddress}`;
+        console.log('ordersUrl: ', ordersUrl);
+        const response = await fetch(ordersUrl);
+        console.log('response: ', response);
+
+        return response.json();
+    });
+};
+
+export default useBinaryOptionsUsersOrdersQuery;

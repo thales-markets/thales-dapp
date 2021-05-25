@@ -7,6 +7,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
+import useBinaryOptionsUsersOrdersQuery from 'queries/options/useBinaryOptionsUsersOrdersQuery';
 import snxJSConnector from 'utils/snxJSConnector';
 import { sortOptionsMarkets } from 'utils/options';
 import { RootState } from 'redux/rootReducer';
@@ -35,7 +36,8 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: open,
     });
-    console.log(marketsQuery);
+    const ordersQuery = useBinaryOptionsUsersOrdersQuery(networkId, walletAddress);
+    console.log('ordersQuery: ', ordersQuery);
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
 
