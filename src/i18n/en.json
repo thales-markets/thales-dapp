@@ -448,6 +448,16 @@
                     "confirm-button": {
                         "label": "Submit order",
                         "progress-label": "Submitting order in progress..."
+                    },
+                    "swap-confirm-button": {
+                        "buy": {
+                            "label": "Buy",
+                            "progress-label": "Buying in progress..."
+                        },
+                        "sell": {
+                            "label": "sell",
+                            "progress-label": "Selling in progress..."
+                        }
                     }
                 },
                 "fill-order": {

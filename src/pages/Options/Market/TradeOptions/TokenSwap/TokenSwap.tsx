@@ -1,9 +1,4 @@
-// import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-// import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-// import { Web3Wrapper } from '@0x/web3-wrapper';
-// import axios from 'axios';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
-// import { EMPTY_VALUE } from 'constants/placeholder';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,23 +23,14 @@ import {
     toBigNumber,
 } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-// import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import {
-    AMOUNT_PERCENTAGE,
-    SLIPPAGE_PERCENTAGE,
-    // OrderPeriod,
-    // OrderPeriodItem,
-    // ORDER_PERIOD_IN_SECONDS,
-    // ORDER_PERIOD_ITEMS_MAP,
-} from 'constants/options';
+import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, SLIPPAGE_THRESHOLD } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
-// import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
@@ -104,6 +90,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [slippage, setSlippage] = useState<number>(SLIPPAGE_PERCENTAGE[1]);
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
+    const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
     const orderSideOptions = [
         {
             value: 'buy' as OrderSide,
@@ -158,8 +145,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const isBuy = orderSide.value === 'buy';
 
     const isButtonDisabled =
-        // price === '' ||
-        // Number(price) <= 0 ||
+        price === '' ||
+        Number(price) <= 0 ||
         amount === '' ||
         Number(amount) <= 0 ||
         isSubmitting ||
@@ -181,11 +168,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     });
 
     const bestBuyPrice =
-        orderbookQuery.isSuccess && orderbookQuery.data
+        orderbookQuery.isSuccess && orderbookQuery.data && orderbookQuery.data.sellOrders.length > 0
             ? orderbookQuery.data.sellOrders[0].displayOrder.price
             : undefined;
     const bestSellPrice =
-        orderbookQuery.isSuccess && orderbookQuery.data
+        orderbookQuery.isSuccess && orderbookQuery.data && orderbookQuery.data.buyOrders.length > 0
             ? orderbookQuery.data.buyOrders[0].displayOrder.price
             : undefined;
 
@@ -254,8 +241,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 setIsSubmitting(false);
             }
         } catch (error) {
-            console.log(error);
             setIsSubmitting(false);
+            console.log(error);
         }
     };
     const calculateAmount = (percentage: number) => {
@@ -276,13 +263,12 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         if (newAmount !== '' && Number(newAmount) > 0) {
             const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(newAmount), DEFAULT_TOKEN_DECIMALS);
             try {
-                const swapUrl = isBuy
-                    ? `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&buyAmount=${tokenAmount}&slippagePercentage=${
-                          (newSlippage || slippage) / 100
-                      }&takerAddress=${walletAddress}`
-                    : `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&sellAmount=${tokenAmount}&slippagePercentage=${
-                          (newSlippage || slippage) / 100
-                      }&takerAddress=${walletAddress}`;
+                const swapUrl = `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&${
+                    isBuy ? 'buyAmount' : 'sellAmount'
+                }=${tokenAmount}&slippagePercentage=${(newSlippage || slippage) / 100}${
+                    gasPrice != null ? `&gasPrice=${gasPrice * GWEI_UNIT}` : ''
+                }${isWalletConnected && hasAllowance ? `&takerAddress=${walletAddress}` : ''}`;
+
                 const response = await fetch(swapUrl);
                 if (response.status == 200) {
                     const quote = await response.json();
@@ -297,12 +283,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     setInsufficientLiquidity(false);
                     setGasLimit(quote.gas);
                     if (isBuy) {
-                        console.log(bestBuyPrice ? (quote.price - bestBuyPrice) / bestBuyPrice : 0);
                         setPriceImpactPercentage(bestBuyPrice ? (quote.price - bestBuyPrice) / bestBuyPrice : 0);
                     } else {
-                        console.log(bestSellPrice ? -(bestSellPrice - quote.price) / bestSellPrice : 0);
                         setPriceImpactPercentage(bestSellPrice ? -(bestSellPrice - quote.price) / bestSellPrice : 0);
                     }
+                    setInsufficientBalance0x(false);
                 } else {
                     const quote = await response.json();
                     console.log(quote);
@@ -313,6 +298,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     setSwapQuote(undefined);
                     setProtocolFee('');
                     setInsufficientLiquidity(quote.code === 100);
+                    setInsufficientBalance0x(quote.code === 105);
                     setGasLimit(null);
                     setPriceImpactPercentage('0');
                 }
@@ -329,6 +315,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             setInsufficientLiquidity(false);
             setGasLimit(null);
             setPriceImpactPercentage('0');
+            setInsufficientBalance0x(false);
         }
     };
 
@@ -402,7 +389,10 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             <TotalContainer>
                 <TotalLabel>{t('options.market.trade-options.place-order.price-label')}</TotalLabel>
                 <Price
-                    isWarning={Number(priceImpactPercentage) > 0.1 || Number(priceImpactPercentage) < -0.1}
+                    isWarning={
+                        Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
+                        Number(priceImpactPercentage) < -SLIPPAGE_THRESHOLD
+                    }
                 >{`${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))} (${formatPercentageWithSign(
                     priceImpactPercentage
                 )})`}</Price>
@@ -428,19 +418,31 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             </NetworkFeesContainer>
             <SubmitButtonContainer>
                 {' '}
-                {hasAllowance || insufficientBalance || insufficientLiquidity ? (
+                {hasAllowance ||
+                insufficientBalance ||
+                insufficientBalance0x ||
+                insufficientLiquidity ||
+                addressToApprove === '' ? (
                     <SubmitButton
                         isBuy={isBuy}
-                        disabled={isButtonDisabled || insufficientBalance || insufficientLiquidity}
+                        disabled={
+                            isButtonDisabled ||
+                            insufficientBalance ||
+                            insufficientBalance0x ||
+                            insufficientLiquidity ||
+                            addressToApprove === ''
+                        }
                         onClick={handleSubmitOrder}
                     >
-                        {insufficientBalance
+                        {insufficientBalance || insufficientBalance0x
                             ? t('common.errors.insufficient-balance')
                             : insufficientLiquidity
                             ? t('common.errors.insufficient-liquidity')
                             : !isSubmitting
-                            ? t('options.market.trade-options.place-order.confirm-button.label')
-                            : t('options.market.trade-options.place-order.confirm-button.progress-label')}
+                            ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
+                            : t(
+                                  `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.progress-label`
+                              )}
                     </SubmitButton>
                 ) : (
                     <SubmitButton
