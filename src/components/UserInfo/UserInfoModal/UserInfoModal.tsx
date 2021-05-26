@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FilterButton, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
+import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
 import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useBinaryOptionsUsersOrdersQuery from 'queries/options/useBinaryOptionsUsersOrdersQuery';
+import useBinaryOptionsUserOrders from 'queries/options/useBinaryOptionsUserOrders';
 import snxJSConnector from 'utils/snxJSConnector';
 import { sortOptionsMarkets } from 'utils/options';
 import { RootState } from 'redux/rootReducer';
@@ -16,7 +16,9 @@ import Currency from 'components/Currency';
 import { formatShortDate } from 'utils/formatters/date';
 import { USD_SIGN } from 'constants/currency';
 import { navigateToOptionsMarket } from 'utils/routes';
-// import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
+import { Trade } from 'types/options';
+import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
+import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -36,10 +38,14 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: open,
     });
-    const ordersQuery = useBinaryOptionsUsersOrdersQuery(networkId, walletAddress);
-    console.log('ordersQuery: ', ordersQuery);
+    const ordersQuery = useBinaryOptionsUserOrders(networkId, walletAddress, {
+        enabled: open,
+    });
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
+    const {
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
 
     const optionsMarkets = useMemo(
         () =>
@@ -56,12 +62,44 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     return market.creator.toLowerCase() === walletAddress.toLowerCase();
                 });
             case Filters.ORDERS:
-                // optionsMarkets.map((market) => {
-                //     const orderbookQueryLong = useBinaryOptionsMarketOrderbook(networkId, market.longAddress);
-                //     console.log('Long orders: ', orderbookQueryLong);
-                //     const orderbookQueryShort = useBinaryOptionsMarketOrderbook(networkId, market.shortAddress);
-                //     console.log('Short orders: ', orderbookQueryShort);
-                // });
+                if (ordersQuery.isSuccess) {
+                    return optionsMarkets.reduce((acc, market: any) => {
+                        if (market.openOrders > 0) {
+                            const userOrdersForMarket: [] = ordersQuery.data.records.reduce((temp: any, data: any) => {
+                                const rawOrder: Trade = data.order;
+                                const isBuy: boolean =
+                                    rawOrder.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+                                let isLong = false;
+                                if (
+                                    (isBuy && market.longAddress.toLowerCase() === rawOrder.takerToken.toLowerCase()) ||
+                                    (!isBuy && market.longAddress.toLowerCase() === rawOrder.makerToken.toLowerCase())
+                                ) {
+                                    isLong = true;
+                                } else if (
+                                    (isBuy &&
+                                        market.shortAddress.toLowerCase() === rawOrder.takerToken.toLowerCase()) ||
+                                    (!isBuy && market.shortAddress.toLowerCase() === rawOrder.makerToken.toLowerCase())
+                                ) {
+                                    isLong = false;
+                                } else {
+                                    return temp;
+                                }
+                                const displayOrder = isBuy ? prepBuyOrder(data) : prepSellOrder(data);
+
+                                temp.push({
+                                    ...displayOrder,
+                                    market,
+                                    isBuy,
+                                    isLong,
+                                });
+                                return temp;
+                            }, []);
+                            acc.push(...userOrdersForMarket);
+                        }
+                        return acc;
+                    }, []);
+                }
+
                 break;
             case Filters.ASSETS:
                 break;
@@ -138,25 +176,63 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     </FilterButton>
                 </FilterWrapper>
                 <DataWrapper>
-                    {filteredMarkets?.map((market, index) => (
-                        <MarketRow
-                            key={index}
-                            onClick={() => {
-                                if (market.phase !== 'expiry') {
-                                    navigateToOptionsMarket(market.address);
-                                }
-                            }}
-                        >
-                            <Currency.Name
-                                currencyKey={market.currencyKey}
-                                showIcon={true}
-                                iconProps={{ width: '32px', height: '32px', type: 'asset' }}
-                            />
-                            <Text style={{ margin: '0 8px' }}>{market.strikePrice.toFixed(2) + USD_SIGN}</Text>
-                            <Text> by {formatShortDate(market.maturityDate)}</Text>
-                            <Text>{market.poolSize.toFixed(2) + USD_SIGN}</Text>
-                        </MarketRow>
-                    ))}
+                    {filter === Filters.MARKETS &&
+                        filteredMarkets?.map((market, index) => (
+                            <MarketRow
+                                key={index}
+                                onClick={() => {
+                                    if (market.phase !== 'expiry') {
+                                        navigateToOptionsMarket(market.address);
+                                    }
+                                }}
+                            >
+                                <Currency.Name
+                                    currencyKey={market.currencyKey}
+                                    showIcon={true}
+                                    iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                                />
+                                <Text style={{ margin: '0 8px' }}>{market.strikePrice.toFixed(2) + USD_SIGN}</Text>
+                                <Text> by {formatShortDate(market.maturityDate)}</Text>
+                                <Text>{market.poolSize.toFixed(2) + USD_SIGN}</Text>
+                            </MarketRow>
+                        ))}
+                    {filter === Filters.ORDERS &&
+                        filteredMarkets?.map((order: any, index) => (
+                            <MarketRow
+                                style={{
+                                    background: order.isBuy ? 'rgb(61, 186, 162,0.6)' : 'rgb(255, 122, 104, 0.6)',
+                                }}
+                                key={index}
+                                onClick={() => {
+                                    if (order.market.phase !== 'expiry') {
+                                        navigateToOptionsMarket(order.market.address);
+                                    }
+                                }}
+                            >
+                                <FlexDivCentered style={{ flex: 7, justifyContent: 'flex-start' }}>
+                                    <Currency.Name
+                                        currencyKey={order.market.currencyKey}
+                                        showIcon={true}
+                                        iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                                    />
+                                    <Text className="text-xxs" style={{ margin: '0 8px' }}>
+                                        {order.isLong ? ' > ' : ' < '}
+                                        {formatCurrency(order.market.strikePrice) + USD_SIGN + ' '}
+                                        by {formatShortDate(order.market.maturityDate)}
+                                    </Text>
+                                </FlexDivCentered>
+                                <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
+                                    {order.displayOrder.amount.toFixed(2) + ' x '}
+                                    {order.displayOrder.price.toFixed(2) + USD_SIGN}
+                                </Text>
+                                <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
+                                    {formatPercentage(order.displayOrder.filled, 0)}
+                                </Text>
+                                <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
+                                    {new Date(order.displayOrder.timeRemaining).toDateString()}
+                                </Text>
+                            </MarketRow>
+                        ))}
                 </DataWrapper>
             </ModalWrapper>
         </Modal>
@@ -215,11 +291,12 @@ const MarketRow = styled(FlexDiv)`
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    border-radius: 12px;
+    margin: 6px 8px;
 
     &:hover {
         border: 1px solid #44e1e2;
         padding: 11px;
-        border-radius: 12px;
     }
 `;
 

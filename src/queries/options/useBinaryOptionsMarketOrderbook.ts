@@ -1,11 +1,10 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { OrderbookInfo, OrderItem } from 'types/options';
-import snxJSConnector from '../../utils/snxJSConnector';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import snxJSConnector from 'utils/snxJSConnector';
 import { get0xBaseURL } from 'utils/0x';
 import { NetworkId } from 'utils/network';
-import { toJSTimestamp } from 'utils/formatters/date';
+import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 
 const useBinaryOptionsMarketOrderbook = (
     networkId: NetworkId,
@@ -22,59 +21,10 @@ const useBinaryOptionsMarketOrderbook = (
         sellOrders: [],
     };
 
-    function prepSellOrder(record: any) {
-        const price = bigNumberFormatter(record.order.takerAmount) / bigNumberFormatter(record.order.makerAmount);
-        const amount = bigNumberFormatter(record.order.makerAmount);
-        const total = bigNumberFormatter(record.order.takerAmount);
-        const timeRemaining = toJSTimestamp(record.order.expiry);
-        const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
-        const filled = (amount - fillableAmount) / amount;
-        const orderHash = record.metaData.orderHash;
-
-        return {
-            rawOrder: record.order,
-            signature: record.order.signature,
-            displayOrder: {
-                amount,
-                price,
-                total,
-                timeRemaining,
-                fillableAmount,
-                filled,
-                orderHash,
-            },
-        };
-    }
-
-    function prepBuyOrder(record: any) {
-        const price = bigNumberFormatter(record.order.makerAmount) / bigNumberFormatter(record.order.takerAmount);
-        const amount = bigNumberFormatter(record.order.takerAmount);
-        const total = bigNumberFormatter(record.order.makerAmount);
-        const timeRemaining = toJSTimestamp(record.order.expiry);
-        const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
-        const filled = (amount - fillableAmount) / amount;
-        const orderHash = record.metaData.orderHash;
-
-        return {
-            rawOrder: record.order,
-            signature: record.order.signature,
-            displayOrder: {
-                amount,
-                price,
-                total,
-                timeRemaining,
-                fillableAmount,
-                filled,
-                orderHash,
-            },
-        };
-    }
-
     return useQuery<OrderbookInfo>(
         QUERY_KEYS.BinaryOptions.MarketOrderBook(optionsTokenAddress),
         async () => {
             const orderbookUrl = `${baseUrl}orderbook?baseToken=${optionsTokenAddress}&quoteToken=${SynthsUSD.address}`;
-            console.log(orderbookUrl);
             const response = await fetch(orderbookUrl);
 
             const responseJ = await response.json();
