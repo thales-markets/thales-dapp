@@ -258,7 +258,8 @@
                 "maturity-phase-widget": "Exercise options",
                 "orderbook-widget": "Orderbook",
                 "trade-widget": "Trade",
-                "chart-widget": "Chart",
+                "chart-trading-view-widget": "Trading view",
+                "chart-options-widget": "Options price",
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {
