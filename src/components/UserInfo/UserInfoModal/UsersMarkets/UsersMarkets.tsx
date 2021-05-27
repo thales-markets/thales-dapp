@@ -1,7 +1,7 @@
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import React from 'react';
-import { Text } from 'theme/common';
+import { LightTooltip, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -16,6 +16,7 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets }) => {
         <>
             {usersMarkets?.map((market, index) => (
                 <MarketRow
+                    className="text-xs"
                     key={index}
                     onClick={() => {
                         if (market.phase !== 'expiry') {
@@ -28,9 +29,15 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets }) => {
                         showIcon={true}
                         iconProps={{ width: '32px', height: '32px', type: 'asset' }}
                     />
-                    <Text style={{ margin: '0 8px' }}>{market.strikePrice.toFixed(2) + USD_SIGN}</Text>
-                    <Text> by {formatShortDate(market.maturityDate)}</Text>
-                    <Text>{market.poolSize.toFixed(2) + USD_SIGN}</Text>
+                    <LightTooltip title="Strike price">
+                        <Text style={{ margin: '0 8px' }}>{market.strikePrice.toFixed(2) + USD_SIGN}</Text>
+                    </LightTooltip>
+                    <LightTooltip title="Maturity date">
+                        <Text> {formatShortDate(market.maturityDate)}</Text>
+                    </LightTooltip>
+                    <LightTooltip title="Pool size">
+                        <Text>{market.poolSize.toFixed(2) + USD_SIGN}</Text>
+                    </LightTooltip>
                 </MarketRow>
             ))}
         </>

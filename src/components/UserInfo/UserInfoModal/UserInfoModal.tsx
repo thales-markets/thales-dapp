@@ -143,6 +143,8 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
 const ModalWrapper = styled(FlexDivColumn)`
     width: 600px;
+    max-height: 800px;
+    overflow-y: auto;
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 23px;
     margin: 240px auto;
