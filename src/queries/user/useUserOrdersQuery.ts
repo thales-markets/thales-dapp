@@ -4,7 +4,7 @@ import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsMarketInfo } from 'types/options';
 
-const useBinaryOptionsUserOrders = (
+const useUserOrdersQuery = (
     networkId: NetworkId,
     walletAddress: string,
     options?: UseQueryOptions<OptionsMarketInfo>
@@ -22,4 +22,4 @@ const useBinaryOptionsUserOrders = (
     );
 };
 
-export default useBinaryOptionsUserOrders;
+export default useUserOrdersQuery;

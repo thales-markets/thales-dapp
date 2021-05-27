@@ -1,3 +1,4 @@
+import { OptionsMarkets } from 'types/options';
 import { NetworkId } from 'utils/network';
 import { CurrencyKey } from './currency';
 
@@ -52,6 +53,7 @@ export const QUERY_KEYS = {
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
         Orders: (walletAddress: string) => ['user', 'orders', walletAddress],
+        Assets: (markets: OptionsMarkets, walletAddress: string) => ['user', 'assets', markets, walletAddress],
     },
 };
 

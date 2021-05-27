@@ -1,24 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, XButton } from 'theme/common';
+import { Button, FilterButton, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
 import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import useBinaryOptionsUserOrders from 'queries/options/useBinaryOptionsUserOrders';
 import snxJSConnector from 'utils/snxJSConnector';
 import { sortOptionsMarkets } from 'utils/options';
 import { RootState } from 'redux/rootReducer';
 import { truncateAddress } from 'utils/formatters/string';
-import Currency from 'components/Currency';
-import { formatShortDate } from 'utils/formatters/date';
-import { USD_SIGN } from 'constants/currency';
-import { navigateToOptionsMarket } from 'utils/routes';
-import { Trade } from 'types/options';
-import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
-import { formatCurrency, formatPercentage } from 'utils/formatters/number';
+import UsersAssets from './UsersAssets';
+import UsersOrders from './UsersOrders';
+import UsersMarkets from './UsersMarkets';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -38,14 +33,9 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: open,
     });
-    const ordersQuery = useBinaryOptionsUserOrders(networkId, walletAddress, {
-        enabled: open,
-    });
+
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
 
     const optionsMarkets = useMemo(
         () =>
@@ -55,56 +45,14 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
         [marketsQuery, synthsMap]
     );
 
-    const filteredMarkets = useMemo(() => {
-        switch (filter) {
-            case Filters.MARKETS:
-                return optionsMarkets.filter((market) => {
-                    return market.creator.toLowerCase() === walletAddress.toLowerCase();
-                });
-            case Filters.ORDERS:
-                if (ordersQuery.isSuccess) {
-                    return optionsMarkets.reduce((acc, market: any) => {
-                        if (market.openOrders > 0) {
-                            const userOrdersForMarket: [] = ordersQuery.data.records.reduce((temp: any, data: any) => {
-                                const rawOrder: Trade = data.order;
-                                const isBuy: boolean =
-                                    rawOrder.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
-                                let isLong = false;
-                                if (
-                                    (isBuy && market.longAddress.toLowerCase() === rawOrder.takerToken.toLowerCase()) ||
-                                    (!isBuy && market.longAddress.toLowerCase() === rawOrder.makerToken.toLowerCase())
-                                ) {
-                                    isLong = true;
-                                } else if (
-                                    (isBuy &&
-                                        market.shortAddress.toLowerCase() === rawOrder.takerToken.toLowerCase()) ||
-                                    (!isBuy && market.shortAddress.toLowerCase() === rawOrder.makerToken.toLowerCase())
-                                ) {
-                                    isLong = false;
-                                } else {
-                                    return temp;
-                                }
-                                const displayOrder = isBuy ? prepBuyOrder(data) : prepSellOrder(data);
+    const usersMarkets = useMemo(
+        () =>
+            optionsMarkets.filter((market) => {
+                return market.creator.toLowerCase() === walletAddress.toLowerCase();
+            }),
 
-                                temp.push({
-                                    ...displayOrder,
-                                    market,
-                                    isBuy,
-                                    isLong,
-                                });
-                                return temp;
-                            }, []);
-                            acc.push(...userOrdersForMarket);
-                        }
-                        return acc;
-                    }, []);
-                }
-
-                break;
-            case Filters.ASSETS:
-                break;
-        }
-    }, [optionsMarkets, filter]);
+        [optionsMarkets, filter]
+    );
 
     return (
         <Modal
@@ -176,63 +124,17 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     </FilterButton>
                 </FilterWrapper>
                 <DataWrapper>
-                    {filter === Filters.MARKETS &&
-                        filteredMarkets?.map((market, index) => (
-                            <MarketRow
-                                key={index}
-                                onClick={() => {
-                                    if (market.phase !== 'expiry') {
-                                        navigateToOptionsMarket(market.address);
-                                    }
-                                }}
-                            >
-                                <Currency.Name
-                                    currencyKey={market.currencyKey}
-                                    showIcon={true}
-                                    iconProps={{ width: '32px', height: '32px', type: 'asset' }}
-                                />
-                                <Text style={{ margin: '0 8px' }}>{market.strikePrice.toFixed(2) + USD_SIGN}</Text>
-                                <Text> by {formatShortDate(market.maturityDate)}</Text>
-                                <Text>{market.poolSize.toFixed(2) + USD_SIGN}</Text>
-                            </MarketRow>
-                        ))}
-                    {filter === Filters.ORDERS &&
-                        filteredMarkets?.map((order: any, index) => (
-                            <MarketRow
-                                style={{
-                                    background: order.isBuy ? 'rgb(61, 186, 162,0.6)' : 'rgb(255, 122, 104, 0.6)',
-                                }}
-                                key={index}
-                                onClick={() => {
-                                    if (order.market.phase !== 'expiry') {
-                                        navigateToOptionsMarket(order.market.address);
-                                    }
-                                }}
-                            >
-                                <FlexDivCentered style={{ flex: 7, justifyContent: 'flex-start' }}>
-                                    <Currency.Name
-                                        currencyKey={order.market.currencyKey}
-                                        showIcon={true}
-                                        iconProps={{ width: '32px', height: '32px', type: 'asset' }}
-                                    />
-                                    <Text className="text-xxs" style={{ margin: '0 8px' }}>
-                                        {order.isLong ? ' > ' : ' < '}
-                                        {formatCurrency(order.market.strikePrice) + USD_SIGN + ' '}
-                                        by {formatShortDate(order.market.maturityDate)}
-                                    </Text>
-                                </FlexDivCentered>
-                                <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
-                                    {order.displayOrder.amount.toFixed(2) + ' x '}
-                                    {order.displayOrder.price.toFixed(2) + USD_SIGN}
-                                </Text>
-                                <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
-                                    {formatPercentage(order.displayOrder.filled, 0)}
-                                </Text>
-                                <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
-                                    {new Date(order.displayOrder.timeRemaining).toDateString()}
-                                </Text>
-                            </MarketRow>
-                        ))}
+                    {filter === Filters.MARKETS && <UsersMarkets usersMarkets={usersMarkets} />}
+                    {filter === Filters.ORDERS && (
+                        <UsersOrders
+                            optionsMarkets={optionsMarkets}
+                            walletAddress={walletAddress}
+                            networkId={networkId}
+                        />
+                    )}
+                    {filter === Filters.ASSETS && (
+                        <UsersAssets optionsMarkets={optionsMarkets} walletAddress={walletAddress} />
+                    )}
                 </DataWrapper>
             </ModalWrapper>
         </Modal>
@@ -283,7 +185,7 @@ const DataWrapper = styled(FlexDivColumn)`
     border-bottom-left-radius: 23px;
 `;
 
-const MarketRow = styled(FlexDiv)`
+export const MarketRow = styled(FlexDiv)`
     color: white;
     font-size: 14px;
     line-height: 16px;
