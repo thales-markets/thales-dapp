@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React from 'react';
 import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
-import { ReactComponent as OptionsLineIcon } from 'assets/images/options-line.svg';
-// import { ReactComponent as DollarSignIcon } from 'assets/images/dollar-sign.svg';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-// import { PeriodLabel, PERIOD_LABELS_MAP, PERIOD_LABELS } from 'constants/period';
 import Currency from 'components/Currency';
-import PriceChart from './PriceChart';
 import OptionsChart from './OptionsChart';
 import { useMarketContext } from '../contexts/MarketContext';
 import { useSelector } from 'react-redux';
@@ -24,13 +19,12 @@ import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../components/MarketWidget/MarketWidgetContent';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 
-type ChartType = 'price' | 'options' | 'trading-view';
+type ChartCardType = {
+    marketWidgetKey: MarketWidgetKey;
+};
 
-const ChartCard: React.FC = () => {
-    // const [selectedPeriod, setSelectedPeriod] = useState<PeriodLabel>(PERIOD_LABELS_MAP.ONE_MONTH);
-    const { t } = useTranslation();
+const ChartCard: React.FC<ChartCardType> = ({ marketWidgetKey }) => {
     const optionsMarket = useMarketContext();
-    const [chartType, setChartType] = useState<ChartType>('trading-view');
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
@@ -58,7 +52,7 @@ const ChartCard: React.FC = () => {
 
     return (
         <>
-            <MarketWidgetHeader widgetKey={MarketWidgetKey.CHART}></MarketWidgetHeader>
+            <MarketWidgetHeader widgetKey={marketWidgetKey}></MarketWidgetHeader>
             <MarketWidgetContent>
                 <Container style={{ width: '100%', height: '100%' }}>
                     <WidgetHeader>
@@ -73,40 +67,11 @@ const ChartCard: React.FC = () => {
                             />
                             <Splitter>|</Splitter> {formatCurrencyWithSign(USD_SIGN, optionsMarket.currentPrice)}
                         </WidgetTitle>
-                        <FilterContainer>
-                            <FilterButton
-                                className={chartType === 'trading-view' ? 'selected' : ''}
-                                onClick={() => setChartType('trading-view')}
-                            >
-                                {t('options.market.chart-card.chart-types.trading-view')}
-                            </FilterButton>
-                            {/* <Button size="mini" primary={chartType === 'price'} onClick={() => setChartType('price')}>
-                        <DollarSignIcon /> {t('options.market.chart-card.chart-types.price')}
-                    </Button> */}
-                            <FilterButton
-                                className={chartType === 'options' ? 'selected' : ''}
-                                onClick={() => setChartType('options')}
-                            >
-                                <OptionsLineIcon /> {t('options.market.chart-card.chart-types.options')}
-                            </FilterButton>
-                            {/* <span style={{ marginLeft: 8, marginRight: 10 }}>|</span>
-                    {PERIOD_LABELS.map((period) => (
-                        <Button
-                            size="mini"
-                            key={period.value}
-                            primary={period.value === selectedPeriod.value}
-                            onClick={() => setSelectedPeriod(period)}
-                        >
-                            {t(period.i18nLabel)}
-                        </Button>
-                    ))} */}
-                        </FilterContainer>
                     </WidgetHeader>
-                    <div style={{ width: '100%', height: 'calc(100% - 60px)' }}>
-                        {chartType === 'price' && <PriceChart {...chartProps} />}
-                        {chartType === 'options' && <OptionsChart {...chartProps} />}
-                        {chartType === 'trading-view' && (
-                            <div style={{ width: '100%', height: '100%' }}>
+                    <div style={{ width: '100%', height: 'calc(100% - 52px)' }}>
+                        {marketWidgetKey === MarketWidgetKey.CHART_OPTIONS && <OptionsChart {...chartProps} />}
+                        {marketWidgetKey === MarketWidgetKey.CHART_TRADING_VIEW && (
+                            <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
                                 <TradingViewWidget
                                     symbol={assetToTradingViewMap[optionsMarket.currencyKey]}
                                     save_image={false}
@@ -144,34 +109,6 @@ const WidgetTitle = styled(FlexDiv)`
     letter-spacing: 0.5px;
     color: #f6f6fe;
     padding: 10px 30px;
-`;
-
-const FilterContainer = styled.div`
-    padding-right: 21px;
-`;
-
-const FilterButton = styled.button`
-    border: 2px solid rgba(1, 38, 81, 0.5);
-    border-radius: 23px;
-    min-height: 32px;
-    background-color: transparent;
-    cursor: pointer;
-    margin-left: 10px;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-    text-align: center;
-    letter-spacing: 0.5px;
-    color: #f6f6fe;
-    margin: 14px 9px;
-    padding: 5px 20px;
-    &.selected,
-    &:hover {
-        background: rgba(1, 38, 81, 0.5);
-        border: 2px solid #355dff;
-        border-radius: 23px;
-        color: #355dff;
-    }
 `;
 
 export default ChartCard;

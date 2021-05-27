@@ -155,12 +155,12 @@ const MarketsTable: FC<MarketsTableProps> = memo(
 
         const toggleWatchlist = async (marketAddress: string) => {
             try {
-                const result = await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
+                await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
                     networkId,
                     walletAddress,
                     marketAddress,
                 });
-                onChange(result.data.data);
+                onChange();
             } catch (e) {
                 console.log(e);
             }

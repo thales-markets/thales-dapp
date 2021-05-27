@@ -239,7 +239,18 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             <TradeOptions optionSide={optionsActiveTab.id} />,
             'linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%)'
         );
-        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART, <ChartCard />);
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.CHART_TRADING_VIEW,
+            <ChartCard marketWidgetKey={MarketWidgetKey.CHART_TRADING_VIEW} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.CHART_OPTIONS,
+            <ChartCard marketWidgetKey={MarketWidgetKey.CHART_OPTIONS} />
+        );
         wrapWidget(
             optionsMarket.phase,
             widgets,
@@ -259,7 +270,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         if (optionsMarket && optionsMarket.phase === 'trading') {
             dispatch(set0xReady(false));
             // TODO: For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering. Find a way to optimize this.
-            contractWrappers0xConnector.setContractWrappers0x(isWalletConnected, networkId);
+            contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
             dispatch(set0xReady(true));
         }
     }, [networkId, isWalletConnected, marketQuery.isSuccess]);

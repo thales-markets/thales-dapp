@@ -56,16 +56,12 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-    const watchlistedMarketsData = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
-    const [watchlistedMarkets, setWatchlistedMarkets] = useState<string[]>(watchlistedMarketsData);
+
+    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
     });
-
-    const handleWatchlistedMarketsChange = (newWatchlist: string[]) => {
-        setWatchlistedMarkets(newWatchlist);
-    };
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
@@ -215,9 +211,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             <MarketsTable
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 watchlistedMarkets={watchlistedMarkets}
-                onChange={handleWatchlistedMarketsChange}
                 isLoading={userBidsMarketsQuery.isLoading}
                 phase={phaseFilter}
+                onChange={watchlistedMarketsQuery.refetch}
             >
                 <NoMarkets>
                     {userFilter === UserFilterEnum.All && phaseFilter !== PhaseFilterEnum.all && (

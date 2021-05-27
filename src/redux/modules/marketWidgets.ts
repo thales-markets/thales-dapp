@@ -25,7 +25,8 @@ const defaultMarketWidgetVisibility: Record<MarketWidgetKey, boolean> = {
     [MarketWidgetKey.MATURITY_PHASE]: false,
     [MarketWidgetKey.TRADE]: true,
     [MarketWidgetKey.ORDERBOOK]: true,
-    [MarketWidgetKey.CHART]: true,
+    [MarketWidgetKey.CHART_TRADING_VIEW]: true,
+    [MarketWidgetKey.CHART_OPTIONS]: true,
     [MarketWidgetKey.RECENT_TRANSACTIONS]: true,
     [MarketWidgetKey.YOUR_TRANSACTIONS]: true,
 };
