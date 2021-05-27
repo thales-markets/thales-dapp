@@ -100,7 +100,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const { contractWrappers0x } = contractWrappers0xConnector;
+    const { exchangeProxy } = contractWrappers0xConnector;
 
     const isBuy = orderSide === 'buy';
 
@@ -145,7 +145,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
     useEffect(() => {
         if (is0xReady) {
-            const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
+            const subscriptionToken = exchangeProxy.subscribe(
                 IZeroExEvents.LimitOrderFilled,
                 { orderHash: order.displayOrder.orderHash },
                 (_, log) => {
@@ -159,7 +159,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 }
             );
             return () => {
-                contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
+                exchangeProxy.unsubscribe(subscriptionToken);
             };
         }
     }, [is0xReady]);
@@ -172,7 +172,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
                 const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
                 try {
-                    const gasEstimate = await contractWrappers0x.exchangeProxy
+                    const gasEstimate = await exchangeProxy
                         .fillLimitOrder(
                             targetOrder,
                             order.signature,
@@ -220,7 +220,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
 
             try {
-                await contractWrappers0x.exchangeProxy
+                await exchangeProxy
                     .fillLimitOrder(
                         targetOrder,
                         order.signature,
