@@ -22,7 +22,7 @@
         "bignumber.js": "^9.0.1",
         "bnc-onboard": "^1.20.0",
         "date-fns": "^2.19.0",
-        "ethers": "5.0.8",
+        "ethers": "^5.0.8",
         "history": "^4.10.1",
         "i18next": "^19.9.1",
         "i18next-browser-languagedetector": "^6.0.1",
@@ -50,7 +50,8 @@
         "synthetix-data": "^2.1.42",
         "thales-data": "0.0.6",
         "typescript": "^4.2.2",
-        "web-vitals": "^1.1.0"
+        "web-vitals": "^1.1.0",
+        "web3": "^1.3.6"
     },
     "devDependencies": {
         "@types/lodash": "^4.14.168",

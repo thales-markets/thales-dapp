@@ -20,6 +20,7 @@ export const PHASES_CARDS = ['bidding', 'trading', 'maturity'] as Phase[];
 export const SLIPPAGE_THRESHOLD = 0.1;
 
 export const AMOUNT_PERCENTAGE = [25, 50, 75, 100];
+export const SLIPPAGE_PERCENTAGE = [0.5, 1];
 
 export enum OrderPeriod {
     TEN_MINUTES = 'TEN_MINUTES',

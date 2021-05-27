@@ -239,7 +239,18 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             <TradeOptions optionSide={optionsActiveTab.id} />,
             'linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%)'
         );
-        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART, <ChartCard />);
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.CHART_TRADING_VIEW,
+            <ChartCard marketWidgetKey={MarketWidgetKey.CHART_TRADING_VIEW} />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            widgets,
+            MarketWidgetKey.CHART_OPTIONS,
+            <ChartCard marketWidgetKey={MarketWidgetKey.CHART_OPTIONS} />
+        );
         wrapWidget(
             optionsMarket.phase,
             widgets,

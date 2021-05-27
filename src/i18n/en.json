@@ -258,7 +258,8 @@
                 "maturity-phase-widget": "Exercise options",
                 "orderbook-widget": "Orderbook",
                 "trade-widget": "Trade",
-                "chart-widget": "Chart",
+                "chart-trading-view-widget": "Trading view",
+                "chart-options-widget": "Options price",
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {
@@ -441,9 +442,23 @@
                     "price-label": "Price per sOPT",
                     "expiration-label": "Expires in",
                     "total-label": "Total (sUSD)",
+                    "total-max-label": "Maximum sent (sUSD)",
+                    "total-min-label": "Minimum received (sUSD)",
+                    "slippage-label": "Slippage tolerance",
+                    "protocol-fee-label": "Protocol fee",
                     "confirm-button": {
                         "label": "Submit order",
                         "progress-label": "Submitting order in progress..."
+                    },
+                    "swap-confirm-button": {
+                        "buy": {
+                            "label": "Buy",
+                            "progress-label": "Buying in progress..."
+                        },
+                        "sell": {
+                            "label": "sell",
+                            "progress-label": "Selling in progress..."
+                        }
                     }
                 },
                 "fill-order": {
