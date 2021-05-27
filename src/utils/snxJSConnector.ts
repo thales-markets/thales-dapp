@@ -1,6 +1,7 @@
 import { ethers, Signer } from 'ethers';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
+import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import keyBy from 'lodash/keyBy';
 import initSynthetixJS, { Synth } from '@synthetixio/contracts-interface';
 import { SynthsMap, ContractSettings } from 'types/synthetix';
@@ -15,6 +16,7 @@ type SnxJSConnector = {
     signer: Signer | undefined;
     synthSummaryUtilContract: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
+    binaryOptionsMarketManagerContract: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
 };
 
@@ -39,6 +41,12 @@ const snxJSConnector: SnxJSConnector = {
             binaryOptionsMarketDataContract.abi,
             this.provider
         );
+        this.binaryOptionsMarketManagerContract = new ethers.Contract(
+            binaryOptionsMarketManagerContract.addresses[contractSettings.networkId],
+            binaryOptionsMarketManagerContract.abi,
+            this.signer
+        );
+        console.log(this.binaryOptionsMarketManagerContract);
     },
 };
 
