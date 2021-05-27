@@ -483,12 +483,12 @@ export const CreateMarket: React.FC = () => {
                                             }}
                                             type="number"
                                         />
-                                        {userHasEnoughFunds && !isAmountValid && (
+                                        {!isAmountValid && (
                                             <Error className="text-xxxs red">
                                                 Please enter funding amount. MIn 1000.00 sUSD is required.
                                             </Error>
                                         )}
-                                        {!userHasEnoughFunds && (
+                                        {isAmountValid && !userHasEnoughFunds && (
                                             <Error className="text-xxxs red">
                                                 Please ensure your wallet has sufficient sUSD.
                                             </Error>

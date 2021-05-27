@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { FlexDivColumn, Section } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
+import { history } from 'utils/routes';
 
 const MAX_HOT_MARKETS = 9;
 
@@ -38,6 +39,12 @@ export const Home: React.FC = () => {
                 .slice(0, MAX_HOT_MARKETS),
         [optionsMarkets]
     );
+
+    useEffect(() => {
+        if (history.location.hash === '#explore-markets') {
+            document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
 
     return (
         <>

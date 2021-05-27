@@ -4,6 +4,7 @@ import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
 import React from 'react';
 import background from 'assets/images/background-dark.png';
+import { Tooltip, withStyles } from '@material-ui/core';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -158,6 +159,15 @@ export const Button = styled.button`
     }
 `;
 
+export const LightTooltip = withStyles(() => ({
+    tooltip: {
+        fontSize: '12px',
+        backgroundColor: '#748BC6',
+        border: '1px solid #748BC6',
+        padding: 6,
+    },
+}))(Tooltip);
+
 export const Text = styled.p`
     @media (max-width: 468px) {
         margin: 0 0 0.5em;
@@ -216,4 +226,22 @@ export const ProgressBar = styled.div`
         display: block;
     }
     margin-bottom: 20px;
+`;
+
+export const FilterButton = styled(Button)`
+    width: 110px;
+    height: 40px;
+    margin: 24px 10px;
+    background: transparent;
+    border: 1px solid #04045a;
+    border-radius: 32px;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 13px;
+    letter-spacing: 0.4px;
+    text-transform: capitalize !important;
+    color: #f6f6fe;
+    &.selected {
+        background: #44e1e2;
+    }
 `;

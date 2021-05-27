@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
-import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
@@ -21,6 +21,7 @@ import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
+import { getSynthName } from 'utils/snxJSConnector';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -66,28 +67,25 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
             case UserFilterEnum.MyBids:
-                if (isWalletConnected) {
-                    filteredMarkets =
-                        userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
-                            ? filteredMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
-                            : [];
-                }
+                filteredMarkets =
+                    userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
+                        ? filteredMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
+                        : [];
 
                 break;
             case UserFilterEnum.MyMarkets:
-                if (isWalletConnected) {
-                    filteredMarkets = filteredMarkets.filter(
-                        ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
-                    );
-                }
+                filteredMarkets = filteredMarkets.filter(
+                    ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
+                );
 
                 break;
             case UserFilterEnum.MyWatchlist:
-                if (isWalletConnected) {
-                    filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
-                }
+                filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 break;
             case UserFilterEnum.Recent:
+                filteredMarkets = filteredMarkets.filter(({ timestamp }) =>
+                    isRecentlyAdded(new Date(), new Date(timestamp))
+                );
                 break;
         }
 
@@ -110,10 +108,16 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     ]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
-        () =>
-            assetSearch
-                ? filteredOptionsMarkets.filter(({ asset }) => asset.toLowerCase().includes(assetSearch.toLowerCase()))
-                : filteredOptionsMarkets,
+        () => {
+            return assetSearch
+                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                      return (
+                          asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          getSynthName(currencyKey).toLowerCase().includes(assetSearch.toLowerCase())
+                      );
+                  })
+                : filteredOptionsMarkets;
+        },
         [filteredOptionsMarkets, assetSearch],
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
@@ -264,24 +268,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     );
 };
 
-const FilterButton = styled(Button)`
-    width: 110px;
-    height: 40px;
-    margin: 24px 10px;
-    background: transparent;
-    border: 1px solid #04045a;
-    border-radius: 32px;
-    font-weight: bold;
-    font-size: 13px;
-    line-height: 13px;
-    letter-spacing: 0.4px;
-    text-transform: capitalize !important;
-    color: #f6f6fe;
-    &.selected {
-        background: #44e1e2;
-    }
-`;
-
 const NoMarkets = styled(FlexDivColumn)`
     height: 500px;
     background: #126;
@@ -292,5 +278,14 @@ const NoMarkets = styled(FlexDivColumn)`
         align-self: center;
     }
 `;
+
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+const isRecentlyAdded = (a: Date, b: Date) => {
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY)) <= 7;
+};
 
 export default ExploreMarkets;
