@@ -2,11 +2,11 @@ import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
 import { LimitOrder, Signature } from '@0x/protocol-utils';
 
-export type Phase = 'bidding' | 'trading' | 'maturity' | 'expiry';
+export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
-export type OptionsTransactionType = 'refund' | 'bid' | 'exercise' | 'claim' | 'buy' | 'sell';
+export type OptionsTransactionType = 'exercise' | 'buy' | 'sell';
 
 export type OptionsTransaction = {
     hash: string;
@@ -27,11 +27,8 @@ export type OptionValue = {
 };
 
 export type BNOptionValue = {
-    totalLongBN: BigNumberish;
-    totalShortBN: BigNumberish;
     depositedBN: BigNumberish;
     feeBN: BigNumberish;
-    refundFeeBN: BigNumberish;
 };
 
 export type OptionsTransactions = OptionsTransaction[];
@@ -44,7 +41,6 @@ export type HistoricalOptionsMarketInfo = {
     creator: string;
     currencyKey: CurrencyKey;
     strikePrice: number;
-    biddingEndDate: number;
     maturityDate: number;
     expiryDate: number;
     isOpen: boolean;
@@ -69,43 +65,35 @@ export type OptionsMarketInfo = {
     currentPrice: number;
     finalPrice: number;
     strikePrice: number;
-    biddingEndDate: number;
     maturityDate: number;
     expiryDate: number;
-    longPrice: number;
-    shortPrice: number;
     asset: string;
     phase: Phase;
     timeRemaining: number;
     result: OptionSide;
-    totalBids: OptionValue;
-    totalClaimableSupplies: OptionValue;
     totalSupplies: OptionValue;
-    deposits: {
-        deposited: number;
-        exercisableDeposits: number;
-    };
+    // deposits: {
+    //     deposited: number;
+    //     exercisableDeposits: number;
+    // };
     creator: string;
-    options: OptionValue;
+    // options: OptionValue;
     fees: {
         creatorFee: number;
         poolFee: number;
-        refundFee: number;
     };
-    creatorLimits: {
-        capitalRequirement: number;
-        skewLimit: number;
-    };
-    BN: BNOptionValue;
-    withdrawalsEnabled: boolean;
+    // creatorLimits: {
+    //     capitalRequirement: number;
+    //     skewLimit: number;
+    // };
+    // BN: BNOptionValue;
     longAddress: string;
     shortAddress: string;
 };
 
 export type AccountMarketInfo = {
-    claimable: OptionValue;
-    balances: OptionValue;
-    bids: OptionValue;
+    long: number;
+    short: number;
 };
 
 export type OptionsMarkets = HistoricalOptionsMarketInfo[];

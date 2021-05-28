@@ -44,9 +44,8 @@ const snxJSConnector: SnxJSConnector = {
         this.binaryOptionsMarketManagerContract = new ethers.Contract(
             binaryOptionsMarketManagerContract.addresses[contractSettings.networkId],
             binaryOptionsMarketManagerContract.abi,
-            this.signer
+            contractSettings.signer ? this.signer : this.provider
         );
-        console.log(this.binaryOptionsMarketManagerContract);
     },
 };
 

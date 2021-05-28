@@ -1,10 +1,9 @@
 import { Phase, OptionSide } from '../types/options';
 
 export const PHASE: Record<Phase, number> = {
-    bidding: 0,
-    trading: 1,
-    maturity: 2,
-    expiry: 3,
+    trading: 0,
+    maturity: 1,
+    expiry: 2,
 };
 
 export const SIDE: Record<OptionSide | number, number | OptionSide> = {
@@ -14,8 +13,8 @@ export const SIDE: Record<OptionSide | number, number | OptionSide> = {
     1: 'short',
 };
 
-export const PHASES = ['bidding', 'trading', 'maturity', 'expiry'] as Phase[];
-export const PHASES_CARDS = ['bidding', 'trading', 'maturity'] as Phase[];
+export const PHASES = ['trading', 'maturity', 'expiry'] as Phase[];
+export const PHASES_CARDS = ['trading', 'maturity'] as Phase[];
 
 export const SLIPPAGE_THRESHOLD = 0.1;
 

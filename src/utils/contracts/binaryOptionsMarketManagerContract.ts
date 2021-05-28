@@ -3,9 +3,9 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const binaryOptionsMarketDataContract = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0xDcA4277CBA074e3Bc01c2975348dD1c5409c9079',
+        [NetworkId.Ropsten]: '0x8a7a7927370d42B063002FF0f285E3e0c31d4592',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: 'TBD',
+        [NetworkId.Kovan]: '0xd5928acfAd2b5D7b119691ce9524496fbc765c17',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement

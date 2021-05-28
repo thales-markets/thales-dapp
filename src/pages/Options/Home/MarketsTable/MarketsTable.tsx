@@ -13,7 +13,6 @@ import {
     TableFooter,
 } from '@material-ui/core';
 import Currency from 'components/Currency';
-import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -94,11 +93,11 @@ const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: 'Asset', sortable: true },
     { id: 3, label: 'Strike Price', sortable: true },
-    { id: 4, label: 'Pool Size', sortable: true },
-    { id: 5, label: 'Long/Short', sortable: true },
-    { id: 6, label: 'Time Remaining', sortable: false },
-    { id: 7, label: 'Open Orders', sortable: true },
-    { id: 8, label: 'Phase', sortable: false },
+    // { id: 4, label: 'Pool Size', sortable: true },
+    { id: 4, label: 'Long/Short', sortable: true },
+    { id: 5, label: 'Time Remaining', sortable: false },
+    { id: 6, label: 'Open Orders', sortable: true },
+    { id: 7, label: 'Phase', sortable: false },
 ];
 
 enum OrderDirection {
@@ -180,14 +179,14 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                             return orderDirection === OrderDirection.ASC
                                 ? a.poolSize - b.poolSize
                                 : b.poolSize - a.poolSize;
+                        // case 4:
+                        //     return orderDirection === OrderDirection.ASC
+                        //         ? a.longPrice - b.longPrice
+                        //         : b.longPrice - a.longPrice;
                         case 4:
-                            return orderDirection === OrderDirection.ASC
-                                ? a.longPrice - b.longPrice
-                                : b.longPrice - a.longPrice;
-                        case 5:
                             const phaseDiff = a.phaseNum - b.phaseNum;
                             return phaseDiff === 0 ? a.timeRemaining - b.timeRemaining : phaseDiff;
-                        case 6:
+                        case 5:
                             return orderDirection === OrderDirection.ASC
                                 ? a.openOrders - b.openOrders
                                 : b.openOrders - a.openOrders;
@@ -273,7 +272,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                         </StyledTableCell>
                                         <StyledTableCell>{market.strikePrice.toFixed(2)}</StyledTableCell>
                                         <StyledTableCell>{market.poolSize.toFixed(2)}</StyledTableCell>
-                                        <StyledTableCell>
+                                        {/* <StyledTableCell>
                                             <div>
                                                 <span style={{ color: '#10BA97' }}>
                                                     {t('common.val-in-cents', {
@@ -287,7 +286,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                                     })}
                                                 </span>
                                             </div>
-                                        </StyledTableCell>
+                                        </StyledTableCell> */}
                                         <StyledTableCell>
                                             <TimeRemaining end={market.timeRemaining} />
                                         </StyledTableCell>

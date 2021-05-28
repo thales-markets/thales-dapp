@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const binaryOptionsMarketDataContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0xDAdEa8352661FF961956c7aB5425839A400535a4',
-        [NetworkId.Ropsten]: '0x953Cb51942084edd0e1E6BdCBa9e19eCDfC3BdFd',
-        [NetworkId.Rinkeby]: '0x99D378835E2981e4AA8EeF08090d5621853dfC34',
-        [NetworkId.Kovan]: '0xe9d2762643Ab57a07b4fb91E38D13e501d2cbaAd',
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: '0x4B4698E5f58eA409ec8A865f2BF69EAD9812033d',
+        [NetworkId.Rinkeby]: 'TBD',
+        [NetworkId.Kovan]: '0x4a50146bbC71b46C4A392531beeBe5E8f457F710',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
@@ -15,8 +15,16 @@ export const binaryOptionsMarketDataContract = {
         {
             constant: true,
             inputs: [
-                { internalType: 'contract IBinaryOptionMarket', name: 'market', type: 'address' },
-                { internalType: 'address', name: 'account', type: 'address' },
+                {
+                    internalType: 'contract BinaryOptionMarket',
+                    name: 'market',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
             ],
             name: 'getAccountMarketData',
             outputs: [
@@ -24,26 +32,16 @@ export const binaryOptionsMarketDataContract = {
                     components: [
                         {
                             components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
-                            ],
-                            internalType: 'struct BinaryOptionMarketData.OptionValues',
-                            name: 'bids',
-                            type: 'tuple',
-                        },
-                        {
-                            components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
-                            ],
-                            internalType: 'struct BinaryOptionMarketData.OptionValues',
-                            name: 'claimable',
-                            type: 'tuple',
-                        },
-                        {
-                            components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'long',
+                                    type: 'uint256',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'short',
+                                    type: 'uint256',
+                                },
                             ],
                             internalType: 'struct BinaryOptionMarketData.OptionValues',
                             name: 'balances',
@@ -61,15 +59,29 @@ export const binaryOptionsMarketDataContract = {
         },
         {
             constant: true,
-            inputs: [{ internalType: 'contract IBinaryOptionMarket', name: 'market', type: 'address' }],
+            inputs: [
+                {
+                    internalType: 'contract BinaryOptionMarket',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
             name: 'getMarketData',
             outputs: [
                 {
                     components: [
                         {
                             components: [
-                                { internalType: 'uint256', name: 'price', type: 'uint256' },
-                                { internalType: 'uint256', name: 'updatedAt', type: 'uint256' },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'price',
+                                    type: 'uint256',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'updatedAt',
+                                    type: 'uint256',
+                                },
                             ],
                             internalType: 'struct BinaryOptionMarketData.OraclePriceAndTimestamp',
                             name: 'oraclePriceAndTimestamp',
@@ -77,17 +89,11 @@ export const binaryOptionsMarketDataContract = {
                         },
                         {
                             components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
-                            ],
-                            internalType: 'struct IBinaryOptionMarket.Prices',
-                            name: 'prices',
-                            type: 'tuple',
-                        },
-                        {
-                            components: [
-                                { internalType: 'uint256', name: 'deposited', type: 'uint256' },
-                                { internalType: 'uint256', name: 'exercisableDeposits', type: 'uint256' },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'deposited',
+                                    type: 'uint256',
+                                },
                             ],
                             internalType: 'struct BinaryOptionMarketData.Deposits',
                             name: 'deposits',
@@ -95,37 +101,43 @@ export const binaryOptionsMarketDataContract = {
                         },
                         {
                             components: [
-                                { internalType: 'bool', name: 'resolved', type: 'bool' },
-                                { internalType: 'bool', name: 'canResolve', type: 'bool' },
+                                {
+                                    internalType: 'bool',
+                                    name: 'resolved',
+                                    type: 'bool',
+                                },
+                                {
+                                    internalType: 'bool',
+                                    name: 'canResolve',
+                                    type: 'bool',
+                                },
                             ],
                             internalType: 'struct BinaryOptionMarketData.Resolution',
                             name: 'resolution',
                             type: 'tuple',
                         },
-                        { internalType: 'enum IBinaryOptionMarket.Phase', name: 'phase', type: 'uint8' },
-                        { internalType: 'enum IBinaryOptionMarket.Side', name: 'result', type: 'uint8' },
                         {
-                            components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
-                            ],
-                            internalType: 'struct BinaryOptionMarketData.OptionValues',
-                            name: 'totalBids',
-                            type: 'tuple',
+                            internalType: 'enum IBinaryOptionMarket.Phase',
+                            name: 'phase',
+                            type: 'uint8',
+                        },
+                        {
+                            internalType: 'enum IBinaryOptionMarket.Side',
+                            name: 'result',
+                            type: 'uint8',
                         },
                         {
                             components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
-                            ],
-                            internalType: 'struct BinaryOptionMarketData.OptionValues',
-                            name: 'totalClaimableSupplies',
-                            type: 'tuple',
-                        },
-                        {
-                            components: [
-                                { internalType: 'uint256', name: 'long', type: 'uint256' },
-                                { internalType: 'uint256', name: 'short', type: 'uint256' },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'long',
+                                    type: 'uint256',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'short',
+                                    type: 'uint256',
+                                },
                             ],
                             internalType: 'struct BinaryOptionMarketData.OptionValues',
                             name: 'totalSupplies',
@@ -143,58 +155,93 @@ export const binaryOptionsMarketDataContract = {
         },
         {
             constant: true,
-            inputs: [{ internalType: 'contract IBinaryOptionMarket', name: 'market', type: 'address' }],
+            inputs: [
+                {
+                    internalType: 'contract BinaryOptionMarket',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
             name: 'getMarketParameters',
             outputs: [
                 {
                     components: [
-                        { internalType: 'address', name: 'creator', type: 'address' },
+                        {
+                            internalType: 'address',
+                            name: 'creator',
+                            type: 'address',
+                        },
                         {
                             components: [
-                                { internalType: 'contract IBinaryOption', name: 'long', type: 'address' },
-                                { internalType: 'contract IBinaryOption', name: 'short', type: 'address' },
+                                {
+                                    internalType: 'contract BinaryOption',
+                                    name: 'long',
+                                    type: 'address',
+                                },
+                                {
+                                    internalType: 'contract BinaryOption',
+                                    name: 'short',
+                                    type: 'address',
+                                },
                             ],
-                            internalType: 'struct IBinaryOptionMarket.Options',
+                            internalType: 'struct BinaryOptionMarket.Options',
                             name: 'options',
                             type: 'tuple',
                         },
                         {
                             components: [
-                                { internalType: 'uint256', name: 'biddingEnd', type: 'uint256' },
-                                { internalType: 'uint256', name: 'maturity', type: 'uint256' },
-                                { internalType: 'uint256', name: 'expiry', type: 'uint256' },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'maturity',
+                                    type: 'uint256',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'expiry',
+                                    type: 'uint256',
+                                },
                             ],
-                            internalType: 'struct IBinaryOptionMarket.Times',
+                            internalType: 'struct BinaryOptionMarket.Times',
                             name: 'times',
                             type: 'tuple',
                         },
                         {
                             components: [
-                                { internalType: 'bytes32', name: 'key', type: 'bytes32' },
-                                { internalType: 'uint256', name: 'strikePrice', type: 'uint256' },
-                                { internalType: 'uint256', name: 'finalPrice', type: 'uint256' },
+                                {
+                                    internalType: 'bytes32',
+                                    name: 'key',
+                                    type: 'bytes32',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'strikePrice',
+                                    type: 'uint256',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'finalPrice',
+                                    type: 'uint256',
+                                },
                             ],
-                            internalType: 'struct IBinaryOptionMarket.OracleDetails',
+                            internalType: 'struct BinaryOptionMarket.OracleDetails',
                             name: 'oracleDetails',
                             type: 'tuple',
                         },
                         {
                             components: [
-                                { internalType: 'uint256', name: 'poolFee', type: 'uint256' },
-                                { internalType: 'uint256', name: 'creatorFee', type: 'uint256' },
-                                { internalType: 'uint256', name: 'refundFee', type: 'uint256' },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'poolFee',
+                                    type: 'uint256',
+                                },
+                                {
+                                    internalType: 'uint256',
+                                    name: 'creatorFee',
+                                    type: 'uint256',
+                                },
                             ],
-                            internalType: 'struct IBinaryOptionMarketManager.Fees',
+                            internalType: 'struct BinaryOptionMarketManager.Fees',
                             name: 'fees',
-                            type: 'tuple',
-                        },
-                        {
-                            components: [
-                                { internalType: 'uint256', name: 'capitalRequirement', type: 'uint256' },
-                                { internalType: 'uint256', name: 'skewLimit', type: 'uint256' },
-                            ],
-                            internalType: 'struct IBinaryOptionMarketManager.CreatorLimits',
-                            name: 'creatorLimits',
                             type: 'tuple',
                         },
                     ],

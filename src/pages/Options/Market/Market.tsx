@@ -5,7 +5,6 @@ import { USD_SIGN } from 'constants/currency';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
 import { MarketProvider } from './contexts/MarketContext';
-import { useBOMContractContext } from './contexts/BOMContractContext';
 import { Button, Icon, Label, Loader } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { Link } from 'react-router-dom';
@@ -17,8 +16,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import BiddingPhaseCard from './TradeCard/BiddingPhaseCard';
-import TradingPhaseCard from './TradeCard/TradingPhaseCard';
 import MaturityPhaseCard from './TradeCard/MaturityPhaseCard';
 import OptionSideIcon from './components/OptionSideIcon';
 import { Tooltip } from '@material-ui/core';
@@ -58,7 +55,6 @@ type MarketProps = {
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const { t } = useTranslation();
     const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
-    const BOMContract = useBOMContractContext();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -68,7 +64,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const curentLayout = useSelector((state: RootState) => getCurrentLayout(state));
     const fullLayout = useSelector((state: RootState) => getFullLayout(state));
 
-    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, BOMContract, {
+    const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
     });
 
@@ -88,44 +84,23 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const accountMarketInfo = {
-        balances: {
-            long: 0,
-            short: 0,
-        },
-        claimable: {
-            long: 0,
-            short: 0,
-        },
-        bids: {
-            long: 0,
-            short: 0,
-        },
+    let accountMarketInfo = {
+        long: 0,
+        short: 0,
     };
 
     if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
-        const { balances, claimable, bids } = accountMarketInfoQuery.data as AccountMarketInfo;
-
-        accountMarketInfo.balances = balances;
-        accountMarketInfo.claimable = claimable;
-        accountMarketInfo.bids = bids;
+        accountMarketInfo = accountMarketInfoQuery.data as AccountMarketInfo;
     }
 
-    const longAmount = accountMarketInfo.balances.long + accountMarketInfo.claimable.long;
-    const shortAmount = accountMarketInfo.balances.short + accountMarketInfo.claimable.short;
-    const exerciseAvailable = !!longAmount || !!shortAmount;
-    const claimAvailable = !!accountMarketInfo.bids.short || !!accountMarketInfo.bids.long;
-    const userActionAvailable =
-        optionsMarket &&
-        ((optionsMarket.phase === 'trading' && claimAvailable) ||
-            (optionsMarket.phase === 'maturity' && exerciseAvailable));
+    const exerciseAvailable = !!accountMarketInfo.long || !!accountMarketInfo.short;
+    const userActionAvailable = optionsMarket && optionsMarket.phase === 'maturity' && exerciseAvailable;
 
-    const optionsAmountLabel = (phase: string) => (
+    const optionsAmountLabel = () => (
         <>
             <Label
                 onClick={() => {
-                    const widgetKey =
-                        phase === 'trading' ? MarketWidgetKey.TRADING_PHASE : MarketWidgetKey.MATURITY_PHASE;
+                    const widgetKey = MarketWidgetKey.MATURITY_PHASE;
                     dispatch(
                         setMarketWidgetVisibility({
                             marketWidget: widgetKey,
@@ -138,14 +113,14 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 <div>
                     <OptionSideIcon side="long" />{' '}
                     {t(`options.common.amount-long`, {
-                        amount: formatCurrency(longAmount),
+                        amount: formatCurrency(accountMarketInfo.long),
                     })}
                 </div>
                 <br />
                 <div>
                     <OptionSideIcon side="short" />{' '}
                     {t(`options.common.amount-short`, {
-                        amount: formatCurrency(shortAmount),
+                        amount: formatCurrency(accountMarketInfo.short),
                     })}
                 </div>
             </Label>
@@ -208,18 +183,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const renderWidgets = (optionsMarket: OptionsMarketInfo) => {
         const widgets: ReactElement[] = [];
-        wrapWidget(
-            optionsMarket.phase,
-            widgets,
-            MarketWidgetKey.BIDDING_PHASE,
-            <BiddingPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
-        );
-        wrapWidget(
-            optionsMarket.phase,
-            widgets,
-            MarketWidgetKey.TRADING_PHASE,
-            <TradingPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
-        );
         wrapWidget(
             optionsMarket.phase,
             widgets,
@@ -339,10 +302,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                                 placement="top"
                                                 arrow={true}
                                             >
-                                                {optionsAmountLabel(optionsMarket.phase)}
+                                                {optionsAmountLabel()}
                                             </Tooltip>
                                         ) : (
-                                            optionsAmountLabel(optionsMarket.phase)
+                                            optionsAmountLabel()
                                         )}
                                     </div>
                                 )}

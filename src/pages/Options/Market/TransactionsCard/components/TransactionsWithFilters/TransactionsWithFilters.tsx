@@ -40,10 +40,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
     const filteredTransactions = useMemo(() => {
         switch (filter) {
             case TransactionFilterEnum.MARKET:
-                return transactions.filter(
-                    (tx: OptionsTransaction) =>
-                        tx.type === 'refund' || tx.type === 'bid' || tx.type === 'exercise' || tx.type === 'claim'
-                );
+                return transactions.filter((tx: OptionsTransaction) => tx.type === 'exercise');
             case TransactionFilterEnum.TRADE:
                 return transactions.filter((tx: OptionsTransaction) => tx.type === 'buy' || tx.type === 'sell');
             default:

@@ -61,10 +61,6 @@ export const MarketInfoModal: React.FC<MarketInfoModalProps> = ({ onClose, optio
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
-                                    <Table.Cell>{t('options.market.info-modal.table.bidding-end-col')}</Table.Cell>
-                                    <Table.Cell>{formatShortDateWithTime(optionMarket.biddingEndDate)}</Table.Cell>
-                                </Table.Row>
-                                <Table.Row>
                                     <Table.Cell>{t('options.market.info-modal.table.maturity-col')}</Table.Cell>
                                     <Table.Cell>{formatShortDateWithTime(optionMarket.maturityDate)}</Table.Cell>
                                 </Table.Row>
@@ -87,18 +83,11 @@ export const MarketInfoModal: React.FC<MarketInfoModalProps> = ({ onClose, optio
                             <Table.Body>
                                 <Table.Row>
                                     <Table.Cell>{t('options.market.info-modal.table.option-prices-col')}</Table.Cell>
-                                    <Table.Cell>{formatCurrencyWithSign(USD_SIGN, optionMarket.longPrice)}</Table.Cell>
-                                    <Table.Cell>{formatCurrencyWithSign(USD_SIGN, optionMarket.shortPrice)}</Table.Cell>
-                                </Table.Row>
-                                <Table.Row>
                                     <Table.Cell>
-                                        {t('options.market.info-modal.table.total-outstanding-bids-col')}
+                                        -{/* {formatCurrencyWithSign(USD_SIGN, optionMarket.longPrice)} */}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {formatCurrencyWithSign(USD_SIGN, optionMarket.totalBids.long)}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {formatCurrencyWithSign(USD_SIGN, optionMarket.totalBids.short)}
+                                        -{/* {formatCurrencyWithSign(USD_SIGN, optionMarket.shortPrice)} */}
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>
@@ -117,7 +106,7 @@ export const MarketInfoModal: React.FC<MarketInfoModalProps> = ({ onClose, optio
                                         />
                                     </Table.Cell>
                                     <Table.Cell colSpan={2}>
-                                        {formatCurrencyWithSign(USD_SIGN, optionMarket.deposits.deposited)}
+                                        -{/* {formatCurrencyWithSign(USD_SIGN, optionMarket.deposits.deposited)} */}
                                     </Table.Cell>
                                 </Table.Row>
                                 <Table.Row>

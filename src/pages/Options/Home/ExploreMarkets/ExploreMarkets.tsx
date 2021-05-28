@@ -5,11 +5,9 @@ import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import useBinaryOptionsUserBidsMarketsQuery from 'queries/options/useBinaryOptionsUserBidsMarketsQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
-import myBids from 'assets/images/my-bids.svg';
 import myMarkets from 'assets/images/my-markets.svg';
 import myWatchlist from 'assets/images/my-watchlist.svg';
 import recentlyAdded from 'assets/images/recently-added.svg';
@@ -28,7 +26,6 @@ type ExploreMarketsProps = {
 
 export enum PhaseFilterEnum {
     all = 'all',
-    bidding = 'bidding',
     trading = 'trading',
     maturity = 'maturity',
     expiry = 'expiry',
@@ -36,7 +33,6 @@ export enum PhaseFilterEnum {
 
 enum UserFilterEnum {
     All = 'All',
-    MyBids = 'My Bids',
     MyMarkets = 'My Markets',
     MyWatchlist = 'My Watchlist',
     Recent = 'Recently Added',
@@ -58,10 +54,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const watchlistedMarketsData = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
     const [watchlistedMarkets, setWatchlistedMarkets] = useState<string[]>(watchlistedMarketsData);
 
-    const userBidsMarketsQuery = useBinaryOptionsUserBidsMarketsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && userFilter === UserFilterEnum.MyBids,
-    });
-
     const handleWatchlistedMarketsChange = (newWatchlist: string[]) => {
         setWatchlistedMarkets(newWatchlist);
     };
@@ -69,22 +61,12 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
-            case UserFilterEnum.MyBids:
-                if (isWalletConnected) {
-                    filteredMarkets =
-                        userBidsMarketsQuery.isSuccess && Array.isArray(userBidsMarketsQuery.data)
-                            ? filteredMarkets.filter(({ address }) => userBidsMarketsQuery.data.includes(address))
-                            : [];
-                }
-
-                break;
             case UserFilterEnum.MyMarkets:
                 if (isWalletConnected) {
                     filteredMarkets = filteredMarkets.filter(
                         ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
                     );
                 }
-
                 break;
             case UserFilterEnum.MyWatchlist:
                 if (isWalletConnected) {
@@ -101,17 +83,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             });
         }
         return filteredMarkets;
-    }, [
-        optionsMarkets,
-        userFilter,
-        phaseFilter,
-        isWalletConnected,
-        walletAddress,
-        userBidsMarketsQuery.data,
-        userBidsMarketsQuery.isSuccess,
-        watchlistedMarkets,
-        assetSearch,
-    ]);
+    }, [optionsMarkets, userFilter, phaseFilter, isWalletConnected, walletAddress, watchlistedMarkets, assetSearch]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
         () =>
@@ -129,12 +101,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
     const getImage = (filter: UserFilterEnum) => {
         switch (filter) {
-            case UserFilterEnum.MyBids:
-                return myBids;
-
             case UserFilterEnum.MyMarkets:
                 return myMarkets;
-
             case UserFilterEnum.MyWatchlist:
                 return myWatchlist;
             case UserFilterEnum.Recent:
@@ -144,8 +112,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
     const getColor = (filter: UserFilterEnum) => {
         switch (filter) {
-            case UserFilterEnum.MyBids:
-                return 'linear-gradient(144.68deg, #86E1A0 9.9%, #4FBF67 84.58%)';
             case UserFilterEnum.MyMarkets:
                 return 'linear-gradient(135deg, #FFA051 0%, #FF6628 100%)';
             case UserFilterEnum.MyWatchlist:
@@ -212,7 +178,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 watchlistedMarkets={watchlistedMarkets}
                 onChange={handleWatchlistedMarketsChange}
-                isLoading={userBidsMarketsQuery.isLoading}
+                isLoading={false} // TODO put logic
                 phase={phaseFilter}
             >
                 <NoMarkets>
@@ -220,14 +186,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                         <>
                             <Text className="text-l bold pale-grey">No markets available.</Text>
                             <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
-                                View all markets
-                            </Button>
-                        </>
-                    )}
-                    {userFilter === UserFilterEnum.MyBids && (
-                        <>
-                            <Text className="text-l bold pale-grey">You haven’t placed any bids yet.</Text>
-                            <Button className="primary" onClick={resetFilters}>
                                 View all markets
                             </Button>
                         </>

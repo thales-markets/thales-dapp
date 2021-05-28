@@ -20,8 +20,6 @@ type UISliceState = {
 };
 
 const defaultMarketWidgetVisibility: Record<MarketWidgetKey, boolean> = {
-    [MarketWidgetKey.BIDDING_PHASE]: true,
-    [MarketWidgetKey.TRADING_PHASE]: false,
     [MarketWidgetKey.MATURITY_PHASE]: false,
     [MarketWidgetKey.TRADE]: true,
     [MarketWidgetKey.ORDERBOOK]: true,
@@ -98,10 +96,7 @@ const saveWidgetsToLS = (state: UISliceState) => {
 
 // hack to force showing of claim/exercise options widgets always on top
 const pinToTop = (layoutItem: Layout, currentLayout: Layout[]) => {
-    if (
-        (layoutItem.i === MarketWidgetKey.TRADING_PHASE || layoutItem.i === MarketWidgetKey.MATURITY_PHASE) &&
-        layoutItem.y === 0
-    ) {
+    if (layoutItem.i === MarketWidgetKey.MATURITY_PHASE && layoutItem.y === 0) {
         currentLayout.forEach((item: Layout) => {
             if (item.y === 0 && item.x < layoutItem.x && item.i !== layoutItem.i) {
                 item.y = 1;

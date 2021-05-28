@@ -16,9 +16,6 @@ export const PhaseLabel = styled(Button)`
     line-height: 24px;
     letter-spacing: 0.25px;
     color: #04045a !important;
-    &.bidding {
-        background: #ffd951;
-    }
     &.trading {
         background: #4fbf67;
     }

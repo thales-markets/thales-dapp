@@ -1,6 +1,5 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
-import MarketSentiment from 'pages/Options/components/MarketSentiment';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +46,6 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                 <ExpireDate>{t('common.by-date', { date: formatShortDate(optionMarket.maturityDate) })}</ExpireDate>
             </Content>
             <Footer className="footer">
-                <MarketSentiment long={optionMarket.longPrice} short={optionMarket.shortPrice}></MarketSentiment>
                 <ViewMarket className="view-market">View Market</ViewMarket>
             </Footer>
         </Card>

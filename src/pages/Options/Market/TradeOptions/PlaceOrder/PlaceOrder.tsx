@@ -126,8 +126,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     };
 
     if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
-        const { balances } = accountMarketInfoQuery.data as AccountMarketInfo;
-        optBalances = balances;
+        optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
     const tokenBalance = optionSide === 'long' ? optBalances.long : optBalances.short;
     const baseToken = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;

@@ -189,7 +189,6 @@ export const CreateMarket: React.FC = () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
             try {
                 const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                console.log(formatCreateMarketArguments());
                 const gasEstimate = await binaryOptionsMarketManagerContract.estimateGas.createMarket(
                     oracleKey,
                     price,
@@ -203,7 +202,7 @@ export const CreateMarket: React.FC = () => {
                 if (e.data?.originalError.code === 3) {
                     setUserHasEnoughFunds(true);
                 }
-                setGasLimit(3000000);
+                setGasLimit(null);
             }
         };
         if (isButtonDisabled) return;

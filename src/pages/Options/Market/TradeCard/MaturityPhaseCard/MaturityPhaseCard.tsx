@@ -35,10 +35,9 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
 
-    const { balances, claimable } = accountMarketInfo;
     const { result } = optionsMarket;
-    const longAmount = balances.long + claimable.long;
-    const shortAmount = balances.short + claimable.short;
+    const longAmount = accountMarketInfo.long;
+    const shortAmount = accountMarketInfo.short;
     const nothingToExercise = !longAmount && !shortAmount;
     const isLongResult = result === 'long';
     const isButtonDisabled = isExercising || !isWalletConnected || nothingToExercise || !gasLimit;
@@ -89,7 +88,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                         account: walletAddress,
                         hash: tx.hash || '',
                         type: 'exercise',
-                        amount: isLongResult ? balances.long : balances.short,
+                        amount: isLongResult ? longAmount : shortAmount,
                         side: isLongResult ? 'long' : 'short',
                     },
                 })
