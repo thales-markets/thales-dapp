@@ -53,6 +53,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         enabled: isAppReady && isWalletConnected,
     });
 
+    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
