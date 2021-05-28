@@ -12,6 +12,44 @@ import { truncateAddress } from 'utils/formatters/string';
 import avatar from 'assets/images/avatar.svg';
 import UserInfoModal from './UserInfoModal';
 
+const UserInfo: React.FC = () => {
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const network = useSelector((state: RootState) => getNetwork(state));
+    const [open, setOpen] = useState(false);
+
+    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const walletBalancesMap =
+        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
+            ? { synths: synthsWalletBalancesQuery.data }
+            : null;
+    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+
+    return (
+        <>
+            <UserInfoWrapper onClick={setOpen.bind(this, true)}>
+                <EthBalance>{sUSDBalance.toFixed(2)} SUSD</EthBalance>
+                <NetworkWrapper>
+                    <AddressWrapper>
+                        <p>{truncateAddress(walletAddress)}</p>
+                        <p>{network.networkName}</p>
+                    </AddressWrapper>
+                    <Image style={{ width: '18px', height: '18px', marginRight: '20px' }} src={avatar}></Image>
+                </NetworkWrapper>
+            </UserInfoWrapper>
+            <UserInfoModal
+                walletAddress={walletAddress}
+                network={network.networkName}
+                open={open}
+                handleClose={setOpen.bind(this, false)}
+            ></UserInfoModal>
+        </>
+    );
+};
+
 const UserInfoWrapper = styled(FlexDiv)`
     height: 40px;
     width: 260px;
@@ -66,43 +104,5 @@ const AddressWrapper = styled(FlexDivColumnCentered)`
         color: #f6f6fe;
     }
 `;
-
-const UserInfo: React.FC = () => {
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const network = useSelector((state: RootState) => getNetwork(state));
-    const [open, setOpen] = useState(false);
-
-    const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
-    const walletBalancesMap =
-        synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
-            ? { synths: synthsWalletBalancesQuery.data }
-            : null;
-    const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
-
-    return (
-        <>
-            <UserInfoWrapper onClick={setOpen.bind(this, true)}>
-                <EthBalance>{sUSDBalance.toFixed(2)} SUSD</EthBalance>
-                <NetworkWrapper>
-                    <AddressWrapper>
-                        <p>{truncateAddress(walletAddress)}</p>
-                        <p>{network.networkName}</p>
-                    </AddressWrapper>
-                    <Image style={{ width: '18px', height: '18px', marginRight: '20px' }} src={avatar}></Image>
-                </NetworkWrapper>
-            </UserInfoWrapper>
-            <UserInfoModal
-                address={truncateAddress(walletAddress, 13, 4)}
-                network={network.networkName}
-                open={open}
-                handleClose={setOpen.bind(this, false)}
-            ></UserInfoModal>
-        </>
-    );
-};
 
 export default UserInfo;

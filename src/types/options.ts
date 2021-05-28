@@ -149,3 +149,11 @@ export type Trade = {
 };
 
 export type Trades = Trade[];
+
+export type UsersAssets = {
+    market: HistoricalOptionsMarketInfo;
+    balances: {
+        long: number;
+        short: number;
+    };
+};

@@ -41,13 +41,13 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 : null,
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
-    const { contractWrappers0x } = contractWrappers0xConnector;
+    const { exchangeProxy } = contractWrappers0xConnector;
 
     const isButtonDisabled = !isWalletConnected || isCanceling || !is0xReady;
 
     useEffect(() => {
         if (is0xReady) {
-            const subscriptionToken = contractWrappers0x.exchangeProxy.subscribe(
+            const subscriptionToken = exchangeProxy.subscribe(
                 IZeroExEvents.OrderCancelled,
                 { orderHash: order.displayOrder.orderHash },
                 (_, log) => {
@@ -59,7 +59,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 }
             );
             return () => {
-                contractWrappers0x.exchangeProxy.unsubscribe(subscriptionToken);
+                exchangeProxy.unsubscribe(subscriptionToken);
             };
         }
     }, [is0xReady]);
@@ -68,7 +68,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
         const fetchGasLimit = async () => {
             if (gasPrice !== null) {
                 try {
-                    const gasEstimate = await contractWrappers0x.exchangeProxy
+                    const gasEstimate = await exchangeProxy
                         .cancelLimitOrder(order.rawOrder)
                         .estimateGasAsync({ from: walletAddress });
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
@@ -88,7 +88,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
             setIsCanceling(true);
 
             try {
-                await contractWrappers0x.exchangeProxy.cancelLimitOrder(order.rawOrder).sendTransactionAsync({
+                await exchangeProxy.cancelLimitOrder(order.rawOrder).sendTransactionAsync({
                     from: walletAddress,
                     gas: gasLimit !== null ? gasLimit : undefined,
                     gasPrice: gasPriceInWei(gasPrice),
