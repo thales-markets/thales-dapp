@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from 'components/Header';
 import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li, Image } from 'theme/common';
 import { useTranslation } from 'react-i18next';
@@ -13,14 +13,19 @@ import styled from 'styled-components';
 import market from 'assets/images/market.png';
 import scaleSstars from 'assets/images/weight-scale-stars.png';
 import thalesTheWhite from 'assets/images/thales-white.png';
+import { setupThreeJS } from './Three';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    useEffect(() => {
+        setupThreeJS();
+    });
+
     return (
         <>
-            <Section class="hero">
+            <Section id="landing-hero" class="hero">
                 <FlexDivColumn>
                     <Header />
                     <HeroSection className="landing-hero">
@@ -31,6 +36,7 @@ const Home: React.FC = () => {
                             </Text>
                             <FlexDiv>
                                 <Button
+                                    id="use-app"
                                     className="secondary"
                                     style={{ padding: '8px 35px', marginRight: '20px' }}
                                     onClick={() => navigateTo(ROUTES.Options.Home)}
