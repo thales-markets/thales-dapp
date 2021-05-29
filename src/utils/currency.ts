@@ -4,6 +4,7 @@ import {
     CRYPTO_CURRENCY_MAP,
     FIAT_CURRENCY_MAP,
     SYNTHS_MAP,
+    currencyKeyToSynthIconMap,
 } from 'constants/currency';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
@@ -19,5 +20,4 @@ export const synthToAsset = (currencyKey: CurrencyKey) => currencyKey.replace(/^
 
 export const getAssetIcon = (currencyKey: CurrencyKey) => currencyKeyToAssetIconMap[currencyKey];
 
-export const getSynthIcon = (currencyKey: CurrencyKey) =>
-    `https://raw.githubusercontent.com/Synthetixio/synthetix-assets/master/synths/${currencyKey}.svg`;
+export const getSynthIcon = (currencyKey: CurrencyKey) => currencyKeyToSynthIconMap[currencyKey];
