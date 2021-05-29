@@ -96,9 +96,10 @@ export const MainWrapper = styled.div`
 
 type SectionProps = {
     class?: string;
+    id?: string;
 };
 export const Section: React.FC<SectionProps> = (props) => (
-    <Background className={props.class}>
+    <Background id={props.id} className={props.class}>
         <MainWrapper>{props.children}</MainWrapper>
     </Background>
 );
