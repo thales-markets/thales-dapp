@@ -8,7 +8,7 @@ export const setupThreeJS = () => {
     if (heroHTML) {
         const scene = new THREE.Scene();
         const renderer = new THREE.WebGLRenderer();
-        const camera = new PerspectiveCamera(75, heroHTML?.clientWidth / heroHTML?.clientHeight, 1, 1000);
+        const camera = new PerspectiveCamera(100, heroHTML?.clientWidth / heroHTML?.clientHeight, 1, 1000);
         camera.position.z = 400;
         renderer.setSize(heroHTML?.clientWidth, heroHTML?.clientHeight);
         scene.background = new THREE.Color(0x04045a);
@@ -46,9 +46,9 @@ export const setupThreeJS = () => {
         scene.add(lights[1]);
         scene.add(lights[2]);
         const onWindowResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = heroHTML?.clientWidth / heroHTML?.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(heroHTML?.clientWidth, heroHTML?.clientHeight);
         };
 
         window.addEventListener('resize', onWindowResize, false);
@@ -64,13 +64,14 @@ export const setupThreeJS = () => {
         const animate = function () {
             requestAnimationFrame(animate);
 
-            particle.rotation.x += 0.0;
             if (speedUp) {
                 particleSpeed = particleSpeed + 0.0005 > 0.1 ? 0.1 : particleSpeed + 0.00075;
             } else {
                 particleSpeed = particleSpeed - 0.0005 < 0.004 ? 0.004 : particleSpeed - 0.00075;
             }
+            particle.rotation.x -= 0.004;
             particle.rotation.y -= particleSpeed;
+            particle.rotation.z -= 0.004;
             renderer.clear();
 
             renderer.render(scene, camera);
