@@ -378,7 +378,7 @@ const Container = styled.div`
 `;
 
 const MainContent = styled(FlexDivColumn)`
-    padding: 20px 75px;
+    padding: 20px 108px;
 `;
 
 const MainContentContainer = styled.div`

@@ -6,7 +6,7 @@ export type Phase = 'trading' | 'maturity' | 'expiry';
 
 export type OptionSide = 'long' | 'short';
 
-export type OptionsTransactionType = 'exercise' | 'buy' | 'sell';
+export type OptionsTransactionType = 'mint' | 'exercise' | 'buy' | 'sell';
 
 export type OptionsTransaction = {
     hash: string;

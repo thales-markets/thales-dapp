@@ -11,6 +11,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
+import { uniqBy } from 'lodash';
 
 type RecentTransactionsProps = {
     marketAddress: OptionsMarketInfo['address'];
@@ -33,12 +34,14 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
         { enabled: isAppReady && isTradingEnabled }
     );
 
+    const marketTransactions = uniqBy(marketTransactionsQuery.data || [], (transaction) => transaction.hash);
+
     return (
         <>
             <MarketWidgetHeader widgetKey={MarketWidgetKey.RECENT_TRANSACTIONS}></MarketWidgetHeader>
             <MarketWidgetContent>
                 <TransactionsWithFilters
-                    marketTransactions={marketTransactionsQuery.data || []}
+                    marketTransactions={marketTransactions}
                     tradesTransactions={tradesQuery.data || []}
                     isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
                     type="recent-activity"

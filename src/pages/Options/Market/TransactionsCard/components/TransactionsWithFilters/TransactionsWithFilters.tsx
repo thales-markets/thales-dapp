@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
 import { orderBy } from 'lodash';
 import TransactionsTable from '../TransactionsTable';
-import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
 
@@ -28,9 +27,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
     type,
 }) => {
     const { t } = useTranslation();
-    const optionsMarket = useMarketContext();
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
-    const isTradingEnabled = optionsMarket.phase === 'trading' || optionsMarket.phase === 'maturity';
 
     const transactions = useMemo(() => orderBy([...marketTransactions, ...tradesTransactions], 'timestamp', 'desc'), [
         marketTransactions,
@@ -40,7 +37,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
     const filteredTransactions = useMemo(() => {
         switch (filter) {
             case TransactionFilterEnum.MARKET:
-                return transactions.filter((tx: OptionsTransaction) => tx.type === 'exercise');
+                return transactions.filter((tx: OptionsTransaction) => tx.type === 'mint' || tx.type === 'exercise');
             case TransactionFilterEnum.TRADE:
                 return transactions.filter((tx: OptionsTransaction) => tx.type === 'buy' || tx.type === 'sell');
             default:
@@ -52,19 +49,17 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
 
     return (
         <Container>
-            {isTradingEnabled && (
-                <FilterContainer>
-                    {Object.values(TransactionFilterEnum).map((filterItem) => (
-                        <FilterButton
-                            className={filter === filterItem ? 'selected' : ''}
-                            onClick={() => setFilter(filterItem)}
-                            key={filterItem}
-                        >
-                            {t(`options.market.transactions-card.filter.${filterItem}`)}
-                        </FilterButton>
-                    ))}
-                </FilterContainer>
-            )}
+            <FilterContainer>
+                {Object.values(TransactionFilterEnum).map((filterItem) => (
+                    <FilterButton
+                        className={filter === filterItem ? 'selected' : ''}
+                        onClick={() => setFilter(filterItem)}
+                        key={filterItem}
+                    >
+                        {t(`options.market.transactions-card.filter.${filterItem}`)}
+                    </FilterButton>
+                ))}
+            </FilterContainer>
             <TransactionsTable
                 optionsTransactions={filteredTransactions}
                 isLoading={isLoading}

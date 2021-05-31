@@ -141,7 +141,7 @@ export const SubmitButtonContainer = styled(FlexDivCentered)`
     margin-top: 30px;
 `;
 
-export const SubmitButton = styled.button<{ isBuy: boolean }>`
+export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     background: ${(prop) => (prop.isBuy ? '#4FBF67' : '#C62937')};
     border-radius: 23px;
     border: none;

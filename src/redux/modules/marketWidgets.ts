@@ -94,7 +94,7 @@ const saveWidgetsToLS = (state: UISliceState) => {
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT, state.fullLayout);
 };
 
-// hack to force showing of claim/exercise options widgets always on top
+// hack to force showing of exercise options widgets always on top
 const pinToTop = (layoutItem: Layout, currentLayout: Layout[]) => {
     if (layoutItem.i === MarketWidgetKey.MATURITY_PHASE && layoutItem.y === 0) {
         currentLayout.forEach((item: Layout) => {

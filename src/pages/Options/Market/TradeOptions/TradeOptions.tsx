@@ -20,6 +20,7 @@ import { useMarketContext } from '../contexts/MarketContext';
 import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import MintOptions from './MintOptions';
 
 type TradeOptionsProps = {
     optionSide: OptionSide;
@@ -56,7 +57,7 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
     const tabContent: Array<{
-        id: 'market' | 'limit';
+        id: 'market' | 'limit' | 'mint';
         name: string;
     }> = useMemo(
         () => [
@@ -67,6 +68,10 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
             {
                 id: 'market',
                 name: t('options.market.trade-options.market-tab-title'),
+            },
+            {
+                id: 'mint',
+                name: t('options.market.trade-options.mint-tab-title'),
             },
         ],
         [t]
@@ -108,6 +113,7 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
                     </FlexDivRowCentered>
                     {activeTab.id === 'market' && <TokenSwap optionSide={optionSide} />}
                     {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
+                    {activeTab.id === 'mint' && <MintOptions />}
                 </Container>
             </MarketWidgetContent>
         </>
@@ -135,8 +141,8 @@ const FilterButton = styled.button`
     text-align: center;
     letter-spacing: 0.5px;
     color: #f6f6fe;
-    width: 139px;
-    margin: 14px 9px;
+    width: 120px;
+    margin: 14px 5px;
     &.selected,
     &:hover {
         background: rgba(1, 38, 81, 0.5);

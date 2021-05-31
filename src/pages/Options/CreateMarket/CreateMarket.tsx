@@ -121,6 +121,12 @@ export const CreateMarket: React.FC = () => {
         initialFundingAmount === '';
 
     const formatCreateMarketArguments = () => {
+        console.log(
+            'fund',
+            initialFundingAmount,
+            initialFundingAmount.toString(),
+            ethers.utils.parseEther(initialFundingAmount.toString())
+        );
         const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
         const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
         const price = ethers.utils.parseEther(strikePrice.toString());
@@ -249,7 +255,10 @@ export const CreateMarket: React.FC = () => {
                 setTxErrorMessage(null);
                 setIsCreatingMarket(true);
                 const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                await binaryOptionsMarketManagerContract.createMarket(oracleKey, price, maturity, initialMint, {
+                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, {
                     gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
                 });

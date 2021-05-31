@@ -78,7 +78,8 @@
             "gas-exceeds-limit": "Max input is {{gasPrice}}",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
             "insufficient-balance": "insufficient balance",
-            "insufficient-liquidity": "insufficient liquidity"
+            "insufficient-liquidity": "insufficient liquidity",
+            "enter-amount": "enter an amount"
         },
         "search": "search",
         "chart": {
@@ -304,7 +305,8 @@
                         "claim": "Claim",
                         "exercise": "Exercise",
                         "buy": "Buy",
-                        "sell": "Sell"
+                        "sell": "Sell",
+                        "mint": "Mint"
                     }
                 },
                 "filter": {
@@ -392,6 +394,7 @@
                 "trade-short-options-tab-title": "Trade Short options",
                 "market-tab-title": "Market",
                 "limit-tab-title": "Limit",
+                "mint-tab-title": "Mint",
                 "orderbook": {
                     "title": "Orderbook",
                     "buy": {
@@ -459,6 +462,13 @@
                             "label": "sell",
                             "progress-label": "Selling in progress..."
                         }
+                    }
+                },
+                "mint": {
+                    "amount-label": "Amount",
+                    "confirm-button": {
+                        "label": "Mint",
+                        "progress-label": "Minting in progress..."
                     }
                 },
                 "fill-order": {

@@ -65,7 +65,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                             Cell: (cellProps: CellProps<OptionsTransaction, OptionsTransaction['side']>) => {
                                 const side = cellProps.cell.value;
                                 const type = cellProps.cell.row.original.type;
-                                if (type === 'exercise') return <span>{EMPTY_VALUE}</span>;
+                                if (type === 'mint' || type === 'exercise') return <span>{EMPTY_VALUE}</span>;
                                 return (
                                     <>
                                         {side === 'long' ? (
