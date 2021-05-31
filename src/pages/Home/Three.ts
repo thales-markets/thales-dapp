@@ -65,9 +65,9 @@ export const setupThreeJS = () => {
             requestAnimationFrame(animate);
 
             if (speedUp) {
-                particleSpeed = particleSpeed + 0.0005 > 0.1 ? 0.1 : particleSpeed + 0.00075;
+                particleSpeed = particleSpeed + 0.005 > 0.2 ? 0.2 : particleSpeed + 0.005;
             } else {
-                particleSpeed = particleSpeed - 0.0005 < 0.004 ? 0.004 : particleSpeed - 0.00075;
+                particleSpeed = particleSpeed - 0.005 < 0.004 ? 0.004 : particleSpeed - 0.005;
             }
             particle.rotation.x -= 0.004;
             particle.rotation.y -= particleSpeed;
