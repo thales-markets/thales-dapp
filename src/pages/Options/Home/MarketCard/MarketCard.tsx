@@ -4,9 +4,8 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
-
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -43,9 +42,13 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
             </Header>
             <Content>
                 <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
-                <ExpireDate>{t('common.by-date', { date: formatShortDate(optionMarket.maturityDate) })}</ExpireDate>
+                <ExpireDate>{formatShortDate(optionMarket.maturityDate)}</ExpireDate>
             </Content>
             <Footer className="footer">
+                <FlexDiv style={{ margin: 'auto' }} className="text-m">
+                    <Text style={{ marginRight: 4 }}>Pool Size:</Text>
+                    <Text>{formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}</Text>
+                </FlexDiv>
                 <ViewMarket className="view-market">View Market</ViewMarket>
             </Footer>
         </Card>
