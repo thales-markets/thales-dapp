@@ -223,7 +223,6 @@ export const currencyKeyToSynthIconMap = {
     [SYNTHS_MAP.sADA]: sADAIcon,
     [SYNTHS_MAP.sYFI]: sYFIIcon,
     [SYNTHS_MAP.sDOT]: sDOTIcon,
-    [SYNTHS_MAP.sREN]: sRENIcon,
     [SYNTHS_MAP.sCOMP]: sCOMPIcon,
     [SYNTHS_MAP.s1INCH]: s1INCHIcon,
     [SYNTHS_MAP.sRUNE]: sRUNEIcon,
@@ -236,6 +235,9 @@ export const currencyKeyToSynthIconMap = {
     [SYNTHS_MAP.sJPY]: sJPYIcon,
     [SYNTHS_MAP.sUSD]: sUSDIcon,
     [SYNTHS_MAP.sFTSE]: sFTSEIcon,
+    [SYNTHS_MAP.sREN]: sRENIcon,
+    ['REN']: sRENIcon,
+    ['LEND']: sAAVEIcon,
 };
 
 export const sUSD_EXCHANGE_RATE = 1;

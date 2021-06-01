@@ -55,6 +55,10 @@ export const getSynthName = (currencyKey: string) => {
             return 'Synthetix';
         case CRYPTO_CURRENCY_MAP.SNX:
             return 'KNCL';
+        case CRYPTO_CURRENCY_MAP.REN:
+            return 'REN';
+        case CRYPTO_CURRENCY_MAP.LEND:
+            return 'LEND';
         default:
             return snxJSConnector.synthsMap[currencyKey]?.description;
     }
