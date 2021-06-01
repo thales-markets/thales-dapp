@@ -11,7 +11,10 @@ export const setupThreeJS = () => {
         const camera = new PerspectiveCamera(100, heroHTML?.clientWidth / heroHTML?.clientHeight, 1, 1000);
         camera.position.z = 400;
         renderer.setSize(heroHTML?.clientWidth, heroHTML?.clientHeight);
-        scene.background = new THREE.Color(0x04045a);
+        const loader = new THREE.TextureLoader();
+        loader.load('background.png', function (texture) {
+            scene.background = texture;
+        });
         heroHTML.appendChild(renderer.domElement);
 
         const particle = new THREE.Object3D();
