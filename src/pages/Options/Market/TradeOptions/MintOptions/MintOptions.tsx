@@ -31,12 +31,16 @@ import {
     Input,
     CurrencyLabel,
     SubmitButton,
+    TotalContainer,
+    TotalLabel,
+    Total,
 } from '../components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { refetchMarketQueries } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
+import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -97,8 +101,6 @@ const MintOptions: React.FC = () => {
                 setMarketFees({
                     creator: fees.creatorFee / 1e18,
                     pool: fees.poolFee / 1e18,
-                    refund: fees.refundFee / 1e18,
-                    bidding: fees.creatorFee / 1e18 + fees.poolFee / 1e18,
                 });
                 console.log(marketFees);
             } catch (e) {
@@ -259,7 +261,42 @@ const MintOptions: React.FC = () => {
                     <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                 </InputContainer>
             </GridContainer>
+            <MintingFeesContainer>
+                <TotalLabel>{t('options.market.trade-options.mint.minting-label')}</TotalLabel>
+            </MintingFeesContainer>
+            <MintingFeesInnerContainer>
+                <MintingTotalLabel color={'#3DBAA2'}>
+                    {t('options.market.trade-options.mint.long-label')}
+                </MintingTotalLabel>
+                <MintingTotal color={'#3DBAA2'}>
+                    {formatCurrency(
+                        marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                    )}
+                </MintingTotal>
+            </MintingFeesInnerContainer>
+            <MintingFeesInnerContainer>
+                <MintingTotalLabel color={'#FF7A68'}>
+                    {t('options.market.trade-options.mint.short-label')}
+                </MintingTotalLabel>
+                <MintingTotal color={'#FF7A68'}>
+                    {formatCurrency(
+                        marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                    )}
+                </MintingTotal>
+            </MintingFeesInnerContainer>
             <Divider />
+            <MintingFeesContainer>
+                <TotalLabel>{t('options.market.trade-options.mint.fees.minting')}</TotalLabel>
+                <Total>{formatPercentage(marketFees ? marketFees.creator + marketFees.pool : 0)}</Total>
+            </MintingFeesContainer>
+            <MintingFeesInnerContainer>
+                <TotalLabel>{t('options.market.trade-options.mint.fees.creator')}</TotalLabel>
+                <Total>{formatPercentage(marketFees ? marketFees.creator : 0)}</Total>
+            </MintingFeesInnerContainer>
+            <MintingFeesInnerContainer>
+                <TotalLabel>{t('options.market.trade-options.mint.fees.pool')}</TotalLabel>
+                <Total>{formatPercentage(marketFees ? marketFees.pool : 0)}</Total>
+            </MintingFeesInnerContainer>
             <NetworkFeesContainer>
                 <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
             </NetworkFeesContainer>
@@ -292,6 +329,22 @@ const MintSubmitButton = styled(SubmitButton)`
         border-radius: 20px;
         color: #04045a;
     }
+`;
+
+const MintingFeesContainer = styled(TotalContainer)`
+    margin-bottom: 4px;
+`;
+
+const MintingFeesInnerContainer = styled(MintingFeesContainer)`
+    margin-left: 20px;
+`;
+
+const MintingTotalLabel = styled(TotalLabel)<{ color?: string }>`
+    color: ${(props) => props.color ?? '#f6f6fe'};
+`;
+
+const MintingTotal = styled(Total)<{ color?: string }>`
+    color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 
 export default MintOptions;

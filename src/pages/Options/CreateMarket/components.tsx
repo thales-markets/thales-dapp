@@ -36,13 +36,11 @@ export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 export const StyledSlider = withStyles({
     root: {
         color: '#4FBF67',
-        height: 15,
-        padding: '0 0 2px 0',
     },
     thumb: {
-        width: 20,
-        height: 20,
-        top: 2,
+        width: 14,
+        height: 14,
+        marginTop: '-2px',
         background: '#FFFFFF',
         boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
         '&:focus, &:hover, &$active': {
@@ -50,16 +48,26 @@ export const StyledSlider = withStyles({
         },
     },
     track: {
-        height: 15,
+        height: 10,
         borderRadius: 10,
     },
     rail: {
-        height: 15,
-        backgroundColor: '#C62937',
-        opacity: 1,
+        height: 10,
         borderRadius: 10,
     },
 })(Slider);
+
+export const LongSlider = withStyles({
+    root: {
+        color: '#4FBF67',
+    },
+})(StyledSlider);
+
+export const ShortSlider = withStyles({
+    root: {
+        color: '#c62937',
+    },
+})(StyledSlider);
 
 export const ToggleButton = styled.div`
     position: relative;
@@ -137,7 +145,6 @@ export const SUSDSign = styled.div`
     background: #44e1e2;
     border-radius: 5px;
     z-index: 1;
-    bottom: 16px;
     left: 0px;
     font-size: 16px;
     line-height: 24px;

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { LineChart, XAxis, YAxis, Line, Tooltip, ResponsiveContainer } from 'recharts';
 import format from 'date-fns/format';
 import isNumber from 'lodash/isNumber';
@@ -7,10 +7,6 @@ import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Loader } from 'semantic-ui-react';
 import { OptionsMarketInfo } from 'types/options';
-import useBinaryOptionsHistoricalOptionPriceQuery from 'queries/options/useBinaryOptionsHistoricalOptionPriceQuery';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
 import styled from 'styled-components';
 import { GridDivCenteredRow } from 'theme/common';
 
@@ -21,30 +17,14 @@ type OptionsChartProps = {
     isChartEnabled: boolean;
 };
 
-const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket, minTimestamp, maxTimestamp, isChartEnabled }) => {
+// TODO no chart data until we implement new model for chart
+const OptionsChart: React.FC<OptionsChartProps> = () => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const historicalOptionPriceQuery = useBinaryOptionsHistoricalOptionPriceQuery(
-        optionsMarket.address,
-        networkId,
-        minTimestamp,
-        maxTimestamp,
-        {
-            enabled: isChartEnabled,
-        }
-    );
+    const chartData: any = [];
 
-    const chartData = useMemo(() => {
-        const data = historicalOptionPriceQuery.data || [];
-        if (data.length) {
-            return [...data].reverse();
-        }
-        return [];
-    }, [historicalOptionPriceQuery.data]);
-
-    const isLoading = historicalOptionPriceQuery.isLoading;
-    const noChartData = historicalOptionPriceQuery.isSuccess && chartData.length < 2;
+    const isLoading = false;
+    const noChartData = true;
 
     return (
         <div style={{ height: 300, paddingLeft: '30px' }}>
