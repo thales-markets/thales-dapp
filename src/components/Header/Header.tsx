@@ -28,7 +28,9 @@ const Header: React.FC = () => {
             >
                 <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home} />
                 <NavLink to="">{t('header.links.faq')}</NavLink>
-                <NavLink to="">{t('header.links.community')}</NavLink>
+                <CommunityLink target="_blank" rel="noreferrer" href="https://discord.gg/cFGv5zyVEj">
+                    {t('header.links.community')}
+                </CommunityLink>
                 <NavLink to="">{t('header.links.partners')}</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
@@ -123,6 +125,32 @@ const NavLink = styled(Link)`
     &:last-child {
         margin-right: 0;
     }
+    &:hover {
+        color: #44e1e2;
+    }
+    @media (max-width: 768px) {
+        border-top: 1px solid #748bc6;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 6px 0;
+        .primary {
+            margin: 50px 0 !important;
+            width: 140px;
+            font-size: 16px;
+            line-height: 24px;
+            padding: 8px 16px !important;
+        }
+    }
+`;
+
+const CommunityLink = styled.a`
+    margin-right: 40px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 32px;
+    letter-spacing: 0.15px;
+    color: white;
     &:hover {
         color: #44e1e2;
     }
