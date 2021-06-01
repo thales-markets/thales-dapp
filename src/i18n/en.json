@@ -131,7 +131,6 @@
     "options": {
         "phases": {
             "all": "all",
-            "bidding": "bidding",
             "trading": "trading",
             "maturity": "maturity",
             "expiry": "expired"
@@ -188,9 +187,7 @@
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
-                "bidding-end-date-label": "bidding end date:",
                 "market-maturity-date-label": "market maturity date:",
-                "long-short-skew-label": "long/short price skew:",
                 "funding-amount": {
                     "label": "market funding amount:",
                     "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
@@ -199,14 +196,12 @@
             "summary": {
                 "title": "new market summary:",
                 "dates": {
-                    "bidding-end": "Bidding end",
                     "maturity-date": "Maturity date",
                     "time-to-exercise": "Time to exercise"
                 },
                 "fees": {
-                    "bidding": "Bidding fee",
+                    "minting": "Minting fee",
                     "creator": "Creator earns",
-                    "refund": "Withdrawal penalty",
                     "pool": "Fee pool earns"
                 },
                 "withdrawals": {
@@ -239,7 +234,6 @@
                     "currency-col": "currency",
                     "strike-price-col": "strike price",
                     "phase-col": "phase",
-                    "bidding-end-col": "bidding end",
                     "maturity-col": "maturity",
                     "expiry-col": "expiry",
                     "option-prices-col": "option prices",
@@ -254,7 +248,6 @@
                 }
             },
             "widgets": {
-                "bidding-phase-widget": "Bidding",
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
                 "orderbook-widget": "Orderbook",
@@ -300,9 +293,6 @@
                         }
                     },
                     "types": {
-                        "bid": "Bid",
-                        "refund": "Withdrawal",
-                        "claim": "Claim",
                         "exercise": "Exercise",
                         "buy": "Buy",
                         "sell": "Sell",
@@ -318,61 +308,6 @@
             "trade-card": {
                 "shared": {
                     "price-shift": "If a bid is too large for the current size of the market, it will cause slippage."
-                },
-                "bidding": {
-                    "bid": {
-                        "title": "place bid",
-                        "subtitle": "Pick a side to place a bid:",
-                        "amount-label": "bid amount:",
-                        "price-label": "price:",
-                        "confirm-bid": "confirm-bid",
-                        "confirm-button": {
-                            "label": "confirm bid",
-                            "progress-label": "bidding in progress...",
-                            "high-slippage": "Warning this bid will shift market prices by more than 10% make sure you have entered the right bid amount."
-                        }
-                    },
-                    "refund": {
-                        "title": "withdraw",
-                        "subtitle": "From your existing bid:",
-                        "amount-label": "withdrawing:",
-                        "price-label": "price:",
-                        "confirm-button": {
-                            "label": "confirm withdrawal",
-                            "progress-label": "withdrawal in progress..."
-                        },
-                        "disabled": {
-                            "tooltip": "Market Creator has disabled all withdrawals - sUSD bids are final",
-                            "first-time-tooltip": "WARNING: market creator has disabled withdrawals on this market. All sUSD bids are final."
-                        }
-                    },
-                    "common": {
-                        "current-position": "current position:",
-                        "bid": "bid:",
-                        "payout": "payout:",
-                        "bid-fee": "Bid fee",
-                        "refund-fee": "Refund fee",
-                        "network-info-tooltip": {
-                            "exchange-fee": "Exchange fee",
-                            "network-fee": "Network fee (gas)"
-                        }
-                    },
-                    "footer": {
-                        "end-label": "bidding period closing in:"
-                    }
-                },
-                "trading": {
-                    "title": "claim options",
-                    "card-title": "bidding has closed",
-                    "card-subtitle": "Options available:",
-                    "confirm-button": {
-                        "label": "claim options",
-                        "progress-label": "claiming in progress...",
-                        "success-label": "nothing to claim"
-                    },
-                    "footer": {
-                        "end-label": "trading period closing in:"
-                    }
                 },
                 "maturity": {
                     "title": "exercise options",
@@ -466,6 +401,14 @@
                 },
                 "mint": {
                     "amount-label": "Amount",
+                    "minting-label": "You're going to mint",
+                    "long-label": "LONG options",
+                    "short-label": "SHORT options",
+                    "fees": {
+                        "minting": "Minting fee",
+                        "creator": "Creator earns",
+                        "pool": "Fee pool earns"
+                    },
                     "confirm-button": {
                         "label": "Mint",
                         "progress-label": "Minting in progress..."

@@ -27,7 +27,7 @@ import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
 import { LINKS } from 'constants/links';
-import { HowItWorks, SUSDSign, Error, StyledSlider, Field, FundingInput, Input } from './components';
+import { HowItWorks, SUSDSign, Error, /*LongSlider, ShortSlider,*/ Field, FundingInput, Input } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 
@@ -53,16 +53,9 @@ export const CreateMarket: React.FC = () => {
     const [isCurrencyKeyValid, setIsCurrencyKeyValid] = useState(true);
     const [strikePrice, setStrikePrice] = useState<number | string>('');
     const [isStrikePriceValid, setIsStrikePriceValid] = useState(true);
-    const [biddingEndDate, setEndOfBidding] = useState<Date>(
-        roundMinutes(new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000))
-    );
     const [maturityDate, setMaturityDate] = useState<Date>(
         roundMinutes(new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000))
     );
-    const [initialLongShorts, setInitialLongShorts] = useState<{ long: number; short: number }>({
-        long: 50,
-        short: 50,
-    });
     const [initialFundingAmount, setInitialFundingAmount] = useState<number | string>('');
     const [isAmountValid, setIsAmountValid] = useState(true);
     const [userHasEnoughFunds, setUserHasEnoughFunds] = useState(true);
@@ -73,6 +66,8 @@ export const CreateMarket: React.FC = () => {
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showWarning, setShowWarning] = useState(false);
+    // const [longPrice, setLongPrice] = useState<number>(0);
+    // const [shortPrice, setShortPrice] = useState<number>(0);
 
     const exchangeRatesQuery = useExchangeRatesQuery();
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -114,19 +109,9 @@ export const CreateMarket: React.FC = () => {
     );
 
     const isButtonDisabled =
-        currencyKey === null ||
-        strikePrice === '' ||
-        biddingEndDate === null ||
-        maturityDate === null ||
-        initialFundingAmount === '';
+        currencyKey === null || strikePrice === '' || maturityDate === null || initialFundingAmount === '';
 
     const formatCreateMarketArguments = () => {
-        console.log(
-            'fund',
-            initialFundingAmount,
-            initialFundingAmount.toString(),
-            ethers.utils.parseEther(initialFundingAmount.toString())
-        );
         const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
         const oracleKey = bytesFormatter((currencyKey as CurrencyKeyOptionType).value);
         const price = ethers.utils.parseEther(strikePrice.toString());
@@ -149,8 +134,6 @@ export const CreateMarket: React.FC = () => {
                 setMarketFees({
                     creator: fees.creatorFee / 1e18,
                     pool: fees.poolFee / 1e18,
-                    refund: fees.refundFee / 1e18,
-                    bidding: fees.creatorFee / 1e18 + fees.poolFee / 1e18,
                 });
             } catch (e) {
                 console.log(e);
@@ -213,15 +196,7 @@ export const CreateMarket: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [
-        isButtonDisabled,
-        currencyKey,
-        strikePrice,
-        biddingEndDate,
-        maturityDate,
-        initialFundingAmount,
-        initialLongShorts,
-    ]);
+    }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount]);
 
     const strikePricePlaceholderVal = `${USD_SIGN}10000.00 ${FIAT_CURRENCY_MAP.USD}`;
 
@@ -270,7 +245,6 @@ export const CreateMarket: React.FC = () => {
         }
     };
 
-    const formattedBiddingEnd = biddingEndDate ? formatShortDate(biddingEndDate) : EMPTY_VALUE;
     const formattedMaturityDate = maturityDate ? formatShortDate(maturityDate) : EMPTY_VALUE;
     const timeLeftToExercise = maturityDate
         ? formatDuration(intervalToDuration({ start: maturityDate, end: add(maturityDate, { weeks: 26 }) }), {
@@ -386,54 +360,25 @@ export const CreateMarket: React.FC = () => {
                                     </Field>
                                 </Form.Group>
                                 <Form.Group widths="equal">
-                                    <Field>
-                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
-                                            {t('options.create-market.details.bidding-end-date-label')}
-                                        </Text>
-                                        <DatePicker
-                                            id="end-of-bidding"
-                                            dateFormat="MMM d, yyyy h:mm aa"
-                                            showTimeSelect={true}
-                                            onChange={(d: any) => {
-                                                if (d instanceof Date) {
-                                                    setEndOfBidding(d);
-                                                } else {
-                                                    d[1] ? setEndOfBidding(d[1]) : setEndOfBidding(d[0]);
-                                                }
-                                                if (biddingEndDate) {
-                                                    setMaturityDate(
-                                                        roundMinutes(
-                                                            new Date(biddingEndDate.getTime() + 5 * 24 * 60 * 60 * 1000)
-                                                        )
-                                                    );
-                                                }
-                                            }}
-                                            minDate={new Date()}
-                                            selected={biddingEndDate}
-                                            startDate={Today}
-                                            endDate={biddingEndDate}
-                                            selectsRange
-                                        />
-                                    </Field>
-                                    <Field>
+                                    <Field style={{ marginTop: 50 }}>
                                         <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
                                             {t('options.create-market.details.market-maturity-date-label')}
                                         </Text>
                                         <DatePicker
-                                            disabled={!biddingEndDate}
                                             id="maturity-date"
                                             dateFormat="MMM d, yyyy h:mm aa"
-                                            minDate={biddingEndDate || null}
+                                            minDate={new Date()}
                                             showTimeSelect={true}
-                                            startDate={biddingEndDate || null}
+                                            startDate={Today}
                                             selected={maturityDate}
                                             endDate={maturityDate}
                                             onChange={(d: Date) => setMaturityDate(d)}
                                         />
                                     </Field>
-                                </Form.Group>
-                                <Form.Group widths="equal">
-                                    <Field className={isAmountValid && userHasEnoughFunds ? '' : 'error'}>
+                                    <Field
+                                        className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
+                                        style={{ position: 'relative' }}
+                                    >
                                         <Text
                                             className="text-ms pale-grey uppercase text-error"
                                             style={{ margin: '10px 0' }}
@@ -478,39 +423,78 @@ export const CreateMarket: React.FC = () => {
                                             </Error>
                                         )}
                                     </Field>
+                                </Form.Group>
+                                {/* <Form.Group widths="equal">
                                     <Field>
-                                        <div style={{ position: 'relative', top: 'calc(100% - 54px)' }}>
+                                        <div style={{ position: 'relative' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                                 <Text className="text-ms green" style={{ margin: '4px' }}>
-                                                    {t('common.val-in-cents', { val: initialLongShorts.long })}
+                                                    {t('common.val-in-cents', { val: 0 })}
                                                 </Text>
-                                                <Text className="text-ms red" style={{ margin: '4px' }}>
-                                                    {t('common.val-in-cents', { val: initialLongShorts.short })}
+                                                <Text className="text-ms green" style={{ margin: '4px' }}>
+                                                    {t('common.val-in-cents', { val: 100 })}
                                                 </Text>
                                             </div>
-                                            <StyledSlider
-                                                value={initialLongShorts.long}
-                                                max={95}
-                                                min={5}
+                                            <LongSlider
+                                                value={longPrice}
+                                                step={0.01}
+                                                max={1}
+                                                min={0}
                                                 onChange={(_, newValue) => {
                                                     const long = newValue as number;
-                                                    setInitialLongShorts({
-                                                        long,
-                                                        short: 100 - long,
-                                                    });
+                                                    setLongPrice(long);
                                                 }}
                                             />
                                         </div>
                                     </Field>
-                                </Form.Group>
+                                    <Field>
+                                        <Text
+                                            className="text-ms pale-grey uppercase text-error"
+                                            style={{ margin: '5px 0' }}
+                                        >
+                                            {t('options.create-market.details.strike-price-label')}
+                                        </Text>
+                                        <Input
+                                            className=" input-override"
+                                            value={longPrice}
+                                            onChange={(e) => {
+                                                setLongPrice(Number(e.target.value));
+                                            }}
+                                            id="long-price"
+                                            type="number"
+                                            step={0.01}
+                                            max={1}
+                                            min={0}
+                                        />
+                                    </Field>
+                                    <Field>
+                                        <div style={{ position: 'relative' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <Text className="text-ms red" style={{ margin: '4px' }}>
+                                                    {t('common.val-in-cents', { val: 0 })}
+                                                </Text>
+                                                <Text className="text-ms red" style={{ margin: '4px' }}>
+                                                    {t('common.val-in-cents', { val: 100 })}
+                                                </Text>
+                                            </div>
+                                            <ShortSlider
+                                                value={shortPrice}
+                                                max={1}
+                                                min={0}
+                                                onChange={(_, newValue) => {
+                                                    const short = newValue as number;
+                                                    setShortPrice(short);
+                                                }}
+                                            />
+                                        </div>
+                                    </Field>
+                                </Form.Group> */}
                             </Form>
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
                             strikingPrice={strikePrice}
-                            biddingEndDate={formattedBiddingEnd}
                             maturityDate={formattedMaturityDate}
-                            initialLongShorts={initialLongShorts}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}

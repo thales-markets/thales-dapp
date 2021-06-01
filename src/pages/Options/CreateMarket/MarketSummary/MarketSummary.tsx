@@ -6,15 +6,12 @@ import styled from 'styled-components';
 import Currency from 'components/Currency';
 import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
-import MarketSentiment from 'pages/Options/components/MarketSentiment';
 import { formatPercentage } from 'utils/formatters/number';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
     strikingPrice?: number | string;
-    biddingEndDate?: string;
     maturityDate?: string;
-    initialLongShorts: { long: number; short: number };
     initialFundingAmount?: number | string;
     timeLeftToExercise?: string;
     marketFees: MarketFees | null;
@@ -57,10 +54,6 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             </StrikeBy>
             <MarketInfo>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Text className="text-xxs dark lh24">{t('options.create-market.summary.dates.bidding-end')}</Text>
-                    <Text className="text-xxs dark bold lh24">{props.biddingEndDate}</Text>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Text className="text-xxs dark lh24">{t('options.create-market.summary.dates.maturity-date')}</Text>
                     <Text className="text-xxs dark bold lh24">{props.maturityDate}</Text>
                 </div>
@@ -70,17 +63,11 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     </Text>
                     <Text className="text-xxs dark bold lh24">{props.timeLeftToExercise}</Text>
                 </div>
-                <LongShortWrapper>
-                    <MarketSentiment
-                        long={props.initialLongShorts.long / 100}
-                        short={props.initialLongShorts.short / 100}
-                    ></MarketSentiment>
-                </LongShortWrapper>
-                <div style={{ padding: '20px 0 0 0' }}>
+                <div style={{ padding: '10px 0 0 0', borderTop: '1.5px solid rgb(116, 139, 198)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Text className="text-xxs dark lh24">{t('options.create-market.summary.fees.bidding')}</Text>
+                        <Text className="text-xxs dark lh24">{t('options.create-market.summary.fees.minting')}</Text>
                         <Text className="text-xxs dark bold lh24">
-                            {formatPercentage(props.marketFees ? props.marketFees.bidding : 0)}
+                            {formatPercentage(props.marketFees ? props.marketFees.creator + props.marketFees.pool : 0)}
                         </Text>
                     </div>
                     <div style={{ paddingLeft: 10 }}>
@@ -98,12 +85,6 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                                 {formatPercentage(props.marketFees ? props.marketFees.pool : 0)}
                             </Text>
                         </div>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Text className="text-xxs dark lh24">{t('options.create-market.summary.fees.refund')}</Text>
-                        <Text className="text-xxs dark bold lh24">
-                            {formatPercentage(props.marketFees ? props.marketFees.refund : 0)}
-                        </Text>
                     </div>
                 </div>
             </MarketInfo>
@@ -139,11 +120,11 @@ const MarketInfo = styled(FlexDivColumn)`
     font-size: 12px;
 `;
 
-const LongShortWrapper = styled.div`
-    border-top: 1.5px solid #748bc6;
-    border-bottom: 1.5px solid #748bc6;
-    padding-top: 10px;
-`;
+// const LongShortWrapper = styled.div`
+//     border-top: 1.5px solid #748bc6;
+//     border-bottom: 1.5px solid #748bc6;
+//     padding-top: 10px;
+// `;
 
 const Footer = styled(FlexDivColumn)`
     background: #b8c6e5;
