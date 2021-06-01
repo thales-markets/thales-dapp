@@ -32,10 +32,8 @@ export const Home: React.FC = () => {
     const hotMarkets = useMemo(
         () =>
             optionsMarkets
-                .filter((market) =>
-                    market.phaseNum !== PHASE.maturity && market.phaseNum !== PHASE.expiry ? market : undefined
-                )
-                .sort((a, b) => b.poolSize - a.poolSize)
+                .filter((market) => market.phaseNum === PHASE.trading)
+                .sort((a, b) => a.timeRemaining - b.timeRemaining)
                 .slice(0, MAX_HOT_MARKETS),
         [optionsMarkets]
     );

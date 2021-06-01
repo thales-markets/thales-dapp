@@ -1,5 +1,5 @@
 import React, { FC, memo, useEffect, useMemo, useState } from 'react';
-import { OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
     Paper,
@@ -41,48 +41,6 @@ type MarketsTableProps = {
     onChange: any;
 };
 
-const StyledTableRow = withStyles(() => ({
-    root: {
-        background: '#126',
-        '&:nth-of-type(odd)': {
-            background: '#116',
-        },
-        '&.clickable': {
-            cursor: 'pointer',
-            '&:hover': {
-                background: '#04045A',
-            },
-        },
-    },
-}))(TableRow);
-
-const Divider: React.FC = () => {
-    return (
-        <Row>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </Row>
-    );
-};
-
-const PaginationWrapper = styled(TablePagination)`
-    border: none !important;
-    display: flex;
-    .MuiToolbar-root {
-        padding: 0;
-        margin-top: 16px;
-        display: inline-block;
-    }
-
-    .MuiTablePagination-caption {
-        display: none;
-    }
-`;
-
 interface HeadCell {
     id: keyof OptionsMarkets;
     label: string;
@@ -93,9 +51,8 @@ const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: 'Asset', sortable: true },
     { id: 3, label: 'Strike Price', sortable: true },
-    // { id: 4, label: 'Pool Size', sortable: true },
-    { id: 4, label: 'Long/Short', sortable: true },
-    { id: 5, label: 'Time Remaining', sortable: false },
+    { id: 4, label: 'Pool Size', sortable: true },
+    { id: 5, label: 'Time Remaining', sortable: true },
     { id: 6, label: 'Open Orders', sortable: true },
     { id: 7, label: 'Phase', sortable: false },
 ];
@@ -115,7 +72,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(
             setPage(newPage);
         };
         const [orderBy, setOrderBy] = useState(defaultOrderBy);
-        const [orderDirection, setOrderDirection] = useState(OrderDirection.NONE);
+        const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
         const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -129,7 +86,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                         setOrderDirection(OrderDirection.ASC);
                         break;
                     case OrderDirection.ASC:
-                        setOrderDirection(OrderDirection.NONE);
+                        setOrderDirection(OrderDirection.DESC);
                         setOrderBy(defaultOrderBy);
                         break;
                 }
@@ -140,17 +97,6 @@ const MarketsTable: FC<MarketsTableProps> = memo(
         };
 
         useEffect(() => setPage(0), [phase]);
-
-        const compareStrings = (a: string, b: string) => {
-            if (a < b) {
-                return orderDirection === OrderDirection.ASC ? -1 : 1;
-            }
-            if (a > b) {
-                return orderDirection === OrderDirection.ASC ? 1 : -1;
-            }
-
-            return 0;
-        };
 
         const toggleWatchlist = async (marketAddress: string) => {
             try {
@@ -170,23 +116,15 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                 .sort((a, b) => {
                     switch (orderBy) {
                         case 1:
-                            return compareStrings(a.asset, b.asset);
                         case 2:
-                            return orderDirection === OrderDirection.ASC
-                                ? a.strikePrice - b.strikePrice
-                                : b.strikePrice - a.strikePrice;
+                            return sortByAssetName(a, b, orderDirection);
                         case 3:
-                            return orderDirection === OrderDirection.ASC
-                                ? a.poolSize - b.poolSize
-                                : b.poolSize - a.poolSize;
-                        // case 4:
-                        //     return orderDirection === OrderDirection.ASC
-                        //         ? a.longPrice - b.longPrice
-                        //         : b.longPrice - a.longPrice;
+                            return sortByStrikePrice(a, b, orderDirection);
                         case 4:
-                            const phaseDiff = a.phaseNum - b.phaseNum;
-                            return phaseDiff === 0 ? a.timeRemaining - b.timeRemaining : phaseDiff;
+                            return sortByPoolSize(a, b, orderDirection);
                         case 5:
+                            return sortByTime(a, b, orderDirection);
+                        case 6:
                             return orderDirection === OrderDirection.ASC
                                 ? a.openOrders - b.openOrders
                                 : b.openOrders - a.openOrders;
@@ -327,5 +265,107 @@ const MarketsTable: FC<MarketsTableProps> = memo(
         );
     }
 );
+
+const StyledTableRow = withStyles(() => ({
+    root: {
+        background: '#126',
+        '&:nth-of-type(odd)': {
+            background: '#116',
+        },
+        '&.clickable': {
+            cursor: 'pointer',
+            '&:hover': {
+                background: '#04045A',
+            },
+        },
+    },
+}))(TableRow);
+
+const Divider: React.FC = () => {
+    return (
+        <Row>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </Row>
+    );
+};
+
+const PaginationWrapper = styled(TablePagination)`
+    border: none !important;
+    display: flex;
+    .MuiToolbar-root {
+        padding: 0;
+        margin-top: 16px;
+        display: inline-block;
+    }
+
+    .MuiTablePagination-caption {
+        display: none;
+    }
+`;
+
+const sortByTime = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
+    if (direction === OrderDirection.ASC && a.phaseNum === b.phaseNum) {
+        return a.timeRemaining > b.timeRemaining ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC && a.phaseNum === b.phaseNum) {
+        return a.timeRemaining > b.timeRemaining ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByPoolSize = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
+    if (direction === OrderDirection.ASC) {
+        if (a.phaseNum === b.phaseNum) {
+            return a.poolSize > b.poolSize ? 1 : -1;
+        }
+    }
+    if (direction === OrderDirection.DESC) {
+        if (a.phaseNum === b.phaseNum) {
+            return a.poolSize > b.poolSize ? -1 : 1;
+        }
+    }
+
+    return 0;
+};
+
+const sortByStrikePrice = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection
+) => {
+    if (direction === OrderDirection.ASC) {
+        if (a.phaseNum === b.phaseNum) {
+            return a.strikePrice > b.strikePrice ? 1 : -1;
+        }
+    }
+    if (direction === OrderDirection.DESC) {
+        if (a.phaseNum === b.phaseNum) {
+            return a.strikePrice > b.strikePrice ? -1 : 1;
+        }
+    }
+
+    return 0;
+};
+
+const sortByAssetName = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
+    if (direction === OrderDirection.ASC) {
+        if (a.phaseNum === b.phaseNum) {
+            return a.asset > b.asset ? 1 : -1;
+        }
+    }
+    if (direction === OrderDirection.DESC) {
+        if (a.phaseNum === b.phaseNum) {
+            return a.asset > b.asset ? -1 : 1;
+        }
+    }
+
+    return 0;
+};
 
 export default MarketsTable;

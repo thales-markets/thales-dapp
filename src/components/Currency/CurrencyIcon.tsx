@@ -16,7 +16,8 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, ...rest
     };
 
     if (currencyKey !== CRYPTO_CURRENCY_MAP.SNX && currencyKey !== CRYPTO_CURRENCY_MAP.KNC) {
-        return <img src={getSynthIcon(currencyKey)} style={{ marginRight: 10 }} {...props} />;
+        const SynthIcon = getSynthIcon(currencyKey);
+        return <SynthIcon style={{ width: 24, height: 24, marginRight: 10 }} />;
     }
 
     const AssetIcon = getAssetIcon(currencyKey);

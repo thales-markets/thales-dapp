@@ -11,7 +11,7 @@ import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bytesFormatter, parseBytes32String, bigNumberFormatter } from 'utils/formatters/ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import snxJSConnector from 'utils/snxJSConnector';
+import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import { Form, Message } from 'semantic-ui-react';
@@ -280,13 +280,21 @@ export const CreateMarket: React.FC = () => {
                                         </Text>
                                         <Select
                                             className="select-override"
-                                            formatOptionLabel={(option: any) => (
-                                                <Currency.Name
-                                                    currencyKey={option.value}
-                                                    showIcon={true}
-                                                    iconProps={{ type: 'asset' }}
-                                                />
-                                            )}
+                                            filterOption={(option, rawInput) =>
+                                                option.label.toLowerCase().includes(rawInput.toLowerCase()) ||
+                                                getSynthName(option.value)
+                                                    ?.toLowerCase()
+                                                    .includes(rawInput.toLowerCase())
+                                            }
+                                            formatOptionLabel={(option: any) => {
+                                                return (
+                                                    <Currency.Name
+                                                        currencyKey={option.value}
+                                                        showIcon={true}
+                                                        iconProps={{ type: 'asset' }}
+                                                    />
+                                                );
+                                            }}
                                             onBlur={() => {
                                                 currencyKey
                                                     ? setIsCurrencyKeyValid(true)
@@ -493,7 +501,7 @@ export const CreateMarket: React.FC = () => {
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
-                            strikingPrice={strikePrice}
+                            strikingPrice={parseFloat(strikePrice.toString()).toFixed(2)}
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}

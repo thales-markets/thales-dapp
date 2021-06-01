@@ -87,7 +87,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                       return (
                           asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                          getSynthName(currencyKey).toLowerCase().includes(assetSearch.toLowerCase())
+                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
                       );
                   })
                 : filteredOptionsMarkets;
@@ -129,7 +129,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     };
 
     return (
-        <div id="explore-markets" style={{ padding: '50px 120px' }}>
+        <div id="explore-markets" style={{ padding: '50px 150px', width: '100%' }}>
             <FlexDivCentered>
                 {Object.keys(UserFilterEnum)
                     .filter(
