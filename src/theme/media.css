@@ -44,6 +44,8 @@ xl: 1300, */
         position: absolute;
         top: 0;
         transform: scale(0.9);
+        padding: 0 !important;
+        width: auto !important;
     }
     .explore-markets {
         position: relative;
