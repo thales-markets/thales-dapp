@@ -248,6 +248,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     }, [isWalletConnected]);
 
     useEffect(() => {
+        return () => {
+            marketQuery.remove();
+            accountMarketInfoQuery.remove();
+        };
+    }, []);
+
+    useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
