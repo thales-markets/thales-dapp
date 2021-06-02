@@ -88,6 +88,7 @@ export const CATEGORY_MAP = keyBy(CATEGORY);
 
 export const SYNTHS = [
     'sBTC',
+    'sBCH',
     'sETH',
     'sEUR',
     'sDEFI',
