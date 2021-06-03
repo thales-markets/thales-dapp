@@ -43,7 +43,16 @@ const Home: React.FC = () => {
                                 >
                                     {t('landing-page.use-app')}
                                 </Button>
-                                <Button className="tertiary">{t('landing-page.who-is-thales')}</Button>
+                                <Button
+                                    onClick={() => {
+                                        document
+                                            .getElementById('who-is-thales')
+                                            ?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                    className="tertiary"
+                                >
+                                    {t('landing-page.who-is-thales')}
+                                </Button>
                             </FlexDiv>
                         </Side>
                         <Side></Side>
@@ -97,7 +106,7 @@ const Home: React.FC = () => {
                     <Market src={market} />
                 </Side>
             </Section>
-            <Section>
+            <Section id="who-is-thales">
                 <Side>
                     <ThalesTheWhite src={thalesTheWhite} />
                 </Side>
