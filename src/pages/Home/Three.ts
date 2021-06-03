@@ -35,7 +35,7 @@ export const setupThreeJS = () => {
         const smokeMaterial = new THREE.MeshBasicMaterial({
             map: SMOKE,
             transparent: true,
-            opacity: 0.03,
+            opacity: 0.02,
         });
 
         for (let p = 0, l = 600; p < l; p++) {
