@@ -141,7 +141,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(
             <>
                 <TableContainer style={{ background: 'transparent', boxShadow: 'none' }} component={Paper}>
                     <Table aria-label="customized table">
-                        <TableHead>
+                        <TableHead style={{ textTransform: 'uppercase' }}>
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (
