@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from 'components/Header';
 import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li, Image } from 'theme/common';
 import { useTranslation } from 'react-i18next';
@@ -13,15 +13,10 @@ import styled from 'styled-components';
 import market from 'assets/images/market.png';
 import scaleSstars from 'assets/images/weight-scale-stars.png';
 import thalesTheWhite from 'assets/images/thales-white.png';
-import { setupThreeJS } from './Three';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-
-    useEffect(() => {
-        setupThreeJS();
-    });
 
     return (
         <>
@@ -64,10 +59,10 @@ const Home: React.FC = () => {
                     <Scale src={scaleSstars} />
                 </Side>
                 <Side>
-                    <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
+                    <Text className="text-xxl white" style={{ marginBottom: 26 }}>
                         {t('landing-page.markets.title')}
                     </Text>
-                    <Text className="text-m dark">{t('landing-page.markets.description')}</Text>
+                    <Text className="text-m white">{t('landing-page.markets.description')}</Text>
                     <Button
                         className="primary"
                         style={{ marginTop: '40px' }}
@@ -111,10 +106,10 @@ const Home: React.FC = () => {
                     <ThalesTheWhite src={thalesTheWhite} />
                 </Side>
                 <Side>
-                    <Text className="text-xxl dark" style={{ marginBottom: 26 }}>
+                    <Text className="text-xxl white" style={{ marginBottom: 26 }}>
                         {t('landing-page.who-is-thales')}
                     </Text>
-                    <Text className="text-m dark">{t('landing-page.thales-is')}</Text>
+                    <Text className="text-m white">{t('landing-page.thales-is')}</Text>
                 </Side>
             </Section>
             <Footer></Footer>

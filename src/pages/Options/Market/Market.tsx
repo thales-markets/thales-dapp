@@ -368,8 +368,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 };
 
 export const Background = styled.section`
-    background-size: cover !important;
-    background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    position: relative;
+    background: transparent;
+    z-index: 2;
 `;
 
 const Container = styled.div`

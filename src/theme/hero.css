@@ -2,14 +2,12 @@
     position: relative;
 }
 
-#landing-hero > canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-}
-
 #landing-hero > div {
     position: relative;
     z-index: 2;
+}
+
+#root > canvas {
+    position: fixed;
+    top: 0;
 }

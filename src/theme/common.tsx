@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
 import React from 'react';
-import background from 'assets/images/background-dark.png';
 import { Tooltip, withStyles } from '@material-ui/core';
 
 export const FlexDiv = styled.div`
@@ -66,14 +65,13 @@ export const Background = styled.section`
         @media (min-height: 1000px) and (min-width: 1200px) {
             min-height: 800px;
         }
-        background-image: url(${background}) !important;
     }
 
-    &:nth-child(odd) {
-        background-image: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-    }
+    position: relative;
+    background: transparent;
+    z-index: 2;
+
     &:nth-child(even) {
-        background: white;
         @media (max-width: 768px) {
             & > div {
                 flex-flow: column-reverse;
