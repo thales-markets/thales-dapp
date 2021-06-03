@@ -178,7 +178,10 @@ export const CreateMarket: React.FC = () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
             try {
                 const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                const gasEstimate = await binaryOptionsMarketManagerContract.estimateGas.createMarket(
+                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
                     oracleKey,
                     price,
                     maturity,
