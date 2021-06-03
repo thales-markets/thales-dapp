@@ -11,11 +11,10 @@ const CAM_POSITION = 400;
 const STAR = LOADER.load('three/star.png');
 const SMOKE = LOADER.load('three/smoke.png');
 
-let speedUp = false;
-const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];
-let particleSpeed = MIN_SPEED;
-
 export const setupThreeJS = () => {
+    let speedUp = false;
+    const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];
+    let particleSpeed = MIN_SPEED;
     const heroHTML = document.getElementById('landing-hero');
     if (heroHTML) {
         const scene = new THREE.Scene();
@@ -90,22 +89,24 @@ export const setupThreeJS = () => {
         });
 
         const animate = function () {
-            for (let i = 0; i < PARTICLES_CNT; i++) {
-                if (posArr[i * 3 + 2] >= CAM_POSITION) {
-                    posArr[i * 3 + 2] = -300;
+            if (document.getElementById('landing-hero')) {
+                for (let i = 0; i < PARTICLES_CNT; i++) {
+                    if (posArr[i * 3 + 2] >= CAM_POSITION) {
+                        posArr[i * 3 + 2] = -300;
+                    }
+                    posArr[i * 3 + 2] += particleSpeed;
                 }
-                posArr[i * 3 + 2] += particleSpeed;
-            }
-            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+                particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
 
-            if (speedUp) {
-                particleSpeed = particleSpeed + ACCELERATION > MAX_SPEED ? MAX_SPEED : particleSpeed + ACCELERATION;
-            } else {
-                particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
-            }
+                if (speedUp) {
+                    particleSpeed = particleSpeed + ACCELERATION > MAX_SPEED ? MAX_SPEED : particleSpeed + ACCELERATION;
+                } else {
+                    particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
+                }
 
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
         };
         animate();
     }
