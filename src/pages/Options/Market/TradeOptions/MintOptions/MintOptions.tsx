@@ -1,4 +1,4 @@
-import { SYNTHS_MAP } from 'constants/currency';
+import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,14 +12,14 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Message } from 'semantic-ui-react';
+import { Checkbox, Message } from 'semantic-ui-react';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import {
@@ -37,10 +37,21 @@ import {
 } from '../components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
-import { refetchMarketQueries } from 'utils/queryConnector';
+import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
-import { formatCurrency, formatPercentage } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage, toBigNumber } from 'utils/formatters/number';
+import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
+import { FlexDivCentered, FlexDivRow } from 'theme/common';
+import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { get0xBaseURL } from 'utils/0x';
+import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
+import { LimitOrder, SignatureType } from '@0x/protocol-utils';
+import axios from 'axios';
+import { SIDE } from 'constants/options';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -60,6 +71,19 @@ const MintOptions: React.FC = () => {
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
+    const [longPrice, setLongPrice] = useState<number>(1);
+    const [shortPrice, setShortPrice] = useState<number>(1);
+    const [longAmount, setLongAmount] = useState<number | string>('');
+    const [shortAmount, setShortAmount] = useState<number | string>('');
+    const [sellLong, setSellLong] = useState<boolean>(false);
+    const [sellShort, setSellShort] = useState<boolean>(false);
+    const [hasLongAllowance, setLongAllowance] = useState<boolean>(false);
+    const [isLongAllowing, setIsLongAllowing] = useState<boolean>(false);
+    const [isLongSubmitting, setIsLongSubmitting] = useState<boolean>(false);
+    const [hasShortAllowance, setShortAllowance] = useState<boolean>(false);
+    const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
+    const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
+    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -85,6 +109,8 @@ const MintOptions: React.FC = () => {
     const insufficientBalance = Number(amount) > sUSDBalance || !sUSDBalance;
     const isButtonDisabled = !isAmountEntered || isMinting || !isWalletConnected || !sUSDBalance || insufficientBalance;
 
+    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+
     useEffect(() => {
         const {
             contracts: { SynthsUSD },
@@ -102,7 +128,6 @@ const MintOptions: React.FC = () => {
                     creator: fees.creatorFee / 1e18,
                     pool: fees.poolFee / 1e18,
                 });
-                console.log(marketFees);
             } catch (e) {
                 console.log(e);
             }
@@ -110,6 +135,7 @@ const MintOptions: React.FC = () => {
         const registerAllowanceListener = () => {
             if (walletAddress) {
                 SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                    console.log(owner, walletAddress, spender, binaryOptionsMarketManagerContract.address);
                     if (owner === walletAddress && spender === binaryOptionsMarketManagerContract.address) {
                         setAllowance(true);
                         setIsAllowing(false);
@@ -131,11 +157,17 @@ const MintOptions: React.FC = () => {
 
     useEffect(() => {
         if (walletAddress) {
-            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, (_, account: string) => {
-                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
                 if (walletAddress === account) {
+                    if (SIDE[side] === 'long' && sellLong) {
+                        await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
+                    }
+                    if (SIDE[side] === 'short' && sellShort) {
+                        await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
+                    }
                     setIsMinting(false);
                 }
+                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
             });
         }
         return () => {
@@ -143,7 +175,7 @@ const MintOptions: React.FC = () => {
                 BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
             }
         };
-    }, [walletAddress]);
+    }, [walletAddress, sellLong, sellLong, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
@@ -166,13 +198,14 @@ const MintOptions: React.FC = () => {
             const {
                 contracts: { SynthsUSD },
             } = snxJSConnector.snxJS as any;
+            const { binaryOptionsMarketManagerContract } = snxJSConnector;
             try {
                 setIsAllowing(true);
                 const gasEstimate = await SynthsUSD.estimateGas.approve(
-                    BOMContract.address,
+                    binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256
                 );
-                await SynthsUSD.approve(BOMContract.address, ethers.constants.MaxUint256, {
+                await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
                 });
@@ -183,40 +216,46 @@ const MintOptions: React.FC = () => {
         }
     };
     const handleMint = async () => {
-        try {
-            setTxErrorMessage(null);
-            setIsMinting(true);
-            const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-            const mintAmount = ethers.utils.parseEther(amount.toString());
-            const tx = (await BOMContractWithSigner.mint(mintAmount)) as ethers.ContractTransaction;
+        if (gasPrice !== null) {
+            try {
+                console.log('before', sellLong, sellShort);
+                setTxErrorMessage(null);
+                setIsMinting(true);
+                const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
+                const mintAmount = ethers.utils.parseEther(amount.toString());
+                const tx = (await BOMContractWithSigner.mint(mintAmount, {
+                    gasPrice: gasPriceInWei(gasPrice),
+                    gasLimit,
+                })) as ethers.ContractTransaction;
 
-            dispatch(
-                addOptionsPendingTransaction({
-                    optionTransaction: {
-                        market: optionsMarket.address,
-                        currencyKey: optionsMarket.currencyKey,
-                        account: walletAddress,
-                        hash: tx.hash || '',
-                        type: 'mint',
-                        amount: amount,
-                        side: 'long',
-                    },
-                })
-            );
-
-            const txResult = await tx.wait();
-            if (txResult && txResult.transactionHash) {
                 dispatch(
-                    updateOptionsPendingTransactionStatus({
-                        hash: txResult.transactionHash,
-                        status: 'confirmed',
+                    addOptionsPendingTransaction({
+                        optionTransaction: {
+                            market: optionsMarket.address,
+                            currencyKey: optionsMarket.currencyKey,
+                            account: walletAddress,
+                            hash: tx.hash || '',
+                            type: 'mint',
+                            amount: amount,
+                            side: 'long',
+                        },
                     })
                 );
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    dispatch(
+                        updateOptionsPendingTransactionStatus({
+                            hash: txResult.transactionHash,
+                            status: 'confirmed',
+                        })
+                    );
+                }
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsMinting(false);
             }
-        } catch (e) {
-            console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            setIsMinting(false);
         }
     };
 
@@ -236,6 +275,38 @@ const MintOptions: React.FC = () => {
                 </MintSubmitButton>
             );
         }
+        if (!hasLongAllowance && sellLong) {
+            return (
+                <MintSubmitButton disabled={isLongAllowing || !isWalletConnected} onClick={handleLongAllowance}>
+                    {!isLongAllowing
+                        ? t(`options.market.trade-options.mint.approve-long-button.label`)
+                        : t(`options.market.trade-options.mint.approve-long-button.progress-label`)}
+                </MintSubmitButton>
+            );
+        }
+        if (!hasShortAllowance && sellShort) {
+            return (
+                <MintSubmitButton disabled={isShortAllowing || !isWalletConnected} onClick={handleShortAllowance}>
+                    {!isShortAllowing
+                        ? t(`options.market.trade-options.mint.approve-short-button.label`)
+                        : t(`options.market.trade-options.mint.approve-short-button.progress-label`)}
+                </MintSubmitButton>
+            );
+        }
+        if (isLongSubmitting) {
+            return (
+                <MintSubmitButton disabled={true}>
+                    {t(`options.market.trade-options.mint.confirm-button.submit-long-progress-label`)}
+                </MintSubmitButton>
+            );
+        }
+        if (isShortSubmitting) {
+            return (
+                <MintSubmitButton disabled={true}>
+                    {t(`options.market.trade-options.mint.confirm-button.submit-short-progress-label`)}
+                </MintSubmitButton>
+            );
+        }
         return (
             <MintSubmitButton disabled={isButtonDisabled} onClick={handleMint}>
                 {!isMinting
@@ -244,6 +315,189 @@ const MintOptions: React.FC = () => {
             </MintSubmitButton>
         );
     };
+
+    useEffect(() => {
+        const erc20Instance = new ethers.Contract(optionsMarket.longAddress, erc20Contract.abi, snxJSConnector.signer);
+        const getAllowance = async () => {
+            try {
+                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                setLongAllowance(!!bigNumberFormatter(allowance));
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const registerAllowanceListener = () => {
+            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                    setLongAllowance(true);
+                    setIsLongAllowing(false);
+                }
+            });
+        };
+        if (isWalletConnected && sellLong) {
+            getAllowance();
+            registerAllowanceListener();
+        }
+        return () => {
+            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+        };
+    }, [walletAddress, isWalletConnected, sellLong]);
+
+    const handleLongAllowance = async () => {
+        if (gasPrice !== null) {
+            const erc20Instance = new ethers.Contract(
+                optionsMarket.longAddress,
+                erc20Contract.abi,
+                snxJSConnector.signer
+            );
+            try {
+                setIsLongAllowing(true);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasPrice: gasPriceInWei(gasPrice),
+                });
+            } catch (e) {
+                console.log(e);
+                setIsLongAllowing(false);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const erc20Instance = new ethers.Contract(optionsMarket.shortAddress, erc20Contract.abi, snxJSConnector.signer);
+        const getAllowance = async () => {
+            try {
+                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                setShortAllowance(!!bigNumberFormatter(allowance));
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const registerAllowanceListener = () => {
+            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                    setShortAllowance(true);
+                    setIsShortAllowing(false);
+                }
+            });
+        };
+        if (isWalletConnected && sellShort) {
+            getAllowance();
+            registerAllowanceListener();
+        }
+        return () => {
+            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+        };
+    }, [walletAddress, isWalletConnected, sellShort]);
+
+    const handleShortAllowance = async () => {
+        if (gasPrice !== null) {
+            const erc20Instance = new ethers.Contract(
+                optionsMarket.shortAddress,
+                erc20Contract.abi,
+                snxJSConnector.signer
+            );
+            try {
+                setIsShortAllowing(true);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasPrice: gasPriceInWei(gasPrice),
+                });
+            } catch (e) {
+                console.log(e);
+                setIsShortAllowing(false);
+            }
+        }
+    };
+
+    const getOrderEndDate = () => toBigNumber(Math.round(optionsMarket.timeRemaining / 1000));
+
+    const handleSubmitOrder = async (
+        price: number,
+        makerToken: string,
+        optionsAmount: number | string,
+        isLong?: boolean
+    ) => {
+        const {
+            contracts: { SynthsUSD },
+        } = snxJSConnector.snxJS as any;
+        setTxErrorMessage(null);
+        isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
+
+        const baseUrl = get0xBaseURL(networkId);
+        const placeOrderUrl = `${baseUrl}sra/v4/order`;
+
+        const makerAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(optionsAmount), DEFAULT_TOKEN_DECIMALS);
+        const takerAmount = Web3Wrapper.toBaseUnitAmount(
+            toBigNumber(Number(optionsAmount) * Number(price)),
+            DEFAULT_TOKEN_DECIMALS
+        );
+        const expiry = getOrderEndDate();
+        const salt = generatePseudoRandomSalt();
+
+        try {
+            const createSignedOrderV4Async = async () => {
+                const order = new LimitOrder({
+                    makerToken,
+                    takerToken: SynthsUSD.address,
+                    makerAmount,
+                    takerAmount,
+                    maker: walletAddress,
+                    sender: NULL_ADDRESS,
+                    expiry,
+                    salt,
+                    chainId: networkId,
+                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+                });
+
+                try {
+                    const signature = await order.getSignatureWithProviderAsync(
+                        (snxJSConnector.signer?.provider as any).provider,
+                        SignatureType.EIP712
+                    );
+                    return { ...order, signature };
+                } catch (e) {
+                    console.log(e);
+                }
+            };
+
+            const signedOrder = await createSignedOrderV4Async();
+
+            try {
+                await axios({
+                    method: 'POST',
+                    url: placeOrderUrl,
+                    data: signedOrder,
+                });
+                refetchOrderbook(makerToken);
+            } catch (err) {
+                console.error(JSON.stringify(err.response.data));
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+            }
+            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+        } catch (e) {
+            console.error(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+        }
+    };
+
+    useEffect(() => {
+        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
+        setLongAmount(amountMinted);
+        setShortAmount(amountMinted);
+    }, [amount, marketFees]);
 
     return (
         <Container>
@@ -284,18 +538,138 @@ const MintOptions: React.FC = () => {
                     )}
                 </MintingTotal>
             </MintingFeesInnerContainer>
+
+            <Divider />
+
+            <PlaceInOrderbook>{t('options.market.trade-options.mint.sell-options-title')}</PlaceInOrderbook>
+            <FlexDivCentered>
+                <Checkbox
+                    checked={sellLong}
+                    value={sellLong.toString()}
+                    onChange={(_, data) => setSellLong(data.checked || false)}
+                    style={{ marginBottom: 20 }}
+                />
+                <SliderContainer>
+                    <LongSlider
+                        value={longPrice}
+                        step={0.01}
+                        max={1}
+                        min={0}
+                        onChange={(_, newValue) => {
+                            const long = newValue as number;
+                            setLongPrice(long);
+                        }}
+                        disabled={!sellLong}
+                    />
+                    <FlexDivRow>
+                        <SliderRange color={'#3DBAA2'}>{`${USD_SIGN}0`}</SliderRange>
+                        <SliderRange color={'#3DBAA2'}>{`${USD_SIGN}1`}</SliderRange>
+                    </FlexDivRow>
+                </SliderContainer>
+                <InputContainer style={{ width: '25%', marginRight: 10 }}>
+                    <Input
+                        value={longPrice}
+                        onChange={(e) => setLongPrice(Number(e.target.value))}
+                        type="number"
+                        min="0"
+                        step="any"
+                        disabled={!sellLong}
+                    />
+                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                </InputContainer>
+                <InputContainer style={{ width: '25%' }}>
+                    <Input
+                        value={longAmount}
+                        onChange={(e) => setLongAmount(e.target.value)}
+                        id="amount"
+                        type="number"
+                        min="0"
+                        step="any"
+                        disabled={!sellLong}
+                    />
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
+                    </InputLabel>
+                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{'sLONG'}</CurrencyLabel>
+                </InputContainer>
+            </FlexDivCentered>
+            <FlexDivCentered>
+                <Checkbox
+                    checked={sellShort}
+                    value={sellShort.toString()}
+                    onChange={(_, data) => setSellShort(data.checked || false)}
+                    style={{ marginBottom: 20 }}
+                />
+                <SliderContainer>
+                    <ShortSlider
+                        value={shortPrice}
+                        step={0.01}
+                        max={1}
+                        min={0}
+                        onChange={(_, newValue) => {
+                            const short = newValue as number;
+                            setShortPrice(short);
+                        }}
+                        disabled={!sellShort}
+                    />
+                    <FlexDivRow>
+                        <SliderRange color={'#FF7A68'}>{`${USD_SIGN}0`}</SliderRange>
+                        <SliderRange color={'#FF7A68'}>{`${USD_SIGN}1`}</SliderRange>
+                    </FlexDivRow>
+                </SliderContainer>
+                <InputContainer style={{ width: '25%', marginRight: 10 }}>
+                    <Input
+                        value={shortPrice}
+                        onChange={(e) => setShortPrice(Number(e.target.value))}
+                        type="number"
+                        min="0"
+                        step="any"
+                        disabled={!sellShort}
+                    />
+                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                </InputContainer>
+                <InputContainer style={{ width: '25%' }}>
+                    <Input
+                        value={shortAmount}
+                        onChange={(e) => setShortAmount(e.target.value)}
+                        id="amount"
+                        type="number"
+                        min="0"
+                        step="any"
+                        disabled={!sellShort}
+                    />
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
+                    </InputLabel>
+                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{'sSHORT'}</CurrencyLabel>
+                </InputContainer>
+            </FlexDivCentered>
+
             <Divider />
             <MintingFeesContainer>
                 <TotalLabel>{t('options.market.trade-options.mint.fees.minting')}</TotalLabel>
-                <Total>{formatPercentage(marketFees ? marketFees.creator + marketFees.pool : 0)}</Total>
+                <Total>{`${formatPercentage(
+                    marketFees ? marketFees.creator + marketFees.pool : 0
+                )} (${formatCurrencyWithSign(
+                    USD_SIGN,
+                    marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                )})`}</Total>
             </MintingFeesContainer>
             <MintingFeesInnerContainer>
                 <TotalLabel>{t('options.market.trade-options.mint.fees.creator')}</TotalLabel>
-                <Total>{formatPercentage(marketFees ? marketFees.creator : 0)}</Total>
+                <Total>{`${formatPercentage(marketFees ? marketFees.creator : 0)} (${formatCurrencyWithSign(
+                    USD_SIGN,
+                    marketFees ? Number(amount) * marketFees.creator : 0
+                )})`}</Total>
             </MintingFeesInnerContainer>
             <MintingFeesInnerContainer>
                 <TotalLabel>{t('options.market.trade-options.mint.fees.pool')}</TotalLabel>
-                <Total>{formatPercentage(marketFees ? marketFees.pool : 0)}</Total>
+                <Total>{`${formatPercentage(marketFees ? marketFees.pool : 0)} (${formatCurrencyWithSign(
+                    USD_SIGN,
+                    marketFees ? Number(amount) * marketFees.pool : 0
+                )})`}</Total>
             </MintingFeesInnerContainer>
             <NetworkFeesContainer>
                 <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
@@ -313,7 +687,7 @@ const NetworkFeesContainer = styled.div`
 `;
 
 const Divider = styled.hr`
-    width: 90%;
+    width: 100%;
     border: none;
     border-top: 2px solid rgba(1, 38, 81, 0.5);
 `;
@@ -345,6 +719,28 @@ const MintingTotalLabel = styled(TotalLabel)<{ color?: string }>`
 
 const MintingTotal = styled(Total)<{ color?: string }>`
     color: ${(props) => props.color ?? '#f6f6fe'};
+`;
+
+const SliderRange = styled.div<{ color?: string }>`
+    font-size: 14px;
+    line-height: 14px;
+    letter-spacing: 0.4px;
+    color: ${(props) => props.color ?? '#f6f6fe'};
+`;
+
+const PlaceInOrderbook = styled.div`
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 40px;
+    letter-spacing: 0.15px;
+    color: #f6f6fe;
+`;
+
+const SliderContainer = styled.div`
+    position: relative;
+    width: 500%;
+    padding: 0 20px;
+    margin-bottom: 10px;
 `;
 
 export default MintOptions;

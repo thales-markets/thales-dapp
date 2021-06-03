@@ -16,7 +16,6 @@ const useBinaryOptionsAccountMarketInfoQuery = (
                 marketAddress,
                 walletAddress
             );
-            console.log(result);
             return {
                 long: bigNumberFormatter(result.balances.long),
                 short: bigNumberFormatter(result.balances.short),

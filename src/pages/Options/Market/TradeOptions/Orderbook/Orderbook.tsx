@@ -66,7 +66,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
         return filterMyOrders
             ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
             : orders;
-    }, [orderbookQuery.data, filterMyOrders]);
+    }, [orderbookQuery.data, filterMyOrders, walletAddress]);
 
     const sellOrders = useMemo(() => {
         const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.sellOrders : [];

@@ -58,6 +58,7 @@ import {
     Total,
     SubmitButton,
 } from '../components';
+import { refetchOrderbook } from 'utils/queryConnector';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -269,6 +270,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     url: placeOrderUrl,
                     data: signedOrder,
                 });
+                refetchOrderbook(baseToken);
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));

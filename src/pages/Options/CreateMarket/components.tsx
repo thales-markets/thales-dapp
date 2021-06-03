@@ -34,9 +34,7 @@ export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 );
 
 export const StyledSlider = withStyles({
-    root: {
-        color: '#4FBF67',
-    },
+    root: {},
     thumb: {
         width: 14,
         height: 14,
@@ -45,6 +43,14 @@ export const StyledSlider = withStyles({
         boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
         '&:focus, &:hover, &$active': {
             boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
+        },
+        '&$disabled': {
+            width: 14,
+            height: 14,
+            marginTop: '-2px',
+            marginLeft: '-6px',
+            boxShadow: 'none',
+            outline: 0,
         },
     },
     track: {
@@ -55,18 +61,29 @@ export const StyledSlider = withStyles({
         height: 10,
         borderRadius: 10,
     },
+    disabled: {},
 })(Slider);
 
 export const LongSlider = withStyles({
     root: {
-        color: '#4FBF67',
+        color: '#3DBAA2',
+        '&$disabled': {
+            color: '#3DBAA2',
+            opacity: 0.5,
+        },
     },
+    disabled: {},
 })(StyledSlider);
 
 export const ShortSlider = withStyles({
     root: {
-        color: '#c62937',
+        color: '#FF7A68',
+        '&$disabled': {
+            color: '#FF7A68',
+            opacity: 0.5,
+        },
     },
+    disabled: {},
 })(StyledSlider);
 
 export const ToggleButton = styled.div`

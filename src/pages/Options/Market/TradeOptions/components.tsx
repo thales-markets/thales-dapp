@@ -33,6 +33,10 @@ export const Input = styled.input`
         border: 2px solid #04045a;
         box-sizing: border-box;
     }
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
 `;
 
 export const InputLabel = styled.label`
@@ -58,6 +62,10 @@ export const CurrencyLabel = styled.label`
     position: absolute;
     bottom: 0;
     right: 0;
+    &.disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
 `;
 
 export const InputContainer = styled.div`
@@ -125,7 +133,6 @@ export const AmountButton = styled.button`
     letter-spacing: 0.25px;
     color: #f6f6fe;
     margin: 0 12px 20px 12px;
-
     &:disabled {
         opacity: 0.5;
         cursor: default;

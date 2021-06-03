@@ -404,14 +404,25 @@
                     "minting-label": "You're going to mint",
                     "long-label": "LONG options",
                     "short-label": "SHORT options",
+                    "sell-options-title": "Sell minted LONG/SHORT options",
                     "fees": {
                         "minting": "Minting fee",
                         "creator": "Creator earns",
                         "pool": "Fee pool earns"
                     },
+                    "approve-long-button": {
+                        "label": "Approve LONG",
+                        "progress-label": "Approving LONG in progress...."
+                    },
+                    "approve-short-button": {
+                        "label": "Approve SHORT",
+                        "progress-label": "Approving SHORT in progress..."
+                    },
                     "confirm-button": {
                         "label": "Mint",
-                        "progress-label": "Minting in progress..."
+                        "progress-label": "Minting in progress...",
+                        "submit-long-progress-label": "Submitting LONG order in progress...",
+                        "submit-short-progress-label": "Submitting SHORT order in progress.."
                     }
                 },
                 "fill-order": {
