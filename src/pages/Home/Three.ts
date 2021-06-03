@@ -30,7 +30,7 @@ export const setupThreeJS = () => {
         renderer.setSize(heroHTML?.clientWidth, heroHTML?.clientHeight);
         heroHTML.appendChild(renderer.domElement);
 
-        const smokeGeo = new THREE.PlaneBufferGeometry(86, 93);
+        const smokeGeo = new THREE.PlaneBufferGeometry(3 * 86, 3 * 93);
 
         const smokeMaterial = new THREE.MeshLambertMaterial({
             map: SMOKE,
@@ -38,13 +38,13 @@ export const setupThreeJS = () => {
             opacity: 0.03,
         });
 
-        for (let p = 0, l = 1000; p < l; p++) {
+        for (let p = 0, l = 400; p < l; p++) {
             const particle = new THREE.Mesh(smokeGeo, smokeMaterial);
 
             particle.position.set(
-                (Math.random() - 0.5) * (Math.random() * 2000),
-                (Math.random() - 0.5) * (Math.random() * 2000),
-                CAM_POSITION - 300 + Math.random() * 400
+                (Math.random() - 0.5) * (Math.random() * 1500),
+                (Math.random() - 0.5) * (Math.random() * 1500),
+                CAM_POSITION - 300 + Math.random() * 600
             );
             scene.add(particle);
             smoke_particles.push(particle);
