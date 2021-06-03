@@ -12,7 +12,7 @@ const STAR = LOADER.load('three/star.png');
 const SMOKE = LOADER.load('three/smoke.png');
 
 let speedUp = false;
-const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshLambertMaterial>[] = [];
+const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];
 let particleSpeed = MIN_SPEED;
 
 export const setupThreeJS = () => {
@@ -32,13 +32,13 @@ export const setupThreeJS = () => {
 
         const smokeGeo = new THREE.PlaneBufferGeometry(3 * 86, 3 * 93);
 
-        const smokeMaterial = new THREE.MeshLambertMaterial({
+        const smokeMaterial = new THREE.MeshBasicMaterial({
             map: SMOKE,
             transparent: true,
             opacity: 0.03,
         });
 
-        for (let p = 0, l = 400; p < l; p++) {
+        for (let p = 0, l = 600; p < l; p++) {
             const particle = new THREE.Mesh(smokeGeo, smokeMaterial);
 
             particle.position.set(
