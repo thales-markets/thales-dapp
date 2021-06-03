@@ -44,7 +44,7 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                             </FlexDiv>
                             <LightTooltip title="Strike price">
                                 <Text style={{ margin: '0 8px', flex: 1, textAlign: 'center' }}>
-                                    {asset.market.strikePrice.toFixed(2) + USD_SIGN}
+                                    {USD_SIGN + asset.market.strikePrice.toFixed(2)}
                                 </Text>
                             </LightTooltip>
                             <LightTooltip title="Maturity date">

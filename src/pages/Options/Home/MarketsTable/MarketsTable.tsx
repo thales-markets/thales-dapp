@@ -30,6 +30,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
+import { USD_SIGN } from 'constants/currency';
 
 dotenv.config();
 
@@ -208,23 +209,8 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                                 iconProps={{ width: '24px', height: '24px', type: 'asset' }}
                                             />
                                         </StyledTableCell>
-                                        <StyledTableCell>{market.strikePrice.toFixed(2)}</StyledTableCell>
-                                        <StyledTableCell>{market.poolSize.toFixed(2)}</StyledTableCell>
-                                        {/* <StyledTableCell>
-                                            <div>
-                                                <span style={{ color: '#10BA97' }}>
-                                                    {t('common.val-in-cents', {
-                                                        val: formatCurrency(market.longPrice * 100),
-                                                    })}
-                                                </span>{' '}
-                                                /{' '}
-                                                <span style={{ color: '#D94454' }}>
-                                                    {t('common.val-in-cents', {
-                                                        val: formatCurrency(market.shortPrice * 100),
-                                                    })}
-                                                </span>
-                                            </div>
-                                        </StyledTableCell> */}
+                                        <StyledTableCell>{USD_SIGN + market.strikePrice.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>{USD_SIGN + market.poolSize.toFixed(2)}</StyledTableCell>
                                         <StyledTableCell>
                                             <TimeRemaining end={market.timeRemaining} />
                                         </StyledTableCell>
