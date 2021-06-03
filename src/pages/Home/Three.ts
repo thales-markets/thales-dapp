@@ -13,7 +13,7 @@ export const setupThreeJS = () => {
         const ACCELERATION = 0.1;
         const CAM_POSITION = 400;
         const STAR = LOADER.load(window.location.origin + '/three/star.png');
-        const SMOKE = LOADER.load(window.location.origin + '/three/smoke.png');
+        const SMOKE = LOADER.load(window.location.origin + '/three/purple.jpeg');
 
         let speedUp = false;
         const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];
@@ -102,6 +102,7 @@ export const setupThreeJS = () => {
                     particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
                 }
             } else {
+                speedUp = false;
                 particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
             }
             for (let i = 0; i < PARTICLES_CNT; i++) {
