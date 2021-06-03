@@ -54,9 +54,8 @@ export const Home: React.FC = () => {
                             <MarketCreation />
                         </FlexDivColumn>
                     </Section>
-                    <Section>
-                        <HotMarkets optionsMarkets={hotMarkets} />
-                    </Section>
+
+                    <Section>{hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} />}</Section>
                     <Section class="explore-markets">
                         <ExploreMarkets optionsMarkets={optionsMarkets} />
                     </Section>
