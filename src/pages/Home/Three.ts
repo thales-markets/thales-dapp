@@ -10,7 +10,6 @@ const ACCELERATION = 0.1;
 const CAM_POSITION = 400;
 const STAR = LOADER.load('three/star.png');
 const SMOKE = LOADER.load('three/smoke.png');
-//const BACKGROUND = LOADER.load('background.png');
 
 let speedUp = false;
 const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshLambertMaterial>[] = [];
@@ -39,13 +38,13 @@ export const setupThreeJS = () => {
             opacity: 0.03,
         });
 
-        for (let p = 0, l = 10000; p < l; p++) {
+        for (let p = 0, l = 1000; p < l; p++) {
             const particle = new THREE.Mesh(smokeGeo, smokeMaterial);
 
             particle.position.set(
                 (Math.random() - 0.5) * (Math.random() * 2000),
                 (Math.random() - 0.5) * (Math.random() * 2000),
-                CAM_POSITION - 500 + Math.random() * 400
+                CAM_POSITION - 300 + Math.random() * 400
             );
             scene.add(particle);
             smoke_particles.push(particle);
