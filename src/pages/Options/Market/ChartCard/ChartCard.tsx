@@ -4,13 +4,6 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import Currency from 'components/Currency';
 import OptionsChart from './OptionsChart';
 import { useMarketContext } from '../contexts/MarketContext';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import useBinaryOptionsTransactionsQuery from 'queries/options/useBinaryOptionsTransactionsQuery';
-import { calculateTimestampForPeriod } from 'utils/rates';
-import { Period, PERIOD_IN_HOURS } from 'constants/period';
 import TradingViewWidget from 'react-tradingview-widget';
 import { assetToTradingViewMap } from 'config/tradingView';
 import { FlexDivColumn, FlexDivRowCentered, FlexDiv } from 'theme/common';
@@ -25,29 +18,9 @@ type ChartCardType = {
 
 const ChartCard: React.FC<ChartCardType> = ({ marketWidgetKey }) => {
     const optionsMarket = useMarketContext();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-
-    const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(optionsMarket.address, networkId, {
-        enabled: isAppReady,
-    });
-    const minTimestamp =
-        marketTransactionsQuery.isSuccess && marketTransactionsQuery.data.length > 0
-            ? Math.trunc(marketTransactionsQuery.data[marketTransactionsQuery.data.length - 1].timestamp / 1000)
-            : calculateTimestampForPeriod(PERIOD_IN_HOURS[Period.ONE_MONTH]);
-
-    const maxTimestamp =
-        optionsMarket.phase === 'maturity'
-            ? Math.trunc(optionsMarket.maturityDate / 1000)
-            : Math.trunc(new Date().getTime() / 1000);
-
-    const isChartEnabled = marketTransactionsQuery.isSuccess && marketTransactionsQuery.data.length > 0;
 
     const chartProps = {
         optionsMarket,
-        minTimestamp,
-        maxTimestamp,
-        isChartEnabled,
     };
 
     return (

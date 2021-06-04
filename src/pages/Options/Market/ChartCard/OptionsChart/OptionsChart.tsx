@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { LineChart, XAxis, YAxis, Line, Tooltip, ResponsiveContainer } from 'recharts';
 import format from 'date-fns/format';
 import isNumber from 'lodash/isNumber';
@@ -6,25 +6,65 @@ import { useTranslation } from 'react-i18next';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Loader } from 'semantic-ui-react';
-import { OptionsMarketInfo } from 'types/options';
+import { OptionsMarketInfo, OptionsTransactions } from 'types/options';
 import styled from 'styled-components';
 import { GridDivCenteredRow } from 'theme/common';
+import useBinaryOptionsTradesQuery from 'queries/options/useBinaryOptionsTradesQuery';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import { RootState } from 'redux/rootReducer';
+import { orderBy, maxBy } from 'lodash';
 
 type OptionsChartProps = {
     optionsMarket: OptionsMarketInfo;
-    minTimestamp: number;
-    maxTimestamp: number;
-    isChartEnabled: boolean;
 };
 
-// TODO no chart data until we implement new model for chart
-const OptionsChart: React.FC<OptionsChartProps> = () => {
+const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const chartData: any = [];
+    const tradesQuery = useBinaryOptionsTradesQuery(
+        optionsMarket.address,
+        optionsMarket.longAddress,
+        optionsMarket.shortAddress,
+        networkId,
+        { enabled: isAppReady }
+    );
 
-    const isLoading = false;
-    const noChartData = true;
+    const getLastPrice = (data: OptionsTransactions, side: string, timestamp: number) => {
+        const lastTrade = maxBy(
+            data.filter((trade) => trade.timestamp < timestamp && trade.side === side),
+            'timestamp'
+        );
+        return lastTrade ? lastTrade.price : 0;
+    };
+
+    const chartData = useMemo(() => {
+        const data = orderBy(
+            tradesQuery.data
+                ? tradesQuery.data.map((trade) => ({
+                      ...trade,
+                      longPrice:
+                          trade.side === 'long' ? trade.price : getLastPrice(tradesQuery.data, 'long', trade.timestamp),
+                      shortPrice:
+                          trade.side === 'short'
+                              ? trade.price
+                              : getLastPrice(tradesQuery.data, 'short', trade.timestamp),
+                  }))
+                : [],
+            'timestamp',
+            'desc'
+        );
+        if (data.length) {
+            return [...data].reverse();
+        }
+        return [];
+    }, [tradesQuery.data]);
+
+    const isLoading = tradesQuery.isLoading;
+    const noChartData = tradesQuery.isSuccess && chartData.length < 2;
 
     return (
         <div style={{ height: 300, paddingLeft: '30px' }}>

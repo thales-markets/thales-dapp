@@ -21,7 +21,6 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
     const optionsMarket = useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isTradingEnabled = optionsMarket.phase === 'trading' || optionsMarket.phase === 'maturity';
 
     const marketTransactionsQuery = useBinaryOptionsTransactionsQuery(marketAddress, networkId, {
         enabled: isAppReady,
@@ -31,7 +30,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
         optionsMarket.longAddress,
         optionsMarket.shortAddress,
         networkId,
-        { enabled: isAppReady && isTradingEnabled }
+        { enabled: isAppReady }
     );
 
     const marketTransactions = uniqBy(marketTransactionsQuery.data || [], (transaction) => transaction.hash);
