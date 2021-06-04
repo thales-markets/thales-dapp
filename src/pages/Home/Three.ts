@@ -106,8 +106,10 @@ export const setupThreeJS = () => {
 
             if (document.getElementById('landing-hero')) {
                 MAX_SCROLL = root.clientHeight - window.innerHeight;
-                if (window.scrollY > (40 * MAX_SCROLL) / 100) {
-                    particles.material.opacity = 1.6 - window.scrollY / MAX_SCROLL;
+                if (window.scrollY > (25 * MAX_SCROLL) / 100) {
+                    const scrollllll = 1.25 - window.scrollY / MAX_SCROLL;
+                    console.log(scrollllll);
+                    particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
                 } else {
                     particles.material.opacity = 1;
                 }
