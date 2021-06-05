@@ -16,11 +16,11 @@ import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { orderBy, maxBy } from 'lodash';
 
-type OptionsChartProps = {
+type OptionsPriceChartContentProps = {
     optionsMarket: OptionsMarketInfo;
 };
 
-const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
+const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -64,13 +64,14 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
     }, [tradesQuery.data]);
 
     const isLoading = tradesQuery.isLoading;
-    const noChartData = tradesQuery.isSuccess && chartData.length < 2;
+    const noChartData = tradesQuery.isSuccess && chartData.length < 1;
 
+    console.log(chartData);
     return (
-        <div style={{ height: 300, paddingLeft: '30px' }}>
-            <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-                <div style={{ width: '100%', height: '100%', position: 'absolute' }}>
-                    <ResponsiveContainer width="100%" height="100%">
+        <Container>
+            <InnerContainerRelative>
+                <InnerContainerAbsolute>
+                    <ChartResponsiveContainer>
                         <LineChart data={noChartData ? [] : chartData}>
                             <XAxis
                                 dataKey="timestamp"
@@ -91,7 +92,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
                                 tick={yAxisFontStyle}
                                 axisLine={false}
                                 tickLine={false}
-                                tickFormatter={(val: any) => t('common.val-in-cents', { val })}
+                                tickFormatter={(val: any) => t(`$${val}`)}
                             />
                             <Line
                                 type="linear"
@@ -105,7 +106,7 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
                                 type="linear"
                                 name={t('options.common.short-price')}
                                 dataKey="shortPrice"
-                                stroke="#C62937"
+                                stroke="#FF7A68"
                                 strokeWidth={1.5}
                                 isAnimationActive={false}
                             />
@@ -126,16 +127,38 @@ const OptionsChart: React.FC<OptionsChartProps> = ({ optionsMarket }) => {
                                 />
                             )}
                         </LineChart>
-                    </ResponsiveContainer>
+                    </ChartResponsiveContainer>
                     {isLoading && <Loader active />}
                     {noChartData && (
                         <NoCharDataContainer>{t('options.market.chart-card.no-chart-data')}</NoCharDataContainer>
                     )}
-                </div>
-            </div>
-        </div>
+                </InnerContainerAbsolute>
+            </InnerContainerRelative>
+        </Container>
     );
 };
+
+const Container = styled.div`
+    height: 300px;
+    padding-left: 30px;
+`;
+
+const InnerContainerRelative = styled.div`
+    width: 100%;
+    height: 100%;
+    position: relative;
+`;
+
+const InnerContainerAbsolute = styled.div`
+    width: 100%;
+    height: 100%;
+    position: absolute;
+`;
+
+const ChartResponsiveContainer = styled(ResponsiveContainer)`
+    width: 100%;
+    height: 100%;
+`;
 
 const xAxisFontStyle = {
     fontWeight: 'bold',
@@ -188,4 +211,4 @@ const NoCharDataContainer = styled(GridDivCenteredRow)`
     transform: translate(-50%, -50%);
 `;
 
-export default OptionsChart;
+export default OptionsPriceChartContent;

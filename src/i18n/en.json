@@ -253,7 +253,7 @@
                 "orderbook-widget": "Orderbook",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
-                "chart-options-widget": "Options price",
+                "chart-options-price-widget": "Options price",
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {

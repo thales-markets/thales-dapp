@@ -9,7 +9,7 @@ import { Button, Icon, Label, Loader } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { Link } from 'react-router-dom';
 import MarketInfoModal from './MarketInfoModal';
-import ChartCard from './ChartCard';
+import OptionsPriceChart from './OptionsPriceChart';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import { getIsAppReady, set0xReady } from 'redux/modules/app';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,6 +45,7 @@ import MarketOverview from './components/MarketOverview';
 import styled from 'styled-components';
 import longIcon from 'assets/images/long.svg';
 import shortIcon from 'assets/images/short.svg';
+import TradingView from './TradingView';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -202,18 +203,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             <TradeOptions optionSide={optionsActiveTab.id} />,
             'linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%)'
         );
-        wrapWidget(
-            optionsMarket.phase,
-            widgets,
-            MarketWidgetKey.CHART_TRADING_VIEW,
-            <ChartCard marketWidgetKey={MarketWidgetKey.CHART_TRADING_VIEW} />
-        );
-        wrapWidget(
-            optionsMarket.phase,
-            widgets,
-            MarketWidgetKey.CHART_OPTIONS,
-            <ChartCard marketWidgetKey={MarketWidgetKey.CHART_OPTIONS} />
-        );
+        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART_TRADING_VIEW, <TradingView />);
+        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART_OPTIONS_PRICE, <OptionsPriceChart />);
         wrapWidget(
             optionsMarket.phase,
             widgets,
