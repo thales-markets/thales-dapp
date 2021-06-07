@@ -4,6 +4,7 @@ import { Loader } from 'semantic-ui-react';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
 import styled from 'styled-components';
 import { OrderItem, OrderSide } from 'types/options';
+import { COLORS } from 'constants/ui';
 
 type ColumnWithSorting<D extends Record<string, unknown>> = Column<D> & {
     sortType?: string;
@@ -129,7 +130,7 @@ export const TableRowBody = styled(TableRow)`
 
 const InnerTableRow = styled(FlexDiv)<{ width: number; orderSide: OrderSide }>`
     min-height: 32px;
-    background: ${(props) => (props.orderSide === 'buy' ? '#3DBAA2' : '#FF7A68')};
+    background: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
     mix-blend-mode: normal;
     opacity: 0.2;
     width: ${(props) => `${props.width}%`};

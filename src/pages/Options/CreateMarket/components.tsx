@@ -7,6 +7,7 @@ import Slider from '@material-ui/core/Slider';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark.svg';
 import { Form } from 'semantic-ui-react';
 import { Text } from 'theme/common';
+import { COLORS } from 'constants/ui';
 
 type TooltipIconProps = {
     title: React.ReactNode;
@@ -66,9 +67,9 @@ export const StyledSlider = withStyles({
 
 export const LongSlider = withStyles({
     root: {
-        color: '#3DBAA2',
+        color: COLORS.LONG,
         '&$disabled': {
-            color: '#3DBAA2',
+            color: COLORS.LONG,
             opacity: 0.5,
         },
     },
@@ -77,9 +78,9 @@ export const LongSlider = withStyles({
 
 export const ShortSlider = withStyles({
     root: {
-        color: '#FF7A68',
+        color: COLORS.SHORT,
         '&$disabled': {
-            color: '#FF7A68',
+            color: COLORS.SHORT,
             opacity: 0.5,
         },
     },

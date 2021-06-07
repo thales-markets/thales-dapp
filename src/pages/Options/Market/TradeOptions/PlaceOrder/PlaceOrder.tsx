@@ -3,7 +3,6 @@ import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
 import { SYNTHS_MAP } from 'constants/currency';
-// import { EMPTY_VALUE } from 'constants/placeholder';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +22,6 @@ import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-// import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
@@ -45,7 +43,6 @@ import { ValueType } from 'react-select';
 import {
     Container,
     InputContainer,
-    GridContainer,
     InputLabel,
     SubmitButtonContainer,
     Input,
@@ -57,8 +54,9 @@ import {
     TotalContainer,
     Total,
     SubmitButton,
-} from '../components';
+} from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
+import { FlexDiv } from 'theme/common';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -293,34 +291,27 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
 
     return (
         <Container>
-            {/* <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <span>
-                    <WalletIcon />
-                    {isWalletConnected
-                        ? isBuy
-                            ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)
-                            : formatCurrencyWithKey('sOPT', tokenBalance)
-                        : EMPTY_VALUE}
-                </span>
-            </div> */}
-            <InputContainer>
-                <ReactSelect
-                    formatOptionLabel={(option: any) => option.label}
-                    options={orderSideOptions}
-                    value={orderSide}
-                    onChange={(option: any) => setOrderSide(option)}
-                    isSearchable={false}
-                    isUppercase
-                />
-                <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
-            </InputContainer>
-            <GridContainer>
-                <InputContainer>
-                    <Input value={price} onChange={(e) => setPrice(e.target.value)} type="number" min="0" step="any" />
-                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
-                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+            <FlexDiv>
+                <InputContainer style={{ width: '50%', marginRight: 10 }}>
+                    <ReactSelect
+                        formatOptionLabel={(option: any) => option.label}
+                        options={orderSideOptions}
+                        value={orderSide}
+                        onChange={(option: any) => setOrderSide(option)}
+                        isSearchable={false}
+                        isUppercase
+                    />
+                    <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </InputContainer>
-                <InputContainer>
+                <div></div>
+            </FlexDiv>
+            <InputContainer>
+                <Input value={price} onChange={(e) => setPrice(e.target.value)} type="number" min="0" step="any" />
+                <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+            </InputContainer>
+            <FlexDiv>
+                <InputContainer style={{ width: '50%', marginRight: 10 }}>
                     <Input
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
@@ -334,7 +325,18 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     </InputLabel>
                     <CurrencyLabel>{'sOPT'}</CurrencyLabel>
                 </InputContainer>
-            </GridContainer>
+                <InputContainer style={{ width: '50%' }}>
+                    <ReactSelect
+                        formatOptionLabel={(option: any) => option.label}
+                        options={expirationOptions}
+                        placeholder={''}
+                        value={expiration}
+                        onChange={(option: any) => setExpiration(option)}
+                        isSearchable={false}
+                    />
+                    <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
+                </InputContainer>
+            </FlexDiv>
             <AmountButtonContainer>
                 {AMOUNT_PERCENTAGE.map((percentage: number) => (
                     <AmountButton
@@ -346,17 +348,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     </AmountButton>
                 ))}
             </AmountButtonContainer>
-            <InputContainer>
-                <ReactSelect
-                    formatOptionLabel={(option: any) => option.label}
-                    options={expirationOptions}
-                    placeholder={''}
-                    value={expiration}
-                    onChange={(option: any) => setExpiration(option)}
-                    isSearchable={false}
-                />
-                <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
-            </InputContainer>
             <TotalContainer>
                 <TotalLabel>{t('options.market.trade-options.place-order.total-label')}</TotalLabel>
                 <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}</Total>

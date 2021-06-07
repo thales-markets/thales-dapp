@@ -2,10 +2,10 @@ import React, { useState, useCallback, useMemo, useEffect, ReactElement } from '
 import { useTranslation } from 'react-i18next';
 import ROUTES from 'constants/routes';
 import { USD_SIGN } from 'constants/currency';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
 import { MarketProvider } from './contexts/MarketContext';
-import { Button, Icon, Label, Loader } from 'semantic-ui-react';
+import { Button, Icon, Loader } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import { Link } from 'react-router-dom';
 import MarketInfoModal from './MarketInfoModal';
@@ -17,8 +17,6 @@ import { RootState } from 'redux/rootReducer';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import MaturityPhaseCard from './TradeCard/MaturityPhaseCard';
-import OptionSideIcon from './components/OptionSideIcon';
-import { Tooltip } from '@material-ui/core';
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -94,49 +92,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         accountMarketInfo = accountMarketInfoQuery.data as AccountMarketInfo;
     }
 
-    const exerciseAvailable = !!accountMarketInfo.long || !!accountMarketInfo.short;
-    const userActionAvailable = optionsMarket && optionsMarket.phase === 'maturity' && exerciseAvailable;
-
-    const optionsAmountLabel = () => (
-        <>
-            <Label
-                onClick={() => {
-                    const widgetKey = MarketWidgetKey.MATURITY_PHASE;
-                    dispatch(
-                        setMarketWidgetVisibility({
-                            marketWidget: widgetKey,
-                            isVisible: !visibilityMap[widgetKey],
-                        })
-                    );
-                }}
-                className="button-label"
-            >
-                <div>
-                    <OptionSideIcon side="long" />{' '}
-                    {t(`options.common.amount-long`, {
-                        amount: formatCurrency(accountMarketInfo.long),
-                    })}
-                </div>
-                <br />
-                <div>
-                    <OptionSideIcon side="short" />{' '}
-                    {t(`options.common.amount-short`, {
-                        amount: formatCurrency(accountMarketInfo.short),
-                    })}
-                </div>
-            </Label>
-            {userActionAvailable && (
-                <Label
-                    circular
-                    color="red"
-                    empty
-                    floating
-                    style={{ position: 'relative', top: '-35px', left: '-10px' }}
-                />
-            )}
-        </>
-    );
-
     const optionsTabContent: Array<{
         id: 'long' | 'short';
         name: string;
@@ -201,7 +156,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             widgets,
             MarketWidgetKey.TRADE,
             <TradeOptions optionSide={optionsActiveTab.id} />,
-            'linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%)'
+            'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)'
         );
         wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART_TRADING_VIEW, <TradingView />);
         wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART_OPTIONS_PRICE, <OptionsPriceChart />);
@@ -282,31 +237,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                     </Button>
                                 </span>
                             </div>
-                            <div style={{ marginTop: 10, marginBottom: 10, display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ marginBottom: 10, display: 'flex', flexDirection: 'row' }}>
                                 <CustomizeLayout phase={optionsMarket.phase} />
-                                {(optionsMarket.phase === 'trading' || optionsMarket.phase === 'maturity') && (
-                                    <div>
-                                        {userActionAvailable ? (
-                                            <Tooltip
-                                                title={
-                                                    <span style={{ fontSize: 12 }}>
-                                                        {t(
-                                                            optionsMarket.phase === 'trading'
-                                                                ? 'options.market.heading.options-to-claim-tooltip'
-                                                                : 'options.market.heading.options-to-exercise-tooltip'
-                                                        )}
-                                                    </span>
-                                                }
-                                                placement="top"
-                                                arrow={true}
-                                            >
-                                                {optionsAmountLabel()}
-                                            </Tooltip>
-                                        ) : (
-                                            optionsAmountLabel()
-                                        )}
-                                    </div>
-                                )}
                             </div>
                         </div>
 
@@ -381,7 +313,7 @@ const MainContent = styled(FlexDivColumn)`
 `;
 
 const MainContentContainer = styled.div`
-    border: 1px solid #141c7f;
+    border: 1px solid #0a2e66;
     border-radius: 15px 15px 15px 15px;
     overflow: hidden;
 `;
@@ -392,18 +324,19 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean }>`
     background-color: transparent;
     width: ${(props) => (props.isActive ? '60%' : '40%')};
     transition: 0.5s;
-    height: 74px;
+    height: 60px;
     border-radius: 15px 15px 0px 0px;
     font-style: normal;
     font-weight: 600;
-    font-size: 25px;
-    line-height: 48px;
+    font-size: 20px;
+    line-height: 40px;
     text-align: center;
-    letter-spacing: 0.25px;
-    color: #f6f6fe;
+    letter-spacing: 0.15px;
+    color: #b8c6e5;
     &.selected {
-        background-color: #141c7f;
+        background-color: #0a2e66;
         transition: 0.2s;
+        color: #f6f6fe;
     }
     &:hover {
         cursor: pointer;
@@ -411,14 +344,14 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean }>`
     }
     img {
         margin-left: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 `;
 
 const OptionsIcon = styled.img``;
 
 const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string }>`
-    background-color: #141c7f;
+    background-color: #0a2e66;
     border-radius: ${(props) =>
         props.phase === 'trading'
             ? props.optionsActiveTab === 'long'

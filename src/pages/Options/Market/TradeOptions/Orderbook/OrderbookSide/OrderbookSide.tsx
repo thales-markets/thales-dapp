@@ -13,6 +13,7 @@ import { CellProps, Row } from 'react-table';
 import OrderbookTable from '../../components/OrderbookTable';
 import styled from 'styled-components';
 import { OrderbookFilterEnum } from 'constants/options';
+import { COLORS } from 'constants/ui';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -164,7 +165,7 @@ const TableContainer = styled.div<{ filter: OrderbookFilterEnum }>`
 
 const Price = styled.p<{ orderSide: OrderSide }>`
     margin-left: 14px;
-    color: ${(props) => (props.orderSide === 'buy' ? '#3DBAA2' : '#FF7A68')};
+    color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
 `;
 
 const YellowDotContainer = styled.div`
@@ -185,7 +186,7 @@ const IconContainer = styled(Icon)`
 `;
 
 const NoResultContainer = styled.div<{ orderSide: OrderSide }>`
-    color: ${(props) => (props.orderSide === 'buy' ? '#3DBAA2' : '#FF7A68')};
+    color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
 `;
 
 export default OrderbookSide;

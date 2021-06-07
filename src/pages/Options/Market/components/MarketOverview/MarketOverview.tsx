@@ -8,6 +8,7 @@ import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
+import { COLORS } from 'constants/ui';
 // import { getSynthName } from 'utils/snxJSConnector';
 
 type MarketOverviewProps = {
@@ -67,7 +68,7 @@ const Container = styled(FlexDiv)`
 `;
 const InnerItemContainer = styled(FlexDivCentered)`
     flex: 1;
-    height: 112px;
+    min-height: 76px;
     &:not(:last-child) {
         border-right: 2px solid rgba(1, 38, 81, 0.5);
     }
@@ -78,25 +79,23 @@ const Item = styled(FlexDivColumnCentered)`
 `;
 const Title = styled.p`
     font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 18px;
     color: #b8c6e5;
 `;
 const Content = styled.p`
     font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 25px;
-    letter-spacing: 0.15px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 18px;
     color: #f6f6fe;
 `;
 const Phase = styled(PhaseLabel)`
     cursor: default;
 `;
 const Result = styled(Content)<{ isLong: boolean }>`
-    color: ${(props) => (props.isLong ? '#10BA97' : '#D94454')};
+    color: ${(props) => (props.isLong ? COLORS.LONG : COLORS.SHORT)};
     text-transform: uppercase;
 `;
 // const CryptoName = styled.p`

@@ -24,6 +24,7 @@ import { OrderbookFilterEnum } from 'constants/options';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
+import { FilterButton } from '../../components';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -94,15 +95,15 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     return (
         <>
             <MarketWidgetHeader widgetKey={MarketWidgetKey.ORDERBOOK}>
-                <ButtonsContainer>
+                <FilterContainer>
                     {Object.values(OrderbookFilterEnum).map((filterItem) => (
-                        <FilterButton
+                        <OrderbookFilterButton
                             className={filter === filterItem ? 'selected' : ''}
                             onClick={() => setFilter(filterItem)}
                             key={filterItem}
                         >
                             {orderbookFilterIconMap[filterItem]}
-                        </FilterButton>
+                        </OrderbookFilterButton>
                     ))}
                     <Tooltip
                         title={
@@ -117,14 +118,14 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                         placement="top"
                         arrow={true}
                     >
-                        <FilterButton
+                        <OrderbookFilterButton
                             onClick={isWalletConnected ? () => setFilterMyOrders(!filterMyOrders) : undefined}
                             className={filterMyOrders ? 'selected' : ''}
                         >
                             <UserIcon />
-                        </FilterButton>
+                        </OrderbookFilterButton>
                     </Tooltip>
-                </ButtonsContainer>
+                </FilterContainer>
             </MarketWidgetHeader>
             <MarketWidgetContent>
                 <Container>
@@ -178,29 +179,14 @@ const Header = styled(FlexDivCentered)`
     padding: 10px 0;
 `;
 
-const ButtonsContainer = styled(FlexDiv)`
+const FilterContainer = styled(FlexDiv)`
     &:last-child {
         margin-right: 20px;
     }
 `;
 
-const FilterButton = styled.button`
-    border: 2px solid rgba(1, 38, 81, 0.5);
-    border-radius: 23px;
-    height: 32px;
-    width: 54px;
-    background-color: transparent;
-    cursor: pointer;
-    margin-left: 10px;
-    &.selected,
-    &:hover {
-        background: rgba(1, 38, 81, 0.5);
-        border: 2px solid #355dff;
-        border-radius: 23px;
-    }
-    &:last-child {
-        margin-right: 15px;
-    }
+const OrderbookFilterButton = styled(FilterButton)`
+    padding: 4px 16px;
 `;
 
 const Divider = styled.hr`

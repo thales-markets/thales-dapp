@@ -34,7 +34,7 @@ import {
     TotalContainer,
     TotalLabel,
     Total,
-} from '../components';
+} from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
@@ -52,6 +52,7 @@ import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import axios from 'axios';
 import { SIDE } from 'constants/options';
+import { COLORS } from 'constants/ui';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -519,20 +520,20 @@ const MintOptions: React.FC = () => {
                 <TotalLabel>{t('options.market.trade-options.mint.minting-label')}</TotalLabel>
             </MintingFeesContainer>
             <MintingFeesInnerContainer>
-                <MintingTotalLabel color={'#3DBAA2'}>
+                <MintingTotalLabel color={COLORS.LONG}>
                     {t('options.market.trade-options.mint.long-label')}
                 </MintingTotalLabel>
-                <MintingTotal color={'#3DBAA2'}>
+                <MintingTotal color={COLORS.LONG}>
                     {formatCurrency(
                         marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
                     )}
                 </MintingTotal>
             </MintingFeesInnerContainer>
             <MintingFeesInnerContainer>
-                <MintingTotalLabel color={'#FF7A68'}>
+                <MintingTotalLabel color={COLORS.SHORT}>
                     {t('options.market.trade-options.mint.short-label')}
                 </MintingTotalLabel>
-                <MintingTotal color={'#FF7A68'}>
+                <MintingTotal color={COLORS.SHORT}>
                     {formatCurrency(
                         marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
                     )}
@@ -562,8 +563,8 @@ const MintOptions: React.FC = () => {
                         disabled={!sellLong}
                     />
                     <FlexDivRow>
-                        <SliderRange color={'#3DBAA2'}>{`${USD_SIGN}0`}</SliderRange>
-                        <SliderRange color={'#3DBAA2'}>{`${USD_SIGN}1`}</SliderRange>
+                        <SliderRange color={COLORS.LONG}>{`${USD_SIGN}0`}</SliderRange>
+                        <SliderRange color={COLORS.LONG}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
                 </SliderContainer>
                 <InputContainer style={{ width: '25%', marginRight: 10 }}>
@@ -614,8 +615,8 @@ const MintOptions: React.FC = () => {
                         disabled={!sellShort}
                     />
                     <FlexDivRow>
-                        <SliderRange color={'#FF7A68'}>{`${USD_SIGN}0`}</SliderRange>
-                        <SliderRange color={'#FF7A68'}>{`${USD_SIGN}1`}</SliderRange>
+                        <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}0`}</SliderRange>
+                        <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
                 </SliderContainer>
                 <InputContainer style={{ width: '25%', marginRight: 10 }}>

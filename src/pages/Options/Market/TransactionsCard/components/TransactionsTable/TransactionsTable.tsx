@@ -11,6 +11,7 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import styled from 'styled-components';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
+import { COLORS } from 'constants/ui';
 
 type TransactionsTableProps = {
     optionsTransactions: OptionsTransactions;
@@ -21,14 +22,11 @@ type TransactionsTableProps = {
 const getCellColor = (type: string) => {
     switch (type) {
         case 'buy':
-            return '#3DBAA2';
-            break;
+            return COLORS.BUY;
         case 'sell':
-            return '#FF7A68';
-            break;
+            return COLORS.SELL;
         default:
-            return '#f6f6fe';
-            break;
+            return COLORS.WHITE;
     }
 };
 

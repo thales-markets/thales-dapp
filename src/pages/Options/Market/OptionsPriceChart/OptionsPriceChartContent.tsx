@@ -15,6 +15,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { orderBy, maxBy } from 'lodash';
+import { COLORS } from 'constants/ui';
 
 type OptionsPriceChartContentProps = {
     optionsMarket: OptionsMarketInfo;
@@ -98,7 +99,7 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
                                 type="linear"
                                 name={t('options.common.long-price')}
                                 dataKey="longPrice"
-                                stroke="#4FBF67"
+                                stroke={COLORS.LONG}
                                 strokeWidth={1.5}
                                 isAnimationActive={false}
                             />
@@ -106,7 +107,7 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
                                 type="linear"
                                 name={t('options.common.short-price')}
                                 dataKey="shortPrice"
-                                stroke="#FF7A68"
+                                stroke={COLORS.SHORT}
                                 strokeWidth={1.5}
                                 isAnimationActive={false}
                             />

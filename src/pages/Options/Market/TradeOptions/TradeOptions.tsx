@@ -21,6 +21,7 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import MintOptions from './MintOptions';
+import { FilterButton } from '../components';
 
 type TradeOptionsProps = {
     optionSide: OptionSide;
@@ -87,14 +88,14 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
                     <FlexDivRowCentered>
                         <FilterContainer>
                             {tabContent.map((tab) => (
-                                <FilterButton
+                                <TradeFilterButton
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab)}
                                     className={tab.id === activeTab.id ? 'selected' : ''}
                                     name={tab.id}
                                 >
                                     {tab.name}
-                                </FilterButton>
+                                </TradeFilterButton>
                             ))}
                         </FilterContainer>
                         <FlexDivCentered>
@@ -126,30 +127,11 @@ const FilterContainer = styled.div`
     &:first-child {
         margin-left: 10px;
     }
+    margin: 14px 0px;
 `;
 
-const FilterButton = styled.button`
-    background: transparent;
-    border: 2px solid rgba(1, 38, 81, 0.5);
-    border-radius: 20px;
-    min-height: 40px;
-    cursor: pointer;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
-    text-align: center;
-    letter-spacing: 0.5px;
-    color: #f6f6fe;
-    width: 120px;
-    margin: 14px 5px;
-    &.selected,
-    &:hover {
-        background: rgba(1, 38, 81, 0.5);
-        border: 2px solid #04045a;
-        border-radius: 20px;
-        color: #04045a;
-    }
+const TradeFilterButton = styled(FilterButton)`
+    padding: 6px 32px;
 `;
 
 const WalletContainer = styled(FlexDivColumn)`

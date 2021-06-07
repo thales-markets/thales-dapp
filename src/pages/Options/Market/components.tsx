@@ -1,4 +1,5 @@
 import Select from 'components/Select';
+import { COLORS } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol } from 'theme/common';
 
@@ -11,8 +12,8 @@ export const GridContainer = styled(GridDivCol)`
 `;
 
 export const Input = styled.input`
-    background: rgba(1, 38, 81, 0.5);
-    border: 2px solid rgba(1, 38, 81, 0);
+    background: #0a2e66;
+    border: 2px solid #0a2e66;
     box-sizing: border-box;
     mix-blend-mode: normal;
     border-radius: 12px;
@@ -30,7 +31,7 @@ export const Input = styled.input`
         background: #f6f6fe;
     }
     &:focus {
-        border: 2px solid #04045a;
+        border: 2px solid #00f9ff;
         box-sizing: border-box;
     }
     &:disabled {
@@ -79,7 +80,7 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     text-transform: ${(prop) => (prop.isUppercase ? 'uppercase' : 'none')};
     > div:first-of-type {
         height: 64px;
-        background: rgba(1, 38, 81, 0.5);
+        background: #0a2e66;
         > div:first-of-type {
             * {
                 font-weight: bold;
@@ -97,7 +98,7 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         line-height: 24px;
         letter-spacing: 0.4px;
         color: #f6f6fe !important;
-        background: rgba(1, 38, 81);
+        background: #0a2e66;
         border: none;
         border-radius: 12px;
         box-shadow: none;
@@ -138,9 +139,9 @@ export const AmountButton = styled.button`
         cursor: default;
     }
     &:hover:not(:disabled) {
-        background: rgba(1, 38, 81, 0.5);
-        border: 2px solid #04045a;
-        color: #04045a;
+        background: #0a2e66;
+        border: 2px solid #00f9ff;
+        color: #00f9ff;
     }
 `;
 
@@ -149,7 +150,7 @@ export const SubmitButtonContainer = styled(FlexDivCentered)`
 `;
 
 export const SubmitButton = styled.button<{ isBuy?: boolean }>`
-    background: ${(prop) => (prop.isBuy ? '#4FBF67' : '#C62937')};
+    background: ${(prop) => (prop.isBuy ? COLORS.BUY : COLORS.SELL)};
     border-radius: 23px;
     border: none;
     min-height: 40px;
@@ -191,4 +192,35 @@ export const Total = styled.div`
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
+`;
+
+export const FilterButton = styled.button`
+    border: 2px solid #0a2e66;
+    border-radius: 20px;
+    min-height: 32px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: #f6f6fe;
+    margin: 0 9px;
+    padding: 6px 16px;
+    &:hover {
+        background: rgba(1, 38, 81, 0.8);
+        border: 2px solid #0a2e66;
+        color: #b8c6e5;
+    }
+    &.selected {
+        background: #0a2e66;
+        border: 2px solid #00f9ff;
+        color: #00f9ff;
+    }
+    &.selected:hover {
+        background: rgba(1, 38, 81, 0.8);
+        color: #b8c6e5;
+    }
 `;

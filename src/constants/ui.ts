@@ -19,3 +19,11 @@ export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
     [MarketWidgetKey.RECENT_TRANSACTIONS]: { i: MarketWidgetKey.RECENT_TRANSACTIONS, x: 0, y: 3, w: 12, h: 10 },
     [MarketWidgetKey.YOUR_TRANSACTIONS]: { i: MarketWidgetKey.YOUR_TRANSACTIONS, x: 0, y: 4, w: 12, h: 10 },
 };
+
+export enum COLORS {
+    LONG = '#04C19D',
+    SHORT = '#FF553E',
+    BUY = '#04C19D',
+    SELL = '#FF553E',
+    WHITE = '#F6F6FE',
+}

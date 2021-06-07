@@ -50,7 +50,7 @@ import {
     TotalContainer,
     Total,
     SubmitButton,
-} from '../components';
+} from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'theme/common';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
