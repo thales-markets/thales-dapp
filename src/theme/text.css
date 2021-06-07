@@ -90,6 +90,10 @@
     line-height: 24px;
 }
 
+.ls25 {
+    letter-spacing: 0.25px;
+}
+
 .text-normal {
     font-weight: normal;
 }

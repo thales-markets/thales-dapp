@@ -66,8 +66,32 @@ export const Background = styled.section`
     &#landing-hero {
         min-height: 900px;
         position: relative;
-        background: transparent;
         z-index: 2;
+        background: transparent;
+
+        & ~ section {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            &:after {
+                content: '';
+                display: block;
+                width: min(620px, 30%);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                height: 1.5px;
+                background-color: #00f9ff;
+            }
+            &#who-is-thales:after {
+                width: 100%;
+            }
+            &:last-of-type {
+                backdrop-filter: blur(20px);
+            }
+        }
     }
 
     &.hero {
