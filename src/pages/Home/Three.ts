@@ -42,7 +42,7 @@ export const setupThreeJS = () => {
         const smokeMaterial = new THREE.MeshBasicMaterial({
             map: SMOKE,
             transparent: true,
-            opacity: 0.05,
+            opacity: 0.03,
             blending: THREE.NormalBlending,
         });
 
@@ -64,7 +64,7 @@ export const setupThreeJS = () => {
         const material = new THREE.PointsMaterial({
             size: 6.5,
             map: STAR,
-            color: '04045a',
+            color: 'white',
             transparent: true,
             blending: THREE.AdditiveBlending,
             alphaTest: 0.5,
@@ -79,7 +79,7 @@ export const setupThreeJS = () => {
         const particles = new THREE.Points(particlesGeo, material);
         scene.add(particles);
 
-        const ambientLight = new THREE.AmbientLight(0x11e8bb);
+        const ambientLight = new THREE.AmbientLight(0x04045a);
         scene.add(ambientLight);
 
         const onWindowResize = () => {

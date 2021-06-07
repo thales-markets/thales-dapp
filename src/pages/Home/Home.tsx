@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import Header from 'components/Header';
 import { Button, FlexDiv, FlexDivColumn, Section, Side, Text, Li, Image } from 'theme/common';
 import { useTranslation } from 'react-i18next';
-import onboardConnector from 'utils/onboardConnector';
 import Footer from './Footer/Footer';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { getIsWalletConnected } from 'redux/modules/wallet';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import market from 'assets/images/market.png';
-import scaleSstars from 'assets/images/weight-scale-stars.png';
 import thalesTheWhite from 'assets/images/thales-white.png';
+import coins from 'assets/images/coins-thales.png';
+import scale from 'assets/images/weight-scale-gradient.png';
 import { setupThreeJS } from './Three';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     useEffect(() => {
         setupThreeJS();
@@ -59,34 +55,43 @@ const Home: React.FC = () => {
                 </FlexDivColumn>
             </Section>
             <Section>
-                <Side>
-                    <Scale src={scaleSstars} />
-                </Side>
-                <Side>
-                    <Text className="text-xxl white" style={{ marginBottom: 26 }}>
-                        {t('landing-page.markets.title')}
-                    </Text>
-                    <Text className="text-m white">{t('landing-page.markets.description')}</Text>
-                    <Button
-                        className="primary"
-                        style={{ marginTop: '40px' }}
-                        onClick={() =>
-                            isWalletConnected
-                                ? navigateTo(ROUTES.Options.CreateMarket)
-                                : onboardConnector.connectWallet()
-                        }
-                    >
-                        {t('landing-page.markets.create-market')}
+                <Cards>
+                    <Image src={coins} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
+                    <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
+                        <Text className="white text-l">{t('landing-page.markets.title')}</Text>.
+                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                            {t('landing-page.markets.option1')}
+                        </Text>
+                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                            {t('landing-page.markets.option2')}
+                        </Text>
+                        <Text className="white texts">{t('landing-page.markets.option3')}</Text>
+                    </FlexDivColumn>
+                    <Button className="primary" style={{ margin: '50px auto' }}>
+                        {t('landing-page.markets.view-markets')}
                     </Button>
-                </Side>
+                </Cards>
+                <Cards>
+                    <Image src={scale} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
+                    <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
+                        <Text className="white text-l">{t('landing-page.options.title')}</Text>.
+                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                            {t('landing-page.options.option1')}
+                        </Text>
+                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                            {t('landing-page.options.option2')}
+                        </Text>
+                        <Text className="white texts">{t('landing-page.options.option3')}</Text>
+                    </FlexDivColumn>
+                    <Button className="primary" style={{ margin: '50px auto' }}>
+                        {t('landing-page.options.view-markets')}
+                    </Button>
+                </Cards>
             </Section>
             <Section>
                 <Side>
                     <Text className="text-xxl white" style={{ marginBottom: 26 }}>
                         {t('landing-page.options.title')}
-                    </Text>
-                    <Text className="text-lm bold white" style={{ marginBottom: 26 }}>
-                        {t('landing-page.options.description')}
                     </Text>
                     <List>
                         <Li className="text-m white">{t('landing-page.options.option1')}</Li>
@@ -128,11 +133,19 @@ const HeroSection = styled(FlexDiv)`
     }
 `;
 
-const Scale = styled(Image)`
-    object-fit: contain;
-    max-height: 500px;
-    min-height: 400px;
-    min-width: 300px;
+const Cards = styled(FlexDivColumn)`
+    height: 600px;
+    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
+    box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(4px);
+    border-radius: 23px;
+    border: 2px solid rgb(106, 193, 213, 0.4);
+    &:first-child {
+        margin: 50px 50px 50px 120px;
+    }
+    &:nth-child(2) {
+        margin: 50px 120px 50px 50px;
+    }
 `;
 
 const ThalesTheWhite = styled(Image)`

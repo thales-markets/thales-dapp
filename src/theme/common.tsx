@@ -61,8 +61,13 @@ export const Background = styled.section`
         background-size: cover !important;
     }
 
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+
     &#landing-hero {
         min-height: 900px;
+        position: relative;
+        background: transparent;
+        z-index: 2;
     }
 
     &.hero {
@@ -70,10 +75,6 @@ export const Background = styled.section`
             min-height: 800px;
         }
     }
-
-    position: relative;
-    background: transparent;
-    z-index: 2;
 
     &:nth-child(even) {
         @media (max-width: 768px) {
@@ -119,14 +120,13 @@ export const Side = styled(FlexDivColumnCentered)`
 `;
 
 export const Button = styled.button`
-    padding: 8px 24px;
+    padding: 8px 35px;
     border-radius: 40px;
     border: none;
     outline: none;
-    align-self: flex-start;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 16px;
+    line-height: 24px;
     text-align: center;
     letter-spacing: 0.5px;
     text-transform: none !important;
@@ -135,6 +135,9 @@ export const Button = styled.button`
     white-space: pre;
     &.primary {
         background: #3936c7;
+        &:hover {
+            background: #7119e1;
+        }
     }
     &.secondary {
         background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
