@@ -19,39 +19,43 @@ type MarketCardPros = {
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
     const { t } = useTranslation();
     return (
-        <Card
-            id="market-card"
-            onClick={() => {
-                if (optionMarket.phase !== 'expiry') {
-                    navigateToOptionsMarket(optionMarket.address);
-                }
-            }}
-        >
-            <Header>
-                <CurrencyIcon currencyKey={optionMarket.currencyKey} />
-                <FlexDivColumnCentered>
-                    <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
-                    <CryptoKey>{optionMarket.asset}</CryptoKey>
-                </FlexDivColumnCentered>
-                <FlexDivColumn style={{ paddingRight: 20, maxWidth: 130 }}>
-                    <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
-                    <CryptoTime>
-                        <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
-                    </CryptoTime>
-                </FlexDivColumn>
-            </Header>
-            <Content>
-                <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
-                <ExpireDate>{formatShortDate(optionMarket.maturityDate)}</ExpireDate>
-            </Content>
-            <Footer className="footer">
-                <FlexDiv style={{ margin: 'auto' }} className="text-m">
-                    <Text style={{ marginRight: 4 }}>Pool Size:</Text>
-                    <Text>{formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}</Text>
-                </FlexDiv>
-                <ViewMarket className="view-market">View Market</ViewMarket>
-            </Footer>
-        </Card>
+        <>
+            {optionMarket && (
+                <Card
+                    id="market-card"
+                    onClick={() => {
+                        if (optionMarket.phase !== 'expiry') {
+                            navigateToOptionsMarket(optionMarket.address);
+                        }
+                    }}
+                >
+                    <Header>
+                        <CurrencyIcon currencyKey={optionMarket.currencyKey} />
+                        <FlexDivColumnCentered>
+                            <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
+                            <CryptoKey>{optionMarket.asset}</CryptoKey>
+                        </FlexDivColumnCentered>
+                        <FlexDivColumn style={{ paddingRight: 20, maxWidth: 130 }}>
+                            <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
+                            <CryptoTime>
+                                <TimeRemaining end={optionMarket.timeRemaining}></TimeRemaining>
+                            </CryptoTime>
+                        </FlexDivColumn>
+                    </Header>
+                    <Content>
+                        <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
+                        <ExpireDate>{formatShortDate(optionMarket.maturityDate)}</ExpireDate>
+                    </Content>
+                    <Footer className="footer">
+                        <FlexDiv style={{ margin: 'auto' }} className="text-m">
+                            <Text style={{ marginRight: 4 }}>Pool Size:</Text>
+                            <Text>{formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}</Text>
+                        </FlexDiv>
+                        <ViewMarket className="view-market">View Market</ViewMarket>
+                    </Footer>
+                </Card>
+            )}
+        </>
     );
 };
 
