@@ -31,7 +31,7 @@ const Home: React.FC = () => {
                     <HeroSection className="landing-hero">
                         <Side>
                             <Text className="title">{t('landing-page.title')}</Text>
-                            <Text className="text-m pale-grey" style={{ marginBottom: 60, marginTop: 6 }}>
+                            <Text className="text-m pale-grey" style={{ marginBottom: 120, marginTop: 30 }}>
                                 {t('landing-page.description')}
                             </Text>
                             <FlexDiv>
@@ -55,7 +55,6 @@ const Home: React.FC = () => {
                                 </Button>
                             </FlexDiv>
                         </Side>
-                        <Side></Side>
                     </HeroSection>
                 </FlexDivColumn>
             </Section>

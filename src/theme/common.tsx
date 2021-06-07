@@ -61,6 +61,10 @@ export const Background = styled.section`
         background-size: cover !important;
     }
 
+    &#landing-hero {
+        min-height: 900px;
+    }
+
     &.hero {
         @media (min-height: 1000px) and (min-width: 1200px) {
             min-height: 800px;
@@ -104,10 +108,7 @@ export const Section: React.FC<SectionProps> = (props) => (
 
 export const Side = styled(FlexDivColumnCentered)`
     flex: 1;
-    padding: 120px 140px 120px 60px;
-    &:first-child {
-        padding: 120px 60px 120px 140px;
-    }
+    padding: 120px 140px;
     @media (max-width: 768px) {
         padding: 40px !important;
         width: 100%;
