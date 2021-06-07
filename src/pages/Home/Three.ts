@@ -6,14 +6,14 @@ let eventListenerSet = false;
 export const setupThreeJS = () => {
     if (!init) {
         init = true;
-
+        const root: any = document.getElementById('landing-hero');
         const LOADER = new THREE.TextureLoader();
-        const PARTICLES_CNT = window.innerWidth > window.innerHeight ? 5 * window.innerWidth : 5 * window.innerHeight;
+        const PARTICLES_CNT = root.clientWidth > root.clientHeight ? 5 * root.clientWidth : 5 * root.clientHeight;
         const SMOKE_SIZE = 200;
         const SMOKE_CNT =
-            window.innerWidth > window.innerHeight
-                ? (100 * window.innerWidth) / SMOKE_SIZE
-                : (100 * window.innerHeight) / SMOKE_SIZE;
+            root.clientWidth > root.clientHeight
+                ? (100 * root.clientWidth) / SMOKE_SIZE
+                : (100 * root.clientHeight) / SMOKE_SIZE;
         const MIN_SPEED = 0.5;
         const MAX_SPEED = 10;
         const ACCELERATION = 0.1;
@@ -24,7 +24,6 @@ export const setupThreeJS = () => {
         let speedUp = false;
         const smoke_particles: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];
         let particleSpeed = MIN_SPEED;
-        const root: any = document.getElementById('root');
 
         const scene = new THREE.Scene();
         const color = 0x2d0947; // white
@@ -32,10 +31,10 @@ export const setupThreeJS = () => {
         const far = 1000;
         scene.fog = new THREE.Fog(color, near, far);
         const renderer = new THREE.WebGLRenderer();
-        const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+        const camera = new PerspectiveCamera(75, root.clientWidth / root.clientHeight, 1, 1000);
         renderer.setClearColor('#04045a');
         camera.position.z = CAM_POSITION;
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(root.clientWidth, root.clientHeight);
         root?.appendChild(renderer.domElement);
 
         const smokeGeo = new THREE.PlaneBufferGeometry(200, 200);
@@ -51,8 +50,8 @@ export const setupThreeJS = () => {
             const smoke = new THREE.Mesh(smokeGeo, smokeMaterial);
 
             smoke.position.set(
-                (Math.random() - 0.5) * 2 * (Math.random() * window.innerWidth),
-                (Math.random() - 0.5) * 2 * (Math.random() * window.innerHeight),
+                (Math.random() - 0.5) * 2 * (Math.random() * root.clientWidth),
+                (Math.random() - 0.5) * 2 * (Math.random() * root.clientHeight),
                 CAM_POSITION - 300 + Math.random() * 400
             );
             scene.add(smoke);
@@ -84,57 +83,56 @@ export const setupThreeJS = () => {
         scene.add(ambientLight);
 
         const onWindowResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = root.clientWidth / root.clientHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(root.clientWidth, root.clientHeight);
         };
 
         window.addEventListener('resize', onWindowResize, false);
         let countRender = 0;
-        let MAX_SCROLL: any;
+        // let MAX_SCROLL: any;
         const animate = function () {
-            const useApp = document.getElementById('use-app');
-            if (useApp && !eventListenerSet) {
-                eventListenerSet = true;
-                useApp.addEventListener('mouseenter', () => {
-                    speedUp = true;
-                });
-                useApp.addEventListener('mouseleave', () => {
-                    speedUp = false;
-                });
-            }
-
-            if (document.getElementById('landing-hero')) {
-                MAX_SCROLL = root.clientHeight - window.innerHeight;
-                if (window.scrollY > (25 * MAX_SCROLL) / 100) {
-                    const scrollllll = 1.25 - window.scrollY / MAX_SCROLL;
-                    console.log(scrollllll);
-                    particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
-                } else {
-                    particles.material.opacity = 1;
+            if (root) {
+                const useApp = document.getElementById('use-app');
+                if (useApp && !eventListenerSet) {
+                    eventListenerSet = true;
+                    useApp.addEventListener('mouseenter', () => {
+                        speedUp = true;
+                    });
+                    useApp.addEventListener('mouseleave', () => {
+                        speedUp = false;
+                    });
                 }
+                // MAX_SCROLL = root.clientHeight - root.clientHeight;
+                // if (window.scrollY > (25 * MAX_SCROLL) / 100) {
+                //     particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
+                // } else {
+                //     particles.material.opacity = 1;
+                // }
                 if (speedUp) {
                     particleSpeed = particleSpeed + ACCELERATION > MAX_SPEED ? MAX_SPEED : particleSpeed + ACCELERATION;
                 } else {
                     particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
                 }
+                for (let i = 0; i < PARTICLES_CNT; i++) {
+                    if (posArr[i * 3 + 2] >= CAM_POSITION) {
+                        posArr[i * 3 + 2] = -300;
+                    }
+                    posArr[i * 3 + 2] += particleSpeed;
+                }
+                particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+
+                smoke_particles.forEach((smoke, i) => {
+                    smoke.position.z =
+                        Math.sin(i + countRender * 0.0002) * ((smoke as any).myZ - (smoke as any).myZ * 0.6);
+                    countRender += 0.1;
+                });
             } else {
+                particleSpeed = MIN_SPEED;
                 eventListenerSet = false;
                 speedUp = false;
-                particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
             }
-            for (let i = 0; i < PARTICLES_CNT; i++) {
-                if (posArr[i * 3 + 2] >= CAM_POSITION) {
-                    posArr[i * 3 + 2] = -300;
-                }
-                posArr[i * 3 + 2] += particleSpeed;
-            }
-            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
 
-            smoke_particles.forEach((smoke, i) => {
-                smoke.position.z = Math.sin(i + countRender * 0.0002) * ((smoke as any).myZ - (smoke as any).myZ * 0.6);
-                countRender += 0.1;
-            });
             renderer.render(scene, camera);
             countRender += 1;
             requestAnimationFrame(animate);
