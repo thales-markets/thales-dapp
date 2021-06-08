@@ -33,7 +33,7 @@ const Header: React.FC = () => {
                 </CommunityLink>
                 <NavLink to="">{t('header.links.partners')}</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
-                    <Button className="secondary" style={{ padding: '4px 35px', marginLeft: '60px', fontSize: 16 }}>
+                    <Button className="secondary" style={{ marginLeft: '60px', fontSize: 16 }}>
                         {t('landing-page.use-app')}
                     </Button>
                 </NavLink>

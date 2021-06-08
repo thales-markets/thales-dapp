@@ -85,7 +85,7 @@ export const Background = styled.section`
                 height: 1.5px;
                 background-color: #00f9ff;
             }
-            &#who-is-thales:after {
+            &#faq:after {
                 width: 100%;
             }
             &:last-of-type {
@@ -162,9 +162,19 @@ export const Button = styled.button`
         &:hover {
             background: #7119e1;
         }
+        &:active {
+            background: #5a14b4;
+        }
     }
     &.secondary {
         background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
+        &:hover {
+            background: #00f9ff;
+            color: #04045a;
+        }
+        &:active {
+            background: #00ced3;
+        }
     }
     &.tertiary {
         background: transparent;

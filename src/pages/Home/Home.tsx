@@ -19,6 +19,8 @@ import { removeThreeJS, setupThreeJS } from './Three';
 import synthetix from 'assets/images/synthetix.svg';
 import zeroX from 'assets/images/0x.svg';
 import chainlink from 'assets/images/chainlink.svg';
+import plus from 'assets/images/plus.svg';
+import minus from 'assets/images/minus.svg';
 import { SyntetixLogo } from './Footer/components';
 
 const CAROUSEL_SCROLL = {
@@ -37,9 +39,11 @@ enum CAROUSEL_SELECTED {
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const [carousel, setCarousel] = useState(CAROUSEL_SELECTED.NONE);
+    const [q1open, setQ1open] = useState(false);
+    const [q2open, setQ2open] = useState(false);
+    const [q3open, setQ3open] = useState(false);
 
     const scrollListener = () => {
-        console.log(window.scrollY);
         if (scrollY > CAROUSEL_SCROLL.third) {
             setCarousel(CAROUSEL_SELECTED.LAST);
         } else if (scrollY > CAROUSEL_SCROLL.second && scrollY <= CAROUSEL_SCROLL.third) {
@@ -75,10 +79,10 @@ const Home: React.FC = () => {
                                 <Button
                                     id="use-app"
                                     className="secondary"
-                                    style={{ padding: '8px 35px', marginRight: '20px' }}
+                                    style={{ marginRight: '20px' }}
                                     onClick={() => navigateTo(ROUTES.Options.Home)}
                                 >
-                                    {t('landing-page.use-app')}
+                                    {t('landing-page.launch')}
                                 </Button>
                                 <Button
                                     onClick={() => {
@@ -200,7 +204,7 @@ const Home: React.FC = () => {
                     </GetStarted>
                 </FlexDivColumn>
             </Section>
-            <Section id="who-is-thales">
+            <Section>
                 <Side>
                     <ThalesTheWhite src={thalesTheWhite} />
                 </Side>
@@ -208,13 +212,73 @@ const Home: React.FC = () => {
                     <Text className="text-xxl white" style={{ marginBottom: 50 }}>
                         {t('landing-page.who-is-thales')}
                     </Text>
-                    <Text className="text-m white">{t('landing-page.thales-is')}</Text>
+                    <Text style={{ backdropFilter: 'blur(10px)' }} className="text-m white">
+                        {t('landing-page.thales-is')}
+                    </Text>
                 </Side>
+            </Section>
+            <Section id="faq">
+                <FlexDivColumn style={{ padding: '80px 150px', backdropFilter: 'blur(10px)' }}>
+                    <Text className="text-xxl white">{t('landing-page.faq.title')}</Text>
+                    <DropDownWrapper className={q1open ? 'open' : ''}>
+                        <Question>
+                            <Text className="text-m white">{t('landing-page.faq.firstQ')}</Text>
+                            <Image src={q1open ? minus : plus} onClick={() => setQ1open(!q1open)}></Image>
+                        </Question>
+                        <Answer className="text-s white lh24 ls25">{t('landing-page.faq.firstA')}</Answer>
+                    </DropDownWrapper>
+                    <DropDownWrapper className={q2open ? 'open' : ''}>
+                        <Question>
+                            <Text className="text-m white">{t('landing-page.faq.secondQ')}</Text>
+                            <Image src={q2open ? minus : plus} onClick={() => setQ2open(!q2open)}></Image>
+                        </Question>
+                        <Answer className="text-s white lh24 ls25">{t('landing-page.faq.secondA')}</Answer>
+                    </DropDownWrapper>
+                    <DropDownWrapper className={q3open ? 'open' : ''}>
+                        <Question>
+                            <Text className="text-m white lh24 ls25">{t('landing-page.faq.thirdQ')}</Text>
+                            <Image src={q3open ? minus : plus} onClick={() => setQ3open(!q3open)}></Image>
+                        </Question>
+                        <Answer className="text-s white lh24 ls25">{t('landing-page.faq.thirdA')}</Answer>
+                    </DropDownWrapper>
+                </FlexDivColumn>
             </Section>
             <Footer></Footer>
         </>
     );
 };
+
+const DropDownWrapper = styled(FlexDivColumn)`
+    margin-top: 12px;
+    padding: 20px 0;
+    &:not(:last-child) {
+        border-bottom: 1.5px dashed #00f9ff;
+    }
+    &.open {
+        & > p {
+            position: relative;
+            opacity: 1;
+            transition: opacity 1s;
+        }
+    }
+`;
+
+const Question = styled(FlexDiv)`
+    justify-content: space-between;
+    align-items: center;
+    img {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+    }
+`;
+const Answer = styled(Text)`
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+    margin-top: 10px;
+    white-space: break-spaces;
+`;
 
 const HeroSection = styled(FlexDiv)`
     @media (max-width: 768px) {
