@@ -264,6 +264,7 @@ const DropDownWrapper = styled(FlexDivColumn)`
 `;
 
 const Question = styled(FlexDiv)`
+    display: flex;
     justify-content: space-between;
     align-items: center;
     img {
