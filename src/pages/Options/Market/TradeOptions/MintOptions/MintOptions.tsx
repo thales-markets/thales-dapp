@@ -28,12 +28,13 @@ import {
     GridContainer,
     InputLabel,
     SubmitButtonContainer,
-    Input,
     CurrencyLabel,
     SubmitButton,
     SummaryItem,
     SummaryLabel,
     SummaryContent,
+    SliderContainer,
+    SliderRange,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -53,6 +54,8 @@ import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import axios from 'axios';
 import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
+import NumericInput from '../../components/NumericInput';
+import onboardConnector from 'utils/onboardConnector';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -72,8 +75,8 @@ const MintOptions: React.FC = () => {
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
-    const [longPrice, setLongPrice] = useState<number>(1);
-    const [shortPrice, setShortPrice] = useState<number>(1);
+    const [longPrice, setLongPrice] = useState<number | string>(1);
+    const [shortPrice, setShortPrice] = useState<number | string>(1);
     const [longAmount, setLongAmount] = useState<number | string>('');
     const [shortAmount, setShortAmount] = useState<number | string>('');
     const [sellLong, setSellLong] = useState<boolean>(false);
@@ -136,7 +139,6 @@ const MintOptions: React.FC = () => {
         const registerAllowanceListener = () => {
             if (walletAddress) {
                 SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    console.log(owner, walletAddress, spender, binaryOptionsMarketManagerContract.address);
                     if (owner === walletAddress && spender === binaryOptionsMarketManagerContract.address) {
                         setAllowance(true);
                         setIsAllowing(false);
@@ -219,7 +221,6 @@ const MintOptions: React.FC = () => {
     const handleMint = async () => {
         if (gasPrice !== null) {
             try {
-                console.log('before', sellLong, sellShort);
                 setTxErrorMessage(null);
                 setIsMinting(true);
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
@@ -261,6 +262,13 @@ const MintOptions: React.FC = () => {
     };
 
     const getSubmitButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <MintSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </MintSubmitButton>
+            );
+        }
         if (!isAmountEntered) {
             return <MintSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</MintSubmitButton>;
         }
@@ -271,8 +279,10 @@ const MintOptions: React.FC = () => {
             return (
                 <MintSubmitButton disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
                     {!isAllowing
-                        ? t('common.enable-wallet-access.label')
-                        : t('common.enable-wallet-access.progress-label')}
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sUSD })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: SYNTHS_MAP.sUSD,
+                          })}
                 </MintSubmitButton>
             );
         }
@@ -280,8 +290,10 @@ const MintOptions: React.FC = () => {
             return (
                 <MintSubmitButton disabled={isLongAllowing || !isWalletConnected} onClick={handleLongAllowance}>
                     {!isLongAllowing
-                        ? t(`options.market.trade-options.mint.approve-long-button.label`)
-                        : t(`options.market.trade-options.mint.approve-long-button.progress-label`)}
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: SYNTHS_MAP.sLONG,
+                          })}
                 </MintSubmitButton>
             );
         }
@@ -289,8 +301,10 @@ const MintOptions: React.FC = () => {
             return (
                 <MintSubmitButton disabled={isShortAllowing || !isWalletConnected} onClick={handleShortAllowance}>
                     {!isShortAllowing
-                        ? t(`options.market.trade-options.mint.approve-short-button.label`)
-                        : t(`options.market.trade-options.mint.approve-short-button.progress-label`)}
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: SYNTHS_MAP.sSHORT,
+                          })}
                 </MintSubmitButton>
             );
         }
@@ -424,7 +438,7 @@ const MintOptions: React.FC = () => {
     const getOrderEndDate = () => toBigNumber(Math.round(optionsMarket.timeRemaining / 1000));
 
     const handleSubmitOrder = async (
-        price: number,
+        price: number | string,
         makerToken: string,
         optionsAmount: number | string,
         isLong?: boolean
@@ -504,14 +518,7 @@ const MintOptions: React.FC = () => {
         <Container>
             <GridContainer>
                 <InputContainer>
-                    <Input
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        id="amount"
-                        type="number"
-                        min="0"
-                        step="any"
-                    />
+                    <NumericInput value={amount} onChange={(_, value) => setAmount(value)} />
                     <InputLabel>{t('options.market.trade-options.mint.amount-label')}</InputLabel>
                     <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                 </InputContainer>
@@ -552,14 +559,11 @@ const MintOptions: React.FC = () => {
                 />
                 <SliderContainer>
                     <LongSlider
-                        value={longPrice}
+                        value={Number(longPrice)}
                         step={0.01}
                         max={1}
                         min={0}
-                        onChange={(_, newValue) => {
-                            const long = newValue as number;
-                            setLongPrice(long);
-                        }}
+                        onChange={(_, value) => setLongPrice(Number(value))}
                         disabled={!sellLong}
                     />
                     <FlexDivRow>
@@ -568,25 +572,14 @@ const MintOptions: React.FC = () => {
                     </FlexDivRow>
                 </SliderContainer>
                 <InputContainer style={{ width: '25%', marginRight: 10 }}>
-                    <Input
-                        value={longPrice}
-                        onChange={(e) => setLongPrice(Number(e.target.value))}
-                        type="number"
-                        min="0"
-                        step="any"
-                        disabled={!sellLong}
-                    />
+                    <NumericInput value={longPrice} onChange={(_, value) => setLongPrice(value)} disabled={!sellLong} />
                     <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                 </InputContainer>
                 <InputContainer style={{ width: '25%' }}>
-                    <Input
+                    <NumericInput
                         value={longAmount}
-                        onChange={(e) => setLongAmount(e.target.value)}
-                        id="amount"
-                        type="number"
-                        min="0"
-                        step="any"
+                        onChange={(_, value) => setLongAmount(value)}
                         disabled={!sellLong}
                     />
                     <InputLabel>
@@ -604,14 +597,11 @@ const MintOptions: React.FC = () => {
                 />
                 <SliderContainer>
                     <ShortSlider
-                        value={shortPrice}
+                        value={Number(shortPrice)}
                         step={0.01}
                         max={1}
                         min={0}
-                        onChange={(_, newValue) => {
-                            const short = newValue as number;
-                            setShortPrice(short);
-                        }}
+                        onChange={(_, value) => setShortPrice(Number(value))}
                         disabled={!sellShort}
                     />
                     <FlexDivRow>
@@ -620,25 +610,18 @@ const MintOptions: React.FC = () => {
                     </FlexDivRow>
                 </SliderContainer>
                 <InputContainer style={{ width: '25%', marginRight: 10 }}>
-                    <Input
+                    <NumericInput
                         value={shortPrice}
-                        onChange={(e) => setShortPrice(Number(e.target.value))}
-                        type="number"
-                        min="0"
-                        step="any"
+                        onChange={(_, value) => setShortPrice(value)}
                         disabled={!sellShort}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                 </InputContainer>
                 <InputContainer style={{ width: '25%' }}>
-                    <Input
+                    <NumericInput
                         value={shortAmount}
-                        onChange={(e) => setShortAmount(e.target.value)}
-                        id="amount"
-                        type="number"
-                        min="0"
-                        step="any"
+                        onChange={(_, value) => setShortAmount(value)}
                         disabled={!sellShort}
                     />
                     <InputLabel>
@@ -665,7 +648,7 @@ const MintOptions: React.FC = () => {
                     marketFees ? Number(amount) * marketFees.creator : 0
                 )})`}</SummaryContent>
             </MintingFeesInnerContainer>
-            <MintingFeesInnerContainer>
+            <MintingFeesInnerContainer style={{ marginBottom: 20 }}>
                 <SummaryLabel>{t('options.market.trade-options.mint.fees.pool')}</SummaryLabel>
                 <SummaryContent>{`${formatPercentage(marketFees ? marketFees.pool : 0)} (${formatCurrencyWithSign(
                     USD_SIGN,
@@ -673,7 +656,7 @@ const MintOptions: React.FC = () => {
                 )})`}</SummaryContent>
             </MintingFeesInnerContainer>
             <NetworkFeesContainer>
-                <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
+                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
             </NetworkFeesContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
@@ -694,15 +677,11 @@ const Divider = styled.hr`
 `;
 
 const MintSubmitButton = styled(SubmitButton)`
-    background: transparent;
-    border: 2px solid rgba(1, 38, 81, 0.5);
+    background: #3936c7;
     color: #f6f6fe;
     &.selected,
     &:hover:not(:disabled) {
-        background: rgba(1, 38, 81, 0.5);
-        border: 2px solid #04045a;
-        border-radius: 20px;
-        color: #04045a;
+        background: #7119e1;
     }
 `;
 
@@ -722,26 +701,12 @@ const MintingTotal = styled(SummaryContent)<{ color?: string }>`
     color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 
-const SliderRange = styled.div<{ color?: string }>`
-    font-size: 14px;
-    line-height: 14px;
-    letter-spacing: 0.4px;
-    color: ${(props) => props.color ?? '#f6f6fe'};
-`;
-
 const PlaceInOrderbook = styled.div`
     font-weight: 600;
     font-size: 16px;
     line-height: 40px;
     letter-spacing: 0.15px;
     color: #f6f6fe;
-`;
-
-const SliderContainer = styled.div`
-    position: relative;
-    width: 500%;
-    padding: 0 20px;
-    margin-bottom: 10px;
 `;
 
 export default MintOptions;

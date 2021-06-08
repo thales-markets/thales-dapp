@@ -100,9 +100,11 @@
         "errors": {
             "gas-exceeds-limit": "Max input is {{gasPrice}}",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
-            "insufficient-balance": "insufficient balance",
-            "insufficient-liquidity": "insufficient liquidity",
-            "enter-amount": "enter an amount"
+            "insufficient-balance": "Insufficient balance",
+            "insufficient-liquidity": "Insufficient liquidity",
+            "enter-amount": "Enter amount",
+            "enter-price": "Enter price",
+            "enter-expiration": "Enter expiration"
         },
         "search": "search",
         "chart": {
@@ -132,8 +134,10 @@
             "off": "off"
         },
         "enable-wallet-access": {
-            "label": "enable wallet access",
-            "progress-label": "enabling wallet access..."
+            "label": "Enable wallet access",
+            "progress-label": "Enabling wallet access...",
+            "approve-label": "Approve {{currencyKey}}",
+            "approve-progress-label": "Approving {{currencyKey}}..."
         }
     },
     "modals": {
@@ -432,14 +436,6 @@
                         "minting": "Minting fee",
                         "creator": "Creator earns",
                         "pool": "Fee pool earns"
-                    },
-                    "approve-long-button": {
-                        "label": "Approve LONG",
-                        "progress-label": "Approving LONG in progress...."
-                    },
-                    "approve-short-button": {
-                        "label": "Approve SHORT",
-                        "progress-label": "Approving SHORT in progress..."
                     },
                     "confirm-button": {
                         "label": "Mint",
