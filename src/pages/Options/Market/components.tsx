@@ -18,7 +18,7 @@ export const Input = styled.input`
     mix-blend-mode: normal;
     border-radius: 12px;
     height: 64px;
-    padding: 14px 0px 0 22px;
+    padding: 14px 0px 0 20px;
     outline: 0;
     font-size: 16px;
     font-weight: 600;
@@ -88,7 +88,7 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
                 line-height: 24px;
                 letter-spacing: 0.4px;
                 color: #f6f6fe !important;
-                padding: 14px 0px 0 12px;
+                padding: 15px 0px 0 11px;
             }
         }
     }
@@ -108,12 +108,34 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         fill: #f6f6fe;
     }
     .react-select__option--is-selected {
-        color: #f6f6fe;
-        background: #2d83d2;
+        border: 1px solid #00f9ff;
+        box-sizing: border-box;
+        border-radius: 10px;
+        background: #0a2e66;
     }
     .react-select__option--is-focused {
-        color: #f6f6fe;
         background: rgba(45, 131, 210, 0.3);
+        border-radius: 10px;
+        color: #b8c6e5;
+        cursor: pointer;
+    }
+    .react-select__menu {
+        padding: 0px 4px;
+    }
+    .react-select__control:hover {
+        border-color: #0a2e66;
+    }
+    .react-select__control {
+        border: 2px solid #0a2e66;
+        box-sizing: border-box;
+    }
+    .react-select__control--is-focused,
+    .react-select__control--menu-is-open,
+    .react-select__control--is-focused:hover,
+    .react-select__control--menu-is-open:hover {
+        border: 2px solid #00f9ff;
+        box-sizing: border-box;
+        cursor: pointer;
     }
 `;
 
@@ -121,27 +143,37 @@ export const AmountButtonContainer = styled(FlexDivCentered)``;
 
 export const AmountButton = styled.button`
     background: transparent;
-    border: 2px solid rgba(1, 38, 81, 0.5);
+    border: 2px solid #0a2e66;
     border-radius: 5px;
     min-height: 28px;
     width: 58px;
     cursor: pointer;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 14px;
     line-height: 16px;
     text-align: center;
     letter-spacing: 0.25px;
     color: #f6f6fe;
     margin: 0 12px 20px 12px;
+    padding-bottom: 2px;
     &:disabled {
         opacity: 0.5;
         cursor: default;
     }
     &:hover:not(:disabled) {
+        background: rgba(1, 38, 81, 0.8);
+        border: 2px solid #0a2e66;
+        color: #b8c6e5;
+    }
+    &.selected {
         background: #0a2e66;
         border: 2px solid #00f9ff;
         color: #00f9ff;
+    }
+    &.selected:hover:not(:disabled) {
+        background: rgba(1, 38, 81, 0.8);
+        color: #b8c6e5;
     }
 `;
 
@@ -173,20 +205,22 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     }
 `;
 
-export const TotalContainer = styled(FlexDivRow)`
+export const SummaryItem = styled(FlexDivRow)`
     padding: 0 45px;
     margin-bottom: 20px;
 `;
 
-export const TotalLabel = styled.div`
+export const SummaryLabel = styled.div`
+    font-style: normal;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.5px;
-    color: #748bc6;
+    color: #f6f6fe;
 `;
 
-export const Total = styled.div`
+export const SummaryContent = styled.div`
+    font-style: normal;
     font-weight: 600;
     font-size: 14px;
     line-height: 16px;

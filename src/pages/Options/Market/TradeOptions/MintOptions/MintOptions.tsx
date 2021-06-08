@@ -31,9 +31,9 @@ import {
     Input,
     CurrencyLabel,
     SubmitButton,
-    TotalContainer,
-    TotalLabel,
-    Total,
+    SummaryItem,
+    SummaryLabel,
+    SummaryContent,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -517,7 +517,7 @@ const MintOptions: React.FC = () => {
                 </InputContainer>
             </GridContainer>
             <MintingFeesContainer>
-                <TotalLabel>{t('options.market.trade-options.mint.minting-label')}</TotalLabel>
+                <SummaryLabel>{t('options.market.trade-options.mint.minting-label')}</SummaryLabel>
             </MintingFeesContainer>
             <MintingFeesInnerContainer>
                 <MintingTotalLabel color={COLORS.LONG}>
@@ -650,27 +650,27 @@ const MintOptions: React.FC = () => {
 
             <Divider />
             <MintingFeesContainer>
-                <TotalLabel>{t('options.market.trade-options.mint.fees.minting')}</TotalLabel>
-                <Total>{`${formatPercentage(
+                <SummaryLabel>{t('options.market.trade-options.mint.fees.minting')}</SummaryLabel>
+                <SummaryContent>{`${formatPercentage(
                     marketFees ? marketFees.creator + marketFees.pool : 0
                 )} (${formatCurrencyWithSign(
                     USD_SIGN,
                     marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0
-                )})`}</Total>
+                )})`}</SummaryContent>
             </MintingFeesContainer>
             <MintingFeesInnerContainer>
-                <TotalLabel>{t('options.market.trade-options.mint.fees.creator')}</TotalLabel>
-                <Total>{`${formatPercentage(marketFees ? marketFees.creator : 0)} (${formatCurrencyWithSign(
+                <SummaryLabel>{t('options.market.trade-options.mint.fees.creator')}</SummaryLabel>
+                <SummaryContent>{`${formatPercentage(marketFees ? marketFees.creator : 0)} (${formatCurrencyWithSign(
                     USD_SIGN,
                     marketFees ? Number(amount) * marketFees.creator : 0
-                )})`}</Total>
+                )})`}</SummaryContent>
             </MintingFeesInnerContainer>
             <MintingFeesInnerContainer>
-                <TotalLabel>{t('options.market.trade-options.mint.fees.pool')}</TotalLabel>
-                <Total>{`${formatPercentage(marketFees ? marketFees.pool : 0)} (${formatCurrencyWithSign(
+                <SummaryLabel>{t('options.market.trade-options.mint.fees.pool')}</SummaryLabel>
+                <SummaryContent>{`${formatPercentage(marketFees ? marketFees.pool : 0)} (${formatCurrencyWithSign(
                     USD_SIGN,
                     marketFees ? Number(amount) * marketFees.pool : 0
-                )})`}</Total>
+                )})`}</SummaryContent>
             </MintingFeesInnerContainer>
             <NetworkFeesContainer>
                 <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
@@ -706,7 +706,7 @@ const MintSubmitButton = styled(SubmitButton)`
     }
 `;
 
-const MintingFeesContainer = styled(TotalContainer)`
+const MintingFeesContainer = styled(SummaryItem)`
     margin-bottom: 4px;
 `;
 
@@ -714,11 +714,11 @@ const MintingFeesInnerContainer = styled(MintingFeesContainer)`
     margin-left: 20px;
 `;
 
-const MintingTotalLabel = styled(TotalLabel)<{ color?: string }>`
+const MintingTotalLabel = styled(SummaryLabel)<{ color?: string }>`
     color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 
-const MintingTotal = styled(Total)<{ color?: string }>`
+const MintingTotal = styled(SummaryContent)<{ color?: string }>`
     color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 

@@ -50,9 +50,9 @@ import {
     CurrencyLabel,
     AmountButton,
     AmountButtonContainer,
-    TotalLabel,
-    TotalContainer,
-    Total,
+    SummaryLabel,
+    SummaryItem,
+    SummaryContent,
     SubmitButton,
 } from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
@@ -348,10 +348,12 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     </AmountButton>
                 ))}
             </AmountButtonContainer>
-            <TotalContainer>
-                <TotalLabel>{t('options.market.trade-options.place-order.total-label')}</TotalLabel>
-                <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}</Total>
-            </TotalContainer>
+            <SummaryItem>
+                <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
+                <SummaryContent>
+                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
+                </SummaryContent>
+            </SummaryItem>
             <SubmitButtonContainer>
                 {hasAllowance ? (
                     <SubmitButton isBuy={isBuy} disabled={isButtonDisabled} onClick={handleSubmitOrder}>

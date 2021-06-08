@@ -1,4 +1,4 @@
-import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,6 @@ import NetworkFees from 'pages/Options/components/NetworkFees';
 import {
     Container,
     InputContainer,
-    GridContainer,
     InputLabel,
     SubmitButtonContainer,
     Input,
@@ -46,9 +45,9 @@ import {
     CurrencyLabel,
     AmountButton,
     AmountButtonContainer,
-    TotalLabel,
-    TotalContainer,
-    Total,
+    SummaryLabel,
+    SummaryItem,
+    SummaryContent,
     SubmitButton,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
@@ -88,7 +87,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [swapQuote, setSwapQuote] = useState<any>();
     const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [slippage, setSlippage] = useState<number>(SLIPPAGE_PERCENTAGE[1]);
+    const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
     const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
     const orderSideOptions = [
@@ -251,12 +250,12 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         setAmount(newAmount);
     };
 
-    const setSlippageAndRecalucalte = (newSlippage: number) => {
+    const setSlippageAndRecalucalte = (newSlippage: number | string) => {
         setSlippage(newSlippage);
         onAmountChange(amount, newSlippage);
     };
 
-    const onAmountChange = async (newAmount: string | number, newSlippage?: number) => {
+    const onAmountChange = async (newAmount: string | number, newSlippage?: number | string) => {
         // TODO refactor this method
         setAmount(newAmount);
         if (newAmount !== '' && Number(newAmount) > 0) {
@@ -264,7 +263,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             try {
                 const swapUrl = `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&${
                     isBuy ? 'buyAmount' : 'sellAmount'
-                }=${tokenAmount}&slippagePercentage=${(newSlippage || slippage) / 100}${
+                }=${tokenAmount}&slippagePercentage=${Number(newSlippage || slippage) / 100}${
                     gasPrice != null ? `&gasPrice=${gasPrice * GWEI_UNIT}` : ''
                 }${isWalletConnected && hasAllowance ? `&takerAddress=${walletAddress}` : ''}`;
 
@@ -320,19 +319,19 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
 
     return (
         <Container>
-            <InputContainer>
-                <ReactSelect
-                    formatOptionLabel={(option: any) => option.label}
-                    options={orderSideOptions}
-                    value={orderSide}
-                    onChange={(option: any) => setOrderSide(option)}
-                    isSearchable={false}
-                    isUppercase
-                />
-                <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
-            </InputContainer>
-            <GridContainer>
-                <InputContainer>
+            <FlexDivRow>
+                <InputContainer style={{ width: '50%', marginRight: '10px' }}>
+                    <ReactSelect
+                        formatOptionLabel={(option: any) => option.label}
+                        options={orderSideOptions}
+                        value={orderSide}
+                        onChange={(option: any) => setOrderSide(option)}
+                        isSearchable={false}
+                        isUppercase
+                    />
+                    <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
+                </InputContainer>
+                <InputContainer style={{ width: '50%' }}>
                     <Input
                         value={amount}
                         onChange={(e) => onAmountChange(e.target.value)}
@@ -344,9 +343,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
-                    <CurrencyLabel>{'sOPT'}</CurrencyLabel>
+                    <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
                 </InputContainer>
-            </GridContainer>
+            </FlexDivRow>
             {!isBuy && (
                 <AmountButtonContainer>
                     {AMOUNT_PERCENTAGE.map((percentage: number) => (
@@ -360,7 +359,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     ))}
                 </AmountButtonContainer>
             )}
-            <TotalContainer>
+            <SummaryItem>
                 <SlippageLabel>{t('options.market.trade-options.place-order.slippage-label')}</SlippageLabel>
                 <FlexDivCentered>
                     {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
@@ -375,7 +374,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <SlippageContainer>
                         <SlippageInput
                             value={slippage}
-                            onChange={(e) => setSlippageAndRecalucalte(Number(e.target.value))}
+                            onChange={(e) => setSlippageAndRecalucalte(e.target.value)}
                             id="slippage"
                             type="number"
                             min="0"
@@ -384,9 +383,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         <PercentageLabel>%</PercentageLabel>
                     </SlippageContainer>
                 </FlexDivCentered>
-            </TotalContainer>
-            <TotalContainer>
-                <TotalLabel>{t('options.market.trade-options.place-order.price-label')}</TotalLabel>
+            </SummaryItem>
+            <SummaryItem>
+                <SummaryLabel>{t('options.market.trade-options.place-order.price-label')}</SummaryLabel>
                 <Price
                     isWarning={
                         Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
@@ -395,22 +394,22 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 >{`${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))} (${formatPercentageWithSign(
                     priceImpactPercentage
                 )})`}</Price>
-            </TotalContainer>
+            </SummaryItem>
 
-            <TotalContainer>
-                <TotalLabel>{t('options.market.trade-options.place-order.total-label')}</TotalLabel>
-                <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</Total>
-            </TotalContainer>
-            <TotalContainer>
-                <TotalLabel>
+            <SummaryItem>
+                <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
+                <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</SummaryContent>
+            </SummaryItem>
+            <SummaryItem style={{ marginBottom: 10 }}>
+                <SummaryLabel>
                     {t(`options.market.trade-options.place-order.${isBuy ? 'total-max-label' : 'total-min-label'}`)}
-                </TotalLabel>
-                <Total>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, minimumReceived)}</Total>
-            </TotalContainer>
+                </SummaryLabel>
+                <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, minimumReceived)}</SummaryContent>
+            </SummaryItem>
             <Divider />
             <ProtocolFeeContainer>
-                <TotalLabel>{t('options.market.trade-options.place-order.protocol-fee-label')}</TotalLabel>
-                <Total>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</Total>
+                <ProtocolFeeLabel>{t('options.market.trade-options.place-order.protocol-fee-label')}</ProtocolFeeLabel>
+                <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
             </ProtocolFeeContainer>
             <NetworkFeesContainer>
                 <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
@@ -467,46 +466,64 @@ const NetworkFeesContainer = styled.div`
 `;
 
 const Divider = styled.hr`
-    width: 90%;
+    width: 85%;
     border: none;
-    border-top: 2px solid rgba(1, 38, 81, 0.5);
+    border-top: 2px solid #0a2e66;
 `;
 
 const SlippageButton = styled(AmountButton)`
     margin: 0 10px 0 0;
-    &.selected {
-        background: rgba(1, 38, 81, 0.5);
-        border: 2px solid #04045a;
-        color: #04045a;
-    }
+    min-height: 26px;
+    width: 48px;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.25px;
+    padding-bottom: 2px;
 `;
 
 const SlippageInput = styled(Input)`
-    height: 32px;
+    height: 26px;
     width: 80px;
     padding: 0;
     padding-left: 10px;
+    background: #0a2e66;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
 `;
 
 const PercentageLabel = styled(CurrencyLabel)`
-    padding: 0 10px 8px 0;
+    padding: 0 10px 5px 0;
 `;
 
 const SlippageContainer = styled(InputContainer)`
     margin: 0;
 `;
 
-const SlippageLabel = styled(TotalLabel)`
+const SlippageLabel = styled(SummaryLabel)`
     display: flex;
     align-items: center;
 `;
 
 const ProtocolFeeContainer = styled(FlexDivRow)`
     padding: 0 45px;
+    margin-top: 5px;
     margin-bottom: 10px;
 `;
 
-const Price = styled(Total)<{ isWarning: boolean }>`
+const ProtocolFeeLabel = styled(SummaryLabel)`
+    font-size: 13px;
+    line-height: 24px;
+`;
+
+const ProtocolFeeItem = styled(SummaryContent)`
+    font-size: 13px;
+    line-height: 24px;
+`;
+
+const Price = styled(SummaryContent)<{ isWarning: boolean }>`
     color: ${(props) => (props.isWarning ? 'rgb(240, 185, 11)' : '#f6f6fe')};
 `;
 

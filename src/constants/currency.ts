@@ -163,6 +163,12 @@ export const FIAT_CURRENCY_SIGN = {
 };
 export const USD_SIGN = FIAT_CURRENCY_SIGN[FIAT_CURRENCY_MAP.USD];
 
+export const OPTIONS_CURRENCY = ['sLONG', 'sSHORT'];
+export const OPTIONS_CURRENCY_MAP = {
+    long: 'sLONG',
+    short: 'sSHORT',
+};
+
 export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.SNX]: SNXIcon,
     [CRYPTO_CURRENCY_MAP.KNC]: KNCIcon,
