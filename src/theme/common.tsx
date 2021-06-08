@@ -61,15 +61,44 @@ export const Background = styled.section`
         background-size: cover !important;
     }
 
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+
+    &#landing-hero {
+        min-height: 900px;
+        position: relative;
+        z-index: 2;
+        background: transparent;
+
+        & ~ section {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            &:after {
+                content: '';
+                display: block;
+                width: min(620px, 30%);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                height: 1.5px;
+                background-color: #00f9ff;
+            }
+            &#faq:after {
+                width: 100%;
+            }
+            &:last-of-type {
+                backdrop-filter: blur(20px);
+            }
+        }
+    }
+
     &.hero {
         @media (min-height: 1000px) and (min-width: 1200px) {
             min-height: 800px;
         }
     }
-
-    position: relative;
-    background: transparent;
-    z-index: 2;
 
     &:nth-child(even) {
         @media (max-width: 768px) {
@@ -104,10 +133,7 @@ export const Section: React.FC<SectionProps> = (props) => (
 
 export const Side = styled(FlexDivColumnCentered)`
     flex: 1;
-    padding: 120px 140px 120px 60px;
-    &:first-child {
-        padding: 120px 60px 120px 140px;
-    }
+    padding: 120px 140px;
     @media (max-width: 768px) {
         padding: 40px !important;
         width: 100%;
@@ -118,14 +144,13 @@ export const Side = styled(FlexDivColumnCentered)`
 `;
 
 export const Button = styled.button`
-    padding: 8px 24px;
+    padding: 8px 35px;
     border-radius: 40px;
     border: none;
     outline: none;
-    align-self: flex-start;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 16px;
+    line-height: 24px;
     text-align: center;
     letter-spacing: 0.5px;
     text-transform: none !important;
@@ -134,9 +159,22 @@ export const Button = styled.button`
     white-space: pre;
     &.primary {
         background: #3936c7;
+        &:hover {
+            background: #7119e1;
+        }
+        &:active {
+            background: #5a14b4;
+        }
     }
     &.secondary {
         background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
+        &:hover {
+            background: #00f9ff;
+            color: #04045a;
+        }
+        &:active {
+            background: #00ced3;
+        }
     }
     &.tertiary {
         background: transparent;
