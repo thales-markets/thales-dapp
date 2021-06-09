@@ -133,7 +133,7 @@ export const Section: React.FC<SectionProps> = (props) => (
 
 export const Side = styled(FlexDivColumnCentered)`
     flex: 1;
-    padding: 120px 140px;
+    padding: 120px 100px;
     @media (max-width: 768px) {
         padding: 40px !important;
         width: 100%;
@@ -154,7 +154,7 @@ export const Button = styled.button`
     text-align: center;
     letter-spacing: 0.5px;
     text-transform: none !important;
-    color: white;
+    color: #f6f6fe;
     cursor: pointer;
     white-space: pre;
     &.primary {
@@ -178,13 +178,21 @@ export const Button = styled.button`
     }
     &.tertiary {
         background: transparent;
-        border: 1.5px solid #44e1e2;
-        color: #44e1e2;
+        border-left: 1.5px solid rgba(202, 145, 220, 1);
+        border-top: 1.5px solid rgba(202, 145, 220, 1);
+        border-right: 1.5px solid rgba(106, 193, 213, 1);
+        border-bottom: 1.5px solid rgba(106, 193, 213, 1);
+        color: #f6f6fe;
+        &:hover {
+            border: 1.5px solid#00f9ff;
+            color: #00f9ff;
+        }
+        &:active {
+            border: 1.5px solid #00ced3;
+            color: #00ced3;
+        }
     }
-    &:hover {
-        color: white;
-        background: #44e1e2;
-    }
+
     &:disabled {
         background: #748bc6;
         color: #b5bbc9;

@@ -73,7 +73,7 @@ export const setupThreeJS = () => {
         const material = new THREE.PointsMaterial({
             size: 6.5,
             map: STAR,
-            color: 'white',
+            color: '#f6f6fe',
             transparent: true,
             blending: THREE.AdditiveBlending,
             alphaTest: 0.5,

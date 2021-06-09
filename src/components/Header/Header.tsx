@@ -33,7 +33,7 @@ const Header: React.FC = () => {
                 </CommunityLink>
                 <NavLink to="">{t('header.links.partners')}</NavLink>
                 <NavLink to={ROUTES.Options.Home}>
-                    <Button className="secondary" style={{ marginLeft: '60px', fontSize: 16 }}>
+                    <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
                         {t('landing-page.use-app')}
                     </Button>
                 </NavLink>
@@ -121,7 +121,7 @@ const NavLink = styled(Link)`
     font-size: 16px;
     line-height: 32px;
     letter-spacing: 0.15px;
-    color: white;
+    color: #f6f6fe;
     &:last-child {
         margin-right: 0;
     }
@@ -150,7 +150,7 @@ const CommunityLink = styled.a`
     font-size: 16px;
     line-height: 32px;
     letter-spacing: 0.15px;
-    color: white;
+    color: #f6f6fe;
     &:hover {
         color: #44e1e2;
     }
