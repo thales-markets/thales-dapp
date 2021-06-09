@@ -114,7 +114,7 @@ const Home: React.FC = () => {
                     </Button>
                 </Cards>
                 <Cards>
-                    <Image src={scale} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
+                    <Image src={scale} style={{ height: 200, width: 200, margin: 'auto' }}></Image>
                     <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
                         <Text className="pale-grey text-l">{t('landing-page.options.title')}</Text>.
                         <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
@@ -125,7 +125,7 @@ const Home: React.FC = () => {
                         </Text>
                         <Text className="pale-grey texts lh24">{t('landing-page.options.option3')}</Text>
                     </FlexDivColumn>
-                    <Button className="primary" style={{ margin: '50px auto' }}>
+                    <Button className="primary" style={{ margin: 'auto', marginBottom: '50px' }}>
                         {t('landing-page.options.view-markets')}
                     </Button>
                 </Cards>
