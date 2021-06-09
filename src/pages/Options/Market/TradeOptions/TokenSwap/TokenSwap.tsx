@@ -412,7 +412,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
             </ProtocolFeeContainer>
             <NetworkFeesContainer>
-                <NetworkFees gasLimit={gasLimit} labelColor={'dusty'} priceColor={'pale-grey'} />
+                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
             </NetworkFeesContainer>
             <SubmitButtonContainer>
                 {' '}

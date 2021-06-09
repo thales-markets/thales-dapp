@@ -130,6 +130,8 @@ export const SYNTHS = [
     'sXAG',
     'sJPY',
     'sUSD',
+    'sLONG',
+    'sSHORT',
 ];
 export const SYNTHS_MAP = keyBy(SYNTHS);
 

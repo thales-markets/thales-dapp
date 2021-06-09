@@ -189,10 +189,9 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     cursor: pointer;
     font-style: normal;
     font-weight: bold;
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 16px;
+    line-height: 24px;
     text-align: center;
-    letter-spacing: 0.5px;
     color: #f6f6fe;
     padding: 8px 38px;
     &:disabled {
@@ -201,7 +200,7 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     }
     &.selected,
     &:hover:not(:disabled) {
-        color: #04045a;
+        background: ${(prop) => (prop.isBuy ? '#00E4B8' : '#e53720')};
     }
 `;
 
@@ -257,4 +256,18 @@ export const FilterButton = styled.button`
         background: rgba(1, 38, 81, 0.8);
         color: #b8c6e5;
     }
+`;
+
+export const SliderRange = styled.div<{ color?: string }>`
+    font-size: 14px;
+    line-height: 14px;
+    letter-spacing: 0.4px;
+    color: ${(props) => props.color ?? '#f6f6fe'};
+`;
+
+export const SliderContainer = styled.div`
+    position: relative;
+    width: 50%;
+    padding: 0 20px;
+    margin-bottom: 10px;
 `;

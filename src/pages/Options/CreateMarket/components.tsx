@@ -42,7 +42,7 @@ export const StyledSlider = withStyles({
         marginTop: '-2px',
         background: '#FFFFFF',
         boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
-        '&:focus, &:hover, &$active': {
+        '&:focus, &:hover': {
             boxShadow: '0px 1px 4px rgba(202, 202, 241, 0.5)',
         },
         '&$disabled': {

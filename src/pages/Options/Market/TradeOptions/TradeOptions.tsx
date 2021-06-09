@@ -4,7 +4,7 @@ import { AccountMarketInfo, OptionSide } from 'types/options';
 import TokenSwap from './TokenSwap';
 import PlaceOrder from './PlaceOrder';
 import MarketWidgetContent from '../components/MarketWidget/MarketWidgetContent';
-import { MarketWidgetKey } from 'constants/ui';
+import { COLORS, MarketWidgetKey } from 'constants/ui';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivRowCentered, FlexDivCentered } from 'theme/common';
@@ -13,11 +13,11 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { RootState } from 'redux/rootReducer';
-import { SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { useMarketContext } from '../contexts/MarketContext';
-import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
+import { ReactComponent as WalletIcon } from 'assets/images/wallet-dark.svg';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import MintOptions from './MintOptions';
@@ -82,7 +82,23 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
 
     return (
         <>
-            <MarketWidgetHeader widgetKey={MarketWidgetKey.TRADE}></MarketWidgetHeader>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.TRADE}>
+                <FlexDivCentered>
+                    <WalletIcon />
+                    <WalletContainer>
+                        {isWalletConnected ? (
+                            <>
+                                <Wallet>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</Wallet>
+                                <Wallet color={optionSide === 'long' ? COLORS.LONG : COLORS.SHORT}>
+                                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], tokenBalance)}
+                                </Wallet>
+                            </>
+                        ) : (
+                            EMPTY_VALUE
+                        )}
+                    </WalletContainer>
+                </FlexDivCentered>
+            </MarketWidgetHeader>
             <MarketWidgetContent>
                 <Container>
                     <FlexDivRowCentered>
@@ -98,19 +114,6 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
                                 </TradeFilterButton>
                             ))}
                         </FilterContainer>
-                        <FlexDivCentered>
-                            <WalletIcon />
-                            <WalletContainer>
-                                <Wallet>
-                                    {isWalletConnected
-                                        ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)
-                                        : EMPTY_VALUE}
-                                </Wallet>
-                                <Wallet>
-                                    {isWalletConnected ? formatCurrencyWithKey('sOPT', tokenBalance) : EMPTY_VALUE}
-                                </Wallet>
-                            </WalletContainer>
-                        </FlexDivCentered>
                     </FlexDivRowCentered>
                     {activeTab.id === 'market' && <TokenSwap optionSide={optionSide} />}
                     {activeTab.id === 'limit' && <PlaceOrder optionSide={optionSide} />}
@@ -137,15 +140,16 @@ const TradeFilterButton = styled(FilterButton)`
 const WalletContainer = styled(FlexDivColumn)`
     align-items: end;
     margin-right: 20px;
-    margin-left: 5px;
+    margin-left: 7px;
 `;
 
-const Wallet = styled.div`
+const Wallet = styled.div<{ color?: string }>`
     font-weight: 600;
     font-size: 14px;
     line-height: 16px;
+    text-align: center;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => (props.color ? props.color : '#f6f6fe')};
 `;
 
 export default TradeOptions;

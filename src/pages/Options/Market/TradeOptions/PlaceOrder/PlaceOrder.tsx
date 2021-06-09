@@ -2,7 +2,7 @@ import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
-import { SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,6 @@ import {
     InputContainer,
     InputLabel,
     SubmitButtonContainer,
-    Input,
     ReactSelect,
     CurrencyLabel,
     AmountButton,
@@ -54,9 +53,15 @@ import {
     SummaryItem,
     SummaryContent,
     SubmitButton,
+    SliderRange,
+    SliderContainer,
 } from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
+import NumericInput from '../../components/NumericInput';
+import onboardConnector from 'utils/onboardConnector';
+import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
+import { COLORS } from 'constants/ui';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -76,7 +81,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [price, setPrice] = useState<number | string>('');
     const [amount, setAmount] = useState<number | string>('');
-    const [expiration, setExpiration] = useState<ValueType<ExpirationOptionType, false>>();
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
@@ -136,18 +140,9 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     } = snxJSConnector.snxJS as any;
 
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
+    const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
-
-    const isButtonDisabled =
-        price === '' ||
-        Number(price) <= 0 ||
-        expiration === undefined ||
-        amount === '' ||
-        Number(amount) <= 0 ||
-        isSubmitting ||
-        !isWalletConnected ||
-        (isBuy ? !sUSDBalance : !tokenBalance);
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
@@ -155,6 +150,23 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
             label: t(period.i18nLabel),
         };
     });
+
+    const [expiration, setExpiration] = useState<ValueType<ExpirationOptionType, false>>(
+        expirationOptions[expirationOptions.length - 1]
+    );
+
+    const isPriceEntered = Number(price) > 0;
+    const isAmountEntered = Number(amount) > 0;
+    const isExpirationEntered = expiration !== undefined;
+    const insufficientBalance = isBuy ? sUSDBalance < Number(price) * Number(amount) : tokenBalance < Number(amount);
+
+    const isButtonDisabled =
+        !isPriceEntered ||
+        !isAmountEntered ||
+        !isExpirationEntered ||
+        isSubmitting ||
+        !isWalletConnected ||
+        insufficientBalance;
 
     const getOrderEndDate = () => {
         let orderEndDate = 0;
@@ -289,9 +301,65 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         setAmount(newAmount);
     };
 
+    const getSubmitButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <SubmitButton isBuy={isBuy} onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </SubmitButton>
+            );
+        }
+        if (!isPriceEntered) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.enter-price`)}
+                </SubmitButton>
+            );
+        }
+        if (!isAmountEntered) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.enter-amount`)}
+                </SubmitButton>
+            );
+        }
+        if (insufficientBalance) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.insufficient-balance`)}
+                </SubmitButton>
+            );
+        }
+        if (!isExpirationEntered) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.enter-expiration`)}
+                </SubmitButton>
+            );
+        }
+        if (!hasAllowance) {
+            return (
+                <SubmitButton disabled={isAllowing || !isWalletConnected} onClick={handleAllowance} isBuy={isBuy}>
+                    {!isAllowing
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: makerTokenCurrencyKey })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: makerTokenCurrencyKey,
+                          })}
+                </SubmitButton>
+            );
+        }
+        return (
+            <SubmitButton disabled={isButtonDisabled} onClick={handleSubmitOrder} isBuy={isBuy}>
+                {!isSubmitting
+                    ? t(`options.market.trade-options.place-order.confirm-button.label`)
+                    : t(`options.market.trade-options.place-order.confirm-button.progress-label`)}
+            </SubmitButton>
+        );
+    };
+
     return (
         <Container>
-            <FlexDiv>
+            <FlexDivRow>
                 <InputContainer style={{ width: '50%', marginRight: 10 }}>
                     <ReactSelect
                         formatOptionLabel={(option: any) => option.label}
@@ -303,27 +371,51 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </InputContainer>
-                <div></div>
-            </FlexDiv>
-            <InputContainer>
-                <Input value={price} onChange={(e) => setPrice(e.target.value)} type="number" min="0" step="any" />
-                <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
-                <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
-            </InputContainer>
+                <div style={{ width: '50%' }}></div>
+            </FlexDivRow>
+            <FlexDivCentered>
+                <SliderContainer style={{ width: '50%', marginRight: 10, padding: '0 10px' }}>
+                    {isBuy ? (
+                        <LongSlider
+                            value={Number(price)}
+                            step={0.01}
+                            max={1}
+                            min={0}
+                            onChange={(_, newValue) => {
+                                const long = newValue as number;
+                                setPrice(long);
+                            }}
+                        />
+                    ) : (
+                        <ShortSlider
+                            value={Number(price)}
+                            step={0.01}
+                            max={1}
+                            min={0}
+                            onChange={(_, newValue) => {
+                                const long = newValue as number;
+                                setPrice(long);
+                            }}
+                        />
+                    )}
+                    <FlexDivRow>
+                        <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}0`}</SliderRange>
+                        <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}1`}</SliderRange>
+                    </FlexDivRow>
+                </SliderContainer>
+                <InputContainer style={{ width: '50%' }}>
+                    <NumericInput value={price} onChange={(_, value) => setPrice(value)} />
+                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                </InputContainer>
+            </FlexDivCentered>
             <FlexDiv>
                 <InputContainer style={{ width: '50%', marginRight: 10 }}>
-                    <Input
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        id="amount"
-                        type="number"
-                        min="0"
-                        step="any"
-                    />
+                    <NumericInput value={amount} onChange={(_, value) => setAmount(value)} />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
-                    <CurrencyLabel>{'sOPT'}</CurrencyLabel>
+                    <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
                 </InputContainer>
                 <InputContainer style={{ width: '50%' }}>
                     <ReactSelect
@@ -354,21 +446,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
                 </SummaryContent>
             </SummaryItem>
-            <SubmitButtonContainer>
-                {hasAllowance ? (
-                    <SubmitButton isBuy={isBuy} disabled={isButtonDisabled} onClick={handleSubmitOrder}>
-                        {!isSubmitting
-                            ? t('options.market.trade-options.place-order.confirm-button.label')
-                            : t('options.market.trade-options.place-order.confirm-button.progress-label')}
-                    </SubmitButton>
-                ) : (
-                    <SubmitButton isBuy={isBuy} disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
-                        {!isAllowing
-                            ? t('common.enable-wallet-access.label')
-                            : t('common.enable-wallet-access.progress-label')}
-                    </SubmitButton>
-                )}
-            </SubmitButtonContainer>
+            <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
                 {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
             </div>
