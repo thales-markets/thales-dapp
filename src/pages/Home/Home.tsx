@@ -21,6 +21,7 @@ import zeroX from 'assets/images/0x.svg';
 import chainlink from 'assets/images/chainlink.svg';
 import plus from 'assets/images/plus.svg';
 import minus from 'assets/images/minus.svg';
+import faq from 'assets/images/faq.svg';
 import { SyntetixLogo } from './Footer/components';
 
 const CAROUSEL_SCROLL = {
@@ -70,32 +71,28 @@ const Home: React.FC = () => {
                 <FlexDivColumn>
                     <Header />
                     <HeroSection className="landing-hero">
-                        <Side>
-                            <Text className="title">{t('landing-page.title')}</Text>
-                            <Text className="text-m pale-grey" style={{ marginBottom: 120, marginTop: 30 }}>
-                                {t('landing-page.description')}
-                            </Text>
-                            <FlexDiv>
-                                <Button
-                                    id="use-app"
-                                    className="secondary"
-                                    style={{ marginRight: '20px' }}
-                                    onClick={() => navigateTo(ROUTES.Options.Home)}
-                                >
-                                    {t('landing-page.launch')}
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        document
-                                            .getElementById('who-is-thales')
-                                            ?.scrollIntoView({ behavior: 'smooth' });
-                                    }}
-                                    className="tertiary"
-                                >
-                                    {t('landing-page.who-is-thales')}
-                                </Button>
-                            </FlexDiv>
-                        </Side>
+                        <Text className="title">{t('landing-page.title')}</Text>
+                        <Text className="text-m pale-grey" style={{ marginBottom: 120, marginTop: 50 }}>
+                            {t('landing-page.description')}
+                        </Text>
+                        <FlexDiv>
+                            <Button
+                                id="use-app"
+                                className="secondary"
+                                style={{ marginRight: '20px' }}
+                                onClick={() => navigateTo(ROUTES.Options.Home)}
+                            >
+                                {t('landing-page.launch')}
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    document.getElementById('thales')?.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className="tertiary"
+                            >
+                                {t('landing-page.who-is-thales')}
+                            </Button>
+                        </FlexDiv>
                     </HeroSection>
                 </FlexDivColumn>
             </Section>
@@ -103,14 +100,14 @@ const Home: React.FC = () => {
                 <Cards>
                     <Image src={coins} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
                     <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
-                        <Text className="white text-l">{t('landing-page.markets.title')}</Text>.
-                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                        <Text className="pale-grey text-l">{t('landing-page.markets.title')}</Text>.
+                        <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
                             {t('landing-page.markets.option1')}
                         </Text>
-                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                        <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
                             {t('landing-page.markets.option2')}
                         </Text>
-                        <Text className="white texts">{t('landing-page.markets.option3')}</Text>
+                        <Text className="pale-grey texts lh24">{t('landing-page.markets.option3')}</Text>
                     </FlexDivColumn>
                     <Button className="primary" style={{ margin: '50px auto' }}>
                         {t('landing-page.markets.view-markets')}
@@ -119,14 +116,14 @@ const Home: React.FC = () => {
                 <Cards>
                     <Image src={scale} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
                     <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
-                        <Text className="white text-l">{t('landing-page.options.title')}</Text>.
-                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                        <Text className="pale-grey text-l">{t('landing-page.options.title')}</Text>.
+                        <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
                             {t('landing-page.options.option1')}
                         </Text>
-                        <Text className="white text-s" style={{ marginBottom: 30 }}>
+                        <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
                             {t('landing-page.options.option2')}
                         </Text>
-                        <Text className="white texts">{t('landing-page.options.option3')}</Text>
+                        <Text className="pale-grey texts lh24">{t('landing-page.options.option3')}</Text>
                     </FlexDivColumn>
                     <Button className="primary" style={{ margin: '50px auto' }}>
                         {t('landing-page.options.view-markets')}
@@ -135,11 +132,11 @@ const Home: React.FC = () => {
             </Section>
             <Section>
                 <FlexDivColumn style={{ alignItems: 'center', marginTop: 50 }}>
-                    <Text className="text-l white">{t('landing-page.partners.seed')}</Text>
+                    <Text className="text-l pale-grey">{t('landing-page.partners.seed')}</Text>
                     <Partners style={{ width: 480, padding: '50px 30px' }}>
                         <SyntetixLogo style={{ width: 'auto', height: 30 }} src={synthetix}></SyntetixLogo>
                     </Partners>
-                    <Text className="text-l white" style={{ marginTop: 40, marginBottom: 70 }}>
+                    <Text className="text-l pale-grey" style={{ marginTop: 40, marginBottom: 70 }}>
                         {t('landing-page.partners.technical')}
                     </Text>
                     <FlexDiv>
@@ -154,7 +151,7 @@ const Home: React.FC = () => {
             </Section>
             <Section>
                 <FlexDivColumn>
-                    <Text className="white text-l" style={{ marginTop: 80, marginBottom: 35, marginLeft: 120 }}>
+                    <Text className="pale-grey text-l" style={{ marginTop: 80, marginBottom: 35, marginLeft: 120 }}>
                         {t('landing-page.get-started.title')}
                     </Text>
                     <GetStarted className={carousel !== CAROUSEL_SELECTED.NONE ? 'animate' : ''}>
@@ -178,7 +175,7 @@ const Home: React.FC = () => {
                         </Carousel>
                         <CardsSmall className="animate-l">
                             <Image src={first} style={{ width: 30, margin: 20 }}></Image>
-                            <Text className="white text-s lh24 ls25">{t('landing-page.get-started.first')}</Text>
+                            <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.first')}</Text>
                         </CardsSmall>
                         <Image className="animate-r" src={market} style={{ width: 250, height: 200 }}></Image>
                     </GetStarted>
@@ -192,99 +189,67 @@ const Home: React.FC = () => {
                         <Image className="animate-l" src={market} style={{ width: 250, height: 200 }}></Image>
                         <CardsSmall className="animate-r">
                             <Image src={second} style={{ width: 30, margin: 20 }}></Image>
-                            <Text className="white text-s lh24 ls25">{t('landing-page.get-started.second')}</Text>
+                            <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.second')}</Text>
                         </CardsSmall>
                     </GetStarted>
                     <GetStarted className={carousel === CAROUSEL_SELECTED.LAST ? 'animate' : ''}>
                         <CardsSmall className="animate-l">
                             <Image src={third} style={{ width: 30, margin: 20 }}></Image>
-                            <Text className="white text-s lh24 ls25">{t('landing-page.get-started.third')}</Text>
+                            <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.third')}</Text>
                         </CardsSmall>
                         <Image className="animate-r" src={market} style={{ width: 250, height: 200 }}></Image>
                     </GetStarted>
                 </FlexDivColumn>
             </Section>
-            <Section>
+            <Section id="thales">
                 <Side>
                     <ThalesTheWhite src={thalesTheWhite} />
                 </Side>
                 <Side>
-                    <Text className="text-xxl white" style={{ marginBottom: 50 }}>
-                        {t('landing-page.who-is-thales')}
-                    </Text>
-                    <Text style={{ backdropFilter: 'blur(10px)' }} className="text-m white">
-                        {t('landing-page.thales-is')}
-                    </Text>
+                    <CardThales>
+                        <Text className="text-xxl pale-grey" style={{ marginBottom: 50 }}>
+                            {t('landing-page.who-is-thales')}
+                        </Text>
+                        <Text style={{ backdropFilter: 'blur(10px)' }} className="text-s pale-grey lh24">
+                            {t('landing-page.thales-is')}
+                        </Text>
+                    </CardThales>
                 </Side>
             </Section>
             <Section id="faq">
-                <FlexDivColumn style={{ padding: '80px 150px', backdropFilter: 'blur(10px)' }}>
-                    <Text className="text-xxl white">{t('landing-page.faq.title')}</Text>
+                <CardFaq>
+                    <Text className="text-xxl pale-grey">{t('landing-page.faq.title')}</Text>
                     <DropDownWrapper className={q1open ? 'open' : ''}>
                         <Question>
-                            <Text className="text-m white">{t('landing-page.faq.firstQ')}</Text>
+                            <Text className="text-m pale-grey">{t('landing-page.faq.firstQ')}</Text>
                             <Image src={q1open ? minus : plus} onClick={() => setQ1open(!q1open)}></Image>
                         </Question>
-                        <Answer className="text-s white lh24 ls25">{t('landing-page.faq.firstA')}</Answer>
+                        <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.firstA')}</Answer>
                     </DropDownWrapper>
                     <DropDownWrapper className={q2open ? 'open' : ''}>
                         <Question>
-                            <Text className="text-m white">{t('landing-page.faq.secondQ')}</Text>
+                            <Text className="text-m pale-grey">{t('landing-page.faq.secondQ')}</Text>
                             <Image src={q2open ? minus : plus} onClick={() => setQ2open(!q2open)}></Image>
                         </Question>
-                        <Answer className="text-s white lh24 ls25">{t('landing-page.faq.secondA')}</Answer>
+                        <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.secondA')}</Answer>
                     </DropDownWrapper>
                     <DropDownWrapper className={q3open ? 'open' : ''}>
                         <Question>
-                            <Text className="text-m white lh24 ls25">{t('landing-page.faq.thirdQ')}</Text>
+                            <Text className="text-m pale-grey lh24 ls25">{t('landing-page.faq.thirdQ')}</Text>
                             <Image src={q3open ? minus : plus} onClick={() => setQ3open(!q3open)}></Image>
                         </Question>
-                        <Answer className="text-s white lh24 ls25">{t('landing-page.faq.thirdA')}</Answer>
+                        <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.thirdA')}</Answer>
                     </DropDownWrapper>
-                </FlexDivColumn>
+                </CardFaq>
+                <FaqImg src={faq} />
             </Section>
             <Footer></Footer>
         </>
     );
 };
 
-const DropDownWrapper = styled(FlexDivColumn)`
-    margin-top: 12px;
-    padding: 20px 0;
-    &:not(:last-child) {
-        border-bottom: 1.5px dashed #00f9ff;
-    }
-    &.open {
-        & > p {
-            position: relative;
-            opacity: 1;
-            transition: opacity 1s;
-        }
-    }
-`;
-
-const Question = styled(FlexDiv)`
-    justify-content: space-between;
-    align-items: center;
-    img {
-        cursor: pointer;
-        width: 20px;
-        height: 20px;
-    }
-`;
-const Answer = styled(Text)`
-    opacity: 0;
-    position: absolute;
-    pointer-events: none;
-    margin-top: 10px;
-    white-space: break-spaces;
-`;
-
-const HeroSection = styled(FlexDiv)`
-    @media (max-width: 768px) {
-        flex-direction: column;
-        width: 100%;
-    }
+const HeroSection = styled(FlexDivColumn)`
+    padding: 160px 100px;
 `;
 
 const CardsAbs = styled(FlexDivColumn)`
@@ -293,6 +258,10 @@ const CardsAbs = styled(FlexDivColumn)`
     backdrop-filter: blur(10px);
     border-radius: 23px;
     border: 2px solid rgb(106, 193, 213, 0.4);
+    border-left: 2px solid rgba(202, 145, 220, 0.6);
+    border-top: 2px solid rgba(202, 145, 220, 0.6);
+    border-right: 2px solid rgba(106, 193, 213, 0.6);
+    border-bottom: 2px solid rgba(106, 193, 213, 0.6);
 `;
 
 const Cards = styled(CardsAbs)`
@@ -350,11 +319,59 @@ const CardsSmall = styled(CardsAbs)`
     align-items: center;
 `;
 
+const CardThales = styled(CardsAbs)`
+    padding: 45px 35px 75px 70px;
+`;
+
+const CardFaq = styled(CardsAbs)`
+    margin: 65px 0 200px 70px;
+    padding: 45px 30px 45px 75px;
+    min-width: 850px;
+`;
+
+const DropDownWrapper = styled(FlexDivColumn)`
+    margin-top: 12px;
+    padding: 20px 0;
+    &:not(:last-child) {
+        border-bottom: 1.5px dashed #00f9ff;
+    }
+    &.open {
+        & > p {
+            position: relative;
+            opacity: 1;
+            transition: opacity 1s;
+        }
+    }
+`;
+
+const Question = styled(FlexDiv)`
+    justify-content: space-between;
+    align-items: center;
+    img {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+    }
+`;
+const Answer = styled(Text)`
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+    margin-top: 10px;
+    white-space: break-spaces;
+`;
+
 const ThalesTheWhite = styled(Image)`
     object-fit: contain;
     max-height: 500px;
     min-height: 400px;
     min-width: 300px;
+`;
+
+const FaqImg = styled(Image)`
+    height: 600px;
+    margin-right: -80px;
+    margin-bottom: 100px;
 `;
 
 const Carousel = styled(FlexDivColumn)`

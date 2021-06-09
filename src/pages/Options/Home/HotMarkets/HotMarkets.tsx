@@ -50,7 +50,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <Wrapper id="hot-markets">
-            <Text className="text-xxl white">{t('options.home.explore-markets.discover')}</Text>
+            <Text className="text-xxl palge-grey">{t('options.home.explore-markets.discover')}</Text>
             <FlexDivCentered className="hot-markets__desktop">
                 <Arrow
                     onClick={() => {
