@@ -188,7 +188,7 @@ const DataWrapper = styled(FlexDivColumn)`
 `;
 
 export const MarketRow = styled(FlexDiv)`
-    color: white;
+    color: #f6f6fe;
     font-size: 14px;
     line-height: 16px;
     padding: 12px;

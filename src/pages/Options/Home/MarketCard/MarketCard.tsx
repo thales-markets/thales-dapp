@@ -63,7 +63,7 @@ const Card = styled(FlexDivColumnCentered)`
     position: relative;
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 24px;
-    color: white;
+    color: #f6f6fe;
     min-width: 300px;
     max-width: 320px;
     margin: 50px 20px 50px 20px;
