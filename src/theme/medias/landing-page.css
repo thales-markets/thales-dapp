@@ -1,8 +1,100 @@
+#get-started > div {
+    padding: 80px 8%;
+}
+
+#get-started img.animate-l {
+    margin-left: 60px;
+}
+
+#get-started img.animate-r {
+    margin-right: 60px;
+}
+
 @media (max-width: 1150px) {
-    #cards > div {
+    #cards > div,
+    #faq > div,
+    #thales > div {
         flex-direction: column;
     }
     #cards > div > div {
         margin: 50px;
     }
+
+    #thales > div > div {
+        padding: 50px;
+    }
+
+    #faq > div {
+        padding: 50px;
+    }
+
+    #faq > div > div {
+        margin: 0;
+        min-width: none;
+    }
+
+    #get-started > div {
+        padding: 80px 50px;
+    }
+
+    #get-started .animate-l,
+    #get-started .animate-r {
+        transform: scale(0.9);
+    }
+
+    #get-started .animate-l {
+        transform-origin: left;
+    }
+
+    #get-started .animate-r {
+        transform-origin: right;
+    }
+
+    #get-started img.animate-l {
+        margin-left: 30px;
+    }
+
+    #get-started img.animate-r {
+        margin-right: 30px;
+    }
+}
+
+@media (max-width: 960px) {
+    #get-started .animate-l,
+    #get-started .animate-r {
+        transform: scale(0.8);
+    }
+    #get-started img.animate-l {
+        margin-left: 0;
+    }
+
+    #get-started img.animate-r {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 760px) {
+    #get-started .animate-l,
+    #get-started .animate-r {
+        transform: scale(0.7);
+        padding: 20px;
+    }
+
+    #thales > div:last-child {
+        margin-top: -130px;
+    }
+
+    #cards > div,
+    #thales > div:last-child,
+    #partners > div,
+    #faq > div {
+        transform: scale(0.8);
+    }
+
+    #thales > div:last-child > div:last-child {
+        margin-right: 1.5rem;
+    }
+}
+
+@media (max-width: 580px) {
 }

@@ -133,7 +133,7 @@ const Home: React.FC = () => {
                     </Button>
                 </Cards>
             </Section>
-            <Section>
+            <Section id="partners">
                 <FlexDivColumn style={{ alignItems: 'center', marginTop: 50 }}>
                     <Text className="text-l pale-grey">{t('landing-page.partners.seed')}</Text>
                     <Partners style={{ width: 480, padding: '50px 30px' }}>
@@ -154,7 +154,7 @@ const Home: React.FC = () => {
             </Section>
             <Section id="get-started">
                 <FlexDivColumn>
-                    <Text className="pale-grey text-l" style={{ marginTop: 80, marginBottom: 35, marginLeft: 120 }}>
+                    <Text className="pale-grey text-l" style={{ marginBottom: 35, marginLeft: -30 }}>
                         {t('landing-page.get-started.title')}
                     </Text>
                     <GetStarted className={carousel !== CAROUSEL_SELECTED.NONE ? 'animate' : ''}>
@@ -293,7 +293,7 @@ const GetStarted = styled(FlexDiv)`
     position: relative;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 150px;
+    margin: 20px 0;
     .animate-l {
         transform: translateX(-200px);
         opacity: 0;
@@ -329,12 +329,13 @@ const CardsSmall = styled(CardsAbs)`
 
 const CardThales = styled(CardsAbs)`
     padding: 45px 35px 75px 70px;
+    min-width: 500px;
 `;
 
 const CardFaq = styled(CardsAbs)`
     margin: 65px 0 200px 70px;
     padding: 45px 30px 45px 75px;
-    min-width: 850px;
+    min-width: min(850px, 100%);
 `;
 
 const DropDownWrapper = styled(FlexDivColumn)`
