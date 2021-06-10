@@ -181,5 +181,6 @@ input[type='number'] {
 @import './text.css';
 @import './colors.css';
 @import './datepicker.css';
-@import './media.css';
 @import './hero.css';
+@import './medias/market-options.css';
+@import './medias/landing-page.css';

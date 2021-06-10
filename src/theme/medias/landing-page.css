@@ -1,0 +1,8 @@
+@media (max-width: 1150px) {
+    #cards > div {
+        flex-direction: column;
+    }
+    #cards > div > div {
+        margin: 50px;
+    }
+}

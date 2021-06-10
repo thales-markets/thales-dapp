@@ -24,12 +24,6 @@ import minus from 'assets/images/minus.svg';
 import faq from 'assets/images/faq.svg';
 import { SyntetixLogo } from './Footer/components';
 
-const CAROUSEL_SCROLL = {
-    first: 1550,
-    second: 1900,
-    third: 2350,
-};
-
 enum CAROUSEL_SELECTED {
     'NONE',
     'FIRST',
@@ -45,14 +39,23 @@ const Home: React.FC = () => {
     const [q3open, setQ3open] = useState(false);
 
     const scrollListener = () => {
-        if (scrollY > CAROUSEL_SCROLL.third) {
-            setCarousel(CAROUSEL_SELECTED.LAST);
-        } else if (scrollY > CAROUSEL_SCROLL.second && scrollY <= CAROUSEL_SCROLL.third) {
-            setCarousel(CAROUSEL_SELECTED.SECOND);
-        } else if (scrollY <= CAROUSEL_SCROLL.second && scrollY > CAROUSEL_SCROLL.first) {
-            setCarousel(CAROUSEL_SELECTED.FIRST);
-        } else {
-            setCarousel(CAROUSEL_SELECTED.NONE);
+        const currentPosition = window.innerHeight + scrollY;
+
+        const parent = document.getElementById('get-started')?.offsetTop;
+
+        const first = document.getElementById('first-eclipse')?.offsetTop;
+        const second = document.getElementById('second-eclipse')?.offsetTop;
+        const third = document.getElementById('third-eclipse')?.offsetTop;
+        if (parent !== undefined && first !== undefined && second !== undefined && third !== undefined) {
+            if (currentPosition > parent + third + 600) {
+                setCarousel(CAROUSEL_SELECTED.LAST);
+            } else if (currentPosition > parent + second + 500 && currentPosition <= parent + third + 600) {
+                setCarousel(CAROUSEL_SELECTED.SECOND);
+            } else if (currentPosition <= parent + second + 500 && currentPosition > parent + first + 400) {
+                setCarousel(CAROUSEL_SELECTED.FIRST);
+            } else {
+                setCarousel(CAROUSEL_SELECTED.NONE);
+            }
         }
     };
 
@@ -96,7 +99,7 @@ const Home: React.FC = () => {
                     </HeroSection>
                 </FlexDivColumn>
             </Section>
-            <Section>
+            <Section id="cards">
                 <Cards>
                     <Image src={coins} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
                     <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
@@ -149,7 +152,7 @@ const Home: React.FC = () => {
                     </FlexDiv>
                 </FlexDivColumn>
             </Section>
-            <Section>
+            <Section id="get-started">
                 <FlexDivColumn>
                     <Text className="pale-grey text-l" style={{ marginTop: 80, marginBottom: 35, marginLeft: 120 }}>
                         {t('landing-page.get-started.title')}
@@ -157,10 +160,12 @@ const Home: React.FC = () => {
                     <GetStarted className={carousel !== CAROUSEL_SELECTED.NONE ? 'animate' : ''}>
                         <Carousel>
                             <Eclipse
+                                id="first-eclipse"
                                 src={carousel !== CAROUSEL_SELECTED.NONE ? eclipseSelected : eclipse}
                                 style={{ width: 20, height: 20 }}
                             ></Eclipse>
                             <Eclipse
+                                id="second-eclipse"
                                 src={
                                     carousel === CAROUSEL_SELECTED.SECOND || carousel === CAROUSEL_SELECTED.LAST
                                         ? eclipseSelected
@@ -169,6 +174,7 @@ const Home: React.FC = () => {
                                 style={{ width: 20, height: 20 }}
                             ></Eclipse>
                             <Eclipse
+                                id="third-eclipse"
                                 src={carousel === CAROUSEL_SELECTED.LAST ? eclipseSelected : eclipse}
                                 style={{ width: 20, height: 20 }}
                             ></Eclipse>
@@ -265,7 +271,9 @@ const CardsAbs = styled(FlexDivColumn)`
 `;
 
 const Cards = styled(CardsAbs)`
-    height: 600px;
+    min-height: 600px;
+    min-width: 550px;
+    max-width: 550px;
     &:first-child {
         margin: 50px 50px 90px 120px;
     }
