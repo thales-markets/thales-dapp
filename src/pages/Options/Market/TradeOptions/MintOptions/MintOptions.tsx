@@ -12,7 +12,7 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Checkbox, Message } from 'semantic-ui-react';
+import { Checkbox } from 'semantic-ui-react';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -35,6 +35,9 @@ import {
     SummaryContent,
     SliderContainer,
     SliderRange,
+    InnerSummaryItem,
+    SummaryContainer,
+    DoubleShortInputContainer,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -43,7 +46,7 @@ import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
 import { formatCurrency, formatCurrencyWithSign, formatPercentage, toBigNumber } from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
-import { FlexDivCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'theme/common';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { get0xBaseURL } from 'utils/0x';
@@ -56,6 +59,8 @@ import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
+import ValidationMessage from 'components/ValidationMessage';
+import FieldValidationMessage from 'components/FieldValidationMessage';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -88,6 +93,11 @@ const MintOptions: React.FC = () => {
     const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
     const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
+    const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
+    const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
+    const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
+    const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -111,7 +121,16 @@ const MintOptions: React.FC = () => {
 
     const isAmountEntered = Number(amount) > 0;
     const insufficientBalance = Number(amount) > sUSDBalance || !sUSDBalance;
-    const isButtonDisabled = !isAmountEntered || isMinting || !isWalletConnected || !sUSDBalance || insufficientBalance;
+    const isButtonDisabled =
+        !isAmountEntered ||
+        isMinting ||
+        !isWalletConnected ||
+        !sUSDBalance ||
+        insufficientBalance ||
+        !isLongAmountValid ||
+        !isShortAmountValid ||
+        !isLongPriceValid ||
+        !isShortPriceValid;
 
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
 
@@ -269,11 +288,11 @@ const MintOptions: React.FC = () => {
                 </MintSubmitButton>
             );
         }
-        if (!isAmountEntered) {
-            return <MintSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</MintSubmitButton>;
-        }
         if (insufficientBalance) {
             return <MintSubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</MintSubmitButton>;
+        }
+        if (!isAmountEntered) {
+            return <MintSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</MintSubmitButton>;
         }
         if (!hasAllowance) {
             return (
@@ -514,48 +533,84 @@ const MintOptions: React.FC = () => {
         setShortAmount(amountMinted);
     }, [amount, marketFees]);
 
+    useEffect(() => {
+        setIsLongPriceValid(!sellLong || (sellLong && Number(longPrice) <= 1 && Number(longPrice) > 0));
+    }, [sellLong, longPrice]);
+
+    useEffect(() => {
+        setIsShortPriceValid(!sellShort || (sellShort && Number(shortPrice) <= 1 && Number(shortPrice) > 0));
+    }, [sellShort, shortPrice]);
+
+    useEffect(() => {
+        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
+        setIsLongAmountValid(
+            !sellLong ||
+                amountMinted === 0 ||
+                (sellLong && Number(longAmount) <= amountMinted && Number(longAmount) > 0)
+        );
+    }, [sellLong, longAmount, marketFees]);
+
+    useEffect(() => {
+        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
+        setIsShortAmountValid(
+            !sellShort ||
+                amountMinted === 0 ||
+                (sellShort && Number(shortAmount) <= amountMinted && Number(shortAmount) > 0)
+        );
+    }, [sellShort, shortAmount, marketFees]);
+
     return (
         <Container>
             <GridContainer>
                 <InputContainer>
-                    <NumericInput value={amount} onChange={(_, value) => setAmount(value)} />
+                    <NumericInput
+                        value={amount}
+                        onChange={(_, value) => {
+                            setIsAmountValid(
+                                Number(value) === 0 || (Number(value) > 0 && Number(value) <= sUSDBalance)
+                            );
+                            setAmount(value);
+                        }}
+                        className={isAmountValid ? '' : 'error'}
+                    />
                     <InputLabel>{t('options.market.trade-options.mint.amount-label')}</InputLabel>
                     <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <FieldValidationMessage
+                        showValidation={!isAmountValid}
+                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: SYNTHS_MAP.sUSD })}
+                    />
                 </InputContainer>
             </GridContainer>
-            <MintingFeesContainer>
-                <SummaryLabel>{t('options.market.trade-options.mint.minting-label')}</SummaryLabel>
-            </MintingFeesContainer>
-            <MintingFeesInnerContainer>
-                <MintingTotalLabel color={COLORS.LONG}>
-                    {t('options.market.trade-options.mint.long-label')}
-                </MintingTotalLabel>
-                <MintingTotal color={COLORS.LONG}>
-                    {formatCurrency(
-                        marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
-                    )}
-                </MintingTotal>
-            </MintingFeesInnerContainer>
-            <MintingFeesInnerContainer>
-                <MintingTotalLabel color={COLORS.SHORT}>
-                    {t('options.market.trade-options.mint.short-label')}
-                </MintingTotalLabel>
-                <MintingTotal color={COLORS.SHORT}>
-                    {formatCurrency(
-                        marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
-                    )}
-                </MintingTotal>
-            </MintingFeesInnerContainer>
-
+            <SummaryContainer>
+                <MintingSummaryItem>
+                    <SummaryLabel>{t('options.market.trade-options.mint.minting-label')}</SummaryLabel>
+                </MintingSummaryItem>
+                <MintingInnerSummaryItem>
+                    <SummaryLabel color={COLORS.LONG}>{t('options.market.trade-options.mint.long-label')}</SummaryLabel>
+                    <SummaryContent color={COLORS.LONG}>
+                        {formatCurrency(
+                            marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                        )}
+                    </SummaryContent>
+                </MintingInnerSummaryItem>
+                <MintingInnerSummaryItem>
+                    <SummaryLabel color={COLORS.SHORT}>
+                        {t('options.market.trade-options.mint.short-label')}
+                    </SummaryLabel>
+                    <SummaryContent color={COLORS.SHORT}>
+                        {formatCurrency(
+                            marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                        )}
+                    </SummaryContent>
+                </MintingInnerSummaryItem>
+            </SummaryContainer>
             <Divider />
-
             <PlaceInOrderbook>{t('options.market.trade-options.mint.sell-options-title')}</PlaceInOrderbook>
-            <FlexDivCentered>
-                <Checkbox
+            <FlexDiv>
+                <StyledCheckbox
                     checked={sellLong}
                     value={sellLong.toString()}
-                    onChange={(_, data) => setSellLong(data.checked || false)}
-                    style={{ marginBottom: 20 }}
+                    onChange={(_: any, data: any) => setSellLong(data.checked || false)}
                 />
                 <SliderContainer>
                     <LongSlider
@@ -571,29 +626,53 @@ const MintOptions: React.FC = () => {
                         <SliderRange color={COLORS.LONG}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
                 </SliderContainer>
-                <InputContainer style={{ width: '25%', marginRight: 10 }}>
-                    <NumericInput value={longPrice} onChange={(_, value) => setLongPrice(value)} disabled={!sellLong} />
+                <DoubleShortInputContainer>
+                    <NumericInput
+                        value={longPrice}
+                        onChange={(_, value) => setLongPrice(value)}
+                        disabled={!sellLong}
+                        className={isLongPriceValid ? '' : 'error'}
+                        step="0.01"
+                    />
                     <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
-                </InputContainer>
-                <InputContainer style={{ width: '25%' }}>
+                    <FieldValidationMessage
+                        showValidation={!isLongPriceValid}
+                        message={t(
+                            Number(longPrice) == 0 ? 'common.errors.enter-price' : 'common.errors.invalid-price-max',
+                            { max: 1 }
+                        )}
+                    />
+                </DoubleShortInputContainer>
+                <DoubleShortInputContainer>
                     <NumericInput
                         value={longAmount}
                         onChange={(_, value) => setLongAmount(value)}
                         disabled={!sellLong}
+                        className={isLongAmountValid ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{'sLONG'}</CurrencyLabel>
-                </InputContainer>
-            </FlexDivCentered>
-            <FlexDivCentered>
-                <Checkbox
+                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sLONG}</CurrencyLabel>
+                    <FieldValidationMessage
+                        showValidation={!isLongAmountValid}
+                        message={t(
+                            Number(longAmount) == 0 ? 'common.errors.enter-amount' : 'common.errors.invalid-amount-max',
+                            {
+                                max: marketFees
+                                    ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)
+                                    : 0,
+                            }
+                        )}
+                    />
+                </DoubleShortInputContainer>
+            </FlexDiv>
+            <FlexDiv>
+                <StyledCheckbox
                     checked={sellShort}
                     value={sellShort.toString()}
-                    onChange={(_, data) => setSellShort(data.checked || false)}
-                    style={{ marginBottom: 20 }}
+                    onChange={(_: any, data: any) => setSellShort(data.checked || false)}
                 />
                 <SliderContainer>
                     <ShortSlider
@@ -609,66 +688,93 @@ const MintOptions: React.FC = () => {
                         <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
                 </SliderContainer>
-                <InputContainer style={{ width: '25%', marginRight: 10 }}>
+                <DoubleShortInputContainer>
                     <NumericInput
                         value={shortPrice}
                         onChange={(_, value) => setShortPrice(value)}
                         disabled={!sellShort}
+                        className={isShortPriceValid ? '' : 'error'}
+                        step="0.01"
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
-                </InputContainer>
-                <InputContainer style={{ width: '25%' }}>
+                    <FieldValidationMessage
+                        showValidation={!isShortPriceValid}
+                        message={t(
+                            Number(shortPrice) == 0 ? 'common.errors.enter-price' : 'common.errors.invalid-price-max',
+                            { max: 1 }
+                        )}
+                    />
+                </DoubleShortInputContainer>
+                <DoubleShortInputContainer>
                     <NumericInput
                         value={shortAmount}
                         onChange={(_, value) => setShortAmount(value)}
                         disabled={!sellShort}
+                        className={isShortAmountValid ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{'sSHORT'}</CurrencyLabel>
-                </InputContainer>
-            </FlexDivCentered>
+                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sSHORT}</CurrencyLabel>
+                    <FieldValidationMessage
+                        showValidation={!isShortAmountValid}
+                        message={t(
+                            Number(shortAmount) == 0
+                                ? 'common.errors.enter-amount'
+                                : 'common.errors.invalid-amount-max',
+                            {
+                                max: marketFees
+                                    ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)
+                                    : 0,
+                            }
+                        )}
+                    />
+                </DoubleShortInputContainer>
+            </FlexDiv>
 
             <Divider />
-            <MintingFeesContainer>
-                <SummaryLabel>{t('options.market.trade-options.mint.fees.minting')}</SummaryLabel>
-                <SummaryContent>{`${formatPercentage(
-                    marketFees ? marketFees.creator + marketFees.pool : 0
-                )} (${formatCurrencyWithSign(
-                    USD_SIGN,
-                    marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0
-                )})`}</SummaryContent>
-            </MintingFeesContainer>
-            <MintingFeesInnerContainer>
-                <SummaryLabel>{t('options.market.trade-options.mint.fees.creator')}</SummaryLabel>
-                <SummaryContent>{`${formatPercentage(marketFees ? marketFees.creator : 0)} (${formatCurrencyWithSign(
-                    USD_SIGN,
-                    marketFees ? Number(amount) * marketFees.creator : 0
-                )})`}</SummaryContent>
-            </MintingFeesInnerContainer>
-            <MintingFeesInnerContainer style={{ marginBottom: 20 }}>
-                <SummaryLabel>{t('options.market.trade-options.mint.fees.pool')}</SummaryLabel>
-                <SummaryContent>{`${formatPercentage(marketFees ? marketFees.pool : 0)} (${formatCurrencyWithSign(
-                    USD_SIGN,
-                    marketFees ? Number(amount) * marketFees.pool : 0
-                )})`}</SummaryContent>
-            </MintingFeesInnerContainer>
-            <NetworkFeesContainer>
+
+            <FeeSummaryContainer>
+                <MintingSummaryItem>
+                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
+                    <ProtocolFeeContent>{`${formatPercentage(
+                        marketFees ? marketFees.creator + marketFees.pool : 0
+                    )} (${formatCurrencyWithSign(
+                        USD_SIGN,
+                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                    )})`}</ProtocolFeeContent>
+                </MintingSummaryItem>
+                <MintingInnerSummaryItem>
+                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.creator')}</ProtocolFeeLabel>
+                    <ProtocolFeeContent>{`${formatPercentage(
+                        marketFees ? marketFees.creator : 0
+                    )} (${formatCurrencyWithSign(
+                        USD_SIGN,
+                        marketFees ? Number(amount) * marketFees.creator : 0
+                    )})`}</ProtocolFeeContent>
+                </MintingInnerSummaryItem>
+                <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
+                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.pool')}</ProtocolFeeLabel>
+                    <ProtocolFeeContent>{`${formatPercentage(
+                        marketFees ? marketFees.pool : 0
+                    )} (${formatCurrencyWithSign(
+                        USD_SIGN,
+                        marketFees ? Number(amount) * marketFees.pool : 0
+                    )})`}</ProtocolFeeContent>
+                </MintingInnerSummaryItem>
                 <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
-            </NetworkFeesContainer>
+            </FeeSummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-            </div>
+
+            <ValidationMessage
+                showValidation={txErrorMessage !== null}
+                message={txErrorMessage}
+                onDismiss={() => setTxErrorMessage(null)}
+            />
         </Container>
     );
 };
-
-const NetworkFeesContainer = styled.div`
-    padding: 0 45px;
-`;
 
 const Divider = styled.hr`
     width: 100%;
@@ -683,22 +789,23 @@ const MintSubmitButton = styled(SubmitButton)`
     &:hover:not(:disabled) {
         background: #7119e1;
     }
+    margin-top: ;
 `;
 
-const MintingFeesContainer = styled(SummaryItem)`
+const MintingSummaryItem = styled(SummaryItem)`
     margin-bottom: 4px;
 `;
 
-const MintingFeesInnerContainer = styled(MintingFeesContainer)`
-    margin-left: 20px;
+const MintingInnerSummaryItem = styled(InnerSummaryItem)`
+    margin-bottom: 4px;
 `;
 
-const MintingTotalLabel = styled(SummaryLabel)<{ color?: string }>`
-    color: ${(props) => props.color ?? '#f6f6fe'};
+const ProtocolFeeLabel = styled(SummaryLabel)`
+    font-size: 13px;
 `;
 
-const MintingTotal = styled(SummaryContent)<{ color?: string }>`
-    color: ${(props) => props.color ?? '#f6f6fe'};
+const ProtocolFeeContent = styled(SummaryContent)`
+    font-size: 13px;
 `;
 
 const PlaceInOrderbook = styled.div`
@@ -707,6 +814,14 @@ const PlaceInOrderbook = styled.div`
     line-height: 40px;
     letter-spacing: 0.15px;
     color: #f6f6fe;
+`;
+
+const StyledCheckbox = styled(Checkbox)`
+    margin-top: 24px;
+`;
+
+const FeeSummaryContainer = styled(SummaryContainer)`
+    margin-top: 10px;
 `;
 
 export default MintOptions;

@@ -16,7 +16,6 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Message } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -42,7 +41,6 @@ import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import { ValueType } from 'react-select';
 import {
     Container,
-    InputContainer,
     InputLabel,
     SubmitButtonContainer,
     ReactSelect,
@@ -54,14 +52,18 @@ import {
     SummaryContent,
     SubmitButton,
     SliderRange,
-    SliderContainer,
+    BuySellSliderContainer,
+    ShortInputContainer,
+    SummaryContainer,
 } from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
-import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
-import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
+import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
 import { COLORS } from 'constants/ui';
+import FieldValidationMessage from 'components/FieldValidationMessage';
+import ValidationMessage from 'components/ValidationMessage';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -86,6 +88,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    const [isPriceValid, setIsPriceValid] = useState(true);
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
 
     const orderSideOptions = [
         {
@@ -158,7 +162,9 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const isPriceEntered = Number(price) > 0;
     const isAmountEntered = Number(amount) > 0;
     const isExpirationEntered = expiration !== undefined;
-    const insufficientBalance = isBuy ? sUSDBalance < Number(price) * Number(amount) : tokenBalance < Number(amount);
+    const insufficientBalance = isBuy
+        ? sUSDBalance < Number(price) * Number(amount) || !sUSDBalance
+        : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
         !isPriceEntered ||
@@ -166,7 +172,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         !isExpirationEntered ||
         isSubmitting ||
         !isWalletConnected ||
-        insufficientBalance;
+        insufficientBalance ||
+        !isPriceValid;
 
     const getOrderEndDate = () => {
         let orderEndDate = 0;
@@ -309,10 +316,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                 </SubmitButton>
             );
         }
-        if (!isPriceEntered) {
+        if (insufficientBalance) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
-                    {t(`common.errors.enter-price`)}
+                    {t(`common.errors.insufficient-balance`)}
                 </SubmitButton>
             );
         }
@@ -323,10 +330,17 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                 </SubmitButton>
             );
         }
-        if (insufficientBalance) {
+        if (!isPriceEntered) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
-                    {t(`common.errors.insufficient-balance`)}
+                    {t(`common.errors.enter-price`)}
+                </SubmitButton>
+            );
+        }
+        if (isPriceEntered && !isPriceValid) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.invalid-price`)}
                 </SubmitButton>
             );
         }
@@ -357,10 +371,18 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         );
     };
 
+    useEffect(() => {
+        setIsAmountValid(
+            Number(amount) === 0 ||
+                (Number(amount) > 0 &&
+                    (isBuy ? Number(price) * Number(amount) <= sUSDBalance : Number(amount) <= tokenBalance))
+        );
+    }, [amount, price, isBuy]);
+
     return (
         <Container>
             <FlexDivRow>
-                <InputContainer style={{ width: '50%', marginRight: 10 }}>
+                <ShortInputContainer>
                     <ReactSelect
                         formatOptionLabel={(option: any) => option.label}
                         options={orderSideOptions}
@@ -370,31 +392,31 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         isUppercase
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
-                </InputContainer>
-                <div style={{ width: '50%' }}></div>
+                </ShortInputContainer>
+                <ShortInputContainer></ShortInputContainer>
             </FlexDivRow>
-            <FlexDivCentered>
-                <SliderContainer style={{ width: '50%', marginRight: 10, padding: '0 10px' }}>
+            <FlexDiv>
+                <BuySellSliderContainer>
                     {isBuy ? (
-                        <LongSlider
+                        <BuySlider
                             value={Number(price)}
                             step={0.01}
                             max={1}
                             min={0}
-                            onChange={(_, newValue) => {
-                                const long = newValue as number;
-                                setPrice(long);
+                            onChange={(_, value) => {
+                                setIsPriceValid(Number(value) <= 1);
+                                setPrice(Number(value));
                             }}
                         />
                     ) : (
-                        <ShortSlider
+                        <SellSlider
                             value={Number(price)}
                             step={0.01}
                             max={1}
                             min={0}
-                            onChange={(_, newValue) => {
-                                const long = newValue as number;
-                                setPrice(long);
+                            onChange={(_, value) => {
+                                setIsPriceValid(Number(value) <= 1);
+                                setPrice(Number(value));
                             }}
                         />
                     )}
@@ -402,22 +424,40 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}0`}</SliderRange>
                         <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
-                </SliderContainer>
-                <InputContainer style={{ width: '50%' }}>
-                    <NumericInput value={price} onChange={(_, value) => setPrice(value)} />
+                </BuySellSliderContainer>
+                <ShortInputContainer>
+                    <NumericInput
+                        value={price}
+                        onChange={(_, value) => {
+                            setIsPriceValid(Number(value) <= 1);
+                            setPrice(value);
+                        }}
+                        step="0.01"
+                        className={isPriceValid ? '' : 'error'}
+                    />
                     <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
                     <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
-                </InputContainer>
-            </FlexDivCentered>
+                    <FieldValidationMessage
+                        showValidation={!isPriceValid}
+                        message={t(`common.errors.invalid-price-max`, { max: 1 })}
+                    />
+                </ShortInputContainer>
+            </FlexDiv>
             <FlexDiv>
-                <InputContainer style={{ width: '50%', marginRight: 10 }}>
+                <ShortInputContainer>
                     <NumericInput value={amount} onChange={(_, value) => setAmount(value)} />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
                     <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
-                </InputContainer>
-                <InputContainer style={{ width: '50%' }}>
+                    <FieldValidationMessage
+                        showValidation={!isAmountValid}
+                        message={t(`common.errors.insufficient-balance-wallet`, {
+                            currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                        })}
+                    />
+                </ShortInputContainer>
+                <ShortInputContainer>
                     <ReactSelect
                         formatOptionLabel={(option: any) => option.label}
                         options={expirationOptions}
@@ -427,7 +467,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         isSearchable={false}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
-                </InputContainer>
+                </ShortInputContainer>
             </FlexDiv>
             <AmountButtonContainer>
                 {AMOUNT_PERCENTAGE.map((percentage: number) => (
@@ -440,16 +480,20 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     </AmountButton>
                 ))}
             </AmountButtonContainer>
-            <SummaryItem>
-                <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
-                <SummaryContent>
-                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
-                </SummaryContent>
-            </SummaryItem>
+            <SummaryContainer>
+                <SummaryItem>
+                    <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
+                    <SummaryContent>
+                        {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
+                    </SummaryContent>
+                </SummaryItem>
+            </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-            </div>
+            <ValidationMessage
+                showValidation={txErrorMessage !== null}
+                message={txErrorMessage}
+                onDismiss={() => setTxErrorMessage(null)}
+            />
         </Container>
     );
 };

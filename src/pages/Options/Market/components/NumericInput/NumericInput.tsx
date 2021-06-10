@@ -8,11 +8,22 @@ type NumericInputProps = {
     onChange: (e: ChangeEvent<HTMLInputElement>, value: string) => void;
     className?: string;
     disabled?: boolean;
+    step?: string;
+    max?: string;
 };
 
 const INVALID_CHARS = ['-', '+', 'e'];
 
-const NumericInput: React.FC<NumericInputProps> = ({ value, onChange, placeholder, className, disabled, ...rest }) => {
+const NumericInput: React.FC<NumericInputProps> = ({
+    value,
+    onChange,
+    placeholder,
+    className,
+    disabled,
+    step,
+    max,
+    ...rest
+}) => {
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
 
@@ -34,7 +45,8 @@ const NumericInput: React.FC<NumericInputProps> = ({ value, onChange, placeholde
                 }
             }}
             min="0"
-            step="any"
+            max={max || 'any'}
+            step={step || 'any'}
         />
     );
 };

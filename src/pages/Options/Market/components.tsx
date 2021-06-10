@@ -38,6 +38,9 @@ export const Input = styled.input`
         opacity: 0.5;
         cursor: default;
     }
+    &.error {
+        border: 2px solid #e53720;
+    }
 `;
 
 export const InputLabel = styled.label`
@@ -58,10 +61,9 @@ export const CurrencyLabel = styled.label`
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
-    padding: 0 16px 17px 0;
+    padding: 31px 16px 17px 0;
     pointer-events: none;
     position: absolute;
-    bottom: 0;
     right: 0;
     &.disabled {
         opacity: 0.5;
@@ -74,6 +76,20 @@ export const InputContainer = styled.div`
     flex-direction: column;
     position: relative;
     margin-bottom: 20px;
+`;
+
+export const ShortInputContainer = styled(InputContainer)`
+    width: 50%;
+    &:first-child {
+        margin-right: 10px;
+    }
+`;
+
+export const DoubleShortInputContainer = styled(InputContainer)`
+    width: 25%;
+    &:last-child {
+        margin-left: 10px;
+    }
 `;
 
 export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
@@ -171,14 +187,10 @@ export const AmountButton = styled.button`
         border: 2px solid #00f9ff;
         color: #00f9ff;
     }
-    &.selected:hover:not(:disabled) {
-        background: rgba(1, 38, 81, 0.8);
-        color: #b8c6e5;
-    }
 `;
 
 export const SubmitButtonContainer = styled(FlexDivCentered)`
-    margin-top: 30px;
+    margin-top: 40px;
 `;
 
 export const SubmitButton = styled.button<{ isBuy?: boolean }>`
@@ -204,27 +216,34 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     }
 `;
 
-export const SummaryItem = styled(FlexDivRow)`
+export const SummaryContainer = styled.div`
     padding: 0 45px;
+`;
+
+export const SummaryItem = styled(FlexDivRow)`
     margin-bottom: 20px;
 `;
 
-export const SummaryLabel = styled.div`
+export const InnerSummaryItem = styled(SummaryItem)`
+    margin-left: 20px;
+`;
+
+export const SummaryLabel = styled.div<{ color?: string }>`
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.5px;
-    color: #f6f6fe;
+    color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 
-export const SummaryContent = styled.div`
+export const SummaryContent = styled.div<{ color?: string }>`
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #f6f6fe;
+    color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 
 export const FilterButton = styled.button`
@@ -269,5 +288,10 @@ export const SliderContainer = styled.div`
     position: relative;
     width: 50%;
     padding: 0 20px;
-    margin-bottom: 10px;
+    margin-top: 15px;
+`;
+
+export const BuySellSliderContainer = styled(SliderContainer)`
+    margin-right: 10px;
+    padding: 0 10px;
 `;

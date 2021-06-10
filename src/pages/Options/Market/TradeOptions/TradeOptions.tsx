@@ -4,7 +4,7 @@ import { AccountMarketInfo, OptionSide } from 'types/options';
 import TokenSwap from './TokenSwap';
 import PlaceOrder from './PlaceOrder';
 import MarketWidgetContent from '../components/MarketWidget/MarketWidgetContent';
-import { COLORS, MarketWidgetKey } from 'constants/ui';
+import { /*COLORS,*/ MarketWidgetKey } from 'constants/ui';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 import styled from 'styled-components';
 import { FlexDivColumn, FlexDivRowCentered, FlexDivCentered } from 'theme/common';
@@ -89,7 +89,7 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
                         {isWalletConnected ? (
                             <>
                                 <Wallet>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</Wallet>
-                                <Wallet color={optionSide === 'long' ? COLORS.LONG : COLORS.SHORT}>
+                                <Wallet /*color={optionSide === 'long' ? COLORS.LONG : COLORS.SHORT}*/>
                                     {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], tokenBalance)}
                                 </Wallet>
                             </>

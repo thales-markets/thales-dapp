@@ -87,6 +87,28 @@ export const ShortSlider = withStyles({
     disabled: {},
 })(StyledSlider);
 
+export const BuySlider = withStyles({
+    root: {
+        color: COLORS.BUY,
+        '&$disabled': {
+            color: COLORS.BUY,
+            opacity: 0.5,
+        },
+    },
+    disabled: {},
+})(StyledSlider);
+
+export const SellSlider = withStyles({
+    root: {
+        color: COLORS.SELL,
+        '&$disabled': {
+            color: COLORS.SELL,
+            opacity: 0.5,
+        },
+    },
+    disabled: {},
+})(StyledSlider);
+
 export const ToggleButton = styled.div`
     position: relative;
     width: 45px;

@@ -36,7 +36,7 @@
             "technical": "Technical partners"
         },
         "get-started": {
-            "title":"How to get started?",
+            "title": "How to get started?",
             "first": "You must have a Web3 wallet, like Metamask.",
             "second": "You must have Ether to pay for gas. ",
             "third": "You must have sUSD, which can be bought from Uniswap, 1inch.Exchange, or Curve.Fi."
@@ -49,8 +49,6 @@
             "secondA": "Market participants are free to create markets for any supported Chainlink price feed on crypto assets, index products, forex, traditional equities, and commodities.",
             "thirdQ": "How does binary options pricing work?",
             "thirdA": "Binary options are priced based on the make-up of the pool for a given market. The market originator sets an initial skew to establish initial odds, bidders can then choose a side they think is more likely, and during the trading phase a user Alice can set her own prices at which to exchange an sOPT token."
-
-           
         }
     },
     "maintenance-page": {
@@ -104,7 +102,13 @@
             "insufficient-liquidity": "Insufficient liquidity",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
-            "enter-expiration": "Enter expiration"
+            "enter-expiration": "Enter expiration",
+            "invalid-price": "Invalid price",
+            "invalid-price-max": "The price cannot be higher than ${{max}}",
+            "invalid-amount-max": "The amount cannot be higher than {{max}}",
+            "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
+            "invalid-options-price": "The price must be higher than ${{min}} and less than or equal to the ${{max}}",
+            "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}"
         },
         "search": "search",
         "chart": {
@@ -327,9 +331,9 @@
                     }
                 },
                 "filter": {
-                    "all": "all",
-                    "market": "market transactions",
-                    "trade": "trades"
+                    "all": "All",
+                    "market": "Market transactions",
+                    "trade": "Trades"
                 }
             },
             "trade-card": {

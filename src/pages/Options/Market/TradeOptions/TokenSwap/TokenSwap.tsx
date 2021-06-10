@@ -12,7 +12,6 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Message } from 'semantic-ui-react';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -49,6 +48,8 @@ import {
     SummaryItem,
     SummaryContent,
     SubmitButton,
+    SummaryContainer,
+    ShortInputContainer,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'theme/common';
@@ -57,6 +58,10 @@ import { get } from 'lodash';
 import { GWEI_UNIT } from 'constants/network';
 import Web3 from 'web3';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
+import ValidationMessage from 'components/ValidationMessage';
+import onboardConnector from 'utils/onboardConnector';
+import NumericInput from '../../components/NumericInput';
+import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -83,13 +88,14 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [addressToApprove, setAddressToApprove] = useState<string | null>(null);
     const [swapQuote, setSwapQuote] = useState<any>();
     const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
     const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
+    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+
     const orderSideOptions = [
         {
             value: 'buy' as OrderSide,
@@ -142,21 +148,22 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     } = snxJSConnector.snxJS as any;
     const isBuy = orderSide.value === 'buy';
 
+    const isAmountEntered = Number(amount) > 0;
+    const isPriceEntered = Number(price) > 0;
+
+    const insufficientBalance = isBuy
+        ? sUSDBalance < total || !sUSDBalance
+        : tokenBalance < Number(amount) || !tokenBalance;
+
     const isButtonDisabled =
-        price === '' ||
-        Number(price) <= 0 ||
-        amount === '' ||
-        Number(amount) <= 0 ||
-        isSubmitting ||
-        !isWalletConnected ||
-        (isBuy ? !sUSDBalance : !tokenBalance);
+        !isPriceEntered || !isAmountEntered || isSubmitting || !isWalletConnected || insufficientBalance;
 
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
+    const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+    const addressToApprove: string = contractAddresses0x.exchangeProxy;
 
-    const insufficientBalance = isBuy ? total > sUSDBalance : amount > tokenBalance;
     const baseUrl = get0xBaseURL(networkId);
-
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
@@ -175,43 +182,39 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             : undefined;
 
     useEffect(() => {
-        if (addressToApprove) {
-            const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
-            const getAllowance = async () => {
-                try {
-                    const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                    setAllowance(!!bigNumberFormatter(allowance));
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-
-            const registerAllowanceListener = () => {
-                erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                        setAllowance(true);
-                        setIsAllowing(false);
-                    }
-                });
-            };
-            if (isWalletConnected) {
-                getAllowance();
-                registerAllowanceListener();
+        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const getAllowance = async () => {
+            try {
+                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                setAllowance(!!bigNumberFormatter(allowance));
+            } catch (e) {
+                console.log(e);
             }
-            return () => {
-                erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-            };
-        } else {
-            setAllowance(false);
+        };
+
+        const registerAllowanceListener = () => {
+            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
+            });
+        };
+        if (isWalletConnected) {
+            getAllowance();
+            registerAllowanceListener();
         }
-    }, [walletAddress, isWalletConnected, isBuy, addressToApprove, optionSide]);
+        return () => {
+            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+        };
+    }, [walletAddress, isWalletConnected, isBuy, optionSide]);
 
     useEffect(() => {
         onAmountChange(amount);
     }, [buyToken, sellToken]);
 
     const handleAllowance = async () => {
-        if (gasPrice !== null && addressToApprove) {
+        if (gasPrice !== null) {
             const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
             try {
                 setIsAllowing(true);
@@ -271,7 +274,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 if (response.status == 200) {
                     const quote = await response.json();
                     setPrice(quote.price);
-                    setAddressToApprove(quote.allowanceTarget);
                     setTotal(Number(newAmount) * Number(quote.price));
                     setMinimumReceived(Number(newAmount) * Number(quote.guaranteedPrice));
                     setSwapQuote(quote);
@@ -290,7 +292,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     const quote = await response.json();
                     console.log(quote);
                     setPrice('');
-                    setAddressToApprove('');
                     setTotal('');
                     setMinimumReceived('');
                     setSwapQuote(undefined);
@@ -305,7 +306,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             }
         } else {
             setPrice('');
-            setAddressToApprove('');
             setTotal('');
             setMinimumReceived('');
             setSwapQuote(undefined);
@@ -317,10 +317,61 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         }
     };
 
+    const getSubmitButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <SubmitButton isBuy={isBuy} onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </SubmitButton>
+            );
+        }
+        if (insufficientBalance || insufficientBalance0x) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.insufficient-balance`)}
+                </SubmitButton>
+            );
+        }
+        if (!isAmountEntered) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.enter-amount`)}
+                </SubmitButton>
+            );
+        }
+        if (insufficientLiquidity) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.insufficient-liquidity`)}
+                </SubmitButton>
+            );
+        }
+        if (!hasAllowance) {
+            return (
+                <SubmitButton disabled={isAllowing || !isWalletConnected} onClick={handleAllowance} isBuy={isBuy}>
+                    {!isAllowing
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: sellTokenCurrencyKey,
+                          })}
+                </SubmitButton>
+            );
+        }
+        return (
+            <SubmitButton disabled={isButtonDisabled} onClick={handleSubmitOrder} isBuy={isBuy}>
+                {!isSubmitting
+                    ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
+                    : t(
+                          `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.progress-label`
+                      )}
+            </SubmitButton>
+        );
+    };
+
     return (
         <Container>
             <FlexDivRow>
-                <InputContainer style={{ width: '50%', marginRight: '10px' }}>
+                <ShortInputContainer>
                     <ReactSelect
                         formatOptionLabel={(option: any) => option.label}
                         options={orderSideOptions}
@@ -330,8 +381,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         isUppercase
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
-                </InputContainer>
-                <InputContainer style={{ width: '50%' }}>
+                </ShortInputContainer>
+                <ShortInputContainer>
                     <Input
                         value={amount}
                         onChange={(e) => onAmountChange(e.target.value)}
@@ -344,7 +395,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
                     <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
-                </InputContainer>
+                </ShortInputContainer>
             </FlexDivRow>
             {!isBuy && (
                 <AmountButtonContainer>
@@ -359,114 +410,71 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     ))}
                 </AmountButtonContainer>
             )}
-            <SummaryItem>
-                <SlippageLabel>{t('options.market.trade-options.place-order.slippage-label')}</SlippageLabel>
-                <FlexDivCentered>
-                    {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
-                        <SlippageButton
-                            className={percentage === slippage ? 'selected' : ''}
-                            key={percentage}
-                            onClick={() => setSlippageAndRecalucalte(percentage)}
-                        >
-                            {`${percentage}%`}
-                        </SlippageButton>
-                    ))}
-                    <SlippageContainer>
-                        <SlippageInput
-                            value={slippage}
-                            onChange={(e) => setSlippageAndRecalucalte(e.target.value)}
-                            id="slippage"
-                            type="number"
-                            min="0"
-                            step="any"
-                        />
-                        <PercentageLabel>%</PercentageLabel>
-                    </SlippageContainer>
-                </FlexDivCentered>
-            </SummaryItem>
-            <SummaryItem>
-                <SummaryLabel>{t('options.market.trade-options.place-order.price-label')}</SummaryLabel>
-                <Price
-                    isWarning={
-                        Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
-                        Number(priceImpactPercentage) < -SLIPPAGE_THRESHOLD
-                    }
-                >{`${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))} (${formatPercentageWithSign(
-                    priceImpactPercentage
-                )})`}</Price>
-            </SummaryItem>
-
-            <SummaryItem>
-                <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
-                <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</SummaryContent>
-            </SummaryItem>
-            <SummaryItem style={{ marginBottom: 10 }}>
-                <SummaryLabel>
-                    {t(`options.market.trade-options.place-order.${isBuy ? 'total-max-label' : 'total-min-label'}`)}
-                </SummaryLabel>
-                <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, minimumReceived)}</SummaryContent>
-            </SummaryItem>
-            <Divider />
-            <ProtocolFeeContainer>
-                <ProtocolFeeLabel>{t('options.market.trade-options.place-order.protocol-fee-label')}</ProtocolFeeLabel>
-                <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
-            </ProtocolFeeContainer>
-            <NetworkFeesContainer>
-                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
-            </NetworkFeesContainer>
-            <SubmitButtonContainer>
-                {' '}
-                {hasAllowance ||
-                insufficientBalance ||
-                insufficientBalance0x ||
-                insufficientLiquidity ||
-                addressToApprove === '' ? (
-                    <SubmitButton
-                        isBuy={isBuy}
-                        disabled={
-                            isButtonDisabled ||
-                            insufficientBalance ||
-                            insufficientBalance0x ||
-                            insufficientLiquidity ||
-                            addressToApprove === ''
+            <SummaryContainer>
+                <SummaryItem>
+                    <SlippageLabel>{t('options.market.trade-options.place-order.slippage-label')}</SlippageLabel>
+                    <FlexDivCentered>
+                        {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
+                            <SlippageButton
+                                className={percentage === slippage ? 'selected' : ''}
+                                key={percentage}
+                                onClick={() => setSlippageAndRecalucalte(percentage)}
+                            >
+                                {`${percentage}%`}
+                            </SlippageButton>
+                        ))}
+                        <SlippageContainer>
+                            <SlippageInput
+                                value={slippage}
+                                onChange={(_: any, value: any) => setSlippageAndRecalucalte(Number(value))}
+                            />
+                            <PercentageLabel>%</PercentageLabel>
+                        </SlippageContainer>
+                    </FlexDivCentered>
+                </SummaryItem>
+                <SummaryItem>
+                    <SummaryLabel>{t('options.market.trade-options.place-order.price-label')}</SummaryLabel>
+                    <Price
+                        isWarning={
+                            Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
+                            Number(priceImpactPercentage) < -SLIPPAGE_THRESHOLD
                         }
-                        onClick={handleSubmitOrder}
-                    >
-                        {insufficientBalance || insufficientBalance0x
-                            ? t('common.errors.insufficient-balance')
-                            : insufficientLiquidity
-                            ? t('common.errors.insufficient-liquidity')
-                            : !isSubmitting
-                            ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
-                            : t(
-                                  `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.progress-label`
-                              )}
-                    </SubmitButton>
-                ) : (
-                    <SubmitButton
-                        isBuy={isBuy}
-                        disabled={isAllowing || !isWalletConnected || addressToApprove === ''}
-                        onClick={handleAllowance}
-                    >
-                        {!isAllowing
-                            ? t('common.enable-wallet-access.label')
-                            : t('common.enable-wallet-access.progress-label')}
-                    </SubmitButton>
-                )}
-            </SubmitButtonContainer>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                {txErrorMessage && <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />}
-            </div>
+                    >{`${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))} (${formatPercentageWithSign(
+                        priceImpactPercentage
+                    )})`}</Price>
+                </SummaryItem>
+
+                <SummaryItem>
+                    <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
+                    <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</SummaryContent>
+                </SummaryItem>
+                <SummaryItem style={{ marginBottom: 10 }}>
+                    <SummaryLabel>
+                        {t(`options.market.trade-options.place-order.${isBuy ? 'total-max-label' : 'total-min-label'}`)}
+                    </SummaryLabel>
+                    <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, minimumReceived)}</SummaryContent>
+                </SummaryItem>
+                <Divider />
+                <ProtocolFeeContainer>
+                    <ProtocolFeeLabel>
+                        {t('options.market.trade-options.place-order.protocol-fee-label')}
+                    </ProtocolFeeLabel>
+                    <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
+                </ProtocolFeeContainer>
+                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+            </SummaryContainer>
+            <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+            <ValidationMessage
+                showValidation={txErrorMessage !== null}
+                message={txErrorMessage}
+                onDismiss={() => setTxErrorMessage(null)}
+            />
         </Container>
     );
 };
 
-const NetworkFeesContainer = styled.div`
-    padding: 0 45px;
-`;
-
 const Divider = styled.hr`
-    width: 85%;
+    width: 100%;
     border: none;
     border-top: 2px solid #0a2e66;
 `;
@@ -478,24 +486,20 @@ const SlippageButton = styled(AmountButton)`
     font-weight: 600;
     font-size: 12px;
     letter-spacing: 0.25px;
-    padding-bottom: 2px;
+    padding-bottom: 1px;
 `;
 
-const SlippageInput = styled(Input)`
+const SlippageInput = styled(NumericInput)`
     height: 26px;
     width: 80px;
     padding: 0;
     padding-left: 10px;
-    background: #0a2e66;
     border-radius: 5px;
-    font-weight: 600;
     font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
 `;
 
 const PercentageLabel = styled(CurrencyLabel)`
-    padding: 0 10px 5px 0;
+    padding: 5px 10px 5px 0;
 `;
 
 const SlippageContainer = styled(InputContainer)`
@@ -508,7 +512,6 @@ const SlippageLabel = styled(SummaryLabel)`
 `;
 
 const ProtocolFeeContainer = styled(FlexDivRow)`
-    padding: 0 45px;
     margin-top: 5px;
     margin-bottom: 10px;
 `;
