@@ -152,6 +152,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                 <CancelOrderModal
                     order={selectedOrder}
                     baseToken={optionsTokenAddress}
+                    optionSide={optionSide}
                     onClose={() => setCancelOrderModalVisible(false)}
                 />
             )}

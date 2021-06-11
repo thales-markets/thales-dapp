@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Button, Header, Message, Modal, Segment } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import { getCustomGasPrice, getGasSpeed, getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
-import { OrderItem } from 'types/options';
+import { OptionSide, OrderItem } from 'types/options';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -13,14 +12,25 @@ import { refetchOrderbook } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { getIs0xReady } from 'redux/modules/app';
+import { DefaultSubmitButton, SubmitButtonContainer } from 'pages/Options/Market/components';
+import ValidationMessage from 'components/ValidationMessage';
+import {
+    StyledModal,
+    ModalContainer,
+    ModalTitle,
+    CloseIconContainer,
+    ModalSummaryContainer,
+    ModalHeader,
+} from '../components';
 
 type CancelOrderModalProps = {
     order: OrderItem;
     baseToken: string;
     onClose: () => void;
+    optionSide: OptionSide;
 };
 
-export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, order, baseToken }) => {
+export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, order, baseToken, optionSide }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -102,29 +112,30 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     };
 
     return (
-        <Modal open={true} onClose={onClose} centered={false} closeIcon size="mini">
-            <Modal.Content>
-                <Segment>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Header as="h3">{t(`options.market.trade-options.cancel-order.title`)}</Header>
-                    </div>
-                    <OrderDetails order={order.displayOrder} />
-                    <NetworkFees gasLimit={gasLimit} />
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                        <Button primary disabled={isButtonDisabled || !gasLimit} onClick={handleCancelOrder}>
-                            {!isCanceling
-                                ? t('options.market.trade-options.cancel-order.confirm-button.label')
-                                : t('options.market.trade-options.cancel-order.confirm-button.progress-label')}
-                        </Button>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                        {txErrorMessage && (
-                            <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                        )}
-                    </div>
-                </Segment>
-            </Modal.Content>
-        </Modal>
+        <StyledModal open={true} onClose={onClose}>
+            <ModalContainer>
+                <ModalHeader>
+                    <ModalTitle>{t(`options.market.trade-options.cancel-order.title`)}</ModalTitle>
+                    <CloseIconContainer onClick={onClose} />
+                </ModalHeader>
+                <OrderDetails order={order.displayOrder} optionSide={optionSide} />
+                <ModalSummaryContainer>
+                    <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                </ModalSummaryContainer>
+                <SubmitButtonContainer>
+                    <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleCancelOrder}>
+                        {!isCanceling
+                            ? t('options.market.trade-options.cancel-order.confirm-button.label')
+                            : t('options.market.trade-options.cancel-order.confirm-button.progress-label')}
+                    </DefaultSubmitButton>
+                </SubmitButtonContainer>
+                <ValidationMessage
+                    showValidation={txErrorMessage !== null}
+                    message={txErrorMessage}
+                    onDismiss={() => setTxErrorMessage(null)}
+                />
+            </ModalContainer>
+        </StyledModal>
     );
 };
 

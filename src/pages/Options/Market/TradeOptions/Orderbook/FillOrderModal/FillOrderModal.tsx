@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Button, Form, Header, Input, Message, Modal, Segment } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
 import {
     getCustomGasPrice,
@@ -23,12 +22,10 @@ import { getIs0xReady, getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign, toBigNumber } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { ReactComponent as WalletIcon } from 'assets/images/wallet.svg';
-import { Tooltip } from '@material-ui/core';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
@@ -37,6 +34,42 @@ import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryC
 import OrderDetails from '../../components/OrderDetails';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import {
+    CloseIconContainer,
+    ModalContainer,
+    ModalSummaryContainer,
+    ModalTitle,
+    StyledModal,
+    ModalHeader,
+} from '../components';
+import ValidationMessage from 'components/ValidationMessage';
+import {
+    DefaultSubmitButton,
+    SubmitButtonContainer,
+    WalletContainer,
+    Wallet,
+    InputContainer,
+    InputLabel,
+    CurrencyLabel,
+    SubmitButton,
+    SummaryItem,
+    SummaryLabel,
+    SummaryContent,
+    Divider,
+    Tooltip,
+    ProtocolFeeContainer,
+    ProtocolFeeLabel,
+    ProtocolFeeItem,
+} from 'pages/Options/Market/components';
+import onboardConnector from 'utils/onboardConnector';
+import { FlexDivCentered, FlexDivRow, FlexDiv } from 'theme/common';
+import { ReactComponent as WalletIcon } from 'assets/images/wallet-light.svg';
+import NumericInput from 'pages/Options/Market/components/NumericInput';
+import FieldValidationMessage from 'components/FieldValidationMessage';
+import styled from 'styled-components';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import { get } from 'lodash';
+import { GWEI_UNIT } from 'constants/network';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -62,6 +95,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
+    const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
+    const [protocolFee, setProtocolFee] = useState<number | string>('');
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -103,16 +139,20 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
     const isBuy = orderSide === 'buy';
 
-    const isButtonDisabled =
-        amount === '' ||
-        Number(amount) <= 0 ||
-        isFilling ||
-        !isWalletConnected ||
-        (isBuy ? !tokenBalance : !sUSDBalance) ||
-        !is0xReady;
+    const isAmountEntered = Number(amount) > 0;
+    const insufficientBalance = isBuy
+        ? tokenBalance < Number(amount) || !tokenBalance
+        : sUSDBalance < Number(order.displayOrder.price) * Number(amount) || !sUSDBalance;
+
+    const isButtonDisabled = !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance || !is0xReady;
 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
+    const takeTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
+
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
+    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -169,7 +209,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 const targetOrder = order.rawOrder;
                 const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
 
-                const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
+                const newProtocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
+                setProtocolFee(Number(newProtocolFee));
+
                 try {
                     const gasEstimate = await exchangeProxy
                         .fillLimitOrder(
@@ -177,7 +219,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             order.signature,
                             Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
                         )
-                        .estimateGasAsync({ from: walletAddress, value: protocolFee });
+                        .estimateGasAsync({ from: walletAddress, value: newProtocolFee });
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                 } catch (e) {
                     console.log(e);
@@ -216,7 +258,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
             const targetOrder = order.rawOrder;
             const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
-            const protocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
+            const newProtocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
+            setProtocolFee(Number(newProtocolFee));
 
             try {
                 await exchangeProxy
@@ -229,7 +272,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         from: walletAddress,
                         gas: gasLimit !== null ? gasLimit : undefined,
                         gasPrice: gasPriceInWei(gasPrice),
-                        value: protocolFee,
+                        value: newProtocolFee,
                     });
             } catch (e) {
                 console.log(e);
@@ -246,79 +289,185 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         setAmount(maxAmount);
     };
 
+    useEffect(() => {
+        setIsAmountValid(
+            Number(amount) === 0 ||
+                (Number(amount) > 0 &&
+                    (isBuy
+                        ? Number(amount) <= tokenBalance
+                        : Number(order.displayOrder.price) * Number(amount) <= sUSDBalance))
+        );
+        setInsufficientOrderAmount(order.displayOrder.fillableAmount < Number(amount));
+    }, [amount]);
+
+    useEffect(() => {
+        setIsAmountValid(
+            Number(amount) === 0 ||
+                (Number(amount) > 0 &&
+                    (isBuy
+                        ? Number(amount) <= tokenBalance
+                        : Number(order.displayOrder.price) * Number(amount) <= sUSDBalance))
+        );
+        setInsufficientOrderAmount(order.displayOrder.fillableAmount < Number(amount));
+    }, [amount]);
+
+    const getSubmitButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </DefaultSubmitButton>
+            );
+        }
+        if (insufficientOrderAmount) {
+            return (
+                <DefaultSubmitButton disabled={true}>
+                    {t(`common.errors.insufficient-order-amount`)}
+                </DefaultSubmitButton>
+            );
+        }
+        if (insufficientBalance) {
+            return <DefaultSubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</DefaultSubmitButton>;
+        }
+        if (!isAmountEntered) {
+            return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</DefaultSubmitButton>;
+        }
+        if (!hasAllowance) {
+            return (
+                <DefaultSubmitButton disabled={isAllowing} onClick={handleAllowance}>
+                    {!isAllowing
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: takeTokenCurrencyKey })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: takeTokenCurrencyKey,
+                          })}
+                </DefaultSubmitButton>
+            );
+        }
+        return (
+            <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleFillOrder}>
+                {!isFilling
+                    ? t('options.market.trade-options.fill-order.confirm-button.label')
+                    : t('options.market.trade-options.fill-order.confirm-button.progress-label')}
+            </DefaultSubmitButton>
+        );
+    };
+
     return (
-        <Modal open={true} onClose={onClose} centered={false} closeIcon size="mini">
-            <Modal.Content>
-                <Segment>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Header as="h3">{t(`options.market.trade-options.fill-order.${orderSide}.title`)}</Header>
-                        <span>
+        <StyledModal open={true} onClose={onClose}>
+            <ModalContainer>
+                <ModalHeader>
+                    <ModalTitle>
+                        {t(`options.market.trade-options.fill-order.${orderSide}.title`, {
+                            currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                        })}
+                    </ModalTitle>
+                    <FlexDivRow>
+                        <FlexDivCentered>
                             <WalletIcon />
-                            {isWalletConnected
-                                ? isBuy
-                                    ? formatCurrencyWithKey('sOPT', tokenBalance)
-                                    : formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)
-                                : EMPTY_VALUE}
-                        </span>
-                    </div>
-                    <OrderDetails order={order.displayOrder} />
-                    <Form>
-                        <Form.Field>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <label style={{ textTransform: 'none', fontWeight: 'bold' }}>
-                                    {t('options.market.trade-options.fill-order.amount-label', {
-                                        orderSide: isBuy ? t('common.sell') : t('common.buy'),
-                                    })}
-                                </label>
-                                <Tooltip
-                                    title={
-                                        <span>{t('options.market.trade-options.fill-order.max-button-tooltip')}</span>
-                                    }
-                                    placement="top"
-                                    arrow={true}
-                                >
-                                    <Button size="mini" primary onClick={onMaxClick}>
-                                        {t('common.max')}
-                                    </Button>
-                                </Tooltip>
-                            </div>
-                            <Input
-                                fluid
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                label="sOPT"
-                                id="amount"
-                                type="number"
-                                min="0"
-                                step="any"
-                            />
-                        </Form.Field>
-                    </Form>
-                    <NetworkFees gasLimit={gasLimit} />
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                        {hasAllowance ? (
-                            <Button primary disabled={isButtonDisabled || !gasLimit} onClick={handleFillOrder}>
-                                {!isFilling
-                                    ? t('options.market.trade-options.fill-order.confirm-button.label')
-                                    : t('options.market.trade-options.fill-order.confirm-button.progress-label')}
-                            </Button>
-                        ) : (
-                            <Button primary disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
-                                {!isAllowing
-                                    ? t('common.enable-wallet-access.label')
-                                    : t('common.enable-wallet-access.progress-label')}
-                            </Button>
-                        )}
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                        {txErrorMessage && (
-                            <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                        )}
-                    </div>
-                </Segment>
-            </Modal.Content>
-        </Modal>
+                            <WalletContainer>
+                                {isWalletConnected ? (
+                                    <>
+                                        <Wallet>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</Wallet>
+                                        <Wallet>
+                                            {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], tokenBalance)}
+                                        </Wallet>
+                                    </>
+                                ) : (
+                                    EMPTY_VALUE
+                                )}
+                            </WalletContainer>
+                        </FlexDivCentered>
+                        <CloseIconContainer onClick={onClose} />
+                    </FlexDivRow>
+                </ModalHeader>
+                <OrderDetails order={order.displayOrder} optionSide={optionSide} />
+                <FillOrderContainer>
+                    <AmountInputContainer>
+                        <NumericInput
+                            value={amount}
+                            onChange={(_, value) => setAmount(value)}
+                            className={isAmountValid && !insufficientOrderAmount ? '' : 'error'}
+                        />
+                        <InputLabel>
+                            {t('options.market.trade-options.fill-order.amount-label', {
+                                orderSide: isBuy ? t('common.sell') : t('common.buy'),
+                            })}
+                        </InputLabel>
+                        <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                        <FieldValidationMessage
+                            showValidation={!isAmountValid || insufficientOrderAmount}
+                            message={
+                                insufficientOrderAmount
+                                    ? t(`common.errors.invalid-order-amount-max`, {
+                                          max: formatCurrency(order.displayOrder.fillableAmount),
+                                      })
+                                    : t(`common.errors.insufficient-balance-wallet`, {
+                                          currencyKey: isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD,
+                                      })
+                            }
+                        />
+                    </AmountInputContainer>
+                    <Tooltip title={t('options.market.trade-options.fill-order.max-button-tooltip')}>
+                        <MaxButton onClick={onMaxClick}>{t('common.max')}</MaxButton>
+                    </Tooltip>
+                </FillOrderContainer>
+                <ModalSummaryContainer>
+                    <SummaryItem>
+                        <SummaryLabel>{t('options.market.trade-options.fill-order.total-label')}</SummaryLabel>
+                        <SummaryContent>
+                            {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(order.displayOrder.price) * Number(amount))}
+                        </SummaryContent>
+                    </SummaryItem>
+                    <Divider />
+                    <ProtocolFeeContainer>
+                        <ProtocolFeeLabel>
+                            {t('options.market.trade-options.fill-order.protocol-fee-label')}
+                        </ProtocolFeeLabel>
+                        <ProtocolFeeItem>
+                            {formatCurrencyWithSign(
+                                USD_SIGN,
+                                ethRate !== null ? (Number(protocolFee) * ethRate) / GWEI_UNIT / GWEI_UNIT : 0
+                            )}
+                        </ProtocolFeeItem>
+                    </ProtocolFeeContainer>
+                    <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                </ModalSummaryContainer>
+                <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+                <ValidationMessage
+                    showValidation={txErrorMessage !== null}
+                    message={txErrorMessage}
+                    onDismiss={() => setTxErrorMessage(null)}
+                />
+            </ModalContainer>
+        </StyledModal>
     );
 };
+
+const FillOrderContainer = styled(FlexDiv)`
+    margin: 30px 0px 10px 0px;
+`;
+
+const MaxButton = styled(SubmitButton)`
+    width: 25%;
+    background: transparent;
+    border: 3px solid #0a2e66;
+    box-sizing: border-box;
+    border-radius: 5px;
+    height: 52px;
+    margin-left: 20px;
+    margin-top: 6px;
+    text-transform: uppercase;
+    padding: 0;
+    &.selected,
+    &:hover:not(:disabled) {
+        background: rgba(1, 38, 81, 0.8);
+        color: #b8c6e5;
+    }
+`;
+
+const AmountInputContainer = styled(InputContainer)`
+    width: 75%;
+    margin: 0;
+`;
 
 export default FillOrderModal;

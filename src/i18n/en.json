@@ -100,6 +100,8 @@
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
             "insufficient-balance": "Insufficient balance",
             "insufficient-liquidity": "Insufficient liquidity",
+            "insufficient-order-amount": "Insufficient order amount",
+            "invalid-order-amount-max": "The sLONG amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
             "enter-expiration": "Enter expiration",
@@ -450,13 +452,15 @@
                 },
                 "fill-order": {
                     "buy": {
-                        "title": "Sell sOPT"
+                        "title": "Sell {{currencyKey}}"
                     },
                     "sell": {
-                        "title": "Buy sOPT"
+                        "title": "Buy {{currencyKey}}"
                     },
                     "max-button-tooltip": "Set MAX available amount based on remaining order amount and wallet balance",
                     "amount-label": "Amount to {{orderSide}}",
+                    "total-label": "Total (sUSD)",
+                    "protocol-fee-label": "Protocol fee",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
@@ -483,8 +487,7 @@
                     "amount-label": "Amount (sOPT):",
                     "total-label": "Total (sUSD):",
                     "filled-label": "Filled (%):",
-                    "remaining-amount-label": "Remaining amount (sOPT):",
-                    "remaining-amount-susd-label": "Remaining amount (sUSD):"
+                    "remaining-amount-label": "Remaining amount ({{currencyKey}}):"
                 }
             }
         },

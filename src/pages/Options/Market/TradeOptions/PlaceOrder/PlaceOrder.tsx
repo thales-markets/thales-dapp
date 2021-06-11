@@ -353,7 +353,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing || !isWalletConnected} onClick={handleAllowance} isBuy={isBuy}>
+                <SubmitButton disabled={isAllowing} onClick={handleAllowance} isBuy={isBuy}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: makerTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
