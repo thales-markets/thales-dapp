@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Icon } from 'semantic-ui-react';
 import { Orders, OrderItem, OrderSide, OptionSide, DisplayOrder } from 'types/options';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
 import CancelOrderModal from '../CancelOrderModal';
@@ -14,6 +13,7 @@ import OrderbookTable from '../../components/OrderbookTable';
 import styled from 'styled-components';
 import { OrderbookFilterEnum } from 'constants/options';
 import { COLORS } from 'constants/ui';
+import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -112,9 +112,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Cell: (cellProps: CellProps<OrderItem>) =>
                             cellProps.cell.row.original.rawOrder.maker.toLowerCase() ===
                                 walletAddress.toLowerCase() && (
-                                <IconContainer
-                                    name="cancel"
-                                    color="red"
+                                <CancelIconContainer
                                     onClick={(e: any) => {
                                         e.stopPropagation();
                                         openCancelOrderModal(cellProps.cell.row.original);
@@ -182,7 +180,10 @@ const YellowDot = styled.span`
     display: inline-block;
 `;
 
-const IconContainer = styled(Icon)`
+const CancelIconContainer = styled(CancelIcon)`
+    min-width: 8px;
+    min-height: 8px;
+    margin-top: 2px;
     z-index: 2;
 `;
 

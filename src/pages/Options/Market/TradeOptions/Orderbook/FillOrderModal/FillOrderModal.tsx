@@ -56,7 +56,7 @@ import {
     SummaryLabel,
     SummaryContent,
     Divider,
-    Tooltip,
+    DarkTooltip,
     ProtocolFeeContainer,
     ProtocolFeeLabel,
     ProtocolFeeItem,
@@ -407,9 +407,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             }
                         />
                     </AmountInputContainer>
-                    <Tooltip title={t('options.market.trade-options.fill-order.max-button-tooltip')}>
+                    <DarkTooltip title={t('options.market.trade-options.fill-order.max-button-tooltip')}>
                         <MaxButton onClick={onMaxClick}>{t('common.max')}</MaxButton>
-                    </Tooltip>
+                    </DarkTooltip>
                 </FillOrderContainer>
                 <ModalSummaryContainer>
                     <SummaryItem>

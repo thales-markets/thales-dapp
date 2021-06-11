@@ -22,8 +22,8 @@ export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
 
 export enum COLORS {
     LONG = '#04C19D',
-    SHORT = '#FF553E',
+    SHORT = '#FF3E24',
     BUY = '#04C19D',
-    SELL = '#FF553E',
+    SELL = '#FF3E24',
     WHITE = '#F6F6FE',
 }

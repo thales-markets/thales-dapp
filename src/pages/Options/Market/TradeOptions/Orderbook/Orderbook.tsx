@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
-import { Tooltip } from '@material-ui/core';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
 import { ReactComponent as OrderbookBuyIcon } from 'assets/images/orderbook-buy.svg';
@@ -24,7 +23,7 @@ import { OrderbookFilterEnum } from 'constants/options';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
-import { FilterButton } from '../../components';
+import { FilterButton, LightTooltip } from '../../components';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -105,26 +104,21 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                             {orderbookFilterIconMap[filterItem]}
                         </OrderbookFilterButton>
                     ))}
-                    <Tooltip
+                    <LightTooltip
                         title={
-                            <span style={{ fontSize: 12 }}>
-                                {!isWalletConnected
-                                    ? t(`options.market.trade-options.orderbook.filter.my-orders.tooltip-connected`)
-                                    : t(
-                                          `options.market.trade-options.orderbook.filter.my-orders.tooltip-not-connected`
-                                      )}
-                            </span>
+                            !isWalletConnected
+                                ? t(`options.market.trade-options.orderbook.filter.my-orders.tooltip-connected`)
+                                : t(`options.market.trade-options.orderbook.filter.my-orders.tooltip-not-connected`)
                         }
-                        placement="top"
-                        arrow={true}
                     >
                         <OrderbookFilterButton
                             onClick={isWalletConnected ? () => setFilterMyOrders(!filterMyOrders) : undefined}
                             className={filterMyOrders ? 'selected' : ''}
+                            disabled={!isWalletConnected}
                         >
                             <UserIcon />
                         </OrderbookFilterButton>
-                    </Tooltip>
+                    </LightTooltip>
                 </FilterContainer>
             </MarketWidgetHeader>
             <MarketWidgetContent>

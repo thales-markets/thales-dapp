@@ -180,15 +180,20 @@ export const AmountButton = styled.button`
         opacity: 0.5;
         cursor: default;
     }
+    &.selected {
+        background: #0a2e66;
+        border: 2px solid #00f9ff;
+        color: #00f9ff;
+    }
     &:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #0a2e66;
         color: #b8c6e5;
     }
-    &.selected {
-        background: #0a2e66;
+    &.selected:hover {
+        background: rgba(1, 38, 81, 0.8);
         border: 2px solid #00f9ff;
-        color: #00f9ff;
+        color: #b8c6e5;
     }
 `;
 
@@ -272,7 +277,11 @@ export const FilterButton = styled.button`
     color: #f6f6fe;
     margin: 0 9px;
     padding: 6px 16px;
-    &:hover {
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+    &:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #0a2e66;
         color: #b8c6e5;
@@ -284,6 +293,7 @@ export const FilterButton = styled.button`
     }
     &.selected:hover {
         background: rgba(1, 38, 81, 0.8);
+        border: 2px solid #00f9ff;
         color: #b8c6e5;
     }
 `;
@@ -333,7 +343,7 @@ type TooltipIconProps = {
     children: any;
 };
 
-const StyledTooltip = withStyles(() => ({
+const StyledDarkTooltip = withStyles(() => ({
     arrow: {
         color: '#0A2E66',
     },
@@ -348,10 +358,31 @@ const StyledTooltip = withStyles(() => ({
     },
 }))(MaterialTooltip);
 
-export const Tooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+export const DarkTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
+    <StyledDarkTooltip title={<span>{title}</span>} placement="top" arrow={true}>
         {children}
-    </StyledTooltip>
+    </StyledDarkTooltip>
+);
+
+const StyledLightTooltip = withStyles(() => ({
+    arrow: {
+        color: '#748BC6',
+    },
+    tooltip: {
+        background: '#748BC6',
+        borderRadius: '10px',
+        padding: '10px',
+        fontSize: '10px',
+        lineHeight: '16px',
+        letterSpacing: '0.4px',
+        color: '#04045A',
+    },
+}))(MaterialTooltip);
+
+export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
+    <StyledLightTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+        {children}
+    </StyledLightTooltip>
 );
 
 export const ProtocolFeeContainer = styled(FlexDivRow)`
