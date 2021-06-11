@@ -49,7 +49,7 @@ const GetStarted: React.FC = () => {
     }, []);
 
     return (
-        <FlexDivColumn>
+        <GetStartedWrapper>
             <Text className="pale-grey text-l" style={{ marginBottom: 35, marginLeft: -30 }}>
                 {t('landing-page.get-started.title')}
             </Text>
@@ -99,9 +99,13 @@ const GetStarted: React.FC = () => {
                 </CardsSmall>
                 <Image className="animate-r" src={market} style={{ width: 250, height: 200 }}></Image>
             </Wrapper>
-        </FlexDivColumn>
+        </GetStartedWrapper>
     );
 };
+
+const GetStartedWrapper = styled(FlexDivColumn)`
+    padding: 70px 140px;
+`;
 
 const Wrapper = styled(FlexDiv)`
     position: relative;

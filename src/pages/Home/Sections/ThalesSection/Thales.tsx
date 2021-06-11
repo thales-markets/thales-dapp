@@ -7,9 +7,8 @@ import { useTranslation } from 'react-i18next';
 const Thales: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <FlexDiv>
+        <Wrapper>
             <ThalesTheWhite src={thalesTheWhite} />
-
             <CardThales>
                 <Text className="text-xxl pale-grey" style={{ marginBottom: 50 }}>
                     {t('landing-page.who-is-thales')}
@@ -18,9 +17,13 @@ const Thales: React.FC = () => {
                     {t('landing-page.thales-is')}
                 </Text>
             </CardThales>
-        </FlexDiv>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled(FlexDiv)`
+    padding: 70px 140px;
+`;
 
 const ThalesTheWhite = styled(Image)`
     object-fit: contain;
