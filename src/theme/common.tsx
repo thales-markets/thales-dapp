@@ -65,6 +65,9 @@ export const Background = styled.section`
 
     &#landing-hero {
         min-height: 900px;
+        @media (max-width: 768px) {
+            min-height: 600px;
+        }
         position: relative;
         z-index: 2;
         background: transparent;
@@ -73,7 +76,7 @@ export const Background = styled.section`
             position: relative;
             z-index: 2;
             background: transparent;
-            &:after {
+            &:not(:last-of-type):after {
                 content: '';
                 display: block;
                 width: min(620px, 30%);
@@ -227,7 +230,20 @@ export const Logo = styled(Link)`
     height: 52px;
     width: 214px;
     margin-right: 20px;
+    margin-top: 6px;
     background-repeat: no-repeat;
+`;
+
+export const CardsAbs = styled(FlexDivColumn)`
+    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
+    box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 23px;
+    border: 2px solid rgb(106, 193, 213, 0.4);
+    border-left: 2px solid rgba(202, 145, 220, 0.6);
+    border-top: 2px solid rgba(202, 145, 220, 0.6);
+    border-right: 2px solid rgba(106, 193, 213, 0.6);
+    border-bottom: 2px solid rgba(106, 193, 213, 0.6);
 `;
 
 export const Image = styled.img`
