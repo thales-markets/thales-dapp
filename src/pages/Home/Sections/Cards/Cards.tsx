@@ -11,7 +11,7 @@ const Cards: React.FC = () => {
         <Wrapper>
             <Card className="first">
                 <Image src={coins} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
-                <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
+                <TextWrapper>
                     <Text className="pale-grey text-l">{t('landing-page.markets.title')}</Text>.
                     <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
                         {t('landing-page.markets.option1')}
@@ -20,14 +20,14 @@ const Cards: React.FC = () => {
                         {t('landing-page.markets.option2')}
                     </Text>
                     <Text className="pale-grey texts lh24">{t('landing-page.markets.option3')}</Text>
-                </FlexDivColumn>
+                </TextWrapper>
                 <Button className="primary" style={{ margin: '50px auto' }}>
                     {t('landing-page.markets.view-markets')}
                 </Button>
             </Card>
             <Card className="second">
                 <Image src={scale} style={{ height: 200, width: 200, margin: 'auto' }}></Image>
-                <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
+                <TextWrapper>
                     <Text className="pale-grey text-l">{t('landing-page.options.title')}</Text>.
                     <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
                         {t('landing-page.options.option1')}
@@ -36,8 +36,8 @@ const Cards: React.FC = () => {
                         {t('landing-page.options.option2')}
                     </Text>
                     <Text className="pale-grey texts lh24">{t('landing-page.options.option3')}</Text>
-                </FlexDivColumn>
-                <Button className="primary" style={{ margin: 'auto', marginBottom: '50px' }}>
+                </TextWrapper>
+                <Button className="primary" style={{ margin: 'auto', marginBottom: 50, marginTop: 30 }}>
                     {t('landing-page.options.view-markets')}
                 </Button>
             </Card>
@@ -64,12 +64,26 @@ const Wrapper = styled(FlexDiv)`
             margin-bottom: 70px;
         }
     }
+    @media (max-width: 568px) {
+        padding: 20px;
+    }
+`;
+
+const TextWrapper = styled(FlexDivColumn)`
+    padding-left: 70px;
+    padding-right: 24px;
+    @media (max-width: 620px) {
+        padding-left: 30px;
+    }
 `;
 
 const Card = styled(CardsAbs)`
     min-height: 600px;
     min-width: 550px;
     max-width: 550px;
+    @media (max-width: 620px) {
+        min-width: unset;
+    }
 `;
 
 export default Cards;

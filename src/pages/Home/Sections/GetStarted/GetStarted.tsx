@@ -105,6 +105,9 @@ const GetStarted: React.FC = () => {
 
 const GetStartedWrapper = styled(FlexDivColumn)`
     padding: 70px 140px;
+    @media (max-width: 968px) {
+        padding: 50px;
+    }
 `;
 
 const Wrapper = styled(FlexDiv)`
@@ -135,6 +138,11 @@ const Wrapper = styled(FlexDiv)`
     &:last-child {
         margin-bottom: 50px;
     }
+    @media (max-width: 768px) {
+        & > img {
+            display: none;
+        }
+    }
 `;
 
 const CardsSmall = styled(CardsAbs)`
@@ -143,9 +151,23 @@ const CardsSmall = styled(CardsAbs)`
     flex-direction: row;
     max-width: 350px;
     align-items: center;
+    @media (max-width: 1280px) {
+        &.animate-r {
+            margin-left: 150px;
+        }
+        &.animate-l {
+            margin-right: 150px;
+        }
+    }
+    @media (max-width: 768px) {
+        margin: auto !important;
+    }
 `;
 
 const Carousel = styled(FlexDivColumn)`
+    @media (max-width: 768px) {
+        display: none;
+    }
     width: 5px;
     background-color: #b8c6e5;
     height: 480px;

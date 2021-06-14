@@ -51,23 +51,32 @@ const Wrapper = styled(FlexDiv)`
     width: 100%;
     @media (max-width: 1280px) {
         padding: 50px;
-        flex-direction: column;
+        flex-direction: column-reverse;
+    }
+    @media (max-width: 568px) {
+        padding: 20px;
     }
 `;
 
 const CardFaq = styled(CardsAbs)`
+    margin: auto;
     padding: 45px 30px 45px 75px;
-    min-width: min(850px, 100%);
+    min-width: min(750px, 100%);
     @media (max-width: 1280px) {
         position: relative;
         width: 100%;
         min-width: 500px;
+    }
+    @media (max-width: 568px) {
+        padding: 20px;
+        min-width: unset;
     }
 `;
 
 const DropDownWrapper = styled(FlexDivColumn)`
     margin-top: 12px;
     padding: 20px 0;
+    flex: 0;
     &:not(:last-child) {
         border-bottom: 1.5px dashed #00f9ff;
     }
@@ -99,8 +108,12 @@ const Answer = styled(Text)`
 
 const FaqImg = styled(Image)`
     height: 600px;
+    max-width: 450px;
     margin-right: -80px;
     margin-bottom: 100px;
+    @media (max-width: 1280px) {
+        margin: auto;
+    }
 `;
 
 export default Faq;

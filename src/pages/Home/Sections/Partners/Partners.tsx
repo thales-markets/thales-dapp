@@ -13,20 +13,20 @@ const Partners: React.FC = () => {
     return (
         <FlexDivColumn style={{ alignItems: 'center', marginTop: 50 }}>
             <Text className="text-l pale-grey">{t('landing-page.partners.seed')}</Text>
-            <Partner style={{ width: 480, padding: '50px 30px' }}>
-                <SyntetixLogo style={{ width: 'auto', height: 30 }} src={synthetix}></SyntetixLogo>
+            <Partner>
+                <SyntetixLogo className="snx-logo" src={synthetix}></SyntetixLogo>
             </Partner>
             <Text className="text-l pale-grey" style={{ marginTop: 40, marginBottom: 70 }}>
                 {t('landing-page.partners.technical')}
             </Text>
-            <FlexDiv>
+            <TechPartners>
                 <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
                     <Image style={{ width: 'auto', height: 50 }} src={zeroX}></Image>
                 </Partner>
                 <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
                     <Image style={{ width: 'auto', height: 50 }} src={chainlink}></Image>
                 </Partner>
-            </FlexDiv>
+            </TechPartners>
         </FlexDivColumn>
     );
 };
@@ -36,6 +36,26 @@ const Partner = styled(CardsAbs)`
     margin: 50px;
     min-width: 220px;
     align-items: center;
+    .snx-logo {
+        height: 30px;
+        width: auto;
+        padding: 20px 0;
+        box-sizing: content-box;
+        @media (max-width: 520px) {
+            height: 24px;
+            padding: 6px 0;
+        }
+        @media (max-width: 420px) {
+            height: 20px;
+            padding: 0;
+        }
+    }
+`;
+
+const TechPartners = styled(FlexDiv)`
+    @media (max-width: 620px) {
+        flex-direction: column;
+    }
 `;
 
 export default Partners;

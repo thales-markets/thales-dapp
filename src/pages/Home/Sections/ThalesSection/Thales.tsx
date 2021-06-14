@@ -32,18 +32,25 @@ const Wrapper = styled(FlexDiv)`
             margin-bottom: 50px;
         }
     }
+    @media (max-width: 568px) {
+        padding: 20px;
+    }
 `;
 
 const ThalesTheWhite = styled(Image)`
     object-fit: contain;
-    width: 515px;
-    height: 515px;
+    max-width: 515px;
+    max-height: 515px;
     margin-right: 50px;
 `;
 
 const CardThales = styled(CardsAbs)`
     padding: 45px 35px 75px 70px;
     min-width: 500px;
+    @media (max-width: 568px) {
+        min-width: unset;
+        padding: 25px 10px 35px 30px;
+    }
 `;
 
 export default Thales;

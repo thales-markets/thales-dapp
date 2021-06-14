@@ -65,6 +65,9 @@ export const Background = styled.section`
 
     &#landing-hero {
         min-height: 900px;
+        @media (max-width: 768px) {
+            min-height: 600px;
+        }
         position: relative;
         z-index: 2;
         background: transparent;
@@ -73,7 +76,7 @@ export const Background = styled.section`
             position: relative;
             z-index: 2;
             background: transparent;
-            &:after {
+            &:not(:last-of-type):after {
                 content: '';
                 display: block;
                 width: min(620px, 30%);
@@ -227,6 +230,7 @@ export const Logo = styled(Link)`
     height: 52px;
     width: 214px;
     margin-right: 20px;
+    margin-top: 6px;
     background-repeat: no-repeat;
 `;
 
