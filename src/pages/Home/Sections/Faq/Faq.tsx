@@ -14,7 +14,7 @@ const Faq: React.FC = () => {
     const [q3open, setQ3open] = useState(false);
 
     return (
-        <>
+        <Wrapper>
             <CardFaq>
                 <Text className="text-xxl pale-grey">{t('landing-page.faq.title')}</Text>
                 <DropDownWrapper className={q1open ? 'open' : ''}>
@@ -40,14 +40,29 @@ const Faq: React.FC = () => {
                 </DropDownWrapper>
             </CardFaq>
             <FaqImg src={faq} />
-        </>
+        </Wrapper>
     );
 };
 
+const Wrapper = styled(FlexDiv)`
+    padding: 70px 140px;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    @media (max-width: 1280px) {
+        padding: 50px;
+        flex-direction: column;
+    }
+`;
+
 const CardFaq = styled(CardsAbs)`
-    margin: 65px 0 200px 70px;
     padding: 45px 30px 45px 75px;
     min-width: min(850px, 100%);
+    @media (max-width: 1280px) {
+        position: relative;
+        width: 100%;
+        min-width: 500px;
+    }
 `;
 
 const DropDownWrapper = styled(FlexDivColumn)`

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FlexDivColumn, Image, Text, CardsAbs } from 'theme/common';
+import { Button, FlexDivColumn, Image, Text, CardsAbs, FlexDiv } from 'theme/common';
 import coins from 'assets/images/coins-thales.png';
 import scale from 'assets/images/weight-scale-gradient.png';
 import { useTranslation } from 'react-i18next';
@@ -8,8 +8,8 @@ import styled from 'styled-components';
 const Cards: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <>
-            <Card>
+        <Wrapper>
+            <Card className="first">
                 <Image src={coins} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
                 <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
                     <Text className="pale-grey text-l">{t('landing-page.markets.title')}</Text>.
@@ -25,7 +25,7 @@ const Cards: React.FC = () => {
                     {t('landing-page.markets.view-markets')}
                 </Button>
             </Card>
-            <Card>
+            <Card className="second">
                 <Image src={scale} style={{ height: 200, width: 200, margin: 'auto' }}></Image>
                 <FlexDivColumn style={{ paddingLeft: 70, paddingRight: 24 }}>
                     <Text className="pale-grey text-l">{t('landing-page.options.title')}</Text>.
@@ -41,20 +41,35 @@ const Cards: React.FC = () => {
                     {t('landing-page.options.view-markets')}
                 </Button>
             </Card>
-        </>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled(FlexDiv)`
+    padding: 70px 120px;
+    .first {
+        margin-right: 50px;
+    }
+    .second {
+        margin-left: 50px;
+    }
+    @media (max-width: 1280px) {
+        flex-direction: column;
+        padding: 50px;
+        .first,
+        .second {
+            margin: 0;
+        }
+        .first {
+            margin-bottom: 70px;
+        }
+    }
+`;
 
 const Card = styled(CardsAbs)`
     min-height: 600px;
     min-width: 550px;
     max-width: 550px;
-    &:first-child {
-        margin: 50px 50px 90px 120px;
-    }
-    &:nth-child(2) {
-        margin: 50px 120px 90px 50px;
-    }
 `;
 
 export default Cards;

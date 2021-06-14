@@ -37,7 +37,7 @@ const HeroSection: React.FC = () => {
 };
 
 const Hero = styled(FlexDivColumn)`
-    padding: 160px 100px;
+    padding: 160px 140px;
 `;
 
 export default HeroSection;

@@ -23,13 +23,22 @@ const Thales: React.FC = () => {
 
 const Wrapper = styled(FlexDiv)`
     padding: 70px 140px;
+    justify-content: center;
+    @media (max-width: 1280px) {
+        flex-direction: column;
+        padding: 50px;
+        img {
+            margin: auto;
+            margin-bottom: 50px;
+        }
+    }
 `;
 
 const ThalesTheWhite = styled(Image)`
     object-fit: contain;
-    max-height: 500px;
-    min-height: 400px;
-    min-width: 300px;
+    width: 515px;
+    height: 515px;
+    margin-right: 50px;
 `;
 
 const CardThales = styled(CardsAbs)`
