@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { SYNTHS_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatTxTimestamp } from 'utils/formatters/date';
@@ -85,7 +85,10 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                                 <p style={{ color: getCellColor(cellProps.cell.row.original.type) }}>
                                     {cellProps.cell.row.original.type === 'buy' ||
                                     cellProps.cell.row.original.type === 'sell'
-                                        ? formatCurrencyWithKey('sOPT', cellProps.cell.value)
+                                        ? formatCurrencyWithKey(
+                                              OPTIONS_CURRENCY_MAP[cellProps.cell.row.original.side],
+                                              cellProps.cell.value
+                                          )
                                         : formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}
                                 </p>
                             ),

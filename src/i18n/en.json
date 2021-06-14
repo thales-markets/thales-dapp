@@ -100,6 +100,8 @@
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
             "insufficient-balance": "Insufficient balance",
             "insufficient-liquidity": "Insufficient liquidity",
+            "insufficient-order-amount": "Insufficient order amount",
+            "invalid-order-amount-max": "The sLONG amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
             "enter-expiration": "Enter expiration",
@@ -384,37 +386,27 @@
                     "table": {
                         "type-col": "Type",
                         "price-col": "Price (sUSD)",
-                        "amount-col": "Amount (sOPT)",
+                        "amount-col": "Amount ({{currencyKey}})",
                         "filled-col": "Filled (%)",
                         "total-col": "Total (sUSD)",
-                        "remaining-amount-col": "Remaining amount (sOPT):",
+                        "remaining-amount-col": "Remaining amount ({{currencyKey}}):",
                         "remaining-amount-susd-col": "Remaining amount (sUSD):",
                         "time-remaining-col": "Time remaining",
                         "cancel-col": "Cancel"
                     }
                 },
                 "place-order": {
-                    "long": {
-                        "title": "Place Long order"
-                    },
-                    "short": {
-                        "title": "Place Short order"
-                    },
-                    "buy": {
-                        "title": "Buy sOPT"
-                    },
-                    "sell": {
-                        "title": "Sell sOPT"
-                    },
                     "order-type-label": "Order type",
                     "amount-label": "Amount to {{orderSide}}",
-                    "price-label": "Price per sOPT",
+                    "price-label": "Price per {{currencyKey}}",
                     "expiration-label": "Expires in",
                     "total-label": "Total (sUSD)",
                     "total-max-label": "Maximum sent (sUSD)",
                     "total-min-label": "Minimum received (sUSD)",
                     "slippage-label": "Slippage tolerance",
-                    "protocol-fee-label": "Protocol fee",
+                    "slippage-tooltip": "Your transaction will revert if the price chnages unfavorably by more than this percentage",
+                    "protocol-fee-label": "0x protocol fee",
+                    "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                     "confirm-button": {
                         "label": "Submit order",
                         "progress-label": "Submitting order in progress..."
@@ -450,13 +442,16 @@
                 },
                 "fill-order": {
                     "buy": {
-                        "title": "Sell sOPT"
+                        "title": "Sell {{currencyKey}}"
                     },
                     "sell": {
-                        "title": "Buy sOPT"
+                        "title": "Buy {{currencyKey}}"
                     },
                     "max-button-tooltip": "Set MAX available amount based on remaining order amount and wallet balance",
                     "amount-label": "Amount to {{orderSide}}",
+                    "total-label": "Total (sUSD)",
+                    "protocol-fee-label": "0x protocol fee",
+                    "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
@@ -479,12 +474,11 @@
                 },
                 "order-details": {
                     "title": "Order details",
-                    "price-label": "Price per sOPT (sUSD):",
-                    "amount-label": "Amount (sOPT):",
+                    "price-label": "Price per {{currencyKey}} (sUSD):",
+                    "amount-label": "Amount ({{currencyKey}}):",
                     "total-label": "Total (sUSD):",
                     "filled-label": "Filled (%):",
-                    "remaining-amount-label": "Remaining amount (sOPT):",
-                    "remaining-amount-susd-label": "Remaining amount (sUSD):"
+                    "remaining-amount-label": "Remaining amount ({{currencyKey}}):"
                 }
             }
         },

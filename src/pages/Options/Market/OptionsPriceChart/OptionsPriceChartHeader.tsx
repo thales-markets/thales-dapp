@@ -1,28 +1,83 @@
-import React from 'react';
-import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import Currency from 'components/Currency';
-import { FlexDivRowCentered, FlexDiv } from 'theme/common';
+import React, { useMemo } from 'react';
+import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { FlexDivRow, FlexDiv } from 'theme/common';
 import styled from 'styled-components';
-import { OptionsMarketInfo } from 'types/options';
+import { OptionsMarketInfo, Orders } from 'types/options';
+import { mean } from 'lodash';
+import { RootState } from 'redux/rootReducer';
+import { getIsAppReady } from 'redux/modules/app';
+import { getNetworkId } from 'redux/modules/wallet';
+import { useSelector } from 'react-redux';
+import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
+import { COLORS } from 'constants/ui';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { EMPTY_VALUE } from 'constants/placeholder';
 
 type OptionsPriceChartContentProps = {
     optionsMarket: OptionsMarketInfo;
 };
 
 const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ optionsMarket }) => {
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const longOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket.longAddress, {
+        enabled: isAppReady,
+    });
+    const shortOrderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsMarket.shortAddress, {
+        enabled: isAppReady,
+    });
+
+    const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
+        console.log(sellOrders, buyOrders);
+        if (sellOrders.length > 0 && buyOrders.length > 0) {
+            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
+            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
+            const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
+            return formatCurrencyWithSign(USD_SIGN, marketPrice, 4);
+        }
+        if (sellOrders.length > 0) {
+            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
+            return formatCurrencyWithSign(USD_SIGN, lowestSellOrderPrice, 4);
+        }
+        if (buyOrders.length > 0) {
+            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
+            return formatCurrencyWithSign(USD_SIGN, highestBuyOrderPrice, 4);
+        }
+
+        return EMPTY_VALUE;
+    };
+
+    const longMarketPrice = useMemo(() => {
+        const sellOrders =
+            shortOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.sellOrders : [];
+        const buyOrders =
+            longOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.buyOrders : [];
+
+        const marketPrice = getMarketPrice(sellOrders, buyOrders);
+        console.log('longMarketPrice', marketPrice);
+        return marketPrice;
+    }, [longOrderbookQuery.data]);
+
+    const shortMarketPrice = useMemo(() => {
+        const sellOrders =
+            shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.sellOrders : [];
+        const buyOrders =
+            shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.buyOrders : [];
+
+        const marketPrice = getMarketPrice(sellOrders, buyOrders);
+        console.log('shortMarketPrice', marketPrice);
+        return marketPrice;
+    }, [shortOrderbookQuery.data]);
+
     return (
         <ChartHeader>
-            <ChartTitle>
-                <Currency.Pair
-                    baseCurrencyKey={optionsMarket.currencyKey}
-                    baseCurrencyAsset={optionsMarket.asset}
-                    quoteCurrencyKey={FIAT_CURRENCY_MAP.USD}
-                    iconProps={{
-                        type: 'asset',
-                    }}
-                />
-                <Splitter>|</Splitter> {formatCurrencyWithSign(USD_SIGN, optionsMarket.currentPrice)}
+            <ChartTitle color={COLORS.LONG}>
+                {SYNTHS_MAP.sLONG}
+                <Splitter>|</Splitter> {longMarketPrice}
+            </ChartTitle>
+            <ChartTitle color={COLORS.SHORT}>
+                {SYNTHS_MAP.sSHORT}
+                <Splitter>|</Splitter> {shortMarketPrice}
             </ChartTitle>
         </ChartHeader>
     );
@@ -32,14 +87,14 @@ const Splitter = styled.span`
     margin: 0px 5px;
 `;
 
-const ChartHeader = styled(FlexDivRowCentered)``;
+const ChartHeader = styled(FlexDivRow)``;
 
-const ChartTitle = styled(FlexDiv)`
+const ChartTitle = styled(FlexDiv)<{ color: COLORS }>`
     font-weight: bold;
     font-size: 20px;
     line-height: 32px;
     letter-spacing: 0.5px;
-    color: #f6f6fe;
+    color: ${(props) => props.color};
     padding: 10px 30px;
 `;
 

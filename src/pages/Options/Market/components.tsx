@@ -1,7 +1,11 @@
+import React from 'react';
 import Select from 'components/Select';
 import { COLORS } from 'constants/ui';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol } from 'theme/common';
+import { withStyles } from '@material-ui/core';
+import MaterialTooltip from '@material-ui/core/Tooltip';
+import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark-circle.svg';
 
 export const Container = styled(FlexDivColumn)`
     padding: 15px;
@@ -177,15 +181,20 @@ export const AmountButton = styled.button`
         opacity: 0.5;
         cursor: default;
     }
+    &.selected {
+        background: #0a2e66;
+        border: 2px solid #00f9ff;
+        color: #00f9ff;
+    }
     &:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #0a2e66;
         color: #b8c6e5;
     }
-    &.selected {
-        background: #0a2e66;
+    &.selected:hover {
+        background: rgba(1, 38, 81, 0.8);
         border: 2px solid #00f9ff;
-        color: #00f9ff;
+        color: #b8c6e5;
     }
 `;
 
@@ -213,6 +222,14 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     &.selected,
     &:hover:not(:disabled) {
         background: ${(prop) => (prop.isBuy ? '#00E4B8' : '#e53720')};
+    }
+`;
+
+export const DefaultSubmitButton = styled(SubmitButton)`
+    background: #3936c7;
+    &.selected,
+    &:hover:not(:disabled) {
+        background: #7119e1;
     }
 `;
 
@@ -261,7 +278,11 @@ export const FilterButton = styled.button`
     color: #f6f6fe;
     margin: 0 9px;
     padding: 6px 16px;
-    &:hover {
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+    &:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #0a2e66;
         color: #b8c6e5;
@@ -273,6 +294,7 @@ export const FilterButton = styled.button`
     }
     &.selected:hover {
         background: rgba(1, 38, 81, 0.8);
+        border: 2px solid #00f9ff;
         color: #b8c6e5;
     }
 `;
@@ -294,4 +316,93 @@ export const SliderContainer = styled.div`
 export const BuySellSliderContainer = styled(SliderContainer)`
     margin-right: 10px;
     padding: 0 10px;
+`;
+
+export const WalletContainer = styled(FlexDivColumn)`
+    align-items: end;
+    margin-right: 20px;
+    margin-left: 7px;
+`;
+
+export const Wallet = styled.div<{ color?: string }>`
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.25px;
+    color: ${(props) => (props.color ? props.color : '#f6f6fe')};
+`;
+
+export const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 2px solid #0a2e66;
+`;
+
+type TooltipIconProps = {
+    title: React.ReactNode;
+    children: any;
+};
+
+const StyledDarkTooltip = withStyles(() => ({
+    arrow: {
+        color: '#0A2E66',
+    },
+    tooltip: {
+        background: '#0A2E66',
+        borderRadius: '10px',
+        padding: '10px',
+        fontSize: '10px',
+        lineHeight: '16px',
+        letterSpacing: '0.4px',
+        color: '#F6F6FE',
+    },
+}))(MaterialTooltip);
+
+export const DarkTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
+    <StyledDarkTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+        {children}
+    </StyledDarkTooltip>
+);
+
+const StyledLightTooltip = withStyles(() => ({
+    arrow: {
+        color: '#748BC6',
+    },
+    tooltip: {
+        background: '#748BC6',
+        borderRadius: '10px',
+        padding: '10px',
+        fontSize: '10px',
+        lineHeight: '16px',
+        letterSpacing: '0.4px',
+        color: '#04045A',
+    },
+}))(MaterialTooltip);
+
+export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
+    <StyledLightTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+        {children}
+    </StyledLightTooltip>
+);
+
+export const ProtocolFeeContainer = styled(FlexDivRow)`
+    margin-top: 5px;
+    margin-bottom: 10px;
+`;
+
+export const ProtocolFeeLabel = styled(SummaryLabel)`
+    font-size: 13px;
+    line-height: 24px;
+`;
+
+export const ProtocolFeeItem = styled(SummaryContent)`
+    font-size: 13px;
+    line-height: 24px;
+`;
+
+export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
+    cursor: pointer;
+    margin-left: 4px;
+    margin-bottom: -1px;
 `;

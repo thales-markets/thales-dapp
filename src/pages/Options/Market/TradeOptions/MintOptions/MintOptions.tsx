@@ -29,7 +29,6 @@ import {
     InputLabel,
     SubmitButtonContainer,
     CurrencyLabel,
-    SubmitButton,
     SummaryItem,
     SummaryLabel,
     SummaryContent,
@@ -38,6 +37,8 @@ import {
     InnerSummaryItem,
     SummaryContainer,
     DoubleShortInputContainer,
+    DefaultSubmitButton,
+    Divider,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -283,70 +284,70 @@ const MintOptions: React.FC = () => {
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
-                <MintSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
-                </MintSubmitButton>
+                </DefaultSubmitButton>
             );
         }
         if (insufficientBalance) {
-            return <MintSubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</MintSubmitButton>;
+            return <DefaultSubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</DefaultSubmitButton>;
         }
         if (!isAmountEntered) {
-            return <MintSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</MintSubmitButton>;
+            return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</DefaultSubmitButton>;
         }
         if (!hasAllowance) {
             return (
-                <MintSubmitButton disabled={isAllowing || !isWalletConnected} onClick={handleAllowance}>
+                <DefaultSubmitButton disabled={isAllowing} onClick={handleAllowance}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sUSD })
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: SYNTHS_MAP.sUSD,
                           })}
-                </MintSubmitButton>
+                </DefaultSubmitButton>
             );
         }
         if (!hasLongAllowance && sellLong) {
             return (
-                <MintSubmitButton disabled={isLongAllowing || !isWalletConnected} onClick={handleLongAllowance}>
+                <DefaultSubmitButton disabled={isLongAllowing} onClick={handleLongAllowance}>
                     {!isLongAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: SYNTHS_MAP.sLONG,
                           })}
-                </MintSubmitButton>
+                </DefaultSubmitButton>
             );
         }
         if (!hasShortAllowance && sellShort) {
             return (
-                <MintSubmitButton disabled={isShortAllowing || !isWalletConnected} onClick={handleShortAllowance}>
+                <DefaultSubmitButton disabled={isShortAllowing} onClick={handleShortAllowance}>
                     {!isShortAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
                         : t('common.enable-wallet-access.approve-progress-label', {
                               currencyKey: SYNTHS_MAP.sSHORT,
                           })}
-                </MintSubmitButton>
+                </DefaultSubmitButton>
             );
         }
         if (isLongSubmitting) {
             return (
-                <MintSubmitButton disabled={true}>
+                <DefaultSubmitButton disabled={true}>
                     {t(`options.market.trade-options.mint.confirm-button.submit-long-progress-label`)}
-                </MintSubmitButton>
+                </DefaultSubmitButton>
             );
         }
         if (isShortSubmitting) {
             return (
-                <MintSubmitButton disabled={true}>
+                <DefaultSubmitButton disabled={true}>
                     {t(`options.market.trade-options.mint.confirm-button.submit-short-progress-label`)}
-                </MintSubmitButton>
+                </DefaultSubmitButton>
             );
         }
         return (
-            <MintSubmitButton disabled={isButtonDisabled} onClick={handleMint}>
+            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleMint}>
                 {!isMinting
                     ? t(`options.market.trade-options.mint.confirm-button.label`)
                     : t(`options.market.trade-options.mint.confirm-button.progress-label`)}
-            </MintSubmitButton>
+            </DefaultSubmitButton>
         );
     };
 
@@ -766,7 +767,6 @@ const MintOptions: React.FC = () => {
                 <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
             </FeeSummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
                 message={txErrorMessage}
@@ -775,22 +775,6 @@ const MintOptions: React.FC = () => {
         </Container>
     );
 };
-
-const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 2px solid rgba(1, 38, 81, 0.5);
-`;
-
-const MintSubmitButton = styled(SubmitButton)`
-    background: #3936c7;
-    color: #f6f6fe;
-    &.selected,
-    &:hover:not(:disabled) {
-        background: #7119e1;
-    }
-    margin-top: ;
-`;
 
 const MintingSummaryItem = styled(SummaryItem)`
     margin-bottom: 4px;

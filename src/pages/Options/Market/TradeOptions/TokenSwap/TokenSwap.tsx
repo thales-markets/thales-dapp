@@ -50,6 +50,12 @@ import {
     SubmitButton,
     SummaryContainer,
     ShortInputContainer,
+    Divider,
+    ProtocolFeeContainer,
+    ProtocolFeeLabel,
+    ProtocolFeeItem,
+    StyledQuestionMarkIcon,
+    LightTooltip,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'theme/common';
@@ -348,7 +354,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         }
         if (!hasAllowance) {
             return (
-                <SubmitButton disabled={isAllowing || !isWalletConnected} onClick={handleAllowance} isBuy={isBuy}>
+                <SubmitButton disabled={isAllowing} onClick={handleAllowance} isBuy={isBuy}>
                     {!isAllowing
                         ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
                         : t('common.enable-wallet-access.approve-progress-label', {
@@ -412,7 +418,12 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             )}
             <SummaryContainer>
                 <SummaryItem>
-                    <SlippageLabel>{t('options.market.trade-options.place-order.slippage-label')}</SlippageLabel>
+                    <SlippageLabel>
+                        {t('options.market.trade-options.place-order.slippage-label')}
+                        <LightTooltip title={t('options.market.trade-options.place-order.slippage-tooltip')}>
+                            <StyledQuestionMarkIcon />
+                        </LightTooltip>
+                    </SlippageLabel>
                     <FlexDivCentered>
                         {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
                             <SlippageButton
@@ -433,7 +444,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     </FlexDivCentered>
                 </SummaryItem>
                 <SummaryItem>
-                    <SummaryLabel>{t('options.market.trade-options.place-order.price-label')}</SummaryLabel>
+                    <SummaryLabel>
+                        {t('options.market.trade-options.place-order.price-label', {
+                            currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                        })}
+                    </SummaryLabel>
                     <Price
                         isWarning={
                             Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
@@ -458,6 +473,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 <ProtocolFeeContainer>
                     <ProtocolFeeLabel>
                         {t('options.market.trade-options.place-order.protocol-fee-label')}
+                        <LightTooltip title={t('options.market.trade-options.place-order.protocol-fee-tooltip')}>
+                            <StyledQuestionMarkIcon />
+                        </LightTooltip>
                     </ProtocolFeeLabel>
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>
@@ -472,12 +490,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         </Container>
     );
 };
-
-const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 2px solid #0a2e66;
-`;
 
 const SlippageButton = styled(AmountButton)`
     margin: 0 10px 0 0;
@@ -509,21 +521,6 @@ const SlippageContainer = styled(InputContainer)`
 const SlippageLabel = styled(SummaryLabel)`
     display: flex;
     align-items: center;
-`;
-
-const ProtocolFeeContainer = styled(FlexDivRow)`
-    margin-top: 5px;
-    margin-bottom: 10px;
-`;
-
-const ProtocolFeeLabel = styled(SummaryLabel)`
-    font-size: 13px;
-    line-height: 24px;
-`;
-
-const ProtocolFeeItem = styled(SummaryContent)`
-    font-size: 13px;
-    line-height: 24px;
 `;
 
 const Price = styled(SummaryContent)<{ isWarning: boolean }>`

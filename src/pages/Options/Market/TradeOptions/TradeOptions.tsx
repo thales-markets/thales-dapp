@@ -21,7 +21,7 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet-dark.svg';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import MintOptions from './MintOptions';
-import { FilterButton } from '../components';
+import { FilterButton, Wallet, WalletContainer } from '../components';
 
 type TradeOptionsProps = {
     optionSide: OptionSide;
@@ -135,21 +135,6 @@ const FilterContainer = styled.div`
 
 const TradeFilterButton = styled(FilterButton)`
     padding: 6px 32px;
-`;
-
-const WalletContainer = styled(FlexDivColumn)`
-    align-items: end;
-    margin-right: 20px;
-    margin-left: 7px;
-`;
-
-const Wallet = styled.div<{ color?: string }>`
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 16px;
-    text-align: center;
-    letter-spacing: 0.25px;
-    color: ${(props) => (props.color ? props.color : '#f6f6fe')};
 `;
 
 export default TradeOptions;
