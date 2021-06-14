@@ -41,3 +41,7 @@
 .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
     background: #0e107b !important;
 }
+
+.higher-z-index {
+    z-index: 3 !important;
+}

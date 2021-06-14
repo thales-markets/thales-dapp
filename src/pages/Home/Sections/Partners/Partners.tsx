@@ -1,6 +1,6 @@
 import { SyntetixLogo } from 'pages/Home/Footer/components';
 import React from 'react';
-import { CardsAbs, FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
+import { CardsAbs, FlexDiv, FlexDivColumn, Image, Text, IconLink } from 'theme/common';
 import synthetix from 'assets/images/synthetix.svg';
 import zeroX from 'assets/images/0x.svg';
 import chainlink from 'assets/images/chainlink.svg';
@@ -13,19 +13,26 @@ const Partners: React.FC = () => {
     return (
         <FlexDivColumn style={{ alignItems: 'center', marginTop: 50 }}>
             <Text className="text-l pale-grey">{t('landing-page.partners.seed')}</Text>
-            <Partner>
-                <SyntetixLogo className="snx-logo" src={synthetix}></SyntetixLogo>
-            </Partner>
+            <IconLink target="_blank" rel="noreferrer" href="https://synthetix.io/">
+                <Partner>
+                    <SyntetixLogo className="snx-logo" src={synthetix}></SyntetixLogo>
+                </Partner>
+            </IconLink>
+
             <Text className="text-l pale-grey" style={{ marginTop: 40, marginBottom: 70 }}>
                 {t('landing-page.partners.technical')}
             </Text>
             <TechPartners>
-                <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
-                    <Image style={{ width: 'auto', height: 50 }} src={zeroX}></Image>
-                </Partner>
-                <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
-                    <Image style={{ width: 'auto', height: 50 }} src={chainlink}></Image>
-                </Partner>
+                <IconLink target="_blank" rel="noreferrer" href="https://0x.org/">
+                    <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
+                        <Image style={{ width: 'auto', height: 50 }} src={zeroX}></Image>
+                    </Partner>
+                </IconLink>
+                <IconLink target="_blank" rel="noreferrer" href="https://chain.link/">
+                    <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
+                        <Image style={{ width: 'auto', height: 50 }} src={chainlink}></Image>
+                    </Partner>
+                </IconLink>
             </TechPartners>
         </FlexDivColumn>
     );

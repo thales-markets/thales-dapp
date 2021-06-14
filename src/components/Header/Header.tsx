@@ -1,6 +1,6 @@
 import ROUTES from 'constants/routes';
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, Logo } from 'theme/common';
@@ -16,6 +16,18 @@ const Header: React.FC = () => {
     const { t } = useTranslation();
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
+    useMemo(() => {
+        if (showBurgerMenu !== BurgerState.Init) {
+            const hero = document.getElementById('landing-hero');
+            if (hero && showBurgerMenu === BurgerState.Show) {
+                hero.className += ' higher-z-index';
+            }
+            if (hero && showBurgerMenu === BurgerState.Hide) {
+                hero.className.replace(' higher-z-index', '');
+            }
+        }
+    }, [showBurgerMenu]);
+
     return (
         <HeaderWrapper>
             <Logo to={ROUTES.Home} />
@@ -25,13 +37,32 @@ const Header: React.FC = () => {
                     ' ' +
                     (showBurgerMenu === BurgerState.Hide ? 'hide' : '')
                 }
+                onClick={() => {
+                    setShowBurdgerMenu(BurgerState.Hide);
+                }}
             >
                 <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home} />
-                <NavLink to="">{t('header.links.faq')}</NavLink>
+                <CommunityLink
+                    onClick={() => {
+                        document.getElementById('partners')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                >
+                    {t('header.links.partners')}
+                </CommunityLink>
                 <CommunityLink target="_blank" rel="noreferrer" href="https://discord.gg/cFGv5zyVEj">
                     {t('header.links.community')}
                 </CommunityLink>
-                <NavLink to="">{t('header.links.partners')}</NavLink>
+
+                <CommunityLink target="_blank" rel="noreferrer" href="  https://thalesmarket.medium.com/">
+                    {t('header.links.blog')}
+                </CommunityLink>
+                <CommunityLink
+                    onClick={() => {
+                        document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                >
+                    {t('header.links.faq')}
+                </CommunityLink>
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
                         {t('landing-page.use-app')}
@@ -45,7 +76,12 @@ const Header: React.FC = () => {
                 hidden={showBurgerMenu === BurgerState.Show}
                 src={burger}
             />
-            <Overlay className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}></Overlay>
+            <Overlay
+                onClick={() => {
+                    setShowBurdgerMenu(BurgerState.Hide);
+                }}
+                className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
+            ></Overlay>
         </HeaderWrapper>
     );
 };
@@ -85,6 +121,7 @@ const Links = styled.div`
         .burger-logo {
             display: flex;
             max-height: 140px;
+            margin-top: 20px;
         }
         &.show {
             animation-name: show;
@@ -151,6 +188,7 @@ const CommunityLink = styled.a`
     line-height: 32px;
     letter-spacing: 0.15px;
     color: #f6f6fe;
+    cursor: pointer;
     &:hover {
         color: #44e1e2;
     }

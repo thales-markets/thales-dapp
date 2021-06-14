@@ -1,6 +1,6 @@
 import ROUTES from 'constants/routes';
 import React from 'react';
-import { FlexDiv, Logo, MainWrapper } from 'theme/common';
+import { FlexDiv, Logo, MainWrapper, IconLink } from 'theme/common';
 import github from 'assets/images/github.svg';
 import twitter from 'assets/images/twitter.svg';
 import discord from 'assets/images/discord.svg';
@@ -19,9 +19,15 @@ const Footer: React.FC = () => (
         <MainWrapper>
             <VerticalWrapper>
                 <FlexDiv>
-                    <FooterIcon src={github}></FooterIcon>
-                    <FooterIcon src={twitter}></FooterIcon>
-                    <FooterIcon src={discord}></FooterIcon>
+                    <IconLink target="_blank" rel="noreferrer" href="https://github.com/thales-markets">
+                        <FooterIcon src={github}></FooterIcon>
+                    </IconLink>
+                    <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
+                        <FooterIcon src={twitter}></FooterIcon>
+                    </IconLink>
+                    <IconLink target="_blank" rel="noreferrer" href="https://discord.gg/cFGv5zyVEj">
+                        <FooterIcon src={discord}></FooterIcon>
+                    </IconLink>
                 </FlexDiv>
                 <FlexDiv>
                     <Logo to={ROUTES.Home} />

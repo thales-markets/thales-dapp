@@ -31,6 +31,7 @@ const Wrapper = styled(FlexDiv)`
             margin: auto;
             margin-bottom: 50px;
         }
+        margin-bottom: 50px;
     }
     @media (max-width: 568px) {
         padding: 20px;

@@ -6,7 +6,9 @@ import second from 'assets/images/2.svg';
 import third from 'assets/images/3.svg';
 import eclipse from 'assets/images/eclipse.svg';
 import eclipseSelected from 'assets/images/eclipse-selected.svg';
-import market from 'assets/images/market.png';
+import image1 from 'assets/images/how-it-works1.svg';
+import image2 from 'assets/images/how-it-works2.svg';
+import image3 from 'assets/images/how-it-works3.svg';
 import { useTranslation } from 'react-i18next';
 
 enum CAROUSEL_SELECTED {
@@ -79,14 +81,14 @@ const GetStarted: React.FC = () => {
                     <Image src={first} style={{ width: 30, margin: 20 }}></Image>
                     <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.first')}</Text>
                 </CardsSmall>
-                <Image className="animate-r" src={market} style={{ width: 250, height: 200 }}></Image>
+                <Image className="animate-r" src={image1} style={{ width: 250, height: 200 }}></Image>
             </Wrapper>
             <Wrapper
                 className={
                     carousel === CAROUSEL_SELECTED.SECOND || carousel === CAROUSEL_SELECTED.LAST ? 'animate' : ''
                 }
             >
-                <Image className="animate-l" src={market} style={{ width: 250, height: 200 }}></Image>
+                <Image className="animate-l" src={image2} style={{ width: 250, height: 200 }}></Image>
                 <CardsSmall className="animate-r">
                     <Image src={second} style={{ width: 30, margin: 20 }}></Image>
                     <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.second')}</Text>
@@ -97,7 +99,7 @@ const GetStarted: React.FC = () => {
                     <Image src={third} style={{ width: 30, margin: 20 }}></Image>
                     <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.third')}</Text>
                 </CardsSmall>
-                <Image className="animate-r" src={market} style={{ width: 250, height: 200 }}></Image>
+                <Image className="animate-r" src={image3} style={{ width: 250, height: 200 }}></Image>
             </Wrapper>
         </GetStartedWrapper>
     );

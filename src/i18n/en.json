@@ -5,7 +5,8 @@
             "options": "Options",
             "faq": "FAQ",
             "partners": "Partners",
-            "community": "Community"
+            "community": "Community",
+            "blog": "Blog"
         },
         "connect-wallet": "Connect wallet",
         "disconnect-wallet": "Disconnect wallet"
