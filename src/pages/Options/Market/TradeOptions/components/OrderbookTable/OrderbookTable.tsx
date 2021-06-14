@@ -153,7 +153,6 @@ export const TableCell = styled(FlexDivCentered)`
 
 const NoResultContainer = styled(TableRow)`
     min-height: 10px;
-    padding-top: 20px;
     height: 60px;
     padding-left: 18px;
     font-size: 14px;

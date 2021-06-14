@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { TableRow, TableCell } from './OrderbookTable';
 
-const OrderbookTableHeader: React.FC = () => {
+type OrderbookTableHeaderProps = {
+    optionsCurrencyKey: string;
+};
+
+const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurrencyKey }) => {
     const { t } = useTranslation();
     const columns = [
         {
@@ -15,7 +19,9 @@ const OrderbookTableHeader: React.FC = () => {
             width: 300,
         },
         {
-            header: <>{t('options.market.trade-options.orderbook.table.amount-col')}</>,
+            header: (
+                <>{t('options.market.trade-options.orderbook.table.amount-col', { currencyKey: optionsCurrencyKey })}</>
+            ),
             width: 300,
         },
         {

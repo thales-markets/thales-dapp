@@ -159,7 +159,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
 };
 
 const TableContainer = styled.div<{ filter: OrderbookFilterEnum }>`
-    height: ${(props) => (props.filter === OrderbookFilterEnum.ALL ? 'calc(50% - 9px)' : '100%')};
+    height: ${(props) => (props.filter === OrderbookFilterEnum.ALL ? 'calc(50% - 17px)' : 'calc(100% - 34px)')};
 `;
 
 const Price = styled.p<{ orderSide: OrderSide }>`

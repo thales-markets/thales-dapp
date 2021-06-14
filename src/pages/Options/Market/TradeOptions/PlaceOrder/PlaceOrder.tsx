@@ -435,7 +435,11 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         step="0.01"
                         className={isPriceValid ? '' : 'error'}
                     />
-                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.price-label', {
+                            currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                        })}
+                    </InputLabel>
                     <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isPriceValid}

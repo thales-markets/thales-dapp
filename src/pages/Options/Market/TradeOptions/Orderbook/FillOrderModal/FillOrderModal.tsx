@@ -56,10 +56,11 @@ import {
     SummaryLabel,
     SummaryContent,
     Divider,
-    DarkTooltip,
+    LightTooltip,
     ProtocolFeeContainer,
     ProtocolFeeLabel,
     ProtocolFeeItem,
+    StyledQuestionMarkIcon,
 } from 'pages/Options/Market/components';
 import onboardConnector from 'utils/onboardConnector';
 import { FlexDivCentered, FlexDivRow, FlexDiv } from 'theme/common';
@@ -353,7 +354,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     };
 
     return (
-        <StyledModal open={true} onClose={onClose}>
+        <StyledModal open disableBackdropClick onClose={onClose}>
             <ModalContainer>
                 <ModalHeader>
                     <ModalTitle>
@@ -407,9 +408,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             }
                         />
                     </AmountInputContainer>
-                    <DarkTooltip title={t('options.market.trade-options.fill-order.max-button-tooltip')}>
+                    <LightTooltip title={t('options.market.trade-options.fill-order.max-button-tooltip')}>
                         <MaxButton onClick={onMaxClick}>{t('common.max')}</MaxButton>
-                    </DarkTooltip>
+                    </LightTooltip>
                 </FillOrderContainer>
                 <ModalSummaryContainer>
                     <SummaryItem>
@@ -422,6 +423,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     <ProtocolFeeContainer>
                         <ProtocolFeeLabel>
                             {t('options.market.trade-options.fill-order.protocol-fee-label')}
+                            <LightTooltip title={t('options.market.trade-options.fill-order.protocol-fee-tooltip')}>
+                                <StyledQuestionMarkIcon />
+                            </LightTooltip>
                         </ProtocolFeeLabel>
                         <ProtocolFeeItem>
                             {formatCurrencyWithSign(

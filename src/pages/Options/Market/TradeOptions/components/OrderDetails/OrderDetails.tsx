@@ -19,12 +19,18 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
         <Container>
             <Title>{t('options.market.trade-options.order-details.title')}</Title>
             <SummaryDetailsItem>
-                <SummaryDetailsLabel>{t('options.market.trade-options.order-details.price-label')}</SummaryDetailsLabel>
+                <SummaryDetailsLabel>
+                    {t('options.market.trade-options.order-details.price-label', {
+                        currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                    })}
+                </SummaryDetailsLabel>
                 <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.price)}</SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>
-                    {t('options.market.trade-options.order-details.amount-label')}
+                    {t('options.market.trade-options.order-details.amount-label', {
+                        currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                    })}
                 </SummaryDetailsLabel>
                 <SummaryDetailsContent>
                     {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.amount)}

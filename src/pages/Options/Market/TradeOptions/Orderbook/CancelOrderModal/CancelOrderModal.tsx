@@ -112,7 +112,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     };
 
     return (
-        <StyledModal open={true} onClose={onClose}>
+        <StyledModal open disableBackdropClick onClose={onClose}>
             <ModalContainer>
                 <ModalHeader>
                     <ModalTitle>{t(`options.market.trade-options.cancel-order.title`)}</ModalTitle>

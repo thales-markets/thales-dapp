@@ -54,6 +54,8 @@ import {
     ProtocolFeeContainer,
     ProtocolFeeLabel,
     ProtocolFeeItem,
+    StyledQuestionMarkIcon,
+    LightTooltip,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivRow } from 'theme/common';
@@ -416,7 +418,12 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             )}
             <SummaryContainer>
                 <SummaryItem>
-                    <SlippageLabel>{t('options.market.trade-options.place-order.slippage-label')}</SlippageLabel>
+                    <SlippageLabel>
+                        {t('options.market.trade-options.place-order.slippage-label')}
+                        <LightTooltip title={t('options.market.trade-options.place-order.slippage-tooltip')}>
+                            <StyledQuestionMarkIcon />
+                        </LightTooltip>
+                    </SlippageLabel>
                     <FlexDivCentered>
                         {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
                             <SlippageButton
@@ -437,7 +444,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     </FlexDivCentered>
                 </SummaryItem>
                 <SummaryItem>
-                    <SummaryLabel>{t('options.market.trade-options.place-order.price-label')}</SummaryLabel>
+                    <SummaryLabel>
+                        {t('options.market.trade-options.place-order.price-label', {
+                            currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                        })}
+                    </SummaryLabel>
                     <Price
                         isWarning={
                             Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
@@ -462,6 +473,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 <ProtocolFeeContainer>
                     <ProtocolFeeLabel>
                         {t('options.market.trade-options.place-order.protocol-fee-label')}
+                        <LightTooltip title={t('options.market.trade-options.place-order.protocol-fee-tooltip')}>
+                            <StyledQuestionMarkIcon />
+                        </LightTooltip>
                     </ProtocolFeeLabel>
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>

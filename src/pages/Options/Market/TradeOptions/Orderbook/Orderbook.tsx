@@ -8,8 +8,8 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
@@ -18,7 +18,7 @@ import { ReactComponent as OrderbookSellIcon } from 'assets/images/orderbook-sel
 import { ReactComponent as OrderbookAllIcon } from 'assets/images/orderbook-all.svg';
 import { ReactComponent as UserIcon } from 'assets/images/user.svg';
 import OrderbookTableHeader from '../components/OrderbookTable/OrderbookTableHeader';
-import { maxBy } from 'lodash';
+import { maxBy, mean } from 'lodash';
 import { OrderbookFilterEnum } from 'constants/options';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import { MarketWidgetKey } from 'constants/ui';
@@ -91,6 +91,25 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
           )} @ ${formatShortDate(optionsMarket.maturityDate)}`
         : null;
 
+    const getMarketPrice = () => {
+        if (sellOrders.length > 0 && buyOrders.length > 0) {
+            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
+            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
+            const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
+            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, marketPrice, 4);
+        }
+        if (sellOrders.length > 0) {
+            const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
+            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, lowestSellOrderPrice, 4);
+        }
+        if (buyOrders.length > 0) {
+            const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
+            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, highestBuyOrderPrice, 4);
+        }
+
+        return '';
+    };
+
     return (
         <>
             <MarketWidgetHeader widgetKey={MarketWidgetKey.ORDERBOOK}>
@@ -124,7 +143,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
             <MarketWidgetContent>
                 <Container>
                     <Header>{marketHeading}</Header>
-                    <OrderbookTableHeader />
+                    <OrderbookTableHeader optionsCurrencyKey={OPTIONS_CURRENCY_MAP[optionSide]} />
                     <SidesContainer>
                         {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.SELL) && (
                             <OrderbookSide
@@ -136,7 +155,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                                 filter={filter}
                             />
                         )}
-                        {filter === OrderbookFilterEnum.ALL && <Divider />}
+                        <MarketPrice>{getMarketPrice()}</MarketPrice>
                         {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.BUY) && (
                             <OrderbookSide
                                 orders={buyOrders}
@@ -183,10 +202,19 @@ const OrderbookFilterButton = styled(FilterButton)`
     padding: 4px 16px;
 `;
 
-const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 2px solid rgba(228, 228, 228, 0.1);
+// const Divider = styled.hr`
+//     width: 100%;
+//     border: none;
+//     border-top: 2px solid rgba(228, 228, 228, 0.1);
+// `;
+
+const MarketPrice = styled.div`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 24px;
+    color: #f6f6fe;
+    padding: 5px 20px;
 `;
 
 export default Orderbook;
