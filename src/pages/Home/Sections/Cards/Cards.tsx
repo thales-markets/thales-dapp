@@ -56,6 +56,7 @@ const Wrapper = styled(FlexDiv)`
     @media (max-width: 1280px) {
         flex-direction: column;
         padding: 50px;
+        margin-bottom: 50px;
         .first,
         .second {
             margin: 0;

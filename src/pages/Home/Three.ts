@@ -8,24 +8,25 @@ const ACCELERATION = 0.1;
 const CAM_POSITION = 400;
 const STAR = LOADER.load(window.location.origin + '/three/star.png');
 const SMOKE = LOADER.load(window.location.origin + '/three/smoke.png');
-const PARTICLES_CNT = window.innerWidth > window.innerHeight ? 5 * window.innerWidth : 5 * window.innerHeight;
+const PARTICLES_CNT = window.screen.width > window.screen.height ? 5 * window.screen.width : 5 * window.screen.height;
 const SMOKE_SIZE = 200;
 const SMOKE_CNT =
-    window.innerWidth > window.innerHeight
-        ? (100 * window.innerWidth) / SMOKE_SIZE
-        : (100 * window.innerHeight) / SMOKE_SIZE;
+    window.screen.width > window.screen.height
+        ? (100 * window.screen.width) / SMOKE_SIZE
+        : (100 * window.screen.height) / SMOKE_SIZE;
 
 let init = false;
 let eventListenerSet = false;
 let particleSpeed = MIN_SPEED;
 let speedUp = false;
 let countRender = 0;
+
 const renderer = new THREE.WebGLRenderer();
-const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+const camera = new PerspectiveCamera(75, window.screen.width / window.screen.height, 1, 1000);
 const onWindowResize = () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = window.screen.width / window.screen.height;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.screen.width, window.screen.height);
 };
 
 export const setupThreeJS = () => {
@@ -43,7 +44,7 @@ export const setupThreeJS = () => {
 
         renderer.setClearColor('#04045a');
         camera.position.z = CAM_POSITION;
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(window.screen.width, window.screen.height);
         root?.appendChild(renderer.domElement);
 
         const smokeGeo = new THREE.PlaneBufferGeometry(SMOKE_SIZE, SMOKE_SIZE);
@@ -59,8 +60,8 @@ export const setupThreeJS = () => {
             const smoke = new THREE.Mesh(smokeGeo, smokeMaterial);
 
             smoke.position.set(
-                (Math.random() - 0.5) * 2 * (Math.random() * window.innerWidth),
-                (Math.random() - 0.5) * 2 * (Math.random() * window.innerHeight),
+                (Math.random() - 0.5) * 2 * (Math.random() * window.screen.width),
+                (Math.random() - 0.5) * 2 * (Math.random() * window.screen.height),
                 CAM_POSITION - 300 + Math.random() * 400
             );
             scene.add(smoke);
@@ -106,7 +107,7 @@ export const setupThreeJS = () => {
                         speedUp = false;
                     });
                 }
-                // MAX_SCROLL = window.innerHeight - window.innerHeight;
+                // MAX_SCROLL = window.screen.height - window.screen.height;
                 // if (window.scrollY > (25 * MAX_SCROLL) / 100) {
                 //     particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
                 // } else {

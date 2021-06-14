@@ -52,6 +52,7 @@ const Wrapper = styled(FlexDiv)`
     @media (max-width: 1280px) {
         padding: 50px;
         flex-direction: column-reverse;
+        margin-bottom: 50px;
     }
     @media (max-width: 568px) {
         padding: 20px;
@@ -112,7 +113,8 @@ const FaqImg = styled(Image)`
     margin-right: -80px;
     margin-bottom: 100px;
     @media (max-width: 1280px) {
-        margin: auto;
+        height: 400px;
+        margin: 60px auto;
     }
 `;
 

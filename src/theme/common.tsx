@@ -306,3 +306,17 @@ export const FilterButton = styled(Button)`
         background: #44e1e2;
     }
 `;
+
+export const IconLink = styled.a``;
+
+export const SyntetixLogo = styled.img`
+    width: 220px;
+    height: 16px;
+    position: relative;
+    top: 2px;
+    @media (max-width: 468px) {
+        width: 160px;
+        top: 4px;
+        margin-left: 6px;
+    }
+`;

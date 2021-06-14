@@ -107,7 +107,8 @@ section {
 }
 body {
     line-height: 1;
-    padding: 0 !important;
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0)
+        env(safe-area-inset-left, 0);
     overflow-x: hidden !important;
     overflow-y: auto !important;
 }
@@ -175,6 +176,14 @@ input::-webkit-inner-spin-button {
 
 input[type='number'] {
     -moz-appearance: textfield; /* Firefox */
+}
+
+#root {
+    overflow: hidden;
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
 }
 
 @import './overrides.css';
