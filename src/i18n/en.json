@@ -58,8 +58,8 @@
     "common": {
         "max": "max",
         "gas-limit": "gas limit",
-        "network-fee-gas": "network fee (gas)",
-        "gas-price-gwei": "gas price (gwei)",
+        "network-fee-gas": "Network fee (gas)",
+        "gas-price-gwei": "Gas price (gwei)",
         "gwei": "gwei",
         "transaction": {
             "view": "View"
@@ -149,7 +149,7 @@
     },
     "modals": {
         "gwei": {
-            "placeholder": "CUSTOM",
+            "placeholder": "Custom",
             "table": {
                 "speed-allowed": "Speed (allowed)",
                 "slow": "Slow",

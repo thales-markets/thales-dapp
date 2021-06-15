@@ -11,7 +11,8 @@ import { getTransactionPrice } from 'utils/network';
 import SelectGasMenu from 'components/SelectGasMenu';
 import { getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import { Text } from 'theme/common';
+import { SummaryContent, SummaryItem, SummaryLabel } from 'pages/Options/Market/components';
+import styled from 'styled-components';
 
 type NetworkFeesProps = {
     gasLimit: number | null;
@@ -19,7 +20,7 @@ type NetworkFeesProps = {
     priceColor?: string;
 };
 
-const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, labelColor, priceColor }) => {
+const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
@@ -40,21 +41,36 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, labelColor, priceCo
     const { t } = useTranslation();
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase' }}>
-                <Text className={`text-xs ${labelColor || 'dark'} bold capitalize`}>{t('common.network-fee-gas')}</Text>
-                <Text className={`text-xs ${priceColor || 'dark'} bold capitalize`}>
+        <>
+            <NetworkFeeSummaryItem>
+                <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
+                <NetworkFeeSummaryContent>
                     {formatCurrencyWithSign(USD_SIGN, getTransactionPrice(gasPrice, gasLimit, ethRate))}
-                </Text>
-            </div>
-            <div
-                style={{ display: 'flex', justifyContent: 'space-between', textTransform: 'uppercase', marginTop: 10 }}
-            >
-                <Text className={`text-xs ${labelColor || 'dark'} bold capitalize`}>{t('common.gas-price-gwei')}</Text>
+                </NetworkFeeSummaryContent>
+            </NetworkFeeSummaryItem>
+            <NetworkFeeSummaryItem>
+                <NetworkFeeSummaryLabel>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
                 <SelectGasMenu gasPrice={gasPrice} />
-            </div>
-        </div>
+            </NetworkFeeSummaryItem>
+        </>
     );
 };
+
+const NetworkFeeSummaryItem = styled(SummaryItem)`
+    margin-bottom: 10px;
+    &:last-child {
+        margin-top: 10px;
+    }
+`;
+
+const NetworkFeeSummaryLabel = styled(SummaryLabel)`
+    font-size: 13px;
+    line-height: 24px;
+`;
+
+const NetworkFeeSummaryContent = styled(SummaryContent)`
+    font-size: 13px;
+    line-height: 24px;
+`;
 
 export default NetworkFees;
