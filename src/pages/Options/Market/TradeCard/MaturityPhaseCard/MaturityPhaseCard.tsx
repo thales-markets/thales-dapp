@@ -4,11 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import snxJSConnector from 'utils/snxJSConnector';
 import { normalizeGasLimit } from 'utils/network';
-import { ReactComponent as FinishIcon } from 'assets/images/finish.svg';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN, SYNTHS_MAP } from 'constants/currency';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { SYNTHS_MAP } from 'constants/currency';
 import { ethers } from 'ethers';
-import { Button, Header, Message } from 'semantic-ui-react';
 import { TradeCardPhaseProps } from 'types/options';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
@@ -22,6 +20,17 @@ import { BINARY_OPTIONS_EVENTS } from 'constants/events';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
+import ValidationMessage from 'components/ValidationMessage';
+import {
+    DefaultSubmitButton,
+    Divider,
+    SubmitButtonContainer,
+    SummaryContent,
+    SummaryItem,
+    SummaryLabel,
+} from '../../components';
+import styled from 'styled-components';
+import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
@@ -114,63 +123,87 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
         <>
             <MarketWidgetHeader widgetKey={MarketWidgetKey.MATURITY_PHASE}></MarketWidgetHeader>
             <MarketWidgetContent>
-                <div style={{ overflow: 'hidden' }}>
-                    <div>
+                <Container>
+                    <InnerContainer>
                         <ResultCard
-                            icon={<FinishIcon />}
                             title={t('options.market.trade-card.maturity.card-title')}
                             subTitle={t('options.market.trade-card.maturity.card-subtitle')}
                             longAmount={longAmount}
                             shortAmount={shortAmount}
                             result={result}
+                            exercised={nothingToExercise}
                         />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                        <Header as="h3" style={{ textTransform: 'uppercase' }}>
-                            {t('options.market.trade-card.maturity.payout-amount')}
-                        </Header>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 5, marginBottom: 20 }}>
-                        <Header as="h2">
-                            {formatCurrencyWithSign(USD_SIGN, isLongResult ? longAmount : shortAmount)}{' '}
-                            {SYNTHS_MAP.sUSD}
-                        </Header>
-                    </div>
-                    <NetworkFees gasLimit={gasLimit} />
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                        <Button primary disabled={isButtonDisabled} onClick={handleExercise}>
-                            {nothingToExercise
-                                ? t('options.market.trade-card.maturity.confirm-button.success-label')
-                                : !isExercising
-                                ? t('options.market.trade-card.maturity.confirm-button.label')
-                                : t('options.market.trade-card.maturity.confirm-button.progress-label')}
-                        </Button>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                        {txErrorMessage && (
-                            <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                        )}
-                    </div>
-                    <div
-                        style={{ display: 'flex', justifyContent: 'center', textTransform: 'uppercase', marginTop: 20 }}
-                    >
-                        <span>
-                            {t('options.market.trade-card.maturity.footer.end-label')}{' '}
-                            <TimeRemaining
-                                end={optionsMarket.timeRemaining}
-                                onEnded={() =>
-                                    queryConnector.queryClient.invalidateQueries(
-                                        QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
-                                    )
-                                }
-                            />
-                        </span>
-                    </div>
-                </div>
+                        <MaturitySummaryContainer>
+                            <SummaryItem>
+                                <MaturitySummaryLabel>
+                                    {t('options.market.trade-card.maturity.payout-amount-label')}
+                                </MaturitySummaryLabel>
+                                <MaturitySummaryContent>
+                                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, isLongResult ? longAmount : shortAmount)}
+                                </MaturitySummaryContent>
+                            </SummaryItem>
+                            <SummaryItem>
+                                <MaturitySummaryLabel>
+                                    {t('options.market.trade-card.maturity.end-label')}
+                                </MaturitySummaryLabel>
+                                <MaturitySummaryContent>
+                                    <TimeRemaining
+                                        end={optionsMarket.timeRemaining}
+                                        onEnded={() =>
+                                            queryConnector.queryClient.invalidateQueries(
+                                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                                            )
+                                        }
+                                        fontSize={20}
+                                    />
+                                </MaturitySummaryContent>
+                            </SummaryItem>
+                        </MaturitySummaryContainer>
+                        <Divider />
+                        <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                        <SubmitButtonContainer>
+                            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleExercise}>
+                                {nothingToExercise
+                                    ? t('options.market.trade-card.maturity.confirm-button.success-label')
+                                    : !isExercising
+                                    ? t('options.market.trade-card.maturity.confirm-button.label')
+                                    : t('options.market.trade-card.maturity.confirm-button.progress-label')}
+                            </DefaultSubmitButton>
+                        </SubmitButtonContainer>
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
+                    </InnerContainer>
+                </Container>
             </MarketWidgetContent>
         </>
     );
 };
+
+const Container = styled(FlexDivCentered)`
+    padding: 20px 30px;
+`;
+
+const InnerContainer = styled(FlexDivColumnCentered)`
+    max-width: 600px;
+`;
+
+const MaturitySummaryContainer = styled.div`
+    margin-top: 30px;
+`;
+
+const MaturitySummaryLabel = styled(SummaryLabel)`
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: 0.15px;
+`;
+
+const MaturitySummaryContent = styled(SummaryContent)`
+    font-size: 20px !important;
+    line-height: 32px;
+    letter-spacing: 0.15px;
+`;
 
 export default MaturityPhaseCard;

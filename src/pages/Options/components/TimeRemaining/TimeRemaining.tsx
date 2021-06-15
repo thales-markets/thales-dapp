@@ -10,12 +10,13 @@ import useInterval from 'hooks/useInterval';
 type TimeRemainingProps = {
     end: Date | number;
     onEnded?: () => void;
+    fontSize?: number;
 };
 
 const ONE_SECOND_IN_MS = 1000;
 //const ENDING_SOON_IN_HOURS = 48;
 
-export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded }) => {
+export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, fontSize }) => {
     const now = Date.now();
     const [timeElapsed, setTimeElapsed] = useState(now >= end);
     const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, end)));
@@ -51,7 +52,7 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded }) =>
     }, timeInterval);
 
     return (
-        <span style={{ fontSize: 12 }}>
+        <span style={{ fontSize: fontSize || 12 }}>
             {timeElapsed
                 ? t('options.common.time-remaining.ended')
                 : showRemainingInWeeks

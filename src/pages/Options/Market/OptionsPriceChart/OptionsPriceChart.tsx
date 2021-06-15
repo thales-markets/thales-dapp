@@ -16,8 +16,8 @@ const OptionsPriceChart: React.FC = () => {
             <MarketWidgetHeader widgetKey={MarketWidgetKey.CHART_OPTIONS_PRICE}></MarketWidgetHeader>
             <MarketWidgetContent>
                 <Container>
-                    <OptionsPriceChartHeader optionsMarket={optionsMarket} />
-                    <ChartContainer>
+                    {optionsMarket.phase === 'trading' && <OptionsPriceChartHeader optionsMarket={optionsMarket} />}
+                    <ChartContainer phase={optionsMarket.phase}>
                         <OptionsPriceChartContent optionsMarket={optionsMarket} />
                     </ChartContainer>
                 </Container>
@@ -33,8 +33,9 @@ const Container = styled(FlexDivColumn)`
     height: 100%;
 `;
 
-const ChartContainer = styled.div`
+const ChartContainer = styled.div<{ phase: string }>`
     width: 100%;
     height: calc(100% - 52px);
+    margin-top: ${(props) => (props.phase === 'trading' ? '0' : '52px')};
 `;
 export default OptionsPriceChart;

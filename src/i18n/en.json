@@ -251,9 +251,12 @@
         "market": {
             "overview": {
                 "strike-price-label": "Strike price",
-                "current-market-price": "Current market price",
-                "maturity-label": "Maturity",
-                "result-label": "Current result"
+                "price-trading-label": "Current price",
+                "price-maturity-label": "Final price",
+                "phase-end-trading-label": "Maturity",
+                "phase-end-maturity-label": "End",
+                "result-trading-label": "Current result",
+                "result-maturity-label": "Final result"
             },
             "heading": {
                 "all-markets": "all markets",
@@ -344,17 +347,14 @@
                     "price-shift": "If a bid is too large for the current size of the market, it will cause slippage."
                 },
                 "maturity": {
-                    "title": "exercise options",
-                    "card-title": "market has closed",
+                    "card-title": "Market has been closed",
                     "card-subtitle": "Options available:",
-                    "payout-amount": "payout amount",
+                    "payout-amount-label": "Payout amount",
+                    "end-label": "Time left to exercise",
                     "confirm-button": {
-                        "label": "exercise options",
-                        "progress-label": "exercising in progress...",
-                        "success-label": "nothing to exercise"
-                    },
-                    "footer": {
-                        "end-label": "time left to exercise:"
+                        "label": "Exercise options",
+                        "progress-label": "Exercising in progress...",
+                        "success-label": "Nothing to exercise"
                     }
                 }
             },

@@ -1,59 +1,68 @@
 import React from 'react';
-import { Grid, Header } from 'semantic-ui-react';
+import styled, { css } from 'styled-components';
+import { FlexDivCentered, FlexDivColumn, FlexDivRow } from 'theme/common';
 import { OptionSide } from 'types/options';
 import OptionResult from '../OptionResult';
 
 type ResultCardProps = {
-    icon: React.ReactNode;
     title: React.ReactNode;
     subTitle: React.ReactNode;
     longAmount: number;
     shortAmount: number;
-    longPrice?: number;
-    shortPrice?: number;
     result?: OptionSide;
     exercised?: boolean;
-    claimableLongAmount?: number;
-    claimableShortAmount?: number;
 };
 
-const ResultCard: React.FC<ResultCardProps> = ({
-    icon,
-    title,
-    subTitle,
-    longAmount,
-    shortAmount,
-    longPrice,
-    shortPrice,
-    // result,
-    // exercised,
-    claimableLongAmount,
-    claimableShortAmount,
-}) => (
-    <div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>{icon}</div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 5 }}>
-            <Header as="h3" style={{ textTransform: 'uppercase' }}>
-                {title}
-            </Header>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+const ResultCard: React.FC<ResultCardProps> = ({ title, subTitle, longAmount, shortAmount, result, exercised }) => (
+    <Container>
+        <Title>{title}</Title>
+        <SubTitle>
             <span>{subTitle}</span>
-        </div>
-        <Grid centered>
-            <Grid.Column width={6}>
-                <OptionResult side="long" amount={longAmount} price={longPrice} claimableAmount={claimableLongAmount} />
-            </Grid.Column>
-            <Grid.Column width={6}>
-                <OptionResult
-                    side="short"
-                    amount={shortAmount}
-                    price={shortPrice}
-                    claimableAmount={claimableShortAmount}
-                />
-            </Grid.Column>
-        </Grid>
-    </div>
+        </SubTitle>
+        <OptionResults result={result} exercised={exercised}>
+            <OptionResult side="long" amount={longAmount} />
+            <OptionResult side="short" amount={shortAmount} />
+        </OptionResults>
+    </Container>
 );
+
+const Container = styled(FlexDivColumn)``;
+
+const Title = styled(FlexDivCentered)`
+    font-style: normal;
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 48px;
+    color: #f6f6fe;
+`;
+
+const SubTitle = styled(Title)`
+    font-size: 20px;
+    line-height: 40px;
+    letter-spacing: 0.15px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+`;
+
+const OptionResults = styled(FlexDivRow)<{ result?: OptionSide; exercised?: boolean }>`
+    ${(props) =>
+        props.result &&
+        css`
+            .long {
+                opacity: ${props.result === 'long' ? 1 : 0.5};
+            }
+            .short {
+                opacity: ${props.result === 'short' ? 1 : 0.5};
+            }
+        `}
+    ${(props) =>
+        props.exercised &&
+        css`
+            .long,
+            .short {
+                opacity: 0.5;
+            }
+        `}
+`;
 
 export default ResultCard;

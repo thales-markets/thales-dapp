@@ -36,15 +36,15 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.strikePrice)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.current-market-price`)}</Title>
+                    <Title>{t(`options.market.overview.price-${optionsMarket.phase}-label`)}</Title>
                     <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.currentPrice)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.maturity-label`)}</Title>
+                    <Title>{t(`options.market.overview.phase-end-${optionsMarket.phase}-label`)}</Title>
                     <Content>{formatShortDate(optionsMarket.maturityDate)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.result-label`)}</Title>
+                    <Title>{t(`options.market.overview.result-${optionsMarket.phase}-label`)}</Title>
                     <Result isLong={isLong}>{isLong ? t('options.common.long') : t('options.common.short')}</Result>
                 </ItemContainer>
                 <ItemContainer>

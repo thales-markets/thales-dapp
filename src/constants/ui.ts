@@ -11,7 +11,7 @@ export enum MarketWidgetKey {
 }
 
 export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
-    [MarketWidgetKey.MATURITY_PHASE]: { i: MarketWidgetKey.MATURITY_PHASE, x: 8, y: 0, w: 4, h: 13 },
+    [MarketWidgetKey.MATURITY_PHASE]: { i: MarketWidgetKey.MATURITY_PHASE, x: 0, y: 0, w: 12, h: 15 },
     [MarketWidgetKey.ORDERBOOK]: { i: MarketWidgetKey.ORDERBOOK, x: 0, y: 1, w: 6, h: 17 },
     [MarketWidgetKey.TRADE]: { i: MarketWidgetKey.TRADE, x: 6, y: 1, w: 6, h: 17 },
     [MarketWidgetKey.CHART_TRADING_VIEW]: { i: MarketWidgetKey.CHART_TRADING_VIEW, x: 0, y: 2, w: 6, h: 11 },
