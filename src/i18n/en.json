@@ -49,7 +49,8 @@
             "secondQ": "What markets are supported?",
             "secondA": "Market participants are free to create markets for any supported Chainlink price feed on crypto assets, index products, forex, traditional equities, and commodities.",
             "thirdQ": "How does binary options pricing work?",
-            "thirdA": "Binary options are priced based on the make-up of the pool for a given market. The market originator sets an initial skew to establish initial odds, bidders can then choose a side they think is more likely, and during the trading phase a user Alice can set her own prices at which to exchange an sOPT token."
+            "thirdA": "Binary options are priced based on the make-up of the pool for a given market. The market originator sets an initial skew to establish initial odds, bidders can then choose a side they think is more likely, and during the trading phase a user Alice can set her own prices at which to exchange an sOPT token.",
+            "hub": "Knowledge hub"          
         }
     },
     "maintenance-page": {

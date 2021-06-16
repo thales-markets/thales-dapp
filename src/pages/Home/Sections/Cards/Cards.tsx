@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, FlexDivColumn, Image, Text, CardsAbs, FlexDiv } from 'theme/common';
 import coins from 'assets/images/coins-thales.png';
-import scale from 'assets/images/weight-scale-gradient.png';
+import scale from 'assets/images/weight-scale-gradient.svg';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
