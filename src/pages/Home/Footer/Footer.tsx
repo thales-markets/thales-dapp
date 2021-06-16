@@ -1,8 +1,7 @@
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { FlexDiv, Logo, MainWrapper, IconLink } from 'theme/common';
-import synthetix from 'assets/images/synthetix.svg';
-import { FooterIcon, PoweredBy, SyntetixLogo, VerticalWrapper } from './components';
+import { FooterIcon, VerticalWrapper } from './components';
 import styled from 'styled-components';
 
 export const Background = styled.section`
@@ -26,13 +25,9 @@ const Footer: React.FC = () => (
                         <FooterIcon className="discord"></FooterIcon>
                     </IconLink>
                 </FlexDiv>
-                <FlexDiv>
+                <FlexDiv style={{ marginBottom: 60 }}>
                     <Logo to={ROUTES.Home} />
                 </FlexDiv>
-                <PoweredBy>
-                    Powered by
-                    <SyntetixLogo src={synthetix}></SyntetixLogo>
-                </PoweredBy>
             </VerticalWrapper>
         </MainWrapper>
     </Background>
