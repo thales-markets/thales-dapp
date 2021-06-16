@@ -16,7 +16,7 @@ const Faq: React.FC = () => {
     return (
         <Wrapper>
             <CardFaq>
-                <Text className="text-xxl pale-grey">{t('landing-page.faq.title')}</Text>
+                <Text className="text-l pale-grey">{t('landing-page.faq.title')}</Text>
                 <DropDownWrapper className={q1open ? 'open' : ''}>
                     <Question>
                         <Text className="text-m pale-grey">{t('landing-page.faq.firstQ')}</Text>
