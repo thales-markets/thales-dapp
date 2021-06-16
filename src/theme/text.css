@@ -90,6 +90,10 @@
     line-height: 24px;
 }
 
+.lh32 {
+    line-height: 32px;
+}
+
 .ls25 {
     letter-spacing: 0.25px;
 }

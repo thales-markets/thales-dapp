@@ -1,16 +1,18 @@
 import React from 'react';
 import { Button, FlexDivColumn, Image, Text, CardsAbs, FlexDiv } from 'theme/common';
 import coins from 'assets/images/coins-thales.png';
-import scale from 'assets/images/weight-scale-gradient.png';
+import scale from 'assets/images/weight-scale-gradient.svg';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import ROUTES from 'constants/routes';
+import { navigateTo } from 'utils/routes';
 
 const Cards: React.FC = () => {
     const { t } = useTranslation();
     return (
         <Wrapper>
             <Card className="first">
-                <Image src={coins} style={{ height: 200, width: 200, margin: '10px auto' }}></Image>
+                <Image src={coins} style={{ height: 200, width: 200, margin: 'auto' }}></Image>
                 <TextWrapper>
                     <Text className="pale-grey text-l">{t('landing-page.markets.title')}</Text>.
                     <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
@@ -21,7 +23,11 @@ const Cards: React.FC = () => {
                     </Text>
                     <Text className="pale-grey texts lh24">{t('landing-page.markets.option3')}</Text>
                 </TextWrapper>
-                <Button className="primary" style={{ margin: '50px auto' }}>
+                <Button
+                    className="primary"
+                    style={{ margin: '50px auto' }}
+                    onClick={() => navigateTo(ROUTES.Options.Home)}
+                >
                     {t('landing-page.markets.view-markets')}
                 </Button>
             </Card>
@@ -37,7 +43,11 @@ const Cards: React.FC = () => {
                     </Text>
                     <Text className="pale-grey texts lh24">{t('landing-page.options.option3')}</Text>
                 </TextWrapper>
-                <Button className="primary" style={{ margin: 'auto', marginBottom: 50, marginTop: 30 }}>
+                <Button
+                    className="primary"
+                    style={{ margin: 'auto', marginBottom: 50, marginTop: 30 }}
+                    onClick={() => navigateTo(ROUTES.Options.Home + '/#explore-markets')}
+                >
                     {t('landing-page.options.view-markets')}
                 </Button>
             </Card>

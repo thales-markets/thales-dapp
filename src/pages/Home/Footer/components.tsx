@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'theme/common';
+import github from 'assets/images/github.svg';
+import twitter from 'assets/images/twitter.svg';
+import discord from 'assets/images/discord.svg';
 
 export const FooterIcon = styled.img`
     width: 30px;
@@ -7,6 +10,15 @@ export const FooterIcon = styled.img`
     margin: 60px;
     @media (max-width: 468px) {
         margin: 40px;
+    }
+    &.github {
+        content: url(${github});
+    }
+    &.twitter {
+        content: url(${twitter});
+    }
+    &.discord {
+        content: url(${discord});
     }
 `;
 

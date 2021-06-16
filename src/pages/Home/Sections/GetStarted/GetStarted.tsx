@@ -23,6 +23,9 @@ const GetStarted: React.FC = () => {
     const [carousel, setCarousel] = useState(CAROUSEL_SELECTED.NONE);
 
     const scrollListener = () => {
+        if (carousel === CAROUSEL_SELECTED.LAST) {
+            return;
+        }
         const currentPosition = window.innerHeight + scrollY;
 
         const parent = document.getElementById('get-started')?.offsetTop;
@@ -33,6 +36,7 @@ const GetStarted: React.FC = () => {
         if (parent !== undefined && first !== undefined && second !== undefined && third !== undefined) {
             if (currentPosition > parent + third + 600) {
                 setCarousel(CAROUSEL_SELECTED.LAST);
+                window.removeEventListener('scroll', scrollListener);
             } else if (currentPosition > parent + second + 500 && currentPosition <= parent + third + 600) {
                 setCarousel(CAROUSEL_SELECTED.SECOND);
             } else if (currentPosition <= parent + second + 500 && currentPosition > parent + first + 400) {
@@ -52,9 +56,7 @@ const GetStarted: React.FC = () => {
 
     return (
         <GetStartedWrapper>
-            <Text className="pale-grey text-l" style={{ marginBottom: 35, marginLeft: -30 }}>
-                {t('landing-page.get-started.title')}
-            </Text>
+            <Title className="pale-grey text-l">{t('landing-page.get-started.title')}</Title>
             <Wrapper className={carousel !== CAROUSEL_SELECTED.NONE ? 'animate' : ''}>
                 <Carousel>
                     <Eclipse
@@ -107,8 +109,18 @@ const GetStarted: React.FC = () => {
 
 const GetStartedWrapper = styled(FlexDivColumn)`
     padding: 70px 140px;
-    @media (max-width: 968px) {
+    max-width: 1200px;
+    @media (max-width: 1100px) {
         padding: 50px;
+        max-width: 980px;
+    }
+`;
+
+const Title = styled(Text)`
+    margin-bottom: 35px !important;
+    margin-left: -30px;
+    @media (max-width: 890px) {
+        margin: auto;
     }
 `;
 
@@ -140,9 +152,18 @@ const Wrapper = styled(FlexDiv)`
     &:last-child {
         margin-bottom: 50px;
     }
-    @media (max-width: 768px) {
+
+    img.animate-r {
+        margin-right: 50px;
+    }
+
+    img.animate-l {
+        margin-left: 50px;
+    }
+
+    @media (max-width: 890px) {
         & > img {
-            display: none;
+            display: none !important;
         }
     }
 `;
@@ -153,21 +174,13 @@ const CardsSmall = styled(CardsAbs)`
     flex-direction: row;
     max-width: 350px;
     align-items: center;
-    @media (max-width: 1280px) {
-        &.animate-r {
-            margin-left: 150px;
-        }
-        &.animate-l {
-            margin-right: 150px;
-        }
-    }
-    @media (max-width: 768px) {
+    @media (max-width: 890px) {
         margin: auto !important;
     }
 `;
 
 const Carousel = styled(FlexDivColumn)`
-    @media (max-width: 768px) {
+    @media (max-width: 890px) {
         display: none;
     }
     width: 5px;
