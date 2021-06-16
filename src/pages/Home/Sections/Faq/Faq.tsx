@@ -19,21 +19,21 @@ const Faq: React.FC = () => {
                 <Text className="text-l pale-grey">{t('landing-page.faq.title')}</Text>
                 <DropDownWrapper className={q1open ? 'open' : ''}>
                     <Question>
-                        <Text className="text-m pale-grey">{t('landing-page.faq.firstQ')}</Text>
+                        <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.firstQ')}</Text>
                         <Image src={q1open ? minus : plus} onClick={() => setQ1open(!q1open)}></Image>
                     </Question>
                     <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.firstA')}</Answer>
                 </DropDownWrapper>
                 <DropDownWrapper className={q2open ? 'open' : ''}>
                     <Question>
-                        <Text className="text-m pale-grey">{t('landing-page.faq.secondQ')}</Text>
+                        <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.secondQ')}</Text>
                         <Image src={q2open ? minus : plus} onClick={() => setQ2open(!q2open)}></Image>
                     </Question>
                     <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.secondA')}</Answer>
                 </DropDownWrapper>
                 <DropDownWrapper className={q3open ? 'open' : ''}>
                     <Question>
-                        <Text className="text-m pale-grey lh24 ls25">{t('landing-page.faq.thirdQ')}</Text>
+                        <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.thirdQ')}</Text>
                         <Image src={q3open ? minus : plus} onClick={() => setQ3open(!q3open)}></Image>
                     </Question>
                     <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.thirdA')}</Answer>
@@ -79,7 +79,7 @@ const DropDownWrapper = styled(FlexDivColumn)`
     padding: 20px 0;
     flex: 0;
     &:not(:last-child) {
-        border-bottom: 1.5px dashed #00f9ff;
+        border-bottom: 1px solid #00f9ff;
     }
     &.open {
         & > p {
