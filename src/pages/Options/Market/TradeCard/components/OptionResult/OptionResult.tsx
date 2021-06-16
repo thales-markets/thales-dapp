@@ -1,41 +1,53 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { USD_SIGN } from 'constants/currency';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
 import { OptionSide } from 'types/options';
-import { Header, Segment } from 'semantic-ui-react';
-import OptionSideIcon from '../../../components/OptionSideIcon';
+import styled from 'styled-components';
+import { FlexDivCentered } from 'theme/common';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import longIcon from 'assets/images/long_small.svg';
+import shortIcon from 'assets/images/short_small.svg';
+import { COLORS } from 'constants/ui';
 
 type OptionResultProps = {
     side: OptionSide;
     amount: number;
-    price?: number;
-    claimableAmount?: number;
 };
 
-const OptionResult: React.FC<OptionResultProps> = ({ side, amount, price, claimableAmount }) => {
-    const { t } = useTranslation();
-
+const OptionResult: React.FC<OptionResultProps> = ({ side, amount }) => {
     return (
-        <Segment style={{ textTransform: 'uppercase' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 5 }}>
-                <OptionSideIcon side={side} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
-                <Header as="h3">{t(`options.common.amount-${side}`, { amount: formatCurrency(amount) })}</Header>
-            </div>
-            {claimableAmount != null && (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {t('options.common.claimable-amount', { amount: formatCurrency(claimableAmount) })}
-                </div>
-            )}
-            {price != null && (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {t('options.common.final-price')} {formatCurrencyWithSign(USD_SIGN, price)}
-                </div>
-            )}
-        </Segment>
+        <Container className={side} side={side}>
+            <InnerContainer>
+                <Amount>{formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[side], amount)}</Amount>
+                {side === 'long' ? <SideImage src={longIcon} /> : <SideImage src={shortIcon} />}
+            </InnerContainer>
+        </Container>
     );
 };
+
+const Container = styled(FlexDivCentered)<{ side: OptionSide }>`
+    border: 3px solid ${(props) => (props.side === 'long' ? COLORS.LONG : COLORS.SHORT)};
+    border-radius: 12px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: 0.5px;
+    color: #f6f6fe;
+    padding: 16px;
+    width: 50%;
+    &:first-child {
+        margin-right: 20px;
+    }
+`;
+
+const InnerContainer = styled(FlexDivCentered)`
+    max-width: 400px;
+`;
+
+const Amount = styled.div`
+    margin-right: 8px;
+`;
+
+const SideImage = styled.img``;
 
 export default OptionResult;

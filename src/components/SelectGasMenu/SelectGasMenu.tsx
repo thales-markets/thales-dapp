@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FlexDiv, Text } from 'theme/common';
+import { FlexDiv } from 'theme/common';
 import { formatCurrency } from 'utils/formatters/number';
 import dropDown from 'assets/images/drop-down.svg';
 import SelectGasMenuBody from './SelectGasMenuBody';
@@ -21,7 +21,7 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
     return (
         <div>
             <Select onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}>
-                <Text className="text-xs uppercase dark bold"> {formatCurrency(gasPrice || 0) || 0}</Text>
+                <Text>{formatCurrency(gasPrice || 0) || 0}</Text>
             </Select>
             {gasDropdownIsOpen && <SelectGasMenuBody setDropdownIsOpen={setDropdownIsOpen} />}
         </div>
@@ -34,18 +34,25 @@ const Select = styled(FlexDiv)`
     height: 24px;
     padding-left: 6px;
     padding-right: 30px;
-    background: #f6f6fe;
+    background: #0a2e66;
+    border: 2px solid #0a2e66;
     border-radius: 5px;
-
+    color: #f6f6fe !important;
     &:after {
         content: url(${dropDown});
         position: absolute;
         right: 0;
-        top: 0;
+        top: -2px;
         height: 24px;
-        background: #44e1e2;
-        border-radius: 5px 0px 0px 5px;
     }
+`;
+
+const Text = styled.p`
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    margin-top: 1px !important;
 `;
 
 export default SelectGasMenu;

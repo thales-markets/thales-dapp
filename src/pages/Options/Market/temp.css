@@ -31,11 +31,6 @@
 .ui.form .field > label {
     text-transform: uppercase;
 }
-::placeholder,
-.divider.default.text,
-.accordion .title {
-    text-transform: uppercase !important;
-}
 
 .sidebar.visible + .pusher {
     margin-left: 475px;

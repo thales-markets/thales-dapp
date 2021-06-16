@@ -206,8 +206,8 @@ const NoCharDataContainer = styled(GridDivCenteredRow)`
     font-size: 25px;
     line-height: 48px;
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 45%;
+    top: 45%;
     transform: translate(-50%, -50%);
 `;
 

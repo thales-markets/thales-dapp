@@ -20,7 +20,7 @@ type UISliceState = {
 };
 
 const defaultMarketWidgetVisibility: Record<MarketWidgetKey, boolean> = {
-    [MarketWidgetKey.MATURITY_PHASE]: false,
+    [MarketWidgetKey.MATURITY_PHASE]: true,
     [MarketWidgetKey.TRADE]: true,
     [MarketWidgetKey.ORDERBOOK]: true,
     [MarketWidgetKey.CHART_TRADING_VIEW]: true,
