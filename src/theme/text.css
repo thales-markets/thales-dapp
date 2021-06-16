@@ -71,6 +71,7 @@
     font-weight: bold;
     line-height: 84px;
     color: #f6f6fe;
+    white-space: break-spaces;
     margin: 0;
 }
 
