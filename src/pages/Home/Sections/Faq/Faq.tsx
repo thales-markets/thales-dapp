@@ -42,7 +42,13 @@ const Faq: React.FC = () => {
                 </CardFaq>
                 <FaqImg src={faq} />
             </Wrapper>
-            <Button className="primary" style={{ alignSelf: 'center', marginBottom: 100 }}>
+            <Button
+                className="primary"
+                style={{ alignSelf: 'center', marginBottom: 100 }}
+                onClick={() => {
+                    window.open('https://themonkeyrev.gitbook.io/thales/', '_blank');
+                }}
+            >
                 {t('landing-page.faq.hub')}
             </Button>
         </FlexDivColumn>
