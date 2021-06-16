@@ -85,8 +85,9 @@ export const Background = styled.section`
                 left: 0;
                 right: 0;
                 margin: auto;
-                height: 1.5px;
-                background-color: #00f9ff;
+                height: 2px;
+                filter: blur(2px);
+                background-color: rgb(0, 249, 255);
             }
             &#faq:after {
                 width: 100%;
