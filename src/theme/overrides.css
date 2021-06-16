@@ -2,14 +2,6 @@
     width: 100%;
 }
 
-.react-datepicker-wrapper input {
-    height: 56px;
-    font-weight: bold;
-    font-size: 18px !important;
-    line-height: 32px !important;
-    color: #04045a !important;
-}
-
 .react-datepicker-popper {
     z-index: 3 !important;
 }
@@ -44,4 +36,38 @@
 
 .higher-z-index {
     z-index: 3 !important;
+}
+
+#maturity-date {
+    background: #0a2e66;
+    border: 2px solid #0a2e66;
+    box-sizing: border-box;
+    mix-blend-mode: normal;
+    border-radius: 12px;
+    width: 100%;
+    height: 64px;
+    padding: 14px 0px 0 20px;
+    outline: 0;
+    font-size: 16px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    color: #f6f6fe;
+}
+
+#maturity-date::selection {
+    color: #04045a;
+    background: #f6f6fe;
+}
+#maturity-date:focus {
+    border: 2px solid #00f9ff;
+    box-sizing: border-box;
+}
+#maturity-date:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+#maturity-date.error {
+    border: 2px solid #e53720;
 }
