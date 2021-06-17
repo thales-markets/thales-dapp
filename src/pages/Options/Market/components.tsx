@@ -310,7 +310,7 @@ export const SliderRange = styled.div<{ color?: string }>`
 export const SliderContainer = styled.div`
     position: relative;
     width: 50%;
-    padding: 0 20px;
+    padding: 0 20px 0 5px;
     margin-top: 15px;
 `;
 

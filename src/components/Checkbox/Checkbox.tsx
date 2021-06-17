@@ -64,17 +64,17 @@ const Checkmark = styled.span`
     position: absolute;
     top: 0;
     left: 0;
-    height: 14px;
-    width: 14px;
+    height: 15px;
+    width: 15px;
     border: 1px solid #f6f6fe;
     background-color: transparent;
     border-radius: 2px;
-    margin-top: 5px;
+    margin-top: 4px;
     :after {
         content: '';
         position: absolute;
         display: none;
-        left: 2px;
+        left: 3px;
         top: -2px;
         width: 5px;
         height: 10px;

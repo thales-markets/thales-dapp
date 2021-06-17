@@ -56,7 +56,7 @@ const CustomizeLayoutButton = styled(DefaultSubmitButton)<{ isActive: boolean }>
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border: 1px solid ${(props) => (props.isActive ? '#00f9ff' : '#4f759b')};
     border-radius: 32px;
-    padding: 10px 25px 12px;
+    padding: 8px;
     &:hover:not(:disabled) {
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         border: 1px solid #00f9ff;
@@ -80,7 +80,7 @@ const DropDown = styled(FlexDivColumn)`
 `;
 
 const StyledRightIcon = styled(RightIcon)`
-    margin-bottom: -3px;
+    margin-bottom: -1px;
     margin-left: 20px;
 `;
 
