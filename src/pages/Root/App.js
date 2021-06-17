@@ -10,7 +10,7 @@ import { getIsWalletConnected, updateNetworkSettings, updateWallet, getNetworkId
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import queryConnector from 'utils/queryConnector';
-import { Loader } from 'semantic-ui-react';
+import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
 import { ethers } from 'ethers';
 import useLocalStorage from 'hooks/useLocalStorage';
@@ -120,7 +120,7 @@ const App = () => {
 
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
-            <Suspense fallback={<Loader active />}>
+            <Suspense fallback={<Loader />}>
                 <Router history={history}>
                     <Switch>
                         <Route

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Checkbox } from 'semantic-ui-react';
 import { MarketWidgetKey } from 'constants/ui';
 import { getVisibilityMap, setMarketWidgetVisibility } from 'redux/modules/marketWidgets';
 import { RootState } from 'redux/rootReducer';
 import { isMarketWidgetVisible } from 'utils/options';
 import { getIsWalletConnected } from 'redux/modules/wallet';
+import Checkbox from 'components/Checkbox';
 
 type SelectWidgetProps = {
     widgetKey: MarketWidgetKey;
@@ -24,8 +24,13 @@ const SelectWidget: React.FC<SelectWidgetProps> = ({ widgetKey, phase }) => {
             label={t(`options.market.widgets.${widgetKey}`)}
             checked={visibilityMap[widgetKey]}
             value={visibilityMap[widgetKey].toString()}
-            onChange={(_, data) =>
-                dispatch(setMarketWidgetVisibility({ marketWidget: widgetKey, isVisible: data.checked || false }))
+            onChange={(e: any) =>
+                dispatch(
+                    setMarketWidgetVisibility({
+                        marketWidget: widgetKey,
+                        isVisible: e.target.checked || false,
+                    })
+                )
             }
         />
     ) : null;

@@ -5,7 +5,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
 import ExploreMarkets from './ExploreMarkets';
-import { Loader } from 'semantic-ui-react';
+import Loader from 'components/Loader';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import { FlexDivColumn, Section } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
 import { history } from 'utils/routes';
+import ROUTES from 'constants/routes';
 
 const MAX_HOT_MARKETS = 9;
 
@@ -50,18 +51,17 @@ export const Home: React.FC = () => {
                 <>
                     <Section>
                         <FlexDivColumn>
-                            <MarketHeader />
+                            <MarketHeader route={ROUTES.Options.Home} />
                             <MarketCreation />
                         </FlexDivColumn>
                     </Section>
-
                     <Section>{hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} />}</Section>
                     <Section class="explore-markets">
                         <ExploreMarkets optionsMarkets={optionsMarkets} />
                     </Section>
                 </>
             ) : (
-                <Loader active />
+                <Loader />
             )}
         </>
     );

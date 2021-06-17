@@ -251,6 +251,7 @@
         },
         "market": {
             "overview": {
+                "market-details-tooltip": "Market details",
                 "strike-price-label": "Strike price",
                 "price-trading-label": "Current price",
                 "price-maturity-label": "Final price",
@@ -295,7 +296,7 @@
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {
-                    "customize-layout": "Customize layout",
+                    "customize-layout": "Adjust view",
                     "reset-layout": "Reset layout"
                 }
             },

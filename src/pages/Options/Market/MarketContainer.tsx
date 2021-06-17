@@ -6,7 +6,7 @@ import binaryOptionMarketContract from 'utils/contracts/binaryOptionsMarketContr
 import ROUTES from 'constants/routes';
 import { BOMContractProvider } from './contexts/BOMContractContext';
 import Market from './Market';
-import { Loader } from 'semantic-ui-react';
+import Loader from 'components/Loader';
 import { navigateTo } from 'utils/routes';
 
 type MarketContainerProps = RouteComponentProps<{
@@ -37,7 +37,7 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
             <Market marketAddress={props.match.params.marketAddress} />
         </BOMContractProvider>
     ) : (
-        <Loader active />
+        <Loader />
     );
 };
 

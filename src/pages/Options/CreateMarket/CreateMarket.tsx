@@ -30,6 +30,7 @@ import { LINKS } from 'constants/links';
 import { HowItWorks, SUSDSign, Error, /*LongSlider, ShortSlider,*/ Field, FundingInput, Input } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
+import ROUTES from 'constants/routes';
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
@@ -259,7 +260,7 @@ export const CreateMarket: React.FC = () => {
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
             <MainWrapper>
                 <FlexDivColumn>
-                    <MarketHeader />
+                    <MarketHeader route={ROUTES.Options.CreateMarket} />
                     <Text className="create-market" style={{ padding: '50px 150px 0' }}>
                         {t('options.create-market.title')}
                     </Text>

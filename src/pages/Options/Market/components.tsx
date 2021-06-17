@@ -6,6 +6,7 @@ import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol } from 'theme/co
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark-circle.svg';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const Container = styled(FlexDivColumn)`
     padding: 15px;
@@ -402,7 +403,11 @@ export const ProtocolFeeItem = styled(SummaryContent)`
 `;
 
 export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
-    cursor: pointer;
     margin-left: 4px;
     margin-bottom: -1px;
+`;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    cursor: pointer;
+    margin-left: 10px;
 `;

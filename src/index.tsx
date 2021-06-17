@@ -4,8 +4,8 @@ import Root from './pages/Root';
 import reportWebVitals from './reportWebVitals';
 import store from './redux/store';
 import './i18n';
-import 'semantic-ui-css/semantic.min.css';
 import './theme/main.css';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 ReactDOM.render(
     <React.Fragment>
