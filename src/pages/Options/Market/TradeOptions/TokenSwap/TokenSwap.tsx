@@ -39,7 +39,6 @@ import {
     InputContainer,
     InputLabel,
     SubmitButtonContainer,
-    Input,
     ReactSelect,
     CurrencyLabel,
     AmountButton,
@@ -68,6 +67,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import onboardConnector from 'utils/onboardConnector';
 import NumericInput from '../../components/NumericInput';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import FieldValidationMessage from 'components/FieldValidationMessage';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -101,6 +101,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
     const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
 
     const orderSideOptions = [
         {
@@ -158,7 +159,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const isPriceEntered = Number(price) > 0;
 
     const insufficientBalance = isBuy
-        ? sUSDBalance < total || !sUSDBalance
+        ? sUSDBalance < Number(total) || !sUSDBalance
         : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
@@ -323,6 +324,14 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         }
     };
 
+    useEffect(() => {
+        console.log(total);
+        setIsAmountValid(
+            Number(amount) === 0 ||
+                (Number(amount) > 0 && (isBuy ? Number(total) <= sUSDBalance : Number(amount) <= tokenBalance))
+        );
+    }, [amount, total, isBuy]);
+
     const getSubmitButton = () => {
         if (!isWalletConnected) {
             return (
@@ -389,18 +398,17 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </ShortInputContainer>
                 <ShortInputContainer>
-                    <Input
-                        value={amount}
-                        onChange={(e) => onAmountChange(e.target.value)}
-                        id="amount"
-                        type="number"
-                        min="0"
-                        step="any"
-                    />
+                    <NumericInput value={amount} onChange={(_, value) => onAmountChange(value)} />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
                     <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                    <FieldValidationMessage
+                        showValidation={!isAmountValid}
+                        message={t(`common.errors.insufficient-balance-wallet`, {
+                            currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                        })}
+                    />
                 </ShortInputContainer>
             </FlexDivRow>
             {!isBuy && (
@@ -479,7 +487,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     </ProtocolFeeLabel>
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>
-                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                <NetworkFees gasLimit={gasLimit} />
             </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

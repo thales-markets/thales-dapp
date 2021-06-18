@@ -22,8 +22,8 @@ const SelectWidget: React.FC<SelectWidgetProps> = ({ widgetKey, phase }) => {
     return isMarketWidgetVisible(widgetKey, visibilityMap, phase, isWalletConnected, true) ? (
         <Checkbox
             label={t(`options.market.widgets.${widgetKey}`)}
-            checked={visibilityMap[widgetKey]}
-            value={visibilityMap[widgetKey].toString()}
+            checked={visibilityMap[widgetKey] !== undefined ? visibilityMap[widgetKey] : false}
+            value={visibilityMap[widgetKey] !== undefined ? visibilityMap[widgetKey].toString() : 'false'}
             onChange={(e: any) =>
                 dispatch(
                     setMarketWidgetVisibility({

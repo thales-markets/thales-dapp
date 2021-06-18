@@ -434,7 +434,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             )}
                         </ProtocolFeeItem>
                     </ProtocolFeeContainer>
-                    <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                    <NetworkFees gasLimit={gasLimit} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

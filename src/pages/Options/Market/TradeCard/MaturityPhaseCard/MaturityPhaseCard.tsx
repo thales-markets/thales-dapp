@@ -160,7 +160,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                             </SummaryItem>
                         </MaturitySummaryContainer>
                         <Divider />
-                        <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                        <NetworkFees gasLimit={gasLimit} />
                         <SubmitButtonContainer>
                             <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleExercise}>
                                 {nothingToExercise

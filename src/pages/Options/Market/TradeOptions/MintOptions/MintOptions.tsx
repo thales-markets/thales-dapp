@@ -768,7 +768,7 @@ const MintOptions: React.FC = () => {
                         marketFees ? Number(amount) * marketFees.pool : 0
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
-                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                <NetworkFees gasLimit={gasLimit} />
             </FeeSummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage
