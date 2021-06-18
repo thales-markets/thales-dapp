@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { OptionsMarketInfo } from 'types/options';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
@@ -20,8 +20,6 @@ type MarketOverviewProps = {
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
-
-    const isLong = optionsMarket.currentPrice > optionsMarket.strikePrice;
     const iconProps = { width: '40px', height: '40px' };
 
     const handleViewMarketDetails = useCallback(() => {
@@ -50,19 +48,44 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 </ItemContainer>
                 <ItemContainer>
                     <Title>{t(`options.market.overview.strike-price-label`)}</Title>
-                    <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.strikePrice)}</Content>
+                    <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.price-${optionsMarket.phase}-label`)}</Title>
-                    <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.currentPrice)}</Content>
+                    <Title>
+                        {optionsMarket.isResolved
+                            ? t('options.market.overview.final-price-label', {
+                                  currencyKey: optionsMarket.asset,
+                              })
+                            : t('options.market.overview.current-price-label', {
+                                  currencyKey: optionsMarket.asset,
+                              })}
+                    </Title>
+                    <Content>
+                        {formatCurrencyWithSign(
+                            USD_SIGN,
+                            optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
+                        )}
+                    </Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.phase-end-${optionsMarket.phase}-label`)}</Title>
-                    <Content>{formatShortDate(optionsMarket.maturityDate)}</Content>
+                    <Title>
+                        {optionsMarket.isResolved
+                            ? t('options.market.overviewe.maturity-label')
+                            : t('options.market.overview.expiry-label')}
+                    </Title>
+                    <Content>
+                        {optionsMarket.isResolved
+                            ? formatShortDate(optionsMarket.maturityDate)
+                            : formatShortDate(optionsMarket.expiryDate)}
+                    </Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.result-${optionsMarket.phase}-label`)}</Title>
-                    <Result isLong={isLong}>{isLong ? t('options.common.long') : t('options.common.short')}</Result>
+                    <Title>
+                        {optionsMarket.isResolved
+                            ? t('options.market.overviewe.final-result-label')
+                            : t('options.market.overview.current-result-label')}
+                    </Title>
+                    <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
                 </ItemContainer>
                 <ItemContainer>
                     <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>

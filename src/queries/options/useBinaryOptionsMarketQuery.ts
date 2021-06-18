@@ -16,7 +16,7 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
             ]);
 
             const { times, oracleDetails, creator, options, fees } = marketParameters;
-            const { totalSupplies, oraclePriceAndTimestamp, resolution } = marketData;
+            const { totalSupplies, oraclePriceAndTimestamp, resolution, deposits } = marketData;
 
             const maturityDate = Number(times.maturity) * 1000;
             const expiryDate = Number(times.expiry) * 1000;
@@ -43,10 +43,7 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                     long: bigNumberFormatter(totalSupplies.long),
                     short: bigNumberFormatter(totalSupplies.short),
                 },
-                // deposits: {
-                //     deposited: bigNumberFormatter(deposits.deposited),
-                //     exercisableDeposits: bigNumberFormatter(deposits.exercisableDeposits),
-                // },
+                deposited: bigNumberFormatter(deposits.deposited),
                 phase,
                 timeRemaining,
                 creator,

@@ -186,6 +186,10 @@ input[type='number'] {
     --sal: env(safe-area-inset-left);
 }
 
+a {
+    text-decoration: none;
+}
+
 @import './overrides.css';
 @import './text.css';
 @import './colors.css';
