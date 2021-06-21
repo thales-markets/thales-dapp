@@ -146,6 +146,12 @@
             "progress-label": "Enabling wallet access...",
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}..."
+        },
+        "sidebar": {
+            "markets-label": "Markets overview",
+            "create-market-label": "Create market",
+            "trade-label": "Trade options",
+            "maturity-label": "Exercise options"
         }
     },
     "modals": {

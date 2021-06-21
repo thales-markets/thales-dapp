@@ -30,7 +30,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
 
     return (
         <>
-            <MarketHeaderWrapper id="market-header">
+            <MarketHeaderWrapper id="market-header" showCustomizeLayout={showCustomizeLayout}>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} />}
                 {!isWalletConnected ? (
                     <Button
@@ -54,7 +54,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                         className={route === ROUTES.Options.Home ? 'selected' : ''}
                     >
                         <SidebarIcon />
-                        <SidebarText>Markets overview</SidebarText>
+                        <SidebarText>{t('common.sidebar.markets-label')}</SidebarText>
                     </SidebarItem>
                     <SidebarItem
                         onClick={() => navigateTo(ROUTES.Options.CreateMarket)}
@@ -63,7 +63,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                         className={route === ROUTES.Options.CreateMarket ? 'selected' : ''}
                     >
                         <SidebarIcon />
-                        <SidebarText>Create market</SidebarText>
+                        <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
                     </SidebarItem>
                     {phase === 'trading' && (
                         <SidebarItem
@@ -73,7 +73,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             style={{ cursor: 'default' }}
                         >
                             <SidebarIcon />
-                            <SidebarText>Trade options</SidebarText>
+                            <SidebarText>{t('common.sidebar.trade-label')}</SidebarText>
                         </SidebarItem>
                     )}
                     {phase === 'maturity' && (
@@ -84,7 +84,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             style={{ cursor: 'default' }}
                         >
                             <SidebarIcon />
-                            <SidebarText>Exercise options</SidebarText>
+                            <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
                 </ItemsContainer>
@@ -93,13 +93,13 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
     );
 };
 
-const MarketHeaderWrapper = styled.div`
+const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     padding: 0 75px;
     width: 100%;
     display: flex;
     height: 100px;
     align-items: center;
-    justify-content: end;
+    justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'end')};
 `;
 
 const Sidebar = styled.nav`

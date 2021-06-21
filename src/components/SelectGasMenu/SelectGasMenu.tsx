@@ -46,6 +46,9 @@ const Select = styled(FlexDiv)`
         top: -2px;
         height: 24px;
     }
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 const Text = styled.p`

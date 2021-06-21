@@ -145,6 +145,7 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     }
     .react-select__control:hover {
         border-color: #0a2e66;
+        cursor: pointer;
     }
     .react-select__control {
         border: 2px solid #0a2e66;

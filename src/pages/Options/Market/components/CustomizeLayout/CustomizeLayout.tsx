@@ -8,6 +8,7 @@ import { FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { DefaultSubmitButton } from '../../components';
 import SelectWidget from './SelectWidget';
 import { ReactComponent as RightIcon } from 'assets/images/right.svg';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 type CustomizeLayoutProps = {
     phase: string;
@@ -16,21 +17,27 @@ type CustomizeLayoutProps = {
 export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const [customizeLayoutVisible, setCustomizeLayoutVisible] = useState<boolean>(false);
+    const [layoutDropdownIsOpen, setLayoutDropdownIsOpen] = useState(false);
+    const setDropdownIsOpen = (isOpen: boolean) => {
+        if (!isOpen && !layoutDropdownIsOpen) {
+            return;
+        }
+        setLayoutDropdownIsOpen(isOpen);
+    };
 
     return (
-        <>
-            <FlexDivColumnCentered>
+        <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
+            <Container>
                 <CustomizeLayoutButton
                     onClick={() => {
-                        setCustomizeLayoutVisible(!customizeLayoutVisible);
+                        setDropdownIsOpen(!layoutDropdownIsOpen);
                     }}
-                    isActive={customizeLayoutVisible}
+                    isActive={layoutDropdownIsOpen}
                 >
                     {t('options.market.widgets.button.customize-layout')} <StyledRightIcon />
                 </CustomizeLayoutButton>
-                {customizeLayoutVisible && (
-                    <Container>
+                {layoutDropdownIsOpen && (
+                    <DropdownContainer>
                         <DropDown>
                             {Object.values(MarketWidgetKey).map((widgetKey: string) => (
                                 <SelectWidget
@@ -43,12 +50,16 @@ export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase }) => {
                                 {t('options.market.widgets.button.reset-layout')}
                             </ResetButton>
                         </DropDown>
-                    </Container>
+                    </DropdownContainer>
                 )}
-            </FlexDivColumnCentered>
-        </>
+            </Container>
+        </OutsideClickHandler>
     );
 };
+
+const Container = styled(FlexDivColumnCentered)`
+    width: 180px;
+`;
 
 const CustomizeLayoutButton = styled(DefaultSubmitButton)<{ isActive: boolean }>`
     position: relative;
@@ -63,7 +74,7 @@ const CustomizeLayoutButton = styled(DefaultSubmitButton)<{ isActive: boolean }>
     }
 `;
 
-const Container = styled.div`
+const DropdownContainer = styled.div`
     width: 278px;
     position: relative;
     z-index: 1000;
