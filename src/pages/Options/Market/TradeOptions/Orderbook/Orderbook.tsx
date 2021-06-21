@@ -91,7 +91,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
           )} @ ${formatShortDate(optionsMarket.maturityDate)}`
         : null;
 
-    const getMarketPrice = () => {
+    const marketPrice = useMemo(() => {
         if (sellOrders.length > 0 && buyOrders.length > 0) {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
@@ -108,7 +108,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
         }
 
         return '';
-    };
+    }, [sellOrders, buyOrders]);
 
     return (
         <>
@@ -155,7 +155,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                                 filter={filter}
                             />
                         )}
-                        <MarketPrice>{getMarketPrice()}</MarketPrice>
+                        {marketPrice !== '' && <MarketPrice>{marketPrice}</MarketPrice>}
                         {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.BUY) && (
                             <OrderbookSide
                                 orders={buyOrders}
