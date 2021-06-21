@@ -21,6 +21,10 @@
     color: #04045a !important;
 }
 
+.react-select__control--menu-is-open {
+    z-index: 24;
+}
+
 .bn-onboard-custom {
     z-index: 1301;
 }
