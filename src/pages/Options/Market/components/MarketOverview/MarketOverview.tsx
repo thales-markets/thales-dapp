@@ -70,7 +70,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 <ItemContainer>
                     <Title>
                         {optionsMarket.isResolved
-                            ? t('options.market.overviewe.maturity-label')
+                            ? t('options.market.overview.maturity-label')
                             : t('options.market.overview.expiry-label')}
                     </Title>
                     <Content>
@@ -82,7 +82,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 <ItemContainer>
                     <Title>
                         {optionsMarket.isResolved
-                            ? t('options.market.overviewe.final-result-label')
+                            ? t('options.market.overview.final-result-label')
                             : t('options.market.overview.current-result-label')}
                     </Title>
                     <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
