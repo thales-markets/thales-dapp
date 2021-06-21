@@ -4,6 +4,7 @@ import { FlexDiv } from 'theme/common';
 import { formatCurrency } from 'utils/formatters/number';
 import dropDown from 'assets/images/drop-down.svg';
 import SelectGasMenuBody from './SelectGasMenuBody';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 type SelectGasMenuProps = {
     gasPrice: number | null;
@@ -19,12 +20,12 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
     };
 
     return (
-        <div>
+        <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
             <Select onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}>
                 <Text>{formatCurrency(gasPrice || 0) || 0}</Text>
             </Select>
             {gasDropdownIsOpen && <SelectGasMenuBody setDropdownIsOpen={setDropdownIsOpen} />}
-        </div>
+        </OutsideClickHandler>
     );
 };
 

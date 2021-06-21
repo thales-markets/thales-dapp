@@ -111,6 +111,7 @@ body {
         env(safe-area-inset-left, 0);
     overflow-x: hidden !important;
     overflow-y: auto !important;
+    padding-right: 0 !important;
 }
 ol,
 ul {
