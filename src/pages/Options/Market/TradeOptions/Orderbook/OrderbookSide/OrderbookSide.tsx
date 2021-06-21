@@ -66,7 +66,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Header: <>{t('options.market.trade-options.orderbook.table.price-col')}</>,
                         accessor: 'displayOrder.price',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['price']>) => (
-                            <Price orderSide={orderSide}>{formatCurrency(cellProps.cell.value)}</Price>
+                            <Price orderSide={orderSide}>{formatCurrency(cellProps.cell.value, 3)}</Price>
                         ),
                         width: 300,
                         sortable: false,
