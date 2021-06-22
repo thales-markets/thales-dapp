@@ -72,10 +72,7 @@ export type OptionsMarketInfo = {
     timeRemaining: number;
     result: OptionSide;
     totalSupplies: OptionValue;
-    // deposits: {
-    //     deposited: number;
-    //     exercisableDeposits: number;
-    // };
+    deposited: number;
     creator: string;
     // options: OptionValue;
     fees: {

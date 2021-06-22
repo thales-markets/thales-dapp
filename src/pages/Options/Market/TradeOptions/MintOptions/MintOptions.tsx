@@ -12,7 +12,6 @@ import {
     getWalletAddress,
 } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { Checkbox } from 'semantic-ui-react';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -62,6 +61,7 @@ import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
+import Checkbox from 'components/Checkbox';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -608,11 +608,13 @@ const MintOptions: React.FC = () => {
             <Divider />
             <PlaceInOrderbook>{t('options.market.trade-options.mint.sell-options-title')}</PlaceInOrderbook>
             <FlexDiv>
-                <StyledCheckbox
-                    checked={sellLong}
-                    value={sellLong.toString()}
-                    onChange={(_: any, data: any) => setSellLong(data.checked || false)}
-                />
+                <CheckboxContainer>
+                    <Checkbox
+                        checked={sellLong}
+                        value={sellLong.toString()}
+                        onChange={(e: any) => setSellLong(e.target.checked || false)}
+                    />
+                </CheckboxContainer>
                 <SliderContainer>
                     <LongSlider
                         value={Number(longPrice)}
@@ -670,11 +672,13 @@ const MintOptions: React.FC = () => {
                 </DoubleShortInputContainer>
             </FlexDiv>
             <FlexDiv>
-                <StyledCheckbox
-                    checked={sellShort}
-                    value={sellShort.toString()}
-                    onChange={(_: any, data: any) => setSellShort(data.checked || false)}
-                />
+                <CheckboxContainer>
+                    <Checkbox
+                        checked={sellShort}
+                        value={sellShort.toString()}
+                        onChange={(e: any) => setSellShort(e.target.checked || false)}
+                    />
+                </CheckboxContainer>
                 <SliderContainer>
                     <ShortSlider
                         value={Number(shortPrice)}
@@ -764,7 +768,7 @@ const MintOptions: React.FC = () => {
                         marketFees ? Number(amount) * marketFees.pool : 0
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
-                <NetworkFees gasLimit={gasLimit} labelColor={'pale-grey'} priceColor={'pale-grey'} />
+                <NetworkFees gasLimit={gasLimit} />
             </FeeSummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

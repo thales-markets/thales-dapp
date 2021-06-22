@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { DEFAULT_FIAT_DECIMALS } from 'constants/defaults';
+// import { DEFAULT_FIAT_DECIMALS } from 'constants/defaults';
 import { CurrencyKey } from 'constants/currency';
 import numbro from 'numbro';
 
@@ -32,7 +32,8 @@ export const formatCurrency = (value: NumericValue, decimals = DEFAULT_CURRENCY_
 
     return numbro(value).format({
         thousandSeparated: true,
-        trimMantissa: decimals > DEFAULT_FIAT_DECIMALS ? true : false,
+        // trimMantissa: decimals > DEFAULT_FIAT_DECIMALS ? true : false,
+        trimMantissa: false,
         mantissa: decimals,
     });
 };

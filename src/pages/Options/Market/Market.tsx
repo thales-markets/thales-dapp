@@ -1,14 +1,8 @@
-import React, { useState, useCallback, useMemo, useEffect, ReactElement } from 'react';
+import React, { useState, useMemo, useEffect, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import ROUTES from 'constants/routes';
-import { USD_SIGN } from 'constants/currency';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { formatShortDate } from 'utils/formatters/date';
 import { MarketProvider } from './contexts/MarketContext';
-import { Button, Icon, Loader } from 'semantic-ui-react';
+import Loader from 'components/Loader';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
-import { Link } from 'react-router-dom';
-import MarketInfoModal from './MarketInfoModal';
 import OptionsPriceChart from './OptionsPriceChart';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import { getIsAppReady, set0xReady } from 'redux/modules/app';
@@ -36,7 +30,6 @@ import {
     getFullLayout,
 } from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
-import CustomizeLayout from './components/CustomizeLayout';
 import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketOverview from './components/MarketOverview';
@@ -44,6 +37,7 @@ import styled from 'styled-components';
 import longIcon from 'assets/images/long.svg';
 import shortIcon from 'assets/images/short.svg';
 import TradingView from './TradingView';
+import ROUTES from 'constants/routes';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -53,7 +47,6 @@ type MarketProps = {
 
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const { t } = useTranslation();
-    const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -67,17 +60,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         enabled: isAppReady,
     });
 
-    const handleViewMarketDetails = useCallback(() => {
-        setMarketInfoModalVisible(true);
-    }, []);
-
     const optionsMarket: OptionsMarketInfo | null = marketQuery.isSuccess && marketQuery.data ? marketQuery.data : null;
-
-    const marketHeading = optionsMarket
-        ? `${optionsMarket.asset} > ${formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)} @ ${formatShortDate(
-              optionsMarket.maturityDate
-          )}`
-        : null;
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -177,10 +160,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     useEffect(() => {
         if (optionsMarket && optionsMarket.phase === 'trading') {
-            dispatch(set0xReady(false));
-            // TODO: For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering. Find a way to optimize this.
-            contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
-            dispatch(set0xReady(true));
+            // For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering.
+            // Timeout added to delay initialization and not block page rendering.
+            setTimeout(() => {
+                dispatch(set0xReady(false));
+                contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
+                dispatch(set0xReady(true));
+            }, 500);
         }
     }, [networkId, isWalletConnected, marketQuery.isSuccess]);
 
@@ -213,35 +199,16 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             <Background>
                 <Container>
                     <FlexDivColumn>
-                        <MarketHeader />
+                        <MarketHeader
+                            showCustomizeLayout
+                            phase={optionsMarket.phase}
+                            route={ROUTES.Options.MarketMatch}
+                        />
                     </FlexDivColumn>
                 </Container>
                 <Container>
                     <MainContent>
-                        <MarketOverview optionsMarket={optionsMarket} />
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div>
-                                <span style={{ textTransform: 'uppercase' }}>
-                                    <Link to={ROUTES.Options.Home} className="item">
-                                        <Icon name="long arrow alternate left"></Icon>
-                                        {t('options.market.heading.all-markets')}
-                                    </Link>
-                                    <Button
-                                        size="mini"
-                                        onClick={handleViewMarketDetails}
-                                        style={{ marginLeft: 10, marginRight: 10 }}
-                                    >
-                                        {t('options.market.heading.market-details')}
-                                        {'  '}
-                                        <Icon name="info circle"></Icon>
-                                    </Button>
-                                </span>
-                            </div>
-                            <div style={{ marginBottom: 10, display: 'flex', flexDirection: 'row' }}>
-                                <CustomizeLayout phase={optionsMarket.phase} />
-                            </div>
-                        </div>
-
+                        <MarketOverview optionsMarket={optionsMarket} />{' '}
                         <MainContentContainer>
                             {optionsMarket.phase === 'trading' && (
                                 <OptionsTabContainer>
@@ -277,16 +244,9 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                     </MainContent>
                 </Container>
             </Background>
-            {marketInfoModalVisible && (
-                <MarketInfoModal
-                    marketHeading={marketHeading}
-                    optionMarket={optionsMarket}
-                    onClose={() => setMarketInfoModalVisible(false)}
-                />
-            )}
         </MarketProvider>
     ) : (
-        <Loader active />
+        <Loader />
     );
 };
 

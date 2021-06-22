@@ -13,15 +13,14 @@ xl: 1300, */
     -webkit-transform-origin: top;
 }
 
+#market-header {
+    padding: 0 108px;
+}
+
 @media (max-width: 1260px) {
-    #market-header,
     #market-creation,
     #hot-markets {
         transform: scale(0.85);
-    }
-
-    #market-header {
-        padding: 0 20px;
     }
 
     #market-creation .text-xxxl {
@@ -182,7 +181,6 @@ xl: 1300, */
 }
 
 @media (max-height: 930px) {
-    #market-header,
     #market-creation,
     #hot-markets {
         transform: scale(0.85);
@@ -190,10 +188,6 @@ xl: 1300, */
 
     #market-creation .text-xxxl {
         font-size: 56px;
-    }
-
-    #market-header {
-        padding: 0 20px;
     }
 
     #hot-markets {

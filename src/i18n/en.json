@@ -12,7 +12,7 @@
         "disconnect-wallet": "Disconnect wallet"
     },
     "landing-page": {
-        "title": "Binary Options Trading, Re-Imagined",
+        "title": "Binary Options Trading,\nRe-Imagined",
         "description": "Create, trade, and exercise binary options on Ethereum",
         "use-app": "Use dApp",
         "launch": "Launch app",
@@ -50,7 +50,7 @@
             "secondA": "Market participants are free to create markets for any supported Chainlink price feed on crypto assets, index products, forex, traditional equities, and commodities.",
             "thirdQ": "How does binary options pricing work?",
             "thirdA": "Binary options are priced based on the make-up of the pool for a given market. The market originator sets an initial skew to establish initial odds, bidders can then choose a side they think is more likely, and during the trading phase a user Alice can set her own prices at which to exchange an sOPT token.",
-            "hub": "Knowledge hub"          
+            "hub": "Knowledge hub"
         }
     },
     "maintenance-page": {
@@ -66,7 +66,7 @@
             "view": "View"
         },
         "contracts": {
-            "view": "View Contract"
+            "view": "View contract"
         },
         "actions": {
             "submit": "submit",
@@ -146,6 +146,12 @@
             "progress-label": "Enabling wallet access...",
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}..."
+        },
+        "sidebar": {
+            "markets-label": "Markets overview",
+            "create-market-label": "Create market",
+            "trade-label": "Trade options",
+            "maturity-label": "Exercise options"
         }
     },
     "modals": {
@@ -251,13 +257,14 @@
         },
         "market": {
             "overview": {
+                "market-details-tooltip": "Market details",
                 "strike-price-label": "Strike price",
-                "price-trading-label": "Current price",
-                "price-maturity-label": "Final price",
-                "phase-end-trading-label": "Maturity",
-                "phase-end-maturity-label": "End",
-                "result-trading-label": "Current result",
-                "result-maturity-label": "Final result"
+                "current-price-label": "Current {{currencyKey}} price",
+                "final-price-label": "Final {{currencyKey}} price",
+                "maturity-label": "Maturity",
+                "expiry-label": "Expiry",
+                "current-result-label": "Current result",
+                "final-result-label": "Final result"
             },
             "heading": {
                 "all-markets": "all markets",
@@ -267,22 +274,18 @@
                 "options-to-exercise-tooltip": "You have options to exercise"
             },
             "info-modal": {
-                "title": "market information:",
+                "title": "Market information",
                 "table": {
-                    "currency-col": "currency",
-                    "strike-price-col": "strike price",
-                    "phase-col": "phase",
-                    "maturity-col": "maturity",
-                    "expiry-col": "expiry",
-                    "option-prices-col": "option prices",
-                    "total-outstanding-bids-col": "total outstanding bids",
-                    "total-outstanding-options-col": "total outstanding options",
-                    "deposited-currency-col": "deposited <0>{{currencyKey}}</0>",
-                    "currency-price-col": "current <0>{{currencyKey}}</0> price",
-                    "final-price-col": "final <0>{{currencyKey}}</0> price",
-                    "current-price-col": "current <0>{{currencyKey}}</0> price",
-                    "current-result-col": "current result",
-                    "final-result-col": "final result"
+                    "currency-col": "Currency",
+                    "strike-price-col": "Strike price",
+                    "phase-col": "Phase",
+                    "maturity-col": "Maturity",
+                    "expiry-col": "Expiry",
+                    "deposited-currency-col": "Deposited {{currencyKey}}",
+                    "final-price-col": "Final {{currencyKey}} price",
+                    "current-price-col": "Current {{currencyKey}} price",
+                    "current-result-col": "Current result",
+                    "final-result-col": "Final result"
                 }
             },
             "widgets": {
@@ -295,7 +298,7 @@
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {
-                    "customize-layout": "Customize layout",
+                    "customize-layout": "Adjust view",
                     "reset-layout": "Reset layout"
                 }
             },

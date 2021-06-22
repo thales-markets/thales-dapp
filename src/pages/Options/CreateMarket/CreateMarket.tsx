@@ -28,6 +28,7 @@ import { LINKS } from 'constants/links';
 import { HowItWorks, Error, InputsWrapper, LongSlider, ShortSlider } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
+
 import {
     CurrencyLabel,
     DoubleShortInputContainer,
@@ -44,6 +45,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
 import { StyledCheckbox } from '../Market/TradeOptions/MintOptions/MintOptions';
 import { COLORS } from 'constants/ui';
+import ROUTES from 'constants/routes';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -290,7 +292,7 @@ export const CreateMarket: React.FC = () => {
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
             <MainWrapper>
                 <FlexDivColumn>
-                    <MarketHeader />
+                    <MarketHeader route={ROUTES.Options.CreateMarket} />
                     <Text className="create-market" style={{ padding: '50px 150px 0' }}>
                         {t('options.create-market.title')}
                     </Text>

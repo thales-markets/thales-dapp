@@ -28,7 +28,6 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
     });
 
     const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
-        console.log(sellOrders, buyOrders);
         if (sellOrders.length > 0 && buyOrders.length > 0) {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
@@ -54,7 +53,6 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
             longOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.buyOrders : [];
 
         const marketPrice = getMarketPrice(sellOrders, buyOrders);
-        console.log('longMarketPrice', marketPrice);
         return marketPrice;
     }, [longOrderbookQuery.data]);
 
@@ -65,7 +63,6 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
             shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.buyOrders : [];
 
         const marketPrice = getMarketPrice(sellOrders, buyOrders);
-        console.log('shortMarketPrice', marketPrice);
         return marketPrice;
     }, [shortOrderbookQuery.data]);
 

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { OptionsMarketInfo } from 'types/options';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { FIAT_CURRENCY_MAP } from 'constants/currency';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
+import { LightTooltip, StyledInfoIcon } from '../../components';
+import MarketInfoModal from '../../MarketInfoModal';
 // import { getSynthName } from 'utils/snxJSConnector';
 
 type MarketOverviewProps = {
@@ -17,8 +19,18 @@ type MarketOverviewProps = {
 
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
-    const isLong = optionsMarket.currentPrice > optionsMarket.strikePrice;
+    const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
     const iconProps = { width: '40px', height: '40px' };
+
+    const handleViewMarketDetails = useCallback(() => {
+        setMarketInfoModalVisible(true);
+    }, []);
+
+    const marketHeading = `${optionsMarket.asset} > ${formatCurrencyWithSign(
+        USD_SIGN,
+        optionsMarket.strikePrice
+    )} @ ${formatShortDate(optionsMarket.maturityDate)}`;
+
     return (
         <>
             <Container>
@@ -29,28 +41,63 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             {/* <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName> */}
                             <CryptoKey>{optionsMarket.asset}</CryptoKey>
                         </FlexDivColumnCentered>
+                        <LightTooltip title={t('options.market.overview.market-details-tooltip')}>
+                            <StyledInfoIcon onClick={handleViewMarketDetails} />
+                        </LightTooltip>
                     </FlexDivCentered>
                 </ItemContainer>
                 <ItemContainer>
                     <Title>{t(`options.market.overview.strike-price-label`)}</Title>
-                    <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.strikePrice)}</Content>
+                    <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.price-${optionsMarket.phase}-label`)}</Title>
-                    <Content>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionsMarket.currentPrice)}</Content>
+                    <Title>
+                        {optionsMarket.isResolved
+                            ? t('options.market.overview.final-price-label', {
+                                  currencyKey: optionsMarket.asset,
+                              })
+                            : t('options.market.overview.current-price-label', {
+                                  currencyKey: optionsMarket.asset,
+                              })}
+                    </Title>
+                    <Content>
+                        {formatCurrencyWithSign(
+                            USD_SIGN,
+                            optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
+                        )}
+                    </Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.phase-end-${optionsMarket.phase}-label`)}</Title>
-                    <Content>{formatShortDate(optionsMarket.maturityDate)}</Content>
+                    <Title>
+                        {optionsMarket.isResolved
+                            ? t('options.market.overview.maturity-label')
+                            : t('options.market.overview.expiry-label')}
+                    </Title>
+                    <Content>
+                        {optionsMarket.isResolved
+                            ? formatShortDate(optionsMarket.maturityDate)
+                            : formatShortDate(optionsMarket.expiryDate)}
+                    </Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>{t(`options.market.overview.result-${optionsMarket.phase}-label`)}</Title>
-                    <Result isLong={isLong}>{isLong ? t('options.common.long') : t('options.common.short')}</Result>
+                    <Title>
+                        {optionsMarket.isResolved
+                            ? t('options.market.overview.final-result-label')
+                            : t('options.market.overview.current-result-label')}
+                    </Title>
+                    <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
                 </ItemContainer>
                 <ItemContainer>
                     <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
                 </ItemContainer>
             </Container>
+            {marketInfoModalVisible && (
+                <MarketInfoModal
+                    marketHeading={marketHeading}
+                    optionMarket={optionsMarket}
+                    onClose={() => setMarketInfoModalVisible(false)}
+                />
+            )}
         </>
     );
 };

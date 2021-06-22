@@ -24,7 +24,7 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
                         currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
                     })}
                 </SummaryDetailsLabel>
-                <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.price)}</SummaryDetailsContent>
+                <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.price, 3)}</SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>

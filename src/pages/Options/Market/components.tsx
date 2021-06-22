@@ -6,6 +6,7 @@ import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol } from 'theme/co
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark-circle.svg';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const Container = styled(FlexDivColumn)`
     padding: 15px;
@@ -143,6 +144,7 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     }
     .react-select__control:hover {
         border-color: #0a2e66;
+        cursor: pointer;
     }
     .react-select__control {
         border: 2px solid #0a2e66;
@@ -308,7 +310,7 @@ export const SliderRange = styled.div<{ color?: string }>`
 export const SliderContainer = styled.div`
     position: relative;
     width: 50%;
-    padding: 0 20px;
+    padding: 0 20px 0 5px;
     margin-top: 15px;
 `;
 
@@ -401,7 +403,11 @@ export const ProtocolFeeItem = styled(SummaryContent)`
 `;
 
 export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
-    cursor: pointer;
     margin-left: 4px;
     margin-bottom: -1px;
+`;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    cursor: pointer;
+    margin-left: 10px;
 `;

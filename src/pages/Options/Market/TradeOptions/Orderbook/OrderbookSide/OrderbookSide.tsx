@@ -22,6 +22,7 @@ type OrderbookSideProps = {
     optionsTokenAddress: string;
     filterMyOrders: boolean;
     filter: OrderbookFilterEnum;
+    orderbookEmpty: boolean;
 };
 
 const OrderbookSide: React.FC<OrderbookSideProps> = ({
@@ -31,6 +32,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
     optionsTokenAddress,
     filterMyOrders,
     filter,
+    orderbookEmpty,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -66,7 +68,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Header: <>{t('options.market.trade-options.orderbook.table.price-col')}</>,
                         accessor: 'displayOrder.price',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['price']>) => (
-                            <Price orderSide={orderSide}>{formatCurrency(cellProps.cell.value)}</Price>
+                            <Price orderSide={orderSide}>{formatCurrency(cellProps.cell.value, 3)}</Price>
                         ),
                         width: 300,
                         sortable: false,
@@ -126,7 +128,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                 data={orders}
                 noResultsMessage={
                     orders.length === 0 ? (
-                        <NoResultContainer orderSide={orderSide}>
+                        <NoResultContainer orderSide={orderSide} orderbookEmpty={orderbookEmpty}>
                             {filterMyOrders
                                 ? t(`options.market.trade-options.orderbook.filter.my-orders.${orderSide}.no-results`)
                                 : t(`options.market.trade-options.orderbook.${orderSide}.no-results`)}
@@ -187,8 +189,9 @@ const CancelIconContainer = styled(CancelIcon)`
     z-index: 2;
 `;
 
-const NoResultContainer = styled.div<{ orderSide: OrderSide }>`
+const NoResultContainer = styled.div<{ orderSide: OrderSide; orderbookEmpty: boolean }>`
     color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
+    padding-top: ${(props) => (props.orderbookEmpty ? '0px' : '17px')};
 `;
 
 export default OrderbookSide;
