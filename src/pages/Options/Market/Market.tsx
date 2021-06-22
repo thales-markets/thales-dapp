@@ -160,10 +160,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     useEffect(() => {
         if (optionsMarket && optionsMarket.phase === 'trading') {
-            dispatch(set0xReady(false));
-            // TODO: For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering. Find a way to optimize this.
-            contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
-            dispatch(set0xReady(true));
+            // For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering.
+            // Timeout added to delay initialization and not block page rendering.
+            setTimeout(() => {
+                dispatch(set0xReady(false));
+                contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
+                dispatch(set0xReady(true));
+            }, 500);
         }
     }, [networkId, isWalletConnected, marketQuery.isSuccess]);
 

@@ -153,6 +153,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                                 optionsTokenAddress={optionsTokenAddress}
                                 filterMyOrders={filterMyOrders}
                                 filter={filter}
+                                orderbookEmpty={marketPrice === ''}
                             />
                         )}
                         {marketPrice !== '' && <MarketPrice>{marketPrice}</MarketPrice>}
@@ -164,6 +165,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                                 optionsTokenAddress={optionsTokenAddress}
                                 filterMyOrders={filterMyOrders}
                                 filter={filter}
+                                orderbookEmpty={marketPrice === ''}
                             />
                         )}
                     </SidesContainer>
