@@ -776,23 +776,23 @@ const MintOptions: React.FC = () => {
     );
 };
 
-const MintingSummaryItem = styled(SummaryItem)`
+export const MintingSummaryItem = styled(SummaryItem)`
     margin-bottom: 4px;
 `;
 
-const MintingInnerSummaryItem = styled(InnerSummaryItem)`
+export const MintingInnerSummaryItem = styled(InnerSummaryItem)`
     margin-bottom: 4px;
 `;
 
-const ProtocolFeeLabel = styled(SummaryLabel)`
+export const ProtocolFeeLabel = styled(SummaryLabel)`
     font-size: 13px;
 `;
 
-const ProtocolFeeContent = styled(SummaryContent)`
+export const ProtocolFeeContent = styled(SummaryContent)`
     font-size: 13px;
 `;
 
-const PlaceInOrderbook = styled.div`
+export const PlaceInOrderbook = styled.div`
     font-weight: 600;
     font-size: 16px;
     line-height: 40px;
@@ -800,11 +800,11 @@ const PlaceInOrderbook = styled.div`
     color: #f6f6fe;
 `;
 
-const StyledCheckbox = styled(Checkbox)`
+export const StyledCheckbox = styled(Checkbox)`
     margin-top: 24px;
 `;
 
-const FeeSummaryContainer = styled(SummaryContainer)`
+export const FeeSummaryContainer = styled(SummaryContainer)`
     margin-top: 10px;
 `;
 
