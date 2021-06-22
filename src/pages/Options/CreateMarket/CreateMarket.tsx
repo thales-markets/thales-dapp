@@ -43,9 +43,10 @@ import { Message } from 'semantic-ui-react';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
-import { StyledCheckbox } from '../Market/TradeOptions/MintOptions/MintOptions';
+import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOptions';
 import { COLORS } from 'constants/ui';
 import ROUTES from 'constants/routes';
+import Checkbox from 'components/Checkbox';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -220,14 +221,10 @@ export const CreateMarket: React.FC = () => {
                     }
                     setGasLimit(null);
                 });
-        } catch (e) {
-            console.log(e);
-        }
+        } catch (e) {}
     }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount]);
 
     useEffect(() => {
-        console.log(longAmount);
-        console.log(initialFundingAmount);
         if (initialFundingAmount) {
             setIsLongAmountValid(longAmount ? longAmount <= initialFundingAmount : true);
             setIsShortAmountValid(shortAmount ? shortAmount <= initialFundingAmount : true);
@@ -301,7 +298,7 @@ export const CreateMarket: React.FC = () => {
                             <Text className="text-s pale-grey" style={{ lineHeight: '24px' }}>
                                 {t('options.create-market.subtitle')}
                             </Text>
-                            <Text style={{ marginBottom: 115, marginTop: 30 }} className="text-s pale-grey">
+                            <Text style={{ marginBottom: 20, marginTop: 30 }} className="text-s pale-grey">
                                 New to Binary Options? Make sure to read{' '}
                                 <HowItWorks href={LINKS.Blog.HowBinaryOptionsWork}>how it works</HowItWorks> first!
                             </Text>
@@ -337,7 +334,7 @@ export const CreateMarket: React.FC = () => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
                                                 const price = get(exchangeRates, option.value, null);
-                                                if (price) setStrikePrice(price);
+                                                if (price) setStrikePrice(price.toFixed(4).replace(/\.0+$/, ''));
                                             }}
                                         />
                                         <InputLabel>{t('options.create-market.details.select-asset-label')}</InputLabel>
@@ -347,11 +344,14 @@ export const CreateMarket: React.FC = () => {
                                     </ShortInputContainer>
                                     <ShortInputContainer>
                                         <Input
-                                            value={strikePrice}
                                             onChange={(e) => {
-                                                Number(e.target.value) > 0
-                                                    ? setIsStrikePriceValid(true)
-                                                    : setIsStrikePriceValid(false);
+                                                if (Number(e.target.value) > 0) {
+                                                    setIsStrikePriceValid(true);
+                                                    setStrikePrice(Number(e.target.value));
+                                                } else {
+                                                    setIsStrikePriceValid(false);
+                                                }
+
                                                 if (Number(e.target.value) > 0 && currencyKey) {
                                                     const currentPrice = get(exchangeRates, currencyKey.value, null);
                                                     if (currentPrice) {
@@ -363,16 +363,15 @@ export const CreateMarket: React.FC = () => {
                                                 } else {
                                                     setShowWarning(false);
                                                 }
-
-                                                setStrikePrice(Number(e.target.value).toString());
                                             }}
-                                            onBlur={() => {
-                                                Number(strikePrice) > 0
-                                                    ? setIsStrikePriceValid(true)
-                                                    : setIsStrikePriceValid(false);
+                                            onBlur={(e) => {
+                                                if (Number(e.target.value) > 0) {
+                                                    setIsStrikePriceValid(true);
+                                                } else {
+                                                    setIsStrikePriceValid(false);
+                                                }
                                             }}
                                             id="strike-price"
-                                            type="number"
                                         />
                                         <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
                                         <CurrencyLabel>{FIAT_CURRENCY[0]}</CurrencyLabel>
@@ -459,12 +458,13 @@ export const CreateMarket: React.FC = () => {
                                     </ShortInputContainer>
                                 </FlexDivRow>
                                 <FlexDiv>
-                                    <StyledCheckbox
-                                        disabled={!initialFundingAmount || !isAmountValid}
-                                        checked={sellLong}
-                                        value={sellLong.toString()}
-                                        onChange={(_: any, data: any) => setSellLong(data.checked || false)}
-                                    />
+                                    <CheckboxContainer>
+                                        <Checkbox
+                                            checked={sellLong}
+                                            value={sellLong.toString()}
+                                            onChange={(e: any) => setSellLong(e.target.checked || false)}
+                                        />
+                                    </CheckboxContainer>
                                     <SliderContainer>
                                         <LongSlider
                                             value={Number(longPrice)}
@@ -525,19 +525,20 @@ export const CreateMarket: React.FC = () => {
                                                     ? 'common.errors.enter-amount'
                                                     : 'common.errors.invalid-amount-max',
                                                 {
-                                                    max: Number(initialFundingAmount),
+                                                    max: initialFundingAmount,
                                                 }
                                             )}
                                         />
                                     </DoubleShortInputContainer>
                                 </FlexDiv>
                                 <FlexDiv>
-                                    <StyledCheckbox
-                                        disabled={!initialFundingAmount || !isAmountValid}
-                                        checked={sellShort}
-                                        value={sellShort.toString()}
-                                        onChange={(_: any, data: any) => setSellShort(data.checked || false)}
-                                    />
+                                    <CheckboxContainer>
+                                        <Checkbox
+                                            checked={sellShort}
+                                            value={sellShort.toString()}
+                                            onChange={(e: any) => setSellShort(e.target.checked || false)}
+                                        />
+                                    </CheckboxContainer>
                                     <SliderContainer>
                                         <ShortSlider
                                             value={Number(shortPrice)}
@@ -598,24 +599,24 @@ export const CreateMarket: React.FC = () => {
                                                     ? 'common.errors.enter-amount'
                                                     : 'common.errors.invalid-amount-max',
                                                 {
-                                                    max: Number(initialFundingAmount),
+                                                    max: initialFundingAmount,
                                                 }
                                             )}
                                         />
                                     </DoubleShortInputContainer>
                                 </FlexDiv>
+                                <NetworkFees gasLimit={gasLimit} />
                             </InputsWrapper>
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
-                            strikingPrice={parseFloat(strikePrice.toString()).toFixed(2)}
+                            strikingPrice={parseFloat(strikePrice.toString()).toFixed(4).replace(/\.0+$/, '')}
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}
                         >
                             <div>
-                                <NetworkFees gasLimit={gasLimit} />
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     {hasAllowance ? (
                                         <Button

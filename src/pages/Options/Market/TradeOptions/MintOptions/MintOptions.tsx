@@ -804,6 +804,11 @@ export const PlaceInOrderbook = styled.div`
     color: #f6f6fe;
 `;
 
+export const CheckboxContainer = styled.div`
+    margin-top: 21px;
+    margin-left: 5px;
+`;
+
 export const StyledCheckbox = styled(Checkbox)`
     margin-top: 24px;
 `;
