@@ -182,7 +182,6 @@ const MintOptions: React.FC = () => {
     useEffect(() => {
         if (walletAddress) {
             BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
-                console.log('SIDE[side]', SIDE[side]);
                 if (walletAddress === account) {
                     if (SIDE[side] === 'long' && sellLong) {
                         await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
@@ -200,7 +199,7 @@ const MintOptions: React.FC = () => {
                 BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
             }
         };
-    }, [walletAddress, sellLong, sellLong, longPrice, shortPrice, longAmount, shortAmount]);
+    }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
