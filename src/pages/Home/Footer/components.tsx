@@ -4,7 +4,7 @@ import github from 'assets/images/github.svg';
 import twitter from 'assets/images/twitter.svg';
 import discord from 'assets/images/discord.svg';
 
-export const FooterIcon = styled.img`
+export const FooterIcon = styled.div`
     width: 30px;
     height: 30px;
     margin: 60px;
