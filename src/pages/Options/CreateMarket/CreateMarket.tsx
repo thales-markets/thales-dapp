@@ -610,7 +610,9 @@ export const CreateMarket: React.FC = () => {
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
-                            strikingPrice={parseFloat(strikePrice.toString()).toFixed(4).replace(/\.0+$/, '')}
+                            strikingPrice={
+                                strikePrice ? parseFloat(strikePrice.toString()).toFixed(4).replace(/\.0+$/, '') : ''
+                            }
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}

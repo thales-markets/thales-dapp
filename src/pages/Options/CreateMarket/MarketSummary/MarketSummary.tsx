@@ -25,7 +25,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     const { t } = useTranslation();
     return (
         <FlexDivColumn
-            style={{ borderLeft: '0.5px solid #00F9FF', marginLeft: '40px', maxWidth: '460px', paddingLeft: 55 }}
+            style={{ borderLeft: '0.5px solid #00F9FF', marginLeft: '40px', maxWidth: '500px', paddingLeft: 55 }}
         >
             <SummaryHeader>
                 <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>

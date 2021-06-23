@@ -237,16 +237,16 @@
             "summary": {
                 "title": "new market summary:",
                 "subtitle": "You will not pay any fee for creating a market.",
-                "strikePrice": "Strike Price",
-                "current": "Current Price",
+                "strikePrice": "Strike price",
+                "current": "Current market price",
                 "dates": {
                     "maturity-date": "Maturity date",
                     "time-to-exercise": "Time to exercise"
                 },
                 "fees": {
                     "minting": "Minting fee",
-                    "creator": "You earn",
-                    "pool": "Pool earns"
+                    "creator": "You will earn",
+                    "pool": "Fee pool earns"
                 },
                 "withdrawals": {
                     "tooltip": "Here you can choose to allow withdrawals, which can affect the pay-out and odds dramatically, particularly late in the Bidding phase."

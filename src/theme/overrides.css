@@ -3,7 +3,7 @@
 }
 
 .react-datepicker-popper {
-    z-index: 3 !important;
+    z-index: 4 !important;
 }
 
 .select-override {
