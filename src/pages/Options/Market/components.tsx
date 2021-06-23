@@ -23,7 +23,7 @@ export const Input = styled.input`
     mix-blend-mode: normal;
     border-radius: 12px;
     height: 64px;
-    padding: 14px 0px 0 20px;
+    padding: 14px 68px 0 20px;
     outline: 0;
     font-size: 16px;
     font-weight: 600;
@@ -261,6 +261,11 @@ export const SummaryContent = styled.div<{ color?: string }>`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    text-align: end;
     color: ${(props) => props.color ?? '#f6f6fe'};
 `;
 

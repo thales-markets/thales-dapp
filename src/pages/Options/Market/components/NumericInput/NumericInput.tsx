@@ -51,6 +51,8 @@ const NumericInput: React.FC<NumericInputProps> = ({
     );
 };
 
-export const StyledInput = styled(Input)``;
+export const StyledInput = styled(Input)`
+    text-overflow: ellipsis;
+`;
 
 export default NumericInput;

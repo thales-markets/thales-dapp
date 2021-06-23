@@ -62,6 +62,7 @@ import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
+import numbro from 'numbro';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -181,6 +182,7 @@ const MintOptions: React.FC = () => {
     useEffect(() => {
         if (walletAddress) {
             BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
+                console.log('SIDE[side]', SIDE[side]);
                 if (walletAddress === account) {
                     if (SIDE[side] === 'long' && sellLong) {
                         await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
@@ -529,9 +531,16 @@ const MintOptions: React.FC = () => {
     };
 
     useEffect(() => {
-        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
-        setLongAmount(amountMinted);
-        setShortAmount(amountMinted);
+        const amountMinted = marketFees
+            ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool))
+            : 0;
+        const formatedAmountMinted = numbro(amountMinted).format({
+            trimMantissa: true,
+            mantissa: 4,
+        });
+
+        setLongAmount(formatedAmountMinted);
+        setShortAmount(formatedAmountMinted);
     }, [amount, marketFees]);
 
     useEffect(() => {
@@ -637,7 +646,9 @@ const MintOptions: React.FC = () => {
                         className={isLongPriceValid ? '' : 'error'}
                         step="0.01"
                     />
-                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sLONG })}
+                    </InputLabel>
                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isLongPriceValid}
@@ -701,7 +712,9 @@ const MintOptions: React.FC = () => {
                         className={isShortPriceValid ? '' : 'error'}
                         step="0.01"
                     />
-                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sSHORT })}
+                    </InputLabel>
                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isShortPriceValid}
@@ -797,6 +810,11 @@ export const ProtocolFeeLabel = styled(SummaryLabel)`
 
 export const ProtocolFeeContent = styled(SummaryContent)`
     font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    text-align: end;
 `;
 
 export const PlaceInOrderbook = styled.div`
