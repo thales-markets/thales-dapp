@@ -56,6 +56,7 @@ export const InputLabel = styled.label`
     color: #748bc6;
     padding: 8px 0 0 22px;
     pointer-events: none;
+    z-index: 3;
     position: absolute;
     text-transform: uppercase;
 `;
@@ -102,15 +103,13 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     > div:first-of-type {
         height: 64px;
         background: #0a2e66;
-        > div:first-of-type {
-            * {
-                font-weight: bold;
-                font-size: 13px;
-                line-height: 24px;
-                letter-spacing: 0.4px;
-                color: #f6f6fe !important;
-                padding: 15px 0px 0 11px;
-            }
+        > div:first-of-type div {
+            font-weight: bold;
+            font-size: 13px;
+            line-height: 24px;
+            letter-spacing: 0.4px;
+            color: #f6f6fe !important;
+            padding: 15px 0px 0 11px;
         }
     }
     > div {

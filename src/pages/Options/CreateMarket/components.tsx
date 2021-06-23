@@ -5,8 +5,7 @@ import sUsd from 'assets/images/sUsd.svg';
 import Tooltip from '@material-ui/core/Tooltip';
 import Slider from '@material-ui/core/Slider';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark.svg';
-import { Form } from 'semantic-ui-react';
-import { Text } from 'theme/common';
+import { FlexDivColumn, Text } from 'theme/common';
 import { COLORS } from 'constants/ui';
 
 type TooltipIconProps = {
@@ -145,7 +144,7 @@ export const Input = styled.input`
     color: #04045a !important;
 `;
 
-export const Field = styled(Form.Field)`
+export const Field = styled.div`
     &.warning {
         color: orange !important;
         position: relative;
@@ -218,4 +217,10 @@ export const Error = styled(Text)`
 export const FundingInput = styled(Input)`
     position: relative;
     padding-left: 100px !important;
+`;
+
+export const InputsWrapper = styled(FlexDivColumn)`
+    padding: 20px;
+    border-radius: 12px;
+    background: #04045a;
 `;

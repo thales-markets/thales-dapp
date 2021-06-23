@@ -236,13 +236,16 @@
             },
             "summary": {
                 "title": "new market summary:",
+                "subtitle": "You will not pay any fee for creating a market.",
+                "strikePrice": "Strike price",
+                "current": "Current market price",
                 "dates": {
                     "maturity-date": "Maturity date",
                     "time-to-exercise": "Time to exercise"
                 },
                 "fees": {
                     "minting": "Minting fee",
-                    "creator": "Creator earns",
+                    "creator": "You will earn",
                     "pool": "Fee pool earns"
                 },
                 "withdrawals": {

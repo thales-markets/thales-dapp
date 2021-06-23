@@ -6,7 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, FIAT_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
+import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, FIAT_CURRENCY, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bytesFormatter, parseBytes32String, bigNumberFormatter } from 'utils/formatters/ethers';
@@ -14,23 +14,42 @@ import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
-import { Form, Message } from 'semantic-ui-react';
 import { RootState } from 'redux/rootReducer';
-import { getWalletAddress, getCustomGasPrice, getGasSpeed } from 'redux/modules/wallet';
+import { getWalletAddress, getCustomGasPrice, getGasSpeed, getNetworkId } from 'redux/modules/wallet';
 import { navigateToOptionsMarket } from 'utils/routes';
 import Currency from 'components/Currency';
-import Select from 'components/Select';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button, FlexDivRow } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
 import { LINKS } from 'constants/links';
-import { HowItWorks, SUSDSign, Error, /*LongSlider, ShortSlider,*/ Field, FundingInput, Input } from './components';
+import { HowItWorks, Error, InputsWrapper, LongSlider, ShortSlider } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
+
+import {
+    CurrencyLabel,
+    DoubleShortInputContainer,
+    Input,
+    InputLabel,
+    ReactSelect,
+    ShortInputContainer,
+    SliderContainer,
+    SliderRange,
+} from '../Market/components';
+import { Message } from 'semantic-ui-react';
+import ValidationMessage from 'components/ValidationMessage';
+import FieldValidationMessage from 'components/FieldValidationMessage';
+import NumericInput from '../Market/components/NumericInput';
+import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOptions';
+import { COLORS } from 'constants/ui';
 import ROUTES from 'constants/routes';
+import Checkbox from 'components/Checkbox';
+
+const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
+const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
 const roundMinutes = (date: Date) => {
     date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
@@ -45,6 +64,19 @@ export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 export type MarketFees = Record<string, number>;
 
 export const CreateMarket: React.FC = () => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const [longPrice, setLongPrice] = useState<number | string>(1);
+    const [shortPrice, setShortPrice] = useState<number | string>(1);
+    const [longAmount, setLongAmount] = useState<number | string>('');
+    const [shortAmount, setShortAmount] = useState<number | string>('');
+    const [sellLong, setSellLong] = useState<boolean>(false);
+    const [sellShort, setSellShort] = useState<boolean>(false);
+
+    const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
+    const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
+    const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
+    const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
+
     const { t } = useTranslation();
     const { synthsMap: synths } = snxJSConnector;
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -67,8 +99,6 @@ export const CreateMarket: React.FC = () => {
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showWarning, setShowWarning] = useState(false);
-    // const [longPrice, setLongPrice] = useState<number>(0);
-    // const [shortPrice, setShortPrice] = useState<number>(0);
 
     const exchangeRatesQuery = useExchangeRatesQuery();
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -96,7 +126,7 @@ export const CreateMarket: React.FC = () => {
                         label: CRYPTO_CURRENCY_MAP.KNC,
                         value: CRYPTO_CURRENCY_MAP.KNC,
                     },
-                    ...Object.values(synths) //.sort(sortSynths)
+                    ...Object.values(synths)
                         .filter((synth) => !synth.inverted && synth.name !== SYNTHS_MAP.sUSD)
                         .map((synth) => ({
                             label: synth.asset,
@@ -175,34 +205,33 @@ export const CreateMarket: React.FC = () => {
     }, [isCreatingMarket]);
 
     useEffect(() => {
-        const fetchGasLimit = async () => {
-            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-            try {
-                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
-                    oracleKey,
-                    price,
-                    maturity,
-                    initialMint
-                );
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
-                setUserHasEnoughFunds(true);
-            } catch (e) {
-                console.log(e);
-                if (e.data?.originalError.code === 3) {
+        const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+        try {
+            const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
+            const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect((snxJSConnector as any).signer);
+            BOMMContractWithSigner.estimateGas
+                .createMarket(oracleKey, price, maturity, initialMint)
+                .then((gasEstimate: any) => {
+                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                     setUserHasEnoughFunds(true);
-                }
-                setGasLimit(null);
-            }
-        };
-        if (isButtonDisabled) return;
-        fetchGasLimit();
+                })
+                .catch((e: any) => {
+                    if (e.data?.originalError.code === 3) {
+                        setUserHasEnoughFunds(false);
+                    }
+                    setGasLimit(null);
+                });
+        } catch (e) {}
     }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount]);
 
-    const strikePricePlaceholderVal = `${USD_SIGN}10000.00 ${FIAT_CURRENCY_MAP.USD}`;
+    useEffect(() => {
+        if (initialFundingAmount) {
+            setIsLongAmountValid(longAmount ? longAmount <= initialFundingAmount : true);
+            setIsShortAmountValid(shortAmount ? shortAmount <= initialFundingAmount : true);
+            setIsLongPriceValid(longPrice ? Number(longPrice) <= 1 && Number(longPrice) > 0 : true);
+            setIsShortPriceValid(shortPrice ? Number(shortPrice) <= 1 && Number(shortPrice) > 0 : true);
+        }
+    }, [initialFundingAmount, longAmount, longPrice, shortAmount, shortPrice]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -269,22 +298,16 @@ export const CreateMarket: React.FC = () => {
                             <Text className="text-s pale-grey" style={{ lineHeight: '24px' }}>
                                 {t('options.create-market.subtitle')}
                             </Text>
-                            <Text style={{ marginBottom: 115, marginTop: 30 }} className="text-s pale-grey">
+                            <Text style={{ marginBottom: 20, marginTop: 30 }} className="text-s pale-grey">
                                 New to Binary Options? Make sure to read{' '}
                                 <HowItWorks href={LINKS.Blog.HowBinaryOptionsWork}>how it works</HowItWorks> first!
                             </Text>
-                            <Form>
-                                <Form.Group widths="equal">
-                                    <Field className={isCurrencyKeyValid ? '' : 'error'}>
-                                        <Text
-                                            className="text-ms pale-grey uppercase text-error"
-                                            style={{ margin: '5px 0' }}
-                                        >
-                                            {t('options.create-market.details.select-asset-label')}
-                                        </Text>
-                                        <Select
+                            <InputsWrapper>
+                                <FlexDivRow className={isCurrencyKeyValid ? '' : 'error'}>
+                                    <ShortInputContainer style={{ zIndex: 10 }}>
+                                        <ReactSelect
                                             className="select-override"
-                                            filterOption={(option, rawInput) =>
+                                            filterOption={(option: any, rawInput: any) =>
                                                 option.label.toLowerCase().includes(rawInput.toLowerCase()) ||
                                                 getSynthName(option.value)
                                                     ?.toLowerCase()
@@ -311,34 +334,24 @@ export const CreateMarket: React.FC = () => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
                                                 const price = get(exchangeRates, option.value, null);
-                                                if (price) setStrikePrice(price);
+                                                if (price) setStrikePrice(price.toFixed(4).replace(/\.0+$/, ''));
                                             }}
                                         />
+                                        <InputLabel>{t('options.create-market.details.select-asset-label')}</InputLabel>
                                         {!isCurrencyKeyValid && (
                                             <Error className="text-xxxs red">Please select asset.</Error>
                                         )}
-                                    </Field>
-                                    <Field
-                                        className={`${isStrikePriceValid ? '' : 'error'} ${
-                                            showWarning ? 'warning' : ''
-                                        }`}
-                                    >
-                                        <Text
-                                            className="text-ms pale-grey uppercase text-error"
-                                            style={{ margin: '5px 0' }}
-                                        >
-                                            {t('options.create-market.details.strike-price-label')}
-                                        </Text>
+                                    </ShortInputContainer>
+                                    <ShortInputContainer>
                                         <Input
-                                            className=" input-override"
-                                            placeholder={t('common.eg-val', {
-                                                val: strikePricePlaceholderVal,
-                                            })}
-                                            value={strikePrice}
                                             onChange={(e) => {
-                                                Number(e.target.value) > 0
-                                                    ? setIsStrikePriceValid(true)
-                                                    : setIsStrikePriceValid(false);
+                                                if (Number(e.target.value) > 0) {
+                                                    setIsStrikePriceValid(true);
+                                                    setStrikePrice(Number(e.target.value));
+                                                } else {
+                                                    setIsStrikePriceValid(false);
+                                                }
+
                                                 if (Number(e.target.value) > 0 && currencyKey) {
                                                     const currentPrice = get(exchangeRates, currencyKey.value, null);
                                                     if (currentPrice) {
@@ -350,32 +363,36 @@ export const CreateMarket: React.FC = () => {
                                                 } else {
                                                     setShowWarning(false);
                                                 }
-
-                                                setStrikePrice(Number(e.target.value).toString());
                                             }}
-                                            onBlur={() => {
-                                                strikePrice
-                                                    ? setIsStrikePriceValid(true)
-                                                    : setIsStrikePriceValid(false);
+                                            onBlur={(e) => {
+                                                if (Number(e.target.value) > 0) {
+                                                    setIsStrikePriceValid(true);
+                                                } else {
+                                                    setIsStrikePriceValid(false);
+                                                }
                                             }}
                                             id="strike-price"
-                                            type="number"
                                         />
-                                        {!isStrikePriceValid && (
-                                            <Error className="text-xxxs red">Please enter strike price.</Error>
-                                        )}
+                                        <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
+                                        <CurrencyLabel>{FIAT_CURRENCY[0]}</CurrencyLabel>
+
+                                        <ValidationMessage
+                                            showValidation={!isStrikePriceValid}
+                                            message="Please enter strike price."
+                                            onDismiss={() => {
+                                                setIsStrikePriceValid(true);
+                                            }}
+                                        ></ValidationMessage>
+
                                         {showWarning && (
                                             <Error className="text-xxxs warning">
                                                 Difference is greater than 100 times.
                                             </Error>
                                         )}
-                                    </Field>
-                                </Form.Group>
-                                <Form.Group widths="equal">
-                                    <Field style={{ marginTop: 50 }}>
-                                        <Text className="text-ms pale-grey uppercase" style={{ margin: '5px 0' }}>
-                                            {t('options.create-market.details.market-maturity-date-label')}
-                                        </Text>
+                                    </ShortInputContainer>
+                                </FlexDivRow>
+                                <FlexDivRow>
+                                    <ShortInputContainer>
                                         <DatePicker
                                             id="maturity-date"
                                             dateFormat="MMM d, yyyy h:mm aa"
@@ -386,44 +403,48 @@ export const CreateMarket: React.FC = () => {
                                             endDate={maturityDate}
                                             onChange={(d: Date) => setMaturityDate(d)}
                                         />
-                                    </Field>
-                                    <Field
+                                        <InputLabel>
+                                            {t('options.create-market.details.market-maturity-date-label')}
+                                        </InputLabel>
+                                    </ShortInputContainer>
+                                    <ShortInputContainer
                                         className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
                                         style={{ position: 'relative' }}
                                     >
-                                        <Text
-                                            className="text-ms pale-grey uppercase text-error"
-                                            style={{ margin: '10px 0' }}
-                                        >
+                                        <Input
+                                            className="input-override"
+                                            value={initialFundingAmount}
+                                            onChange={(e) => {
+                                                setInitialFundingAmount(parseInt(e.target.value, 10));
+                                                parseInt(e.target.value) >=
+                                                (networkId === 1
+                                                    ? MIN_FUNDING_AMOUNT_MAINNET
+                                                    : MIN_FUNDING_AMOUNT_ROPSTEN)
+                                                    ? setIsAmountValid(true)
+                                                    : setIsAmountValid(false);
+                                            }}
+                                            id="funding-amount"
+                                            onBlur={() => {
+                                                initialFundingAmount >=
+                                                (networkId === 1
+                                                    ? MIN_FUNDING_AMOUNT_MAINNET
+                                                    : MIN_FUNDING_AMOUNT_ROPSTEN)
+                                                    ? setIsAmountValid(true)
+                                                    : setIsAmountValid(false);
+                                            }}
+                                            type="number"
+                                        />
+                                        <InputLabel>
+                                            {' '}
                                             {t('options.create-market.details.funding-amount.label')}
-                                        </Text>
+                                        </InputLabel>
+                                        <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                                         <Text
                                             className="text-xxxs grey"
                                             style={{ margin: '6px 0px 8px', lineHeight: '16px' }}
                                         >
                                             {t('options.create-market.details.funding-amount.desc')}
                                         </Text>
-                                        <SUSDSign className="susd">sUSD</SUSDSign>
-                                        <FundingInput
-                                            className="input-override"
-                                            value={initialFundingAmount}
-                                            onChange={(e) => {
-                                                setInitialFundingAmount(parseInt(e.target.value, 10));
-                                                parseInt(e.target.value) >= 1000
-                                                    ? setIsAmountValid(true)
-                                                    : setIsAmountValid(false);
-                                            }}
-                                            id="funding-amount"
-                                            placeholder={t('common.eg-val', {
-                                                val: `${USD_SIGN}1000.00 ${SYNTHS_MAP.sUSD}`,
-                                            })}
-                                            onBlur={() => {
-                                                initialFundingAmount >= 1000
-                                                    ? setIsAmountValid(true)
-                                                    : setIsAmountValid(false);
-                                            }}
-                                            type="number"
-                                        />
                                         {!isAmountValid && (
                                             <Error className="text-xxxs red">
                                                 Please enter funding amount. MIn 1000.00 sUSD is required.
@@ -434,85 +455,170 @@ export const CreateMarket: React.FC = () => {
                                                 Please ensure your wallet has sufficient sUSD.
                                             </Error>
                                         )}
-                                    </Field>
-                                </Form.Group>
-                                {/* <Form.Group widths="equal">
-                                    <Field>
-                                        <div style={{ position: 'relative' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <Text className="text-ms green" style={{ margin: '4px' }}>
-                                                    {t('common.val-in-cents', { val: 0 })}
-                                                </Text>
-                                                <Text className="text-ms green" style={{ margin: '4px' }}>
-                                                    {t('common.val-in-cents', { val: 100 })}
-                                                </Text>
-                                            </div>
-                                            <LongSlider
-                                                value={longPrice}
-                                                step={0.01}
-                                                max={1}
-                                                min={0}
-                                                onChange={(_, newValue) => {
-                                                    const long = newValue as number;
-                                                    setLongPrice(long);
-                                                }}
-                                            />
-                                        </div>
-                                    </Field>
-                                    <Field>
-                                        <Text
-                                            className="text-ms pale-grey uppercase text-error"
-                                            style={{ margin: '5px 0' }}
-                                        >
-                                            {t('options.create-market.details.strike-price-label')}
-                                        </Text>
-                                        <Input
-                                            className=" input-override"
-                                            value={longPrice}
-                                            onChange={(e) => {
-                                                setLongPrice(Number(e.target.value));
-                                            }}
-                                            id="long-price"
-                                            type="number"
+                                    </ShortInputContainer>
+                                </FlexDivRow>
+                                <FlexDiv>
+                                    <CheckboxContainer>
+                                        <Checkbox
+                                            checked={sellLong}
+                                            value={sellLong.toString()}
+                                            onChange={(e: any) => setSellLong(e.target.checked || false)}
+                                        />
+                                    </CheckboxContainer>
+                                    <SliderContainer>
+                                        <LongSlider
+                                            value={Number(longPrice)}
                                             step={0.01}
                                             max={1}
                                             min={0}
+                                            onChange={(_, value) => setLongPrice(Number(value))}
+                                            disabled={!sellLong}
                                         />
-                                    </Field>
-                                    <Field>
-                                        <div style={{ position: 'relative' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <Text className="text-ms red" style={{ margin: '4px' }}>
-                                                    {t('common.val-in-cents', { val: 0 })}
-                                                </Text>
-                                                <Text className="text-ms red" style={{ margin: '4px' }}>
-                                                    {t('common.val-in-cents', { val: 100 })}
-                                                </Text>
-                                            </div>
-                                            <ShortSlider
-                                                value={shortPrice}
-                                                max={1}
-                                                min={0}
-                                                onChange={(_, newValue) => {
-                                                    const short = newValue as number;
-                                                    setShortPrice(short);
-                                                }}
-                                            />
-                                        </div>
-                                    </Field>
-                                </Form.Group> */}
-                            </Form>
+                                        <FlexDivRow>
+                                            <SliderRange color={COLORS.LONG}>{`${USD_SIGN}0`}</SliderRange>
+                                            <SliderRange color={COLORS.LONG}>{`${USD_SIGN}1`}</SliderRange>
+                                        </FlexDivRow>
+                                    </SliderContainer>
+                                    <DoubleShortInputContainer>
+                                        <NumericInput
+                                            value={longPrice}
+                                            onChange={(_, value) => setLongPrice(value)}
+                                            disabled={!sellLong}
+                                            className={isLongPriceValid ? '' : 'error'}
+                                            step="0.01"
+                                        />
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.price-label')}
+                                        </InputLabel>
+                                        <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
+                                            {SYNTHS_MAP.sUSD}
+                                        </CurrencyLabel>
+                                        <FieldValidationMessage
+                                            showValidation={!isLongPriceValid}
+                                            message={t(
+                                                Number(longPrice) == 0
+                                                    ? 'common.errors.enter-price'
+                                                    : 'common.errors.invalid-price-max',
+                                                { max: 1 }
+                                            )}
+                                        />
+                                    </DoubleShortInputContainer>
+                                    <DoubleShortInputContainer>
+                                        <NumericInput
+                                            value={longAmount}
+                                            onChange={(_, value) => setLongAmount(value)}
+                                            disabled={!sellLong}
+                                            className={isLongAmountValid ? '' : 'error'}
+                                        />
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.amount-label', {
+                                                orderSide: 'sell',
+                                            })}
+                                        </InputLabel>
+                                        <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
+                                            {SYNTHS_MAP.sLONG}
+                                        </CurrencyLabel>
+                                        <FieldValidationMessage
+                                            showValidation={!isLongAmountValid}
+                                            message={t(
+                                                Number(longAmount) == 0
+                                                    ? 'common.errors.enter-amount'
+                                                    : 'common.errors.invalid-amount-max',
+                                                {
+                                                    max: initialFundingAmount,
+                                                }
+                                            )}
+                                        />
+                                    </DoubleShortInputContainer>
+                                </FlexDiv>
+                                <FlexDiv>
+                                    <CheckboxContainer>
+                                        <Checkbox
+                                            checked={sellShort}
+                                            value={sellShort.toString()}
+                                            onChange={(e: any) => setSellShort(e.target.checked || false)}
+                                        />
+                                    </CheckboxContainer>
+                                    <SliderContainer>
+                                        <ShortSlider
+                                            value={Number(shortPrice)}
+                                            step={0.01}
+                                            max={1}
+                                            min={0}
+                                            onChange={(_, value) => setShortPrice(Number(value))}
+                                            disabled={!sellShort}
+                                        />
+                                        <FlexDivRow>
+                                            <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}0`}</SliderRange>
+                                            <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}1`}</SliderRange>
+                                        </FlexDivRow>
+                                    </SliderContainer>
+                                    <DoubleShortInputContainer>
+                                        <NumericInput
+                                            value={shortPrice}
+                                            onChange={(_, value) => setShortPrice(value)}
+                                            disabled={!sellShort}
+                                            className={isShortPriceValid ? '' : 'error'}
+                                            step="0.01"
+                                        />
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.price-label')}
+                                        </InputLabel>
+                                        <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
+                                            {SYNTHS_MAP.sUSD}
+                                        </CurrencyLabel>
+                                        <FieldValidationMessage
+                                            showValidation={!isShortPriceValid}
+                                            message={t(
+                                                Number(shortPrice) == 0
+                                                    ? 'common.errors.enter-price'
+                                                    : 'common.errors.invalid-price-max',
+                                                { max: 1 }
+                                            )}
+                                        />
+                                    </DoubleShortInputContainer>
+                                    <DoubleShortInputContainer>
+                                        <NumericInput
+                                            value={shortAmount}
+                                            onChange={(_, value) => setShortAmount(value)}
+                                            disabled={!sellShort}
+                                            className={isShortAmountValid ? '' : 'error'}
+                                        />
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.amount-label', {
+                                                orderSide: 'sell',
+                                            })}
+                                        </InputLabel>
+                                        <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
+                                            {SYNTHS_MAP.sSHORT}
+                                        </CurrencyLabel>
+                                        <FieldValidationMessage
+                                            showValidation={!isShortAmountValid}
+                                            message={t(
+                                                Number(shortAmount) == 0
+                                                    ? 'common.errors.enter-amount'
+                                                    : 'common.errors.invalid-amount-max',
+                                                {
+                                                    max: initialFundingAmount,
+                                                }
+                                            )}
+                                        />
+                                    </DoubleShortInputContainer>
+                                </FlexDiv>
+                                <NetworkFees gasLimit={gasLimit} />
+                            </InputsWrapper>
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
-                            strikingPrice={parseFloat(strikePrice.toString()).toFixed(2)}
+                            strikingPrice={
+                                strikePrice ? parseFloat(strikePrice.toString()).toFixed(4).replace(/\.0+$/, '') : ''
+                            }
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}
                         >
                             <div>
-                                <NetworkFees gasLimit={gasLimit} />
                                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                                     {hasAllowance ? (
                                         <Button
