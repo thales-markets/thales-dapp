@@ -11,9 +11,10 @@ import { MarketRow } from '../UserInfoModal';
 type UsersAssetsProps = {
     optionsMarkets: OptionsMarkets;
     walletAddress: string;
+    onClose: () => void;
 };
 
-const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress }) => {
+const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress, onClose }) => {
     const userAssetsQuery = useAssetsBalanceQuery(optionsMarkets, walletAddress);
 
     const assets = useMemo(
@@ -32,6 +33,7 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                             onClick={() => {
                                 if (asset.market.phase !== 'expiry') {
                                     navigateToOptionsMarket(asset.market.address);
+                                    onClose();
                                 }
                             }}
                         >
