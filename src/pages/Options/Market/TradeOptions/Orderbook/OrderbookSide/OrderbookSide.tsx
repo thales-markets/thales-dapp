@@ -139,6 +139,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                     openFillOrderModal(row.original);
                 }}
                 orderSide={orderSide}
+                columnsDeps={[walletAddress]}
             />
             {fillOrderModalVisible && selectedOrder !== null && (
                 <FillOrderModal

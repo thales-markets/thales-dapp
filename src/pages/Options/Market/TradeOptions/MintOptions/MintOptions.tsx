@@ -747,7 +747,8 @@ const MintOptions: React.FC = () => {
                         marketFees ? marketFees.creator + marketFees.pool : 0
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
-                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
+                        2
                     )})`}</ProtocolFeeContent>
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
@@ -756,7 +757,8 @@ const MintOptions: React.FC = () => {
                         marketFees ? marketFees.creator : 0
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.creator : 0
+                        marketFees ? Number(amount) * marketFees.creator : 0,
+                        2
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
@@ -765,7 +767,8 @@ const MintOptions: React.FC = () => {
                         marketFees ? marketFees.pool : 0
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.pool : 0
+                        marketFees ? Number(amount) * marketFees.pool : 0,
+                        2
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <NetworkFees gasLimit={gasLimit} />
