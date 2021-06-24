@@ -3,6 +3,7 @@ import React from 'react';
 import { CardsAbs, FlexDiv, FlexDivColumn, Image, Text, IconLink } from 'theme/common';
 import synthetix from 'assets/images/synthetix.svg';
 import zeroX from 'assets/images/0x.svg';
+import chainlink from 'assets/images/chainlink.svg';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +26,11 @@ const Partners: React.FC = () => {
                 <IconLink target="_blank" rel="noreferrer" href="https://0x.org/">
                     <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
                         <Image style={{ width: 'auto', height: 50 }} src={zeroX}></Image>
+                    </Partner>
+                </IconLink>
+                <IconLink target="_blank" rel="noreferrer" href="https://chain.link/">
+                    <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
+                        <Image style={{ width: 'auto', height: 50 }} src={chainlink}></Image>
                     </Partner>
                 </IconLink>
             </TechPartners>
