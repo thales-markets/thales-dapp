@@ -51,7 +51,7 @@
             "firstA": "Binary options are a simple and intuitive derivative offering fixed payoffs for a wide variety of markets in a limited risk environment, making risk management more precise.",
             "secondQ": "What markets are supported?",
             "secondA": "More than 60 market types are secured by Chainlink price feeds, including cryptocurrencies, equities, commodities, FX, and index products.",
-            "thirdQ": "What assets do users need to mint or buy options on Thales?",
+            "thirdQ": "Which asset do users need to mint or buy options on Thales?",
             "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now.",
             "hub": "Knowledge hub"
         }
