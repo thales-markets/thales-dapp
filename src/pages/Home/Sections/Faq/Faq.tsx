@@ -4,6 +4,7 @@ import { CardsAbs, FlexDiv, FlexDivColumn, Button, Image, Text } from 'theme/com
 import plus from 'assets/images/plus.svg';
 import minus from 'assets/images/minus.svg';
 import faq from 'assets/images/faq.svg';
+import discord from 'assets/images/discord.svg';
 import { useTranslation } from 'react-i18next';
 
 const Faq: React.FC = () => {
@@ -42,14 +43,22 @@ const Faq: React.FC = () => {
                 </CardFaq>
                 <FaqImg src={faq} />
             </Wrapper>
+
             <Button
                 className="primary"
-                style={{ alignSelf: 'center', marginBottom: 100 }}
+                style={{
+                    alignSelf: 'center',
+                    marginBottom: 100,
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '14px 35px',
+                }}
                 onClick={() => {
                     window.open('https://discord.gg/cFGv5zyVEj', '_blank');
                 }}
             >
-                Join Discord
+                <Image src={discord} style={{ height: 50, width: 90 }}></Image>
+                <Text className="text-xl pale-grey bold">Join Discord</Text>
             </Button>
         </FlexDivColumn>
     );
