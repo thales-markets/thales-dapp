@@ -37,10 +37,10 @@
             "technical": "Technical integrations"
         },
         "get-started": {
-            "title": "How to get started?",
-            "first": "You must have a Web3 wallet, like Metamask.",
-            "second": "You must have Ether to pay for gas. ",
-            "third": "You must have sUSD, which can be bought from Uniswap, 1inch.Exchange, or Curve.Fi."
+            "title": "To get started you'll need",
+            "first": "Web3 wallet, like Metamask",
+            "second": "Ether to pay for network fees (also called gas)",
+            "third": "Synthetix USD (sUSD) which can be obtained on Uniswap, 1inch, Curve, etc."
         },
         "faq": {
             "title": "FAQ",
