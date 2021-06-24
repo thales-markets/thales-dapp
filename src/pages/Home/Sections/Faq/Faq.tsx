@@ -117,6 +117,9 @@ const Question = styled(FlexDiv)`
         cursor: pointer;
         width: 20px;
         height: 20px;
+        align-self: flex-start;
+        top: 2px;
+        position: relative;
     }
 `;
 const Answer = styled(Text)`
