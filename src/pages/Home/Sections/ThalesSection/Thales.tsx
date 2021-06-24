@@ -14,7 +14,11 @@ const Thales: React.FC = () => {
                     {t('landing-page.who-is-thales')}
                 </Text>
                 <Text className="text-s pale-grey lh24">
-                    <Trans i18nKey="landing-page.thales-is" components={{ bold: <strong /> }}></Trans>
+                    <Text>{t('landing-page.thales-is1')}</Text>
+                    <Text style={{ margin: '14px 0' }}>{t('landing-page.thales-is2')}</Text>
+                    <Text>
+                        <Trans i18nKey="landing-page.thales-is3" components={{ bold: <strong /> }}></Trans>
+                    </Text>
                 </Text>
             </CardThales>
         </Wrapper>

@@ -17,7 +17,10 @@
         "use-app": "Use dApp",
         "launch": "Launch app",
         "who-is-thales": "Who is Thales?",
-        "thales-is": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena but was taunted by others with the uselessness of philosophy because of his poverty. One year, Thales discerned the olive harvest will be bountiful next season by his study of the heavenly bodies. Armed with his knowledge he bets on this with a small sum of money by paying deposits for the whole of the olive presses in Miletus, which he hired at a very low price as nobody else was bidding. When the harvests arrived he realized a large sum of money by renting the presses on his terms when demand grew, becoming the <strong>first known person to exercise an options contract.</strong>",
+        "thales-is1": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena but was taunted by others with the uselessness of philosophy because of his poverty.",
+        "thales-is2": "One year, Thales discerned the olive harvest will be bountiful next season by his study of the heavenly bodies. Armed with his knowledge he bets on this with a small sum of money by paying deposits for the whole of the olive presses in Miletus, which he hired at a very low price as nobody else was bidding.",
+        "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms when demand grew, becoming the <strong>first known person to exercise an options contract</strong>",
+
         "markets": {
             "title": "Binary Markets",
             "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
