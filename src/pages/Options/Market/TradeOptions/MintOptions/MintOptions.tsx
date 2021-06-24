@@ -16,7 +16,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit, normalizeGasLimitRelative } from 'utils/network';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -207,7 +207,8 @@ const MintOptions: React.FC = () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                console.log('gasEstimate', Number(gasEstimate));
+                setGasLimit(normalizeGasLimitRelative(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -344,7 +345,7 @@ const MintOptions: React.FC = () => {
             );
         }
         return (
-            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleMint}>
+            <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleMint}>
                 {!isMinting
                     ? t(`options.market.trade-options.mint.confirm-button.label`)
                     : t(`options.market.trade-options.mint.confirm-button.progress-label`)}
