@@ -10,7 +10,7 @@ const Cards: React.FC = () => {
     return (
         <Wrapper>
             <Card className="first">
-                <Image src={coins} style={{ height: 200, width: 200, margin: 'auto' }}></Image>
+                <Image src={coins} style={{ height: 190, width: 200, margin: 'auto', marginTop: 10 }}></Image>
                 <TextWrapper>
                     <Text className="pale-grey text-l">{t('landing-page.markets.title')}</Text>.
                     <Text className="pale-grey text-s lh24" style={{ marginBottom: 30 }}>
@@ -66,7 +66,7 @@ const Wrapper = styled(FlexDiv)`
 
 const TextWrapper = styled(FlexDivColumn)`
     padding-left: 70px;
-    padding-right: 24px;
+    padding-right: 40px;
     @media (max-width: 620px) {
         padding-left: 30px;
     }

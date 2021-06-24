@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { CardsAbs, FlexDiv, Image, Text } from 'theme/common';
 import thalesTheWhite from 'assets/images/who-is-thales.svg';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 const Thales: React.FC = () => {
     const { t } = useTranslation();
@@ -10,10 +10,16 @@ const Thales: React.FC = () => {
         <Wrapper>
             <ThalesTheWhite src={thalesTheWhite} />
             <CardThales>
-                <Text className="text-l pale-grey" style={{ marginBottom: 50 }}>
+                <Text className="text-l pale-grey" style={{ marginBottom: 30 }}>
                     {t('landing-page.who-is-thales')}
                 </Text>
-                <Text className="text-s pale-grey lh24">{t('landing-page.thales-is')}</Text>
+                <Text className="text-s pale-grey lh24">
+                    <Text>{t('landing-page.thales-is1')}</Text>
+                    <Text style={{ margin: '14px 0' }}>{t('landing-page.thales-is2')}</Text>
+                    <Text>
+                        <Trans i18nKey="landing-page.thales-is3" components={{ bold: <strong /> }}></Trans>
+                    </Text>
+                </Text>
             </CardThales>
         </Wrapper>
     );
