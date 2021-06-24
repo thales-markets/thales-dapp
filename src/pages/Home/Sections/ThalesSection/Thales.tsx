@@ -34,7 +34,8 @@ const Wrapper = styled(FlexDiv)`
         img {
             margin: auto;
             margin-bottom: 50px;
-            margin-left: 16px;
+            position: relative;
+            left: 16px;
         }
         margin-bottom: 50px;
     }
