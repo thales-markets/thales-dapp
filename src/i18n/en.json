@@ -17,7 +17,7 @@
         "use-app": "Use dApp",
         "launch": "Launch app",
         "who-is-thales": "Who is Thales?",
-        "thales-is": "Thales is considered the first known person to exercise an options contract in Ancient Greece. In response to challengers who prodded Thales that if Thales was such a famous philosopher then how could he be impoverished, Thales leveraged his knowledge of the seasons and the stars into profitable actions. Thales bought the right to use all the olive presses in town at a very low price in the winter. Several months later, there was a bountiful olive harvest. Thales earned a killing renting out the olive presses to people willing to pay a much higher price than what Thales paid for the rights to use the olive presses.",
+        "thales-is": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena but was taunted by others with the uselessness of philosophy because of his poverty. One year, Thales discerned the olive harvest will be bountiful next season by his study of the heavenly bodies. Armed with his knowledge he bets on this with a small sum of money by paying deposits for the whole of the olive presses in Miletus, which he hired at a very low price as nobody else was bidding. When the harvests arrived he realized a large sum of money by renting the presses on his terms when demand grew, becoming the <strong>first known person to exercise an options contract.</strong>",
         "markets": {
             "title": "Binary Markets",
             "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
@@ -45,11 +45,11 @@
         "faq": {
             "title": "FAQ",
             "firstQ": "What are binary options?",
-            "firstA": "Binary options empower users to speculate and hedge price volatility of supported assets.\n\nSuppose Alice thinks the ETH/USD price will be greater than $2,500 by the end of the week. Alice acquires sOPT-LONG tokens to benefit if Ether’s price exceeds $2,500 at the end of the week. If Ether’s price is strictly greater than $2,500.00 at the time of expiry, Alice’s sOPT-LONG tokens can be redeemed for 1 sUSD apiece, or else the sOPT-LONG tokens are worth $0. Any sOPT-LONG or sOPT-SHORT token can only ever reach a final value of 1 sUSD or 0 sUSD. If Alice’s sOPT-LONG tokens are worth 1 sUSD, Alice has 6 months to exercise the sOPT and claim her sUSD.",
+            "firstA": "Binary options are a simple and intuitive derivative offering fixed payoffs for a wide variety of markets that offer a limited risk environment with capped downside, making risk management more precise.",
             "secondQ": "What markets are supported?",
-            "secondA": "Market participants are free to create markets for any supported Chainlink price feed on crypto assets, index products, forex, traditional equities, and commodities.",
-            "thirdQ": "How does binary options pricing work?",
-            "thirdA": "Binary options token prices are set by the market. A long or short option token can only expire to be worth 1 sUSD or 0. If the price of any option is 0.50 sUSD, the market is reflecting a 50% chance the option token will be in the money at expiry and become redeemable for 1 sUSD.",
+            "secondA": "More than 60 market types are secured by Chainlink price feeds, including cryptocurrencies, equities, commodities, FX, and index products.",
+            "thirdQ": "What assets do users need to mint or buy options on Thales?",
+            "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now.",
             "hub": "Knowledge hub"
         }
     },
