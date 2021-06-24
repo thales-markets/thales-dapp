@@ -216,7 +216,7 @@ const MintOptions: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isWalletConnected, amount]);
+    }, [isWalletConnected, amount, hasAllowance]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
