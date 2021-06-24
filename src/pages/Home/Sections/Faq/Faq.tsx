@@ -20,23 +20,23 @@ const Faq: React.FC = () => {
                 <CardFaq>
                     <Text className="text-l pale-grey">{t('landing-page.faq.title')}</Text>
                     <DropDownWrapper className={q1open ? 'open' : ''}>
-                        <Question>
+                        <Question onClick={() => setQ1open(!q1open)}>
                             <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.firstQ')}</Text>
-                            <Image src={q1open ? minus : plus} onClick={() => setQ1open(!q1open)}></Image>
+                            <Image src={q1open ? minus : plus}></Image>
                         </Question>
                         <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.firstA')}</Answer>
                     </DropDownWrapper>
                     <DropDownWrapper className={q2open ? 'open' : ''}>
-                        <Question>
+                        <Question onClick={() => setQ2open(!q2open)}>
                             <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.secondQ')}</Text>
-                            <Image src={q2open ? minus : plus} onClick={() => setQ2open(!q2open)}></Image>
+                            <Image src={q2open ? minus : plus}></Image>
                         </Question>
                         <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.secondA')}</Answer>
                     </DropDownWrapper>
                     <DropDownWrapper className={q3open ? 'open' : ''}>
-                        <Question>
+                        <Question onClick={() => setQ3open(!q3open)}>
                             <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.thirdQ')}</Text>
-                            <Image src={q3open ? minus : plus} onClick={() => setQ3open(!q3open)}></Image>
+                            <Image src={q3open ? minus : plus}></Image>
                         </Question>
                         <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.thirdA')}</Answer>
                     </DropDownWrapper>
