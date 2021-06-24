@@ -1,9 +1,8 @@
 import ROUTES from 'constants/routes';
-import { Link } from 'react-router-dom';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, Logo } from 'theme/common';
+import { Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
 
 enum BurgerState {
@@ -63,11 +62,6 @@ const Header: React.FC = () => {
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
-                <NavLink to={process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? ROUTES.Options.Home : ''}>
-                    <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
-                        {process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? t('landing-page.use-app') : 'Comming soon'}
-                    </Button>
-                </NavLink>
             </Links>
             <BurdgerIcon
                 onClick={() =>
@@ -152,34 +146,34 @@ const Links = styled.div`
     }
 `;
 
-const NavLink = styled(Link)`
-    margin-right: 40px;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 32px;
-    letter-spacing: 0.15px;
-    color: #f6f6fe;
-    &:last-child {
-        margin-right: 0;
-    }
-    &:hover {
-        color: #44e1e2;
-    }
-    @media (max-width: 768px) {
-        border-top: 1px solid #748bc6;
-        width: 100%;
-        text-align: center;
-        margin: 0;
-        padding: 6px 0;
-        .primary {
-            margin: 50px 0 !important;
-            width: 140px;
-            font-size: 16px;
-            line-height: 24px;
-            padding: 8px 16px !important;
-        }
-    }
-`;
+// const NavLink = styled(Link)`
+//     margin-right: 40px;
+//     font-weight: 600;
+//     font-size: 16px;
+//     line-height: 32px;
+//     letter-spacing: 0.15px;
+//     color: #f6f6fe;
+//     &:last-child {
+//         margin-right: 0;
+//     }
+//     &:hover {
+//         color: #44e1e2;
+//     }
+//     @media (max-width: 768px) {
+//         border-top: 1px solid #748bc6;
+//         width: 100%;
+//         text-align: center;
+//         margin: 0;
+//         padding: 6px 0;
+//         .primary {
+//             margin: 50px 0 !important;
+//             width: 140px;
+//             font-size: 16px;
+//             line-height: 24px;
+//             padding: 8px 16px !important;
+//         }
+//     }
+// `;
 
 const CommunityLink = styled.a`
     margin-right: 40px;

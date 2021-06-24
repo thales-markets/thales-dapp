@@ -1,11 +1,9 @@
 import React from 'react';
-import { Button, FlexDivColumn, Image, Text, CardsAbs, FlexDiv } from 'theme/common';
+import { FlexDivColumn, Image, Text, CardsAbs, FlexDiv } from 'theme/common';
 import coins from 'assets/images/coins-thales.png';
 import scale from 'assets/images/weight-scale-gradient.svg';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import ROUTES from 'constants/routes';
-import { navigateTo } from 'utils/routes';
 
 const Cards: React.FC = () => {
     const { t } = useTranslation();
@@ -23,15 +21,6 @@ const Cards: React.FC = () => {
                     </Text>
                     <Text className="pale-grey texts lh24">{t('landing-page.markets.option3')}</Text>
                 </TextWrapper>
-                <Button
-                    className="primary"
-                    style={{ margin: '50px auto' }}
-                    onClick={() =>
-                        process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? navigateTo(ROUTES.Options.Home) : ''
-                    }
-                >
-                    {t('landing-page.markets.view-markets')}
-                </Button>
             </Card>
             <Card className="second">
                 <Image src={scale} style={{ height: 200, width: 200, margin: 'auto' }}></Image>
@@ -45,17 +34,6 @@ const Cards: React.FC = () => {
                     </Text>
                     <Text className="pale-grey texts lh24">{t('landing-page.options.option3')}</Text>
                 </TextWrapper>
-                <Button
-                    className="primary"
-                    style={{ margin: 'auto', marginBottom: 50, marginTop: 30 }}
-                    onClick={() =>
-                        process.env.REACT_APP_MAINTENANCE_MODE == 'true'
-                            ? navigateTo(ROUTES.Options.Home + '/#explore-markets')
-                            : ''
-                    }
-                >
-                    {t('landing-page.options.view-markets')}
-                </Button>
             </Card>
         </Wrapper>
     );
