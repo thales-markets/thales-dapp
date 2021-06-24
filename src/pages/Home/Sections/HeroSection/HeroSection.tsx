@@ -19,9 +19,11 @@ const HeroSection: React.FC = () => {
                     id="use-app"
                     className="secondary"
                     style={{ marginRight: '20px' }}
-                    onClick={() => navigateTo(ROUTES.Options.Home)}
+                    onClick={() =>
+                        process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? navigateTo(ROUTES.Options.Home) : ''
+                    }
                 >
-                    {t('landing-page.launch')}
+                    {process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? t('landing-page.launch') : 'Comming Soon'}
                 </Button>
                 <Button
                     onClick={() => {

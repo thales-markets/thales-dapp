@@ -63,9 +63,9 @@ const Header: React.FC = () => {
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
-                <NavLink to={ROUTES.Options.Home}>
+                <NavLink to={process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? ROUTES.Options.Home : ''}>
                     <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
-                        {t('landing-page.use-app')}
+                        {process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? t('landing-page.use-app') : 'Comming soon'}
                     </Button>
                 </NavLink>
             </Links>

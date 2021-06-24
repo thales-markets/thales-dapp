@@ -26,7 +26,9 @@ const Cards: React.FC = () => {
                 <Button
                     className="primary"
                     style={{ margin: '50px auto' }}
-                    onClick={() => navigateTo(ROUTES.Options.Home)}
+                    onClick={() =>
+                        process.env.REACT_APP_MAINTENANCE_MODE == 'true' ? navigateTo(ROUTES.Options.Home) : ''
+                    }
                 >
                     {t('landing-page.markets.view-markets')}
                 </Button>
@@ -46,7 +48,11 @@ const Cards: React.FC = () => {
                 <Button
                     className="primary"
                     style={{ margin: 'auto', marginBottom: 50, marginTop: 30 }}
-                    onClick={() => navigateTo(ROUTES.Options.Home + '/#explore-markets')}
+                    onClick={() =>
+                        process.env.REACT_APP_MAINTENANCE_MODE == 'true'
+                            ? navigateTo(ROUTES.Options.Home + '/#explore-markets')
+                            : ''
+                    }
                 >
                     {t('landing-page.options.view-markets')}
                 </Button>
