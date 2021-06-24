@@ -14,7 +14,7 @@ const HeroSection: React.FC = () => {
             </Text>
             <FlexDiv>
                 <Button id="use-app" className="secondary" style={{ marginRight: '20px' }} onClick={() => ''}>
-                    Comming Soon
+                    Coming Soon
                 </Button>
                 <Button
                     onClick={() => {

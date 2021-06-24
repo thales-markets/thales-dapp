@@ -4,7 +4,7 @@
             "home": "Thales",
             "options": "Options",
             "faq": "FAQ",
-            "partners": "Partners",
+            "partners": "Integrations",
             "community": "Community",
             "blog": "Blog"
         },
@@ -19,22 +19,22 @@
         "who-is-thales": "Who is Thales?",
         "thales-is": "Thales is considered the first known person to exercise an options contract in Ancient Greece. In response to challengers who prodded Thales that if Thales was such a famous philosopher then how could he be impoverished, Thales leveraged his knowledge of the seasons and the stars into profitable actions. Thales bought the right to use all the olive presses in town at a very low price in the winter. Several months later, there was a bountiful olive harvest. Thales earned a killing renting out the olive presses to people willing to pay a much higher price than what Thales paid for the rights to use the olive presses.",
         "markets": {
-            "title": "Markets",
-            "option1": "Permissionless binary options market making.",
-            "option2": "Anyone can create a market to speculate on the prices of crypto assets, commodities, equities, and index products.",
-            "option3": "And earn fees while doing so.",
+            "title": "Binary Markets",
+            "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
+            "option2": "Market makers don't pay a fee but earn as liquidity adds up.",
+            "option3": "Permissionless, non-custodial and unrestricted.",
             "view-markets": "View Markets"
         },
         "options": {
             "title": "Trade Binary Options",
-            "option1": "Buy or sell Long or Short options that respond to changes in the price of the underlying.",
-            "option2": "Know your odds, capture opportunities to profit on bullish price trends or hedge downside price risk on volatile crypto prices.",
-            "option3": "Generate revenue along the way for being a market-maker who offers liquidity on Thales orderbooks, powered by 0x.",
-            "view-markets": "Trade binary options"
+            "option1": "Binary options enable users to go long or short on specific outcomes based on price feeds.",
+            "option2": "Know your odds, capture opportunities to profit on trends, or hedge risk on volatile assets.",
+            "option3": "Trade, mint, and exercise binary options like never before!",
+            "view-markets": "Start Trading"
         },
         "partners": {
             "seed": "Seed investor",
-            "technical": "Technical partners"
+            "technical": "Technical integrations"
         },
         "get-started": {
             "title": "How to get started?",
@@ -49,7 +49,7 @@
             "secondQ": "What markets are supported?",
             "secondA": "Market participants are free to create markets for any supported Chainlink price feed on crypto assets, index products, forex, traditional equities, and commodities.",
             "thirdQ": "How does binary options pricing work?",
-            "thirdA": "Binary options are priced based on the make-up of the pool for a given market. The market originator sets an initial skew to establish initial odds, bidders can then choose a side they think is more likely, and during the trading phase a user Alice can set her own prices at which to exchange an sOPT token.",
+            "thirdA": "Binary options token prices are set by the market. A long or short option token can only expire to be worth 1 sUSD or 0. If the price of any option is 0.50 sUSD, the market is reflecting a 50% chance the option token will be in the money at expiry and become redeemable for 1 sUSD.",
             "hub": "Knowledge hub"
         }
     },

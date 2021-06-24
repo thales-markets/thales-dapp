@@ -46,10 +46,10 @@ const Faq: React.FC = () => {
                 className="primary"
                 style={{ alignSelf: 'center', marginBottom: 100 }}
                 onClick={() => {
-                    window.open('https://themonkeyrev.gitbook.io/thales/', '_blank');
+                    window.open('https://discord.gg/cFGv5zyVEj', '_blank');
                 }}
             >
-                {t('landing-page.faq.hub')}
+                Join Discord
             </Button>
         </FlexDivColumn>
     );
