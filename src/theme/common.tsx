@@ -221,9 +221,6 @@ export const LightTooltip = withStyles(() => ({
 }))(Tooltip);
 
 export const Text = styled.p`
-    @media (max-width: 468px) {
-        margin: 0 0 0.5em;
-    }
     strong {
         font-weight: bold;
     }
