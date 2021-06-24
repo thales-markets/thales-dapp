@@ -751,7 +751,7 @@ export const CreateMarket: React.FC = () => {
                     </div>
                     <ProgressTracker
                         isWalletAccessEnabled={hasAllowance}
-                        isMarketCreated={true}
+                        isMarketCreated={marketCreated}
                         showLongProcess={sellLong}
                         showShortProcesS={sellShort}
                     ></ProgressTracker>
