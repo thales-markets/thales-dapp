@@ -10,7 +10,7 @@ const Thales: React.FC = () => {
         <Wrapper>
             <ThalesTheWhite src={thalesTheWhite} />
             <CardThales>
-                <Text className="text-l pale-grey" style={{ marginBottom: 50 }}>
+                <Text className="text-l pale-grey" style={{ marginBottom: 30 }}>
                     {t('landing-page.who-is-thales')}
                 </Text>
                 <Text className="text-s pale-grey lh24">
