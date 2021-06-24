@@ -13,9 +13,9 @@ dotenv.config();
 const MaintenancePage: React.FC = () => {
     const { t } = useTranslation();
 
-    if (process.env.REACT_APP_MAINTENANCE_MODE === 'true') {
-        require('theme/flashlight.css');
-    }
+    // if (process.env.REACT_APP_MAINTENANCE_MODE === 'true') {
+    //     require('theme/flashlight.css');
+    // }
 
     useEffect(() => {
         document.addEventListener('mousemove', update);

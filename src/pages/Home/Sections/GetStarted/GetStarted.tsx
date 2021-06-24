@@ -117,11 +117,8 @@ const GetStartedWrapper = styled(FlexDivColumn)`
 `;
 
 const Title = styled(Text)`
+    margin: auto;
     margin-bottom: 35px !important;
-    margin-left: -30px;
-    @media (max-width: 890px) {
-        margin: auto;
-    }
 `;
 
 const Wrapper = styled(FlexDiv)`
