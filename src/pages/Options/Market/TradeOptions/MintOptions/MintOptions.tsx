@@ -16,7 +16,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit, normalizeGasLimitRelative } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -208,7 +208,7 @@ const MintOptions: React.FC = () => {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
                 console.log('gasEstimate', Number(gasEstimate));
-                setGasLimit(normalizeGasLimitRelative(Number(gasEstimate)));
+                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -216,7 +216,7 @@ const MintOptions: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isWalletConnected, amount, hasAllowance]);
+    }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
