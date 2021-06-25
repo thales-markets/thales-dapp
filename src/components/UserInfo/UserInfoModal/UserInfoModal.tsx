@@ -124,16 +124,23 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     </FilterButton>
                 </FilterWrapper>
                 <DataWrapper>
-                    {filter === Filters.MARKETS && <UsersMarkets usersMarkets={usersMarkets} />}
+                    {filter === Filters.MARKETS && (
+                        <UsersMarkets usersMarkets={usersMarkets} onClose={() => handleClose(false)} />
+                    )}
                     {filter === Filters.ORDERS && (
                         <UsersOrders
                             optionsMarkets={optionsMarkets}
                             walletAddress={walletAddress}
                             networkId={networkId}
+                            onClose={() => handleClose(false)}
                         />
                     )}
                     {filter === Filters.ASSETS && (
-                        <UsersAssets optionsMarkets={optionsMarkets} walletAddress={walletAddress} />
+                        <UsersAssets
+                            optionsMarkets={optionsMarkets}
+                            walletAddress={walletAddress}
+                            onClose={() => handleClose(false)}
+                        />
                     )}
                 </DataWrapper>
             </ModalWrapper>

@@ -17,9 +17,10 @@ type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
     walletAddress: string;
     networkId: NetworkId;
+    onClose: () => void;
 };
 
-const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress, networkId }) => {
+const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress, networkId, onClose }) => {
     const ordersQuery = useUserOrdersQuery(networkId, walletAddress);
     const {
         contracts: { SynthsUSD },
@@ -74,6 +75,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                     onClick={() => {
                         if (order.market.phase !== 'expiry') {
                             navigateToOptionsMarket(order.market.address);
+                            onClose();
                         }
                     }}
                 >

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import OrderbookSide from './OrderbookSide';
-import { OptionSide, OrderItem } from 'types/options';
+import { OptionSide, OrderItem, Orders } from 'types/options';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import { useMarketContext } from '../../contexts/MarketContext';
 import { useSelector } from 'react-redux';
@@ -52,8 +52,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
         enabled: isAppReady,
     });
 
-    const buyOrders = useMemo(() => {
-        const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.buyOrders : [];
+    const getFilteredOrders = (orders: Orders) => {
         if (orders.length > 0) {
             const maxTotalItem = maxBy(orders, (order: OrderItem) => order.displayOrder.total);
             if (maxTotalItem) {
@@ -66,22 +65,16 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
         return filterMyOrders
             ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
             : orders;
+    };
+
+    const { buyOrders, filteredBuyOrders } = useMemo(() => {
+        const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.buyOrders : [];
+        return { buyOrders: orders, filteredBuyOrders: getFilteredOrders(orders) };
     }, [orderbookQuery.data, filterMyOrders, walletAddress]);
 
-    const sellOrders = useMemo(() => {
+    const { sellOrders, filteredSellOrders } = useMemo(() => {
         const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.sellOrders : [];
-        if (orders.length > 0) {
-            const maxTotalItem = maxBy(orders, (order: OrderItem) => order.displayOrder.total);
-            if (maxTotalItem) {
-                orders.forEach((order: OrderItem) => {
-                    order.displayOrder.percentageOfMaximum =
-                        (order.displayOrder.total / maxTotalItem.displayOrder.total) * 100;
-                });
-            }
-        }
-        return filterMyOrders
-            ? orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase())
-            : orders;
+        return { sellOrders: orders, filteredSellOrders: getFilteredOrders(orders) };
     }, [orderbookQuery.data, filterMyOrders, walletAddress]);
 
     const marketHeading = optionsMarket
@@ -147,7 +140,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                     <SidesContainer>
                         {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.SELL) && (
                             <OrderbookSide
-                                orders={sellOrders}
+                                orders={filteredSellOrders}
                                 orderSide="sell"
                                 optionSide={optionSide}
                                 optionsTokenAddress={optionsTokenAddress}
@@ -159,7 +152,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                         {marketPrice !== '' && <MarketPrice>{marketPrice}</MarketPrice>}
                         {(filter === OrderbookFilterEnum.ALL || filter === OrderbookFilterEnum.BUY) && (
                             <OrderbookSide
-                                orders={buyOrders}
+                                orders={filteredBuyOrders}
                                 orderSide="buy"
                                 optionSide={optionSide}
                                 optionsTokenAddress={optionsTokenAddress}

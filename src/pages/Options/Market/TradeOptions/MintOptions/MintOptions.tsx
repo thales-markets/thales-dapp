@@ -62,6 +62,7 @@ import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
+import numbro from 'numbro';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -198,7 +199,7 @@ const MintOptions: React.FC = () => {
                 BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
             }
         };
-    }, [walletAddress, sellLong, sellLong, longPrice, shortPrice, longAmount, shortAmount]);
+    }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
@@ -206,6 +207,7 @@ const MintOptions: React.FC = () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
+                console.log('gasEstimate', Number(gasEstimate));
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);
@@ -214,7 +216,7 @@ const MintOptions: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isWalletConnected, amount]);
+    }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -343,7 +345,7 @@ const MintOptions: React.FC = () => {
             );
         }
         return (
-            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleMint}>
+            <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleMint}>
                 {!isMinting
                     ? t(`options.market.trade-options.mint.confirm-button.label`)
                     : t(`options.market.trade-options.mint.confirm-button.progress-label`)}
@@ -529,9 +531,16 @@ const MintOptions: React.FC = () => {
     };
 
     useEffect(() => {
-        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
-        setLongAmount(amountMinted);
-        setShortAmount(amountMinted);
+        const amountMinted = marketFees
+            ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool))
+            : 0;
+        const formatedAmountMinted = numbro(amountMinted).format({
+            trimMantissa: true,
+            mantissa: 4,
+        });
+
+        setLongAmount(formatedAmountMinted);
+        setShortAmount(formatedAmountMinted);
     }, [amount, marketFees]);
 
     useEffect(() => {
@@ -637,7 +646,9 @@ const MintOptions: React.FC = () => {
                         className={isLongPriceValid ? '' : 'error'}
                         step="0.01"
                     />
-                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sLONG })}
+                    </InputLabel>
                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isLongPriceValid}
@@ -701,7 +712,9 @@ const MintOptions: React.FC = () => {
                         className={isShortPriceValid ? '' : 'error'}
                         step="0.01"
                     />
-                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                    <InputLabel>
+                        {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sSHORT })}
+                    </InputLabel>
                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isShortPriceValid}
@@ -747,7 +760,8 @@ const MintOptions: React.FC = () => {
                         marketFees ? marketFees.creator + marketFees.pool : 0
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
-                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0
+                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
+                        2
                     )})`}</ProtocolFeeContent>
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
@@ -756,7 +770,8 @@ const MintOptions: React.FC = () => {
                         marketFees ? marketFees.creator : 0
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.creator : 0
+                        marketFees ? Number(amount) * marketFees.creator : 0,
+                        2
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
@@ -765,7 +780,8 @@ const MintOptions: React.FC = () => {
                         marketFees ? marketFees.pool : 0
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.pool : 0
+                        marketFees ? Number(amount) * marketFees.pool : 0,
+                        2
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <NetworkFees gasLimit={gasLimit} />
@@ -794,6 +810,11 @@ export const ProtocolFeeLabel = styled(SummaryLabel)`
 
 export const ProtocolFeeContent = styled(SummaryContent)`
     font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    text-align: end;
 `;
 
 export const PlaceInOrderbook = styled.div`

@@ -9,9 +9,10 @@ import { MarketRow } from '../UserInfoModal';
 
 type UsersMarketsProps = {
     usersMarkets: OptionsMarkets;
+    onClose: () => void;
 };
 
-const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets }) => {
+const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) => {
     return (
         <>
             {usersMarkets?.map((market, index) => (
@@ -21,6 +22,7 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets }) => {
                     onClick={() => {
                         if (market.phase !== 'expiry') {
                             navigateToOptionsMarket(market.address);
+                            onClose();
                         }
                     }}
                 >

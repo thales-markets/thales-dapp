@@ -533,6 +533,11 @@ const SlippageLabel = styled(SummaryLabel)`
 
 const Price = styled(SummaryContent)<{ isWarning: boolean }>`
     color: ${(props) => (props.isWarning ? 'rgb(240, 185, 11)' : '#f6f6fe')};
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 150px;
+    text-align: end;
 `;
 
 export default TokenSwap;

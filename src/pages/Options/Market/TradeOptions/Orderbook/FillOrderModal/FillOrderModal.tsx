@@ -230,7 +230,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, gasPrice, amount]);
+    }, [isButtonDisabled, gasPrice, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {

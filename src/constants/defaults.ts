@@ -10,3 +10,4 @@ export const DEFAULT_TOKEN_DECIMALS = 18;
 export const DEFAULT_GAS_SPEED = 'fast';
 export const DEFAULT_GAS_BUFFER = 15000;
 export const DEFAULT_GAS_LIMIT = 500000;
+export const DEFAULT_GAS_BUFFER_MULTIPLIER = 1.3;
