@@ -139,6 +139,10 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         color: #b8c6e5;
         cursor: pointer;
     }
+
+    .react-select__value-container {
+        height: 100%;
+    }
     .react-select__menu {
         padding: 0px 4px;
     }

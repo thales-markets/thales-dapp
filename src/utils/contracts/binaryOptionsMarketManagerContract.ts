@@ -142,6 +142,18 @@ export const binaryOptionsMarketDataContract = {
                     name: 'expiryDate',
                     type: 'uint256',
                 },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'long',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'short',
+                    type: 'address',
+                },
             ],
             name: 'MarketCreated',
             type: 'event',

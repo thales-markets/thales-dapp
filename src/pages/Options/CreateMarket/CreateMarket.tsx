@@ -9,14 +9,13 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, FIAT_CURRENCY, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { bytesFormatter, parseBytes32String, bigNumberFormatter } from 'utils/formatters/ethers';
+import { bytesFormatter, bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress, getCustomGasPrice, getGasSpeed, getNetworkId } from 'redux/modules/wallet';
-import { navigateToOptionsMarket } from 'utils/routes';
 import Currency from 'components/Currency';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
@@ -47,6 +46,9 @@ import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOption
 import { COLORS } from 'constants/ui';
 import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
+import ProgressTracker from './ProgressTracker';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -71,6 +73,9 @@ export const CreateMarket: React.FC = () => {
     const [shortAmount, setShortAmount] = useState<number | string>('');
     const [sellLong, setSellLong] = useState<boolean>(false);
     const [sellShort, setSellShort] = useState<boolean>(false);
+    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    const [hasLongAllowance, setLongAllowance] = useState<boolean>(false);
+    const [isLongAllowing, setIsLongAllowing] = useState<boolean>(false);
 
     const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
     const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
@@ -99,10 +104,13 @@ export const CreateMarket: React.FC = () => {
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showWarning, setShowWarning] = useState(false);
+    const [marketCreated, setMarketCreated] = useState(false);
+    const [longAddress, setLong] = useState('');
+    const [shortAddress, setShort] = useState('');
 
     const exchangeRatesQuery = useExchangeRatesQuery();
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-
+    const addressToApprove: string = contractAddresses0x.exchangeProxy;
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPrice = useMemo(
         () =>
@@ -186,19 +194,39 @@ export const CreateMarket: React.FC = () => {
     }, [walletAddress]);
 
     useEffect(() => {
-        const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
         if (!isCreatingMarket) return;
-        binaryOptionsMarketManagerContract.on(
-            BINARY_OPTIONS_EVENTS.MARKET_CREATED,
-            (market: string, creator: string, oracleKey: string) => {
-                if (
-                    creator === walletAddress &&
-                    parseBytes32String(oracleKey) === (currencyKey as CurrencyKeyOptionType).value
-                ) {
-                    navigateToOptionsMarket(market);
+        const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+        binaryOptionsMarketManagerContract.on(BINARY_OPTIONS_EVENTS.MARKET_CREATED, (long: string, short: string) => {
+            console.log(long);
+            console.log(short);
+            setMarketCreated(true);
+            setLong(long);
+            setShort(short);
+            const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
+            console.log(erc20Instance);
+            console.log('skip', shortAddress, isLongAllowing);
+            const getAllowance = async () => {
+                try {
+                    const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                    console.log(allowance);
+                    setLongAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
                 }
-            }
-        );
+            };
+
+            const registerAllowanceListener = () => {
+                erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                        setLongAllowance(true);
+                        setIsLongAllowing(false);
+                    }
+                });
+            };
+
+            getAllowance();
+            registerAllowanceListener();
+        });
         return () => {
             binaryOptionsMarketManagerContract.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
         };
@@ -274,6 +302,98 @@ export const CreateMarket: React.FC = () => {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsCreatingMarket(false);
+            }
+        }
+    };
+
+    const handleLongAllowance = async () => {
+        if (gasPrice !== null) {
+            const erc20Instance = new ethers.Contract(longAddress, erc20Contract.abi, snxJSConnector.signer);
+            try {
+                setIsLongAllowing(true);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasPrice: gasPriceInWei(gasPrice),
+                });
+            } catch (e) {
+                console.log(e);
+                setIsLongAllowing(false);
+            }
+        }
+    };
+
+    // const handleShortAllowance = async () => {
+    //     if (gasPrice !== null) {
+    //         const erc20Instance = new ethers.Contract(
+    //             optionsMarket.shortAddress,
+    //             erc20Contract.abi,
+    //             snxJSConnector.signer
+    //         );
+    //         try {
+    //             setIsShortAllowing(true);
+    //             const gasEstimate = await erc20Instance.estimateGas.approve(
+    //                 addressToApprove,
+    //                 ethers.constants.MaxUint256
+    //             );
+    //             await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+    //                 gasLimit: normalizeGasLimit(Number(gasEstimate)),
+    //                 gasPrice: gasPriceInWei(gasPrice),
+    //             });
+    //         } catch (e) {
+    //             console.log(e);
+    //             setIsShortAllowing(false);
+    //         }
+    //     }
+    // };
+
+    const getSubmitButton = () => {
+        if (!hasAllowance) {
+            return (
+                <Button
+                    style={{ padding: '8px 24px' }}
+                    className="primary"
+                    disabled={isAllowing}
+                    onClick={handleAllowance}
+                >
+                    {isAllowing
+                        ? t('options.create-market.summary.waiting-for-approval-button-label')
+                        : t('options.create-market.summary.approve-manager-button-label')}
+                </Button>
+            );
+        } else {
+            if (!marketCreated) {
+                return (
+                    <Button
+                        style={{ padding: '8px 24px' }}
+                        className="primary"
+                        disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
+                        onClick={handleMarketCreation}
+                    >
+                        {isCreatingMarket
+                            ? t('options.create-market.summary.creating-market-button-label')
+                            : t('options.create-market.summary.create-market-button-label')}
+                    </Button>
+                );
+            } else {
+                if (sellLong) {
+                    if (!hasLongAllowance) {
+                        <Button
+                            style={{ padding: '8px 24px' }}
+                            className="primary"
+                            disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
+                            onClick={handleLongAllowance}
+                        >
+                            {isCreatingMarket
+                                ? t('options.create-market.summary.creating-market-button-label')
+                                : t('options.create-market.summary.create-market-button-label')}
+                        </Button>;
+                    } else {
+                    }
+                }
             }
         }
     };
@@ -617,44 +737,28 @@ export const CreateMarket: React.FC = () => {
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}
-                        >
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                                    {hasAllowance ? (
-                                        <Button
-                                            style={{ padding: '8px 24px' }}
-                                            className="primary"
-                                            disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
-                                            onClick={handleMarketCreation}
-                                        >
-                                            {isCreatingMarket
-                                                ? t('options.create-market.summary.creating-market-button-label')
-                                                : t('options.create-market.summary.create-market-button-label')}
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            style={{ padding: '8px 24px' }}
-                                            className="primary"
-                                            disabled={isAllowing}
-                                            onClick={handleAllowance}
-                                        >
-                                            {isAllowing
-                                                ? t('options.create-market.summary.waiting-for-approval-button-label')
-                                                : t('options.create-market.summary.approve-manager-button-label')}
-                                        </Button>
-                                    )}
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                                    {txErrorMessage && (
-                                        <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                                    )}
-                                </div>
-                            </div>
-                        </MarketSummary>
+                        ></MarketSummary>
                     </FlexDiv>
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+                            {getSubmitButton()}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
+                            {txErrorMessage && (
+                                <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
+                            )}
+                        </div>
+                    </div>
+                    <ProgressTracker
+                        isWalletAccessEnabled={hasAllowance}
+                        isMarketCreated={marketCreated}
+                        showLongProcess={sellLong}
+                        showShortProcesS={sellShort}
+                    ></ProgressTracker>
                 </FlexDivColumn>
             </MainWrapper>
         </Background>
     );
 };
+
 export default CreateMarket;

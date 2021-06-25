@@ -121,7 +121,6 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     </div>
                 </PrettyWrapper>
             </MarketInfo>
-            <Footer>{props.children}</Footer>
         </FlexDivColumn>
     );
 };
@@ -157,10 +156,6 @@ const StrikeBy = styled(FlexDiv)`
 const MarketInfo = styled(FlexDivColumn)`
     padding: 20px 38px;
     font-size: 12px;
-`;
-
-const Footer = styled(FlexDivColumn)`
-    padding: 20px 38px;
 `;
 
 export default MarketSummary;
