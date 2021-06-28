@@ -228,9 +228,9 @@ export const CreateMarket: React.FC = () => {
                 market: string,
                 creator: string,
                 oracleKey: string,
-                strikePrice: string,
-                maturityDate: string,
-                expiryDate: string,
+                _strikePrice: string,
+                _maturityDate: string,
+                _expiryDate: string,
                 long: string,
                 short: string
             ) => {
@@ -238,7 +238,6 @@ export const CreateMarket: React.FC = () => {
                     creator === walletAddress &&
                     parseBytes32String(oracleKey) === (currencyKey as CurrencyKeyOptionType).value
                 ) {
-                    console.log(market, strikePrice, maturityDate, expiryDate);
                     setIsMarketCreated(true);
                     setIsCreatingMarket(false);
                     setMarket(market);
@@ -247,7 +246,7 @@ export const CreateMarket: React.FC = () => {
                     if (!sellLong && !sellShort) {
                         navigateToOptionsMarket(market);
                     }
-                    console.log(shortAddress);
+
                     if (sellLong) {
                         const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
                         const getAllowance = async () => {

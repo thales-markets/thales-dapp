@@ -23,7 +23,6 @@ type ProgressTrackerProps = {
 };
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
-    console.log(props);
     return (
         <Wrapper>
             <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
