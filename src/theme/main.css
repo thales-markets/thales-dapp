@@ -143,6 +143,11 @@ table {
     src: local('Open Sans'), url(../assets/fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
 }
 
+@font-face {
+    font-family: 'Inter';
+    src: local('Inter'), url(../assets/fonts/Inter/Inter-Regular.ttf) format('truetype');
+}
+
 * {
     box-sizing: border-box;
     font-family: 'Titillium Web' !important;

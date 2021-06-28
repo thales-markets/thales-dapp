@@ -53,7 +53,7 @@ const UserInfo: React.FC = () => {
 const UserInfoWrapper = styled(FlexDiv)`
     height: 40px;
     width: 260px;
-    background: #44e1e2;
+    background: #0a2e66;
     border-radius: 30px;
     align-items: center;
     cursor: pointer;
@@ -62,7 +62,7 @@ const UserInfoWrapper = styled(FlexDiv)`
 const EthBalance = styled.p`
     margin: 14px 10px 14px 20px !important;
     flex: 3;
-    background: #44e1e2;
+    background: #0a2e66;
     border-radius: 30px;
     font-weight: bold;
     font-size: 13px;

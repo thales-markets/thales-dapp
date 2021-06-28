@@ -52,10 +52,12 @@ export const Home: React.FC = () => {
                     <Section>
                         <FlexDivColumn>
                             <MarketHeader route={ROUTES.Options.Home} />
-                            <MarketCreation />
                         </FlexDivColumn>
                     </Section>
                     <Section>{hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} />}</Section>
+                    <Section>
+                        <MarketCreation />
+                    </Section>
                     <Section class="explore-markets">
                         <ExploreMarkets optionsMarkets={optionsMarkets} />
                     </Section>
