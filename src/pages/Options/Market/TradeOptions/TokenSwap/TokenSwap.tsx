@@ -28,7 +28,7 @@ import { ethers } from 'ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, SLIPPAGE_THRESHOLD } from 'constants/options';
+import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { Web3Wrapper } from '@0x/web3-wrapper';
@@ -383,6 +383,16 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         );
     };
 
+    const getPriceColor = (priceImpactPercentage: number) => {
+        if (priceImpactPercentage > 0.1 || Number(priceImpactPercentage) < -0.1) {
+            return 'rgb(223, 47, 43)';
+        }
+        if (priceImpactPercentage > 0.01 || Number(priceImpactPercentage) < -0.01) {
+            return 'rgb(240, 185, 11)';
+        }
+        return 'rgb(49, 208, 170)';
+    };
+
     return (
         <Container>
             <FlexDivRow>
@@ -457,14 +467,10 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                             currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
                         })}
                     </SummaryLabel>
-                    <Price
-                        isWarning={
-                            Number(priceImpactPercentage) > SLIPPAGE_THRESHOLD ||
-                            Number(priceImpactPercentage) < -SLIPPAGE_THRESHOLD
-                        }
-                    >{`${formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price))} (${formatPercentageWithSign(
-                        priceImpactPercentage
-                    )})`}</Price>
+                    <Price color={getPriceColor(Number(priceImpactPercentage))}>{`${formatCurrencyWithKey(
+                        SYNTHS_MAP.sUSD,
+                        Number(price)
+                    )} (${formatPercentageWithSign(priceImpactPercentage)})`}</Price>
                 </SummaryItem>
 
                 <SummaryItem>
@@ -531,8 +537,8 @@ const SlippageLabel = styled(SummaryLabel)`
     align-items: center;
 `;
 
-const Price = styled(SummaryContent)<{ isWarning: boolean }>`
-    color: ${(props) => (props.isWarning ? 'rgb(240, 185, 11)' : '#f6f6fe')};
+const Price = styled(SummaryContent)<{ color: string }>`
+    color: ${(props) => props.color};
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

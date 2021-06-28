@@ -295,8 +295,20 @@ export const CreateMarket: React.FC = () => {
                         registerAllowanceListener();
                     }
                 }
-            }
-        );
+            };
+
+            const registerAllowanceListener = () => {
+                erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                        setLongAllowance(true);
+                        setIsLongAllowing(false);
+                    }
+                });
+            };
+
+            getAllowance();
+            registerAllowanceListener();
+        });
         return () => {
             binaryOptionsMarketManagerContract.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
         };
