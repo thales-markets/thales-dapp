@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, FIAT_CURRENCY, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { bytesFormatter, bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { bytesFormatter, bigNumberFormatter, getAddress, parseBytes32String } from 'utils/formatters/ethers';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
@@ -49,6 +49,17 @@ import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import { toBigNumber } from 'utils/formatters/number';
+import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { Web3Wrapper } from '@0x/web3-wrapper';
+import { get0xBaseURL } from 'utils/0x';
+import { LimitOrder, SignatureType } from '@0x/protocol-utils';
+import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
+import axios from 'axios';
+import { refetchOrderbook } from 'utils/queryConnector';
+import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
+import { OptionsMarketInfo } from 'types/options';
+import { navigateToOptionsMarket } from 'utils/routes';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -74,13 +85,6 @@ export const CreateMarket: React.FC = () => {
     const [sellLong, setSellLong] = useState<boolean>(false);
     const [sellShort, setSellShort] = useState<boolean>(false);
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
-    const [hasLongAllowance, setLongAllowance] = useState<boolean>(false);
-    const [isLongAllowing, setIsLongAllowing] = useState<boolean>(false);
-
-    const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
-    const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
-    const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
-    const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
 
     const { t } = useTranslation();
     const { synthsMap: synths } = snxJSConnector;
@@ -104,13 +108,33 @@ export const CreateMarket: React.FC = () => {
     const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [showWarning, setShowWarning] = useState(false);
-    const [marketCreated, setMarketCreated] = useState(false);
+    const [isMarketCreated, setIsMarketCreated] = useState(false);
+    const [market, setMarket] = useState<string>('');
     const [longAddress, setLong] = useState('');
     const [shortAddress, setShort] = useState('');
+    const [hasLongAllowance, setLongAllowance] = useState<boolean>(false);
+    const [isLongAllowing, setIsLongAllowing] = useState<boolean>(false);
+    const [isLongSubmitting, setIsLongSubmitting] = useState<boolean>(false);
+    const [isLongSubmitted, setIsLongSubmitted] = useState<boolean>(false);
+    const [hasShortAllowance, setShortAllowance] = useState<boolean>(false);
+    const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
+    const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
+    const [isShortSubmitted, setIsShortSubmitted] = useState<boolean>(false);
+    const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
+    const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
+    const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
+    const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
 
     const exchangeRatesQuery = useExchangeRatesQuery();
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
+
+    const marketQuery = useBinaryOptionsMarketQuery(market, {
+        enabled: isMarketCreated,
+    });
+
+    const optionsMarket: OptionsMarketInfo | null = marketQuery.isSuccess && marketQuery.data ? marketQuery.data : null;
+
     const ethGasPriceQuery = useEthGasPriceQuery();
     const gasPrice = useMemo(
         () =>
@@ -193,40 +217,86 @@ export const CreateMarket: React.FC = () => {
         };
     }, [walletAddress]);
 
+    const getOrderEndDate = () => toBigNumber(Math.round((optionsMarket as any)?.timeRemaining / 1000));
+
     useEffect(() => {
         if (!isCreatingMarket) return;
         const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-        binaryOptionsMarketManagerContract.on(BINARY_OPTIONS_EVENTS.MARKET_CREATED, (long: string, short: string) => {
-            console.log(long);
-            console.log(short);
-            setMarketCreated(true);
-            setLong(long);
-            setShort(short);
-            const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
-            console.log(erc20Instance);
-            console.log('skip', shortAddress, isLongAllowing);
-            const getAllowance = async () => {
-                try {
-                    const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                    console.log(allowance);
-                    setLongAllowance(!!bigNumberFormatter(allowance));
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-
-            const registerAllowanceListener = () => {
-                erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                        setLongAllowance(true);
-                        setIsLongAllowing(false);
+        binaryOptionsMarketManagerContract.on(
+            BINARY_OPTIONS_EVENTS.MARKET_CREATED,
+            (
+                market: string,
+                creator: string,
+                oracleKey: string,
+                _strikePrice: string,
+                _maturityDate: string,
+                _expiryDate: string,
+                long: string,
+                short: string
+            ) => {
+                if (
+                    creator === walletAddress &&
+                    parseBytes32String(oracleKey) === (currencyKey as CurrencyKeyOptionType).value
+                ) {
+                    setIsMarketCreated(true);
+                    setIsCreatingMarket(false);
+                    setMarket(market);
+                    setLong(long);
+                    setShort(short);
+                    if (!sellLong && !sellShort) {
+                        navigateToOptionsMarket(market);
                     }
-                });
-            };
 
-            getAllowance();
-            registerAllowanceListener();
-        });
+                    if (sellLong) {
+                        const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
+                        const getAllowance = async () => {
+                            try {
+                                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+
+                                setLongAllowance(!!bigNumberFormatter(allowance));
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        };
+
+                        const registerAllowanceListener = () => {
+                            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                                    setLongAllowance(true);
+                                    setIsLongAllowing(false);
+                                }
+                            });
+                        };
+                        getAllowance();
+                        registerAllowanceListener();
+                    }
+
+                    if (sellShort) {
+                        const erc20Instance = new ethers.Contract(short, erc20Contract.abi, snxJSConnector.signer);
+                        const getAllowance = async () => {
+                            try {
+                                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+
+                                setShortAllowance(!!bigNumberFormatter(allowance));
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        };
+
+                        const registerAllowanceListener = () => {
+                            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                                    setShortAllowance(true);
+                                    setIsShortAllowing(false);
+                                }
+                            });
+                        };
+                        getAllowance();
+                        registerAllowanceListener();
+                    }
+                }
+            }
+        );
         return () => {
             binaryOptionsMarketManagerContract.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
         };
@@ -326,29 +396,25 @@ export const CreateMarket: React.FC = () => {
         }
     };
 
-    // const handleShortAllowance = async () => {
-    //     if (gasPrice !== null) {
-    //         const erc20Instance = new ethers.Contract(
-    //             optionsMarket.shortAddress,
-    //             erc20Contract.abi,
-    //             snxJSConnector.signer
-    //         );
-    //         try {
-    //             setIsShortAllowing(true);
-    //             const gasEstimate = await erc20Instance.estimateGas.approve(
-    //                 addressToApprove,
-    //                 ethers.constants.MaxUint256
-    //             );
-    //             await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-    //                 gasLimit: normalizeGasLimit(Number(gasEstimate)),
-    //                 gasPrice: gasPriceInWei(gasPrice),
-    //             });
-    //         } catch (e) {
-    //             console.log(e);
-    //             setIsShortAllowing(false);
-    //         }
-    //     }
-    // };
+    const handleShortAllowance = async () => {
+        if (gasPrice !== null) {
+            const erc20Instance = new ethers.Contract(shortAddress, erc20Contract.abi, snxJSConnector.signer);
+            try {
+                setIsShortAllowing(true);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasPrice: gasPriceInWei(gasPrice),
+                });
+            } catch (e) {
+                console.log(e);
+                setIsShortAllowing(false);
+            }
+        }
+    };
 
     const getSubmitButton = () => {
         if (!hasAllowance) {
@@ -364,37 +430,163 @@ export const CreateMarket: React.FC = () => {
                         : t('options.create-market.summary.approve-manager-button-label')}
                 </Button>
             );
-        } else {
-            if (!marketCreated) {
-                return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary"
-                        disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
-                        onClick={handleMarketCreation}
-                    >
-                        {isCreatingMarket
-                            ? t('options.create-market.summary.creating-market-button-label')
-                            : t('options.create-market.summary.create-market-button-label')}
-                    </Button>
-                );
-            } else {
-                if (sellLong) {
-                    if (!hasLongAllowance) {
-                        <Button
-                            style={{ padding: '8px 24px' }}
-                            className="primary"
-                            disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
-                            onClick={handleLongAllowance}
-                        >
-                            {isCreatingMarket
-                                ? t('options.create-market.summary.creating-market-button-label')
-                                : t('options.create-market.summary.create-market-button-label')}
-                        </Button>;
-                    } else {
-                    }
+        }
+        if (!isMarketCreated) {
+            return (
+                <Button
+                    style={{ padding: '8px 24px' }}
+                    className="primary"
+                    disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
+                    onClick={handleMarketCreation}
+                >
+                    {isCreatingMarket
+                        ? t('options.create-market.summary.creating-market-button-label')
+                        : t('options.create-market.summary.create-market-button-label')}
+                </Button>
+            );
+        }
+        if (sellLong && !hasLongAllowance) {
+            return (
+                <Button
+                    style={{ padding: '8px 24px' }}
+                    className="primary"
+                    disabled={isLongAllowing}
+                    onClick={handleLongAllowance}
+                >
+                    {!isLongAllowing
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: SYNTHS_MAP.sLONG,
+                          })}
+                </Button>
+            );
+        }
+
+        if (sellShort && !hasShortAllowance) {
+            return (
+                <Button
+                    style={{ padding: '8px 24px' }}
+                    className="primary"
+                    disabled={isShortAllowing}
+                    onClick={handleShortAllowance}
+                >
+                    {!isShortAllowing
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: SYNTHS_MAP.sSHORT,
+                          })}
+                </Button>
+            );
+        }
+        if (sellLong && hasLongAllowance && !isLongSubmitted) {
+            return (
+                <Button
+                    style={{ padding: '8px 24px' }}
+                    className="primary"
+                    disabled={isLongSubmitting || isLongSubmitted}
+                    onClick={handleSubmitOrder.bind(this, longPrice, longAddress, longAmount, true)}
+                >
+                    {!isLongSubmitting
+                        ? t(`options.market.trade-options.place-order.confirm-button.label`)
+                        : t(`options.market.trade-options.place-order.confirm-button.progress-label`)}
+                </Button>
+            );
+        }
+
+        if (sellShort && hasShortAllowance && !isShortSubmitted) {
+            return (
+                <Button
+                    style={{ padding: '8px 24px' }}
+                    className="primary"
+                    disabled={isShortSubmitting || isShortSubmitted}
+                    onClick={handleSubmitOrder.bind(this, shortPrice, shortAddress, shortAmount, false)}
+                >
+                    {!isShortSubmitting
+                        ? t(`options.market.trade-options.place-order.confirm-button.label`)
+                        : t(`options.market.trade-options.place-order.confirm-button.progress-label`)}
+                </Button>
+            );
+        }
+    };
+
+    const handleSubmitOrder = async (
+        price: number | string,
+        makerToken: string,
+        optionsAmount: number | string,
+        isLong?: boolean
+    ) => {
+        const {
+            contracts: { SynthsUSD },
+        } = snxJSConnector.snxJS as any;
+        setTxErrorMessage(null);
+        isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
+
+        const baseUrl = get0xBaseURL(networkId);
+        const placeOrderUrl = `${baseUrl}sra/v4/order`;
+
+        const makerAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(optionsAmount), DEFAULT_TOKEN_DECIMALS);
+        const takerAmount = Web3Wrapper.toBaseUnitAmount(
+            toBigNumber(Number(optionsAmount) * Number(price)),
+            DEFAULT_TOKEN_DECIMALS
+        );
+        const expiry = getOrderEndDate();
+        const salt = generatePseudoRandomSalt();
+
+        try {
+            const createSignedOrderV4Async = async () => {
+                const order = new LimitOrder({
+                    makerToken,
+                    takerToken: SynthsUSD.address,
+                    makerAmount,
+                    takerAmount,
+                    maker: walletAddress,
+                    sender: NULL_ADDRESS,
+                    expiry,
+                    salt,
+                    chainId: networkId,
+                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+                });
+
+                try {
+                    const signature = await order.getSignatureWithProviderAsync(
+                        (snxJSConnector.signer?.provider as any).provider,
+                        SignatureType.EIP712
+                    );
+                    return { ...order, signature };
+                } catch (e) {
+                    console.log(e);
                 }
+            };
+
+            const signedOrder = await createSignedOrderV4Async();
+
+            try {
+                await axios({
+                    method: 'POST',
+                    url: placeOrderUrl,
+                    data: signedOrder,
+                });
+                isLong ? setIsLongSubmitted(true) : setIsShortSubmitted(true);
+
+                refetchOrderbook(makerToken);
+                if (isLong && !sellShort) {
+                    navigateToOptionsMarket(market);
+                    return;
+                }
+                if (!isLong) {
+                    navigateToOptionsMarket(market);
+                    return;
+                }
+            } catch (err) {
+                console.error(JSON.stringify(err.response.data));
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             }
+            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+        } catch (e) {
+            console.error(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
         }
     };
 
@@ -751,9 +943,19 @@ export const CreateMarket: React.FC = () => {
                     </div>
                     <ProgressTracker
                         isWalletAccessEnabled={hasAllowance}
-                        isMarketCreated={marketCreated}
+                        isAllowing={isAllowing}
+                        isMarketCreated={isMarketCreated}
+                        isCreating={isCreatingMarket}
+                        isLongApproved={hasLongAllowance}
+                        isLongAllowing={isLongAllowing}
+                        isShortApproved={hasShortAllowance}
+                        isShortAllowing={isShortAllowing}
+                        isLongSubmitted={isLongSubmitted}
+                        isLongSubmitting={isLongSubmitting}
+                        isShortSubmitted={isShortSubmitted}
+                        isShortSubmitting={isShortSubmitting}
                         showLongProcess={sellLong}
-                        showShortProcesS={sellShort}
+                        showShortProcess={sellShort}
                     ></ProgressTracker>
                 </FlexDivColumn>
             </MainWrapper>

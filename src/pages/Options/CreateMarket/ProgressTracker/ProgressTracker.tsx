@@ -7,20 +7,29 @@ import styled from 'styled-components';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
+    isAllowing?: boolean;
     isMarketCreated?: boolean;
+    isCreating?: boolean;
     isLongApproved?: boolean;
+    isLongAllowing?: boolean;
     isShortApproved?: boolean;
+    isShortAllowing?: boolean;
     isLongSubmitted?: boolean;
+    isLongSubmitting?: boolean;
     isShortSubmitted?: boolean;
+    isShortSubmitting?: boolean;
     showLongProcess?: boolean;
-    showShortProcesS?: boolean;
+    showShortProcess?: boolean;
 };
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
     return (
         <Wrapper>
             <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
-                <Image src={props.isWalletAccessEnabled ? stateComplete : stateCurrent}></Image>
+                <Image
+                    className={props.isAllowing ? 'blob' : ''}
+                    src={props.isWalletAccessEnabled ? stateComplete : stateCurrent}
+                ></Image>
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label className="text-s pale-grey" style={{ left: -36 }}>
                     Wallet Access
@@ -29,6 +38,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
 
             <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
                 <Image
+                    className={props.isCreating ? 'blob' : ''}
                     src={
                         !props.isWalletAccessEnabled ? stateEmpty : props.isMarketCreated ? stateComplete : stateCurrent
                     }
@@ -36,7 +46,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 <Line className={props.isMarketCreated ? 'fill' : ''}></Line>
                 <Label className="text-s pale-grey">Creating market</Label>
             </FlexDiv>
-            {!props.showLongProcess && !props.showShortProcesS && (
+            {!props.showLongProcess && !props.showShortProcess && (
                 <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 0 }}>
                     <Image src={!props.isMarketCreated ? stateEmpty : stateComplete}></Image>
                     <Label className="text-s pale-grey" style={{ left: -20 }}>
@@ -47,6 +57,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
             {props.showLongProcess && (
                 <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
                     <Image
+                        className={props.isLongAllowing ? 'blob' : ''}
                         src={!props.isMarketCreated ? stateEmpty : props.isLongApproved ? stateComplete : stateCurrent}
                     ></Image>
                     <Line className={props.isLongApproved ? 'fill' : ''}></Line>
@@ -54,10 +65,17 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 </FlexDiv>
             )}
 
-            {props.showShortProcesS && (
+            {props.showShortProcess && (
                 <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
                     <Image
-                        src={!props.isLongApproved ? stateEmpty : props.isShortApproved ? stateComplete : stateCurrent}
+                        className={props.isShortAllowing ? 'blob' : ''}
+                        src={
+                            (props.showLongProcess && !props.isLongApproved) || !props.isMarketCreated
+                                ? stateEmpty
+                                : props.isShortApproved
+                                ? stateComplete
+                                : stateCurrent
+                        }
                     ></Image>
                     <Line className={props.isShortApproved ? 'fill' : ''}></Line>
                     <Label className="text-s pale-grey">Approving sShort</Label>
@@ -65,20 +83,32 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
             )}
 
             {props.showLongProcess && (
-                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: props.showShortProcesS ? 1 : 0 }}>
+                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: props.showShortProcess ? 1 : 0 }}>
                     <Image
-                        src={!props.isShortApproved ? stateEmpty : props.isLongSubmitted ? stateComplete : stateCurrent}
+                        className={props.isLongSubmitting ? 'blob' : ''}
+                        src={
+                            props.showShortProcess && !props.isShortApproved
+                                ? stateEmpty
+                                : props.isLongSubmitted
+                                ? stateComplete
+                                : stateCurrent
+                        }
                     ></Image>
-                    {props.showShortProcesS && <Line className={props.isLongSubmitted ? 'fill' : ''}></Line>}
+                    {props.showShortProcess && <Line className={props.isLongSubmitted ? 'fill' : ''}></Line>}
                     <Label className="text-s pale-grey">Submitting sLong</Label>
                 </FlexDiv>
             )}
 
-            {props.showShortProcesS && (
+            {props.showShortProcess && (
                 <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 0 }}>
                     <Image
+                        className={props.isShortSubmitting ? 'blob' : ''}
                         src={
-                            !props.isLongSubmitted ? stateEmpty : props.isShortSubmitted ? stateComplete : stateCurrent
+                            (props.showLongProcess && !props.isLongSubmitted) || !props.isShortApproved
+                                ? stateEmpty
+                                : props.isShortSubmitted
+                                ? stateComplete
+                                : stateCurrent
                         }
                     ></Image>
                     <Label className="text-s pale-grey">Submitting sShort</Label>
@@ -92,6 +122,7 @@ export default ProgressTracker;
 
 const Wrapper = styled(FlexDiv)`
     margin-top: 80px;
+    margin-bottom: 120px;
     padding: 0 200px;
     align-items: center;
     justify-content: center;
