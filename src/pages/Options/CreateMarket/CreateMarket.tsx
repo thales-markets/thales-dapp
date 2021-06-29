@@ -23,7 +23,7 @@ import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button, FlexDivR
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
-import { Error, InputsWrapper, LongSlider, ShortSlider } from './components';
+import { Error, ErrorMessage, InputsWrapper, LongSlider, ShortSlider } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 
@@ -38,7 +38,6 @@ import {
     SliderRange,
 } from '../Market/components';
 import { Message } from 'semantic-ui-react';
-import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
 import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOptions';
@@ -591,7 +590,7 @@ export const CreateMarket: React.FC = () => {
 
     const formattedMaturityDate = maturityDate ? formatShortDate(maturityDate) : EMPTY_VALUE;
     const timeLeftToExercise = maturityDate
-        ? formatDuration(intervalToDuration({ start: maturityDate, end: add(maturityDate, { weeks: 26 }) }), {
+        ? formatDuration(intervalToDuration({ start: maturityDate, end: add(maturityDate, { months: 6 }) }), {
               format: ['months'],
           })
         : EMPTY_VALUE;
@@ -614,10 +613,10 @@ export const CreateMarket: React.FC = () => {
                                 {t('options.create-market.note')}
                             </Text>
                             <InputsWrapper>
-                                <FlexDivRow className={isCurrencyKeyValid ? '' : 'error'}>
-                                    <ShortInputContainer style={{ zIndex: 10 }}>
+                                <FlexDivRow>
+                                    <ShortInputContainer style={{ marginBottom: 40, zIndex: 4 }}>
                                         <ReactSelect
-                                            className="select-override"
+                                            className={!isCurrencyKeyValid ? 'error' : ''}
                                             filterOption={(option: any, rawInput: any) =>
                                                 option.label.toLowerCase().includes(rawInput.toLowerCase()) ||
                                                 getSynthName(option.value)
@@ -648,13 +647,14 @@ export const CreateMarket: React.FC = () => {
                                                 if (price) setStrikePrice(price.toFixed(4).replace(/\.0+$/, ''));
                                             }}
                                         />
-                                        <InputLabel>{t('options.create-market.details.select-asset-label')}</InputLabel>
-                                        {!isCurrencyKeyValid && (
-                                            <Error className="text-xxxs red">Please select asset.</Error>
-                                        )}
+                                        <InputLabel style={{ zIndex: 100 }}>
+                                            {t('options.create-market.details.select-asset-label')}
+                                        </InputLabel>
+                                        <ErrorMessage show={!isCurrencyKeyValid} text="Please select asset." />
                                     </ShortInputContainer>
-                                    <ShortInputContainer>
+                                    <ShortInputContainer style={{ marginBottom: 40 }}>
                                         <Input
+                                            className={!isStrikePriceValid ? 'error' : ''}
                                             onChange={(e) => {
                                                 if (Number(e.target.value) > 0) {
                                                     setIsStrikePriceValid(true);
@@ -682,18 +682,14 @@ export const CreateMarket: React.FC = () => {
                                                     setIsStrikePriceValid(false);
                                                 }
                                             }}
-                                            id="strike-price"
+                                            type="number"
                                         />
                                         <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
                                         <CurrencyLabel>{USD_SIGN}</CurrencyLabel>
-
-                                        <ValidationMessage
-                                            showValidation={!isStrikePriceValid}
-                                            message="Please enter strike price."
-                                            onDismiss={() => {
-                                                setIsStrikePriceValid(true);
-                                            }}
-                                        ></ValidationMessage>
+                                        <ErrorMessage
+                                            show={!isStrikePriceValid}
+                                            text="Please enter strike price."
+                                        ></ErrorMessage>
 
                                         {showWarning && (
                                             <Error className="text-xxxs warning">
@@ -703,7 +699,7 @@ export const CreateMarket: React.FC = () => {
                                     </ShortInputContainer>
                                 </FlexDivRow>
                                 <FlexDivRow>
-                                    <ShortInputContainer>
+                                    <ShortInputContainer style={{ marginBottom: 40 }}>
                                         <DatePicker
                                             id="maturity-date"
                                             dateFormat="MMM d, yyyy h:mm aa"
@@ -720,10 +716,10 @@ export const CreateMarket: React.FC = () => {
                                     </ShortInputContainer>
                                     <ShortInputContainer
                                         className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
-                                        style={{ position: 'relative' }}
+                                        style={{ position: 'relative', marginBottom: 40 }}
                                     >
                                         <Input
-                                            className="input-override"
+                                            className={!isAmountValid || !userHasEnoughFunds ? 'error' : ''}
                                             value={initialFundingAmount}
                                             onChange={(e) => {
                                                 setInitialFundingAmount(parseInt(e.target.value, 10));
@@ -746,26 +742,30 @@ export const CreateMarket: React.FC = () => {
                                             type="number"
                                         />
                                         <InputLabel>
-                                            {' '}
                                             {t('options.create-market.details.funding-amount.label')}
                                         </InputLabel>
                                         <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                                         <Text
                                             className="text-xxxs grey"
-                                            style={{ margin: '6px 0px 8px', lineHeight: '16px' }}
+                                            style={{
+                                                margin: '4px 0 6px 6px',
+                                                lineHeight: '16px',
+                                                position: 'absolute',
+                                                bottom: -40,
+                                            }}
                                         >
                                             {t('options.create-market.details.funding-amount.desc')}
                                         </Text>
-                                        {!isAmountValid && (
-                                            <Error className="text-xxxs red">
-                                                Please enter funding amount. MIn 1000.00 sUSD is required.
-                                            </Error>
-                                        )}
-                                        {isAmountValid && !userHasEnoughFunds && (
-                                            <Error className="text-xxxs red">
-                                                Please ensure your wallet has sufficient sUSD.
-                                            </Error>
-                                        )}
+
+                                        <ErrorMessage
+                                            show={!isAmountValid}
+                                            text="Please enter funding amount. MIn 1000.00 sUSD is required."
+                                        />
+
+                                        <ErrorMessage
+                                            show={isAmountValid && !userHasEnoughFunds}
+                                            text="Please ensure your wallet has sufficient sUSD."
+                                        />
                                     </ShortInputContainer>
                                 </FlexDivRow>
                                 <Text className="text-xxxs pale-grey bold ls1 uppercase">
