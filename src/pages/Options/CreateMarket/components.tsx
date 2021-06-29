@@ -120,31 +120,31 @@ export const InputsWrapper = styled(FlexDivColumn)`
     background: #04045a;
 `;
 
-export const ErrorMessage: React.FC<{ text: string; show: boolean }> = ({ text, show }) => {
-    const Wrapper = styled(FlexDivCentered)`
-        background: #e9bcbc;
-        justify-content: flex-start;
-        white-space: pre;
-        padding-right: 4px;
-        border-radius: 5px;
+const Wrapper = styled(FlexDivCentered)`
+    background: #e9bcbc;
+    justify-content: flex-start;
+    white-space: pre;
+    padding-right: 4px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: -30px;
+
+    &.hide {
+        display: none;
+    }
+
+    &:after {
+        content: '';
         position: absolute;
-        bottom: -30px;
+        top: -12px;
+        left: 30px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #e9bcbc transparent;
+    }
+`;
 
-        &.hide {
-            display: none;
-        }
-
-        &:after {
-            content: '';
-            position: absolute;
-            top: -12px;
-            left: 30px;
-            border-width: 6px;
-            border-style: solid;
-            border-color: transparent transparent #e9bcbc transparent;
-        }
-    `;
-
+export const ErrorMessage: React.FC<{ text: string; show: boolean }> = ({ text, show }) => {
     return (
         <Wrapper className={show ? '' : 'hide'} style={{ background: '#E9BCBC', borderRadius: 5 }}>
             <Image style={{ width: 12, height: 12, margin: 6 }} src={errorIcon}></Image>

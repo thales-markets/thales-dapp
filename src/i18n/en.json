@@ -256,7 +256,7 @@
                 },
                 "wallet-access": "Before you can create a new market, enable wallet access:",
                 "create-market-button-label": "Create market",
-                "creating-market-button-label": "creating market...",
+                "creating-market-button-label": "Creating market...",
                 "approve-manager-button-label": "Approve",
                 "waiting-for-approval-button-label": "Approving...",
                 "note": "*When creating a market you will:",
@@ -423,6 +423,8 @@
                     "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                     "confirm-button": {
                         "label": "Submit order",
+                        "long": "Submit sLong order",
+                        "short": "Submit sShort order",
                         "progress-label": "Submitting order in progress..."
                     },
                     "swap-confirm-button": {

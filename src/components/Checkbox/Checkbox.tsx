@@ -34,6 +34,9 @@ const CheckboxInput = styled.input`
     cursor: pointer;
     height: 0;
     width: 0;
+    &:disabled + span {
+        border: 1px solid #f6f6fe80;
+    }
 `;
 
 const CheckboxContainer = styled.label`

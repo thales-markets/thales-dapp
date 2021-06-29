@@ -246,11 +246,12 @@ export const CreateMarket: React.FC = () => {
                     }
 
                     if (sellLong) {
+                        console.log(walletAddress, addressToApprove);
+                        console.log(long);
                         const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
                         const getAllowance = async () => {
                             try {
                                 const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-
                                 setLongAllowance(!!bigNumberFormatter(allowance));
                             } catch (e) {
                                 console.log(e);
@@ -270,11 +271,13 @@ export const CreateMarket: React.FC = () => {
                     }
 
                     if (sellShort) {
+                        console.log(walletAddress, addressToApprove);
+                        console.log(short);
                         const erc20Instance = new ethers.Contract(short, erc20Contract.abi, snxJSConnector.signer);
+
                         const getAllowance = async () => {
                             try {
                                 const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-
                                 setShortAllowance(!!bigNumberFormatter(allowance));
                             } catch (e) {
                                 console.log(e);
@@ -322,10 +325,14 @@ export const CreateMarket: React.FC = () => {
 
     useEffect(() => {
         if (initialFundingAmount) {
-            setIsLongAmountValid(longAmount ? longAmount <= initialFundingAmount : true);
-            setIsShortAmountValid(shortAmount ? shortAmount <= initialFundingAmount : true);
-            setIsLongPriceValid(longPrice ? Number(longPrice) <= 1 && Number(longPrice) > 0 : true);
-            setIsShortPriceValid(shortPrice ? Number(shortPrice) <= 1 && Number(shortPrice) > 0 : true);
+            if (sellLong) {
+                setIsLongAmountValid(longAmount ? longAmount <= initialFundingAmount : false);
+                setIsShortAmountValid(shortAmount ? shortAmount <= initialFundingAmount : false);
+            }
+            if (sellShort) {
+                setIsLongPriceValid(longPrice ? Number(longPrice) <= 1 && Number(longPrice) > 0 : false);
+                setIsShortPriceValid(shortPrice ? Number(shortPrice) <= 1 && Number(shortPrice) > 0 : false);
+            }
         }
     }, [initialFundingAmount, longAmount, longPrice, shortAmount, shortPrice]);
 
@@ -481,11 +488,11 @@ export const CreateMarket: React.FC = () => {
                 <Button
                     style={{ padding: '8px 24px' }}
                     className="primary"
-                    disabled={isLongSubmitting || isLongSubmitted}
+                    disabled={!isLongAmountValid || isLongSubmitting || isLongSubmitted}
                     onClick={handleSubmitOrder.bind(this, longPrice, longAddress, longAmount, true)}
                 >
                     {!isLongSubmitting
-                        ? t(`options.market.trade-options.place-order.confirm-button.label`)
+                        ? t(`options.market.trade-options.place-order.confirm-button.long`)
                         : t(`options.market.trade-options.place-order.confirm-button.progress-label`)}
                 </Button>
             );
@@ -496,11 +503,11 @@ export const CreateMarket: React.FC = () => {
                 <Button
                     style={{ padding: '8px 24px' }}
                     className="primary"
-                    disabled={isShortSubmitting || isShortSubmitted}
+                    disabled={!isShortAmountValid || isShortSubmitting || isShortSubmitted}
                     onClick={handleSubmitOrder.bind(this, shortPrice, shortAddress, shortAmount, false)}
                 >
                     {!isShortSubmitting
-                        ? t(`options.market.trade-options.place-order.confirm-button.label`)
+                        ? t(`options.market.trade-options.place-order.confirm-button.short`)
                         : t(`options.market.trade-options.place-order.confirm-button.progress-label`)}
                 </Button>
             );
@@ -643,8 +650,6 @@ export const CreateMarket: React.FC = () => {
                                             onChange={(option: any) => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
-                                                const price = get(exchangeRates, option.value, null);
-                                                if (price) setStrikePrice(price.toFixed(4).replace(/\.0+$/, ''));
                                             }}
                                         />
                                         <InputLabel style={{ zIndex: 100 }}>
@@ -661,6 +666,7 @@ export const CreateMarket: React.FC = () => {
                                                     setStrikePrice(Number(e.target.value));
                                                 } else {
                                                     setIsStrikePriceValid(false);
+                                                    setStrikePrice('');
                                                 }
 
                                                 if (Number(e.target.value) > 0 && currencyKey) {
@@ -723,6 +729,8 @@ export const CreateMarket: React.FC = () => {
                                             value={initialFundingAmount}
                                             onChange={(e) => {
                                                 setInitialFundingAmount(parseInt(e.target.value, 10));
+                                                setLongAmount(parseInt(e.target.value, 10));
+                                                setShortAmount(parseInt(e.target.value, 10));
                                                 parseInt(e.target.value) >=
                                                 (networkId === 1
                                                     ? MIN_FUNDING_AMOUNT_MAINNET
@@ -774,6 +782,7 @@ export const CreateMarket: React.FC = () => {
                                 <FlexDiv>
                                     <CheckboxContainer>
                                         <Checkbox
+                                            disabled={!isAmountValid}
                                             checked={sellLong}
                                             value={sellLong.toString()}
                                             onChange={(e: any) => setSellLong(e.target.checked || false)}
@@ -848,6 +857,7 @@ export const CreateMarket: React.FC = () => {
                                 <FlexDiv>
                                     <CheckboxContainer>
                                         <Checkbox
+                                            disabled={!isAmountValid}
                                             checked={sellShort}
                                             value={sellShort.toString()}
                                             onChange={(e: any) => setSellShort(e.target.checked || false)}
