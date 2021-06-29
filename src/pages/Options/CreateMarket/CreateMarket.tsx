@@ -941,6 +941,9 @@ export const CreateMarket: React.FC = () => {
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}
+                            currentPrice={
+                                currencyKey ? get(exchangeRates, currencyKey.value, null)?.toFixed(4).toString() : ''
+                            }
                         ></MarketSummary>
                     </FlexDiv>
                     <div>
