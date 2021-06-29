@@ -36,6 +36,7 @@ const CheckboxInput = styled.input`
     width: 0;
     &:disabled + span {
         border: 1px solid #f6f6fe80;
+        cursor: not-allowed;
     }
 `;
 

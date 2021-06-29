@@ -782,7 +782,7 @@ export const CreateMarket: React.FC = () => {
                                 <FlexDiv>
                                     <CheckboxContainer>
                                         <Checkbox
-                                            disabled={!isAmountValid}
+                                            disabled={!initialFundingAmount || !isAmountValid}
                                             checked={sellLong}
                                             value={sellLong.toString()}
                                             onChange={(e: any) => setSellLong(e.target.checked || false)}
@@ -857,7 +857,7 @@ export const CreateMarket: React.FC = () => {
                                 <FlexDiv>
                                     <CheckboxContainer>
                                         <Checkbox
-                                            disabled={!isAmountValid}
+                                            disabled={!initialFundingAmount || !isAmountValid}
                                             checked={sellShort}
                                             value={sellShort.toString()}
                                             onChange={(e: any) => setSellShort(e.target.checked || false)}
