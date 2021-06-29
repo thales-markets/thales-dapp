@@ -183,13 +183,14 @@
                     "title": "Connect a wallet to create a market or place a bid"
                 },
                 "no-markets": {
-                    "title": "Create a market or place a bid to get started"
+                    "title": "Create a market, mint new options, or find a market you want to trade to get started"
                 },
+                "explore-markets-button-label": "Explore markets",
                 "create-market-button-label": "Create market"
             },
             "explore-markets": {
                 "title": "Bid on open markets:",
-                "discover": "Discover Top-Notch Markets",
+                "trending": "Trending Markets",
                 "table": {
                     "filters": {
                         "markets": {

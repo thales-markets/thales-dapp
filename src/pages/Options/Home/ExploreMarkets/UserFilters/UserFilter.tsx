@@ -22,7 +22,7 @@ const UserFilter: React.FC<UserFilterProps> = ({ color, img, text, className, on
 
 const FiltersWrapper = styled.div`
     position: relative;
-    background: #04045a;
+    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
     border-radius: 20px;
     padding: 20px 40px;
     height: 160px;
@@ -71,7 +71,7 @@ const FiltersIcon = styled.img`
 
 const FiltersText = styled.p`
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 20px;
     text-align: center;
     color: #f6f6fe;

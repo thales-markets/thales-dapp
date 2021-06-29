@@ -99,7 +99,7 @@ const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     display: flex;
     height: 100px;
     align-items: center;
-    justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'end')};
+    justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
 `;
 
 const Sidebar = styled.nav`
