@@ -813,7 +813,7 @@ export const ProtocolFeeContent = styled(SummaryContent)`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 150px;
+    width: 200px;
     text-align: end;
 `;
 

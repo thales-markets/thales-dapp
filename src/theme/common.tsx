@@ -18,6 +18,10 @@ export const FlexDivCentered = styled(FlexDiv)`
     justify-content: center;
 `;
 
+export const FlexDivEnd = styled(FlexDiv)`
+    justify-content: end;
+`;
+
 export const FlexDivRow = styled(FlexDiv)`
     justify-content: space-between;
 `;

@@ -57,7 +57,7 @@ import {
     LightTooltip,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivRow } from 'theme/common';
+import { FlexDivEnd, FlexDivColumn, FlexDivRow } from 'theme/common';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { GWEI_UNIT } from 'constants/network';
@@ -102,6 +102,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
+    const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
 
     const orderSideOptions = [
         {
@@ -325,7 +326,10 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     };
 
     useEffect(() => {
-        console.log(total);
+        setIsSlippageValid(Number(slippage) > 0 && Number(slippage) <= 100);
+    }, [slippage]);
+
+    useEffect(() => {
         setIsAmountValid(
             Number(amount) === 0 ||
                 (Number(amount) > 0 && (isBuy ? Number(total) <= sUSDBalance : Number(amount) <= tokenBalance))
@@ -408,7 +412,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </ShortInputContainer>
                 <ShortInputContainer>
-                    <NumericInput value={amount} onChange={(_, value) => onAmountChange(value)} />
+                    <NumericInput
+                        value={amount}
+                        onChange={(_, value) => onAmountChange(value)}
+                        className={isAmountValid ? '' : 'error'}
+                    />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
@@ -436,30 +444,40 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             )}
             <SummaryContainer>
                 <SummaryItem>
-                    <SlippageLabel>
-                        {t('options.market.trade-options.place-order.slippage-label')}
-                        <LightTooltip title={t('options.market.trade-options.place-order.slippage-tooltip')}>
-                            <StyledQuestionMarkIcon />
-                        </LightTooltip>
-                    </SlippageLabel>
-                    <FlexDivCentered>
-                        {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
-                            <SlippageButton
-                                className={percentage === slippage ? 'selected' : ''}
-                                key={percentage}
-                                onClick={() => setSlippageAndRecalucalte(percentage)}
-                            >
-                                {`${percentage}%`}
-                            </SlippageButton>
-                        ))}
-                        <SlippageContainer>
-                            <SlippageInput
-                                value={slippage}
-                                onChange={(_: any, value: any) => setSlippageAndRecalucalte(Number(value))}
-                            />
-                            <PercentageLabel>%</PercentageLabel>
-                        </SlippageContainer>
-                    </FlexDivCentered>
+                    <FlexDivColumn>
+                        <SlippageLabel>
+                            {t('options.market.trade-options.place-order.slippage-label')}
+                            <LightTooltip title={t('options.market.trade-options.place-order.slippage-tooltip')}>
+                                <StyledQuestionMarkIcon />
+                            </LightTooltip>
+                        </SlippageLabel>
+                    </FlexDivColumn>
+                    <FlexDivColumn>
+                        <FlexDivEnd>
+                            {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
+                                <SlippageButton
+                                    className={percentage === slippage ? 'selected' : ''}
+                                    key={percentage}
+                                    onClick={() => setSlippageAndRecalucalte(percentage)}
+                                >
+                                    {`${percentage}%`}
+                                </SlippageButton>
+                            ))}
+                            <SlippageContainer>
+                                <SlippageInput
+                                    value={slippage}
+                                    onChange={(_: any, value: any) => setSlippageAndRecalucalte(value)}
+                                />
+                                <PercentageLabel>%</PercentageLabel>
+                            </SlippageContainer>
+                        </FlexDivEnd>
+                        <FieldValidationMessage
+                            showValidation={!isSlippageValid}
+                            message={t(`common.errors.invalid-slippage`)}
+                            arrowPosition="right"
+                            marginLeft="40px"
+                        />
+                    </FlexDivColumn>
                 </SummaryItem>
                 <SummaryItem>
                     <SummaryLabel>
@@ -520,8 +538,10 @@ const SlippageInput = styled(NumericInput)`
     width: 80px;
     padding: 0;
     padding-left: 10px;
+    padding-right: 25px;
     border-radius: 5px;
     font-size: 12px;
+    text-overflow: ellipsis;
 `;
 
 const PercentageLabel = styled(CurrencyLabel)`
@@ -535,6 +555,7 @@ const SlippageContainer = styled(InputContainer)`
 const SlippageLabel = styled(SummaryLabel)`
     display: flex;
     align-items: center;
+    margin-top: 5px;
 `;
 
 const Price = styled(SummaryContent)<{ color: string }>`
@@ -542,7 +563,7 @@ const Price = styled(SummaryContent)<{ color: string }>`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 150px;
+    width: 200px;
     text-align: end;
 `;
 
