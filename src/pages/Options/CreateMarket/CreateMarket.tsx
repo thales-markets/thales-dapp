@@ -6,7 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, FIAT_CURRENCY, USD_SIGN } from 'constants/currency';
+import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bytesFormatter, bigNumberFormatter, getAddress, parseBytes32String } from 'utils/formatters/ethers';
@@ -601,11 +601,11 @@ export const CreateMarket: React.FC = () => {
             <MainWrapper>
                 <FlexDivColumn>
                     <MarketHeader route={ROUTES.Options.CreateMarket} />
-                    <Text className="create-market" style={{ padding: '50px 150px 0' }}>
+                    <Text className="create-market" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
 
-                    <FlexDiv style={{ padding: '50px 150px' }}>
+                    <FlexDiv style={{ padding: '50px 100px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
                             <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
                                 {t('options.create-market.subtitle')}
@@ -685,7 +685,7 @@ export const CreateMarket: React.FC = () => {
                                             id="strike-price"
                                         />
                                         <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
-                                        <CurrencyLabel>{FIAT_CURRENCY[0]}</CurrencyLabel>
+                                        <CurrencyLabel>{USD_SIGN}</CurrencyLabel>
 
                                         <ValidationMessage
                                             showValidation={!isStrikePriceValid}

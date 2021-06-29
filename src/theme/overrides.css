@@ -14,13 +14,6 @@
     height: 56px;
 }
 
-.select-override > div {
-    font-weight: bold;
-    font-size: 18px !important;
-    line-height: 32px !important;
-    color: #04045a !important;
-}
-
 .react-select__control--menu-is-open {
     z-index: 24;
 }

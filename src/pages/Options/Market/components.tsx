@@ -100,6 +100,7 @@ export const DoubleShortInputContainer = styled(InputContainer)`
 
 export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     text-transform: ${(prop) => (prop.isUppercase ? 'uppercase' : 'none')};
+    caret-color: transparent;
     > div:first-of-type {
         height: 64px;
         background: #0a2e66;
@@ -144,6 +145,7 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         height: 100%;
     }
     .react-select__menu {
+        font-size: 13px;
         padding: 0px 4px;
     }
     .react-select__control:hover {
