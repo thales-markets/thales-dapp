@@ -4,7 +4,7 @@ import React from 'react';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import Currency from 'components/Currency';
-import { FIAT_CURRENCY_MAP, USD_SIGN } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage } from 'utils/formatters/number';
 import { get } from 'lodash';
@@ -30,16 +30,11 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             <SummaryHeader>
                 <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>
             </SummaryHeader>
-            <Text style={{ textAlign: 'center', marginBottom: 40 }} className="text-s ls25 pale-grey ">
-                {t('options.create-market.summary.subtitle')}
-            </Text>
             <StrikeBy>
                 <div style={{ flex: 1, textAlign: 'center' }}>
                     <Text className="text-xs dusty bold">{t('options.create-market.summary.strikePrice')}</Text>
                     <Text className="text-s pale-grey bold">
-                        {`${USD_SIGN}  ${props.strikingPrice ? props.strikingPrice.toString() : 0} ${
-                            FIAT_CURRENCY_MAP.USD
-                        }`}
+                        {`${USD_SIGN}  ${props.strikingPrice ? props.strikingPrice.toString() : 0}`}
                     </Text>
                 </div>
                 <div
@@ -60,7 +55,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                             props.currencyKey
                                 ? get(exchangeRates, props.currencyKey.value, null)?.toFixed(4).toString()
                                 : ''
-                        } ${FIAT_CURRENCY_MAP.USD}`}
+                        }`}
                     </Text>
                 </div>
             </StrikeBy>
@@ -120,6 +115,13 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                         </div>
                     </div>
                 </PrettyWrapper>
+
+                <Text className="text-xs bold pale-grey ls25" style={{ marginBottom: 12 }}>
+                    {t('options.create-market.summary.note')}
+                </Text>
+                <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                    {t('options.create-market.summary.note1')}
+                </Text>
             </MarketInfo>
         </FlexDivColumn>
     );
