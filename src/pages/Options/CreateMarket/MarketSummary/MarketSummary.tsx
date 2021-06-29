@@ -24,7 +24,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { t } = useTranslation();
     return (
-        <FlexDivColumn style={{ borderLeft: '0.5px solid #00F9FF', marginLeft: '40px', paddingLeft: 55 }}>
+        <Wrapper>
             <SummaryHeader>
                 <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>
             </SummaryHeader>
@@ -121,9 +121,25 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     {t('options.create-market.summary.note1')}
                 </Text>
             </MarketInfo>
-        </FlexDivColumn>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled(FlexDivColumn)`
+    margin-left: 40px;
+    padding-left: 55px;
+    position: relative;
+    &:before {
+        content: '';
+        position: absolute;
+        height: 600px;
+        width: 0.5px;
+        left: 10px;
+        background: #00f9ff;
+        top: 60px;
+        filter: blur(1px);
+    }
+`;
 
 const PrettyWrapper = styled.div`
     background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
@@ -148,8 +164,8 @@ const SummaryHeader = styled.div`
 `;
 
 const StrikeBy = styled(FlexDiv)`
-    padding: 0px 35px 10px 35px;
-    height: 100px;
+    padding: 20px 35px 20px 35px;
+    height: 140px;
     align-items: flex-end;
 `;
 

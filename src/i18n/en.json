@@ -260,7 +260,7 @@
                 "approve-manager-button-label": "Approve",
                 "waiting-for-approval-button-label": "Approving...",
                 "note": "*When creating a market you will:",
-                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\nPay zero Thales protocol fees for minting options tokens.\nPay Ethereum network fees (gas) when approving the market creation."
+                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\n\nPay zero Thales protocol fees for minting options tokens.\n\nPay Ethereum network fees (gas) when approving the market creation."
             }
         },
         "market": {
