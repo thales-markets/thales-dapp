@@ -112,7 +112,8 @@
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
             "invalid-options-price": "The price must be higher than ${{min}} and less than or equal to the ${{max}}",
-            "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}"
+            "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}",
+            "invalid-slippage": "Enter a valid slippage percentage"
         },
         "search": "search",
         "chart": {

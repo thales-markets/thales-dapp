@@ -449,7 +449,11 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
             </FlexDiv>
             <FlexDiv>
                 <ShortInputContainer>
-                    <NumericInput value={amount} onChange={(_, value) => setAmount(value)} />
+                    <NumericInput
+                        value={amount}
+                        onChange={(_, value) => setAmount(value)}
+                        className={isAmountValid ? '' : 'error'}
+                    />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>

@@ -6,14 +6,21 @@ import { FlexDiv } from 'theme/common';
 type FieldValidationMessageProps = {
     showValidation: boolean;
     message: string;
+    arrowPosition?: string;
+    marginLeft?: string;
 };
 
-export const FieldValidationMessage: React.FC<FieldValidationMessageProps> = ({ showValidation, message }) => {
+export const FieldValidationMessage: React.FC<FieldValidationMessageProps> = ({
+    showValidation,
+    message,
+    marginLeft,
+    arrowPosition = 'left',
+}) => {
     return (
         <>
             {showValidation && (
-                <Container>
-                    <Message>
+                <Container marginLeft={marginLeft}>
+                    <Message arrowPosition={arrowPosition}>
                         <StyledValidationErrorIcon /> {message}
                     </Message>
                 </Container>
@@ -22,11 +29,12 @@ export const FieldValidationMessage: React.FC<FieldValidationMessageProps> = ({ 
     );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ marginLeft?: string }>`
     position: relative;
+    margin-left: ${(props) => props.marginLeft || '0px'};
 `;
 
-const Message = styled(FlexDiv)`
+const Message = styled(FlexDiv)<{ arrowPosition: string }>`
     align-items: center;
     background: #e9bcbc;
     border-radius: 5px;
@@ -42,7 +50,7 @@ const Message = styled(FlexDiv)`
         content: '';
         position: absolute;
         top: -7px;
-        left: 15%;
+        left: ${(props) => (props.arrowPosition === 'left' ? '15%' : '85%')};
         border-width: 7px;
         border-style: solid;
         border-color: transparent transparent #e9bcbc transparent;
