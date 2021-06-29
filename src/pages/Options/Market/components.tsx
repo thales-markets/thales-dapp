@@ -164,6 +164,9 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         box-sizing: border-box;
         cursor: pointer;
     }
+    &.error .react-select__control {
+        border: 2px solid #e53720;
+    }
 `;
 
 export const AmountButtonContainer = styled(FlexDivCentered)``;

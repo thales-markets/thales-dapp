@@ -257,11 +257,11 @@
                 },
                 "wallet-access": "Before you can create a new market, enable wallet access:",
                 "create-market-button-label": "Create market",
-                "creating-market-button-label": "creating market...",
+                "creating-market-button-label": "Creating market...",
                 "approve-manager-button-label": "Approve",
                 "waiting-for-approval-button-label": "Approving...",
                 "note": "*When creating a market you will:",
-                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\nPay zero Thales protocol fees for minting options tokens.\nPay Ethereum network fees (gas) when approving the market creation."
+                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\n\nPay zero Thales protocol fees for minting options tokens.\n\nPay Ethereum network fees (gas) when approving the market creation."
             }
         },
         "market": {
@@ -424,6 +424,8 @@
                     "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                     "confirm-button": {
                         "label": "Submit order",
+                        "long": "Submit sLong order",
+                        "short": "Submit sShort order",
                         "progress-label": "Submitting order in progress..."
                     },
                     "swap-confirm-button": {

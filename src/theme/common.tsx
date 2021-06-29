@@ -205,8 +205,9 @@ export const Button = styled.button`
     }
 
     &:disabled {
-        background: #748bc6;
-        color: #b5bbc9;
+        background: #748bc6 !important;
+        color: #b5bbc9 !important;
+        cursor: not-allowed;
     }
     @media (max-width: 468px) {
         font-size: 16px;

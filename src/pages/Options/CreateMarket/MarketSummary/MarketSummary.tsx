@@ -1,18 +1,17 @@
 import { ValueType } from 'react-select';
 import { CurrencyKeyOptionType, MarketFees } from '../CreateMarket';
-import React from 'react';
-import { FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import React, { useMemo } from 'react';
+import { FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage } from 'utils/formatters/number';
-import { get } from 'lodash';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
     strikingPrice?: number | string;
+    currentPrice?: number | string;
     maturityDate?: string;
     initialFundingAmount?: number | string;
     timeLeftToExercise?: string;
@@ -20,43 +19,55 @@ type MarketSummaryProps = {
 };
 
 const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
-    const exchangeRatesQuery = useExchangeRatesQuery();
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { t } = useTranslation();
+
+    const difference = useMemo(() => {
+        if (props.strikingPrice && props.currentPrice) {
+            const percentage = (Number(props.strikingPrice) / Number(props.currentPrice) - 1) * 100;
+            return { value: Math.abs(Math.round(percentage)), side: percentage > 0 };
+        }
+        return null;
+    }, [props.strikingPrice, props.currentPrice]);
+
     return (
-        <FlexDivColumn style={{ borderLeft: '0.5px solid #00F9FF', marginLeft: '40px', paddingLeft: 55 }}>
+        <Wrapper>
             <SummaryHeader>
                 <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>
             </SummaryHeader>
-            <StrikeBy>
-                <div style={{ flex: 1, textAlign: 'center' }}>
-                    <Text className="text-xs dusty bold">{t('options.create-market.summary.strikePrice')}</Text>
-                    <Text className="text-s pale-grey bold">
-                        {`${USD_SIGN}  ${props.strikingPrice ? props.strikingPrice.toString() : 0}`}
-                    </Text>
-                </div>
-                <div
-                    className="text-m pale-grey bold uppercase ls5"
-                    style={{ flex: 1, display: 'flex', justifyContent: 'center', alignSelf: 'flex-start' }}
-                >
+            <FlexDivColumn style={{ justifyContent: 'space-around', flex: 0, minHeight: 160 }}>
+                <FlexDivCentered className="text-m pale-grey bold uppercase ls5">
                     {props.currencyKey && (
-                        <FlexDivCentered>
-                            <Currency.Icon currencyKey={props.currencyKey.value} />
-                            {props.currencyKey.label}
-                        </FlexDivCentered>
+                        <>
+                            <Currency.Icon currencyKey={props.currencyKey.value} /> {props.currencyKey?.label}{' '}
+                        </>
                     )}
-                </div>
-                <div style={{ flex: 1, textAlign: 'center' }}>
-                    <Text className="text-xs dusty bold">{t('options.create-market.summary.current')}</Text>
-                    <Text className="text-s pale-grey bold">
-                        {`${USD_SIGN}   ${
-                            props.currencyKey
-                                ? get(exchangeRates, props.currencyKey.value, null)?.toFixed(4).toString()
-                                : ''
-                        }`}
-                    </Text>
-                </div>
-            </StrikeBy>
+                </FlexDivCentered>
+                <FlexDivCentered>
+                    <div style={{ flex: 1, textAlign: 'center' }}>
+                        <Text className="text-xs dusty bold">{t('options.create-market.summary.strikePrice')}</Text>
+                        <Text className="text-s pale-grey bold">
+                            {`${USD_SIGN}  ${props.strikingPrice ? props.strikingPrice.toString() : 0}`}
+                        </Text>
+                    </div>
+                    <div>
+                        {difference && (
+                            <Text
+                                className={
+                                    difference.side ? 'green text-s bold lh24 ls25' : 'red text-s bold lh24 ls25'
+                                }
+                            >
+                                {difference.value}%
+                            </Text>
+                        )}
+                    </div>
+                    <div style={{ flex: 1, textAlign: 'center' }}>
+                        <Text className="text-xs dusty bold">{t('options.create-market.summary.current')}</Text>
+                        <Text className="text-s pale-grey bold">
+                            {`${USD_SIGN}   ${props.currentPrice ? props.currentPrice : 0}`}
+                        </Text>
+                    </div>
+                </FlexDivCentered>
+            </FlexDivColumn>
             <MarketInfo>
                 <PrettyWrapper>
                     <div
@@ -121,9 +132,25 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     {t('options.create-market.summary.note1')}
                 </Text>
             </MarketInfo>
-        </FlexDivColumn>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled(FlexDivColumn)`
+    margin-left: 40px;
+    padding-left: 55px;
+    position: relative;
+    &:before {
+        content: '';
+        position: absolute;
+        height: 600px;
+        width: 0.5px;
+        left: 10px;
+        background: #00f9ff;
+        top: 60px;
+        filter: blur(1px);
+    }
+`;
 
 const PrettyWrapper = styled.div`
     background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
@@ -147,11 +174,11 @@ const SummaryHeader = styled.div`
     text-align: center;
 `;
 
-const StrikeBy = styled(FlexDiv)`
-    padding: 0px 35px 10px 35px;
-    height: 100px;
-    align-items: flex-end;
-`;
+// const StrikeBy = styled(FlexDiv)`
+//     padding: 20px 35px 20px 35px;
+//     height: 140px;
+//     align-items: flex-end;
+// `;
 
 const MarketInfo = styled(FlexDivColumn)`
     padding: 20px 38px;
