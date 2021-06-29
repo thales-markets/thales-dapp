@@ -102,6 +102,10 @@
     letter-spacing: 0.5px;
 }
 
+.ls1 {
+    letter-spacing: 1px;
+}
+
 .text-normal {
     font-weight: normal;
 }

@@ -225,7 +225,8 @@
         "create-market": {
             "back-to-markets": "back to markets",
             "title": "Create a new Binary Options market",
-            "subtitle": "Here you can create a new Binary Options market by selecting an asset, the strike price that bidders can take either side of, when to close the market, the long/short skew, and how much you’re bidding.",
+            "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
+            "note": "* Note: The amount of sUSD deposited will dictate how many long and short options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 sLONG and 1,000 sSHORT options tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
@@ -235,6 +236,7 @@
                     "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
                 }
             },
+            "sellOptions": "Sell minted LONG/SHORT options",
             "summary": {
                 "title": "new market summary:",
                 "subtitle": "You will not pay any fee for creating a market.",
@@ -256,7 +258,9 @@
                 "create-market-button-label": "Create market",
                 "creating-market-button-label": "creating market...",
                 "approve-manager-button-label": "Approve",
-                "waiting-for-approval-button-label": "Approving..."
+                "waiting-for-approval-button-label": "Approving...",
+                "note": "*When creating a market you will:",
+                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\nPay zero Thales protocol fees for minting options tokens.\nPay Ethereum network fees (gas) when approving the market creation."
             }
         },
         "market": {

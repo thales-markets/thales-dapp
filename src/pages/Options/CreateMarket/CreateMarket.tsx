@@ -6,7 +6,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import formatDuration from 'date-fns/formatDuration';
 import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
-import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, FIAT_CURRENCY, USD_SIGN } from 'constants/currency';
+import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bytesFormatter, bigNumberFormatter, getAddress, parseBytes32String } from 'utils/formatters/ethers';
@@ -23,8 +23,7 @@ import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button, FlexDivR
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { formatShortDate } from 'utils/formatters/date';
-import { LINKS } from 'constants/links';
-import { HowItWorks, Error, InputsWrapper, LongSlider, ShortSlider } from './components';
+import { Error, InputsWrapper, LongSlider, ShortSlider } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 
@@ -602,17 +601,17 @@ export const CreateMarket: React.FC = () => {
             <MainWrapper>
                 <FlexDivColumn>
                     <MarketHeader route={ROUTES.Options.CreateMarket} />
-                    <Text className="create-market" style={{ padding: '50px 150px 0' }}>
+                    <Text className="create-market" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
-                    <FlexDiv style={{ padding: '50px 150px' }}>
+
+                    <FlexDiv style={{ padding: '50px 100px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
-                            <Text className="text-s pale-grey" style={{ lineHeight: '24px' }}>
+                            <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
                                 {t('options.create-market.subtitle')}
                             </Text>
-                            <Text style={{ marginBottom: 20, marginTop: 30 }} className="text-s pale-grey">
-                                New to Binary Options? Make sure to read{' '}
-                                <HowItWorks href={LINKS.Blog.HowBinaryOptionsWork}>how it works</HowItWorks> first!
+                            <Text className="text-s pale-grey lh24" style={{ margin: '30px 2px' }}>
+                                {t('options.create-market.note')}
                             </Text>
                             <InputsWrapper>
                                 <FlexDivRow className={isCurrencyKeyValid ? '' : 'error'}>
@@ -686,7 +685,7 @@ export const CreateMarket: React.FC = () => {
                                             id="strike-price"
                                         />
                                         <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
-                                        <CurrencyLabel>{FIAT_CURRENCY[0]}</CurrencyLabel>
+                                        <CurrencyLabel>{USD_SIGN}</CurrencyLabel>
 
                                         <ValidationMessage
                                             showValidation={!isStrikePriceValid}
@@ -769,6 +768,9 @@ export const CreateMarket: React.FC = () => {
                                         )}
                                     </ShortInputContainer>
                                 </FlexDivRow>
+                                <Text className="text-xxxs pale-grey bold ls1 uppercase">
+                                    {t('options.create-market.sellOptions')}
+                                </Text>
                                 <FlexDiv>
                                     <CheckboxContainer>
                                         <Checkbox
