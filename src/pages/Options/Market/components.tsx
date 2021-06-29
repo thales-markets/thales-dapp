@@ -268,7 +268,7 @@ export const SummaryContent = styled.div<{ color?: string }>`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 150px;
+    width: 200px;
     text-align: end;
     color: ${(props) => props.color ?? '#f6f6fe'};
 `;

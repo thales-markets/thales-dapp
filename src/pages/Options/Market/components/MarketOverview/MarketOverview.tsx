@@ -1,17 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
 import { OptionsMarketInfo } from 'types/options';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
 import styled from 'styled-components';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { USD_SIGN } from 'constants/currency';
+import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
 import { formatShortDate } from 'utils/formatters/date';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
-import { LightTooltip, StyledInfoIcon } from '../../components';
-import MarketInfoModal from '../../MarketInfoModal';
-// import { getSynthName } from 'utils/snxJSConnector';
+import { LightTooltip } from '../../components';
+import { getSynthName } from 'utils/snxJSConnector';
+import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import { getEtherscanAddressLink } from 'utils/etherscan';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -19,17 +23,8 @@ type MarketOverviewProps = {
 
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
-    const [marketInfoModalVisible, setMarketInfoModalVisible] = useState<boolean>(false);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const iconProps = { width: '40px', height: '40px' };
-
-    const handleViewMarketDetails = useCallback(() => {
-        setMarketInfoModalVisible(true);
-    }, []);
-
-    const marketHeading = `${optionsMarket.asset} > ${formatCurrencyWithSign(
-        USD_SIGN,
-        optionsMarket.strikePrice
-    )} @ ${formatShortDate(optionsMarket.maturityDate)}`;
 
     return (
         <>
@@ -38,12 +33,18 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <FlexDivCentered>
                         <CurrencyIcon currencyKey={optionsMarket.currencyKey} {...iconProps} />
                         <FlexDivColumnCentered>
-                            {/* <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName> */}
+                            <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
+                                <StyledLink
+                                    href={getEtherscanAddressLink(networkId, optionsMarket.address)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName>{' '}
+                                    <ArrowIcon width="10" height="10" />
+                                </StyledLink>
+                            </LightTooltip>
                             <CryptoKey>{optionsMarket.asset}</CryptoKey>
                         </FlexDivColumnCentered>
-                        <LightTooltip title={t('options.market.overview.market-details-tooltip')}>
-                            <StyledInfoIcon onClick={handleViewMarketDetails} />
-                        </LightTooltip>
                     </FlexDivCentered>
                 </ItemContainer>
                 <ItemContainer>
@@ -69,14 +70,22 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 </ItemContainer>
                 <ItemContainer>
                     <Title>
+                        {t('options.market.overview.deposited-currency-label', {
+                            currencyKey: SYNTHS_MAP.sUSD,
+                        })}
+                    </Title>
+                    <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                </ItemContainer>
+                <ItemContainer>
+                    <Title>
                         {optionsMarket.isResolved
-                            ? t('options.market.overview.maturity-label')
-                            : t('options.market.overview.expiry-label')}
+                            ? t('options.market.overview.expiry-label')
+                            : t('options.market.overview.maturity-label')}
                     </Title>
                     <Content>
                         {optionsMarket.isResolved
-                            ? formatShortDate(optionsMarket.maturityDate)
-                            : formatShortDate(optionsMarket.expiryDate)}
+                            ? formatShortDate(optionsMarket.expiryDate)
+                            : formatShortDate(optionsMarket.maturityDate)}
                     </Content>
                 </ItemContainer>
                 <ItemContainer>
@@ -91,13 +100,6 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
                 </ItemContainer>
             </Container>
-            {marketInfoModalVisible && (
-                <MarketInfoModal
-                    marketHeading={marketHeading}
-                    optionMarket={optionsMarket}
-                    onClose={() => setMarketInfoModalVisible(false)}
-                />
-            )}
         </>
     );
 };
@@ -113,6 +115,7 @@ const Container = styled(FlexDiv)`
     border-radius: 16px;
     margin-bottom: 20px;
 `;
+
 const InnerItemContainer = styled(FlexDivCentered)`
     flex: 1;
     min-height: 76px;
@@ -121,9 +124,11 @@ const InnerItemContainer = styled(FlexDivCentered)`
     }
     color: #b8c6e5;
 `;
+
 const Item = styled(FlexDivColumnCentered)`
     flex: initial;
 `;
+
 const Title = styled.p`
     font-style: normal;
     font-weight: 600;
@@ -131,6 +136,7 @@ const Title = styled.p`
     line-height: 18px;
     color: #b8c6e5;
 `;
+
 const Content = styled.p`
     font-style: normal;
     font-weight: bold;
@@ -138,28 +144,44 @@ const Content = styled.p`
     line-height: 18px;
     color: #f6f6fe;
 `;
+
 const Phase = styled(PhaseLabel)`
     cursor: default;
 `;
+
 const Result = styled(Content)<{ isLong: boolean }>`
     color: ${(props) => (props.isLong ? COLORS.LONG : COLORS.SHORT)};
     text-transform: uppercase;
 `;
-// const CryptoName = styled.p`
-//     font-style: normal;
-//     font-weight: bold;
-//     font-size: 20px;
-//     line-height: 20px;
-//     letter-spacing: 0.5px;
-//     color: #f6f6fe;
-// `;
-const CryptoKey = styled.p`
+
+const CryptoName = styled.span`
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 20px;
-    letter-spacing: 0.5px;
-    color: #f6f6fe;
+    font-size: 16px;
+    line-height: 16px;
 `;
+
+const CryptoKey = styled.span`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #808191;
+`;
+
+const StyledLink = styled.a`
+    color: #f6f6fe;
+    &path {
+        fill: #f6f6fe;
+    }
+    &:hover {
+        color: #00f9ff;
+        & path {
+            fill: #00f9ff;
+        }
+    }
+`;
+
+export const ArrowIcon = styled(ArrowHyperlinkIcon)``;
 
 export default MarketOverview;
