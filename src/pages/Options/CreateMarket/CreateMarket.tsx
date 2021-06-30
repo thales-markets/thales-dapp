@@ -168,9 +168,12 @@ export const CreateMarket: React.FC = () => {
             ),
         [synths]
     );
-
     const isButtonDisabled =
-        currencyKey === null || strikePrice === '' || maturityDate === null || initialFundingAmount === '';
+        !hasAllowance ||
+        currencyKey === null ||
+        strikePrice === '' ||
+        maturityDate === null ||
+        initialFundingAmount === '';
 
     const formatCreateMarketArguments = () => {
         const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
