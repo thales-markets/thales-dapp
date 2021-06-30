@@ -151,11 +151,11 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
 const ModalWrapper = styled(FlexDivColumn)`
     width: 600px;
-    max-height: 800px;
+    max-height: min(90%, 800px);
     overflow-y: auto;
     background: #04045a;
     border-radius: 23px;
-    margin: 240px auto;
+    margin: 5% auto;
 `;
 
 const Header = styled(FlexDiv)`
