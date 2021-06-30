@@ -207,7 +207,6 @@ const MintOptions: React.FC = () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
-                console.log('gasEstimate', Number(gasEstimate));
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);

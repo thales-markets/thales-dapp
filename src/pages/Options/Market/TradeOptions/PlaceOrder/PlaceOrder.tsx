@@ -372,12 +372,16 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     };
 
     useEffect(() => {
+        const total = Number(price) * Number(amount);
         setIsAmountValid(
             Number(amount) === 0 ||
                 (Number(amount) > 0 &&
-                    (isBuy ? Number(price) * Number(amount) <= sUSDBalance : Number(amount) <= tokenBalance))
+                    (isBuy
+                        ? (Number(total) > 0 && Number(total) <= sUSDBalance) ||
+                          (Number(total) === 0 && sUSDBalance > 0)
+                        : Number(amount) <= tokenBalance))
         );
-    }, [amount, price, isBuy]);
+    }, [amount, price, isBuy, sUSDBalance, tokenBalance]);
 
     return (
         <Container>

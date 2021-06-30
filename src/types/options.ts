@@ -154,3 +154,15 @@ export type UsersAssets = {
         short: number;
     };
 };
+
+export type ZeroExErrorResponse = {
+    code: number;
+    reason: string;
+    validationErrors?: ZeroExValidationError[];
+};
+
+export type ZeroExValidationError = {
+    field: string;
+    code: number;
+    reason: string;
+};
