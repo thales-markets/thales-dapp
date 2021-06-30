@@ -426,8 +426,8 @@
                     "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                     "confirm-button": {
                         "label": "Submit order",
-                        "long": "Submit sLong order",
-                        "short": "Submit sShort order",
+                        "long": "Submit sLong",
+                        "short": "Submit sShort",
                         "progress-label": "Submitting order in progress..."
                     },
                     "swap-confirm-button": {

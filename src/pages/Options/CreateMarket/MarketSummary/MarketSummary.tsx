@@ -43,13 +43,13 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     )}
                 </FlexDivCentered>
                 <FlexDivCentered>
-                    <div style={{ flex: 1, textAlign: 'center' }}>
+                    <div style={{ flex: 2, textAlign: 'center' }}>
                         <Text className="text-xs dusty bold">{t('options.create-market.summary.strikePrice')}</Text>
                         <Text className="text-s pale-grey bold">
                             {`${USD_SIGN}  ${props.strikingPrice ? props.strikingPrice.toString() : 0}`}
                         </Text>
                     </div>
-                    <div>
+                    <div style={{ flex: 1, textAlign: 'center' }}>
                         {difference && (
                             <Text
                                 className={
@@ -60,7 +60,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                             </Text>
                         )}
                     </div>
-                    <div style={{ flex: 1, textAlign: 'center' }}>
+                    <div style={{ flex: 2, textAlign: 'center' }}>
                         <Text className="text-xs dusty bold">{t('options.create-market.summary.current')}</Text>
                         <Text className="text-s pale-grey bold">
                             {`${USD_SIGN}   ${props.currentPrice ? props.currentPrice : 0}`}
