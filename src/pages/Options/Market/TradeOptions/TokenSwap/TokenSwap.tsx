@@ -358,6 +358,13 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 </SubmitButton>
             );
         }
+        if (!isSlippageValid) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.invalid-slippage`)}
+                </SubmitButton>
+            );
+        }
         if (insufficientLiquidity) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
@@ -473,7 +480,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         </FlexDivEnd>
                         <FieldValidationMessage
                             showValidation={!isSlippageValid}
-                            message={t(`common.errors.invalid-slippage`)}
+                            message={t(`common.errors.enter-valid-slippage`)}
                             arrowPosition="right"
                             marginLeft="40px"
                         />

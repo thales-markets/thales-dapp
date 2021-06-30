@@ -417,6 +417,8 @@ export const ProtocolFeeItem = styled(SummaryContent)`
 `;
 
 export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
+    min-width: 12px;
+    min-height: 12px;
     margin-left: 4px;
     margin-bottom: -1px;
 `;

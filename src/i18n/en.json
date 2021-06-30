@@ -107,13 +107,14 @@
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
             "enter-expiration": "Enter expiration",
+            "enter-valid-slippage": "Enter a valid slippage percentage",
             "invalid-price": "Invalid price",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
             "invalid-options-price": "The price must be higher than ${{min}} and less than or equal to the ${{max}}",
             "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}",
-            "invalid-slippage": "Enter a valid slippage percentage"
+            "invalid-slippage": "Invalid slippage"
         },
         "search": "search",
         "chart": {
@@ -407,7 +408,8 @@
                         "remaining-amount-col": "Remaining amount ({{currencyKey}}):",
                         "remaining-amount-susd-col": "Remaining amount (sUSD):",
                         "time-remaining-col": "Time remaining",
-                        "cancel-col": "Cancel"
+                        "cancel-col": "Cancel",
+                        "cancel-col-tooltip": "Click to cancel your order"
                     }
                 },
                 "place-order": {
@@ -434,7 +436,7 @@
                             "progress-label": "Buying in progress..."
                         },
                         "sell": {
-                            "label": "sell",
+                            "label": "Sell",
                             "progress-label": "Selling in progress..."
                         }
                     }

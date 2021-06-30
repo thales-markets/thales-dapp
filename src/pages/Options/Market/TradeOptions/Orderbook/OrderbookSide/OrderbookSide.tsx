@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import { OrderbookFilterEnum } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
+import { LightTooltip } from 'pages/Options/Market/components';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -114,12 +115,16 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Cell: (cellProps: CellProps<OrderItem>) =>
                             cellProps.cell.row.original.rawOrder.maker.toLowerCase() ===
                                 walletAddress.toLowerCase() && (
-                                <CancelIconContainer
-                                    onClick={(e: any) => {
-                                        e.stopPropagation();
-                                        openCancelOrderModal(cellProps.cell.row.original);
-                                    }}
-                                />
+                                <LightTooltip
+                                    title={t('options.market.trade-options.orderbook.table.cancel-col-tooltip')}
+                                >
+                                    <CancelIconContainer
+                                        onClick={(e: any) => {
+                                            e.stopPropagation();
+                                            openCancelOrderModal(cellProps.cell.row.original);
+                                        }}
+                                    />
+                                </LightTooltip>
                             ),
                         width: 30,
                         sortable: false,
@@ -184,8 +189,8 @@ const YellowDot = styled.span`
 `;
 
 const CancelIconContainer = styled(CancelIcon)`
-    min-width: 8px;
-    min-height: 8px;
+    min-width: 12px;
+    min-height: 12px;
     margin-top: 2px;
     z-index: 2;
 `;
