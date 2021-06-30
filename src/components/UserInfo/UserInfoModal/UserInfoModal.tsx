@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FilterButton, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
 import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
@@ -14,6 +14,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import UsersAssets from './UsersAssets';
 import UsersOrders from './UsersOrders';
 import UsersMarkets from './UsersMarkets';
+import { FilterButton } from 'pages/Options/Market/components';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -152,7 +153,7 @@ const ModalWrapper = styled(FlexDivColumn)`
     width: 600px;
     max-height: 800px;
     overflow-y: auto;
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    background: #04045a;
     border-radius: 23px;
     margin: 240px auto;
 `;
@@ -179,7 +180,7 @@ const FilterWrapper = styled(FlexDiv)`
         position: absolute;
         content: '';
         display: block;
-        bottom: 0;
+        bottom: 1px;
         left: 0px;
         height: 1px;
         width: 100%;
@@ -188,7 +189,7 @@ const FilterWrapper = styled(FlexDiv)`
 `;
 
 const DataWrapper = styled(FlexDivColumn)`
-    background: #151862;
+    background: #04045a;
     padding-bottom: 20px;
     border-bottom-right-radius: 23px;
     border-bottom-left-radius: 23px;
@@ -198,16 +199,15 @@ export const MarketRow = styled(FlexDiv)`
     color: #f6f6fe;
     font-size: 14px;
     line-height: 16px;
-    padding: 12px;
+    padding: 20px;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    border-radius: 12px;
-    margin: 6px 8px;
+    background: #24273133;
 
     &:hover {
         border: 1px solid #44e1e2;
-        padding: 11px;
+        padding: 19px;
     }
 `;
 

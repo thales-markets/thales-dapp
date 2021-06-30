@@ -26,19 +26,22 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) =>
                         }
                     }}
                 >
-                    <Currency.Name
-                        currencyKey={market.currencyKey}
-                        showIcon={true}
-                        iconProps={{ width: '32px', height: '32px', type: 'asset' }}
-                    />
+                    <div style={{ flex: 2 }}>
+                        <Currency.Name
+                            currencyKey={market.currencyKey}
+                            showIcon={true}
+                            iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                        />
+                    </div>
+
                     <LightTooltip title="Strike price">
-                        <Text style={{ margin: '0 8px' }}>{USD_SIGN + market.strikePrice.toFixed(2)}</Text>
+                        <Text style={{ flex: 1 }}>{USD_SIGN + market.strikePrice.toFixed(2)}</Text>
                     </LightTooltip>
                     <LightTooltip title="Maturity date">
-                        <Text> {formatShortDate(market.maturityDate)}</Text>
+                        <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                     </LightTooltip>
                     <LightTooltip title="Pool size">
-                        <Text>{USD_SIGN + market.poolSize.toFixed(2)}</Text>
+                        <Text style={{ flex: 1 }}>{USD_SIGN + market.poolSize.toFixed(2)}</Text>
                     </LightTooltip>
                 </MarketRow>
             ))}
