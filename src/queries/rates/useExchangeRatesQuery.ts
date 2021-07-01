@@ -29,7 +29,6 @@ const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
 
                 exchangeRates[synthName] = bigNumberFormatter(rates[idx]);
             });
-            console.log(exchangeRates);
 
             return exchangeRates;
         },

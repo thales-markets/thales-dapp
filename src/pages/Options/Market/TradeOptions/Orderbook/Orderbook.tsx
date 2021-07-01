@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import OrderbookSide from './OrderbookSide';
 import { OptionSide, OrderItem, Orders } from 'types/options';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
@@ -24,6 +24,9 @@ import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader
 import { MarketWidgetKey } from 'constants/ui';
 import MarketWidgetContent from '../../components/MarketWidget/MarketWidgetContent';
 import { FilterButton, LightTooltip } from '../../components';
+import snxJSConnector from 'utils/snxJSConnector';
+import { refetchOrderbook } from 'utils/queryConnector';
+import { get0xWebSocketBaseURL } from 'utils/0x';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -102,6 +105,35 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
         return '';
     }, [sellOrders, buyOrders]);
+
+    const getWebSocketRequest = (makerToken: string, takerToken: string) => ({
+        type: 'subscribe',
+        channel: 'orders',
+        requestId: `${makerToken}-${takerToken}`,
+        payload: {
+            makerToken: makerToken,
+            takerToken: takerToken,
+        },
+    });
+
+    useEffect(() => {
+        const {
+            contracts: { SynthsUSD },
+        } = snxJSConnector.snxJS as any;
+        const ws = new WebSocket(get0xWebSocketBaseURL(networkId));
+
+        ws.onopen = () => {
+            const sellsRequest = getWebSocketRequest(optionsTokenAddress, SynthsUSD.address);
+            ws.send(JSON.stringify(sellsRequest));
+
+            const buysRequest = getWebSocketRequest(SynthsUSD.address, optionsTokenAddress);
+            ws.send(JSON.stringify(buysRequest));
+        };
+
+        ws.onmessage = (evt) => {
+            refetchOrderbook(optionsTokenAddress);
+        };
+    }, [networkId, optionsTokenAddress]);
 
     return (
         <>

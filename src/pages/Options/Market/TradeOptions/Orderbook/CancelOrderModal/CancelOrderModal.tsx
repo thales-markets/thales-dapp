@@ -63,7 +63,6 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 (_, log) => {
                     if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
                         refetchOrderbook(baseToken);
-                        setIsCanceling(false);
                         onClose();
                     }
                 }

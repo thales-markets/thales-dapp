@@ -193,7 +193,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         refetchOrderbook(baseToken);
                         refetchTrades(optionsMarket.address);
                         refetchUserTrades(optionsMarket.address, walletAddress);
-                        setIsFilling(false);
                         onClose();
                     }
                 }
