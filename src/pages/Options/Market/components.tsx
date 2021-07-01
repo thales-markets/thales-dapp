@@ -125,6 +125,10 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         box-shadow: none;
         overflow: hidden;
     }
+    & + label {
+        z-index: 100;
+    }
+
     svg {
         fill: #f6f6fe;
     }
