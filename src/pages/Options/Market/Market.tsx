@@ -254,6 +254,8 @@ export const Background = styled.section`
     position: relative;
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     z-index: 2;
+    height: 100vh;
+    overflow: auto;
 `;
 
 const Container = styled.div`

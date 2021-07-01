@@ -46,7 +46,12 @@ export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase }) => {
                                     phase={phase}
                                 />
                             ))}
-                            <ResetButton onClick={() => dispatch(resetMarketWidgetVisibilityMap())}>
+                            <ResetButton
+                                onClick={() => {
+                                    dispatch(resetMarketWidgetVisibilityMap());
+                                    setDropdownIsOpen(false);
+                                }}
+                            >
                                 {t('options.market.widgets.button.reset-layout')}
                             </ResetButton>
                         </DropDown>

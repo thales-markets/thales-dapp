@@ -128,7 +128,11 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
                             )}
                         </LineChart>
                     </ChartResponsiveContainer>
-                    {isLoading && <Loader />}
+                    {isLoading && (
+                        <LoaderContainer>
+                            <Loader />
+                        </LoaderContainer>
+                    )}
                     {noChartData && (
                         <NoCharDataContainer>{t('options.market.chart-card.no-chart-data')}</NoCharDataContainer>
                     )}
@@ -205,6 +209,14 @@ const NoCharDataContainer = styled(GridDivCenteredRow)`
     font-weight: 600;
     font-size: 25px;
     line-height: 48px;
+    position: absolute;
+    left: 45%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+`;
+
+const LoaderContainer = styled(GridDivCenteredRow)`
+    grid-gap: 10px;
     position: absolute;
     left: 45%;
     top: 45%;

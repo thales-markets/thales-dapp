@@ -1,3 +1,4 @@
+import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../components';
@@ -27,7 +28,15 @@ const NumericInput: React.FC<NumericInputProps> = ({
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
 
-        onChange(e, value.replace(/,/g, '.').replace(/[e+-]/gi, ''));
+        let trimmedValue = value;
+        if (value.indexOf('.') > -1) {
+            const numberOfDecimals = value.split('.')[1].length;
+            if (numberOfDecimals > DEFAULT_TOKEN_DECIMALS) {
+                trimmedValue = value.substring(0, value.length - 1);
+            }
+        }
+
+        onChange(e, trimmedValue.replace(/,/g, '.').replace(/[e+-]/gi, ''));
     };
 
     return (
