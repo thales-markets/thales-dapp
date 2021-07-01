@@ -147,6 +147,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                                 filterMyOrders={filterMyOrders}
                                 filter={filter}
                                 orderbookEmpty={marketPrice === ''}
+                                isLoading={orderbookQuery.isLoading}
                             />
                         )}
                         {marketPrice !== '' && <MarketPrice>{marketPrice}</MarketPrice>}
@@ -159,6 +160,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                                 filterMyOrders={filterMyOrders}
                                 filter={filter}
                                 orderbookEmpty={marketPrice === ''}
+                                isLoading={orderbookQuery.isLoading}
                             />
                         )}
                     </SidesContainer>

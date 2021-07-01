@@ -24,6 +24,7 @@ type OrderbookSideProps = {
     filterMyOrders: boolean;
     filter: OrderbookFilterEnum;
     orderbookEmpty: boolean;
+    isLoading?: boolean;
 };
 
 const OrderbookSide: React.FC<OrderbookSideProps> = ({
@@ -34,6 +35,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
     filterMyOrders,
     filter,
     orderbookEmpty,
+    isLoading,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -145,6 +147,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                 }}
                 orderSide={orderSide}
                 columnsDeps={[walletAddress]}
+                isLoading={isLoading}
             />
             {fillOrderModalVisible && selectedOrder !== null && (
                 <FillOrderModal

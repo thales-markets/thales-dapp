@@ -8,8 +8,8 @@ const Loader: React.FC = () => {
 
 const StyledLoader = styled(CircularProgress)`
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: calc(50% - 22px);
+    top: calc(50% - 22px);
 `;
 
 export default Loader;
