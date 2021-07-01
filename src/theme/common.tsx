@@ -237,6 +237,12 @@ export const Logo = styled(Link)`
     content: ' ';
     background-image: url(${logo});
     height: 52px;
+    @media (max-width: 468px) {
+        height: 36px;
+        &.footer_logo {
+            margin-right: -50px;
+        }
+    }
     width: 214px;
     margin-right: 20px;
     margin-top: 6px;
