@@ -26,7 +26,7 @@ const Footer: React.FC = () => (
                     </IconLink>
                 </FlexDiv>
                 <FlexDiv style={{ marginBottom: 60 }}>
-                    <Logo to={ROUTES.Home} />
+                    <Logo className="footer_logo" to={ROUTES.Home} />
                 </FlexDiv>
             </VerticalWrapper>
         </MainWrapper>

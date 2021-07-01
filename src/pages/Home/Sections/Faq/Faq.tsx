@@ -139,6 +139,7 @@ const FaqImg = styled(Image)`
     @media (max-width: 1280px) {
         height: 400px;
         margin: 60px auto;
+        margin-top: 0;
     }
 `;
 

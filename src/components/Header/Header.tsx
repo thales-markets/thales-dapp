@@ -87,10 +87,7 @@ const HeaderWrapper = styled.div`
     height: 100px;
     align-items: center;
     @media (max-width: 768px) {
-        padding: 0 50px;
-    }
-    @media (max-width: 468px) {
-        padding: 0 30px;
+        padding: 20px;
     }
 `;
 
