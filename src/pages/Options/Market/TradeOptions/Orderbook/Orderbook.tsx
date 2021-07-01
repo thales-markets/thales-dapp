@@ -130,7 +130,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
             ws.send(JSON.stringify(buysRequest));
         };
 
-        ws.onmessage = (evt) => {
+        ws.onmessage = () => {
             refetchOrderbook(optionsTokenAddress);
         };
     }, [networkId, optionsTokenAddress]);
