@@ -17,7 +17,7 @@ type HotMarketsProps = {
 export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [currentMarket, setCurrentMarket] = useState(0);
-    const [shouldUseInterval, setShoudUseInterval] = useState(true);
+    const [shouldUseInterval, setShouldUseInterval] = useState(true);
 
     const currentMarkets = useMemo(() => {
         const markets = [];
@@ -56,7 +56,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
             <FlexDivCentered className="hot-markets__desktop">
                 <Arrow
                     onClick={() => {
-                        setShoudUseInterval(false);
+                        setShouldUseInterval(false);
                         document.getElementById('market-cards-wrapper')?.classList.add('previous');
                         setTimeout(() => {
                             document.getElementById('market-cards-wrapper')?.classList.remove('previous');
@@ -75,7 +75,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
                 <Arrow
                     onClick={() => {
-                        setShoudUseInterval(false);
+                        setShouldUseInterval(false);
                         document.getElementById('market-cards-wrapper')?.classList.add('next');
                         setTimeout(() => {
                             document.getElementById('market-cards-wrapper')?.classList.remove('next');

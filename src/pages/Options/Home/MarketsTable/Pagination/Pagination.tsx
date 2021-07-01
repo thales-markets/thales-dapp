@@ -11,6 +11,7 @@ type PaginationProps = {
 };
 
 const Arrow = styled(Image)`
+    color: #748bc6;
     width: 6px;
     height: 10px;
     box-sizing: content-box;
@@ -47,14 +48,14 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
             </p>
             <FlexDivCentered
                 style={{
-                    border: '1px solid #04045A',
+                    border: '1px solid #0a2e66',
                     borderRadius: '32px',
                     width: '110px',
                     justifyContent: 'space-around',
                     height: '40px',
                 }}
             >
-                <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
+                <Arrow src={backArrow} className={page !== 0 ? 'disabled' : ''} onClick={PreviousPage} />
                 <p
                     style={{
                         fontSize: '13px',
@@ -66,7 +67,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                 >
                     {page + 1}
                 </p>
-                <Arrow src={nextArrow} className={page === numberOfPages - 1 ? 'disabled' : ''} onClick={NextPage} />
+                <Arrow src={nextArrow} className={page !== numberOfPages - 1 ? 'disabled' : ''} onClick={NextPage} />
             </FlexDivCentered>
             <p
                 style={{

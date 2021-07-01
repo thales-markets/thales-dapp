@@ -4,7 +4,7 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
@@ -47,9 +47,11 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                             }}
                         >
                             <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
-                            <CryptoTime>
-                                <TimeRemaining fontSize={11} end={optionMarket.timeRemaining}></TimeRemaining>
-                            </CryptoTime>
+                            <GradientBorderWrapper>
+                                <GradientBorderContent>
+                                    <TimeRemaining fontSize={11} end={optionMarket.timeRemaining}></TimeRemaining>
+                                </GradientBorderContent>
+                            </GradientBorderWrapper>
                         </FlexDivColumn>
                     </Header>
                     <Content>
@@ -57,6 +59,12 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                         <ExpireDate>at {formatShortDate(optionMarket.maturityDate)}</ExpireDate>
                     </Content>
                     <Footer className="footer">
+                        <GradientBorderWrapper style={{ margin: 'auto' }}>
+                            <PoolSize>
+                                <Text style={{ marginRight: 4 }}>Pool Size:</Text>
+                                <Text>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionMarket.poolSize)}</Text>
+                            </PoolSize>
+                        </GradientBorderWrapper>
                         <ViewMarket className="view-market">View Market</ViewMarket>
                     </Footer>
                 </Card>
@@ -116,8 +124,7 @@ const Card = styled(FlexDivColumnCentered)`
 
 const Header = styled(FlexDivCentered)`
     height: 96px;
-    border-bottom: 1px solid #748bc6;
-
+    border-bottom: 1px solid rgba(202, 145, 220, 0.6);
     img,
     svg {
         margin: 20px;
@@ -141,7 +148,7 @@ const ViewMarket = styled.div`
     z-index: 1;
     background: #3936c7;
     border-radius: 0px 0px 21px 21px;
-    height: 82px;
+    height: 67px;
     width: 100%;
     font-weight: 700;
     font-size: 20px;
@@ -169,16 +176,21 @@ const CryptoKey = styled.p`
     color: #808191;
 `;
 
-const CryptoTime = styled.div`
+const GradientBorderWrapper = styled.div`
+    border-radius: 12px;
+    background: linear-gradient(to right, #3936c7, #2d83d2, #23a5dd, #35dadb);
+`;
+
+const GradientBorderContent = styled.div`
     font-weight: bold;
     font-size: 12px;
     line-height: 24px;
     text-align: center;
-    color: #00f9ff;
-    background: #0a2e66;
     border-radius: 20px;
     height: 24px;
     min-width: 70px;
+    background-color: #1c1a71;
+    margin: 1px;
     padding: 0 6px;
 `;
 
@@ -198,9 +210,17 @@ const ExpireDate = styled.p`
     font-weight: 500;
     font-size: 20px;
     line-height: 20px;
+    padding-top: 15px;
     margin-bottom: 16px !important;
     letter-spacing: 0.15px;
     color: #f6f6fe;
+`;
+
+const PoolSize = styled(GradientBorderContent)`
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    font-weight: normal;
 `;
 
 const Phase = styled(PhaseLabel)`
