@@ -80,7 +80,7 @@ const GetStarted: React.FC = () => {
                     ></Eclipse>
                 </Carousel>
                 <CardsSmall className="animate-l">
-                    <Image src={first} style={{ width: 30, margin: 20 }}></Image>
+                    <Image src={first} style={{ width: 33, height: 92, marginRight: 32 }}></Image>
                     <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.first')}</Text>
                 </CardsSmall>
                 <Image className="animate-r" src={image1} style={{ width: 250, height: 200 }}></Image>
@@ -92,13 +92,13 @@ const GetStarted: React.FC = () => {
             >
                 <Image className="animate-l" src={image2} style={{ width: 250, height: 200 }}></Image>
                 <CardsSmall className="animate-r">
-                    <Image src={second} style={{ width: 30, margin: 20 }}></Image>
+                    <Image src={second} style={{ width: 30, height: 92, marginRight: 32 }}></Image>
                     <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.second')}</Text>
                 </CardsSmall>
             </Wrapper>
             <Wrapper className={carousel === CAROUSEL_SELECTED.LAST ? 'animate' : ''}>
                 <CardsSmall className="animate-l">
-                    <Image src={third} style={{ width: 30, margin: 20 }}></Image>
+                    <Image src={third} style={{ width: 30, height: 92, marginRight: 32 }}></Image>
                     <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.third')}</Text>
                 </CardsSmall>
                 <Image className="animate-r" src={image3} style={{ width: 250, height: 200 }}></Image>
@@ -167,8 +167,8 @@ const Wrapper = styled(FlexDiv)`
 `;
 
 const CardsSmall = styled(CardsAbs)`
-    height: 135px;
-    padding: 4px;
+    height: 134px;
+    padding: 20px 35px;
     flex-direction: row;
     max-width: 350px;
     align-items: center;
