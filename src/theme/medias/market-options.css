@@ -179,10 +179,6 @@ xl: 1300, */
 }
 
 @media (min-height: 800px) {
-    #market-creation,
-    #hot-markets {
-        height: calc((100vh - 100px) / 2);
-    }
     #market-creation .text-xxxl {
         font-size: 56px;
     }

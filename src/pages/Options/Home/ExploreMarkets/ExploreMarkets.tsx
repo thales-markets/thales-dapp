@@ -8,9 +8,13 @@ import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modu
 import { getIsAppReady } from 'redux/modules/app';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
-import myMarkets from 'assets/images/my-markets.svg';
-import myWatchlist from 'assets/images/my-watchlist.svg';
-import recentlyAdded from 'assets/images/recently-added.svg';
+import myMarkets from 'assets/images/filters/my-markets.svg';
+import myWatchlist from 'assets/images/filters/my-watchlist.svg';
+import recentlyAdded from 'assets/images/filters/recently-added.svg';
+import bitcoin from 'assets/images/filters/bitcoin.svg';
+import ethereum from 'assets/images/filters/ethereum.svg';
+import myAssets from 'assets/images/filters/my-assets.svg';
+import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
@@ -35,8 +39,12 @@ export enum PhaseFilterEnum {
 enum UserFilterEnum {
     All = 'All',
     MyMarkets = 'My Markets',
-    MyWatchlist = 'My Watchlist',
+    MyOrders = 'My Orders',
+    MyAssets = 'My Assets',
+    MyWatchlist = 'Watchlist',
     Recent = 'Recently Added',
+    Bitcoin = 'Bitcoin',
+    Ethereum = 'Ethereum',
 }
 
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
@@ -109,17 +117,14 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 return myWatchlist;
             case UserFilterEnum.Recent:
                 return recentlyAdded;
-        }
-    };
-
-    const getColor = (filter: UserFilterEnum) => {
-        switch (filter) {
-            case UserFilterEnum.MyMarkets:
-                return 'linear-gradient(135deg, #FFA051 0%, #FF6628 100%)';
-            case UserFilterEnum.MyWatchlist:
-                return 'linear-gradient(135deg, #FF8FD8 0%, #4E47E2 100%)';
-            case UserFilterEnum.Recent:
-                return 'linear-gradient(146.29deg, #B2DEEF 14.84%, #3EDDDD 92.53%)';
+            case UserFilterEnum.Bitcoin:
+                return bitcoin;
+            case UserFilterEnum.Ethereum:
+                return ethereum;
+            case UserFilterEnum.MyAssets:
+                return myAssets;
+            case UserFilterEnum.MyOrders:
+                return myOpenOrders;
         }
     };
 
@@ -129,8 +134,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     };
 
     return (
-        <div id="explore-markets" style={{ padding: '50px 150px', width: '100%' }}>
-            <FlexDivCentered>
+        <div id="explore-markets" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
+            <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                 {Object.keys(UserFilterEnum)
                     .filter(
                         (key) =>
@@ -146,14 +151,22 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                             } ${!isWalletConnected ? 'disabled' : ''}`}
                             onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             key={key}
-                            color={getColor(UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                        ></UserFilter>
+                        />
                     ))}
             </FlexDivCentered>
 
-            <FlexDiv className="table-filters" style={{ justifyContent: 'space-between', marginTop: 40 }}>
+            <FlexDiv
+                className="table-filters"
+                style={{
+                    justifyContent: 'space-between',
+                    marginTop: 40,
+                    background: '#04045a',
+                    borderTopLeftRadius: '23px',
+                    borderTopRightRadius: '23px',
+                }}
+            >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div>
                         {Object.keys(PhaseFilterEnum)
@@ -173,7 +186,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                             ))}
                     </div>
                 </div>
-                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch}></SearchMarket>
+                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
             </FlexDiv>
 
             <MarketsTable
@@ -230,7 +243,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
 const NoMarkets = styled(FlexDivColumn)`
     height: 500px;
-    background: #126;
+    background: #04045a;
     border-radius: 20px;
     justify-content: space-evenly;
     align-items: center;

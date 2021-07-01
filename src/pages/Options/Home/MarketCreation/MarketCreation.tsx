@@ -50,8 +50,8 @@ const MarketCreation: React.FC = () => {
 };
 
 const SideWrapper = styled(Side)`
-    padding-top: 110px !important;
-    padding-bottom: 80px !important;
+    padding-top: 40px !important;
+    padding-bottom: 0 !important;
 `;
 
 const CreateMarket = styled(FlexDivColumn)`
@@ -63,8 +63,7 @@ const CreateMarket = styled(FlexDivColumn)`
     border: solid 2px transparent;
     border-radius: 24px;
     color: #f6f6fe;
-    margin: 50px 75px 50px 75px;
-    cursor: pointer;
+    margin: 75px;
     height: 280px;
     &:before {
         content: '';

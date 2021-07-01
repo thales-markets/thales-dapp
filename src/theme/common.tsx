@@ -303,7 +303,7 @@ export const FilterButton = styled(Button)`
     height: 40px;
     margin: 24px 10px;
     background: transparent;
-    border: 1px solid #04045a;
+    border: 2px solid #0a2e66;
     border-radius: 32px;
     font-weight: bold;
     font-size: 13px;
@@ -311,8 +311,12 @@ export const FilterButton = styled(Button)`
     letter-spacing: 0.4px;
     text-transform: capitalize !important;
     color: #f6f6fe;
+    padding: 8px 28px;
     &.selected {
-        background: #44e1e2;
+        background: #0a2e66;
+        border: 2px solid #00f9ff;
+        border-radius: 32px;
+        color: #00f9ff;
     }
 `;
 

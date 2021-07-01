@@ -2,41 +2,46 @@ import React from 'react';
 import styled from 'styled-components';
 
 type UserFilterProps = {
-    color?: string;
     img?: string;
     text?: string;
     className?: string;
     onClick?: (param: any) => void;
 };
 
-const UserFilter: React.FC<UserFilterProps> = ({ color, img, text, className, onClick }) => {
+const UserFilter: React.FC<UserFilterProps> = ({ img, text, className, onClick }) => {
     return (
         <FiltersWrapper className={className} onClick={onClick}>
-            <FiltersIconWrapper color={color}>
-                <FiltersIcon src={img}></FiltersIcon>
-            </FiltersIconWrapper>
-            <FiltersText>{text}</FiltersText>
+            <BackgroundWrapper>
+                <FiltersIcon src={img} />
+                <FiltersText>{text}</FiltersText>
+            </BackgroundWrapper>
         </FiltersWrapper>
     );
 };
 
 const FiltersWrapper = styled.div`
     position: relative;
-    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
     border-radius: 20px;
-    padding: 20px 40px;
-    height: 160px;
-    max-width: 140px;
-    min-width: 140px;
-    margin: 24px;
-    cursor: pointer;
+    background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
     &.selected,
     &:hover {
-        box-sizing: border-box;
-        background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-        border: 4px solid #44e1e2;
-        padding: 16px 36px;
+        background: #00f9ff;
     }
+    margin: 24px;
+`;
+
+const BackgroundWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    background: #1c1a71;
+    border-radius: 20px;
+    height: 135px;
+    max-width: 150px;
+    min-width: 150px;
+    margin: 2px;
+    cursor: pointer;
     &.disabled {
         pointer-events: none;
         &:after {
@@ -52,21 +57,11 @@ const FiltersWrapper = styled.div`
     }
 `;
 
-const FiltersIconWrapper = styled.div`
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: ${(props) => props.color};
-    margin: auto;
-`;
-
 const FiltersIcon = styled.img`
     display: block;
     position: relative;
-    margin: auto;
-    top: 16px;
-    width: 24px;
-    height: 24px;
+    width: 90px;
+    height: 90px;
 `;
 
 const FiltersText = styled.p`
@@ -75,8 +70,6 @@ const FiltersText = styled.p`
     line-height: 20px;
     text-align: center;
     color: #f6f6fe;
-    margin-top: 16px;
-    word-spacing: 100vw;
 `;
 
 export default UserFilter;
