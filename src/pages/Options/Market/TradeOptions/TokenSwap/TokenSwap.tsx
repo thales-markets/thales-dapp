@@ -68,6 +68,7 @@ import onboardConnector from 'utils/onboardConnector';
 import NumericInput from '../../components/NumericInput';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import FieldValidationMessage from 'components/FieldValidationMessage';
+import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -246,6 +247,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 window.web3 = new Web3(Web3.givenProvider);
                 const quote = { ...swapQuote, from: walletAddress };
                 await window.web3.eth.sendTransaction(quote);
+                refetchOrderbook(baseToken);
+                refetchTrades(optionsMarket.address);
+                refetchUserTrades(optionsMarket.address, walletAddress);
                 setIsSubmitting(false);
             }
         } catch (e) {
