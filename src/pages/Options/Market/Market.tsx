@@ -174,7 +174,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         dispatch(
             setMarketWidgetVisibility({
                 marketWidget: MarketWidgetKey.YOUR_TRANSACTIONS,
-                isVisible: isWalletConnected && visibilityMap[MarketWidgetKey.YOUR_TRANSACTIONS],
+                isVisible: isWalletConnected,
             })
         );
     }, [isWalletConnected]);

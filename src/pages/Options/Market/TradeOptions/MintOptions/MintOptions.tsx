@@ -100,6 +100,7 @@ const MintOptions: React.FC = () => {
     const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
+    const [mintedAmount, setMintedAmount] = useState<number | string>('');
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -259,7 +260,7 @@ const MintOptions: React.FC = () => {
                             account: walletAddress,
                             hash: tx.hash || '',
                             type: 'mint',
-                            amount: amount,
+                            amount: mintedAmount,
                             side: 'long',
                         },
                     })
@@ -530,17 +531,20 @@ const MintOptions: React.FC = () => {
     };
 
     useEffect(() => {
-        const amountMinted = marketFees
-            ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool))
-            : 0;
-        const formatedAmountMinted = numbro(amountMinted).format({
+        setMintedAmount(
+            marketFees ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)) : 0
+        );
+    }, [amount, marketFees]);
+
+    useEffect(() => {
+        const formatedAmountMinted = numbro(Number(mintedAmount)).format({
             trimMantissa: true,
             mantissa: 4,
         });
 
         setLongAmount(formatedAmountMinted);
         setShortAmount(formatedAmountMinted);
-    }, [amount, marketFees]);
+    }, [mintedAmount]);
 
     useEffect(() => {
         setIsLongPriceValid(!sellLong || (sellLong && Number(longPrice) <= 1 && Number(longPrice) > 0));
@@ -551,22 +555,20 @@ const MintOptions: React.FC = () => {
     }, [sellShort, shortPrice]);
 
     useEffect(() => {
-        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
         setIsLongAmountValid(
             !sellLong ||
-                amountMinted === 0 ||
-                (sellLong && Number(longAmount) <= amountMinted && Number(longAmount) > 0)
+                mintedAmount === 0 ||
+                (sellLong && Number(longAmount) <= mintedAmount && Number(longAmount) > 0)
         );
-    }, [sellLong, longAmount, marketFees]);
+    }, [sellLong, longAmount, mintedAmount]);
 
     useEffect(() => {
-        const amountMinted = marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0;
         setIsShortAmountValid(
             !sellShort ||
-                amountMinted === 0 ||
-                (sellShort && Number(shortAmount) <= amountMinted && Number(shortAmount) > 0)
+                mintedAmount === 0 ||
+                (sellShort && Number(shortAmount) <= mintedAmount && Number(shortAmount) > 0)
         );
-    }, [sellShort, shortAmount, marketFees]);
+    }, [sellShort, shortAmount, mintedAmount]);
 
     return (
         <Container>
@@ -596,21 +598,13 @@ const MintOptions: React.FC = () => {
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
                     <SummaryLabel color={COLORS.LONG}>{t('options.market.trade-options.mint.long-label')}</SummaryLabel>
-                    <SummaryContent color={COLORS.LONG}>
-                        {formatCurrency(
-                            marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
-                        )}
-                    </SummaryContent>
+                    <SummaryContent color={COLORS.LONG}>{formatCurrency(mintedAmount)}</SummaryContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem>
                     <SummaryLabel color={COLORS.SHORT}>
                         {t('options.market.trade-options.mint.short-label')}
                     </SummaryLabel>
-                    <SummaryContent color={COLORS.SHORT}>
-                        {formatCurrency(
-                            marketFees ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool) : 0
-                        )}
-                    </SummaryContent>
+                    <SummaryContent color={COLORS.SHORT}>{formatCurrency(mintedAmount)}</SummaryContent>
                 </MintingInnerSummaryItem>
             </SummaryContainer>
             <Divider />
@@ -673,9 +667,7 @@ const MintOptions: React.FC = () => {
                         message={t(
                             Number(longAmount) == 0 ? 'common.errors.enter-amount' : 'common.errors.invalid-amount-max',
                             {
-                                max: marketFees
-                                    ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)
-                                    : 0,
+                                max: mintedAmount,
                             }
                         )}
                     />
@@ -741,16 +733,14 @@ const MintOptions: React.FC = () => {
                                 ? 'common.errors.enter-amount'
                                 : 'common.errors.invalid-amount-max',
                             {
-                                max: marketFees
-                                    ? Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)
-                                    : 0,
+                                max: mintedAmount,
                             }
                         )}
                     />
                 </DoubleShortInputContainer>
             </FlexDiv>
 
-            <Divider />
+            <Divider style={{ marginTop: 4 }} />
 
             <FeeSummaryContainer>
                 <MintingSummaryItem>
@@ -817,10 +807,11 @@ export const ProtocolFeeContent = styled(SummaryContent)`
 `;
 
 export const PlaceInOrderbook = styled.div`
+    font-size: 12px;
+    line-height: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     font-weight: 600;
-    font-size: 16px;
-    line-height: 40px;
-    letter-spacing: 0.15px;
     color: #f6f6fe;
 `;
 
@@ -834,7 +825,7 @@ export const StyledCheckbox = styled(Checkbox)`
 `;
 
 export const FeeSummaryContainer = styled(SummaryContainer)`
-    margin-top: 10px;
+    margin-top: 4px;
 `;
 
 export default MintOptions;

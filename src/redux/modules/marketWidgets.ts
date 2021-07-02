@@ -57,7 +57,6 @@ export const uiSlice = createSlice({
             if (isVisible) {
                 const layoutItem = state.fullLayout.find((item) => item.i === marketWidget);
                 if (layoutItem) {
-                    pinToTop(layoutItem, state.currentLayout);
                     state.currentLayout = [...state.currentLayout, layoutItem];
                 }
             }
@@ -92,17 +91,6 @@ const saveWidgetsToLS = (state: UISliceState) => {
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP, state.visibilityMap);
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_CURRENT_LAYOUT, state.currentLayout);
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT, state.fullLayout);
-};
-
-// hack to force showing of exercise options widgets always on top
-const pinToTop = (layoutItem: Layout, currentLayout: Layout[]) => {
-    if (layoutItem.i === MarketWidgetKey.MATURITY_PHASE && layoutItem.y === 0) {
-        currentLayout.forEach((item: Layout) => {
-            if (item.y === 0 && item.x < layoutItem.x && item.i !== layoutItem.i) {
-                item.y = 1;
-            }
-        });
-    }
 };
 
 export const { setMarketWidgetVisibility, resetMarketWidgetVisibilityMap, setMarketWidgetLayout } = uiSlice.actions;

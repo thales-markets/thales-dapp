@@ -106,6 +106,7 @@
             "unknown-error-try-again-general": "An unknown error occurred. Please try again.",
             "insufficient-balance": "Insufficient balance",
             "insufficient-liquidity": "Insufficient liquidity",
+            "insufficient-liquidity-for-trade": "Insufficient liquidity for this trade",
             "insufficient-order-amount": "Insufficient order amount",
             "invalid-order-amount-max": "The sLONG amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
@@ -313,7 +314,7 @@
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {
-                    "customize-layout": "Adjust view",
+                    "customize-layout": "Customize view",
                     "reset-layout": "Reset layout"
                 }
             },
@@ -339,13 +340,15 @@
                     "no-results": {
                         "recent-activity": {
                             "all": "No transactions associated with this market.",
-                            "market": "No transactions associated with this market.",
-                            "trade": "No trades associated with this market."
+                            "mint": "No mint transactions associated with this market.",
+                            "trade": "No trades associated with this market.",
+                            "exercise": "No exercise transactions associated with this market."
                         },
                         "your-activity": {
                             "all": "No transactions associated with this wallet.",
-                            "market": "No transactions associated with this wallet.",
-                            "trade": "No trades associated with this wallet."
+                            "mint": "No mint transactions associated with this wallet.",
+                            "trade": "No trades associated with this wallet.",
+                            "exercise": "No exercise transactions associated with this wallet."
                         }
                     },
                     "types": {
@@ -357,8 +360,9 @@
                 },
                 "filter": {
                     "all": "All",
-                    "market": "Market transactions",
-                    "trade": "Trades"
+                    "mint": "Mint",
+                    "trade": "Trades",
+                    "exercise": "Exercise"
                 }
             },
             "trade-card": {

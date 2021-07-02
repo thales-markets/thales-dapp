@@ -463,17 +463,22 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <NumericInput
                         value={amount}
                         onChange={(_, value) => setAmount(value)}
-                        className={isAmountValid ? '' : 'error'}
+                        className={isAmountValid && !insufficientLiquidity ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
                     <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
                     <FieldValidationMessage
-                        showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-balance-wallet`, {
-                            currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
-                        })}
+                        showValidation={!isAmountValid || insufficientLiquidity}
+                        message={t(
+                            !isAmountValid
+                                ? 'common.errors.insufficient-balance-wallet'
+                                : 'common.errors.insufficient-liquidity-for-trade',
+                            {
+                                currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                            }
+                        )}
                     />
                 </ShortInputContainer>
             </FlexDivRow>
