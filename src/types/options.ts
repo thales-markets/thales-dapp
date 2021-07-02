@@ -155,6 +155,17 @@ export type UsersAssets = {
     };
 };
 
+export type UserOrderMetaData = {
+    createdAt: string;
+    orderHash: string;
+    remainingFillableTakerAmount: string;
+};
+
+export type UserOrder = {
+    metaData: UserOrderMetaData;
+    order: Trade;
+};
+
 export type ZeroExErrorResponse = {
     code: number;
     reason: string;

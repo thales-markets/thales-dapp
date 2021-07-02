@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketsTable from '../MarketsTable';
-import { OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
@@ -23,7 +23,10 @@ import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
-import { getSynthName } from 'utils/snxJSConnector';
+import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
+import { SYNTHS_MAP } from '../../../../constants/currency';
+import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
+import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -47,6 +50,21 @@ enum UserFilterEnum {
     Ethereum = 'Ethereum',
 }
 
+const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
+    const {
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
+    const isBuy: boolean = order.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+    return (
+        (isBuy &&
+            (market.longAddress.toLowerCase() === order.takerToken.toLowerCase() ||
+                market.shortAddress.toLowerCase() === order.takerToken.toLowerCase())) ||
+        (!isBuy &&
+            (market.longAddress.toLowerCase() === order.makerToken.toLowerCase() ||
+                market.shortAddress.toLowerCase() === order.makerToken.toLowerCase()))
+    );
+};
+
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -56,6 +74,19 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const userAssetsQuery = useAssetsBalanceQuery(optionsMarkets, walletAddress);
+    const userAssets = useMemo(
+        () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
+        [userAssetsQuery]
+    );
+    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress);
+    const userOrders = useMemo(
+        () =>
+            userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records)
+                ? userOrdersQuery.data.records
+                : [],
+        [userOrdersQuery]
+    );
 
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -74,10 +105,29 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             case UserFilterEnum.MyWatchlist:
                 filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 break;
+            case UserFilterEnum.MyAssets:
+                filteredMarkets = userAssets.reduce((acc: HistoricalOptionsMarketInfo[], { market, balances }) => {
+                    if (balances.long || balances.short) {
+                        acc.push(market);
+                    }
+                    return acc;
+                }, []);
+                break;
+            case UserFilterEnum.MyOrders:
+                filteredMarkets = filteredMarkets.filter((market) =>
+                    userOrders.find((order) => isOrderInMarket(order.order, market))
+                );
+                break;
             case UserFilterEnum.Recent:
                 filteredMarkets = filteredMarkets.filter(({ timestamp }) =>
                     isRecentlyAdded(new Date(), new Date(timestamp))
                 );
+                break;
+            case UserFilterEnum.Bitcoin:
+                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC);
+                break;
+            case UserFilterEnum.Ethereum:
+                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH);
                 break;
         }
 
@@ -105,7 +155,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     );
 
     const onClickUserFilter = (filter: UserFilterEnum) => {
-        setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        if (isWalletConnected) {
+            setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        }
         return;
     };
 
@@ -148,7 +200,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                 isWalletConnected && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
                                     ? 'selected'
                                     : ''
-                            } ${!isWalletConnected ? 'disabled' : ''}`}
+                            }`}
+                            disabled={!isWalletConnected}
                             onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             key={key}
                             img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
