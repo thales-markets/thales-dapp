@@ -7,8 +7,10 @@ export function prepSellOrder(record: any) {
     const total = bigNumberFormatter(record.order.takerAmount);
     const timeRemaining = toJSTimestamp(record.order.expiry);
     const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
+    const fillableTotal = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
     const filled = (amount - fillableAmount) / amount;
     const orderHash = record.metaData.orderHash;
+    const potentialReturn = 1 / price - 1;
 
     return {
         rawOrder: record.order,
@@ -19,8 +21,10 @@ export function prepSellOrder(record: any) {
             total,
             timeRemaining,
             fillableAmount,
+            fillableTotal,
             filled,
             orderHash,
+            potentialReturn,
         },
     };
 }
@@ -31,8 +35,10 @@ export function prepBuyOrder(record: any) {
     const total = bigNumberFormatter(record.order.makerAmount);
     const timeRemaining = toJSTimestamp(record.order.expiry);
     const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
+    const fillableTotal = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) * price;
     const filled = (amount - fillableAmount) / amount;
     const orderHash = record.metaData.orderHash;
+    const potentialReturn = 1 / price - 1;
 
     return {
         rawOrder: record.order,
@@ -43,8 +49,10 @@ export function prepBuyOrder(record: any) {
             total,
             timeRemaining,
             fillableAmount,
+            fillableTotal,
             filled,
             orderHash,
+            potentialReturn,
         },
     };
 }

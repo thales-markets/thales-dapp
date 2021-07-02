@@ -409,14 +409,13 @@
                     },
                     "table": {
                         "type-col": "Type",
-                        "price-col": "Price (sUSD)",
-                        "amount-col": "Amount ({{currencyKey}})",
-                        "filled-col": "Filled (%)",
-                        "total-col": "Total (sUSD)",
-                        "remaining-amount-col": "Remaining amount ({{currencyKey}}):",
-                        "remaining-amount-susd-col": "Remaining amount (sUSD):",
-                        "time-remaining-col": "Time remaining",
-                        "cancel-col": "Cancel",
+                        "price-col": "PRICE (sUSD)",
+                        "amount-col": "AMOUNT ({{currencyKey}})",
+                        "filled-col": "FILLED (%)",
+                        "return-col": "RETURN",
+                        "return-col-tooltip": "Potential return if this option win",
+                        "total-col": "TOTAL (sUSD)",
+                        "time-remaining-col": "TIME REMAINING",
                         "cancel-col-tooltip": "Click to cancel your order"
                     }
                 },
@@ -501,11 +500,14 @@
                 },
                 "order-details": {
                     "title": "Order details",
-                    "price-label": "Price per {{currencyKey}} (sUSD):",
-                    "amount-label": "Amount ({{currencyKey}}):",
-                    "total-label": "Total (sUSD):",
-                    "filled-label": "Filled (%):",
-                    "remaining-amount-label": "Remaining amount ({{currencyKey}}):"
+                    "price-label": "Price per {{currencyKey}} (sUSD)",
+                    "amount-label": "Amount ({{currencyKey}})",
+                    "total-label": "Total (sUSD)",
+                    "filled-label": "Filled (%)",
+                    "return-label": "Return",
+                    "return-col-tooltip": "Potential return if this option win",
+                    "inital-amount-label": "Inital amount ({{currencyKey}})",
+                    "inital-total-label": "Inital total ({{currencyKey}})"
                 }
             }
         },

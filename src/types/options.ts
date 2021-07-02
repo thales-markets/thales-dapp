@@ -125,9 +125,11 @@ export type DisplayOrder = {
     fillableAmount: number;
     filled: number;
     total: number;
+    fillableTotal: number;
     timeRemaining: number;
     orderHash: string;
     percentageOfMaximum?: number;
+    potentialReturn: number;
 };
 
 export type OrderSide = 'buy' | 'sell';

@@ -57,11 +57,11 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
     const getFilteredOrders = (orders: Orders) => {
         if (orders.length > 0) {
-            const maxTotalItem = maxBy(orders, (order: OrderItem) => order.displayOrder.total);
+            const maxTotalItem = maxBy(orders, (order: OrderItem) => order.displayOrder.fillableTotal);
             if (maxTotalItem) {
                 orders.forEach((order: OrderItem) => {
                     order.displayOrder.percentageOfMaximum =
-                        (order.displayOrder.total / maxTotalItem.displayOrder.total) * 100;
+                        (order.displayOrder.fillableTotal / maxTotalItem.displayOrder.fillableTotal) * 100;
                 });
             }
         }
