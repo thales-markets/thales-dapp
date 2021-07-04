@@ -55,7 +55,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                     height: '40px',
                 }}
             >
-                <Arrow src={backArrow} className={page !== 0 ? 'disabled' : ''} onClick={PreviousPage} />
+                <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
                 <p
                     style={{
                         fontSize: '13px',
@@ -67,7 +67,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                 >
                     {page + 1}
                 </p>
-                <Arrow src={nextArrow} className={page !== numberOfPages - 1 ? 'disabled' : ''} onClick={NextPage} />
+                <Arrow src={nextArrow} className={page === numberOfPages - 1 ? 'disabled' : ''} onClick={NextPage} />
             </FlexDivCentered>
             <p
                 style={{
