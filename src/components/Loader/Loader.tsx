@@ -1,21 +1,23 @@
 import React from 'react';
-import { Image } from 'theme/common';
-import coin from 'assets/images/thales-coin.gif';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import styled from 'styled-components';
 
 const Loader: React.FC = () => {
     return (
-        <Gif>
-            <Image src={coin}></Image>
-        </Gif>
+        <Wrapper>
+            <CircularProgress></CircularProgress>
+        </Wrapper>
     );
 };
 
-const Gif = styled.div`
+const Wrapper = styled.div`
     position: fixed;
     height: 100%;
     width: 100%;
     background: #04045a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 export default Loader;
