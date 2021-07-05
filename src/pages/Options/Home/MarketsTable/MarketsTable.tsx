@@ -72,6 +72,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
         };
+        const numberOfPages = Math.ceil(optionsMarkets.length / 10) || 1;
         const [orderBy, setOrderBy] = useState(defaultOrderBy);
         const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -99,6 +100,13 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
 
         useEffect(() => setPage(0), [phase]);
 
+        const memoizedPage = useMemo(() => {
+            if (page > numberOfPages - 1) {
+                return numberOfPages - 1;
+            }
+            return page;
+        }, [page, numberOfPages]);
+
         const toggleWatchlist = async (marketAddress: string) => {
             try {
                 await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
@@ -112,7 +120,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
             }
         };
 
-        const sortedMArkets = useMemo(() => {
+        const sortedMarkets = useMemo(() => {
             return optionsMarkets
                 .sort((a, b) => {
                     switch (orderBy) {
@@ -133,8 +141,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                             return 0;
                     }
                 })
-                .slice(page * 10, 10 * (page + 1));
-        }, [optionsMarkets, orderBy, orderDirection, page]);
+                .slice(memoizedPage * 10, 10 * (memoizedPage + 1));
+        }, [optionsMarkets, orderBy, orderDirection, memoizedPage]);
 
         const { t } = useTranslation();
         return (
@@ -183,7 +191,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                         </TableHead>
 
                         <TableBody>
-                            {sortedMArkets.map((market, index) => {
+                            {sortedMarkets.map((market, index) => {
                                 return (
                                     <StyledTableRow
                                         onClick={() => {
@@ -235,12 +243,12 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         rowsPerPageOptions={[]}
                                         count={optionsMarkets.length}
                                         rowsPerPage={10}
-                                        page={page}
+                                        page={memoizedPage}
                                         onChangePage={handleChangePage}
                                         ActionsComponent={() => (
                                             <Pagination
-                                                page={page}
-                                                numberOfPages={Math.ceil(optionsMarkets.length / 10)}
+                                                page={memoizedPage}
+                                                numberOfPages={numberOfPages}
                                                 setPage={setPage}
                                             />
                                         )}
