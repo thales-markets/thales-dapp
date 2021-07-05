@@ -195,8 +195,8 @@ const YellowDot = styled.span`
 `;
 
 const CancelIconContainer = styled(CancelIcon)`
-    min-width: 12px;
-    min-height: 12px;
+    min-width: 14px;
+    min-height: 14px;
     margin-top: 2px;
     z-index: 2;
 `;
