@@ -63,8 +63,7 @@ const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
 const roundMinutes = (date: Date) => {
-    date.setHours(date.getHours() + Math.round(date.getMinutes() / 60));
-    date.setMinutes(0, 0, 0);
+    date.setUTCHours(12, 0, 0, 0);
     return date;
 };
 
@@ -704,21 +703,39 @@ export const CreateMarket: React.FC = () => {
                                     </ShortInputContainer>
                                 </FlexDivRow>
                                 <FlexDivRow>
-                                    <ShortInputContainer style={{ marginBottom: 40 }}>
-                                        <DatePicker
-                                            id="maturity-date"
-                                            dateFormat="MMM d, yyyy h:mm aa"
-                                            minDate={new Date()}
-                                            showTimeSelect={true}
-                                            startDate={Today}
-                                            selected={maturityDate}
-                                            endDate={maturityDate}
-                                            onChange={(d: Date) => setMaturityDate(d)}
-                                        />
-                                        <InputLabel>
-                                            {t('options.create-market.details.market-maturity-date-label')}
-                                        </InputLabel>
-                                    </ShortInputContainer>
+                                    <FlexDivRow style={{ width: '50%', marginRight: 10 }}>
+                                        <ShortInputContainer style={{ marginBottom: 40, flex: 3 }}>
+                                            <DatePicker
+                                                id="maturity-date"
+                                                dateFormat="MMM d, yyyy"
+                                                minDate={new Date()}
+                                                startDate={Today}
+                                                selected={maturityDate}
+                                                endDate={maturityDate}
+                                                onChange={(d: Date) => setMaturityDate(d)}
+                                            />
+                                            <InputLabel>
+                                                {t('options.create-market.details.market-maturity-date-label')}
+                                            </InputLabel>
+                                        </ShortInputContainer>
+                                        <ShortInputContainer style={{ marginBottom: 40, flex: 1, minWidth: 90 }}>
+                                            <DatePicker
+                                                id="maturity-date"
+                                                dateFormat="h:mm aa"
+                                                minDate={new Date()}
+                                                showTimeSelectOnly={true}
+                                                showTimeSelect={true}
+                                                startDate={Today}
+                                                selected={maturityDate}
+                                                endDate={maturityDate}
+                                                onChange={(d: Date) => setMaturityDate(d)}
+                                            />
+                                            <InputLabel>
+                                                {t('options.create-market.details.market-maturity-time-label')}
+                                            </InputLabel>
+                                        </ShortInputContainer>
+                                    </FlexDivRow>
+
                                     <ShortInputContainer
                                         className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
                                         style={{ position: 'relative', marginBottom: 40 }}

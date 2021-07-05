@@ -106,7 +106,6 @@
 }
 
 .react-datepicker__navigation--next {
-    right: 145px !important;
     background-image: url('../assets/images/arrow-right.svg') !important;
 }
 
