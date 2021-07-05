@@ -10,15 +10,18 @@ type CurrencyIconProps = {
 
 export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, synthIconStyle, ...rest }) => {
     const props = {
-        width: synthIconStyle?.width,
-        height: synthIconStyle?.height,
+        width: '24px',
+        height: '24px',
         alt: currencyKey,
         ...rest,
     };
 
     if (currencyKey !== CRYPTO_CURRENCY_MAP.SNX && currencyKey !== CRYPTO_CURRENCY_MAP.KNC) {
         const SynthIcon = getSynthIcon(currencyKey);
-        if (SynthIcon) return <SynthIcon style={{ marginRight: 10, ...synthIconStyle }} />;
+        if (SynthIcon)
+            return (
+                <SynthIcon style={{ marginRight: 10, width: props.width, height: props.height, ...synthIconStyle }} />
+            );
     }
 
     const AssetIcon = getAssetIcon(currencyKey);
