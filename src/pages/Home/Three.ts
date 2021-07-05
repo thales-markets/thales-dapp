@@ -97,42 +97,46 @@ export const setupThreeJS = () => {
         // let MAX_SCROLL: any;
         const animate = function () {
             if (document.getElementById('landing-hero')) {
-                const useApp = document.getElementById('use-app');
-                if (useApp && !eventListenerSet) {
-                    eventListenerSet = true;
-                    useApp.addEventListener('mouseenter', () => {
-                        speedUp = true;
-                    });
-                    useApp.addEventListener('mouseleave', () => {
-                        speedUp = false;
-                    });
-                }
-                // MAX_SCROLL = window.screen.height - window.screen.height;
-                // if (window.scrollY > (25 * MAX_SCROLL) / 100) {
-                //     particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
-                // } else {
-                //     particles.material.opacity = 1;
-                // }
-                if (speedUp) {
-                    particleSpeed = particleSpeed + ACCELERATION > MAX_SPEED ? MAX_SPEED : particleSpeed + ACCELERATION;
-                } else {
-                    particleSpeed = particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
-                }
-                for (let i = 0; i < PARTICLES_CNT; i++) {
-                    if (posArr[i * 3 + 2] >= CAM_POSITION) {
-                        posArr[i * 3 + 2] = -300;
+                if (document.getElementById('animation-button')?.classList.contains('active')) {
+                    const useApp = document.getElementById('use-app');
+                    if (useApp && !eventListenerSet) {
+                        eventListenerSet = true;
+                        useApp.addEventListener('mouseenter', () => {
+                            speedUp = true;
+                        });
+                        useApp.addEventListener('mouseleave', () => {
+                            speedUp = false;
+                        });
                     }
-                    posArr[i * 3 + 2] += particleSpeed;
-                }
-                particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+                    // MAX_SCROLL = window.screen.height - window.screen.height;
+                    // if (window.scrollY > (25 * MAX_SCROLL) / 100) {
+                    //     particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
+                    // } else {
+                    //     particles.material.opacity = 1;
+                    // }
+                    if (speedUp) {
+                        particleSpeed =
+                            particleSpeed + ACCELERATION > MAX_SPEED ? MAX_SPEED : particleSpeed + ACCELERATION;
+                    } else {
+                        particleSpeed =
+                            particleSpeed - ACCELERATION < MIN_SPEED ? MIN_SPEED : particleSpeed - ACCELERATION;
+                    }
+                    for (let i = 0; i < PARTICLES_CNT; i++) {
+                        if (posArr[i * 3 + 2] >= CAM_POSITION) {
+                            posArr[i * 3 + 2] = -300;
+                        }
+                        posArr[i * 3 + 2] += particleSpeed;
+                    }
+                    particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
 
-                smoke_particles.forEach((smoke, i) => {
-                    smoke.position.z =
-                        Math.sin(i + countRender * 0.0002) * ((smoke as any).myZ - (smoke as any).myZ * 0.6);
-                    countRender += 0.1;
-                });
-                renderer.render(scene, camera);
-                countRender += 1;
+                    smoke_particles.forEach((smoke, i) => {
+                        smoke.position.z =
+                            Math.sin(i + countRender * 0.0002) * ((smoke as any).myZ - (smoke as any).myZ * 0.6);
+                        countRender += 0.1;
+                    });
+                    renderer.render(scene, camera);
+                    countRender += 1;
+                }
                 requestAnimationFrame(animate);
             }
         };

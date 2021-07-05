@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
+import animate from 'assets/images/animate-button.svg';
+import animateHover from 'assets/images/animate-button-hover.svg';
+import animateStop from 'assets/images/animate-button-stop.svg';
 
 enum BurgerState {
     Init,
@@ -12,9 +15,15 @@ enum BurgerState {
     Hide,
 }
 
+enum AnimationState {
+    Active,
+    Paused,
+}
+
 const Header: React.FC = () => {
     const { t } = useTranslation();
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
+    const [animationState, setAnimationState] = useState<AnimationState>(AnimationState.Active);
 
     useMemo(() => {
         if (showBurgerMenu !== BurgerState.Init) {
@@ -60,9 +69,18 @@ const Header: React.FC = () => {
                     onClick={() => {
                         document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
                     }}
+                    className="header-faq"
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
+                <AnimationButton
+                    id="animation-button"
+                    onClick={setAnimationState.bind(
+                        this,
+                        animationState === AnimationState.Active ? AnimationState.Paused : AnimationState.Active
+                    )}
+                    className={animationState === AnimationState.Active ? 'active' : 'stop'}
+                ></AnimationButton>
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
                         {t('landing-page.use-app')}
@@ -202,6 +220,25 @@ const CommunityLink = styled.a`
             line-height: 24px;
             padding: 8px 16px !important;
         }
+        &.header-faq {
+            border-bottom: 1px solid #748bc6;
+        }
+    }
+`;
+
+const AnimationButton = styled.img`
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    cursor: pointer;
+    &.active {
+        content: url(${animate});
+    }
+    &.stop {
+        content: url(${animateStop});
+    }
+    &:hover {
+        content: url(${animateHover});
     }
 `;
 
