@@ -35,7 +35,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                 <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>
             </SummaryHeader>
             <FlexDivColumn style={{ justifyContent: 'space-around', flex: 0, minHeight: 160 }}>
-                <FlexDivCentered className="text-m pale-grey bold uppercase ls5">
+                <FlexDivCentered className="text-m pale-grey bold uppercase ls5" style={{ height: 32 }}>
                     {props.currencyKey && (
                         <>
                             <Currency.Icon
