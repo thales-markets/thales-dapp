@@ -38,7 +38,11 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                 <FlexDivCentered className="text-m pale-grey bold uppercase ls5">
                     {props.currencyKey && (
                         <>
-                            <Currency.Icon currencyKey={props.currencyKey.value} /> {props.currencyKey?.label}{' '}
+                            <Currency.Icon
+                                synthIconStyle={{ width: 24, height: 24 }}
+                                currencyKey={props.currencyKey.value}
+                            />
+                            {props.currencyKey?.label}
                         </>
                     )}
                 </FlexDivCentered>
