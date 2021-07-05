@@ -250,11 +250,13 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 onChange={watchlistedMarketsQuery.refetch}
             >
                 <NoMarkets>
-                    {userFilter === UserFilterEnum.All && phaseFilter !== PhaseFilterEnum.all && (
+                    {userFilter !== UserFilterEnum.MyMarkets && (
                         <>
-                            <Text className="text-l bold pale-grey">No markets available.</Text>
+                            <Text className="text-l bold pale-grey">
+                                {t('options.home.explore-markets.table.no-markets-found')}
+                            </Text>
                             <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
-                                View all markets
+                                {t('options.home.explore-markets.table.view-all-markets')}
                             </Button>
                         </>
                     )}
@@ -283,7 +285,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                     or
                                 </Text>
                                 <Button className="primary" onClick={resetFilters}>
-                                    View all markets
+                                    {t('options.home.explore-markets.table.view-all-markets')}
                                 </Button>
                             </FlexDiv>
                         </>
@@ -297,7 +299,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 const NoMarkets = styled(FlexDivColumn)`
     height: 500px;
     background: #04045a;
-    border-radius: 20px;
     justify-content: space-evenly;
     align-items: center;
     .primary {

@@ -213,8 +213,9 @@
                             "no-results": "You haven't placed any bids yet."
                         }
                     },
-                    "view-all-markets": "view all markets",
-                    "view-all-open-markets": "view all open markets"
+                    "view-all-markets": "View all markets",
+                    "view-all-open-markets": "View all open markets",
+                    "no-markets-found": "No markets found."
                 }
             },
             "markets-table": {
