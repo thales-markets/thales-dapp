@@ -658,21 +658,32 @@ export const CreateMarket: React.FC = () => {
                                     <ShortInputContainer style={{ marginBottom: 40 }}>
                                         <Input
                                             className={!isStrikePriceValid ? 'error' : ''}
+                                            value={strikePrice}
                                             onChange={(e) => {
-                                                if (Number(e.target.value) > 0) {
+                                                const { value } = e.target;
+
+                                                let trimmedValue = value;
+                                                if (value.indexOf('.') > -1) {
+                                                    const numberOfDecimals = value.split('.')[1].length;
+                                                    if (numberOfDecimals > DEFAULT_TOKEN_DECIMALS) {
+                                                        trimmedValue = value.substring(0, value.length - 1);
+                                                    }
+                                                }
+
+                                                if (Number(trimmedValue) > 0) {
                                                     setIsStrikePriceValid(true);
-                                                    setStrikePrice(Number(e.target.value));
+                                                    setStrikePrice(trimmedValue);
                                                 } else {
                                                     setIsStrikePriceValid(false);
                                                     setStrikePrice('');
                                                 }
 
-                                                if (Number(e.target.value) > 0 && currencyKey) {
+                                                if (Number(trimmedValue) > 0 && currencyKey) {
                                                     const currentPrice = get(exchangeRates, currencyKey.value, null);
                                                     if (currentPrice) {
                                                         const show =
-                                                            currentPrice * 100 < Number(e.target.value) ||
-                                                            currentPrice / 100 > Number(e.target.value);
+                                                            currentPrice * 100 < Number(trimmedValue) ||
+                                                            currentPrice / 100 > Number(trimmedValue);
                                                         setShowWarning(show);
                                                     }
                                                 } else {
