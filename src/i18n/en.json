@@ -238,7 +238,7 @@
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
                 "market-maturity-date-label": "market maturity date:",
-                "market-maturity-time-label": "time:",
+                "market-maturity-time-label": "time (UTC):",
                 "funding-amount": {
                     "label": "market funding amount:",
                     "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"

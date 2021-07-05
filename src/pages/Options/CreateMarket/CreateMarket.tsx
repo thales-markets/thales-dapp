@@ -22,7 +22,7 @@ import { ethers } from 'ethers';
 import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button, FlexDivRow } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
-import { formatShortDate } from 'utils/formatters/date';
+import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
 import { Error, ErrorMessage, InputsWrapper, LongSlider, ShortSlider } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
@@ -706,7 +706,7 @@ export const CreateMarket: React.FC = () => {
                                     <FlexDivRow style={{ width: '50%', marginRight: 10 }}>
                                         <ShortInputContainer style={{ marginBottom: 40, flex: 3 }}>
                                             <DatePicker
-                                                id="maturity-date"
+                                                className="maturity-date"
                                                 dateFormat="MMM d, yyyy"
                                                 minDate={new Date()}
                                                 startDate={Today}
@@ -720,15 +720,12 @@ export const CreateMarket: React.FC = () => {
                                         </ShortInputContainer>
                                         <ShortInputContainer style={{ marginBottom: 40, flex: 1, minWidth: 90 }}>
                                             <DatePicker
-                                                id="maturity-date"
+                                                className="maturity-date"
                                                 dateFormat="h:mm aa"
-                                                minDate={new Date()}
                                                 showTimeSelectOnly={true}
                                                 showTimeSelect={true}
-                                                startDate={Today}
-                                                selected={maturityDate}
-                                                endDate={maturityDate}
-                                                onChange={(d: Date) => setMaturityDate(d)}
+                                                selected={convertUTCToLocalDate(maturityDate)}
+                                                onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
                                             />
                                             <InputLabel>
                                                 {t('options.create-market.details.market-maturity-time-label')}

@@ -39,3 +39,17 @@ export const formattedDuration = (duration: Duration, delimiter = ' ', firstTwo 
     }
     return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
 };
+
+export const convertUTCToLocalDate = (date: Date) => {
+    return new Date(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        date.getUTCHours(),
+        date.getUTCMinutes()
+    );
+};
+
+export const convertLocalToUTCDate = (date: Date) => {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()));
+};
