@@ -217,7 +217,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <Currency.Name
                                                 currencyKey={market.currencyKey}
                                                 showIcon={true}
-                                                iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                                                iconProps={{ type: 'asset' }}
                                                 synthIconStyle={{ width: 32, height: 32 }}
                                             />
                                         </StyledTableCell>

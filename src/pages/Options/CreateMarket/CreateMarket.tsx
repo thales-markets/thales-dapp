@@ -633,6 +633,7 @@ export const CreateMarket: React.FC = () => {
                                                     <Currency.Name
                                                         currencyKey={option.value}
                                                         showIcon={true}
+                                                        synthIconStyle={{ width: 24, height: 24 }}
                                                         iconProps={{ type: 'asset' }}
                                                     />
                                                 );

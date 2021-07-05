@@ -30,7 +30,8 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) =>
                         <Currency.Name
                             currencyKey={market.currencyKey}
                             showIcon={true}
-                            iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                            synthIconStyle={{ width: 24, height: 24 }}
+                            iconProps={{ type: 'asset' }}
                         />
                     </div>
 

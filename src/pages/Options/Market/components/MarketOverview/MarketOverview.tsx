@@ -24,14 +24,16 @@ type MarketOverviewProps = {
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const iconProps = { width: '40px', height: '40px' };
 
     return (
         <>
             <Container>
                 <ItemContainer>
                     <FlexDivCentered>
-                        <CurrencyIcon currencyKey={optionsMarket.currencyKey} {...iconProps} />
+                        <CurrencyIcon
+                            currencyKey={optionsMarket.currencyKey}
+                            synthIconStyle={{ width: 40, height: 40 }}
+                        />
                         <FlexDivColumnCentered>
                             <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
                                 <StyledLink

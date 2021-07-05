@@ -41,7 +41,8 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                                 <Currency.Name
                                     currencyKey={asset.market.currencyKey}
                                     showIcon={true}
-                                    iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                                    synthIconStyle={{ width: 24, height: 24 }}
+                                    iconProps={{ type: 'asset' }}
                                 />
                             </FlexDiv>
                             <LightTooltip title="Strike price">
@@ -56,12 +57,12 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                             </LightTooltip>
                             <LightTooltip title="Amount of long options">
                                 <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(61, 186, 162)' }}>
-                                    {asset.balances.long}
+                                    {asset.balances.long.toFixed(2)}
                                 </Text>
                             </LightTooltip>
                             <LightTooltip title="Amount of short options">
                                 <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(255, 122, 104)' }}>
-                                    {asset.balances.short}
+                                    {asset.balances.short.toFixed(2)}
                                 </Text>
                             </LightTooltip>
                         </MarketRow>
