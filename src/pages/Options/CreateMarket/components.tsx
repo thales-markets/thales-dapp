@@ -146,9 +146,9 @@ const Wrapper = styled(FlexDivCentered)`
 
 export const ErrorMessage: React.FC<{ text: string; show: boolean }> = ({ text, show }) => {
     return (
-        <Wrapper className={show ? '' : 'hide'} style={{ background: '#E9BCBC', borderRadius: 5 }}>
+        <Wrapper className={show ? '' : 'hide'} style={{ background: '#E9BCBC', borderRadius: 5, zIndex: 10 }}>
             <Image style={{ width: 12, height: 12, margin: 6 }} src={errorIcon}></Image>
-            <Text className="text-xxs red lh16 ls25">{text}</Text>
+            <Text className="text-xxxs red lh16 ls25">{text}</Text>
         </Wrapper>
     );
 };

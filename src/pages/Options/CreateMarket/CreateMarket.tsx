@@ -792,12 +792,17 @@ export const CreateMarket: React.FC = () => {
 
                                         <ErrorMessage
                                             show={!isAmountValid}
-                                            text="Please enter funding amount. MIn 1000.00 sUSD is required."
+                                            text={t('options.create-market.min-amount', {
+                                                minimum:
+                                                    networkId === 1
+                                                        ? MIN_FUNDING_AMOUNT_MAINNET
+                                                        : MIN_FUNDING_AMOUNT_ROPSTEN,
+                                            })}
                                         />
 
                                         <ErrorMessage
                                             show={isAmountValid && !userHasEnoughFunds}
-                                            text="Please ensure your wallet has sufficient sUSD."
+                                            text={t('options.create-market.insufficient-amount')}
                                         />
                                     </ShortInputContainer>
                                 </FlexDivRow>
