@@ -282,6 +282,7 @@
                 "current-price-label": "Current {{currencyKey}} price",
                 "final-price-label": "Final {{currencyKey}} price",
                 "maturity-label": "Maturity",
+                "time-remaining-label": "Time remaining",
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",

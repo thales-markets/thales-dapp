@@ -224,7 +224,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         <StyledTableCell>{USD_SIGN + market.strikePrice.toFixed(2)}</StyledTableCell>
                                         <StyledTableCell>{USD_SIGN + market.poolSize.toFixed(2)}</StyledTableCell>
                                         <StyledTableCell>
-                                            <TimeRemaining end={market.timeRemaining} />
+                                            <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                         </StyledTableCell>
                                         <StyledTableCell>{market.openOrders}</StyledTableCell>
                                         <StyledTableCell>

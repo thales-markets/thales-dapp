@@ -68,6 +68,9 @@ const OrderbookTable: React.FC<OrderbookTableProps> = ({
                                         {...cell.getCellProps()}
                                         key={cellIndex}
                                         style={{ width: cell.column.width }}
+                                        justifyContent={
+                                            cell.column.id === 'displayOrder.timeRemaining' ? 'center' : 'left'
+                                        }
                                     >
                                         {cell.render('Cell')}
                                     </TableCell>
@@ -140,9 +143,9 @@ const InnerTableRow = styled(FlexDiv)<{ width: number; orderSide: OrderSide }>`
     z-index: 1;
 `;
 
-export const TableCell = styled(FlexDivCentered)`
+export const TableCell = styled(FlexDivCentered)<{ justifyContent?: string }>`
     min-width: 0px;
-    justify-content: left;
+    justify-content: ${(props) => props.justifyContent || 'left'};
     &:first-child {
         padding-left: 18px;
     }
