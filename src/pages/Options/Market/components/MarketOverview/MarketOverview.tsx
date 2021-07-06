@@ -8,7 +8,6 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
-import { formatShortDate } from 'utils/formatters/date';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
 import { LightTooltip } from '../../components';
@@ -16,6 +15,7 @@ import { getSynthName } from 'utils/snxJSConnector';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -79,15 +79,13 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
                 </ItemContainer>
                 <ItemContainer>
-                    <Title>
-                        {optionsMarket.isResolved
-                            ? t('options.market.overview.expiry-label')
-                            : t('options.market.overview.maturity-label')}
-                    </Title>
+                    <Title>{t('options.market.overview.time-remaining-label')}</Title>
                     <Content>
-                        {optionsMarket.isResolved
-                            ? formatShortDate(optionsMarket.expiryDate)
-                            : formatShortDate(optionsMarket.maturityDate)}
+                        {optionsMarket.isResolved ? (
+                            <TimeRemaining end={optionsMarket.expiryDate} fontSize={16} />
+                        ) : (
+                            <TimeRemaining end={optionsMarket.maturityDate} fontSize={16} />
+                        )}
                     </Content>
                 </ItemContainer>
                 <ItemContainer>

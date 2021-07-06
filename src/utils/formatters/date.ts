@@ -20,18 +20,21 @@ export const secondsToTime = (seconds: number) => {
 export const formattedDuration = (duration: Duration, delimiter = ' ', firstTwo = false) => {
     const formatted = [];
     if (duration.years) {
-        formatted.push(`${duration.years}y`);
+        return `${duration.years} ${duration.years > 1 ? 'years' : 'year'}`;
     }
     if (duration.months) {
-        formatted.push(`${duration.months}mo`);
+        return `${duration.months} ${duration.months > 1 ? 'months' : 'month'}`;
     }
     if (duration.days) {
-        formatted.push(`${duration.days}d`);
+        return `${duration.days} ${duration.days > 1 ? 'days' : 'day'}`;
     }
     if (duration.hours) {
-        formatted.push(`${duration.hours}h`);
+        return `${duration.hours} ${duration.hours > 1 ? 'hours' : 'hour'}`;
     }
     if (duration.minutes) {
+        if (duration.minutes > 10) {
+            return `${duration.minutes} minutes`;
+        }
         formatted.push(`${duration.minutes}m`);
     }
     if (duration.seconds != null) {

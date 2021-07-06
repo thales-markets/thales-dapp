@@ -24,7 +24,7 @@ import MarketWidget from './components/MarketWidget';
 import { MarketWidgetKey } from 'constants/ui';
 import { getVisibilityMap, setMarketWidgetLayout, getCurrentLayout, getFullLayout } from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
-import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketOverview from './components/MarketOverview';
 import styled from 'styled-components';
@@ -200,6 +200,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab
                                             isActive={tab.id === optionsActiveTab.id}
+                                            isLong={tab.id === 'long'}
                                             key={tab.id}
                                             onClick={() => setOptionsActiveTab(tab)}
                                             className={tab.id === optionsActiveTab.id ? 'selected' : ''}
@@ -265,13 +266,20 @@ const MainContentContainer = styled.div`
     overflow: hidden;
 `;
 
-const OptionsTabContainer = styled(FlexDiv)``;
+const OptionsTabContainer = styled.div`
+    height: 75px;
+    position: relative;
+`;
 
-const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean }>`
+const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; isLong: boolean }>`
+    position: absolute;
+    top: 0;
+    left: ${(props) => (props.isLong ? '0' : props.isActive ? '40%' : 'calc(60% - 25px)')};
     background-color: transparent;
-    width: ${(props) => (props.isActive ? '60%' : '40%')};
+    width: ${(props) => (props.isActive ? '60%' : 'calc(40% + 25px)')};
+    z-index: ${(props) => (props.isActive ? '2' : '1')};
     transition: 0.5s;
-    height: 60px;
+    height: 75px;
     border-radius: 15px 15px 0px 0px;
     font-style: normal;
     font-weight: 600;
@@ -280,14 +288,16 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean }>`
     text-align: center;
     letter-spacing: 0.15px;
     color: #b8c6e5;
+    padding-bottom: 15px;
     &.selected {
         background-color: #0a2e66;
         transition: 0.2s;
         color: #f6f6fe;
     }
-    &:hover {
+    &:hover:not(.selected) {
         cursor: pointer;
-        transition: 0.2s;
+        border: 1.5px solid #00f9ff;
+        color: #00f9ff;
     }
     img {
         margin-left: 10px;
@@ -305,6 +315,9 @@ const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string 
                 ? '0px 15px 15px 15px'
                 : '15px 0px 15px 15px'
             : '15px 15px 15px 15px'};
+    position: relative;
+    top: ${(props) => (props.phase === 'trading' ? '-15px' : '0')};
+    z-index: 3;
 `;
 
 export default Market;

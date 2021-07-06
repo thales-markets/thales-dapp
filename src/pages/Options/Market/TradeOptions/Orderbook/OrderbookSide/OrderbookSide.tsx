@@ -110,7 +110,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Header: <>{t('options.market.trade-options.orderbook.table.time-remaining-col')}</>,
                         accessor: 'displayOrder.timeRemaining',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['timeRemaining']>) => (
-                            <TimeRemaining end={cellProps.cell.value} />
+                            <TimeRemaining end={cellProps.cell.value} showBorder />
                         ),
                         width: 300,
                         sortable: false,
@@ -195,10 +195,12 @@ const YellowDot = styled.span`
 `;
 
 const CancelIconContainer = styled(CancelIcon)`
-    min-width: 14px;
-    min-height: 14px;
-    margin-top: 2px;
+    min-width: 30px;
+    min-height: 30px;
+    position: relative;
+    padding: 10px;
     z-index: 2;
+    right: 10px;
 `;
 
 const NoResultContainer = styled.div<{ orderSide: OrderSide; orderbookEmpty: boolean }>`
