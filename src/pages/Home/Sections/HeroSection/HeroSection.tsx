@@ -19,7 +19,7 @@ const HeroSection: React.FC = () => {
                     id="use-app"
                     className="secondary"
                     style={{ marginRight: '20px' }}
-                    onClick={() => navigateTo(ROUTES.Options.Home)}
+                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
                 >
                     {t('landing-page.launch')}
                 </Button>
