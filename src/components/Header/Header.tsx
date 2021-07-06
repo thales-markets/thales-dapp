@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
-import animate from 'assets/images/animate-button.svg';
-import animateHover from 'assets/images/animate-button-hover.svg';
-import animateStop from 'assets/images/animate-button-stop.svg';
+import play from 'assets/images/play.svg';
+import playHover from 'assets/images/play-hover.svg';
+import pause from 'assets/images/pause.svg';
+import pauseHover from 'assets/images/pause-hover.svg';
 import Cookies from 'universal-cookie';
 import { LightTooltip } from 'pages/Options/Market/components';
 
@@ -239,16 +240,19 @@ const CommunityLink = styled.a`
 const AnimationButton = styled.img`
     width: 40px;
     height: 40px;
-    padding: 10px;
+    padding: 4px;
     cursor: pointer;
     &.active {
-        content: url(${animate});
+        content: url(${pause});
+        &:hover {
+            content: url(${pauseHover});
+        }
     }
     &.stop {
-        content: url(${animateStop});
-    }
-    &:hover {
-        content: url(${animateHover});
+        content: url(${play});
+        &:hover {
+            content: url(${playHover});
+        }
     }
 `;
 
