@@ -22,13 +22,7 @@ import TradeOptions from './TradeOptions';
 import Orderbook from './TradeOptions/Orderbook';
 import MarketWidget from './components/MarketWidget';
 import { MarketWidgetKey } from 'constants/ui';
-import {
-    getVisibilityMap,
-    setMarketWidgetLayout,
-    getCurrentLayout,
-    setMarketWidgetVisibility,
-    getFullLayout,
-} from 'redux/modules/marketWidgets';
+import { getVisibilityMap, setMarketWidgetLayout, getCurrentLayout, getFullLayout } from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
 import { FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
@@ -169,15 +163,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
             }, 500);
         }
     }, [networkId, isWalletConnected, marketQuery.isSuccess]);
-
-    useEffect(() => {
-        dispatch(
-            setMarketWidgetVisibility({
-                marketWidget: MarketWidgetKey.YOUR_TRANSACTIONS,
-                isVisible: isWalletConnected,
-            })
-        );
-    }, [isWalletConnected]);
 
     useEffect(() => {
         return () => {
