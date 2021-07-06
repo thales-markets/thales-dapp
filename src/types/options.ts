@@ -125,9 +125,11 @@ export type DisplayOrder = {
     fillableAmount: number;
     filled: number;
     total: number;
+    fillableTotal: number;
     timeRemaining: number;
     orderHash: string;
     percentageOfMaximum?: number;
+    potentialReturn: number;
 };
 
 export type OrderSide = 'buy' | 'sell';
@@ -153,4 +155,27 @@ export type UsersAssets = {
         long: number;
         short: number;
     };
+};
+
+export type UserOrderMetaData = {
+    createdAt: string;
+    orderHash: string;
+    remainingFillableTakerAmount: string;
+};
+
+export type UserOrder = {
+    metaData: UserOrderMetaData;
+    order: Trade;
+};
+
+export type ZeroExErrorResponse = {
+    code: number;
+    reason: string;
+    validationErrors?: ZeroExValidationError[];
+};
+
+export type ZeroExValidationError = {
+    field: string;
+    code: number;
+    reason: string;
 };

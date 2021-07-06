@@ -2,81 +2,68 @@ import React from 'react';
 import styled from 'styled-components';
 
 type UserFilterProps = {
-    color?: string;
+    disabled?: boolean;
     img?: string;
     text?: string;
     className?: string;
     onClick?: (param: any) => void;
 };
 
-const UserFilter: React.FC<UserFilterProps> = ({ color, img, text, className, onClick }) => {
+const UserFilter: React.FC<UserFilterProps> = ({ img, disabled, text, className, onClick }) => {
     return (
-        <FiltersWrapper className={className} onClick={onClick}>
-            <FiltersIconWrapper color={color}>
-                <FiltersIcon src={img}></FiltersIcon>
-            </FiltersIconWrapper>
-            <FiltersText>{text}</FiltersText>
+        <FiltersWrapper className={`${className} ${disabled ? 'disabled' : ''}`} onClick={onClick}>
+            <BackgroundWrapper>
+                <FiltersIcon src={img} />
+                <FiltersText>{text}</FiltersText>
+            </BackgroundWrapper>
         </FiltersWrapper>
     );
 };
 
 const FiltersWrapper = styled.div`
     position: relative;
-    background: #04045a;
     border-radius: 20px;
-    padding: 20px 40px;
-    height: 160px;
-    max-width: 140px;
-    min-width: 140px;
-    margin: 24px;
+    background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
     cursor: pointer;
     &.selected,
     &:hover {
-        box-sizing: border-box;
-        background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-        border: 4px solid #44e1e2;
-        padding: 16px 36px;
+        background: #00f9ff;
     }
     &.disabled {
         pointer-events: none;
-        &:after {
-            position: absolute;
-            top: 0;
-            left: 0;
-            content: '';
-            width: 100%;
-            height: 100%;
-            background: rgba(31, 31, 31, 0.4);
-            border-radius: 24px;
-        }
     }
+    &.disabled:hover {
+        background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
+    }
+    margin: 24px;
 `;
 
-const FiltersIconWrapper = styled.div`
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: ${(props) => props.color};
-    margin: auto;
+const BackgroundWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    background: #1c1a71;
+    border-radius: 20px;
+    height: 135px;
+    max-width: 150px;
+    min-width: 150px;
+    margin: 2px;
 `;
 
 const FiltersIcon = styled.img`
     display: block;
     position: relative;
-    margin: auto;
-    top: 16px;
-    width: 24px;
-    height: 24px;
+    width: 90px;
+    height: 90px;
 `;
 
 const FiltersText = styled.p`
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 20px;
     text-align: center;
     color: #f6f6fe;
-    margin-top: 16px;
-    word-spacing: 100vw;
 `;
 
 export default UserFilter;

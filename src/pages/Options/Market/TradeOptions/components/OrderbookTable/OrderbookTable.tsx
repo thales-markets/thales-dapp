@@ -1,6 +1,6 @@
 import React, { useMemo, DependencyList } from 'react';
 import { useTable, useSortBy, Column, Row } from 'react-table';
-import Loader from 'components/Loader';
+import SimpleLoader from 'components/SimpleLoader';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
 import styled from 'styled-components';
 import { OrderItem, OrderSide } from 'types/options';
@@ -45,7 +45,7 @@ const OrderbookTable: React.FC<OrderbookTableProps> = ({
     return (
         <ReactTable {...getTableProps()}>
             {isLoading ? (
-                <Loader />
+                <SimpleLoader />
             ) : noResultsMessage != null ? (
                 <NoResultContainer>{noResultsMessage}</NoResultContainer>
             ) : (

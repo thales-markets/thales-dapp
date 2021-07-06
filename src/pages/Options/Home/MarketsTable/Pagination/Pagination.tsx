@@ -11,6 +11,7 @@ type PaginationProps = {
 };
 
 const Arrow = styled(Image)`
+    color: #748bc6;
     width: 6px;
     height: 10px;
     box-sizing: content-box;
@@ -47,7 +48,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
             </p>
             <FlexDivCentered
                 style={{
-                    border: '1px solid #04045A',
+                    border: '1px solid #0a2e66',
                     borderRadius: '32px',
                     width: '110px',
                     justifyContent: 'space-around',

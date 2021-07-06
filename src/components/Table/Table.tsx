@@ -3,7 +3,7 @@ import { useTable, useSortBy, Column, Row } from 'react-table';
 import { ReactComponent as SortDownIcon } from 'assets/images/sort-down.svg';
 import { ReactComponent as SortUpIcon } from 'assets/images/sort-up.svg';
 import { ReactComponent as SortIcon } from 'assets/images/sort.svg';
-import Loader from 'components/Loader';
+import SimpleLoader from 'components/SimpleLoader';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
 import styled from 'styled-components';
 
@@ -71,7 +71,7 @@ const Table: React.FC<TableProps> = ({
             ))}
             <ReactTable {...getTableProps()}>
                 {isLoading ? (
-                    <Loader />
+                    <SimpleLoader />
                 ) : noResultsMessage != null ? (
                     <NoResultContainer>{noResultsMessage}</NoResultContainer>
                 ) : (

@@ -15,9 +15,9 @@ export const PhaseLabel = styled(Button)`
     font-size: 14px;
     line-height: 24px;
     letter-spacing: 0.25px;
-    color: #04045a !important;
+    color: #f6f6fe !important;
     &.trading {
-        background: #4fbf67;
+        background: #01b977;
     }
     &.maturity {
         background: #355dff;
@@ -31,21 +31,12 @@ export const StyledTableCell = withStyles(() => ({
     head: {
         position: 'relative',
         border: 'none',
-        background: '#127',
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: '14px',
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
-        color: '#748BC6',
-        '&:first-child': {
-            borderTopLeftRadius: '8px',
-            borderBottomLeftRadius: '8px',
-        },
-        '&:last-child': {
-            borderTopRightRadius: '8px',
-            borderBottomRightRadius: '8px',
-        },
+        color: '#b8c6e5',
     },
     body: {
         border: 'none',
@@ -55,14 +46,6 @@ export const StyledTableCell = withStyles(() => ({
         lineHeight: '24px',
         letterSpacing: ' 0.25px',
         color: '#F6F6FE',
-        '&:first-child': {
-            borderTopLeftRadius: '12px',
-            borderBottomLeftRadius: '12px',
-        },
-        '&:last-child': {
-            borderTopRightRadius: '12px',
-            borderBottomRightRadius: '12px',
-        },
     },
 }))(TableCell);
 
@@ -70,7 +53,7 @@ export const TableHeaderLabel = styled.span`
     vertical-align: middle;
     margin-right: 4px;
     &.selected {
-        color: #44e1e2;
+        color: #00f9ff;
     }
 `;
 

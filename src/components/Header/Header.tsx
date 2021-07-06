@@ -4,6 +4,12 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
+import play from 'assets/images/play.svg';
+import playHover from 'assets/images/play-hover.svg';
+import pause from 'assets/images/pause.svg';
+import pauseHover from 'assets/images/pause-hover.svg';
+import Cookies from 'universal-cookie';
+import { LightTooltip } from 'pages/Options/Market/components';
 
 enum BurgerState {
     Init,
@@ -11,9 +17,18 @@ enum BurgerState {
     Hide,
 }
 
+enum AnimationState {
+    Active,
+    Paused,
+}
+
 const Header: React.FC = () => {
     const { t } = useTranslation();
+    const cookies = new Cookies();
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
+    const [animationState, setAnimationState] = useState<AnimationState>(
+        cookies.get('animation') === 'false' ? AnimationState.Paused : AnimationState.Active
+    );
 
     useMemo(() => {
         if (showBurgerMenu !== BurgerState.Init) {
@@ -59,9 +74,22 @@ const Header: React.FC = () => {
                     onClick={() => {
                         document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
                     }}
+                    className="header-faq"
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
+                <LightTooltip title="Toogle animation">
+                    <AnimationButton
+                        id="animation-button"
+                        onClick={() => {
+                            cookies.set('animation', animationState === AnimationState.Active ? false : true);
+                            setAnimationState(
+                                animationState === AnimationState.Active ? AnimationState.Paused : AnimationState.Active
+                            );
+                        }}
+                        className={animationState === AnimationState.Active ? 'active' : 'stop'}
+                    ></AnimationButton>
+                </LightTooltip>
             </Links>
             <BurdgerIcon
                 onClick={() =>
@@ -195,6 +223,28 @@ const CommunityLink = styled.a`
             font-size: 16px;
             line-height: 24px;
             padding: 8px 16px !important;
+        }
+        &.header-faq {
+            border-bottom: 1px solid #748bc6;
+        }
+    }
+`;
+
+const AnimationButton = styled.img`
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    cursor: pointer;
+    &.active {
+        content: url(${pause});
+        &:hover {
+            content: url(${pauseHover});
+        }
+    }
+    &.stop {
+        content: url(${play});
+        &:hover {
+            content: url(${playHover});
         }
     }
 `;

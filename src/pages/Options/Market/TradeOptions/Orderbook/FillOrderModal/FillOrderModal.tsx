@@ -193,7 +193,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         refetchOrderbook(baseToken);
                         refetchTrades(optionsMarket.address);
                         refetchUserTrades(optionsMarket.address, walletAddress);
-                        setIsFilling(false);
                         onClose();
                     }
                 }
@@ -230,7 +229,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, gasPrice, amount]);
+    }, [isButtonDisabled, gasPrice, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -299,18 +298,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         : Number(order.displayOrder.price) * Number(amount) <= sUSDBalance))
         );
         setInsufficientOrderAmount(order.displayOrder.fillableAmount < Number(amount));
-    }, [amount]);
-
-    useEffect(() => {
-        setIsAmountValid(
-            Number(amount) === 0 ||
-                (Number(amount) > 0 &&
-                    (isBuy
-                        ? Number(amount) <= tokenBalance
-                        : Number(order.displayOrder.price) * Number(amount) <= sUSDBalance))
-        );
-        setInsufficientOrderAmount(order.displayOrder.fillableAmount < Number(amount));
-    }, [amount]);
+    }, [amount, sUSDBalance, tokenBalance]);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {

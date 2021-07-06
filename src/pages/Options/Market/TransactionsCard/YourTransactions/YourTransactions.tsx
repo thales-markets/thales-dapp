@@ -63,6 +63,7 @@ const YourTransactions: React.FC<YourTransactionsProps> = ({ marketAddress, wall
                     tradesTransactions={tradesQuery.data || []}
                     isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
                     type="your-activity"
+                    isTrading={optionsMarket.phase === 'trading'}
                 />
             </MarketWidgetContent>
         </>

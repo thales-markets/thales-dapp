@@ -70,3 +70,13 @@ export enum OrderbookFilterEnum {
     BUY = 'buy',
     SELL = 'sell',
 }
+export enum Zero0xErrorCode {
+    VALIDATION_FAILED = 100,
+    TRANSACTION_INVALID = 105,
+}
+
+export enum Zero0xErrorReason {
+    MATCHED_MY_OWN_ORDERS = 'IncompleteTransformERC20Error',
+    MAKER_WALLET_INSUFFICIENT_BALANCE = 'WalletExecuteDelegateCallFailedError',
+    TAKER_WALLET_INSUFFICIENT_BALANCE = 'SpenderERC20TransferFromFailedError',
+}

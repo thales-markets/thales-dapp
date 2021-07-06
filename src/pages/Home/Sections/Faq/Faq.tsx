@@ -57,7 +57,7 @@ const Faq: React.FC = () => {
                     window.open('https://discord.gg/cFGv5zyVEj', '_blank');
                 }}
             >
-                <Image src={discord} style={{ height: 37, width: 32, marginRight: 6 }}></Image>
+                <Image src={discord} style={{ height: 37, width: 32, marginRight: 8 }}></Image>
                 <Text className="text-l pale-grey bold">Join Discord</Text>
             </Button>
         </FlexDivColumn>

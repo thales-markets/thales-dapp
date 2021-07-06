@@ -83,7 +83,8 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                         <Currency.Name
                             currencyKey={order.market.currencyKey}
                             showIcon={true}
-                            iconProps={{ width: '32px', height: '32px', type: 'asset' }}
+                            synthIconStyle={{ width: 24, height: 24 }}
+                            iconProps={{ type: 'asset' }}
                         />
                         <Text className="text-xxs" style={{ margin: '0 8px' }}>
                             {order.isLong ? ' > ' : ' < '}

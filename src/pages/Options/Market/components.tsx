@@ -100,6 +100,7 @@ export const DoubleShortInputContainer = styled(InputContainer)`
 
 export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     text-transform: ${(prop) => (prop.isUppercase ? 'uppercase' : 'none')};
+    caret-color: transparent;
     > div:first-of-type {
         height: 64px;
         background: #0a2e66;
@@ -124,6 +125,10 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         box-shadow: none;
         overflow: hidden;
     }
+    & + label {
+        z-index: 100;
+    }
+
     svg {
         fill: #f6f6fe;
     }
@@ -139,7 +144,12 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         color: #b8c6e5;
         cursor: pointer;
     }
+
+    .react-select__value-container {
+        height: 100%;
+    }
     .react-select__menu {
+        font-size: 13px;
         padding: 0px 4px;
     }
     .react-select__control:hover {
@@ -157,6 +167,9 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
         border: 2px solid #00f9ff;
         box-sizing: border-box;
         cursor: pointer;
+    }
+    &.error .react-select__control {
+        border: 2px solid #e53720;
     }
 `;
 
@@ -264,7 +277,7 @@ export const SummaryContent = styled.div<{ color?: string }>`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 150px;
+    width: 200px;
     text-align: end;
     color: ${(props) => props.color ?? '#f6f6fe'};
 `;
@@ -408,6 +421,8 @@ export const ProtocolFeeItem = styled(SummaryContent)`
 `;
 
 export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
+    min-width: 12px;
+    min-height: 12px;
     margin-left: 4px;
     margin-bottom: -1px;
 `;

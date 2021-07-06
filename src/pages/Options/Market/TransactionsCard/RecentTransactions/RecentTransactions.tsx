@@ -44,6 +44,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
                     tradesTransactions={tradesQuery.data || []}
                     isLoading={marketTransactionsQuery.isLoading || tradesQuery.isLoading}
                     type="recent-activity"
+                    isTrading={optionsMarket.phase === 'trading'}
                 />
             </MarketWidgetContent>
         </>

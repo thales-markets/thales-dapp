@@ -3,7 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { DisplayOrder, OptionSide } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
-import { SummaryItem, SummaryLabel, SummaryContent } from 'pages/Options/Market/components';
+import {
+    SummaryItem,
+    SummaryLabel,
+    SummaryContent,
+    LightTooltip,
+    StyledQuestionMarkIcon,
+} from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 
@@ -33,38 +39,47 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
                     })}
                 </SummaryDetailsLabel>
                 <SummaryDetailsContent>
-                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.amount)}
+                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.fillableAmount, 2)}
                 </SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>{t('options.market.trade-options.order-details.total-label')}</SummaryDetailsLabel>
-                <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.total)}</SummaryDetailsContent>
+                <SummaryDetailsContent>
+                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.fillableTotal, 2)}
+                </SummaryDetailsContent>
+            </SummaryDetailsItem>
+            <SummaryDetailsItem>
+                <SummaryDetailsLabel>
+                    {t('options.market.trade-options.order-details.return-label')}
+                    <LightTooltip title={t('options.market.trade-options.order-details.return-col-tooltip')}>
+                        <StyledQuestionMarkIcon />
+                    </LightTooltip>
+                </SummaryDetailsLabel>
+                <SummaryDetailsContent>{formatPercentage(order.potentialReturn)}</SummaryDetailsContent>
+            </SummaryDetailsItem>
+            <SummaryDetailsItem>
+                <SummaryDetailsLabel>
+                    {t('options.market.trade-options.order-details.inital-amount-label', {
+                        currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                    })}
+                </SummaryDetailsLabel>
+                <SummaryDetailsContent>
+                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.amount, 2)}
+                </SummaryDetailsContent>
+            </SummaryDetailsItem>
+            <SummaryDetailsItem>
+                <SummaryDetailsLabel>
+                    {t('options.market.trade-options.order-details.inital-total-label', {
+                        currencyKey: SYNTHS_MAP.sUSD,
+                    })}
+                </SummaryDetailsLabel>
+                <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.total, 2)}</SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>
                     {t('options.market.trade-options.order-details.filled-label')}
                 </SummaryDetailsLabel>
                 <SummaryDetailsContent>{formatPercentage(order.filled)}</SummaryDetailsContent>
-            </SummaryDetailsItem>
-            <SummaryDetailsItem>
-                <SummaryDetailsLabel>
-                    {t('options.market.trade-options.order-details.remaining-amount-label', {
-                        currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
-                    })}
-                </SummaryDetailsLabel>
-                <SummaryDetailsContent>
-                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.fillableAmount)}
-                </SummaryDetailsContent>
-            </SummaryDetailsItem>
-            <SummaryDetailsItem>
-                <SummaryDetailsLabel>
-                    {t('options.market.trade-options.order-details.remaining-amount-label', {
-                        currencyKey: SYNTHS_MAP.sUSD,
-                    })}
-                </SummaryDetailsLabel>
-                <SummaryDetailsContent>
-                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.fillableAmount * order.price)}
-                </SummaryDetailsContent>
             </SummaryDetailsItem>
         </Container>
     );

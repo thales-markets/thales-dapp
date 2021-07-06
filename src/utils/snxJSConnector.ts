@@ -53,8 +53,8 @@ export const getSynthName = (currencyKey: string) => {
     switch (currencyKey) {
         case CRYPTO_CURRENCY_MAP.SNX:
             return 'Synthetix';
-        case CRYPTO_CURRENCY_MAP.SNX:
-            return 'KNCL';
+        case CRYPTO_CURRENCY_MAP.KNC:
+            return 'Kyber Network';
         case CRYPTO_CURRENCY_MAP.REN:
             return 'REN';
         case CRYPTO_CURRENCY_MAP.LEND:

@@ -13,10 +13,20 @@ const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
             const { synthSummaryUtilContract } = snxJSConnector;
 
             const exchangeRates: Rates = {};
+            const snxRate = await snxJSConnector.snxJS?.contracts.ExchangeRates.rateForCurrency(
+                snxJSConnector.snxJS?.toBytes32('SNX')
+            );
+            const kncRate = await snxJSConnector.snxJS?.contracts.ExchangeRates.rateForCurrency(
+                snxJSConnector.snxJS?.toBytes32('KNC')
+            );
+            exchangeRates['SNX'] = bigNumberFormatter(snxRate);
+            exchangeRates['KNC'] = bigNumberFormatter(kncRate);
 
             const [synths, rates] = await synthSummaryUtilContract.synthsRates();
+
             synths.forEach((synth: CurrencyKey, idx: number) => {
                 const synthName = parseBytes32String(synth);
+
                 exchangeRates[synthName] = bigNumberFormatter(rates[idx]);
             });
 

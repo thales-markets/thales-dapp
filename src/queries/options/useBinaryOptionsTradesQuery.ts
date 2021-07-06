@@ -16,7 +16,7 @@ const mapToOptionTransactions = (
             return {
                 timestamp: trade.timestamp,
                 hash: trade.transactionHash,
-                type: orderSide,
+                type: orderSide === 'sell' ? 'buy' : 'sell',
                 market: marketAddress,
                 side: optionSide,
                 amount: orderSide === 'buy' ? trade.takerAmount : trade.makerAmount,

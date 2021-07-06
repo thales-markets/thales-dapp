@@ -5,7 +5,7 @@ import isNumber from 'lodash/isNumber';
 import { useTranslation } from 'react-i18next';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import Loader from 'components/Loader';
+import SimpleLoader from 'components/SimpleLoader';
 import { OptionsMarketInfo, OptionsTransactions } from 'types/options';
 import styled from 'styled-components';
 import { GridDivCenteredRow } from 'theme/common';
@@ -128,7 +128,11 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
                             )}
                         </LineChart>
                     </ChartResponsiveContainer>
-                    {isLoading && <Loader />}
+                    {isLoading && (
+                        <LoaderContainer>
+                            <SimpleLoader />
+                        </LoaderContainer>
+                    )}
                     {noChartData && (
                         <NoCharDataContainer>{t('options.market.chart-card.no-chart-data')}</NoCharDataContainer>
                     )}
@@ -205,6 +209,14 @@ const NoCharDataContainer = styled(GridDivCenteredRow)`
     font-weight: 600;
     font-size: 25px;
     line-height: 48px;
+    position: absolute;
+    left: 45%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+`;
+
+const LoaderContainer = styled(GridDivCenteredRow)`
+    grid-gap: 10px;
     position: absolute;
     left: 45%;
     top: 45%;

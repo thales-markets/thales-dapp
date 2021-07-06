@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
@@ -16,7 +16,7 @@ import Currency from 'components/Currency';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { Arrow, ArrowsWrapper, PhaseLabel, Row, StyledTableCell, TableHeaderLabel, Star } from './components';
+import { Arrow, ArrowsWrapper, PhaseLabel, StyledTableCell, TableHeaderLabel, Star } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarkets';
@@ -66,12 +66,13 @@ enum OrderDirection {
 
 const defaultOrderBy = 5; // time remaining
 
-const MarketsTable: FC<MarketsTableProps> = memo(
+const MarketsTable: React.FC<MarketsTableProps> = memo(
     ({ optionsMarkets, watchlistedMarkets, children, phase, onChange }) => {
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
         };
+        const numberOfPages = Math.ceil(optionsMarkets.length / 10) || 1;
         const [orderBy, setOrderBy] = useState(defaultOrderBy);
         const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -99,6 +100,13 @@ const MarketsTable: FC<MarketsTableProps> = memo(
 
         useEffect(() => setPage(0), [phase]);
 
+        const memoizedPage = useMemo(() => {
+            if (page > numberOfPages - 1) {
+                return numberOfPages - 1;
+            }
+            return page;
+        }, [page, numberOfPages]);
+
         const toggleWatchlist = async (marketAddress: string) => {
             try {
                 await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
@@ -112,7 +120,7 @@ const MarketsTable: FC<MarketsTableProps> = memo(
             }
         };
 
-        const sortedMArkets = useMemo(() => {
+        const sortedMarkets = useMemo(() => {
             return optionsMarkets
                 .sort((a, b) => {
                     switch (orderBy) {
@@ -133,15 +141,18 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                             return 0;
                     }
                 })
-                .slice(page * 10, 10 * (page + 1));
-        }, [optionsMarkets, orderBy, orderDirection, page]);
+                .slice(memoizedPage * 10, 10 * (memoizedPage + 1));
+        }, [optionsMarkets, orderBy, orderDirection, memoizedPage]);
 
         const { t } = useTranslation();
         return (
             <>
-                <TableContainer style={{ background: 'transparent', boxShadow: 'none' }} component={Paper}>
+                <TableContainer
+                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
+                    component={Paper}
+                >
                     <Table aria-label="customized table">
-                        <TableHead style={{ textTransform: 'uppercase' }}>
+                        <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (
@@ -164,11 +175,11 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                                                     ? upSelected
                                                                     : downSelected
                                                             }
-                                                        ></Arrow>
+                                                        />
                                                     ) : (
                                                         <>
-                                                            <Arrow src={up}></Arrow>
-                                                            <Arrow src={down}></Arrow>
+                                                            <Arrow src={up} />
+                                                            <Arrow src={down} />
                                                         </>
                                                     )}
                                                 </ArrowsWrapper>
@@ -177,11 +188,10 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                     );
                                 })}
                             </TableRow>
-                            <Divider />
                         </TableHead>
 
                         <TableBody>
-                            {sortedMArkets.map((market, index) => {
+                            {sortedMarkets.map((market, index) => {
                                 return (
                                     <StyledTableRow
                                         onClick={() => {
@@ -197,16 +207,18 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                                 e.stopPropagation();
                                                 toggleWatchlist(market.address);
                                             }}
+                                            style={{ paddingRight: 0 }}
                                         >
                                             <Star
                                                 src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
-                                            ></Star>
+                                            />
                                         </StyledTableCell>
                                         <StyledTableCell>
                                             <Currency.Name
                                                 currencyKey={market.currencyKey}
                                                 showIcon={true}
-                                                iconProps={{ width: '24px', height: '24px', type: 'asset' }}
+                                                iconProps={{ type: 'asset' }}
+                                                synthIconStyle={{ width: 32, height: 32 }}
                                             />
                                         </StyledTableCell>
                                         <StyledTableCell>{USD_SIGN + market.strikePrice.toFixed(2)}</StyledTableCell>
@@ -231,12 +243,12 @@ const MarketsTable: FC<MarketsTableProps> = memo(
                                         rowsPerPageOptions={[]}
                                         count={optionsMarkets.length}
                                         rowsPerPage={10}
-                                        page={page}
+                                        page={memoizedPage}
                                         onChangePage={handleChangePage}
                                         ActionsComponent={() => (
                                             <Pagination
-                                                page={page}
-                                                numberOfPages={Math.ceil(optionsMarkets.length / 10)}
+                                                page={memoizedPage}
+                                                numberOfPages={numberOfPages}
                                                 setPage={setPage}
                                             />
                                         )}
@@ -254,31 +266,25 @@ const MarketsTable: FC<MarketsTableProps> = memo(
 
 const StyledTableRow = withStyles(() => ({
     root: {
-        background: '#126',
-        '&:nth-of-type(odd)': {
-            background: '#116',
+        background: '#04045a',
+        '&:last-child': {
+            borderBottomLeftRadius: '23px',
+            borderBottomRightRadius: '23px',
+        },
+        '&:last-child td:first-child': {
+            borderBottomLeftRadius: '23px',
+        },
+        '&:last-child td:last-child': {
+            borderBottomRightRadius: '23px',
         },
         '&.clickable': {
             cursor: 'pointer',
             '&:hover': {
-                background: '#04045A',
+                background: '#0a0b52',
             },
         },
     },
 }))(TableRow);
-
-const Divider: React.FC = () => {
-    return (
-        <Row>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </Row>
-    );
-};
 
 const PaginationWrapper = styled(TablePagination)`
     border: none !important;

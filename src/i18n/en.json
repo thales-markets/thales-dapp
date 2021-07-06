@@ -103,19 +103,23 @@
         "errors": {
             "gas-exceeds-limit": "Max input is {{gasPrice}}",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
+            "unknown-error-try-again-general": "An unknown error occurred. Please try again.",
             "insufficient-balance": "Insufficient balance",
             "insufficient-liquidity": "Insufficient liquidity",
+            "insufficient-liquidity-for-trade": "Insufficient liquidity for this trade",
             "insufficient-order-amount": "Insufficient order amount",
             "invalid-order-amount-max": "The sLONG amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
             "enter-expiration": "Enter expiration",
+            "enter-valid-slippage": "Enter a valid slippage percentage",
             "invalid-price": "Invalid price",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
             "invalid-options-price": "The price must be higher than ${{min}} and less than or equal to the ${{max}}",
-            "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}"
+            "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}",
+            "invalid-slippage": "Invalid slippage"
         },
         "search": "search",
         "chart": {
@@ -185,13 +189,14 @@
                     "title": "Connect a wallet to create a market or place a bid"
                 },
                 "no-markets": {
-                    "title": "Create a market or place a bid to get started"
+                    "title": "Create a market, mint new options, or find a market you want to trade to get started"
                 },
+                "explore-markets-button-label": "Explore markets",
                 "create-market-button-label": "Create market"
             },
             "explore-markets": {
                 "title": "Bid on open markets:",
-                "discover": "Discover Top-Notch Markets",
+                "trending": "Trending Markets",
                 "table": {
                     "filters": {
                         "markets": {
@@ -208,8 +213,9 @@
                             "no-results": "You haven't placed any bids yet."
                         }
                     },
-                    "view-all-markets": "view all markets",
-                    "view-all-open-markets": "view all open markets"
+                    "view-all-markets": "View all markets",
+                    "view-all-open-markets": "View all open markets",
+                    "no-markets-found": "No markets found."
                 }
             },
             "markets-table": {
@@ -227,16 +233,19 @@
         "create-market": {
             "back-to-markets": "back to markets",
             "title": "Create a new Binary Options market",
-            "subtitle": "Here you can create a new Binary Options market by selecting an asset, the strike price that bidders can take either side of, when to close the market, the long/short skew, and how much you’re bidding.",
+            "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
+            "note": "* Note: The amount of sUSD deposited will dictate how many long and short options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 sLONG and 1,000 sSHORT options tokens for this market.",
             "details": {
                 "select-asset-label": "select asset:",
                 "strike-price-label": "strike price:",
                 "market-maturity-date-label": "market maturity date:",
+                "market-maturity-time-label": "time (UTC):",
                 "funding-amount": {
                     "label": "market funding amount:",
                     "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
                 }
             },
+            "sellOptions": "Sell minted LONG/SHORT options",
             "summary": {
                 "title": "new market summary:",
                 "subtitle": "You will not pay any fee for creating a market.",
@@ -256,21 +265,24 @@
                 },
                 "wallet-access": "Before you can create a new market, enable wallet access:",
                 "create-market-button-label": "Create market",
-                "creating-market-button-label": "creating market...",
+                "creating-market-button-label": "Creating market...",
                 "approve-manager-button-label": "Approve",
-                "waiting-for-approval-button-label": "Approving..."
+                "waiting-for-approval-button-label": "Approving...",
+                "note": "*When creating a market you will:",
+                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\n\nPay zero Thales protocol fees for minting options tokens.\n\nPay Ethereum network fees (gas) when approving the market creation."
             }
         },
         "market": {
             "overview": {
-                "market-details-tooltip": "Market details",
+                "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
                 "current-price-label": "Current {{currencyKey}} price",
                 "final-price-label": "Final {{currencyKey}} price",
                 "maturity-label": "Maturity",
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
-                "final-result-label": "Final result"
+                "final-result-label": "Final result",
+                "deposited-currency-label": "Deposited {{currencyKey}}"
             },
             "heading": {
                 "all-markets": "all markets",
@@ -304,7 +316,7 @@
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "button": {
-                    "customize-layout": "Adjust view",
+                    "customize-layout": "Customize view",
                     "reset-layout": "Reset layout"
                 }
             },
@@ -330,13 +342,15 @@
                     "no-results": {
                         "recent-activity": {
                             "all": "No transactions associated with this market.",
-                            "market": "No transactions associated with this market.",
-                            "trade": "No trades associated with this market."
+                            "mint": "No mint transactions associated with this market.",
+                            "trade": "No trades associated with this market.",
+                            "exercise": "No exercise transactions associated with this market."
                         },
                         "your-activity": {
                             "all": "No transactions associated with this wallet.",
-                            "market": "No transactions associated with this wallet.",
-                            "trade": "No trades associated with this wallet."
+                            "mint": "No mint transactions associated with this wallet.",
+                            "trade": "No trades associated with this wallet.",
+                            "exercise": "No exercise transactions associated with this wallet."
                         }
                     },
                     "types": {
@@ -348,8 +362,9 @@
                 },
                 "filter": {
                     "all": "All",
-                    "market": "Market transactions",
-                    "trade": "Trades"
+                    "mint": "Mint",
+                    "trade": "Trades",
+                    "exercise": "Exercise"
                 }
             },
             "trade-card": {
@@ -396,14 +411,14 @@
                     },
                     "table": {
                         "type-col": "Type",
-                        "price-col": "Price (sUSD)",
-                        "amount-col": "Amount ({{currencyKey}})",
-                        "filled-col": "Filled (%)",
-                        "total-col": "Total (sUSD)",
-                        "remaining-amount-col": "Remaining amount ({{currencyKey}}):",
-                        "remaining-amount-susd-col": "Remaining amount (sUSD):",
-                        "time-remaining-col": "Time remaining",
-                        "cancel-col": "Cancel"
+                        "price-col": "PRICE (sUSD)",
+                        "amount-col": "AMOUNT ({{currencyKey}})",
+                        "filled-col": "FILLED (%)",
+                        "return-col": "RETURN",
+                        "return-col-tooltip": "Potential return if this option win",
+                        "total-col": "TOTAL (sUSD)",
+                        "time-remaining-col": "TIME REMAINING",
+                        "cancel-col-tooltip": "Click to cancel your order"
                     }
                 },
                 "place-order": {
@@ -420,6 +435,8 @@
                     "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
                     "confirm-button": {
                         "label": "Submit order",
+                        "long": "Submit sLong",
+                        "short": "Submit sShort",
                         "progress-label": "Submitting order in progress..."
                     },
                     "swap-confirm-button": {
@@ -428,7 +445,7 @@
                             "progress-label": "Buying in progress..."
                         },
                         "sell": {
-                            "label": "sell",
+                            "label": "Sell",
                             "progress-label": "Selling in progress..."
                         }
                     }
@@ -485,11 +502,14 @@
                 },
                 "order-details": {
                     "title": "Order details",
-                    "price-label": "Price per {{currencyKey}} (sUSD):",
-                    "amount-label": "Amount ({{currencyKey}}):",
-                    "total-label": "Total (sUSD):",
-                    "filled-label": "Filled (%):",
-                    "remaining-amount-label": "Remaining amount ({{currencyKey}}):"
+                    "price-label": "Price per {{currencyKey}} (sUSD)",
+                    "amount-label": "Amount ({{currencyKey}})",
+                    "total-label": "Total (sUSD)",
+                    "filled-label": "Filled (%)",
+                    "return-label": "Return",
+                    "return-col-tooltip": "Potential return if this option win",
+                    "inital-amount-label": "Inital amount ({{currencyKey}})",
+                    "inital-total-label": "Inital total ({{currencyKey}})"
                 }
             }
         },

@@ -11,11 +11,10 @@ import { TradeCardPhaseProps } from 'types/options';
 import { useBOMContractContext } from 'pages/Options/Market/contexts/BOMContractContext';
 import { getWalletAddress, getIsWalletConnected } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining/TimeRemaining';
-import QUERY_KEYS from 'constants/queryKeys';
 import { RootState } from 'redux/rootReducer';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import ResultCard from '../components/ResultCard';
-import queryConnector, { refetchMarketQueries } from 'utils/queryConnector';
+import { refetchMarketQueries } from 'utils/queryConnector';
 import { BINARY_OPTIONS_EVENTS } from 'constants/events';
 import MarketWidgetHeader from '../../components/MarketWidget/MarketWidgetHeader';
 import { MarketWidgetKey } from 'constants/ui';
@@ -150,8 +149,10 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                                     <TimeRemaining
                                         end={optionsMarket.timeRemaining}
                                         onEnded={() =>
-                                            queryConnector.queryClient.invalidateQueries(
-                                                QUERY_KEYS.BinaryOptions.Market(optionsMarket.address)
+                                            refetchMarketQueries(
+                                                walletAddress,
+                                                BOMContract.address,
+                                                optionsMarket.address
                                             )
                                         }
                                         fontSize={20}

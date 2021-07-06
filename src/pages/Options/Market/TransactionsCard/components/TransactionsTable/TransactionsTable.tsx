@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
 import { OptionsTransaction, OptionsTransactions } from 'types/options';
@@ -89,6 +89,8 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(
                                               OPTIONS_CURRENCY_MAP[cellProps.cell.row.original.side],
                                               cellProps.cell.value
                                           )
+                                        : cellProps.cell.row.original.type === 'mint'
+                                        ? formatCurrency(cellProps.cell.value)
                                         : formatCurrencyWithKey(SYNTHS_MAP.sUSD, cellProps.cell.value)}
                                 </p>
                             ),

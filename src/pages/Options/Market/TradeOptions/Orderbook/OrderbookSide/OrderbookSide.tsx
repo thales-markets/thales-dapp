@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { Orders, OrderItem, OrderSide, OptionSide, DisplayOrder } from 'types/options';
-import { formatCurrency, formatPercentage } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import CancelOrderModal from '../CancelOrderModal';
 import FillOrderModal from '../FillOrderModal';
 import { CellProps, Row } from 'react-table';
@@ -14,6 +14,8 @@ import styled from 'styled-components';
 import { OrderbookFilterEnum } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
+import { LightTooltip } from 'pages/Options/Market/components';
+import { USD_SIGN } from 'constants/currency';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -23,6 +25,7 @@ type OrderbookSideProps = {
     filterMyOrders: boolean;
     filter: OrderbookFilterEnum;
     orderbookEmpty: boolean;
+    isLoading?: boolean;
 };
 
 const OrderbookSide: React.FC<OrderbookSideProps> = ({
@@ -33,6 +36,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
     filterMyOrders,
     filter,
     orderbookEmpty,
+    isLoading,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -68,33 +72,35 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Header: <>{t('options.market.trade-options.orderbook.table.price-col')}</>,
                         accessor: 'displayOrder.price',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['price']>) => (
-                            <Price orderSide={orderSide}>{formatCurrency(cellProps.cell.value, 3)}</Price>
+                            <Price orderSide={orderSide}>
+                                {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 3)}
+                            </Price>
                         ),
                         width: 300,
                         sortable: false,
                     },
                     {
                         Header: <>{t('options.market.trade-options.orderbook.table.amount-col')}</>,
-                        accessor: 'displayOrder.amount',
+                        accessor: 'displayOrder.fillableAmount',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['amount']>) => (
-                            <p>{formatCurrency(cellProps.cell.value)}</p>
+                            <p>{formatCurrency(cellProps.cell.value, 2)}</p>
                         ),
                         width: 300,
                         sortable: false,
                     },
                     {
                         Header: <>{t('options.market.trade-options.orderbook.table.total-col')}</>,
-                        accessor: 'displayOrder.total',
+                        accessor: 'displayOrder.fillableTotal',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['total']>) => (
-                            <p>{formatCurrency(cellProps.cell.value)}</p>
+                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
                         ),
                         width: 300,
                         sortable: false,
                     },
                     {
-                        Header: <>{t('options.market.trade-options.orderbook.table.filled-col')}</>,
-                        accessor: 'displayOrder.filled',
-                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['filled']>) => (
+                        Header: <>{t('options.market.trade-options.orderbook.table.return-col')}</>,
+                        accessor: 'displayOrder.potentialReturn',
+                        Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['potentialReturn']>) => (
                             <p>{formatPercentage(cellProps.cell.value)}</p>
                         ),
                         width: 300,
@@ -114,12 +120,16 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Cell: (cellProps: CellProps<OrderItem>) =>
                             cellProps.cell.row.original.rawOrder.maker.toLowerCase() ===
                                 walletAddress.toLowerCase() && (
-                                <CancelIconContainer
-                                    onClick={(e: any) => {
-                                        e.stopPropagation();
-                                        openCancelOrderModal(cellProps.cell.row.original);
-                                    }}
-                                />
+                                <LightTooltip
+                                    title={t('options.market.trade-options.orderbook.table.cancel-col-tooltip')}
+                                >
+                                    <CancelIconContainer
+                                        onClick={(e: any) => {
+                                            e.stopPropagation();
+                                            openCancelOrderModal(cellProps.cell.row.original);
+                                        }}
+                                    />
+                                </LightTooltip>
                             ),
                         width: 30,
                         sortable: false,
@@ -140,6 +150,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                 }}
                 orderSide={orderSide}
                 columnsDeps={[walletAddress]}
+                isLoading={isLoading}
             />
             {fillOrderModalVisible && selectedOrder !== null && (
                 <FillOrderModal
@@ -184,8 +195,8 @@ const YellowDot = styled.span`
 `;
 
 const CancelIconContainer = styled(CancelIcon)`
-    min-width: 8px;
-    min-height: 8px;
+    min-width: 14px;
+    min-height: 14px;
     margin-top: 2px;
     z-index: 2;
 `;

@@ -63,7 +63,6 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 (_, log) => {
                     if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
                         refetchOrderbook(baseToken);
-                        setIsCanceling(false);
                         onClose();
                     }
                 }
@@ -76,21 +75,19 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            if (gasPrice !== null) {
-                try {
-                    const gasEstimate = await exchangeProxy
-                        .cancelLimitOrder(order.rawOrder)
-                        .estimateGasAsync({ from: walletAddress });
-                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
-                } catch (e) {
-                    console.log(e);
-                    setGasLimit(null);
-                }
+            try {
+                const gasEstimate = await exchangeProxy
+                    .cancelLimitOrder(order.rawOrder)
+                    .estimateGasAsync({ from: walletAddress });
+                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+            } catch (e) {
+                console.log(e);
+                setGasLimit(null);
             }
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, gasPrice]);
+    }, [isButtonDisabled]);
 
     const handleCancelOrder = async () => {
         if (gasPrice !== null) {

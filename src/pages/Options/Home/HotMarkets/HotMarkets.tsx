@@ -17,7 +17,7 @@ type HotMarketsProps = {
 export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     const { t } = useTranslation();
     const [currentMarket, setCurrentMarket] = useState(0);
-    const [shouldUseInterval, setShoudUseInterval] = useState(true);
+    const [shouldUseInterval, setShouldUseInterval] = useState(true);
 
     const currentMarkets = useMemo(() => {
         const markets = [];
@@ -50,11 +50,13 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
     return (
         <Wrapper id="hot-markets">
-            <Text className="text-xxl palge-grey">{t('options.home.explore-markets.discover')}</Text>
+            <Text className="text-xxl pale-grey" style={{ fontSize: '39px', paddingLeft: '65px' }}>
+                {t('options.home.explore-markets.trending')}
+            </Text>
             <FlexDivCentered className="hot-markets__desktop">
                 <Arrow
                     onClick={() => {
-                        setShoudUseInterval(false);
+                        setShouldUseInterval(false);
                         document.getElementById('market-cards-wrapper')?.classList.add('previous');
                         setTimeout(() => {
                             document.getElementById('market-cards-wrapper')?.classList.remove('previous');
@@ -62,8 +64,8 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                         }, 1000);
                     }}
                     src={previous}
-                ></Arrow>
-                <div style={{ width: 1020, overflow: 'hidden' }}>
+                />
+                <div style={{ width: 1128, overflow: 'hidden' }}>
                     <Cards id="market-cards-wrapper">
                         {currentMarkets.map((optionsMarket, index) => {
                             return <MarketCard key={index} optionMarket={optionsMarket} />;
@@ -73,7 +75,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
 
                 <Arrow
                     onClick={() => {
-                        setShoudUseInterval(false);
+                        setShouldUseInterval(false);
                         document.getElementById('market-cards-wrapper')?.classList.add('next');
                         setTimeout(() => {
                             document.getElementById('market-cards-wrapper')?.classList.remove('next');
@@ -81,7 +83,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                         }, 1000);
                     }}
                     src={next}
-                ></Arrow>
+                />
             </FlexDivCentered>
             <FlexDiv className="hot-markets__mobile">
                 <MarketCard optionMarket={currentMarkets[0]}></MarketCard>
@@ -106,10 +108,11 @@ const Arrow = styled(Image)`
 
 const Cards = styled(FlexDiv)`
     position: relative;
-    left: -340px;
+    left: -376px;
+    z-index: 0;
     &.next {
         transition: left 1s;
-        left: -680px;
+        left: -752px;
     }
     &.previous {
         transition: left 1s;

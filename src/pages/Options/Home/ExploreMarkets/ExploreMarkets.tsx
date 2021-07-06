@@ -1,16 +1,20 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketsTable from '../MarketsTable';
-import { OptionsMarkets } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
-import myMarkets from 'assets/images/my-markets.svg';
-import myWatchlist from 'assets/images/my-watchlist.svg';
-import recentlyAdded from 'assets/images/recently-added.svg';
+import myMarkets from 'assets/images/filters/my-markets.svg';
+import myWatchlist from 'assets/images/filters/my-watchlist.svg';
+import recentlyAdded from 'assets/images/filters/recently-added.svg';
+import bitcoin from 'assets/images/filters/bitcoin.svg';
+import ethereum from 'assets/images/filters/ethereum.svg';
+import myAssets from 'assets/images/filters/my-assets.svg';
+import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
@@ -19,7 +23,10 @@ import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
-import { getSynthName } from 'utils/snxJSConnector';
+import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
+import { SYNTHS_MAP } from '../../../../constants/currency';
+import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
+import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 
 type ExploreMarketsProps = {
     optionsMarkets: OptionsMarkets;
@@ -35,9 +42,28 @@ export enum PhaseFilterEnum {
 enum UserFilterEnum {
     All = 'All',
     MyMarkets = 'My Markets',
-    MyWatchlist = 'My Watchlist',
+    MyOrders = 'My Orders',
+    MyAssets = 'My Assets',
+    MyWatchlist = 'Watchlist',
     Recent = 'Recently Added',
+    Bitcoin = 'Bitcoin',
+    Ethereum = 'Ethereum',
 }
+
+const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
+    const {
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
+    const isBuy: boolean = order.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+    return (
+        (isBuy &&
+            (market.longAddress.toLowerCase() === order.takerToken.toLowerCase() ||
+                market.shortAddress.toLowerCase() === order.takerToken.toLowerCase())) ||
+        (!isBuy &&
+            (market.longAddress.toLowerCase() === order.makerToken.toLowerCase() ||
+                market.shortAddress.toLowerCase() === order.makerToken.toLowerCase()))
+    );
+};
 
 const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -48,6 +74,19 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const userAssetsQuery = useAssetsBalanceQuery(optionsMarkets, walletAddress);
+    const userAssets = useMemo(
+        () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
+        [userAssetsQuery]
+    );
+    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress);
+    const userOrders = useMemo(
+        () =>
+            userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records)
+                ? userOrdersQuery.data.records
+                : [],
+        [userOrdersQuery]
+    );
 
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -66,10 +105,29 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             case UserFilterEnum.MyWatchlist:
                 filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 break;
+            case UserFilterEnum.MyAssets:
+                filteredMarkets = userAssets.reduce((acc: HistoricalOptionsMarketInfo[], { market, balances }) => {
+                    if (balances.long || balances.short) {
+                        acc.push(market);
+                    }
+                    return acc;
+                }, []);
+                break;
+            case UserFilterEnum.MyOrders:
+                filteredMarkets = filteredMarkets.filter((market) =>
+                    userOrders.find((order) => isOrderInMarket(order.order, market))
+                );
+                break;
             case UserFilterEnum.Recent:
                 filteredMarkets = filteredMarkets.filter(({ timestamp }) =>
                     isRecentlyAdded(new Date(), new Date(timestamp))
                 );
+                break;
+            case UserFilterEnum.Bitcoin:
+                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC);
+                break;
+            case UserFilterEnum.Ethereum:
+                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH);
                 break;
         }
 
@@ -97,7 +155,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     );
 
     const onClickUserFilter = (filter: UserFilterEnum) => {
-        setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        if (isWalletConnected) {
+            setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        }
         return;
     };
 
@@ -109,17 +169,14 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 return myWatchlist;
             case UserFilterEnum.Recent:
                 return recentlyAdded;
-        }
-    };
-
-    const getColor = (filter: UserFilterEnum) => {
-        switch (filter) {
-            case UserFilterEnum.MyMarkets:
-                return 'linear-gradient(135deg, #FFA051 0%, #FF6628 100%)';
-            case UserFilterEnum.MyWatchlist:
-                return 'linear-gradient(135deg, #FF8FD8 0%, #4E47E2 100%)';
-            case UserFilterEnum.Recent:
-                return 'linear-gradient(146.29deg, #B2DEEF 14.84%, #3EDDDD 92.53%)';
+            case UserFilterEnum.Bitcoin:
+                return bitcoin;
+            case UserFilterEnum.Ethereum:
+                return ethereum;
+            case UserFilterEnum.MyAssets:
+                return myAssets;
+            case UserFilterEnum.MyOrders:
+                return myOpenOrders;
         }
     };
 
@@ -129,8 +186,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
     };
 
     return (
-        <div id="explore-markets" style={{ padding: '50px 150px', width: '100%' }}>
-            <FlexDivCentered>
+        <div id="explore-markets" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
+            <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                 {Object.keys(UserFilterEnum)
                     .filter(
                         (key) =>
@@ -143,17 +200,26 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                 isWalletConnected && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
                                     ? 'selected'
                                     : ''
-                            } ${!isWalletConnected ? 'disabled' : ''}`}
+                            }`}
+                            disabled={!isWalletConnected}
                             onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             key={key}
-                            color={getColor(UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
                             text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                        ></UserFilter>
+                        />
                     ))}
             </FlexDivCentered>
 
-            <FlexDiv className="table-filters" style={{ justifyContent: 'space-between', marginTop: 40 }}>
+            <FlexDiv
+                className="table-filters"
+                style={{
+                    justifyContent: 'space-between',
+                    marginTop: 40,
+                    background: '#04045a',
+                    borderTopLeftRadius: '23px',
+                    borderTopRightRadius: '23px',
+                }}
+            >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div>
                         {Object.keys(PhaseFilterEnum)
@@ -173,7 +239,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                             ))}
                     </div>
                 </div>
-                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch}></SearchMarket>
+                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
             </FlexDiv>
 
             <MarketsTable
@@ -184,11 +250,13 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 onChange={watchlistedMarketsQuery.refetch}
             >
                 <NoMarkets>
-                    {userFilter === UserFilterEnum.All && phaseFilter !== PhaseFilterEnum.all && (
+                    {userFilter !== UserFilterEnum.MyMarkets && (
                         <>
-                            <Text className="text-l bold pale-grey">No markets available.</Text>
+                            <Text className="text-l bold pale-grey">
+                                {t('options.home.explore-markets.table.no-markets-found')}
+                            </Text>
                             <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
-                                View all markets
+                                {t('options.home.explore-markets.table.view-all-markets')}
                             </Button>
                         </>
                     )}
@@ -217,7 +285,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                                     or
                                 </Text>
                                 <Button className="primary" onClick={resetFilters}>
-                                    View all markets
+                                    {t('options.home.explore-markets.table.view-all-markets')}
                                 </Button>
                             </FlexDiv>
                         </>
@@ -230,8 +298,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
 const NoMarkets = styled(FlexDivColumn)`
     height: 500px;
-    background: #126;
-    border-radius: 20px;
+    background: #04045a;
     justify-content: space-evenly;
     align-items: center;
     .primary {

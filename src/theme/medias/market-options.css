@@ -17,6 +17,14 @@ xl: 1300, */
     padding: 0 108px;
 }
 
+#market-creation {
+    z-index: 0;
+}
+
+#market-creation .create-market {
+    text-align: center;
+}
+
 @media (max-width: 1260px) {
     #market-creation,
     #hot-markets {
@@ -60,7 +68,7 @@ xl: 1300, */
 
 @media (max-width: 980px) {
     .hot-markets__desktop > div {
-        width: 680px !important;
+        width: 752px !important;
     }
     #market-card:nth-child(3) {
         display: none;
@@ -171,10 +179,6 @@ xl: 1300, */
 }
 
 @media (min-height: 800px) {
-    #market-creation,
-    #hot-markets {
-        height: calc((100vh - 100px) / 2);
-    }
     #market-creation .text-xxxl {
         font-size: 56px;
     }
