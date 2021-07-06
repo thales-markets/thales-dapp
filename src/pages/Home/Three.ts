@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { PerspectiveCamera } from 'three';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 const LOADER = new THREE.TextureLoader();
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 10;
@@ -94,10 +96,11 @@ export const setupThreeJS = () => {
 
         window.addEventListener('resize', onWindowResize, false);
 
-        // let MAX_SCROLL: any;
         const animate = function () {
+            renderer.render(scene, camera);
+            const cookieValue = cookies.get('animation');
             if (document.getElementById('landing-hero')) {
-                if (document.getElementById('animation-button')?.classList.contains('active')) {
+                if (cookieValue !== 'false') {
                     const useApp = document.getElementById('use-app');
                     if (useApp && !eventListenerSet) {
                         eventListenerSet = true;
@@ -108,12 +111,6 @@ export const setupThreeJS = () => {
                             speedUp = false;
                         });
                     }
-                    // MAX_SCROLL = window.screen.height - window.screen.height;
-                    // if (window.scrollY > (25 * MAX_SCROLL) / 100) {
-                    //     particles.material.opacity = 1.55 - window.scrollY / MAX_SCROLL;
-                    // } else {
-                    //     particles.material.opacity = 1;
-                    // }
                     if (speedUp) {
                         particleSpeed =
                             particleSpeed + ACCELERATION > MAX_SPEED ? MAX_SPEED : particleSpeed + ACCELERATION;
@@ -134,7 +131,6 @@ export const setupThreeJS = () => {
                             Math.sin(i + countRender * 0.0002) * ((smoke as any).myZ - (smoke as any).myZ * 0.6);
                         countRender += 0.1;
                     });
-                    renderer.render(scene, camera);
                     countRender += 1;
                 }
                 requestAnimationFrame(animate);

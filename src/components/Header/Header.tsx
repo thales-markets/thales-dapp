@@ -8,6 +8,8 @@ import burger from 'assets/images/burger.svg';
 import animate from 'assets/images/animate-button.svg';
 import animateHover from 'assets/images/animate-button-hover.svg';
 import animateStop from 'assets/images/animate-button-stop.svg';
+import Cookies from 'universal-cookie';
+import { LightTooltip } from 'pages/Options/Market/components';
 
 enum BurgerState {
     Init,
@@ -22,8 +24,11 @@ enum AnimationState {
 
 const Header: React.FC = () => {
     const { t } = useTranslation();
+    const cookies = new Cookies();
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
-    const [animationState, setAnimationState] = useState<AnimationState>(AnimationState.Active);
+    const [animationState, setAnimationState] = useState<AnimationState>(
+        cookies.get('animation') === 'false' ? AnimationState.Paused : AnimationState.Active
+    );
 
     useMemo(() => {
         if (showBurgerMenu !== BurgerState.Init) {
@@ -73,14 +78,19 @@ const Header: React.FC = () => {
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
-                <AnimationButton
-                    id="animation-button"
-                    onClick={setAnimationState.bind(
-                        this,
-                        animationState === AnimationState.Active ? AnimationState.Paused : AnimationState.Active
-                    )}
-                    className={animationState === AnimationState.Active ? 'active' : 'stop'}
-                ></AnimationButton>
+                <LightTooltip title="Toogle animation">
+                    <AnimationButton
+                        id="animation-button"
+                        onClick={() => {
+                            cookies.set('animation', animationState === AnimationState.Active ? false : true);
+                            setAnimationState(
+                                animationState === AnimationState.Active ? AnimationState.Paused : AnimationState.Active
+                            );
+                        }}
+                        className={animationState === AnimationState.Active ? 'active' : 'stop'}
+                    ></AnimationButton>
+                </LightTooltip>
+
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
                         {t('landing-page.use-app')}
