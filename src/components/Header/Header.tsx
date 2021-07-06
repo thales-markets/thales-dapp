@@ -237,7 +237,7 @@ const CommunityLink = styled.a`
     }
 `;
 
-const AnimationButton = styled.img`
+const AnimationButton = styled.div`
     width: 40px;
     height: 40px;
     padding: 4px;
