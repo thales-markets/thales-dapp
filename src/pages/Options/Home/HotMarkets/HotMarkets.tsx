@@ -9,12 +9,14 @@ import useInterval from 'hooks/useInterval';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 import coins from 'assets/images/coins-mono.png';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 
 type HotMarketsProps = {
+    exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
 };
 
-export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
+export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
     const [currentMarket, setCurrentMarket] = useState(0);
     const [shouldUseInterval, setShouldUseInterval] = useState(true);
@@ -68,7 +70,9 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 <div style={{ width: 1128, overflow: 'hidden' }}>
                     <Cards id="market-cards-wrapper">
                         {currentMarkets.map((optionsMarket, index) => {
-                            return <MarketCard key={index} optionMarket={optionsMarket} />;
+                            return (
+                                <MarketCard key={index} optionMarket={optionsMarket} exchangeRates={exchangeRates} />
+                            );
                         })}
                     </Cards>
                 </div>
@@ -86,8 +90,8 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 />
             </FlexDivCentered>
             <FlexDiv className="hot-markets__mobile">
-                <MarketCard optionMarket={currentMarkets[0]}></MarketCard>
-                <Image src={coins}></Image>
+                <MarketCard optionMarket={currentMarkets[0]} exchangeRates={exchangeRates} />
+                <Image src={coins} />
             </FlexDiv>
         </Wrapper>
     );

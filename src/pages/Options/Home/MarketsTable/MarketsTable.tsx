@@ -31,10 +31,16 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
 import { USD_SIGN } from 'constants/currency';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import { FlexDivCentered, Image } from '../../../../theme/common';
+import arrowDown from '../../../../assets/images/arrow-down.svg';
+import { getPercentageDifference } from '../../../../utils/formatters/number';
+import arrowUp from '../../../../assets/images/arrow-up.svg';
 
 dotenv.config();
 
 type MarketsTableProps = {
+    exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
     watchlistedMarkets: string[];
     isLoading?: boolean;
@@ -51,11 +57,12 @@ interface HeadCell {
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: 'Asset', sortable: true },
-    { id: 3, label: 'Strike Price', sortable: true },
-    { id: 4, label: 'Pool Size', sortable: true },
-    { id: 5, label: 'Time Remaining', sortable: true },
-    { id: 6, label: 'Open Orders', sortable: true },
-    { id: 7, label: 'Phase', sortable: false },
+    { id: 3, label: 'Asset Price', sortable: true },
+    { id: 4, label: 'Strike Price', sortable: true },
+    { id: 5, label: 'Market Size', sortable: true },
+    { id: 6, label: 'Time Remaining', sortable: true },
+    { id: 7, label: 'Open Orders', sortable: true },
+    { id: 8, label: 'Phase', sortable: false },
 ];
 
 enum OrderDirection {
@@ -67,7 +74,7 @@ enum OrderDirection {
 const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
-    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange }) => {
+    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates }) => {
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
@@ -126,14 +133,16 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                     switch (orderBy) {
                         case 1:
                         case 2:
-                            return sortByAssetName(a, b, orderDirection);
+                            return sortByField(a, b, orderDirection, 'asset');
                         case 3:
-                            return sortByStrikePrice(a, b, orderDirection);
+                            return sortByAssetPrice(a, b, orderDirection, exchangeRates);
                         case 4:
-                            return sortByPoolSize(a, b, orderDirection);
+                            return sortByField(a, b, orderDirection, 'strikePrice');
                         case 5:
-                            return sortByTime(a, b, orderDirection);
+                            return sortByField(a, b, orderDirection, 'poolSize');
                         case 6:
+                            return sortByTime(a, b, orderDirection);
+                        case 7:
                             return orderDirection === OrderDirection.ASC
                                 ? a.openOrders - b.openOrders
                                 : b.openOrders - a.openOrders;
@@ -142,7 +151,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                     }
                 })
                 .slice(memoizedPage * 10, 10 * (memoizedPage + 1));
-        }, [optionsMarkets, orderBy, orderDirection, memoizedPage]);
+        }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates]);
 
         const { t } = useTranslation();
         return (
@@ -192,6 +201,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
 
                         <TableBody>
                             {sortedMarkets.map((market, index) => {
+                                const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
                                 return (
                                     <StyledTableRow
                                         onClick={() => {
@@ -221,7 +231,39 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 synthIconStyle={{ width: 32, height: 32 }}
                                             />
                                         </StyledTableCell>
-                                        <StyledTableCell>{USD_SIGN + market.strikePrice.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>{USD_SIGN + currentAssetPrice.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>
+                                            <FlexDivCentered>
+                                                <span>{USD_SIGN + market.strikePrice.toFixed(2)}</span>
+                                                {currentAssetPrice > market.strikePrice ? (
+                                                    <RedText>
+                                                        (
+                                                        <PriceArrow src={arrowDown} />
+                                                        <span>
+                                                            {getPercentageDifference(
+                                                                currentAssetPrice,
+                                                                market.strikePrice
+                                                            )}
+                                                            %
+                                                        </span>
+                                                        )
+                                                    </RedText>
+                                                ) : (
+                                                    <GreenText>
+                                                        (
+                                                        <PriceArrow src={arrowUp} />
+                                                        <span>
+                                                            {getPercentageDifference(
+                                                                currentAssetPrice,
+                                                                market.strikePrice
+                                                            )}
+                                                            %
+                                                        </span>
+                                                        )
+                                                    </GreenText>
+                                                )}
+                                            </FlexDivCentered>
+                                        </StyledTableCell>
                                         <StyledTableCell>{USD_SIGN + market.poolSize.toFixed(2)}</StyledTableCell>
                                         <StyledTableCell>
                                             <TimeRemaining end={market.timeRemaining} fontSize={14} />
@@ -300,6 +342,27 @@ const PaginationWrapper = styled(TablePagination)`
     }
 `;
 
+const PriceArrow = styled(Image)`
+    width: 14px;
+    height: 14px;
+`;
+
+const GreenText = styled.span`
+    color: #01b977;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+`;
+
+const RedText = styled.span`
+    color: #be2727;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+`;
+
 const sortByTime = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
     if (direction === OrderDirection.ASC && a.phaseNum === b.phaseNum) {
         return a.timeRemaining > b.timeRemaining ? -1 : 1;
@@ -311,49 +374,42 @@ const sortByTime = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketIn
     return 0;
 };
 
-const sortByPoolSize = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
-    if (direction === OrderDirection.ASC) {
-        if (a.phaseNum === b.phaseNum) {
-            return a.poolSize > b.poolSize ? 1 : -1;
-        }
-    }
-    if (direction === OrderDirection.DESC) {
-        if (a.phaseNum === b.phaseNum) {
-            return a.poolSize > b.poolSize ? -1 : 1;
-        }
-    }
-
-    return 0;
-};
-
-const sortByStrikePrice = (
+const sortByField = (
     a: HistoricalOptionsMarketInfo,
     b: HistoricalOptionsMarketInfo,
-    direction: OrderDirection
+    direction: OrderDirection,
+    field: keyof HistoricalOptionsMarketInfo
 ) => {
     if (direction === OrderDirection.ASC) {
         if (a.phaseNum === b.phaseNum) {
-            return a.strikePrice > b.strikePrice ? 1 : -1;
+            return a[field] > b[field] ? 1 : -1;
         }
     }
     if (direction === OrderDirection.DESC) {
         if (a.phaseNum === b.phaseNum) {
-            return a.strikePrice > b.strikePrice ? -1 : 1;
+            return a[field] > b[field] ? -1 : 1;
         }
     }
 
     return 0;
 };
 
-const sortByAssetName = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
+const sortByAssetPrice = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection,
+    exchangeRates: Rates | null
+) => {
+    const assetPriceA = exchangeRates?.[a.currencyKey] || 0;
+    const assetPriceB = exchangeRates?.[b.currencyKey] || 0;
     if (direction === OrderDirection.ASC) {
         if (a.phaseNum === b.phaseNum) {
-            return a.asset > b.asset ? 1 : -1;
+            return assetPriceA > assetPriceB ? 1 : -1;
         }
     }
     if (direction === OrderDirection.DESC) {
         if (a.phaseNum === b.phaseNum) {
-            return a.asset > b.asset ? -1 : 1;
+            return assetPriceA > assetPriceB ? -1 : 1;
         }
     }
 

@@ -4,20 +4,26 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, Image, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrencyWithKey, getPercentageDifference } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import arrowUp from '../../../../assets/images/arrow-up.svg';
+import arrowDown from '../../../../assets/images/arrow-down.svg';
 
 type MarketCardPros = {
+    exchangeRates: Rates | null;
     optionMarket: HistoricalOptionsMarketInfo;
 };
 
-const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
+const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
     const { t } = useTranslation();
+    const currentAssetPrice = exchangeRates?.[optionMarket.currencyKey] || 0;
+
     return (
         <>
             {optionMarket && (
@@ -40,30 +46,68 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket }) => {
                         </FlexDivColumnCentered>
                         <FlexDivColumn
                             style={{
-                                padding: '16px 20px 16px 0',
+                                padding: '15px 20px 15px 0',
                                 maxWidth: 130,
                                 height: '100%',
                                 justifyContent: 'space-between',
                             }}
                         >
                             <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
-                            <GradientBorderWrapper>
+                            <GradientBorderWrapper style={{ borderRadius: '12px', margin: 0 }}>
                                 <GradientBorderContent>
-                                    <TimeRemaining fontSize={11} end={optionMarket.timeRemaining}></TimeRemaining>
+                                    <TimeRemaining fontSize={11} end={optionMarket.timeRemaining} />
                                 </GradientBorderContent>
                             </GradientBorderWrapper>
                         </FlexDivColumn>
                     </Header>
                     <Content>
+                        <Text>{t('options.home.market-card.strike-price')}</Text>
                         <Price>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionMarket.strikePrice)}</Price>
-                        <ExpireDate>at {formatShortDate(optionMarket.maturityDate)}</ExpireDate>
+                        <Text>{t('options.home.market-card.difference-text')}:</Text>
+                        {currentAssetPrice > optionMarket.strikePrice ? (
+                            <FlexDivCentered style={{ paddingTop: '5px' }}>
+                                <Arrow src={arrowDown} />
+                                <RedText>
+                                    {getPercentageDifference(currentAssetPrice, optionMarket.strikePrice)}%
+                                </RedText>
+                            </FlexDivCentered>
+                        ) : (
+                            <FlexDivCentered style={{ paddingTop: '5px' }}>
+                                <Arrow src={arrowUp} />
+                                <GreenText>
+                                    {getPercentageDifference(currentAssetPrice, optionMarket.strikePrice)}%
+                                </GreenText>
+                            </FlexDivCentered>
+                        )}
                     </Content>
                     <Footer className="footer">
-                        <GradientBorderWrapper style={{ margin: 'auto' }}>
-                            <PoolSize>
-                                <Text style={{ marginRight: 4 }}>Pool Size:</Text>
-                                <Text>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionMarket.poolSize)}</Text>
-                            </PoolSize>
+                        <GradientBorderWrapper>
+                            <MarketInfo>
+                                <MarketInfoTitle>{t('options.home.market-card.current-asset-price')}:</MarketInfoTitle>
+                                <Text style={{ fontWeight: 'bold' }}>
+                                    {formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, currentAssetPrice)}
+                                </Text>
+                            </MarketInfo>
+                        </GradientBorderWrapper>
+                        <GradientBorderWrapper>
+                            <MarketInfo>
+                                <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
+                                <Text style={{ fontWeight: 'bold' }}>
+                                    {formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionMarket.poolSize)}
+                                </Text>
+                            </MarketInfo>
+                        </GradientBorderWrapper>
+                        <GradientBorderWrapper>
+                            <MarketInfo>
+                                <MarketInfoTitle>{t('options.home.market-card.end-date')}:</MarketInfoTitle>
+                                <Text style={{ fontWeight: 'bold' }}>{formatShortDate(optionMarket.maturityDate)}</Text>
+                            </MarketInfo>
+                        </GradientBorderWrapper>
+                        <GradientBorderWrapper>
+                            <MarketInfo>
+                                <MarketInfoTitle>{t('options.home.market-card.open-orders')}:</MarketInfoTitle>
+                                <Text style={{ fontWeight: 'bold' }}>{optionMarket.openOrders}</Text>
+                            </MarketInfo>
                         </GradientBorderWrapper>
                         <ViewMarket className="view-market">View Market</ViewMarket>
                     </Footer>
@@ -84,7 +128,7 @@ const Card = styled(FlexDivColumnCentered)`
     max-width: 356px;
     margin: 50px 20px 50px 20px;
     cursor: pointer;
-    height: 280px;
+    height: 306px;
     &:before {
         content: '';
         position: absolute;
@@ -99,7 +143,6 @@ const Card = styled(FlexDivColumnCentered)`
     }
     &:hover {
         .footer {
-            padding: 0;
             .sentiment {
                 display: none;
             }
@@ -123,7 +166,7 @@ const Card = styled(FlexDivColumnCentered)`
 `;
 
 const Header = styled(FlexDivCentered)`
-    height: 96px;
+    height: 89px;
     border-bottom: 1px solid rgba(202, 145, 220, 0.6);
     img,
     svg {
@@ -134,11 +177,18 @@ const Header = styled(FlexDivCentered)`
 `;
 const Content = styled(FlexDivColumnCentered)`
     height: 195px;
+    text-align: center;
+    font-size: 14px;
+    padding-top: 11px;
 `;
 const Footer = styled(FlexDivColumnCentered)`
     position: relative;
     min-height: 67px;
-    padding: 0 24px;
+    padding: 15px 33px 0 33px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-column-gap: 10%;
+    grid-row-gap: 5%;
 `;
 
 const ViewMarket = styled.div`
@@ -147,8 +197,8 @@ const ViewMarket = styled.div`
     left: 0;
     z-index: 1;
     background: #3936c7;
-    border-radius: 0px 0px 21px 21px;
-    height: 67px;
+    border-radius: 0px 0px 22px 22px;
+    height: 108px;
     width: 100%;
     font-weight: 700;
     font-size: 20px;
@@ -177,8 +227,9 @@ const CryptoKey = styled.p`
 `;
 
 const GradientBorderWrapper = styled.div`
-    border-radius: 12px;
+    border-radius: 18px;
     background: linear-gradient(to right, #3936c7, #2d83d2, #23a5dd, #35dadb);
+    margin-bottom: 6px;
 `;
 
 const GradientBorderContent = styled.div`
@@ -196,31 +247,30 @@ const GradientBorderContent = styled.div`
 
 const Price = styled.p`
     margin: 0;
-    margin-top: 28px !important;
     text-align: center;
     font-weight: bold;
-    font-size: 31px;
+    font-size: 25px;
     line-height: 34px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
-`;
-const ExpireDate = styled.p`
-    margin: 0;
-    text-align: center;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 20px;
-    padding-top: 15px;
-    margin-bottom: 16px !important;
-    letter-spacing: 0.15px;
-    color: #f6f6fe;
+    margin-bottom: 3px;
 `;
 
-const PoolSize = styled(GradientBorderContent)`
+const MarketInfo = styled(GradientBorderContent)`
     font-size: 14px;
+    height: 36px;
+    border-radius: 18px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     font-weight: normal;
+    padding: 5px 0;
+    line-height: 16px;
+`;
+
+const MarketInfoTitle = styled(Text)`
+    margin-right: 4px;
+    font-size: 12px;
 `;
 
 const Phase = styled(PhaseLabel)`
@@ -232,6 +282,21 @@ const Phase = styled(PhaseLabel)`
     min-width: 70px;
     width: 100%;
     max-height: 24px;
+`;
+
+const Arrow = styled(Image)`
+    width: 20px;
+    height: 20px;
+`;
+
+const GreenText = styled.span`
+    color: #01b977;
+    font-size: 20px;
+`;
+
+const RedText = styled.span`
+    color: #be2727;
+    font-size: 20px;
 `;
 
 export default MarketCard;
