@@ -27,8 +27,10 @@ import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import { SYNTHS_MAP } from '../../../../constants/currency';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 
 type ExploreMarketsProps = {
+    exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
 };
 
@@ -65,7 +67,7 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
     );
 };
 
-const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
+const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -243,6 +245,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             </FlexDiv>
 
             <MarketsTable
+                exchangeRates={exchangeRates}
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 watchlistedMarkets={watchlistedMarkets}
                 isLoading={false} // TODO put logic

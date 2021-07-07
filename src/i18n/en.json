@@ -184,6 +184,14 @@
             "expiry": "expired"
         },
         "home": {
+            "market-card": {
+                "current-asset-price": "Current asset price",
+                "pool-size": "Pool size",
+                "end-date": "End date",
+                "strike-price": "Strike price",
+                "open-orders": "Open orders",
+                "difference-text": "Difference between current and strike price"
+            },
             "market-creation": {
                 "not-connected": {
                     "title": "Connect a wallet to create a market or place a bid"

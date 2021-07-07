@@ -1,7 +1,7 @@
 export const ROUTES = {
     Home: '/',
     Options: {
-        Home: '/options',
+        Home: '/markets',
         CreateMarket: '/options/create-market',
         MarketMatch: '/options/:marketAddress',
     },

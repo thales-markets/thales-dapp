@@ -14,12 +14,15 @@ import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
+import useExchangeRatesQuery from '../../../queries/rates/useExchangeRatesQuery';
 
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
+    const exchangeRatesQuery = useExchangeRatesQuery();
+    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { synthsMap } = snxJSConnector;
 
     const optionsMarkets = useMemo(
@@ -54,12 +57,14 @@ export const Home: React.FC = () => {
                             <MarketHeader route={ROUTES.Options.Home} />
                         </FlexDivColumn>
                     </Section>
-                    <Section>{hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} />}</Section>
+                    <Section>
+                        {hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />}
+                    </Section>
                     <Section>
                         <MarketCreation />
                     </Section>
                     <Section class="explore-markets">
-                        <ExploreMarkets optionsMarkets={optionsMarkets} />
+                        <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
                     </Section>
                 </>
             ) : (
