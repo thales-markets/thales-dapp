@@ -3,14 +3,16 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OptionsMarkets, UsersAssets } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { NetworkId } from 'utils/network';
 
 const useUserAssetsBalanceQuery = (
+    networkId: NetworkId,
     markets: OptionsMarkets,
     walletAddress: string,
     options?: UseQueryOptions<UsersAssets[]>
 ) => {
     return useQuery<UsersAssets[]>(
-        QUERY_KEYS.User.Assets(markets, walletAddress),
+        QUERY_KEYS.User.Assets(walletAddress, networkId),
         async () => {
             return Promise.all(
                 markets.map((market) =>

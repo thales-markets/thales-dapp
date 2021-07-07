@@ -11,7 +11,7 @@ const useUserOrdersQuery = (
 ) => {
     const baseUrl = `${get0xBaseURL(networkId)}sra/v4/`;
     return useQuery<{ records: UserOrder[] }>(
-        QUERY_KEYS.User.Orders(walletAddress),
+        QUERY_KEYS.User.Orders(walletAddress, networkId),
         async () => {
             const ordersUrl = `${baseUrl}orders?trader=${walletAddress}`;
             const response = await fetch(ordersUrl);
