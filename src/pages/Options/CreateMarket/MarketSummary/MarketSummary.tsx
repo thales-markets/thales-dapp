@@ -1,12 +1,14 @@
 import { ValueType } from 'react-select';
 import { CurrencyKeyOptionType, MarketFees } from '../CreateMarket';
 import React, { useMemo } from 'react';
-import { FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, Image, LightTooltip, Text } from 'theme/common';
 import styled from 'styled-components';
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { formatPercentage } from 'utils/formatters/number';
+import arrowUp from 'assets/images/green-arrow-up.svg';
+import arrowDown from 'assets/images/red-arrow-down.svg';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
@@ -55,13 +57,23 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     </div>
                     <div style={{ flex: 1, textAlign: 'center' }}>
                         {difference && (
-                            <Text
-                                className={
-                                    difference.side ? 'green text-s bold lh24 ls25' : 'red text-s bold lh24 ls25'
-                                }
-                            >
-                                {difference.value}%
-                            </Text>
+                            <LightTooltip title="Difference between strike and current price">
+                                <FlexDivCentered style={{ alignItems: 'center' }}>
+                                    <Image
+                                        style={{ width: 15, height: 15, marginRight: 4 }}
+                                        src={difference.side ? arrowUp : arrowDown}
+                                    ></Image>
+                                    <Text
+                                        className={
+                                            difference.side
+                                                ? 'green text-s bold lh24 ls25'
+                                                : 'red text-s bold lh24 ls25'
+                                        }
+                                    >
+                                        {difference.value}%
+                                    </Text>
+                                </FlexDivCentered>
+                            </LightTooltip>
                         )}
                     </div>
                     <div style={{ flex: 2, textAlign: 'center' }}>

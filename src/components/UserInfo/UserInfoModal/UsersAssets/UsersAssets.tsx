@@ -2,6 +2,9 @@ import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import useAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { FlexDiv, Text, LightTooltip } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
@@ -15,7 +18,8 @@ type UsersAssetsProps = {
 };
 
 const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress, onClose }) => {
-    const userAssetsQuery = useAssetsBalanceQuery(optionsMarkets, walletAddress);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress);
 
     const assets = useMemo(
         () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),

@@ -3,7 +3,7 @@ import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useUserOrdersQuery from 'queries/user/useUserOrdersQuery';
 import React, { useMemo } from 'react';
-import { FlexDivCentered, LightTooltip, Text } from 'theme/common';
+import { FlexDivCentered, Image, LightTooltip, Text } from 'theme/common';
 import { OptionsMarkets, Trade } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatPercentage } from 'utils/formatters/number';
@@ -11,6 +11,8 @@ import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 import { NetworkId } from 'utils/network';
 import { navigateToOptionsMarket } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
+import long from 'assets/images/long.svg';
+import short from 'assets/images/short.svg';
 import { MarketRow } from '../UserInfoModal';
 
 type UsersOrdersProps = {
@@ -79,19 +81,23 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                         }
                     }}
                 >
-                    <FlexDivCentered style={{ flex: 8, justifyContent: 'flex-start' }}>
+                    <FlexDivCentered style={{ flex: 4, justifyContent: 'flex-start' }}>
                         <Currency.Name
                             currencyKey={order.market.currencyKey}
                             showIcon={true}
                             synthIconStyle={{ width: 24, height: 24 }}
                             iconProps={{ type: 'asset' }}
                         />
-                        <Text className="text-xxs" style={{ margin: '0 8px' }}>
-                            {order.isLong ? ' > ' : ' < '}
-                            {formatCurrency(order.market.strikePrice) + USD_SIGN + ' '}
-                            by {formatShortDate(order.market.maturityDate)}
-                        </Text>
                     </FlexDivCentered>
+                    <Text className="text-xxs" style={{ flex: 2 }}>
+                        {formatCurrency(order.market.strikePrice) + USD_SIGN + ' '}
+                    </Text>
+                    <LightTooltip title="Maturity date">
+                        <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
+                            {formatShortDate(order.market.maturityDate)}
+                        </Text>
+                    </LightTooltip>
+                    <Image style={{ width: 24 }} src={order.isLong ? long : short}></Image>
                     <LightTooltip title="Amount x Price">
                         <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
                             {order.displayOrder.amount.toFixed(2) + ' x '}

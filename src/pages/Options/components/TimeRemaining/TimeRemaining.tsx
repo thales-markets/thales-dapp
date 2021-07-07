@@ -6,17 +6,19 @@ import intervalToDuration from 'date-fns/intervalToDuration';
 import differenceInWeeks from 'date-fns/differenceInWeeks';
 import { formattedDuration } from 'utils/formatters/date';
 import useInterval from 'hooks/useInterval';
+import styled from 'styled-components';
 
 type TimeRemainingProps = {
     end: Date | number;
     onEnded?: () => void;
     fontSize?: number;
+    showBorder?: boolean;
 };
 
 const ONE_SECOND_IN_MS = 1000;
 //const ENDING_SOON_IN_HOURS = 48;
 
-export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, fontSize }) => {
+export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, fontSize, showBorder }) => {
     const now = Date.now();
     const [timeElapsed, setTimeElapsed] = useState(now >= end);
     const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, end)));
@@ -52,14 +54,40 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, font
     }, timeInterval);
 
     return (
-        <span style={{ fontSize: fontSize || 12 }}>
+        <Container fontSize={fontSize} duration={duration} showBorder={showBorder}>
             {timeElapsed
                 ? t('options.common.time-remaining.ended')
                 : showRemainingInWeeks
                 ? `${weeksDiff} weeks`
                 : formattedDuration(duration)}
-        </span>
+        </Container>
     );
 };
+
+const getColor = (duration: Duration) => {
+    if (duration.years || duration.months || duration.days) {
+        return `#F6F6FE`;
+    }
+    if (duration.hours) {
+        return `#FFCC00`;
+    }
+    if (duration.minutes && duration.minutes > 10) {
+        if (duration.minutes > 10) {
+            return `#FF8800`;
+        }
+    }
+    return '#D82418';
+};
+
+const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean }>`
+    font-size: ${(props) => props.fontSize || 12}px;
+    color: ${(props) => getColor(props.duration)};
+    border: 1px solid
+        ${(props) => (props.showBorder ? (getColor(props.duration) === '#D82418' ? '#D82418' : 'transparent') : 'none')};
+    padding: ${(props) => (props.showBorder ? '2px 12px 4px 12px' : '0')};
+    border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
+    text-align: center;
+    z-index: 3;
+`;
 
 export default TimeRemaining;

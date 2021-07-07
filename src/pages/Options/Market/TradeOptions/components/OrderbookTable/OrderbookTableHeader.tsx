@@ -14,20 +14,24 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
         {
             header: <></>,
             width: 14,
+            justifyContent: 'left',
         },
         {
             header: <p style={{ marginLeft: 14 }}>{t('options.market.trade-options.orderbook.table.price-col')}</p>,
             width: 300,
+            justifyContent: 'left',
         },
         {
             header: (
                 <>{t('options.market.trade-options.orderbook.table.amount-col', { currencyKey: optionsCurrencyKey })}</>
             ),
             width: 300,
+            justifyContent: 'left',
         },
         {
             header: <>{t('options.market.trade-options.orderbook.table.total-col')}</>,
             width: 300,
+            justifyContent: 'left',
         },
         {
             header: (
@@ -39,21 +43,24 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
                 </>
             ),
             width: 300,
+            justifyContent: 'left',
         },
         {
             header: <>{t('options.market.trade-options.orderbook.table.time-remaining-col')}</>,
             width: 300,
+            justifyContent: 'center',
         },
         {
             header: <></>,
             width: 50,
+            justifyContent: 'left',
         },
     ];
 
     return (
         <TableRow>
             {columns.map((column: any, columnIndex: any) => (
-                <TableCellHead style={{ width: column.width }} key={columnIndex}>
+                <TableCellHead style={{ width: column.width }} key={columnIndex} justifyContent={column.justifyContent}>
                     {column.header}
                 </TableCellHead>
             ))}
@@ -61,7 +68,8 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
     );
 };
 
-const TableCellHead = styled(TableCell)`
+const TableCellHead = styled(TableCell)<{ justifyContent?: string }>`
+    justify-content: ${(props) => props.justifyContent || 'left'};
     font-weight: bold;
     font-size: 10px;
     line-height: 16px;

@@ -1,19 +1,21 @@
-import { Modal } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivRow } from 'theme/common';
 import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
+import { withStyles } from '@material-ui/core';
 
-export const StyledModal = styled(Modal)`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
+export const StyledModal = withStyles(() => ({
+    paper: {
+        borderRadius: '23px',
+        width: '500px',
+        background: '#04045a',
+        overflow: 'hidden',
+    },
+}))(Dialog);
 
 export const ModalContainer = styled.div`
-    width: 500px;
-    background: #04045a;
-    border-radius: 23px;
     padding: 20px 30px 30px 30px;
+    overflow: auto;
 `;
 
 export const ModalHeader = styled(FlexDivRow)`
