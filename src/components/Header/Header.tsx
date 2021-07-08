@@ -5,10 +5,8 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
-import play from 'assets/images/play.svg';
-import playHover from 'assets/images/play-hover.svg';
-import pause from 'assets/images/pause.svg';
-import pauseHover from 'assets/images/pause-hover.svg';
+import { ReactComponent as PlayIcon } from 'assets/images/play.svg';
+import { ReactComponent as PauseIcon } from 'assets/images/pause.svg';
 import Cookies from 'universal-cookie';
 import { LightTooltip } from 'pages/Options/Market/components';
 
@@ -80,16 +78,24 @@ const Header: React.FC = () => {
                     {t('header.links.faq')}
                 </CommunityLink>
                 <LightTooltip title="Toogle animation">
-                    <AnimationButton
-                        id="animation-button"
-                        onClick={() => {
-                            cookies.set('animation', animationState === AnimationState.Active ? false : true);
-                            setAnimationState(
-                                animationState === AnimationState.Active ? AnimationState.Paused : AnimationState.Active
-                            );
-                        }}
-                        className={animationState === AnimationState.Active ? 'active' : 'stop'}
-                    ></AnimationButton>
+                    <>
+                        {animationState === AnimationState.Active && (
+                            <StyledPauseIcon
+                                onClick={() => {
+                                    cookies.set('animation', false);
+                                    setAnimationState(AnimationState.Paused);
+                                }}
+                            />
+                        )}
+                        {animationState === AnimationState.Paused && (
+                            <StyledPlayIcon
+                                onClick={() => {
+                                    cookies.set('animation', true);
+                                    setAnimationState(AnimationState.Active);
+                                }}
+                            />
+                        )}
+                    </>
                 </LightTooltip>
 
                 <NavLink to={ROUTES.Options.Home}>
@@ -237,21 +243,35 @@ const CommunityLink = styled.a`
     }
 `;
 
-const AnimationButton = styled.div`
+const StyledPlayIcon = styled(PlayIcon)`
     width: 40px;
     height: 40px;
     padding: 4px;
     cursor: pointer;
-    &.active {
-        content: url(${pause});
-        &:hover {
-            content: url(${pauseHover});
+    &:hover {
+        & path:first-child {
+            fill: #00f9ff;
+        }
+        & path:nth-of-type(2) {
+            fill: #04045a;
         }
     }
-    &.stop {
-        content: url(${play});
-        &:hover {
-            content: url(${playHover});
+`;
+
+const StyledPauseIcon = styled(PauseIcon)`
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    cursor: pointer;
+    &:hover {
+        & path:first-child {
+            fill: #00f9ff;
+        }
+        & path:nth-of-type(2) {
+            fill: #04045a;
+        }
+        & path:nth-of-type(3) {
+            fill: #04045a;
         }
     }
 `;
