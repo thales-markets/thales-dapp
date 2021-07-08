@@ -5,7 +5,7 @@ import { OptionsMarkets } from 'types/options';
 // import { getPhaseAndEndDate } from '../../utils/options';
 // import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from 'utils/network';
-import { getPhaseAndEndDate } from '../../utils/options';
+// import { getPhaseAndEndDate } from '../../utils/options';
 
 const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOptions<OptionsMarkets>) => {
     // const {
@@ -18,15 +18,6 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                 max: Infinity,
                 network: networkId,
             });
-            for (const o of optionsMarkets) {
-                if ('trading' == getPhaseAndEndDate(o.maturityDate, o.expiryDate).phase) {
-                    // TODO move this to the config
-                    const baseUrl = 'https://api.thales.market/options/' + networkId;
-                    const response = await fetch(baseUrl + '/' + o.address);
-                    const count = await response.text();
-                    o.openOrders = parseInt(count);
-                }
-            }
 
             return optionsMarkets;
         },

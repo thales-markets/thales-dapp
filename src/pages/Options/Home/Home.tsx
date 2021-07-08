@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -15,23 +15,28 @@ import { PHASE } from 'constants/options';
 import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import useExchangeRatesQuery from '../../../queries/rates/useExchangeRatesQuery';
+import { getIsAppReady } from '../../../redux/modules/app';
+import { fetchOrders, openOrdersMapCache } from '../../../queries/options/fetchMarketOrders';
 
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
-    const exchangeRatesQuery = useExchangeRatesQuery();
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { synthsMap } = snxJSConnector;
-
-    const optionsMarkets = useMemo(
-        () =>
-            marketsQuery.isSuccess && Array.isArray(marketsQuery.data)
-                ? sortOptionsMarkets(marketsQuery.data, synthsMap)
-                : [],
-        [marketsQuery, synthsMap]
-    );
+    const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
+    const optionsMarkets = useMemo(() => {
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
+            const markets = openOrdersMap
+                ? marketsQuery.data.map((m) => ({ ...m, openOrders: openOrdersMap[m.address] }))
+                : marketsQuery.data;
+            return sortOptionsMarkets(markets, synthsMap);
+        }
+        return [];
+    }, [marketsQuery, synthsMap, openOrdersMap]);
 
     const hotMarkets = useMemo(
         () =>
@@ -41,6 +46,12 @@ export const Home: React.FC = () => {
                 .slice(0, MAX_HOT_MARKETS),
         [optionsMarkets]
     );
+
+    useEffect(() => {
+        if (!openOrdersMap) {
+            fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+        }
+    }, [networkId, optionsMarkets]);
 
     useEffect(() => {
         if (history.location.hash === '#explore-markets') {

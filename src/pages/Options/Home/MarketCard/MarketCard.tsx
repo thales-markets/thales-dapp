@@ -5,6 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, Image, Text } from 'theme/common';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithKey, getPercentageDifference } from 'utils/formatters/number';
@@ -106,7 +107,13 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                         <GradientBorderWrapper>
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.open-orders')}:</MarketInfoTitle>
-                                <Text style={{ fontWeight: 'bold' }}>{optionMarket.openOrders}</Text>
+                                <Text style={{ fontWeight: 'bold' }}>
+                                    {optionMarket.openOrders ?? (
+                                        <div style={{ height: '16px', width: '100%', position: 'relative' }}>
+                                            <StyledLoader />
+                                        </div>
+                                    )}
+                                </Text>
                             </MarketInfo>
                         </GradientBorderWrapper>
                         <ViewMarket className="view-market">View Market</ViewMarket>
@@ -116,6 +123,11 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
         </>
     );
 };
+
+const StyledLoader = styled(CircularProgress)`
+    height: 16px !important;
+    width: 16px !important;
+`;
 
 const Card = styled(FlexDivColumnCentered)`
     position: relative;
