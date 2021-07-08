@@ -36,6 +36,7 @@ import { FlexDivCentered, Image } from '../../../../theme/common';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
 import { getPercentageDifference } from '../../../../utils/formatters/number';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 dotenv.config();
 
@@ -268,7 +269,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         <StyledTableCell>
                                             <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                         </StyledTableCell>
-                                        <StyledTableCell>{market.openOrders}</StyledTableCell>
+                                        <StyledTableCell>
+                                            {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
+                                        </StyledTableCell>
                                         <StyledTableCell>
                                             <PhaseLabel className={market.phase}>
                                                 {t(`options.phases.${market.phase}`)}
@@ -305,6 +308,11 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         );
     }
 );
+
+const StyledLoader = styled(CircularProgress)`
+    height: 16px !important;
+    width: 16px !important;
+`;
 
 const StyledTableRow = withStyles(() => ({
     root: {
