@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { OptionsMarketInfo } from 'types/options';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
 import styled from 'styled-components';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,8 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import arrowUp from 'assets/images/arrow-up.svg';
+import arrowDown from 'assets/images/arrow-down.svg';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -51,7 +53,34 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 </ItemContainer>
                 <ItemContainer>
                     <Title>{t(`options.market.overview.strike-price-label`)}</Title>
-                    <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}</Content>
+                    <Content>
+                        <FlexDivCentered>
+                            {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
+                            {!optionsMarket.isResolved && (
+                                <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
+                                    {optionsMarket.currentPrice > optionsMarket.strikePrice ? (
+                                        <RedText>
+                                            (<PriceArrow src={arrowDown} />
+                                            {getPercentageDifference(
+                                                optionsMarket.currentPrice,
+                                                optionsMarket.strikePrice
+                                            )}
+                                            %)
+                                        </RedText>
+                                    ) : (
+                                        <GreenText>
+                                            (<PriceArrow src={arrowUp} />
+                                            {getPercentageDifference(
+                                                optionsMarket.currentPrice,
+                                                optionsMarket.strikePrice
+                                            )}
+                                            %)
+                                        </GreenText>
+                                    )}
+                                </LightTooltip>
+                            )}
+                        </FlexDivCentered>
+                    </Content>
                 </ItemContainer>
                 <ItemContainer>
                     <Title>
@@ -143,6 +172,10 @@ const Content = styled.p`
     font-size: 16px;
     line-height: 18px;
     color: #f6f6fe;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 `;
 
 const Phase = styled(PhaseLabel)`
@@ -183,5 +216,21 @@ const StyledLink = styled.a`
 `;
 
 export const ArrowIcon = styled(ArrowHyperlinkIcon)``;
+
+const PriceArrow = styled(Image)`
+    width: 16px;
+    height: 16px;
+    margin-bottom: -2px;
+`;
+
+const GreenText = styled.span`
+    color: #01b977;
+    padding-left: 5px;
+`;
+
+const RedText = styled.span`
+    color: #be2727;
+    padding-left: 5px;
+`;
 
 export default MarketOverview;

@@ -76,12 +76,16 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
-    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress);
+    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
     const userAssets = useMemo(
         () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
         [userAssetsQuery]
     );
-    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress);
+    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
     const userOrders = useMemo(
         () =>
             userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records)

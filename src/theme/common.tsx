@@ -2,9 +2,6 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
-import githubHover from 'assets/images/github-hover.svg';
-import twitterHover from 'assets/images/twitter-hover.svg';
-import discordHover from 'assets/images/discord-hover.svg';
 import React from 'react';
 import { Tooltip, withStyles } from '@material-ui/core';
 
@@ -326,19 +323,7 @@ export const FilterButton = styled(Button)`
     }
 `;
 
-export const IconLink = styled.a`
-    &:hover {
-        .github {
-            content: url(${githubHover});
-        }
-        .twitter {
-            content: url(${twitterHover});
-        }
-        .discord {
-            content: url(${discordHover});
-        }
-    }
-`;
+export const IconLink = styled.a``;
 
 export const SyntetixLogo = styled.img`
     width: 220px;

@@ -58,6 +58,7 @@ import { refetchOrderbook } from 'utils/queryConnector';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
+import { getIsAppReady } from 'redux/modules/app';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -121,8 +122,9 @@ export const CreateMarket: React.FC = () => {
     const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const exchangeRatesQuery = useExchangeRatesQuery();
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
 

@@ -287,6 +287,7 @@
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
+                "difference-text-tooltip": "Difference between current and strike price",
                 "current-price-label": "Current {{currencyKey}} price",
                 "final-price-label": "Final {{currencyKey}} price",
                 "maturity-label": "Maturity",

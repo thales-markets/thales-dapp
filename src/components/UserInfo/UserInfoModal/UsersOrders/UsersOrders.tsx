@@ -14,6 +14,10 @@ import snxJSConnector from 'utils/snxJSConnector';
 import long from 'assets/images/long.svg';
 import short from 'assets/images/short.svg';
 import { MarketRow } from '../UserInfoModal';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected } from 'redux/modules/wallet';
 
 type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
@@ -23,10 +27,15 @@ type UsersOrdersProps = {
 };
 
 const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress, networkId, onClose }) => {
-    const ordersQuery = useUserOrdersQuery(networkId, walletAddress);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
+
+    const ordersQuery = useUserOrdersQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const filteredOrders = useMemo(() => {
         if (ordersQuery.isSuccess) {

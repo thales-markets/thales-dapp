@@ -3,7 +3,8 @@ import { USD_SIGN } from 'constants/currency';
 import useAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { FlexDiv, Text, LightTooltip } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
@@ -19,7 +20,12 @@ type UsersAssetsProps = {
 
 const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress, onClose }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
+    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const assets = useMemo(
         () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
