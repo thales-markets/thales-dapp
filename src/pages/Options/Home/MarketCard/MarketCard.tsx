@@ -24,7 +24,7 @@ type MarketCardPros = {
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
     const { t } = useTranslation();
     const currentAssetPrice = exchangeRates?.[optionMarket.currencyKey] || 0;
-
+    const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket.strikePrice);
     return (
         <>
             {optionMarket && (
@@ -61,59 +61,66 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             </GradientBorderWrapper>
                         </FlexDivColumn>
                     </Header>
+
                     <Content>
                         <Text>{t('options.home.market-card.strike-price')}</Text>
                         <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
-                        <Text>{t('options.home.market-card.difference-text')}:</Text>
-                        {currentAssetPrice > optionMarket.strikePrice ? (
-                            <FlexDivCentered style={{ paddingTop: '5px' }}>
-                                <Arrow src={arrowDown} />
-                                <RedText>
-                                    {getPercentageDifference(currentAssetPrice, optionMarket.strikePrice)}%
-                                </RedText>
-                            </FlexDivCentered>
-                        ) : (
-                            <FlexDivCentered style={{ paddingTop: '5px' }}>
-                                <Arrow src={arrowUp} />
-                                <GreenText>
-                                    {getPercentageDifference(currentAssetPrice, optionMarket.strikePrice)}%
-                                </GreenText>
-                            </FlexDivCentered>
-                        )}
+                        <div style={{ visibility: isFinite(strikeAndAssetPriceDifference) ? 'visible' : 'hidden' }}>
+                            <Text>{t('options.home.market-card.difference-text')}:</Text>
+                            {currentAssetPrice > optionMarket.strikePrice ? (
+                                <FlexDivCentered
+                                    style={{
+                                        paddingTop: '5px',
+                                    }}
+                                >
+                                    <Arrow src={arrowDown} />
+                                    <RedText>{strikeAndAssetPriceDifference.toFixed(2)}%</RedText>
+                                </FlexDivCentered>
+                            ) : (
+                                <FlexDivCentered
+                                    style={{
+                                        paddingTop: '5px',
+                                    }}
+                                >
+                                    <Arrow src={arrowUp} />
+                                    <GreenText>{strikeAndAssetPriceDifference.toFixed(2)}%</GreenText>
+                                </FlexDivCentered>
+                            )}
+                        </div>
                     </Content>
                     <Footer className="footer">
                         <GradientBorderWrapper>
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.current-asset-price')}:</MarketInfoTitle>
-                                <Text style={{ fontWeight: 'bold' }}>
-                                    {formatCurrencyWithSign(USD_SIGN, currentAssetPrice)}
-                                </Text>
+                                <span style={{ fontWeight: 'bold' }}>
+                                    {currentAssetPrice ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice) : 'N/A'}
+                                </span>
                             </MarketInfo>
                         </GradientBorderWrapper>
                         <GradientBorderWrapper>
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
-                                <Text style={{ fontWeight: 'bold' }}>
+                                <span style={{ fontWeight: 'bold' }}>
                                     {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
-                                </Text>
+                                </span>
                             </MarketInfo>
                         </GradientBorderWrapper>
                         <GradientBorderWrapper>
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.end-date')}:</MarketInfoTitle>
-                                <Text style={{ fontWeight: 'bold' }}>{formatShortDate(optionMarket.maturityDate)}</Text>
+                                <span style={{ fontWeight: 'bold' }}>{formatShortDate(optionMarket.maturityDate)}</span>
                             </MarketInfo>
                         </GradientBorderWrapper>
                         <GradientBorderWrapper>
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.open-orders')}:</MarketInfoTitle>
-                                <Text style={{ fontWeight: 'bold' }}>
+                                <span style={{ fontWeight: 'bold' }}>
                                     {optionMarket.openOrders ?? (
                                         <div style={{ height: '16px', width: '100%', position: 'relative' }}>
                                             <StyledLoader />
                                         </div>
                                     )}
-                                </Text>
+                                </span>
                             </MarketInfo>
                         </GradientBorderWrapper>
                         <ViewMarket className="view-market">View Market</ViewMarket>

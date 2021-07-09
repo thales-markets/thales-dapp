@@ -160,8 +160,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const onClickUserFilter = (filter: UserFilterEnum) => {
-        if (isWalletConnected) {
+    const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        if (!isDisabled) {
             setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
         }
         return;
@@ -200,20 +200,27 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                             isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
                             key !== UserFilterEnum.All
                     )
-                    .map((key) => (
-                        <UserFilter
-                            className={`${
-                                isWalletConnected && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
-                                    ? 'selected'
-                                    : ''
-                            }`}
-                            disabled={!isWalletConnected}
-                            onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                            key={key}
-                            img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                            text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                        />
-                    ))}
+                    .map((key, index) => {
+                        const isDisabled = !isWalletConnected && index < 4;
+                        return (
+                            <UserFilter
+                                className={`${
+                                    !isDisabled && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                        ? 'selected'
+                                        : ''
+                                }`}
+                                disabled={isDisabled}
+                                onClick={onClickUserFilter.bind(
+                                    this,
+                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                    isDisabled
+                                )}
+                                key={key}
+                                img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                                text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                            />
+                        );
+                    })}
             </FlexDivCentered>
 
             <FlexDiv
@@ -262,7 +269,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                             <Text className="text-l bold pale-grey">
                                 {t('options.home.explore-markets.table.no-markets-found')}
                             </Text>
-                            <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
+                            <Button className="primary" onClick={resetFilters}>
                                 {t('options.home.explore-markets.table.view-all-markets')}
                             </Button>
                         </>

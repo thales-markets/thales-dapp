@@ -28,7 +28,7 @@ import downSelected from 'assets/images/down-selected.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import axios from 'axios';
 import { USD_SIGN } from 'constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
@@ -76,6 +76,7 @@ const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
     ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates }) => {
+        const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
@@ -203,6 +204,10 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                         <TableBody>
                             {sortedMarkets.map((market, index) => {
                                 const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
+                                const strikeAndAssetPriceDifference = getPercentageDifference(
+                                    currentAssetPrice,
+                                    market.strikePrice
+                                );
                                 return (
                                     <StyledTableRow
                                         onClick={() => {
@@ -210,7 +215,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 navigateToOptionsMarket(market.address);
                                             }
                                         }}
-                                        className={market.phase !== 'expiry' ? 'clickable' : ''}
+                                        className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
                                         key={index}
                                     >
                                         <StyledTableCell
@@ -221,6 +226,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{ paddingRight: 0 }}
                                         >
                                             <Star
+                                                style={{ visibility: isWalletConnected ? 'visible' : 'hidden' }}
                                                 src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
                                             />
                                         </StyledTableCell>
@@ -233,36 +239,36 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             />
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {formatCurrencyWithSign(USD_SIGN, currentAssetPrice)}
+                                            {currentAssetPrice
+                                                ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
+                                                : 'N/A'}
                                         </StyledTableCell>
                                         <StyledTableCell>
                                             <FlexDivCentered>
                                                 <span>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</span>
                                                 {currentAssetPrice > market.strikePrice ? (
-                                                    <RedText>
+                                                    <RedText
+                                                        style={{
+                                                            display: isFinite(strikeAndAssetPriceDifference)
+                                                                ? 'flex'
+                                                                : 'none',
+                                                        }}
+                                                    >
                                                         (
                                                         <PriceArrow src={arrowDown} />
-                                                        <span>
-                                                            {getPercentageDifference(
-                                                                currentAssetPrice,
-                                                                market.strikePrice
-                                                            )}
-                                                            %
-                                                        </span>
-                                                        )
+                                                        <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
                                                     </RedText>
                                                 ) : (
-                                                    <GreenText>
+                                                    <GreenText
+                                                        style={{
+                                                            display: isFinite(strikeAndAssetPriceDifference)
+                                                                ? 'flex'
+                                                                : 'none',
+                                                        }}
+                                                    >
                                                         (
                                                         <PriceArrow src={arrowUp} />
-                                                        <span>
-                                                            {getPercentageDifference(
-                                                                currentAssetPrice,
-                                                                market.strikePrice
-                                                            )}
-                                                            %
-                                                        </span>
-                                                        )
+                                                        <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
                                                     </GreenText>
                                                 )}
                                             </FlexDivCentered>
