@@ -64,7 +64,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                             {getPercentageDifference(
                                                 optionsMarket.currentPrice,
                                                 optionsMarket.strikePrice
-                                            )}
+                                            ).toFixed(2)}
                                             %)
                                         </RedText>
                                     ) : (
@@ -73,7 +73,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                             {getPercentageDifference(
                                                 optionsMarket.currentPrice,
                                                 optionsMarket.strikePrice
-                                            )}
+                                            ).toFixed(2)}
                                             %)
                                         </GreenText>
                                     )}

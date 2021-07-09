@@ -684,11 +684,10 @@ export const CreateMarket: React.FC = () => {
 
                                                 if (Number(trimmedValue) > 0) {
                                                     setIsStrikePriceValid(true);
-                                                    setStrikePrice(trimmedValue);
                                                 } else {
                                                     setIsStrikePriceValid(false);
-                                                    setStrikePrice('');
                                                 }
+                                                setStrikePrice(trimmedValue);
 
                                                 if (Number(trimmedValue) > 0 && currencyKey) {
                                                     const currentPrice = get(exchangeRates, currencyKey.value, null);
