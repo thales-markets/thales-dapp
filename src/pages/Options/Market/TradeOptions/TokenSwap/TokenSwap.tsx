@@ -20,6 +20,7 @@ import {
     formatCurrencyWithSign,
     formatPercentageWithSign,
     toBigNumber,
+    truncToDecimals,
 } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -32,7 +33,7 @@ import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorC
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { Web3Wrapper } from '@0x/web3-wrapper';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import {
     Container,
@@ -262,7 +263,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         if (isBuy) return;
         const maxsOPTBalance = tokenBalance;
         const newAmount = (maxsOPTBalance * percentage) / 100;
-        setAmount(newAmount);
+        setAmount(truncToDecimals(newAmount, DEFAULT_OPTIONS_DECIMALS));
     };
 
     const resetQuote = () => {

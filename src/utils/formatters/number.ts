@@ -58,3 +58,8 @@ export const formatCurrencyWithKey = (currencyKey: CurrencyKey, value: NumericVa
 
 export const getPercentageDifference = (firstNumber: number, secondNumber: number): string =>
     Math.abs(((firstNumber - secondNumber) / firstNumber) * 100).toFixed(2);
+
+export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
+    const matchedValue = value.toString().match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
+    return matchedValue !== null ? matchedValue[0] : '0';
+};
