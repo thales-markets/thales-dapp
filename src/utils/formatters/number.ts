@@ -56,8 +56,8 @@ export const formatCurrencyWithSign = (sign: string | null | undefined, value: N
 export const formatCurrencyWithKey = (currencyKey: CurrencyKey, value: NumericValue, decimals?: number) =>
     `${formatCurrency(value, decimals || getPrecision(value))} ${currencyKey}`;
 
-export const getPercentageDifference = (firstNumber: number, secondNumber: number): string =>
-    Math.abs(((firstNumber - secondNumber) / firstNumber) * 100).toFixed(2);
+export const getPercentageDifference = (firstNumber: number, secondNumber: number): number =>
+    Math.abs(((firstNumber - secondNumber) / firstNumber) * 100);
 
 export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS): string => {
     const matchedValue = value.toString().match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
