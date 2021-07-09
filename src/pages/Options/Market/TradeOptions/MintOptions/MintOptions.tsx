@@ -44,7 +44,13 @@ import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } f
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
-import { formatCurrency, formatCurrencyWithSign, formatPercentage, toBigNumber } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatPercentage,
+    toBigNumber,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivRow } from 'theme/common';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
@@ -62,7 +68,6 @@ import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
-import numbro from 'numbro';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -537,10 +542,7 @@ const MintOptions: React.FC = () => {
     }, [amount, marketFees]);
 
     useEffect(() => {
-        const formatedAmountMinted = numbro(Number(mintedAmount)).format({
-            trimMantissa: true,
-            mantissa: 3,
-        });
+        const formatedAmountMinted = truncToDecimals(mintedAmount, DEFAULT_OPTIONS_DECIMALS);
 
         setLongAmount(formatedAmountMinted);
         setShortAmount(formatedAmountMinted);

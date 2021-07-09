@@ -19,7 +19,7 @@ import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
+import { formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
@@ -35,7 +35,7 @@ import {
     ORDER_PERIOD_ITEMS_MAP,
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import { ValueType } from 'react-select';
@@ -305,7 +305,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         if (isBuy && price === '') return;
         const maxsOPTBalance = isBuy ? sUSDBalance / Number(price) : tokenBalance;
         const newAmount = (maxsOPTBalance * percentage) / 100;
-        setAmount(newAmount);
+        setAmount(truncToDecimals(newAmount, DEFAULT_OPTIONS_DECIMALS));
     };
 
     const getSubmitButton = () => {
