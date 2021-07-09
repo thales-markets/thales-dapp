@@ -53,7 +53,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 </ItemContainer>
                 <ItemContainer>
                     <Title>{t(`options.market.overview.strike-price-label`)}</Title>
-                    <Content>
+                    <Content fontSize={optionsMarket.strikePrice < 0.01 ? 14 : 16}>
                         <FlexDivCentered>
                             {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
                             {!optionsMarket.isResolved && (
@@ -92,7 +92,13 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                   currencyKey: optionsMarket.asset,
                               })}
                     </Title>
-                    <Content>
+                    <Content
+                        fontSize={
+                            (optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice) < 0.01
+                                ? 14
+                                : 16
+                        }
+                    >
                         {formatCurrencyWithSign(
                             USD_SIGN,
                             optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
@@ -166,10 +172,10 @@ const Title = styled.p`
     color: #b8c6e5;
 `;
 
-const Content = styled.p`
+const Content = styled.div<{ fontSize?: number }>`
     font-style: normal;
     font-weight: bold;
-    font-size: 16px;
+    font-size: ${(props) => props.fontSize || 16}px;
     line-height: 18px;
     color: #f6f6fe;
     -webkit-user-select: none;

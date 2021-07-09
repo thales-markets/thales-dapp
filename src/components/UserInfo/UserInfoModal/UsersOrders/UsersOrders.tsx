@@ -6,7 +6,7 @@ import React, { useMemo } from 'react';
 import { FlexDivCentered, Image, LightTooltip, Text } from 'theme/common';
 import { OptionsMarkets, Trade } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrency, formatPercentage } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 import { NetworkId } from 'utils/network';
 import { navigateToOptionsMarket } from 'utils/routes';
@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 
 type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
@@ -99,7 +100,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                         />
                     </FlexDivCentered>
                     <Text className="text-xxs" style={{ flex: 2 }}>
-                        {formatCurrency(order.market.strikePrice) + USD_SIGN + ' '}
+                        {formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
                     </Text>
                     <LightTooltip title="Maturity date">
                         <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
@@ -109,8 +110,8 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                     <Image style={{ width: 24 }} src={order.isLong ? long : short}></Image>
                     <LightTooltip title="Amount x Price">
                         <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
-                            {order.displayOrder.amount.toFixed(2) + ' x '}
-                            {order.displayOrder.price.toFixed(2) + USD_SIGN}
+                            {formatCurrency(order.displayOrder.amount, DEFAULT_OPTIONS_DECIMALS) + ' x '}
+                            {formatCurrencyWithSign(USD_SIGN, order.displayOrder.price, DEFAULT_OPTIONS_DECIMALS)}
                         </Text>
                     </LightTooltip>
                     <LightTooltip title="Filled">

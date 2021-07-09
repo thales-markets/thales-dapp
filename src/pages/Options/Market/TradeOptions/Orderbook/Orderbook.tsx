@@ -27,6 +27,7 @@ import { FilterButton, LightTooltip } from '../../components';
 import snxJSConnector from 'utils/snxJSConnector';
 import { refetchOrderbook } from 'utils/queryConnector';
 import { get0xWebSocketBaseURL } from 'utils/0x';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 
 type OrderbookProps = {
     optionSide: OptionSide;
@@ -92,15 +93,15 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
             const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
-            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, marketPrice, 4);
+            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, marketPrice, DEFAULT_OPTIONS_DECIMALS);
         }
         if (sellOrders.length > 0) {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, lowestSellOrderPrice, 4);
+            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, lowestSellOrderPrice, DEFAULT_OPTIONS_DECIMALS);
         }
         if (buyOrders.length > 0) {
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, highestBuyOrderPrice, 4);
+            return formatCurrencyWithKey(SYNTHS_MAP.sUSD, highestBuyOrderPrice, DEFAULT_OPTIONS_DECIMALS);
         }
 
         return '';

@@ -4,6 +4,7 @@ import React from 'react';
 import { LightTooltip, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow } from '../UserInfoModal';
 
@@ -36,13 +37,13 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) =>
                     </div>
 
                     <LightTooltip title="Strike price">
-                        <Text style={{ flex: 1 }}>{USD_SIGN + market.strikePrice.toFixed(2)}</Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                     </LightTooltip>
                     <LightTooltip title="Maturity date">
                         <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                     </LightTooltip>
                     <LightTooltip title="Pool size">
-                        <Text style={{ flex: 1 }}>{USD_SIGN + market.poolSize.toFixed(2)}</Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                     </LightTooltip>
                 </MarketRow>
             ))}

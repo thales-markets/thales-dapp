@@ -9,6 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDiv, Text, LightTooltip } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
+import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow } from '../UserInfoModal';
 
@@ -57,7 +58,7 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                             </FlexDiv>
                             <LightTooltip title="Strike price">
                                 <Text style={{ margin: '0 8px', flex: 1, textAlign: 'center' }}>
-                                    {USD_SIGN + asset.market.strikePrice.toFixed(2)}
+                                    {formatCurrencyWithSign(USD_SIGN, asset.market.strikePrice)}
                                 </Text>
                             </LightTooltip>
                             <LightTooltip title="Maturity date">
@@ -67,12 +68,12 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                             </LightTooltip>
                             <LightTooltip title="Amount of long options">
                                 <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(61, 186, 162)' }}>
-                                    {asset.balances.long.toFixed(2)}
+                                    {formatCurrency(asset.balances.long)}
                                 </Text>
                             </LightTooltip>
                             <LightTooltip title="Amount of short options">
                                 <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(255, 122, 104)' }}>
-                                    {asset.balances.short.toFixed(2)}
+                                    {formatCurrency(asset.balances.short)}
                                 </Text>
                             </LightTooltip>
                         </MarketRow>

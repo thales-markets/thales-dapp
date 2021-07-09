@@ -1,5 +1,5 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
-import { FIAT_CURRENCY_MAP } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import { FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, Image, Text } fr
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithKey, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
@@ -63,7 +63,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                     </Header>
                     <Content>
                         <Text>{t('options.home.market-card.strike-price')}</Text>
-                        <Price>{formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionMarket.strikePrice)}</Price>
+                        <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
                         <Text>{t('options.home.market-card.difference-text')}:</Text>
                         {currentAssetPrice > optionMarket.strikePrice ? (
                             <FlexDivCentered style={{ paddingTop: '5px' }}>
@@ -86,7 +86,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.current-asset-price')}:</MarketInfoTitle>
                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, currentAssetPrice)}
+                                    {formatCurrencyWithSign(USD_SIGN, currentAssetPrice)}
                                 </Text>
                             </MarketInfo>
                         </GradientBorderWrapper>
@@ -94,7 +94,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <MarketInfo>
                                 <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {formatCurrencyWithKey(FIAT_CURRENCY_MAP.USD, optionMarket.poolSize)}
+                                    {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
                                 </Text>
                             </MarketInfo>
                         </GradientBorderWrapper>

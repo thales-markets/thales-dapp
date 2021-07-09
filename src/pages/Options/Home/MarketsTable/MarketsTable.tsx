@@ -34,7 +34,7 @@ import { USD_SIGN } from 'constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { FlexDivCentered, Image } from '../../../../theme/common';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
-import { getPercentageDifference } from '../../../../utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -232,10 +232,12 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 synthIconStyle={{ width: 32, height: 32 }}
                                             />
                                         </StyledTableCell>
-                                        <StyledTableCell>{USD_SIGN + currentAssetPrice.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, currentAssetPrice)}
+                                        </StyledTableCell>
                                         <StyledTableCell>
                                             <FlexDivCentered>
-                                                <span>{USD_SIGN + market.strikePrice.toFixed(2)}</span>
+                                                <span>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</span>
                                                 {currentAssetPrice > market.strikePrice ? (
                                                     <RedText>
                                                         (
@@ -265,7 +267,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 )}
                                             </FlexDivCentered>
                                         </StyledTableCell>
-                                        <StyledTableCell>{USD_SIGN + market.poolSize.toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                        </StyledTableCell>
                                         <StyledTableCell>
                                             <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                         </StyledTableCell>

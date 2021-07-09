@@ -50,7 +50,7 @@ import { FlexDiv, FlexDivRow } from 'theme/common';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { get0xBaseURL } from 'utils/0x';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
@@ -539,7 +539,7 @@ const MintOptions: React.FC = () => {
     useEffect(() => {
         const formatedAmountMinted = numbro(Number(mintedAmount)).format({
             trimMantissa: true,
-            mantissa: 4,
+            mantissa: 3,
         });
 
         setLongAmount(formatedAmountMinted);
@@ -598,13 +598,17 @@ const MintOptions: React.FC = () => {
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
                     <SummaryLabel color={COLORS.LONG}>{t('options.market.trade-options.mint.long-label')}</SummaryLabel>
-                    <SummaryContent color={COLORS.LONG}>{formatCurrency(mintedAmount)}</SummaryContent>
+                    <SummaryContent color={COLORS.LONG}>
+                        {formatCurrency(mintedAmount, DEFAULT_OPTIONS_DECIMALS)}
+                    </SummaryContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem>
                     <SummaryLabel color={COLORS.SHORT}>
                         {t('options.market.trade-options.mint.short-label')}
                     </SummaryLabel>
-                    <SummaryContent color={COLORS.SHORT}>{formatCurrency(mintedAmount)}</SummaryContent>
+                    <SummaryContent color={COLORS.SHORT}>
+                        {formatCurrency(mintedAmount, DEFAULT_OPTIONS_DECIMALS)}
+                    </SummaryContent>
                 </MintingInnerSummaryItem>
             </SummaryContainer>
             <Divider />
@@ -750,7 +754,7 @@ const MintOptions: React.FC = () => {
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
                         marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
-                        2
+                        DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
@@ -760,7 +764,7 @@ const MintOptions: React.FC = () => {
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
                         marketFees ? Number(amount) * marketFees.creator : 0,
-                        2
+                        DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
@@ -770,7 +774,7 @@ const MintOptions: React.FC = () => {
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
                         marketFees ? Number(amount) * marketFees.pool : 0,
-                        2
+                        DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <NetworkFees gasLimit={gasLimit} />

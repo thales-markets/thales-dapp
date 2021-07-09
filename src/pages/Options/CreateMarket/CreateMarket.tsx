@@ -966,16 +966,12 @@ export const CreateMarket: React.FC = () => {
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
-                            strikingPrice={
-                                strikePrice ? parseFloat(strikePrice.toString()).toFixed(4).replace(/\.0+$/, '') : ''
-                            }
+                            strikingPrice={strikePrice}
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}
-                            currentPrice={
-                                currencyKey ? get(exchangeRates, currencyKey.value, null)?.toFixed(4).toString() : ''
-                            }
+                            currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                         ></MarketSummary>
                     </FlexDiv>
                     <div>
