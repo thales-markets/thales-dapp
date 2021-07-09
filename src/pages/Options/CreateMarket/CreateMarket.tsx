@@ -19,7 +19,16 @@ import { getWalletAddress, getCustomGasPrice, getGasSpeed, getNetworkId } from '
 import Currency from 'components/Currency';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button, FlexDivRow } from 'theme/common';
+import {
+    FlexDiv,
+    FlexDivColumn,
+    Background,
+    MainWrapper,
+    Text,
+    Button,
+    FlexDivRow,
+    FlexDivColumnCentered,
+} from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
@@ -37,7 +46,6 @@ import {
     SliderContainer,
     SliderRange,
 } from '../Market/components';
-import { Message } from 'semantic-ui-react';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
 import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOptions';
@@ -59,6 +67,7 @@ import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQ
 import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
+import ValidationMessage from 'components/ValidationMessage';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -974,16 +983,16 @@ export const CreateMarket: React.FC = () => {
                             currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                         ></MarketSummary>
                     </FlexDiv>
-                    <div>
+                    <FlexDivColumnCentered style={{ alignItems: 'center' }}>
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
                             {getSubmitButton()}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                            {txErrorMessage && (
-                                <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                            )}
-                        </div>
-                    </div>
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
+                    </FlexDivColumnCentered>
                     <ProgressTracker
                         isWalletAccessEnabled={hasAllowance}
                         isAllowing={isAllowing}
