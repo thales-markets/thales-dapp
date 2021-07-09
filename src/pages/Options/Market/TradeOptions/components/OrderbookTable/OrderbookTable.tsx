@@ -135,7 +135,7 @@ const InnerTableRow = styled(FlexDiv)<{ width: number; orderSide: OrderSide }>`
     min-height: 32px;
     background: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
     mix-blend-mode: normal;
-    opacity: 0.2;
+    opacity: 0.12;
     width: ${(props) => `${props.width}%`};
     position: absolute;
     top: 0;
