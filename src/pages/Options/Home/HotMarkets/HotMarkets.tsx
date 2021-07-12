@@ -16,10 +16,12 @@ type HotMarketsProps = {
     optionsMarkets: OptionsMarkets;
 };
 
+let shouldUseInterval = true;
+let isAnimationActive = false;
+
 export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
     const [currentMarket, setCurrentMarket] = useState(0);
-    const [shouldUseInterval, setShouldUseInterval] = useState(true);
 
     const currentMarkets = useMemo(() => {
         const markets = [];
@@ -58,12 +60,16 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
             <FlexDivCentered className="hot-markets__desktop">
                 <Arrow
                     onClick={() => {
-                        setShouldUseInterval(false);
-                        document.getElementById('market-cards-wrapper')?.classList.add('previous');
-                        setTimeout(() => {
-                            document.getElementById('market-cards-wrapper')?.classList.remove('previous');
-                            setCurrentMarket(currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1);
-                        }, 1000);
+                        shouldUseInterval = false;
+                        if (!isAnimationActive) {
+                            isAnimationActive = true;
+                            document.getElementById('market-cards-wrapper')?.classList.add('previous');
+                            setTimeout(() => {
+                                isAnimationActive = false;
+                                document.getElementById('market-cards-wrapper')?.classList.remove('previous');
+                                setCurrentMarket(currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1);
+                            }, 1000);
+                        }
                     }}
                     src={previous}
                 />
@@ -79,12 +85,16 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
 
                 <Arrow
                     onClick={() => {
-                        setShouldUseInterval(false);
-                        document.getElementById('market-cards-wrapper')?.classList.add('next');
-                        setTimeout(() => {
-                            document.getElementById('market-cards-wrapper')?.classList.remove('next');
-                            setCurrentMarket(currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1);
-                        }, 1000);
+                        shouldUseInterval = false;
+                        if (!isAnimationActive) {
+                            isAnimationActive = true;
+                            document.getElementById('market-cards-wrapper')?.classList.add('next');
+                            setTimeout(() => {
+                                isAnimationActive = false;
+                                document.getElementById('market-cards-wrapper')?.classList.remove('next');
+                                setCurrentMarket(currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1);
+                            }, 1000);
+                        }
                     }}
                     src={next}
                 />
