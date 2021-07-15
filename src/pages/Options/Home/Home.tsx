@@ -18,6 +18,7 @@ import useExchangeRatesQuery from '../../../queries/rates/useExchangeRatesQuery'
 import { getIsAppReady } from '../../../redux/modules/app';
 import { fetchOrders, openOrdersMapCache } from '../../../queries/options/fetchMarketOrders';
 
+let fetchOrdersInterval: NodeJS.Timeout;
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
@@ -48,8 +49,11 @@ export const Home: React.FC = () => {
     );
 
     useEffect(() => {
-        if (!openOrdersMap) {
+        if (!openOrdersMap && !fetchOrdersInterval && networkId && optionsMarkets.length) {
             fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+            fetchOrdersInterval = setInterval(() => {
+                fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+            }, 10000);
         }
     }, [networkId, optionsMarkets]);
 
