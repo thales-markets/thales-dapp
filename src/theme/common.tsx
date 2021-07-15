@@ -220,6 +220,9 @@ export const LightTooltip = withStyles(() => ({
         border: '1px solid #748BC6',
         padding: 6,
     },
+    arrow: {
+        color: '#748BC6',
+    },
 }))(Tooltip);
 
 export const Text = styled.p`
