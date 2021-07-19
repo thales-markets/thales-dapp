@@ -55,6 +55,8 @@ export type HistoricalOptionsMarketInfo = {
     orders: Array<any>;
     longAddress: string;
     shortAddress: string;
+    customMarket: boolean;
+    customOracle: string;
     result: OptionSide;
 };
 
