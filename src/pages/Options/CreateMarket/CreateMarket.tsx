@@ -79,6 +79,12 @@ const roundMinutes = (date: Date) => {
 
 const Today: Date = new Date();
 
+const datePickerMinDate: Date = new Date();
+
+const datePickerMaxDate: Date = new Date();
+
+datePickerMaxDate.setFullYear(datePickerMaxDate.getFullYear() + 2);
+
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
 export type MarketFees = Record<string, number>;
@@ -730,7 +736,8 @@ export const CreateMarket: React.FC = () => {
                                             <DatePicker
                                                 className="maturity-date"
                                                 dateFormat="MMM d, yyyy"
-                                                minDate={new Date()}
+                                                minDate={datePickerMinDate}
+                                                maxDate={datePickerMaxDate}
                                                 startDate={Today}
                                                 selected={maturityDate}
                                                 endDate={maturityDate}
