@@ -23,8 +23,8 @@ type MarketCardPros = {
 
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
     const { t } = useTranslation();
-    const currentAssetPrice = exchangeRates?.[optionMarket.currencyKey] || 0;
-    const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket.strikePrice);
+    const currentAssetPrice = exchangeRates?.[optionMarket?.currencyKey] || 0;
+    const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket?.strikePrice);
     return (
         <>
             {optionMarket && (
