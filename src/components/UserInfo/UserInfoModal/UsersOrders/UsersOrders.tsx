@@ -2,7 +2,7 @@ import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useUserOrdersQuery from 'queries/user/useUserOrdersQuery';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlexDivCentered, Image, LightTooltip, Text } from 'theme/common';
 import { OptionsMarkets, Trade } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
@@ -19,6 +19,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
+import { fetchOrders, openOrdersMapCache } from '../../../../queries/options/fetchMarketOrders';
+
+let fetchOrdersInterval: NodeJS.Timeout;
 
 type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
@@ -37,11 +40,22 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
     const ordersQuery = useUserOrdersQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
+    const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
+
+    useEffect(() => {
+        if (!openOrdersMap && !fetchOrdersInterval && networkId && optionsMarkets.length) {
+            fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+            fetchOrdersInterval = setInterval(() => {
+                fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+            }, 10000);
+        }
+    }, [networkId, optionsMarkets]);
 
     const filteredOrders = useMemo(() => {
         if (ordersQuery.isSuccess) {
             return optionsMarkets.reduce((acc, market: any) => {
-                if (market.openOrders > 0) {
+                const openOrders = openOrdersMapCache?.[market.address] || 0;
+                if (openOrders > 0) {
                     const userOrdersForMarket: [] = ordersQuery.data.records.reduce((temp: any, data: any) => {
                         const rawOrder: Trade = data.order;
                         const isBuy: boolean = rawOrder.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();

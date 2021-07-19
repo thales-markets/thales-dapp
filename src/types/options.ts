@@ -55,6 +55,7 @@ export type HistoricalOptionsMarketInfo = {
     orders: Array<any>;
     longAddress: string;
     shortAddress: string;
+    result: OptionSide;
 };
 
 export type OptionsMarketInfo = {
