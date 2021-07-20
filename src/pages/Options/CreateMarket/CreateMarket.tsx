@@ -68,6 +68,7 @@ import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
+import { ZERO_ADDRESS } from '../../../constants/network';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -324,7 +325,7 @@ export const CreateMarket: React.FC = () => {
             const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
             const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect((snxJSConnector as any).signer);
             BOMMContractWithSigner.estimateGas
-                .createMarket(oracleKey, price, maturity, initialMint, false, '')
+                .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
                 .then((gasEstimate: any) => {
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                     setUserHasEnoughFunds(true);
@@ -384,10 +385,18 @@ export const CreateMarket: React.FC = () => {
                 const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
                     (snxJSConnector as any).signer
                 );
-                await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, false, '', {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                });
+                await BOMMContractWithSigner.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint,
+                    false,
+                    ZERO_ADDRESS,
+                    {
+                        gasPrice: gasPriceInWei(gasPrice),
+                        gasLimit,
+                    }
+                );
             } catch (e) {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
