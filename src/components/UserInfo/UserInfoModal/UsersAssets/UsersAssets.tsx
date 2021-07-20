@@ -12,7 +12,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow } from '../UserInfoModal';
-import infoIcon from '../../../../assets/images/info.svg';
+import exerciseOptionIcon from '../../../../assets/images/exercise-option.svg';
 
 type UsersAssetsProps = {
     optionsMarkets: OptionsMarkets;
@@ -83,7 +83,9 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                             </LightTooltip>
                             <LightTooltip placement="top" arrow={true} title="Has options to exercise">
                                 <FlexDiv style={{ width: 15, height: 15 }}>
-                                    {hasFundsToExercise && <Image src={infoIcon} style={{ width: 15, height: 15 }} />}
+                                    {hasFundsToExercise && (
+                                        <Image src={exerciseOptionIcon} style={{ width: 15, height: 15 }} />
+                                    )}
                                 </FlexDiv>
                             </LightTooltip>
                         </MarketRow>
