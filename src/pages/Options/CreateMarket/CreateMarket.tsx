@@ -324,7 +324,7 @@ export const CreateMarket: React.FC = () => {
             const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
             const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect((snxJSConnector as any).signer);
             BOMMContractWithSigner.estimateGas
-                .createMarket(oracleKey, price, maturity, initialMint, false, "")
+                .createMarket(oracleKey, price, maturity, initialMint, false, '')
                 .then((gasEstimate: any) => {
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                     setUserHasEnoughFunds(true);
@@ -384,7 +384,7 @@ export const CreateMarket: React.FC = () => {
                 const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
                     (snxJSConnector as any).signer
                 );
-                await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, false, "", {
+                await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, false, '', {
                     gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
                 });
