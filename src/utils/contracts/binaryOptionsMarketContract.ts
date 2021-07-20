@@ -1,63 +1,60 @@
 export const binaryOptionMarketContract = {
     abi: [
         {
-            anonymous: false,
             inputs: [
                 {
-                    indexed: false,
-                    internalType: 'enum IBinaryOptionMarket.Side',
-                    name: 'result',
-                    type: 'uint8',
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
                 },
                 {
-                    indexed: false,
+                    internalType: 'contract IAddressResolver',
+                    name: '_resolver',
+                    type: 'address',
+                },
+                {
                     internalType: 'uint256',
-                    name: 'oraclePrice',
+                    name: '_maxOraclePriceAge',
                     type: 'uint256',
                 },
                 {
-                    indexed: false,
                     internalType: 'uint256',
-                    name: 'oracleTimestamp',
+                    name: '_expiryDuration',
                     type: 'uint256',
                 },
                 {
-                    indexed: false,
                     internalType: 'uint256',
-                    name: 'deposited',
+                    name: '_maxTimeToMaturity',
                     type: 'uint256',
                 },
                 {
-                    indexed: false,
                     internalType: 'uint256',
-                    name: 'poolFees',
+                    name: '_creatorCapitalRequirement',
                     type: 'uint256',
                 },
                 {
-                    indexed: false,
                     internalType: 'uint256',
-                    name: 'creatorFees',
+                    name: '_poolFee',
                     type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_creatorFee',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'address',
+                    name: '_feeAddress',
+                    type: 'address',
                 },
             ],
-            name: 'MarketResolved',
-            type: 'event',
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'constructor',
         },
         {
             anonymous: false,
             inputs: [
-                {
-                    indexed: false,
-                    internalType: 'enum IBinaryOptionMarket.Side',
-                    name: 'side',
-                    type: 'uint8',
-                },
-                {
-                    indexed: true,
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
                 {
                     indexed: false,
                     internalType: 'uint256',
@@ -65,26 +62,190 @@ export const binaryOptionMarketContract = {
                     type: 'uint256',
                 },
             ],
-            name: 'Mint',
+            name: 'CreatorCapitalRequirementUpdated',
             type: 'event',
         },
         {
             anonymous: false,
             inputs: [
                 {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'fee',
+                    type: 'uint256',
+                },
+            ],
+            name: 'CreatorFeeUpdated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'duration',
+                    type: 'uint256',
+                },
+            ],
+            name: 'ExpiryDurationUpdated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+                {
                     indexed: true,
                     internalType: 'address',
-                    name: 'account',
+                    name: 'creator',
                     type: 'address',
+                },
+                {
+                    indexed: true,
+                    internalType: 'bytes32',
+                    name: 'oracleKey',
+                    type: 'bytes32',
                 },
                 {
                     indexed: false,
                     internalType: 'uint256',
-                    name: 'value',
+                    name: 'strikePrice',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'maturityDate',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'expiryDate',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'long',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'short',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'customMarket',
+                    type: 'bool',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'customOracle',
+                    type: 'address',
+                },
+            ],
+            name: 'MarketCreated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'MarketCreationEnabledUpdated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
+            name: 'MarketExpired',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'contract BinaryOptionMarketManager',
+                    name: 'receivingManager',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'contract BinaryOptionMarket[]',
+                    name: 'markets',
+                    type: 'address[]',
+                },
+            ],
+            name: 'MarketsMigrated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'contract BinaryOptionMarketManager',
+                    name: 'migratingManager',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'contract BinaryOptionMarket[]',
+                    name: 'markets',
+                    type: 'address[]',
+                },
+            ],
+            name: 'MarketsReceived',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'duration',
                     type: 'uint256',
                 },
             ],
-            name: 'OptionsExercised',
+            name: 'MaxOraclePriceAgeUpdated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'duration',
+                    type: 'uint256',
+                },
+            ],
+            name: 'MaxTimeToMaturityUpdated',
             type: 'event',
         },
         {
@@ -120,6 +281,32 @@ export const binaryOptionMarketContract = {
             type: 'event',
         },
         {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'isPaused',
+                    type: 'bool',
+                },
+            ],
+            name: 'PauseChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'fee',
+                    type: 'uint256',
+                },
+            ],
+            name: 'PoolFeeUpdated',
+            type: 'event',
+        },
+        {
             constant: false,
             inputs: [],
             name: 'acceptOwnership',
@@ -132,37 +319,22 @@ export const binaryOptionMarketContract = {
             constant: true,
             inputs: [
                 {
-                    internalType: 'address',
-                    name: 'account',
-                    type: 'address',
-                },
-            ],
-            name: 'balancesOf',
-            outputs: [
-                {
                     internalType: 'uint256',
-                    name: 'long',
+                    name: 'index',
                     type: 'uint256',
                 },
                 {
                     internalType: 'uint256',
-                    name: 'short',
+                    name: 'pageSize',
                     type: 'uint256',
                 },
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'canResolve',
+            name: 'activeMarkets',
             outputs: [
                 {
-                    internalType: 'bool',
+                    internalType: 'address[]',
                     name: '',
-                    type: 'bool',
+                    type: 'address[]',
                 },
             ],
             payable: false,
@@ -172,7 +344,7 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'creator',
+            name: 'binaryOptionMarketFactory',
             outputs: [
                 {
                     internalType: 'address',
@@ -187,7 +359,7 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'deposited',
+            name: 'capitalRequirement',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -201,13 +373,44 @@ export const binaryOptionMarketContract = {
         },
         {
             constant: false,
-            inputs: [],
-            name: 'exerciseOptions',
-            outputs: [
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'oracleKey',
+                    type: 'bytes32',
+                },
                 {
                     internalType: 'uint256',
-                    name: '',
+                    name: 'strikePrice',
                     type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'maturity',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'initialMint',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'bool',
+                    name: 'customMarket',
+                    type: 'bool',
+                },
+                {
+                    internalType: 'address',
+                    name: 'customOracle',
+                    type: 'address',
+                },
+            ],
+            name: 'createMarket',
+            outputs: [
+                {
+                    internalType: 'contract IBinaryOptionMarket',
+                    name: '',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -218,15 +421,70 @@ export const binaryOptionMarketContract = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'address payable',
-                    name: 'beneficiary',
-                    type: 'address',
+                    internalType: 'uint256',
+                    name: 'delta',
+                    type: 'uint256',
                 },
             ],
-            name: 'expire',
+            name: 'decrementTotalDeposited',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'durations',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'maxOraclePriceAge',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'expiryDuration',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'maxTimeToMaturity',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address[]',
+                    name: 'markets',
+                    type: 'address[]',
+                },
+            ],
+            name: 'expireMarkets',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'feeAddress',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
@@ -250,9 +508,24 @@ export const binaryOptionMarketContract = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'delta',
+                    type: 'uint256',
+                },
+            ],
+            name: 'incrementTotalDeposited',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
-            name: 'initialMint',
+            name: 'lastPauseTime',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -265,64 +538,9 @@ export const binaryOptionMarketContract = {
             type: 'function',
         },
         {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_binaryOptionMastercopy',
-                    type: 'address',
-                },
-                {
-                    internalType: 'contract IAddressResolver',
-                    name: '_resolver',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_creator',
-                    type: 'address',
-                },
-                {
-                    internalType: 'bytes32',
-                    name: '_oracleKey',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_strikePrice',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256[2]',
-                    name: '_times',
-                    type: 'uint256[2]',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_deposit',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256[2]',
-                    name: '_fees',
-                    type: 'uint256[2]',
-                },
-            ],
-            name: 'initialize',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
             constant: true,
             inputs: [],
-            name: 'initialized',
+            name: 'marketCreationEnabled',
             outputs: [
                 {
                     internalType: 'bool',
@@ -335,15 +553,51 @@ export const binaryOptionMarketContract = {
             type: 'function',
         },
         {
-            constant: false,
+            constant: true,
             inputs: [
                 {
                     internalType: 'uint256',
-                    name: 'value',
+                    name: 'index',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'pageSize',
                     type: 'uint256',
                 },
             ],
-            name: 'mint',
+            name: 'maturedMarkets',
+            outputs: [
+                {
+                    internalType: 'address[]',
+                    name: '',
+                    type: 'address[]',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'contract BinaryOptionMarketManager',
+                    name: 'receivingManager',
+                    type: 'address',
+                },
+                {
+                    internalType: 'bool',
+                    name: 'active',
+                    type: 'bool',
+                },
+                {
+                    internalType: 'contract BinaryOptionMarket[]',
+                    name: 'marketsToMigrate',
+                    type: 'address[]',
+                },
+            ],
+            name: 'migrateMarkets',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -382,41 +636,11 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'options',
+            name: 'numActiveMarkets',
             outputs: [
                 {
-                    internalType: 'contract BinaryOption',
-                    name: 'long',
-                    type: 'address',
-                },
-                {
-                    internalType: 'contract BinaryOption',
-                    name: 'short',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'oracleDetails',
-            outputs: [
-                {
-                    internalType: 'bytes32',
-                    name: 'key',
-                    type: 'bytes32',
-                },
-                {
                     internalType: 'uint256',
-                    name: 'strikePrice',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'finalPrice',
+                    name: '',
                     type: 'uint256',
                 },
             ],
@@ -427,16 +651,11 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'oraclePriceAndTimestamp',
+            name: 'numMaturedMarkets',
             outputs: [
                 {
                     internalType: 'uint256',
-                    name: 'price',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'updatedAt',
+                    name: '',
                     type: 'uint256',
                 },
             ],
@@ -462,40 +681,7 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'phase',
-            outputs: [
-                {
-                    internalType: 'enum IBinaryOptionMarket.Phase',
-                    name: '',
-                    type: 'uint8',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'requireUnpaused',
-            outputs: [],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [],
-            name: 'resolve',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'resolved',
+            name: 'paused',
             outputs: [
                 {
                     internalType: 'bool',
@@ -505,6 +691,41 @@ export const binaryOptionMarketContract = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: 'active',
+                    type: 'bool',
+                },
+                {
+                    internalType: 'contract BinaryOptionMarket[]',
+                    name: 'marketsToReceive',
+                    type: 'address[]',
+                },
+            ],
+            name: 'receiveMarkets',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'market',
+                    type: 'address',
+                },
+            ],
+            name: 'resolveMarket',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -523,33 +744,178 @@ export const binaryOptionMarketContract = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_binaryOptionMarketFactory',
+                    type: 'address',
+                },
+            ],
+            name: 'setBinaryOptionsMarketFactory',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_creatorCapitalRequirement',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setCreatorCapitalRequirement',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_creatorFee',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setCreatorFee',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_expiryDuration',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setExpiryDuration',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_feeAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'setFeeAddress',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'setMarketCreationEnabled',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_maxOraclePriceAge',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setMaxOraclePriceAge',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_maxTimeToMaturity',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setMaxTimeToMaturity',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'contract BinaryOptionMarketManager',
+                    name: 'manager',
+                    type: 'address',
+                },
+            ],
+            name: 'setMigratingManager',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: '_paused',
+                    type: 'bool',
+                },
+            ],
+            name: 'setPaused',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_poolFee',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setPoolFee',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
-            name: 'result',
+            name: 'totalDeposited',
             outputs: [
                 {
-                    internalType: 'enum IBinaryOptionMarket.Side',
+                    internalType: 'uint256',
                     name: '',
-                    type: 'uint8',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'times',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'maturity',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'expiry',
                     type: 'uint256',
                 },
             ],
@@ -558,23 +924,28 @@ export const binaryOptionMarketContract = {
             type: 'function',
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'totalSupplies',
-            outputs: [
+            constant: false,
+            inputs: [
                 {
-                    internalType: 'uint256',
-                    name: 'long',
-                    type: 'uint256',
+                    internalType: 'address',
+                    name: 'sender',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: 'receiver',
+                    type: 'address',
                 },
                 {
                     internalType: 'uint256',
-                    name: 'short',
+                    name: 'amount',
                     type: 'uint256',
                 },
             ],
+            name: 'transferSusdTo',
+            outputs: [],
             payable: false,
-            stateMutability: 'view',
+            stateMutability: 'nonpayable',
             type: 'function',
         },
     ],
