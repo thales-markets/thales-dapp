@@ -1,953 +1,642 @@
 export const binaryOptionMarketContract = {
     abi: [
         {
-            inputs: [
+            "anonymous": false,
+            "inputs": [
                 {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
+                    "indexed": false,
+                    "internalType": "enum IBinaryOptionMarket.Side",
+                    "name": "result",
+                    "type": "uint8"
                 },
                 {
-                    internalType: 'contract IAddressResolver',
-                    name: '_resolver',
-                    type: 'address',
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "oraclePrice",
+                    "type": "uint256"
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_maxOraclePriceAge',
-                    type: 'uint256',
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "oracleTimestamp",
+                    "type": "uint256"
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_expiryDuration',
-                    type: 'uint256',
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "deposited",
+                    "type": "uint256"
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_maxTimeToMaturity',
-                    type: 'uint256',
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "poolFees",
+                    "type": "uint256"
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_creatorCapitalRequirement',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_poolFee',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_creatorFee',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: '_feeAddress',
-                    type: 'address',
-                },
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "creatorFees",
+                    "type": "uint256"
+                }
             ],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'constructor',
+            "name": "MarketResolved",
+            "type": "event"
         },
         {
-            anonymous: false,
-            inputs: [
+            "anonymous": false,
+            "inputs": [
                 {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'value',
-                    type: 'uint256',
+                    "indexed": false,
+                    "internalType": "enum IBinaryOptionMarket.Side",
+                    "name": "side",
+                    "type": "uint8"
                 },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                }
             ],
-            name: 'CreatorCapitalRequirementUpdated',
-            type: 'event',
+            "name": "Mint",
+            "type": "event"
         },
         {
-            anonymous: false,
-            inputs: [
+            "anonymous": false,
+            "inputs": [
                 {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'fee',
-                    type: 'uint256',
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
                 },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                }
             ],
-            name: 'CreatorFeeUpdated',
-            type: 'event',
+            "name": "OptionsExercised",
+            "type": "event"
         },
         {
-            anonymous: false,
-            inputs: [
+            "anonymous": false,
+            "inputs": [
                 {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'duration',
-                    type: 'uint256',
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "oldOwner",
+                    "type": "address"
                 },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
             ],
-            name: 'ExpiryDurationUpdated',
-            type: 'event',
+            "name": "OwnerChanged",
+            "type": "event"
         },
         {
-            anonymous: false,
-            inputs: [
+            "anonymous": false,
+            "inputs": [
                 {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-                {
-                    indexed: true,
-                    internalType: 'address',
-                    name: 'creator',
-                    type: 'address',
-                },
-                {
-                    indexed: true,
-                    internalType: 'bytes32',
-                    name: 'oracleKey',
-                    type: 'bytes32',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'strikePrice',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'maturityDate',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'expiryDate',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'long',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'short',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'customMarket',
-                    type: 'bool',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'customOracle',
-                    type: 'address',
-                },
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "newOwner",
+                    "type": "address"
+                }
             ],
-            name: 'MarketCreated',
-            type: 'event',
+            "name": "OwnerNominated",
+            "type": "event"
         },
         {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
-            ],
-            name: 'MarketCreationEnabledUpdated',
-            type: 'event',
+            "constant": false,
+            "inputs": [],
+            "name": "acceptOwnership",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "accumulatedFees",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
             ],
-            name: 'MarketExpired',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [
                 {
-                    indexed: false,
-                    internalType: 'contract BinaryOptionMarketManager',
-                    name: 'receivingManager',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'contract BinaryOptionMarket[]',
-                    name: 'markets',
-                    type: 'address[]',
-                },
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                }
             ],
-            name: 'MarketsMigrated',
-            type: 'event',
+            "name": "balancesOf",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "long",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "short",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "canResolve",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'contract BinaryOptionMarketManager',
-                    name: 'migratingManager',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'contract BinaryOptionMarket[]',
-                    name: 'markets',
-                    type: 'address[]',
-                },
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
             ],
-            name: 'MarketsReceived',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "creator",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'duration',
-                    type: 'uint256',
-                },
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
             ],
-            name: 'MaxOraclePriceAgeUpdated',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "customMarket",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'duration',
-                    type: 'uint256',
-                },
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
             ],
-            name: 'MaxTimeToMaturityUpdated',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "deposited",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'oldOwner',
-                    type: 'address',
-                },
-                {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
             ],
-            name: 'OwnerChanged',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": false,
+            "inputs": [],
+            "name": "exerciseOptions",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'address',
-                    name: 'newOwner',
-                    type: 'address',
-                },
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
             ],
-            name: 'OwnerNominated',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": false,
+            "inputs": [
                 {
-                    indexed: false,
-                    internalType: 'bool',
-                    name: 'isPaused',
-                    type: 'bool',
-                },
+                    "internalType": "address payable",
+                    "name": "beneficiary",
+                    "type": "address"
+                }
             ],
-            name: 'PauseChanged',
-            type: 'event',
+            "name": "expire",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            anonymous: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "fees",
+            "outputs": [
                 {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'fee',
-                    type: 'uint256',
+                    "internalType": "uint256",
+                    "name": "poolFee",
+                    "type": "uint256"
                 },
+                {
+                    "internalType": "uint256",
+                    "name": "creatorFee",
+                    "type": "uint256"
+                }
             ],
-            name: 'PoolFeeUpdated',
-            type: 'event',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [],
-            name: 'acceptOwnership',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "constant": true,
+            "inputs": [],
+            "name": "iOracleInstance",
+            "outputs": [
+                {
+                    "internalType": "contract IOracleInstance",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "initialMint",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'pageSize',
-                    type: 'uint256',
-                },
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
             ],
-            name: 'activeMarkets',
-            outputs: [
-                {
-                    internalType: 'address[]',
-                    name: '',
-                    type: 'address[]',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'binaryOptionMarketFactory',
-            outputs: [
+            "constant": false,
+            "inputs": [
                 {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
+                    "internalType": "address",
+                    "name": "_owner",
+                    "type": "address"
                 },
+                {
+                    "internalType": "address",
+                    "name": "_binaryOptionMastercopy",
+                    "type": "address"
+                },
+                {
+                    "internalType": "contract IAddressResolver",
+                    "name": "_resolver",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_creator",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "_oracleKey",
+                    "type": "bytes32"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_strikePrice",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256[2]",
+                    "name": "_times",
+                    "type": "uint256[2]"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_deposit",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256[2]",
+                    "name": "_fees",
+                    "type": "uint256[2]"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "name": "initialize",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'capitalRequirement',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "initialized",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [
+            "constant": false,
+            "inputs": [
                 {
-                    internalType: 'bytes32',
-                    name: 'oracleKey',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'strikePrice',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'maturity',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'initialMint',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'customMarket',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'address',
-                    name: 'customOracle',
-                    type: 'address',
-                },
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                }
             ],
-            name: 'createMarket',
-            outputs: [
-                {
-                    internalType: 'contract IBinaryOptionMarket',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "name": "mint",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [
+            "constant": false,
+            "inputs": [
                 {
-                    internalType: 'uint256',
-                    name: 'delta',
-                    type: 'uint256',
-                },
+                    "internalType": "address",
+                    "name": "_owner",
+                    "type": "address"
+                }
             ],
-            name: 'decrementTotalDeposited',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "name": "nominateNewOwner",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'durations',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "nominatedOwner",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: 'maxOraclePriceAge',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'expiryDuration',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'maxTimeToMaturity',
-                    type: 'uint256',
-                },
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "options",
+            "outputs": [
                 {
-                    internalType: 'address[]',
-                    name: 'markets',
-                    type: 'address[]',
+                    "internalType": "contract BinaryOption",
+                    "name": "long",
+                    "type": "address"
                 },
+                {
+                    "internalType": "contract BinaryOption",
+                    "name": "short",
+                    "type": "address"
+                }
             ],
-            name: 'expireMarkets',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'feeAddress',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "oracleDetails",
+            "outputs": [
                 {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
+                    "internalType": "bytes32",
+                    "name": "key",
+                    "type": "bytes32"
                 },
+                {
+                    "internalType": "uint256",
+                    "name": "strikePrice",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "finalPrice",
+                    "type": "uint256"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'fees',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "oraclePriceAndTimestamp",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: 'poolFee',
-                    type: 'uint256',
+                    "internalType": "uint256",
+                    "name": "price",
+                    "type": "uint256"
                 },
                 {
-                    internalType: 'uint256',
-                    name: 'creatorFee',
-                    type: 'uint256',
-                },
+                    "internalType": "uint256",
+                    "name": "updatedAt",
+                    "type": "uint256"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: 'delta',
-                    type: 'uint256',
-                },
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
             ],
-            name: 'incrementTotalDeposited',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'lastPauseTime',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "phase",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
+                    "internalType": "enum IBinaryOptionMarket.Phase",
+                    "name": "",
+                    "type": "uint8"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'marketCreationEnabled',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "constant": true,
+            "inputs": [],
+            "name": "requireUnpaused",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'pageSize',
-                    type: 'uint256',
-                },
-            ],
-            name: 'maturedMarkets',
-            outputs: [
-                {
-                    internalType: 'address[]',
-                    name: '',
-                    type: 'address[]',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "constant": false,
+            "inputs": [],
+            "name": "resolve",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "resolved",
+            "outputs": [
                 {
-                    internalType: 'contract BinaryOptionMarketManager',
-                    name: 'receivingManager',
-                    type: 'address',
-                },
-                {
-                    internalType: 'bool',
-                    name: 'active',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'contract BinaryOptionMarket[]',
-                    name: 'marketsToMigrate',
-                    type: 'address[]',
-                },
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
             ],
-            name: 'migrateMarkets',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: false,
-            inputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "resolver",
+            "outputs": [
                 {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
+                    "internalType": "contract IAddressResolver",
+                    "name": "",
+                    "type": "address"
+                }
             ],
-            name: 'nominateNewOwner',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'nominatedOwner',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "result",
+            "outputs": [
                 {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
+                    "internalType": "enum IBinaryOptionMarket.Side",
+                    "name": "",
+                    "type": "uint8"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'numActiveMarkets',
-            outputs: [
+            "constant": false,
+            "inputs": [
                 {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
+                    "internalType": "address",
+                    "name": "_address",
+                    "type": "address"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "name": "setIOracleInstance",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'numMaturedMarkets',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "times",
+            "outputs": [
                 {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
+                    "internalType": "uint256",
+                    "name": "maturity",
+                    "type": "uint256"
                 },
+                {
+                    "internalType": "uint256",
+                    "name": "expiry",
+                    "type": "uint256"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'owner',
-            outputs: [
+            "constant": true,
+            "inputs": [],
+            "name": "totalSupplies",
+            "outputs": [
                 {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
+                    "internalType": "uint256",
+                    "name": "long",
+                    "type": "uint256"
                 },
+                {
+                    "internalType": "uint256",
+                    "name": "short",
+                    "type": "uint256"
+                }
             ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'paused',
-            outputs: [
-                {
-                    internalType: 'bool',
-                    name: '',
-                    type: 'bool',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: 'active',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'contract BinaryOptionMarket[]',
-                    name: 'marketsToReceive',
-                    type: 'address[]',
-                },
-            ],
-            name: 'receiveMarkets',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'market',
-                    type: 'address',
-                },
-            ],
-            name: 'resolveMarket',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'resolver',
-            outputs: [
-                {
-                    internalType: 'contract IAddressResolver',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_binaryOptionMarketFactory',
-                    type: 'address',
-                },
-            ],
-            name: 'setBinaryOptionsMarketFactory',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_creatorCapitalRequirement',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setCreatorCapitalRequirement',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_creatorFee',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setCreatorFee',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_expiryDuration',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setExpiryDuration',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_feeAddress',
-                    type: 'address',
-                },
-            ],
-            name: 'setFeeAddress',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: 'enabled',
-                    type: 'bool',
-                },
-            ],
-            name: 'setMarketCreationEnabled',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_maxOraclePriceAge',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxOraclePriceAge',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_maxTimeToMaturity',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxTimeToMaturity',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'contract BinaryOptionMarketManager',
-                    name: 'manager',
-                    type: 'address',
-                },
-            ],
-            name: 'setMigratingManager',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'bool',
-                    name: '_paused',
-                    type: 'bool',
-                },
-            ],
-            name: 'setPaused',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_poolFee',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setPoolFee',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'totalDeposited',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: 'sender',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: 'receiver',
-                    type: 'address',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'amount',
-                    type: 'uint256',
-                },
-            ],
-            name: 'transferSusdTo',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }
     ],
 };
 
