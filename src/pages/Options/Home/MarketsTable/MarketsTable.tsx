@@ -442,11 +442,11 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                 <TableRow>
                                     <PaginationWrapper
                                         rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        onChangeRowsPerPage={handleChangeRowsPerPage}
                                         count={optionsMarkets.length}
                                         rowsPerPage={rowsPerPage}
                                         page={memoizedPage}
-                                        onPageChange={handleChangePage}
+                                        onChangePage={handleChangePage}
                                         ActionsComponent={() => (
                                             <Pagination
                                                 page={memoizedPage}
