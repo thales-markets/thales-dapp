@@ -43,7 +43,7 @@ const BackgroundWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     border-radius: 20px;
-    background: #1c1a71;
+    background: #0c1c68;
     border-radius: 20px;
     height: 135px;
     max-width: 150px;
