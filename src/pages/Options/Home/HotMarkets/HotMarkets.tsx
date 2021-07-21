@@ -50,7 +50,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
                 });
             }, 1000);
         }
-    }, 5000);
+    }, 10000);
 
     return (
         <Wrapper id="hot-markets">
