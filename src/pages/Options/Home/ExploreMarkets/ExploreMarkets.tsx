@@ -9,6 +9,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import myMarkets from 'assets/images/filters/my-markets.svg';
+import olympics from 'assets/images/filters/olympics.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
@@ -35,10 +36,10 @@ type ExploreMarketsProps = {
 };
 
 export enum PhaseFilterEnum {
-    all = 'all',
     trading = 'trading',
     maturity = 'maturity',
     expiry = 'expiry',
+    all = 'all',
 }
 
 enum UserFilterEnum {
@@ -50,6 +51,7 @@ enum UserFilterEnum {
     Recent = 'Recently Added',
     Bitcoin = 'Bitcoin',
     Ethereum = 'Ethereum',
+    Olympics = 'Olympics',
 }
 
 const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
@@ -73,7 +75,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
-    const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
+    const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.trading);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
@@ -102,6 +104,11 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
+        if (userFilter === UserFilterEnum.Olympics) {
+            filteredMarkets = filteredMarkets.filter(({ customMarket }) => customMarket === true);
+        } else {
+            filteredMarkets = filteredMarkets.filter(({ customMarket }) => customMarket === false);
+        }
         switch (userFilter) {
             case UserFilterEnum.MyMarkets:
                 filteredMarkets = filteredMarkets.filter(
@@ -183,6 +190,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                 return myAssets;
             case UserFilterEnum.MyOrders:
                 return myOpenOrders;
+            case UserFilterEnum.Olympics:
+                return olympics;
         }
     };
 
@@ -261,6 +270,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                 watchlistedMarkets={watchlistedMarkets}
                 isLoading={false} // TODO put logic
                 phase={phaseFilter}
+                isCustomMarket={userFilter === UserFilterEnum.Olympics}
                 onChange={watchlistedMarketsQuery.refetch}
             >
                 <NoMarkets>

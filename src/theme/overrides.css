@@ -100,3 +100,11 @@
         box-shadow: 0 0 0 0 rgba(246, 246, 254, 0);
     }
 }
+
+.MuiMenu-paper {
+    background: #141874 !important;
+    border: 1px solid #0c1c68 !important;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 20px !important;
+    color: #f6f6fe !important;
+}

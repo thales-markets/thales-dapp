@@ -33,56 +33,63 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
         setPage(page - 1);
     };
     return (
-        <FlexDivCentered>
-            <p
-                style={{
-                    margin: 0,
-                    width: '64px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    color: '#F6F6FE',
-                }}
-            >
-                Page
-            </p>
-            <FlexDivCentered
-                style={{
-                    border: '1px solid #0a2e66',
-                    borderRadius: '32px',
-                    width: '110px',
-                    justifyContent: 'space-around',
-                    height: '40px',
-                }}
-            >
-                <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
+        <>
+            <div style={{ flex: '1 1 100%' }}></div>
+            <FlexDivCentered>
                 <p
                     style={{
+                        margin: 0,
+                        width: '64px',
                         fontSize: '13px',
                         fontWeight: 'bold',
-                        letterSpacing: '0.4px',
+                        textAlign: 'center',
                         color: '#F6F6FE',
-                        margin: 0,
                     }}
                 >
-                    {page + 1}
+                    Page
                 </p>
-                <Arrow src={nextArrow} className={page === numberOfPages - 1 ? 'disabled' : ''} onClick={NextPage} />
+                <FlexDivCentered
+                    style={{
+                        border: '1px solid #0a2e66',
+                        borderRadius: '32px',
+                        width: '110px',
+                        justifyContent: 'space-around',
+                        height: '40px',
+                    }}
+                >
+                    <Arrow src={backArrow} className={page === 0 ? 'disabled' : ''} onClick={PreviousPage} />
+                    <p
+                        style={{
+                            fontSize: '13px',
+                            fontWeight: 'bold',
+                            letterSpacing: '0.4px',
+                            color: '#F6F6FE',
+                            margin: 0,
+                        }}
+                    >
+                        {page + 1}
+                    </p>
+                    <Arrow
+                        src={nextArrow}
+                        className={page === numberOfPages - 1 ? 'disabled' : ''}
+                        onClick={NextPage}
+                    />
+                </FlexDivCentered>
+                <p
+                    style={{
+                        margin: 0,
+                        width: '64px',
+                        fontSize: '13px',
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        color: '#F6F6FE',
+                        whiteSpace: 'pre',
+                    }}
+                >
+                    {'of  ' + numberOfPages}
+                </p>
             </FlexDivCentered>
-            <p
-                style={{
-                    margin: 0,
-                    width: '64px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    color: '#F6F6FE',
-                    whiteSpace: 'pre',
-                }}
-            >
-                {'of  ' + numberOfPages}
-            </p>
-        </FlexDivCentered>
+        </>
     );
 };
 

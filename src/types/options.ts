@@ -89,6 +89,8 @@ export type OptionsMarketInfo = {
     // BN: BNOptionValue;
     longAddress: string;
     shortAddress: string;
+    customMarket: boolean;
+    oracleAdress: string;
 };
 
 export type AccountMarketInfo = {

@@ -45,6 +45,8 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                 },
                 deposited: bigNumberFormatter(deposits.deposited),
                 phase,
+                customMarket: oracleDetails.customMarket,
+                oracleAdress: oracleDetails.iOracleInstanceAddress,
                 timeRemaining,
                 creator,
                 // options: {

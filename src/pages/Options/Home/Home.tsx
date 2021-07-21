@@ -42,7 +42,7 @@ export const Home: React.FC = () => {
     const hotMarkets = useMemo(
         () =>
             optionsMarkets
-                .filter((market) => market.phaseNum === PHASE.trading)
+                .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
                 .sort((a, b) => a.timeRemaining - b.timeRemaining)
                 .slice(0, MAX_HOT_MARKETS),
         [optionsMarkets]
