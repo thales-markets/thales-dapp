@@ -20,6 +20,8 @@ import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
 import { ethers } from 'ethers';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import ReactCountryFlag from 'react-country-flag';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -57,9 +59,10 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                 <Container>
                     <ItemContainer>
                         <FlexDivCentered>
-                            <CurrencyIcon
-                                currencyKey={optionsMarket.currencyKey}
-                                synthIconStyle={{ width: 40, height: 40 }}
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(country)}
+                                style={{ width: 40, height: 40, marginRight: 10 }}
+                                svg
                             />
                             <FlexDivColumnCentered>
                                 <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
@@ -69,7 +72,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                         rel="noreferrer"
                                     >
                                         <CryptoName>{country}</CryptoName>
-                                        <ArrowIcon width="10" height="10" />
+                                        <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                                     </StyledLink>
                                 </LightTooltip>
                             </FlexDivColumnCentered>

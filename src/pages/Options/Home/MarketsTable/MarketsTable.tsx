@@ -40,6 +40,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import sportFeed from '../../../../utils/contracts/sportFeedOracleInstance';
 import { ethers } from 'ethers';
 import snxJSConnector from 'utils/snxJSConnector';
+import ReactCountryFlag from 'react-country-flag';
 
 dotenv.config();
 
@@ -414,7 +415,14 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                       }
                                                   />
                                               </StyledTableCell>
-                                              <StyledTableCell>{market.country}</StyledTableCell>
+                                              <StyledTableCell>
+                                                  <ReactCountryFlag
+                                                      countryCode={countryToCountryCode(market.country)}
+                                                      style={{ width: 32, height: 32, marginRight: 10 }}
+                                                      svg
+                                                  />
+                                                  {market.country}
+                                              </StyledTableCell>
                                               <StyledTableCell>{market.eventName}</StyledTableCell>
                                               <StyledTableCell>{market.outcome}</StyledTableCell>
                                               <StyledTableCell>
@@ -585,6 +593,21 @@ const sortByAssetPrice = (
     }
 
     return 0;
+};
+
+export const countryToCountryCode = (country: string) => {
+    switch (country) {
+        case 'USA':
+            return 'US';
+        case 'JPN':
+            return 'JP';
+        case 'CHN':
+            return 'CN';
+        case 'RUS':
+            return 'RU';
+        case 'SRB':
+            return 'RS';
+    }
 };
 
 export default MarketsTable;
