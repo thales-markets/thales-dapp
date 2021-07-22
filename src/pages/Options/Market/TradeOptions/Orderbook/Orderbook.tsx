@@ -50,7 +50,13 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const [filter, setFilter] = useState<string>(OrderbookFilterEnum.ALL);
 
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
-    const orderbookSign = optionSide === 'long' ? '>' : '<';
+    const orderbookSign = optionsMarket.customMarket
+        ? optionSide === 'long'
+            ? '=='
+            : '!='
+        : optionSide === 'long'
+        ? '>'
+        : '<';
 
     const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, optionsTokenAddress, {
         enabled: isAppReady,
@@ -82,10 +88,14 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     }, [orderbookQuery.data, filterMyOrders, walletAddress]);
 
     const marketHeading = optionsMarket
-        ? `${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
-              USD_SIGN,
-              optionsMarket.strikePrice
-          )} @ ${formatShortDate(optionsMarket.maturityDate)}`
+        ? optionsMarket.customMarket
+            ? `${optionsMarket.country} ${orderbookSign} ${optionsMarket.outcome} @ ${formatShortDate(
+                  optionsMarket.maturityDate
+              )}`
+            : `${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
+                  USD_SIGN,
+                  optionsMarket.strikePrice
+              )} @ ${formatShortDate(optionsMarket.maturityDate)}`
         : null;
 
     const marketPrice = useMemo(() => {

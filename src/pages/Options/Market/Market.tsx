@@ -32,6 +32,9 @@ import longIcon from 'assets/images/long.svg';
 import shortIcon from 'assets/images/short.svg';
 import TradingView from './TradingView';
 import ROUTES from 'constants/routes';
+import snxJSConnector from 'utils/snxJSConnector';
+import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import { ethers } from 'ethers';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -49,12 +52,32 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const visibilityMap = useSelector((state: RootState) => getVisibilityMap(state));
     const curentLayout = useSelector((state: RootState) => getCurrentLayout(state));
     const fullLayout = useSelector((state: RootState) => getFullLayout(state));
+    const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
     });
 
-    const optionsMarket: OptionsMarketInfo | null = marketQuery.isSuccess && marketQuery.data ? marketQuery.data : null;
+    useEffect(() => {
+        if (marketQuery.isSuccess && marketQuery.data) {
+            if (marketQuery.data.customMarket) {
+                const sportFeedContract = new ethers.Contract(
+                    marketQuery.data.oracleAdress,
+                    sportFeedOracleContract.abi,
+                    snxJSConnector.signer
+                );
+                Promise.all([
+                    sportFeedContract.targetName(),
+                    sportFeedContract.eventName(),
+                    sportFeedContract.targetOutcome(),
+                ]).then((data) => {
+                    setOptionsMarket({ ...marketQuery.data, country: data[0], eventName: data[1], outcome: data[2] });
+                });
+            } else {
+                setOptionsMarket(marketQuery.data);
+            }
+        }
+    }, [marketQuery.isSuccess]);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {
         enabled: isAppReady && isWalletConnected,

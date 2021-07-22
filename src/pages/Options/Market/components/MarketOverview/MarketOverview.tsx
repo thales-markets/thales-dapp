@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { OptionsMarketInfo } from 'types/options';
@@ -11,15 +11,13 @@ import { useTranslation } from 'react-i18next';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
 import { LightTooltip } from '../../components';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
+import { getSynthName } from 'utils/snxJSConnector';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
-import { ethers } from 'ethers';
-import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import ReactCountryFlag from 'react-country-flag';
 
@@ -30,28 +28,6 @@ type MarketOverviewProps = {
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [country, setCountry] = useState('');
-    const [eventName, setEventName] = useState('');
-    const [outcome, setOutcome] = useState('');
-
-    useEffect(() => {
-        if (optionsMarket.customMarket) {
-            const sportFeedContract = new ethers.Contract(
-                optionsMarket.oracleAdress,
-                sportFeedOracleContract.abi,
-                snxJSConnector.signer
-            );
-            Promise.all([
-                sportFeedContract.targetName(),
-                sportFeedContract.eventName(),
-                sportFeedContract.targetOutcome(),
-            ]).then((data) => {
-                setCountry(data[0]);
-                setEventName(data[1]);
-                setOutcome(data[2]);
-            });
-        }
-    }, [optionsMarket]);
 
     return (
         <>
@@ -60,7 +36,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <ItemContainer>
                         <FlexDivCentered>
                             <ReactCountryFlag
-                                countryCode={countryToCountryCode(country)}
+                                countryCode={countryToCountryCode(optionsMarket.country as any)}
                                 style={{ width: 40, height: 40, marginRight: 10 }}
                                 svg
                             />
@@ -71,7 +47,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                         target="_blank"
                                         rel="noreferrer"
                                     >
-                                        <CryptoName>{country}</CryptoName>
+                                        <CryptoName>{optionsMarket.country}</CryptoName>
                                         <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                                     </StyledLink>
                                 </LightTooltip>
@@ -81,12 +57,12 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <ItemContainer>
                         <Title>Event Name</Title>
                         <Content fontSize={16}>
-                            <FlexDivCentered>{eventName}</FlexDivCentered>
+                            <FlexDivCentered>{optionsMarket.eventName}</FlexDivCentered>
                         </Content>
                     </ItemContainer>
                     <ItemContainer>
                         <Title>Outcome</Title>
-                        <Content fontSize={16}>{outcome}</Content>
+                        <Content fontSize={16}>{optionsMarket.outcome}</Content>
                     </ItemContainer>
                     <ItemContainer>
                         <Title>
@@ -112,7 +88,13 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                 ? t('options.market.overview.final-result-label')
                                 : t('options.market.overview.current-result-label')}
                         </Title>
-                        <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
+                        <StyledLink
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://www.espn.com/olympics/summer/2020/medals/_/view/overall"
+                        >
+                            ESPN
+                        </StyledLink>
                     </ItemContainer>
                     <ItemContainer>
                         <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>

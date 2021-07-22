@@ -91,6 +91,9 @@ export type OptionsMarketInfo = {
     shortAddress: string;
     customMarket: boolean;
     oracleAdress: string;
+    country?: string;
+    eventName?: string;
+    outcome?: string;
 };
 
 export type AccountMarketInfo = {
