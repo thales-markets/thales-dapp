@@ -3,9 +3,9 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const binaryOptionsMarketDataContract = {
     addresses: {
         [NetworkId.Mainnet]: '0xC3449336909bf8663903c784047f5Cbe82dA09F1',
-        [NetworkId.Ropsten]: '0x3e4E650f61C7A747A4baDCfF5C3b3e2BaF37AEc3',
+        [NetworkId.Ropsten]: '0x4E48FA3638939D2B8e0acE9ceed724c606FEf608',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x0cbeFE6F1E0f2b2CB3672A1Bf97e9D59C7aD6743',
+        [NetworkId.Kovan]: '0x46d9DB2830C005e38878b241199bb09d9d355994',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
@@ -430,6 +430,21 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'customMarketCreationEnabled',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -795,6 +810,21 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'setCreatorFee',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'setCustomMarketCreationEnabled',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
