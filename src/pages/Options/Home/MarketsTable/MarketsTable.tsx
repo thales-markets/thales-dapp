@@ -75,7 +75,7 @@ const headCellsOlympics: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: 'Country', sortable: false },
     { id: 3, label: 'Event Name', sortable: false },
-    { id: 4, label: 'Outcome', sortable: false },
+    { id: 4, label: 'Rank', sortable: false },
     { id: 5, label: 'Market Size', sortable: false },
     { id: 6, label: 'Time Remaining', sortable: false },
     { id: 7, label: 'Open Orders', sortable: false },
@@ -607,6 +607,8 @@ export const countryToCountryCode = (country: string) => {
             return 'RU';
         case 'SRB':
             return 'RS';
+        case 'AUS':
+            return 'AU';
     }
 };
 

@@ -61,7 +61,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Content>
                     </ItemContainer>
                     <ItemContainer>
-                        <Title>Outcome</Title>
+                        <Title>Rank</Title>
                         <Content fontSize={16}>{optionsMarket.outcome}</Content>
                     </ItemContainer>
                     <ItemContainer>
