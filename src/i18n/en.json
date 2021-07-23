@@ -43,7 +43,7 @@
             "title": "To get started you'll need",
             "first": "Web3 wallet, like Metamask",
             "second": "Ether to pay for network fees (also called gas)",
-            "third": "Synthetix USD (sUSD) which can be obtained on Uniswap, 1inch, Curve, etc."
+            "third": "Synth USD (sUSD), which can be obtained on"
         },
         "faq": {
             "title": "FAQ",
