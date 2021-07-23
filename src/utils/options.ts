@@ -65,3 +65,11 @@ export const isMarketWidgetVisible = (
             return visibilityMap[marketWidget] || isCustomizationVisibility;
     }
 };
+
+export const dispatchMarketNotification = (message: string) => {
+    const marketNotificationEvent = new CustomEvent('market-notification', {
+        bubbles: true,
+        detail: { text: message },
+    });
+    document.dispatchEvent(marketNotificationEvent);
+};

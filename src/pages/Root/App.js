@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, lazy, Suspense, useState } from 'react';
 import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
@@ -17,6 +17,8 @@ import useLocalStorage from 'hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import onboardConnector from 'utils/onboardConnector';
 import { history } from 'utils/routes';
+import { Snackbar } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -29,6 +31,8 @@ const App = () => {
     const isAppReady = useSelector((state) => getIsAppReady(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
+
+    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false });
 
     queryConnector.setQueryClient();
 
@@ -118,6 +122,23 @@ const App = () => {
         }
     }, [isAppReady, onboardConnector.onboard, selectedWallet]);
 
+    const onSnackbarClosed = (e) => {
+        if (e) {
+            return;
+        }
+        setSnackbarDetails({ ...snackbarDetails, isOpen: false });
+    };
+
+    useEffect(() => {
+        const handler = (e) => {
+            setSnackbarDetails({ message: e.detail.text, isOpen: true });
+        };
+        document.addEventListener('market-notification', handler);
+        return () => {
+            document.removeEventListener('market-notification', handler);
+        };
+    }, []);
+
     return (
         <QueryClientProvider client={queryConnector.queryClient}>
             <Suspense fallback={<Loader />}>
@@ -158,6 +179,19 @@ const App = () => {
                     </Switch>
                 </Router>
                 <ReactQueryDevtools initialIsOpen={false} />
+                <Snackbar
+                    open={snackbarDetails.isOpen}
+                    onClose={onSnackbarClosed}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    autoHideDuration={5000}
+                >
+                    <Alert elevation={6} variant="filled" severity="success">
+                        {snackbarDetails.message}
+                    </Alert>
+                </Snackbar>
             </Suspense>
         </QueryClientProvider>
     );

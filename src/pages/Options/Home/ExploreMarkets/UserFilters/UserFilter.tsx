@@ -30,7 +30,8 @@ const FiltersWrapper = styled.div`
         background: #00f9ff;
     }
     &.disabled {
-        pointer-events: none;
+        cursor: not-allowed;
+        opacity: 0.4;
     }
     &.disabled:hover {
         background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
