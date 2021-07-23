@@ -64,6 +64,7 @@ import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
 import { COLORS } from 'constants/ui';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -287,6 +288,9 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     url: placeOrderUrl,
                     data: signedOrder,
                 });
+                dispatchMarketNotification(
+                    t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+                );
                 refetchOrderbook(baseToken);
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));

@@ -70,6 +70,7 @@ import NumericInput from '../../components/NumericInput';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -252,6 +253,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 refetchTrades(optionsMarket.address);
                 refetchUserTrades(optionsMarket.address, walletAddress);
                 setIsSubmitting(false);
+                dispatchMarketNotification(
+                    t(
+                        `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                    )
+                );
             }
         } catch (e) {
             console.log(e);

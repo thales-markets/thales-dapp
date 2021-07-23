@@ -68,6 +68,7 @@ import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -273,6 +274,11 @@ const MintOptions: React.FC = () => {
 
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
+                    if (!sellShort && !sellLong) {
+                        dispatchMarketNotification(
+                            t('options.market.trade-options.mint.confirm-button.confirmation-message')
+                        );
+                    }
                     dispatch(
                         updateOptionsPendingTransactionStatus({
                             hash: txResult.transactionHash,
@@ -522,6 +528,7 @@ const MintOptions: React.FC = () => {
                     data: signedOrder,
                 });
                 refetchOrderbook(makerToken);
+                dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
