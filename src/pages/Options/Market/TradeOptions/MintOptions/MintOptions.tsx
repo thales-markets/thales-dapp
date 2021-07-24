@@ -492,6 +492,7 @@ const MintOptions: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
+        const pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -502,6 +503,7 @@ const MintOptions: React.FC = () => {
                     takerAmount,
                     maker: walletAddress,
                     sender: NULL_ADDRESS,
+                    pool,
                     expiry,
                     salt,
                     chainId: networkId,
