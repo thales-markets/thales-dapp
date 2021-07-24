@@ -560,6 +560,7 @@ export const CreateMarket: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
+        const pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -570,6 +571,7 @@ export const CreateMarket: React.FC = () => {
                     takerAmount,
                     maker: walletAddress,
                     sender: NULL_ADDRESS,
+                    pool,
                     expiry,
                     salt,
                     chainId: networkId,

@@ -253,6 +253,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
+        const pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -263,6 +264,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     takerAmount,
                     maker: walletAddress,
                     sender: NULL_ADDRESS,
+                    pool,
                     expiry,
                     salt,
                     chainId: networkId,
