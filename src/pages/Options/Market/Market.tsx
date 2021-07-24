@@ -185,7 +185,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 dispatch(set0xReady(true));
             }, 500);
         }
-    }, [networkId, isWalletConnected, marketQuery.isSuccess]);
+    }, [networkId, isWalletConnected, marketQuery.isSuccess, optionsMarket]);
 
     useEffect(() => {
         return () => {
