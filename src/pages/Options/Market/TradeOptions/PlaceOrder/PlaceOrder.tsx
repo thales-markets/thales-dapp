@@ -255,7 +255,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         const salt = generatePseudoRandomSalt();
         let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
         if (isMainNet(networkId)) {
-            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+            pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
         }
 
         try {
