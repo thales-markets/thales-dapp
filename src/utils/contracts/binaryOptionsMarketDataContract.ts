@@ -2,7 +2,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const binaryOptionsMarketDataContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x2206BD16eb8216A89Cb779590301a0D61b1b6e41',
+        [NetworkId.Mainnet]: '0x2dC96BBEB2081942c932e74F5b53c467d324ae92',
         [NetworkId.Ropsten]: '0x7a774cE863eE0af8B5cFa38B550977F9104e9d15',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x3e4E650f61C7A747A4baDCfF5C3b3e2BaF37AEc3',

@@ -10,7 +10,7 @@ import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constant
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
 import { bytesFormatter, bigNumberFormatter, getAddress, parseBytes32String } from 'utils/formatters/ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import {gasPriceInWei, isMainNet, normalizeGasLimit} from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -560,7 +560,10 @@ export const CreateMarket: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
-        const pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        if (isMainNet(networkId)) {
+            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        }
 
         try {
             const createSignedOrderV4Async = async () => {

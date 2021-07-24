@@ -24,7 +24,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import {
@@ -253,7 +253,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
-        const pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        if (isMainNet(networkId)) {
+            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        }
 
         try {
             const createSignedOrderV4Async = async () => {
