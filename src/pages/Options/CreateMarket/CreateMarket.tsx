@@ -250,7 +250,11 @@ export const CreateMarket: React.FC = () => {
                 _maturityDate: string,
                 _expiryDate: string,
                 long: string,
-                short: string
+                short: string,
+                /*eslint-disable */
+                _customMarket: string,
+                _customOracle: string
+                /*eslint-enable */
             ) => {
                 if (
                     creator === walletAddress &&
@@ -277,12 +281,16 @@ export const CreateMarket: React.FC = () => {
                         };
 
                         const registerAllowanceListener = () => {
-                            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                                    setLongAllowance(true);
-                                    setIsLongAllowing(false);
+                            erc20Instance.on(
+                                APPROVAL_EVENTS.APPROVAL,
+                                // eslint-disable-next-line
+                                (owner: string, spender: string, _value: string) => {
+                                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                                        setLongAllowance(true);
+                                        setIsLongAllowing(false);
+                                    }
                                 }
-                            });
+                            );
                         };
                         getAllowance();
                         registerAllowanceListener();
@@ -301,12 +309,16 @@ export const CreateMarket: React.FC = () => {
                         };
 
                         const registerAllowanceListener = () => {
-                            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                                    setShortAllowance(true);
-                                    setIsShortAllowing(false);
+                            erc20Instance.on(
+                                APPROVAL_EVENTS.APPROVAL,
+                                // eslint-disable-next-line
+                                (owner: string, spender: string, _value: string) => {
+                                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                                        setShortAllowance(true);
+                                        setIsShortAllowing(false);
+                                    }
                                 }
-                            });
+                            );
                         };
                         getAllowance();
                         registerAllowanceListener();
@@ -320,6 +332,7 @@ export const CreateMarket: React.FC = () => {
     }, [isCreatingMarket]);
 
     useEffect(() => {
+        if (!hasAllowance) return;
         const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
         try {
             const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
@@ -337,7 +350,7 @@ export const CreateMarket: React.FC = () => {
                     setGasLimit(null);
                 });
         } catch (e) {}
-    }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount]);
+    }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, hasAllowance]);
 
     useEffect(() => {
         if (initialFundingAmount) {
