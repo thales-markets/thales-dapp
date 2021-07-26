@@ -13,7 +13,7 @@ import Currency from 'components/Currency';
 
 const TradingView: React.FC = () => {
     const optionsMarket = useMarketContext();
-
+    const symbol = assetToTradingViewMap[optionsMarket.currencyKey] || `${optionsMarket.asset}USDT`;
     return (
         <>
             <MarketWidgetHeader widgetKey={MarketWidgetKey.CHART_TRADING_VIEW}></MarketWidgetHeader>
@@ -32,7 +32,7 @@ const TradingView: React.FC = () => {
                     <ChartContainer>
                         <InnerChartContainer>
                             <TradingViewWidget
-                                symbol={assetToTradingViewMap[optionsMarket.currencyKey]}
+                                symbol={symbol}
                                 save_image={false}
                                 style="2"
                                 range="12m"

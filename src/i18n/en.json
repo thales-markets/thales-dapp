@@ -446,7 +446,7 @@
                     "slippage-label": "Slippage tolerance",
                     "slippage-tooltip": "Your transaction will revert if the price chnages unfavorably by more than this percentage",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
                     "confirm-button": {
                         "label": "Submit order",
                         "long": "Submit sLong",
@@ -497,7 +497,7 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "total-label": "Total (sUSD)",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
