@@ -652,7 +652,6 @@ export const CreateMarket: React.FC = () => {
                     <Text className="create-market" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
-
                     <FlexDiv style={{ padding: '50px 100px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
                             <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
@@ -1016,16 +1015,6 @@ export const CreateMarket: React.FC = () => {
                             currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                         ></MarketSummary>
                     </FlexDiv>
-                    <FlexDivColumnCentered style={{ alignItems: 'center' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                            {getSubmitButton()}
-                        </div>
-                        <ValidationMessage
-                            showValidation={txErrorMessage !== null}
-                            message={txErrorMessage}
-                            onDismiss={() => setTxErrorMessage(null)}
-                        />
-                    </FlexDivColumnCentered>
                     <ProgressTracker
                         isWalletAccessEnabled={hasAllowance}
                         isAllowing={isAllowing}
@@ -1042,6 +1031,36 @@ export const CreateMarket: React.FC = () => {
                         showLongProcess={sellLong}
                         showShortProcess={sellShort}
                     ></ProgressTracker>
+                    <FlexDivColumnCentered style={{ alignItems: 'center' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginBottom: 120,
+                                marginTop: 50,
+                            }}
+                        >
+                            {getSubmitButton()}
+                            {isMarketCreated ? (
+                                <>
+                                    <Text className="pale-grey text-s" style={{ margin: '0 70px' }}>
+                                        or
+                                    </Text>
+                                    <Button className="tertiary" onClick={() => navigateToOptionsMarket(market)}>
+                                        Go to market
+                                    </Button>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
+                    </FlexDivColumnCentered>
                 </FlexDivColumn>
             </MainWrapper>
         </Background>
