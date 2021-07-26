@@ -9,7 +9,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import myMarkets from 'assets/images/filters/my-markets.svg';
-import olympics from 'assets/images/filters/olympics.svg';
+import olympicsImg from 'assets/images/filters/olympics.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
@@ -29,10 +29,12 @@ import { SYNTHS_MAP } from '../../../../constants/currency';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import { useEffect } from 'react';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
+    olympics?: boolean;
 };
 
 export enum PhaseFilterEnum {
@@ -69,7 +71,7 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
     );
 };
 
-const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
+const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -101,6 +103,14 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     });
 
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
+
+    useEffect(() => {
+        if (olympics) {
+            setUserFilter(UserFilterEnum.Olympics);
+        } else {
+            if (userFilter === UserFilterEnum.Olympics) setUserFilter(UserFilterEnum.All);
+        }
+    }, [olympics]);
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
@@ -191,7 +201,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
             case UserFilterEnum.MyOrders:
                 return myOpenOrders;
             case UserFilterEnum.Olympics:
-                return olympics;
+                return olympicsImg;
         }
     };
 

@@ -8,11 +8,15 @@ import { Button } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
-import createMarketDefaultIcon from 'assets/images/create-market-default.svg';
-import marketOverviewDefaultIcon from 'assets/images/market-overview-default.svg';
-import createMarketSelectedIcon from 'assets/images/create-market-selected.svg';
-import marketOverviewSelectedIcon from 'assets/images/market-overview-selected.svg';
-import tradeExerciseSelectedIcon from 'assets/images/trade-selected.svg';
+import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
+import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
+import trendingMarketsDefaultIcon from 'assets/images/sidebar/trending-default.svg';
+import olympicsMarketsDefaultIcon from 'assets/images/sidebar/olympics-default.svg';
+import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
+import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
+import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
+import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected.svg';
+import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -49,12 +53,30 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     <Logo onClick={() => navigateTo(ROUTES.Home)} className="logo"></Logo>
                     <SidebarItem
                         onClick={() => navigateTo(ROUTES.Options.Home)}
-                        imgSrc={marketOverviewDefaultIcon}
-                        imgSrcHoverSelected={marketOverviewSelectedIcon}
+                        imgSrc={trendingMarketsDefaultIcon}
+                        imgSrcHoverSelected={trendingMarketsSelectedIcon}
                         className={route === ROUTES.Options.Home ? 'selected' : ''}
                     >
                         <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.markets-label')}</SidebarText>
+                        <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
+                    </SidebarItem>
+                    <SidebarItem
+                        onClick={() => navigateTo(ROUTES.Options.Overview)}
+                        imgSrc={marketOverviewDefaultIcon}
+                        imgSrcHoverSelected={marketOverviewSelectedIcon}
+                        className={route === ROUTES.Options.Overview ? 'selected' : ''}
+                    >
+                        <SidebarIcon />
+                        <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
+                    </SidebarItem>
+                    <SidebarItem
+                        onClick={() => navigateTo(ROUTES.Options.Olympics)}
+                        imgSrc={olympicsMarketsDefaultIcon}
+                        imgSrcHoverSelected={olympicsMarketsSelectedIcon}
+                        className={route === ROUTES.Options.Olympics ? 'selected' : ''}
+                    >
+                        <SidebarIcon />
+                        <SidebarText>{t('common.sidebar.olympics-label')}</SidebarText>
                     </SidebarItem>
                     <SidebarItem
                         onClick={() => navigateTo(ROUTES.Options.CreateMarket)}

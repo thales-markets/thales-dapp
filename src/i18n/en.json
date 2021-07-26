@@ -155,7 +155,9 @@
             "approve-progress-label": "Approving {{currencyKey}}..."
         },
         "sidebar": {
-            "markets-label": "Markets overview",
+            "trending-label": "Trending markets",
+            "overview-label": "Markets overview",
+            "olympics-label": "Olympics markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
             "maturity-label": "Exercise options"

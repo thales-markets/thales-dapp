@@ -12,23 +12,25 @@ import { useSelector } from 'react-redux';
 import { FlexDivColumn, Section } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
-import { history } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import useExchangeRatesQuery from '../../../queries/rates/useExchangeRatesQuery';
 import { getIsAppReady } from '../../../redux/modules/app';
 import { fetchOrders, openOrdersMapCache } from '../../../queries/options/fetchMarketOrders';
+import { useLocation } from 'react-router-dom';
 
 let fetchOrdersInterval: NodeJS.Timeout;
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const location = useLocation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { synthsMap } = snxJSConnector;
     const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
+    const [isOlympics, setIsOlympics] = useState(false);
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
@@ -58,10 +60,16 @@ export const Home: React.FC = () => {
     }, [networkId, optionsMarkets]);
 
     useEffect(() => {
-        if (history.location.hash === '#explore-markets') {
+        if (location.hash === '#overview') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+            setIsOlympics(false);
+        } else if (location.hash === '#olympics') {
+            document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+            setIsOlympics(true);
+        } else {
+            document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
         }
-    });
+    }, [location]);
 
     return (
         <>
@@ -69,7 +77,15 @@ export const Home: React.FC = () => {
                 <>
                     <Section>
                         <FlexDivColumn>
-                            <MarketHeader route={ROUTES.Options.Home} />
+                            <MarketHeader
+                                route={
+                                    location.hash === '#overview'
+                                        ? ROUTES.Options.Overview
+                                        : location.hash === '#olympics'
+                                        ? ROUTES.Options.Olympics
+                                        : ROUTES.Options.Home
+                                }
+                            />
                         </FlexDivColumn>
                     </Section>
                     <Section>
@@ -79,7 +95,11 @@ export const Home: React.FC = () => {
                         <MarketCreation />
                     </Section>
                     <Section class="explore-markets">
-                        <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+                        <ExploreMarkets
+                            optionsMarkets={optionsMarkets}
+                            exchangeRates={exchangeRates}
+                            olympics={isOlympics}
+                        />
                     </Section>
                 </>
             ) : (
