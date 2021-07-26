@@ -210,7 +210,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                     })
                     .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
             }
-        }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates]);
+        }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates, rowsPerPage]);
 
         const { t } = useTranslation();
         return (
