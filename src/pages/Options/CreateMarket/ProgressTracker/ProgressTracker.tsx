@@ -32,7 +32,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 ></Image>
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label className="text-s pale-grey" style={{ left: -36 }}>
-                    Wallet Access
+                    Approving sUSD
                 </Label>
             </FlexDiv>
 
@@ -121,8 +121,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
 export default ProgressTracker;
 
 const Wrapper = styled(FlexDiv)`
-    margin-top: 80px;
-    margin-bottom: 120px;
+    margin: 30px 0;
     padding: 0 200px;
     align-items: center;
     justify-content: center;
