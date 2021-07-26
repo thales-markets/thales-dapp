@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -495,10 +495,7 @@ export const CreateMarket: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
-        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        if (isMainNet(networkId)) {
-            pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        }
+        const pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -584,7 +581,13 @@ export const CreateMarket: React.FC = () => {
                             </Text>
                             <InputsWrapper>
                                 <FlexDivRow>
-                                    <ShortInputContainer style={{ marginBottom: 40, zIndex: 4 }}>
+                                    <ShortInputContainer
+                                        style={{
+                                            marginBottom: 40,
+                                            zIndex: 4,
+                                            opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                        }}
+                                    >
                                         <ReactSelect
                                             className={!isCurrencyKeyValid ? 'error' : ''}
                                             filterOption={(option: any, rawInput: any) =>
@@ -615,13 +618,19 @@ export const CreateMarket: React.FC = () => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
                                             }}
+                                            isDisabled={isCreatingMarket || isMarketCreated}
                                         />
                                         <InputLabel style={{ zIndex: 100 }}>
                                             {t('options.create-market.details.select-asset-label')}
                                         </InputLabel>
                                         <ErrorMessage show={!isCurrencyKeyValid} text="Please select asset." />
                                     </ShortInputContainer>
-                                    <ShortInputContainer style={{ marginBottom: 40 }}>
+                                    <ShortInputContainer
+                                        style={{
+                                            marginBottom: 40,
+                                            opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                        }}
+                                    >
                                         <Input
                                             className={!isStrikePriceValid ? 'error' : ''}
                                             value={strikePrice}
@@ -662,6 +671,7 @@ export const CreateMarket: React.FC = () => {
                                                     setIsStrikePriceValid(false);
                                                 }
                                             }}
+                                            readOnly={isCreatingMarket || isMarketCreated}
                                             type="number"
                                         />
                                         <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
@@ -680,7 +690,13 @@ export const CreateMarket: React.FC = () => {
                                 </FlexDivRow>
                                 <FlexDivRow>
                                     <FlexDivRow style={{ width: '50%', marginRight: 10 }}>
-                                        <ShortInputContainer style={{ marginBottom: 40, flex: 3 }}>
+                                        <ShortInputContainer
+                                            style={{
+                                                marginBottom: 40,
+                                                flex: 3,
+                                                opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                            }}
+                                        >
                                             <DatePicker
                                                 className="maturity-date"
                                                 dateFormat="MMM d, yyyy"
@@ -690,12 +706,20 @@ export const CreateMarket: React.FC = () => {
                                                 selected={maturityDate}
                                                 endDate={maturityDate}
                                                 onChange={(d: Date) => setMaturityDate(d)}
+                                                readOnly={isCreatingMarket || isMarketCreated}
                                             />
                                             <InputLabel>
                                                 {t('options.create-market.details.market-maturity-date-label')}
                                             </InputLabel>
                                         </ShortInputContainer>
-                                        <ShortInputContainer style={{ marginBottom: 40, flex: 1, minWidth: 90 }}>
+                                        <ShortInputContainer
+                                            style={{
+                                                marginBottom: 40,
+                                                flex: 1,
+                                                minWidth: 90,
+                                                opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                            }}
+                                        >
                                             <DatePicker
                                                 className="maturity-date"
                                                 dateFormat="h:mm aa"
@@ -703,6 +727,7 @@ export const CreateMarket: React.FC = () => {
                                                 showTimeSelect={true}
                                                 selected={convertUTCToLocalDate(maturityDate)}
                                                 onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
+                                                readOnly={isCreatingMarket || isMarketCreated}
                                             />
                                             <InputLabel>
                                                 {t('options.create-market.details.market-maturity-time-label')}
@@ -712,7 +737,11 @@ export const CreateMarket: React.FC = () => {
 
                                     <ShortInputContainer
                                         className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
-                                        style={{ position: 'relative', marginBottom: 40 }}
+                                        style={{
+                                            position: 'relative',
+                                            marginBottom: 40,
+                                            opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                        }}
                                     >
                                         <Input
                                             className={!isAmountValid || !userHasEnoughFunds ? 'error' : ''}
@@ -738,6 +767,7 @@ export const CreateMarket: React.FC = () => {
                                                     : setIsAmountValid(false);
                                             }}
                                             type="number"
+                                            readOnly={isCreatingMarket || isMarketCreated}
                                         />
                                         <InputLabel>
                                             {t('options.create-market.details.funding-amount.label')}
@@ -771,13 +801,39 @@ export const CreateMarket: React.FC = () => {
                                         />
                                     </ShortInputContainer>
                                 </FlexDivRow>
-                                <Text className="text-xxxs pale-grey bold ls1 uppercase">
+                                <Text
+                                    style={{
+                                        opacity:
+                                            !initialFundingAmount ||
+                                            !isAmountValid ||
+                                            isLongSubmitting ||
+                                            isLongSubmitted
+                                                ? 0.4
+                                                : 1,
+                                    }}
+                                    className="text-xxxs pale-grey bold ls1 uppercase"
+                                >
                                     {t('options.create-market.sellOptions')}
                                 </Text>
-                                <FlexDiv>
+                                <FlexDiv
+                                    style={{
+                                        opacity:
+                                            !initialFundingAmount ||
+                                            !isAmountValid ||
+                                            isLongSubmitting ||
+                                            isLongSubmitted
+                                                ? 0.4
+                                                : 1,
+                                    }}
+                                >
                                     <CheckboxContainer>
                                         <Checkbox
-                                            disabled={!initialFundingAmount || !isAmountValid}
+                                            disabled={
+                                                !initialFundingAmount ||
+                                                !isAmountValid ||
+                                                isLongSubmitting ||
+                                                isLongSubmitted
+                                            }
                                             checked={sellLong}
                                             value={sellLong.toString()}
                                             onChange={(e: any) => setSellLong(e.target.checked || false)}
@@ -790,7 +846,7 @@ export const CreateMarket: React.FC = () => {
                                             max={1}
                                             min={0}
                                             onChange={(_, value) => setLongPrice(Number(value))}
-                                            disabled={!sellLong}
+                                            disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                         />
                                         <FlexDivRow>
                                             <SliderRange color={COLORS.LONG}>{`${USD_SIGN}0`}</SliderRange>
@@ -801,7 +857,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={longPrice}
                                             onChange={(_, value) => setLongPrice(value)}
-                                            disabled={!sellLong}
+                                            disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                             className={isLongPriceValid ? '' : 'error'}
                                             step="0.01"
                                         />
@@ -825,7 +881,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={longAmount}
                                             onChange={(_, value) => setLongAmount(value)}
-                                            disabled={!sellLong}
+                                            disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                             className={isLongAmountValid ? '' : 'error'}
                                         />
                                         <InputLabel>
@@ -849,10 +905,25 @@ export const CreateMarket: React.FC = () => {
                                         />
                                     </DoubleShortInputContainer>
                                 </FlexDiv>
-                                <FlexDiv>
+                                <FlexDiv
+                                    style={{
+                                        opacity:
+                                            !initialFundingAmount ||
+                                            !isAmountValid ||
+                                            isShortSubmitting ||
+                                            isShortSubmitted
+                                                ? 0.4
+                                                : 1,
+                                    }}
+                                >
                                     <CheckboxContainer>
                                         <Checkbox
-                                            disabled={!initialFundingAmount || !isAmountValid}
+                                            disabled={
+                                                !initialFundingAmount ||
+                                                !isAmountValid ||
+                                                isShortSubmitting ||
+                                                isShortSubmitted
+                                            }
                                             checked={sellShort}
                                             value={sellShort.toString()}
                                             onChange={(e: any) => setSellShort(e.target.checked || false)}
@@ -865,7 +936,7 @@ export const CreateMarket: React.FC = () => {
                                             max={1}
                                             min={0}
                                             onChange={(_, value) => setShortPrice(Number(value))}
-                                            disabled={!sellShort}
+                                            disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                         />
                                         <FlexDivRow>
                                             <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}0`}</SliderRange>
@@ -876,7 +947,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={shortPrice}
                                             onChange={(_, value) => setShortPrice(value)}
-                                            disabled={!sellShort}
+                                            disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                             className={isShortPriceValid ? '' : 'error'}
                                             step="0.01"
                                         />
@@ -900,7 +971,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={shortAmount}
                                             onChange={(_, value) => setShortAmount(value)}
-                                            disabled={!sellShort}
+                                            disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                             className={isShortAmountValid ? '' : 'error'}
                                         />
                                         <InputLabel>
@@ -965,7 +1036,10 @@ export const CreateMarket: React.FC = () => {
                             {getSubmitButton()}
                             {isMarketCreated ? (
                                 <>
-                                    <Text className="pale-grey text-s" style={{ margin: '0 70px' }}>
+                                    <Text
+                                        className="pale-grey text-s"
+                                        style={{ margin: '0 70px', display: sellLong || sellShort ? 'block' : 'none' }}
+                                    >
                                         or
                                     </Text>
                                     <Button className="tertiary" onClick={() => navigateToOptionsMarket(market)}>

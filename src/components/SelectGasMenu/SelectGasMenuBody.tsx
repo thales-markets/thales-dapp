@@ -91,6 +91,7 @@ const DropDown = styled.ul`
     right: 0;
     width: 132px;
     height: 133px;
+    z-index: 1;
     padding: 3px;
     margin: 2px 0;
     background: #0a2e66;
