@@ -8,8 +8,7 @@ import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { bytesFormatter, bigNumberFormatter, getAddress, parseBytes32String } from 'utils/formatters/ethers';
+import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
 import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
@@ -220,116 +219,56 @@ export const CreateMarket: React.FC = () => {
                 console.log(e);
             }
         };
-        const setEventListeners = () => {
-            SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === binaryOptionsMarketManagerContract.address) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         getAllowanceForCurrentWallet();
-        setEventListeners();
-        return () => {
-            SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
     }, [walletAddress]);
 
     const getOrderEndDate = () => toBigNumber(Math.round((optionsMarket as any)?.timeRemaining / 1000));
 
-    useEffect(() => {
-        if (!isCreatingMarket) return;
-        const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-        binaryOptionsMarketManagerContract.on(
-            BINARY_OPTIONS_EVENTS.MARKET_CREATED,
-            (
-                market: string,
-                creator: string,
-                oracleKey: string,
-                _strikePrice: string,
-                _maturityDate: string,
-                _expiryDate: string,
-                long: string,
-                short: string,
-                /*eslint-disable */
-                _customMarket: string,
-                _customOracle: string
-                /*eslint-enable */
-            ) => {
-                if (
-                    creator === walletAddress &&
-                    parseBytes32String(oracleKey) === (currencyKey as CurrencyKeyOptionType).value
-                ) {
-                    setMarket(market);
-                    setLong(long);
-                    setShort(short);
-                    setIsMarketCreated(true);
-                    setIsCreatingMarket(false);
-                    if (!sellLong && !sellShort) {
-                        navigateToOptionsMarket(market);
+    const handleMarketCreation = async () => {
+        if (gasPrice !== null) {
+            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+            try {
+                setTxErrorMessage(null);
+                setIsCreatingMarket(true);
+                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
+                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const tx = (await BOMMContractWithSigner.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint,
+                    false,
+                    ZERO_ADDRESS,
+                    {
+                        gasPrice: gasPriceInWei(gasPrice),
+                        gasLimit,
                     }
-
-                    if (sellLong) {
-                        const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
-                        const getAllowance = async () => {
-                            try {
-                                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                                setLongAllowance(!!bigNumberFormatter(allowance));
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        };
-
-                        const registerAllowanceListener = () => {
-                            erc20Instance.on(
-                                APPROVAL_EVENTS.APPROVAL,
-                                // eslint-disable-next-line
-                                (owner: string, spender: string, _value: string) => {
-                                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                                        setLongAllowance(true);
-                                        setIsLongAllowing(false);
-                                    }
-                                }
-                            );
-                        };
-                        getAllowance();
-                        registerAllowanceListener();
-                    }
-
-                    if (sellShort) {
-                        const erc20Instance = new ethers.Contract(short, erc20Contract.abi, snxJSConnector.signer);
-
-                        const getAllowance = async () => {
-                            try {
-                                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                                setShortAllowance(!!bigNumberFormatter(allowance));
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        };
-
-                        const registerAllowanceListener = () => {
-                            erc20Instance.on(
-                                APPROVAL_EVENTS.APPROVAL,
-                                // eslint-disable-next-line
-                                (owner: string, spender: string, _value: string) => {
-                                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                                        setShortAllowance(true);
-                                        setIsShortAllowing(false);
-                                    }
-                                }
-                            );
-                        };
-                        getAllowance();
-                        registerAllowanceListener();
+                )) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
+                if (txResult && txResult.events) {
+                    const rawData = txResult.events[txResult.events?.length - 1];
+                    if (rawData && rawData.decode) {
+                        const goodData = rawData.decode(rawData.data);
+                        console.log(goodData);
+                        setMarket(goodData.market);
+                        setLong(goodData.long);
+                        setShort(goodData.short);
+                        setIsMarketCreated(true);
+                        setIsCreatingMarket(false);
+                        if (!sellLong && !sellShort) {
+                            navigateToOptionsMarket(market);
+                        }
                     }
                 }
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsCreatingMarket(false);
             }
-        );
-        return () => {
-            binaryOptionsMarketManagerContract.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
-        };
-    }, [isCreatingMarket]);
+        }
+    };
 
     useEffect(() => {
         if (!hasAllowance) return;
@@ -377,43 +316,20 @@ export const CreateMarket: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256
                 );
-                await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                });
+                const tx = (await SynthsUSD.approve(
+                    binaryOptionsMarketManagerContract.address,
+                    ethers.constants.MaxUint256,
+                    {
+                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                        gasPrice: gasPriceInWei(gasPrice),
+                    }
+                )) as ethers.ContractTransaction;
+                await tx.wait();
+                setIsAllowing(false);
+                setAllowance(true);
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
-            }
-        }
-    };
-
-    const handleMarketCreation = async () => {
-        if (gasPrice !== null) {
-            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-            try {
-                setTxErrorMessage(null);
-                setIsCreatingMarket(true);
-                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                await BOMMContractWithSigner.createMarket(
-                    oracleKey,
-                    price,
-                    maturity,
-                    initialMint,
-                    false,
-                    ZERO_ADDRESS,
-                    {
-                        gasPrice: gasPriceInWei(gasPrice),
-                        gasLimit,
-                    }
-                );
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsCreatingMarket(false);
             }
         }
     };
@@ -427,10 +343,13 @@ export const CreateMarket: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+                await tx.wait();
+                setLongAllowance(true);
+                setIsLongAllowing(false);
             } catch (e) {
                 console.log(e);
                 setIsLongAllowing(false);
@@ -447,10 +366,13 @@ export const CreateMarket: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+                await tx.wait();
+                setShortAllowance(true);
+                setIsShortAllowing(false);
             } catch (e) {
                 console.log(e);
                 setIsShortAllowing(false);
@@ -1031,13 +953,12 @@ export const CreateMarket: React.FC = () => {
                         showLongProcess={sellLong}
                         showShortProcess={sellShort}
                     ></ProgressTracker>
-                    <FlexDivColumnCentered style={{ alignItems: 'center' }}>
+                    <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 120 }}>
                         <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginBottom: 120,
                                 marginTop: 50,
                             }}
                         >
