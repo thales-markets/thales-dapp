@@ -467,6 +467,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         onChange={(option: any) => setOrderSide(option)}
                         isSearchable={false}
                         isUppercase
+                        isDisabled={isSubmitting}
+                        className={isSubmitting ? 'disabled' : ''}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </ShortInputContainer>
@@ -475,11 +477,14 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         value={amount}
                         onChange={(_, value) => setAmount(value)}
                         className={isAmountValid && !insufficientLiquidity ? '' : 'error'}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
-                    <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                        {OPTIONS_CURRENCY_MAP[optionSide]}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid || insufficientLiquidity}
                         message={t(
@@ -499,7 +504,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         <AmountButton
                             key={percentage}
                             onClick={() => calculateAmount(percentage)}
-                            disabled={!isWalletConnected || (isBuy && price === '')}
+                            disabled={!isWalletConnected || (isBuy && price === '') || isSubmitting}
                         >
                             {`${percentage}%`}
                         </AmountButton>
@@ -523,13 +528,18 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                                     className={percentage === slippage ? 'selected' : ''}
                                     key={percentage}
                                     onClick={() => setSlippage(percentage)}
+                                    disabled={isSubmitting}
                                 >
                                     {`${percentage}%`}
                                 </SlippageButton>
                             ))}
                             <SlippageContainer>
-                                <SlippageInput value={slippage} onChange={(_: any, value: any) => setSlippage(value)} />
-                                <PercentageLabel>%</PercentageLabel>
+                                <SlippageInput
+                                    value={slippage}
+                                    onChange={(_: any, value: any) => setSlippage(value)}
+                                    disabled={isSubmitting}
+                                />
+                                <PercentageLabel className={isSubmitting ? 'disabled' : ''}>%</PercentageLabel>
                             </SlippageContainer>
                         </FlexDivEnd>
                         <FieldValidationMessage
@@ -572,7 +582,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     </ProtocolFeeLabel>
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>
-                <NetworkFees gasLimit={gasLimit} />
+                <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
             </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

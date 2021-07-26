@@ -403,6 +403,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         onChange={(option: any) => setOrderSide(option)}
                         isSearchable={false}
                         isUppercase
+                        isDisabled={isSubmitting}
+                        className={isSubmitting ? 'disabled' : ''}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </ShortInputContainer>
@@ -420,6 +422,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                                 setIsPriceValid(Number(value) <= 1);
                                 setPrice(Number(value));
                             }}
+                            disabled={isSubmitting}
                         />
                     ) : (
                         <SellSlider
@@ -431,6 +434,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                                 setIsPriceValid(Number(value) <= 1);
                                 setPrice(Number(value));
                             }}
+                            disabled={isSubmitting}
                         />
                     )}
                     <FlexDivRow>
@@ -447,13 +451,14 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         }}
                         step="0.01"
                         className={isPriceValid ? '' : 'error'}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.price-label', {
                             currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
                         })}
                     </InputLabel>
-                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isPriceValid}
                         message={t(`common.errors.invalid-price-max`, { max: 1 })}
@@ -466,11 +471,14 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         value={amount}
                         onChange={(_, value) => setAmount(value)}
                         className={isAmountValid ? '' : 'error'}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
-                    <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                        {OPTIONS_CURRENCY_MAP[optionSide]}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid}
                         message={t(`common.errors.insufficient-balance-wallet`, {
@@ -486,6 +494,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         value={expiration}
                         onChange={(option: any) => setExpiration(option)}
                         isSearchable={false}
+                        isDisabled={isSubmitting}
+                        className={isSubmitting ? 'disabled' : ''}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
                 </ShortInputContainer>
@@ -495,7 +505,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     <AmountButton
                         key={percentage}
                         onClick={() => calculateAmount(percentage)}
-                        disabled={!isWalletConnected || (isBuy && price === '')}
+                        disabled={!isWalletConnected || (isBuy && price === '') || isSubmitting}
                     >
                         {`${percentage}%`}
                     </AmountButton>

@@ -384,13 +384,16 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             value={amount}
                             onChange={(_, value) => setAmount(value)}
                             className={isAmountValid && !insufficientOrderAmount ? '' : 'error'}
+                            disabled={isFilling}
                         />
                         <InputLabel>
                             {t('options.market.trade-options.fill-order.amount-label', {
                                 orderSide: isBuy ? t('common.sell') : t('common.buy'),
                             })}
                         </InputLabel>
-                        <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                        <CurrencyLabel className={isFilling ? 'disabled' : ''}>
+                            {OPTIONS_CURRENCY_MAP[optionSide]}
+                        </CurrencyLabel>
                         <FieldValidationMessage
                             showValidation={!isAmountValid || insufficientOrderAmount}
                             message={
@@ -430,7 +433,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             )}
                         </ProtocolFeeItem>
                     </ProtocolFeeContainer>
-                    <NetworkFees gasLimit={gasLimit} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

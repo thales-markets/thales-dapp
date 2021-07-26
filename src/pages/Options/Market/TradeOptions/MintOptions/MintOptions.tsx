@@ -597,9 +597,10 @@ const MintOptions: React.FC = () => {
                             setAmount(value);
                         }}
                         className={isAmountValid ? '' : 'error'}
+                        disabled={isMinting}
                     />
                     <InputLabel>{t('options.market.trade-options.mint.amount-label')}</InputLabel>
-                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={isMinting ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid}
                         message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: SYNTHS_MAP.sUSD })}
@@ -630,6 +631,7 @@ const MintOptions: React.FC = () => {
             <FlexDiv>
                 <CheckboxContainer>
                     <Checkbox
+                        disabled={isMinting}
                         checked={sellLong}
                         value={sellLong.toString()}
                         onChange={(e: any) => setSellLong(e.target.checked || false)}
@@ -642,7 +644,7 @@ const MintOptions: React.FC = () => {
                         max={1}
                         min={0}
                         onChange={(_, value) => setLongPrice(Number(value))}
-                        disabled={!sellLong}
+                        disabled={!sellLong || isMinting}
                     />
                     <FlexDivRow>
                         <SliderRange color={COLORS.LONG}>{`${USD_SIGN}0`}</SliderRange>
@@ -653,7 +655,7 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={longPrice}
                         onChange={(_, value) => setLongPrice(value)}
-                        disabled={!sellLong}
+                        disabled={!sellLong || isMinting}
                         className={isLongPriceValid ? '' : 'error'}
                         step="0.01"
                     />
@@ -673,13 +675,15 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={longAmount}
                         onChange={(_, value) => setLongAmount(value)}
-                        disabled={!sellLong}
+                        disabled={!sellLong || isMinting}
                         className={isLongAmountValid ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sLONG}</CurrencyLabel>
+                    <CurrencyLabel className={!sellLong || isMinting ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sLONG}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isLongAmountValid}
                         message={t(
@@ -694,6 +698,7 @@ const MintOptions: React.FC = () => {
             <FlexDiv>
                 <CheckboxContainer>
                     <Checkbox
+                        disabled={isMinting}
                         checked={sellShort}
                         value={sellShort.toString()}
                         onChange={(e: any) => setSellShort(e.target.checked || false)}
@@ -706,7 +711,7 @@ const MintOptions: React.FC = () => {
                         max={1}
                         min={0}
                         onChange={(_, value) => setShortPrice(Number(value))}
-                        disabled={!sellShort}
+                        disabled={!sellShort || isMinting}
                     />
                     <FlexDivRow>
                         <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}0`}</SliderRange>
@@ -717,14 +722,16 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={shortPrice}
                         onChange={(_, value) => setShortPrice(value)}
-                        disabled={!sellShort}
+                        disabled={!sellShort || isMinting}
                         className={isShortPriceValid ? '' : 'error'}
                         step="0.01"
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sSHORT })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={!sellShort || isMinting ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sUSD}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isShortPriceValid}
                         message={t(
@@ -737,13 +744,15 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={shortAmount}
                         onChange={(_, value) => setShortAmount(value)}
-                        disabled={!sellShort}
+                        disabled={!sellShort || isMinting}
                         className={isShortAmountValid ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sSHORT}</CurrencyLabel>
+                    <CurrencyLabel className={!sellShort || isMinting ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sSHORT}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isShortAmountValid}
                         message={t(
@@ -791,7 +800,7 @@ const MintOptions: React.FC = () => {
                         DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
-                <NetworkFees gasLimit={gasLimit} />
+                <NetworkFees gasLimit={gasLimit} disabled={isMinting} />
             </FeeSummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

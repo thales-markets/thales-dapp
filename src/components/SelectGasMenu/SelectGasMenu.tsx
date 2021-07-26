@@ -8,9 +8,10 @@ import OutsideClickHandler from 'react-outside-click-handler';
 
 type SelectGasMenuProps = {
     gasPrice: number | null;
+    disabled?: boolean;
 };
 
-export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: SelectGasMenuProps) => {
+export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice, disabled }: SelectGasMenuProps) => {
     const [gasDropdownIsOpen, setGasDropdownIsOpen] = useState(false);
     const setDropdownIsOpen = (isOpen: boolean) => {
         if (!isOpen && !gasDropdownIsOpen) {
@@ -21,7 +22,12 @@ export const SelectGasMenu: React.FC<SelectGasMenuProps> = ({ gasPrice }: Select
 
     return (
         <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
-            <Select onClick={() => setDropdownIsOpen(!gasDropdownIsOpen)}>
+            <Select
+                onClick={() => {
+                    disabled ? null : setDropdownIsOpen(!gasDropdownIsOpen);
+                }}
+                className={disabled ? 'disabled' : ''}
+            >
                 <Text>{formatCurrency(gasPrice || 0) || 0}</Text>
             </Select>
             {gasDropdownIsOpen && <SelectGasMenuBody setDropdownIsOpen={setDropdownIsOpen} />}
@@ -48,6 +54,10 @@ const Select = styled(FlexDiv)`
     }
     &:hover {
         cursor: pointer;
+    }
+    &.disabled {
+        opacity: 0.4;
+        cursor: default;
     }
 `;
 
