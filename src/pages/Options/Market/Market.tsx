@@ -64,7 +64,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 const sportFeedContract = new ethers.Contract(
                     marketQuery.data.oracleAdress,
                     sportFeedOracleContract.abi,
-                    snxJSConnector.signer
+                    (snxJSConnector as any).provider
                 );
                 Promise.all([
                     sportFeedContract.targetName(),

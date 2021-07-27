@@ -140,7 +140,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                         const sportFeedContract = new ethers.Contract(
                             currentMarket.customOracle,
                             sportFeed.abi,
-                            snxJSConnector.signer
+                            (snxJSConnector as any).provider
                         );
                         const data: any = await Promise.all([
                             sportFeedContract.targetName(),
