@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -494,9 +494,9 @@ export const CreateMarket: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
-        const pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-                    if (isMainNet(networkId)) {
-            pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        if (isMainNet(networkId)) {
+            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
         }
 
         try {
