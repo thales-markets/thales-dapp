@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit, isMainNet } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
