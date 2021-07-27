@@ -50,6 +50,7 @@ export const isMarketWidgetVisible = (
     marketWidget: MarketWidgetKey,
     visibilityMap: Record<MarketWidgetKey, boolean>,
     marketPhase: string,
+    isCustomMarket: boolean,
     isWalletConected: boolean,
     isCustomizationVisibility: boolean
 ) => {
@@ -61,6 +62,10 @@ export const isMarketWidgetVisible = (
             return marketPhase === 'maturity' && (visibilityMap[marketWidget] || isCustomizationVisibility);
         case MarketWidgetKey.YOUR_TRANSACTIONS:
             return isWalletConected && (visibilityMap[marketWidget] || isCustomizationVisibility);
+        case MarketWidgetKey.CHART_TRADING_VIEW:
+            return !isCustomMarket && (visibilityMap[marketWidget] || isCustomizationVisibility);
+        case MarketWidgetKey.CUSTOM_MARKET_RESULTS:
+            return isCustomMarket && (visibilityMap[marketWidget] || isCustomizationVisibility);
         default:
             return visibilityMap[marketWidget] || isCustomizationVisibility;
     }
