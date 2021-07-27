@@ -251,14 +251,13 @@ export const CreateMarket: React.FC = () => {
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
                         const goodData = rawData.decode(rawData.data);
-                        console.log(goodData);
                         setMarket(goodData.market);
                         setLong(goodData.long);
                         setShort(goodData.short);
                         setIsMarketCreated(true);
                         setIsCreatingMarket(false);
                         if (!sellLong && !sellShort) {
-                            navigateToOptionsMarket(market);
+                            navigateToOptionsMarket(goodData.market);
                         }
                     }
                 }
