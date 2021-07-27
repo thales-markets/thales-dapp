@@ -35,6 +35,7 @@ import ROUTES from 'constants/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import { ethers } from 'ethers';
+import CustomMarketResults from './CustomMarketResults';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -123,12 +124,13 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const wrapWidget = (
         phase: string,
+        isCustomMarket: boolean,
         widgets: ReactElement[],
         widgetKey: MarketWidgetKey,
         widget: ReactElement,
         background?: string
     ) => {
-        if (isMarketWidgetVisible(widgetKey, visibilityMap, phase, isWalletConnected, false)) {
+        if (isMarketWidgetVisible(widgetKey, visibilityMap, phase, isCustomMarket, isWalletConnected, false)) {
             widgets.push(
                 <div key={widgetKey} data-grid={fullLayout.find((item: Layout) => item.i === widgetKey)}>
                     <MarketWidget background={background}>{widget}</MarketWidget>
@@ -141,33 +143,57 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         const widgets: ReactElement[] = [];
         wrapWidget(
             optionsMarket.phase,
+            optionsMarket.customMarket,
             widgets,
             MarketWidgetKey.MATURITY_PHASE,
             <MaturityPhaseCard optionsMarket={optionsMarket} accountMarketInfo={accountMarketInfo} />
         );
         wrapWidget(
             optionsMarket.phase,
+            optionsMarket.customMarket,
             widgets,
             MarketWidgetKey.ORDERBOOK,
             <Orderbook optionSide={optionsActiveTab.id} />
         );
         wrapWidget(
             optionsMarket.phase,
+            optionsMarket.customMarket,
             widgets,
             MarketWidgetKey.TRADE,
             <TradeOptions optionSide={optionsActiveTab.id} />,
             'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)'
         );
-        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART_TRADING_VIEW, <TradingView />);
-        wrapWidget(optionsMarket.phase, widgets, MarketWidgetKey.CHART_OPTIONS_PRICE, <OptionsPriceChart />);
         wrapWidget(
             optionsMarket.phase,
+            optionsMarket.customMarket,
+            widgets,
+            MarketWidgetKey.CHART_TRADING_VIEW,
+            <TradingView />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            optionsMarket.customMarket,
+            widgets,
+            MarketWidgetKey.CUSTOM_MARKET_RESULTS,
+            <CustomMarketResults />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            optionsMarket.customMarket,
+            widgets,
+            MarketWidgetKey.CHART_OPTIONS_PRICE,
+            <OptionsPriceChart />
+        );
+        wrapWidget(
+            optionsMarket.phase,
+            optionsMarket.customMarket,
             widgets,
             MarketWidgetKey.RECENT_TRANSACTIONS,
             <RecentTransactions marketAddress={optionsMarket.address} />
         );
         wrapWidget(
             optionsMarket.phase,
+            optionsMarket.customMarket,
             widgets,
             MarketWidgetKey.YOUR_TRANSACTIONS,
             <YourTransactions marketAddress={optionsMarket.address} walletAddress={walletAddress} />
@@ -210,6 +236,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         <MarketHeader
                             showCustomizeLayout
                             phase={optionsMarket.phase}
+                            isCustomMarket={optionsMarket.customMarket}
                             route={ROUTES.Options.MarketMatch}
                         />
                     </FlexDivColumn>

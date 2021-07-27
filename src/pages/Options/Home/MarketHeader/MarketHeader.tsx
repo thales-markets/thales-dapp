@@ -25,17 +25,18 @@ import { navigateTo } from 'utils/routes';
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
     phase?: string;
+    isCustomMarket?: boolean;
     route: string;
 };
 
-const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route }) => {
+const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     return (
         <>
             <MarketHeaderWrapper id="market-header" showCustomizeLayout={showCustomizeLayout}>
-                {showCustomizeLayout && phase && <CustomizeLayout phase={phase} />}
+                {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 {!isWalletConnected ? (
                     <Button
                         className="primary"

@@ -12,9 +12,10 @@ import OutsideClickHandler from 'react-outside-click-handler';
 
 type CustomizeLayoutProps = {
     phase: string;
+    isCustomMarket?: boolean;
 };
 
-export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase }) => {
+export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase, isCustomMarket }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [layoutDropdownIsOpen, setLayoutDropdownIsOpen] = useState(false);
@@ -44,6 +45,7 @@ export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase }) => {
                                     key={`${widgetKey}-checkbox`}
                                     widgetKey={widgetKey as MarketWidgetKey}
                                     phase={phase}
+                                    isCustomMarket={isCustomMarket}
                                 />
                             ))}
                             <ResetButton

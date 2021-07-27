@@ -330,6 +330,7 @@
                 "chart-options-price-widget": "Options price",
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
+                "custom-market-results-widget": "Results",
                 "button": {
                     "customize-layout": "Customize view",
                     "reset-layout": "Reset layout"
