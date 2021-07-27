@@ -495,6 +495,9 @@ export const CreateMarket: React.FC = () => {
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
         const pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+                    if (isMainNet(networkId)) {
+            pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        }
 
         try {
             const createSignedOrderV4Async = async () => {
