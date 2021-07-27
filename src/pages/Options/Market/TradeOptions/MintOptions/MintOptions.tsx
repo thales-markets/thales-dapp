@@ -17,7 +17,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
 import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
-import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
+import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -61,7 +61,7 @@ import { Web3Wrapper } from '@0x/web3-wrapper';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import axios from 'axios';
-import { SIDE } from 'constants/options';
+// import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
@@ -186,27 +186,27 @@ const MintOptions: React.FC = () => {
         };
     }, [walletAddress]);
 
-    useEffect(() => {
-        if (walletAddress) {
-            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
-                if (walletAddress === account) {
-                    if (SIDE[side] === 'long' && sellLong) {
-                        await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
-                    }
-                    if (SIDE[side] === 'short' && sellShort) {
-                        await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
-                    }
-                    setIsMinting(false);
-                }
-                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
-            });
-        }
-        return () => {
-            if (walletAddress) {
-                BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
-            }
-        };
-    }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
+    // useEffect(() => {
+    //     if (walletAddress) {
+    //         BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
+    //             if (walletAddress === account) {
+    //                 if (SIDE[side] === 'long' && sellLong) {
+    //                     await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
+    //                 }
+    //                 if (SIDE[side] === 'short' && sellShort) {
+    //                     await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
+    //                 }
+    //                 setIsMinting(false);
+    //             }
+    //             refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+    //         });
+    //     }
+    //     return () => {
+    //         if (walletAddress) {
+    //             BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
+    //         }
+    //     };
+    // }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
@@ -285,7 +285,16 @@ const MintOptions: React.FC = () => {
                             status: 'confirmed',
                         })
                     );
+
+                    if (sellLong) {
+                        await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
+                    }
+                    if (sellShort) {
+                        await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
+                    }
+                    refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
                 }
+                setIsMinting(false);
             } catch (e) {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
