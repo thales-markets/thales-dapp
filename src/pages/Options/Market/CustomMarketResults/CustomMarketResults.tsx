@@ -17,7 +17,6 @@ export const CustomMarketEventMap: Record<string, any> = {
 
 const CustomMarketResults: React.FC = () => {
     const optionsMarket = useMarketContext();
-    console.log(optionsMarket.eventName);
 
     return (
         <>

@@ -21,7 +21,10 @@ const useBinaryOptionsAccountMarketInfoQuery = (
                 short: bigNumberFormatter(result.balances.short),
             };
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 
