@@ -126,7 +126,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     <ItemContainer>
                         <Title>{t(`options.market.overview.strike-price-label`)}</Title>
                         <Content fontSize={optionsMarket.strikePrice < 0.01 ? 14 : 16}>
-                            <FlexDivCentered>
+                            <FlexDiv>
                                 {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
                                 {!optionsMarket.isResolved && (
                                     <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
@@ -151,7 +151,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                         )}
                                     </LightTooltip>
                                 )}
-                            </FlexDivCentered>
+                            </FlexDiv>
                         </Content>
                     </ItemContainer>
                     <ItemContainer>

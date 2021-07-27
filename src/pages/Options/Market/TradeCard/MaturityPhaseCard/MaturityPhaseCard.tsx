@@ -112,6 +112,8 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                         status: 'confirmed',
                     })
                 );
+                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                setIsExercising(false);
             }
         } catch (e) {
             console.log(e);
