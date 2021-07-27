@@ -1,17 +1,19 @@
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import useAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDiv, Text } from 'theme/common';
+import { FlexDiv, Image, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow, Row } from '../UserInfoModal';
+import ReactCountryFlag from 'react-country-flag';
 
 type UsersAssetsProps = {
     optionsMarkets: OptionsMarkets;
@@ -59,6 +61,7 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                     //     asset.market.result &&
                     //     !!asset.balances[asset.market.result];
                     // console.log(hasFundsToExercise);
+
                     return (
                         <MarketRow
                             className="text-xs"
@@ -70,17 +73,35 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                                 }
                             }}
                         >
-                            <FlexDiv style={{ flex: 2, justifyContent: 'flex-start' }}>
-                                <Currency.Name
-                                    currencyKey={asset.market.currencyKey}
-                                    showIcon={true}
-                                    synthIconStyle={{ width: 24, height: 24 }}
-                                    iconProps={{ type: 'asset' }}
-                                />
+                            <FlexDiv style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center' }}>
+                                {asset.market.customMarket ? (
+                                    <>
+                                        <ReactCountryFlag
+                                            countryCode={countryToCountryCode(asset.market.country as any)}
+                                            style={{ width: 24, height: 24, marginRight: 10 }}
+                                            svg
+                                        />
+                                        {asset.market.country}
+                                    </>
+                                ) : (
+                                    <Currency.Name
+                                        currencyKey={asset.market.currencyKey}
+                                        showIcon={true}
+                                        synthIconStyle={{ width: 24, height: 24 }}
+                                        iconProps={{ type: 'asset' }}
+                                    />
+                                )}
                             </FlexDiv>
 
                             <Text style={{ margin: '0 8px', flex: 1, textAlign: 'center' }}>
-                                {formatCurrencyWithSign(USD_SIGN, asset.market.strikePrice)}
+                                {asset.market.customMarket ? (
+                                    <Image
+                                        style={{ width: 32, height: 32 }}
+                                        src={eventToIcon(asset.market.eventName as any)}
+                                    ></Image>
+                                ) : (
+                                    formatCurrencyWithSign(USD_SIGN, asset.market.strikePrice)
+                                )}
                             </Text>
 
                             <Text style={{ flex: 2, textAlign: 'center' }}>

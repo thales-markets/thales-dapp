@@ -33,13 +33,13 @@ import axios from 'axios';
 import { USD_SIGN } from 'constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { FlexDivCentered, Image } from '../../../../theme/common';
-import arrowDown from '../../../../assets/images/arrow-down.svg';
+import arrowDown from 'assets/images/arrow-down.svg';
 import { formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
-import arrowUp from '../../../../assets/images/arrow-up.svg';
+import arrowUp from 'assets/images/arrow-up.svg';
+import basketball from 'assets/images/basketball.svg';
+import volleyball from 'assets/images/volleyball.svg';
+import medals from 'assets/images/medals.png';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import sportFeed from '../../../../utils/contracts/sportFeedOracleInstance';
-import { ethers } from 'ethers';
-import snxJSConnector from 'utils/snxJSConnector';
 import ReactCountryFlag from 'react-country-flag';
 
 dotenv.config();
@@ -103,7 +103,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
         const networkId = useSelector((state: RootState) => getNetworkId(state));
-        const [olympicMarkets, setOlympicMarkets] = useState([]);
 
         const calcDirection = (cell: HeadCell) => {
             if (orderBy === cell.id) {
@@ -132,36 +131,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
 
         useEffect(() => setPage(0), [phase]);
 
-        useEffect(() => {
-            if (isCustomMarket) {
-                const customMarkets: any = [];
-                Promise.all(
-                    optionsMarkets.map(async (currentMarket) => {
-                        const sportFeedContract = new ethers.Contract(
-                            currentMarket.customOracle,
-                            sportFeed.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        customMarkets.push({
-                            ...currentMarket,
-                            country: data[0],
-                            eventName: data[1],
-                            outcome: data[2],
-                        });
-                    })
-                ).then(() => {
-                    setOlympicMarkets(customMarkets);
-                });
-            } else {
-                setOlympicMarkets([]);
-            }
-        }, [isCustomMarket]);
-
         const memoizedPage = useMemo(() => {
             if (page > numberOfPages - 1) {
                 return numberOfPages - 1;
@@ -184,7 +153,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
 
         const sortedMarkets = useMemo(() => {
             if (isCustomMarket) {
-                return [];
+                return optionsMarkets.filter((market) => market.customMarket);
             } else {
                 return optionsMarkets
                     .sort((a, b) => {
@@ -390,7 +359,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                           </StyledTableRow>
                                       );
                                   })
-                                : olympicMarkets.map((market: any, index) => {
+                                : sortedMarkets.map((market: any, index) => {
                                       return (
                                           <StyledTableRow
                                               onClick={() => {
@@ -561,12 +530,12 @@ const sortByField = (
 ) => {
     if (direction === OrderDirection.ASC) {
         if (a.phaseNum === b.phaseNum) {
-            return a[field] > b[field] ? 1 : -1;
+            return (a[field] as any) > (b[field] as any) ? 1 : -1;
         }
     }
     if (direction === OrderDirection.DESC) {
         if (a.phaseNum === b.phaseNum) {
-            return a[field] > b[field] ? -1 : 1;
+            return (a[field] as any) > (b[field] as any) ? -1 : 1;
         }
     }
 
@@ -596,19 +565,35 @@ const sortByAssetPrice = (
 };
 
 export const countryToCountryCode = (country: string) => {
-    switch (country) {
-        case 'USA':
-            return 'US';
-        case 'JPN':
-            return 'JP';
-        case 'CHN':
-            return 'CN';
-        case 'RUS':
-            return 'RU';
-        case 'SRB':
-            return 'RS';
-        case 'AUS':
-            return 'AU';
+    if (country) {
+        switch (country) {
+            case 'USA':
+                return 'US';
+            case 'JPN':
+                return 'JP';
+            case 'CHN':
+                return 'CN';
+            case 'RUS':
+                return 'RU';
+            case 'SRB':
+                return 'RS';
+            case 'AUS':
+                return 'AU';
+        }
+    }
+};
+
+export const eventToIcon = (event: string) => {
+    if (event) {
+        if (event.toLowerCase().indexOf('basketball') !== -1) {
+            return basketball;
+        }
+        if (event.toLowerCase().indexOf('volleyball') !== -1) {
+            return volleyball;
+        }
+        if (event.toLowerCase().indexOf('medals') !== -1) {
+            return medals;
+        }
     }
 };
 

@@ -20,6 +20,8 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { fetchOrders, openOrdersMapCache } from '../../../../queries/options/fetchMarketOrders';
+import ReactCountryFlag from 'react-country-flag';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 
 let fetchOrdersInterval: NodeJS.Timeout;
 
@@ -129,15 +131,33 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                     }}
                 >
                     <FlexDivCentered style={{ flex: 4, justifyContent: 'flex-start' }}>
-                        <Currency.Name
-                            currencyKey={order.market.currencyKey}
-                            showIcon={true}
-                            synthIconStyle={{ width: 24, height: 24 }}
-                            iconProps={{ type: 'asset' }}
-                        />
+                        {order.market.customMarket ? (
+                            <>
+                                <ReactCountryFlag
+                                    countryCode={countryToCountryCode(order.market.country as any)}
+                                    style={{ width: 24, height: 24, marginRight: 10 }}
+                                    svg
+                                />
+                                {order.market.country}
+                            </>
+                        ) : (
+                            <Currency.Name
+                                currencyKey={order.market.currencyKey}
+                                showIcon={true}
+                                synthIconStyle={{ width: 24, height: 24 }}
+                                iconProps={{ type: 'asset' }}
+                            />
+                        )}
                     </FlexDivCentered>
                     <Text className="text-xxs" style={{ flex: 2 }}>
-                        {formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
+                        {order.market.customMarket ? (
+                            <Image
+                                style={{ width: 32, height: 32 }}
+                                src={eventToIcon(order.market.eventName as any)}
+                            ></Image>
+                        ) : (
+                            formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)
+                        )}
                     </Text>
 
                     <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
