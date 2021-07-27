@@ -195,16 +195,18 @@ const DataWrapper = styled(FlexDivColumn)`
     border-bottom-left-radius: 23px;
 `;
 
-export const MarketRow = styled(FlexDiv)`
+export const Row = styled(FlexDiv)`
     color: #f6f6fe;
     font-size: 14px;
     line-height: 16px;
     padding: 20px;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
     background: #24273133;
+`;
 
+export const MarketRow = styled(Row)`
+    cursor: pointer;
     &:hover {
         border: 1px solid #44e1e2;
         padding: 19px;

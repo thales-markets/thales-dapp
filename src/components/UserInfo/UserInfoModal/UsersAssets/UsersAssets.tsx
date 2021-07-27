@@ -6,13 +6,12 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDiv, Text, LightTooltip, Image } from 'theme/common';
+import { FlexDiv, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { MarketRow } from '../UserInfoModal';
-import exerciseOptionIcon from '../../../../assets/images/exercise-option.svg';
+import { MarketRow, Row } from '../UserInfoModal';
 
 type UsersAssetsProps = {
     optionsMarkets: OptionsMarkets;
@@ -36,12 +35,30 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
 
     return (
         <>
+            <Row>
+                <Text className="bold" style={{ flex: 2 }}>
+                    Asset
+                </Text>
+                <Text className="bold" style={{ flex: 2, textAlign: 'center', paddingLeft: 14 }}>
+                    Strike Price
+                </Text>
+                <Text className="bold" style={{ flex: 2, paddingLeft: 20 }}>
+                    Maturity Date
+                </Text>
+                <Text className="bold" style={{ flex: 1, textAlign: 'center', paddingRight: 18 }}>
+                    sLong
+                </Text>
+                <Text className="bold" style={{ flex: 1 }}>
+                    sShort
+                </Text>
+            </Row>
             {assets.map((asset, index) => {
                 if (asset.balances.long || asset.balances.short) {
-                    const hasFundsToExercise =
-                        asset.market.phase === 'maturity' &&
-                        asset.market.result &&
-                        !!asset.balances[asset.market.result];
+                    // const hasFundsToExercise =
+                    //     asset.market.phase === 'maturity' &&
+                    //     asset.market.result &&
+                    //     !!asset.balances[asset.market.result];
+                    // console.log(hasFundsToExercise);
                     return (
                         <MarketRow
                             className="text-xs"
@@ -61,33 +78,30 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                                     iconProps={{ type: 'asset' }}
                                 />
                             </FlexDiv>
-                            <LightTooltip placement="top" arrow={true} title="Strike price">
-                                <Text style={{ margin: '0 8px', flex: 1, textAlign: 'center' }}>
-                                    {formatCurrencyWithSign(USD_SIGN, asset.market.strikePrice)}
-                                </Text>
-                            </LightTooltip>
-                            <LightTooltip placement="top" arrow={true} title="Maturity date">
-                                <Text style={{ flex: 2, textAlign: 'center' }}>
-                                    {formatShortDate(asset.market.maturityDate)}
-                                </Text>
-                            </LightTooltip>
-                            <LightTooltip placement="top" arrow={true} title="Amount of long options">
-                                <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(61, 186, 162)' }}>
-                                    {formatCurrency(asset.balances.long)}
-                                </Text>
-                            </LightTooltip>
-                            <LightTooltip placement="top" arrow={true} title="Amount of short options">
-                                <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(255, 122, 104)' }}>
-                                    {formatCurrency(asset.balances.short)}
-                                </Text>
-                            </LightTooltip>
-                            <LightTooltip placement="top" arrow={true} title="Has options to exercise">
+
+                            <Text style={{ margin: '0 8px', flex: 1, textAlign: 'center' }}>
+                                {formatCurrencyWithSign(USD_SIGN, asset.market.strikePrice)}
+                            </Text>
+
+                            <Text style={{ flex: 2, textAlign: 'center' }}>
+                                {formatShortDate(asset.market.maturityDate)}
+                            </Text>
+
+                            <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(61, 186, 162)' }}>
+                                {formatCurrency(asset.balances.long)}
+                            </Text>
+
+                            <Text style={{ flex: 1, textAlign: 'center', color: 'rgb(255, 122, 104)' }}>
+                                {formatCurrency(asset.balances.short)}
+                            </Text>
+
+                            {/* <LightTooltip placement="top" arrow={true} title="Has options to exercise">
                                 <FlexDiv style={{ width: 15, height: 15 }}>
                                     {hasFundsToExercise && (
                                         <Image src={exerciseOptionIcon} style={{ width: 15, height: 15 }} />
                                     )}
                                 </FlexDiv>
-                            </LightTooltip>
+                            </LightTooltip> */}
                         </MarketRow>
                     );
                 }
