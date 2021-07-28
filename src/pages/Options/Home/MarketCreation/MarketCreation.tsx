@@ -53,8 +53,10 @@ const MarketCreation: React.FC = () => {
 };
 
 const SideWrapper = styled(Side)`
-    padding-top: 55px !important;
-    padding-bottom: 85px !important;
+    padding-top: 0px !important;
+    padding-bottom: 40px !important;
+    top: -20px;
+    position: relative;
 `;
 
 // const CreateMarket = styled(FlexDivColumn)`
