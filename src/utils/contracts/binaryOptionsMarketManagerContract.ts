@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const binaryOptionsMarketDataContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0xC3449336909bf8663903c784047f5Cbe82dA09F1',
-        [NetworkId.Ropsten]: '0x35272f59a87c6A0043c69066243bD80ceADeE238',
+        [NetworkId.Mainnet]: '0x5ed98Ebb66A929758C7Fe5Ac60c979aDF0F4040a',
+        [NetworkId.Ropsten]: '0x4E48FA3638939D2B8e0acE9ceed724c606FEf608',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xd5928acfAd2b5D7b119691ce9524496fbc765c17',
+        [NetworkId.Kovan]: '0x46d9DB2830C005e38878b241199bb09d9d355994',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
@@ -152,6 +152,18 @@ export const binaryOptionsMarketDataContract = {
                     indexed: false,
                     internalType: 'address',
                     name: 'short',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'customMarket',
+                    type: 'bool',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'customOracle',
                     type: 'address',
                 },
             ],
@@ -394,6 +406,16 @@ export const binaryOptionsMarketDataContract = {
                     name: 'initialMint',
                     type: 'uint256',
                 },
+                {
+                    internalType: 'bool',
+                    name: 'customMarket',
+                    type: 'bool',
+                },
+                {
+                    internalType: 'address',
+                    name: 'customOracle',
+                    type: 'address',
+                },
             ],
             name: 'createMarket',
             outputs: [
@@ -405,6 +427,21 @@ export const binaryOptionsMarketDataContract = {
             ],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'customMarketCreationEnabled',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
@@ -773,6 +810,21 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'setCreatorFee',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'setCustomMarketCreationEnabled',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

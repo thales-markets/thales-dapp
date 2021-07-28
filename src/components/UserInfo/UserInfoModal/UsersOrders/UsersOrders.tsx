@@ -2,18 +2,28 @@ import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useUserOrdersQuery from 'queries/user/useUserOrdersQuery';
-import React, { useMemo } from 'react';
-import { FlexDivCentered, Image, LightTooltip, Text } from 'theme/common';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FlexDivCentered, Image, Text } from 'theme/common';
 import { OptionsMarkets, Trade } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrency, formatPercentage } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 import { NetworkId } from 'utils/network';
 import { navigateToOptionsMarket } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import long from 'assets/images/long.svg';
 import short from 'assets/images/short.svg';
-import { MarketRow } from '../UserInfoModal';
+import { MarketRow, Row } from '../UserInfoModal';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected } from 'redux/modules/wallet';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
+import { fetchOrders, openOrdersMapCache } from '../../../../queries/options/fetchMarketOrders';
+import ReactCountryFlag from 'react-country-flag';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+
+let fetchOrdersInterval: NodeJS.Timeout;
 
 type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
@@ -23,15 +33,31 @@ type UsersOrdersProps = {
 };
 
 const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress, networkId, onClose }) => {
-    const ordersQuery = useUserOrdersQuery(networkId, walletAddress);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
 
+    const ordersQuery = useUserOrdersQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
+
+    useEffect(() => {
+        if (!openOrdersMap && !fetchOrdersInterval && networkId && optionsMarkets.length) {
+            fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+            fetchOrdersInterval = setInterval(() => {
+                fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
+            }, 10000);
+        }
+    }, [networkId, optionsMarkets]);
+
     const filteredOrders = useMemo(() => {
         if (ordersQuery.isSuccess) {
             return optionsMarkets.reduce((acc, market: any) => {
-                if (market.openOrders > 0) {
+                const openOrders = openOrdersMapCache?.[market.address] || 0;
+                if (openOrders > 0) {
                     const userOrdersForMarket: [] = ordersQuery.data.records.reduce((temp: any, data: any) => {
                         const rawOrder: Trade = data.order;
                         const isBuy: boolean = rawOrder.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
@@ -68,10 +94,33 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
 
     return (
         <>
+            <Row>
+                <Text className="bold" style={{ flex: 3 }}>
+                    Asset
+                </Text>
+                <Text className="bold" style={{ flex: 2 }}>
+                    Strike Price
+                </Text>
+                <Text className="bold" style={{ flex: 3, textAlign: 'center' }}>
+                    Maturity Date
+                </Text>
+                <Text className="bold" style={{ flex: 2, textAlign: 'right' }}>
+                    Amount
+                </Text>
+                <Text className="bold" style={{ flex: 2, paddingRight: 8, textAlign: 'center' }}>
+                    Price
+                </Text>
+                <Text className="bold" style={{ flex: 2 }}>
+                    Filled
+                </Text>
+                <Text className="bold" style={{ flex: 2 }}>
+                    Expires in
+                </Text>
+            </Row>
             {filteredOrders?.map((order: any, index) => (
                 <MarketRow
                     style={{
-                        background: order.isBuy ? 'rgb(61, 186, 162, 0.4)' : 'rgb(255, 122, 104, 0.4)',
+                        background: order.isBuy ? 'rgb(4, 193, 157, 0.12)' : 'rgb(255, 62, 36, 0.12)',
                     }}
                     key={index}
                     onClick={() => {
@@ -82,38 +131,56 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                     }}
                 >
                     <FlexDivCentered style={{ flex: 4, justifyContent: 'flex-start' }}>
-                        <Currency.Name
-                            currencyKey={order.market.currencyKey}
-                            showIcon={true}
-                            synthIconStyle={{ width: 24, height: 24 }}
-                            iconProps={{ type: 'asset' }}
-                        />
+                        {order.market.customMarket ? (
+                            <>
+                                <ReactCountryFlag
+                                    countryCode={countryToCountryCode(order.market.country as any)}
+                                    style={{ width: 24, height: 24, marginRight: 10 }}
+                                    svg
+                                />
+                                {order.market.country}
+                            </>
+                        ) : (
+                            <Currency.Name
+                                currencyKey={order.market.currencyKey}
+                                showIcon={true}
+                                synthIconStyle={{ width: 24, height: 24 }}
+                                iconProps={{ type: 'asset' }}
+                            />
+                        )}
                     </FlexDivCentered>
                     <Text className="text-xxs" style={{ flex: 2 }}>
-                        {formatCurrency(order.market.strikePrice) + USD_SIGN + ' '}
+                        {order.market.customMarket ? (
+                            <Image
+                                style={{ width: 32, height: 32 }}
+                                src={eventToIcon(order.market.eventName as any)}
+                            ></Image>
+                        ) : (
+                            formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)
+                        )}
                     </Text>
-                    <LightTooltip title="Maturity date">
-                        <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
-                            {formatShortDate(order.market.maturityDate)}
-                        </Text>
-                    </LightTooltip>
+
+                    <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
+                        {formatShortDate(order.market.maturityDate)}
+                    </Text>
+
                     <Image style={{ width: 24 }} src={order.isLong ? long : short}></Image>
-                    <LightTooltip title="Amount x Price">
-                        <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
-                            {order.displayOrder.amount.toFixed(2) + ' x '}
-                            {order.displayOrder.price.toFixed(2) + USD_SIGN}
-                        </Text>
-                    </LightTooltip>
-                    <LightTooltip title="Filled">
-                        <Text className="text-xxs" style={{ flex: 1, textAlign: 'center' }}>
-                            {formatPercentage(order.displayOrder.filled, 0)}
-                        </Text>
-                    </LightTooltip>
-                    <LightTooltip title="Time Remaining">
-                        <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
-                            <TimeRemaining end={order.displayOrder.timeRemaining} />
-                        </Text>
-                    </LightTooltip>
+
+                    <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
+                        {formatCurrency(order.displayOrder.amount, DEFAULT_OPTIONS_DECIMALS)}
+                    </Text>
+
+                    <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
+                        {formatCurrencyWithSign(USD_SIGN, order.displayOrder.price, DEFAULT_OPTIONS_DECIMALS)}
+                    </Text>
+
+                    <Text className="text-xxs" style={{ flex: 2, textAlign: 'center' }}>
+                        {formatPercentage(order.displayOrder.filled, 0)}
+                    </Text>
+
+                    <Text className="text-xxs" style={{ flex: 3, textAlign: 'center' }}>
+                        <TimeRemaining end={order.displayOrder.timeRemaining} />
+                    </Text>
                 </MarketRow>
             ))}
         </>

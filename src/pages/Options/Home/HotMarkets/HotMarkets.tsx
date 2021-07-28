@@ -9,22 +9,32 @@ import useInterval from 'hooks/useInterval';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
 import coins from 'assets/images/coins-mono.png';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 
 type HotMarketsProps = {
+    exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
 };
 
-export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
+let shouldUseInterval = true;
+let isAnimationActive = false;
+
+export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
     const [currentMarket, setCurrentMarket] = useState(0);
-    const [shouldUseInterval, setShouldUseInterval] = useState(true);
 
     const currentMarkets = useMemo(() => {
         const markets = [];
         markets.push(
             currentMarket - 1 < 0 ? optionsMarkets[optionsMarkets.length - 1] : optionsMarkets[currentMarket - 1]
         );
+        if (optionsMarkets.length === 1) return markets;
         markets.push(optionsMarkets[currentMarket]);
+        if (optionsMarkets.length === 2) return markets;
+        if (optionsMarkets.length === 3) {
+            markets.push(optionsMarkets[currentMarket + 1]);
+            return markets;
+        }
         for (let index = 1; index < 4; index++) {
             markets.push(
                 currentMarket + index > optionsMarkets.length - 1
@@ -37,6 +47,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
     }, [currentMarket]);
 
     useInterval(() => {
+        if (optionsMarkets.length <= 3) return;
         if (shouldUseInterval) {
             document.getElementById('market-cards-wrapper')?.classList.add('next');
             setTimeout(() => {
@@ -46,7 +57,7 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 });
             }, 1000);
         }
-    }, 5000);
+    }, 10000);
 
     return (
         <Wrapper id="hot-markets">
@@ -54,40 +65,58 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 {t('options.home.explore-markets.trending')}
             </Text>
             <FlexDivCentered className="hot-markets__desktop">
-                <Arrow
-                    onClick={() => {
-                        setShouldUseInterval(false);
-                        document.getElementById('market-cards-wrapper')?.classList.add('previous');
-                        setTimeout(() => {
-                            document.getElementById('market-cards-wrapper')?.classList.remove('previous');
-                            setCurrentMarket(currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1);
-                        }, 1000);
-                    }}
-                    src={previous}
-                />
+                {optionsMarkets.length > 3 && (
+                    <Arrow
+                        onClick={() => {
+                            shouldUseInterval = false;
+                            if (!isAnimationActive) {
+                                isAnimationActive = true;
+                                document.getElementById('market-cards-wrapper')?.classList.add('previous');
+                                setTimeout(() => {
+                                    isAnimationActive = false;
+                                    document.getElementById('market-cards-wrapper')?.classList.remove('previous');
+                                    setCurrentMarket(
+                                        currentMarket === 0 ? optionsMarkets.length - 1 : currentMarket - 1
+                                    );
+                                }, 1000);
+                            }
+                        }}
+                        src={previous}
+                    />
+                )}
+
                 <div style={{ width: 1128, overflow: 'hidden' }}>
-                    <Cards id="market-cards-wrapper">
+                    <Cards className={optionsMarkets.length <= 3 ? 'default' : 'animate'} id="market-cards-wrapper">
                         {currentMarkets.map((optionsMarket, index) => {
-                            return <MarketCard key={index} optionMarket={optionsMarket} />;
+                            return (
+                                <MarketCard key={index} optionMarket={optionsMarket} exchangeRates={exchangeRates} />
+                            );
                         })}
                     </Cards>
                 </div>
-
-                <Arrow
-                    onClick={() => {
-                        setShouldUseInterval(false);
-                        document.getElementById('market-cards-wrapper')?.classList.add('next');
-                        setTimeout(() => {
-                            document.getElementById('market-cards-wrapper')?.classList.remove('next');
-                            setCurrentMarket(currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1);
-                        }, 1000);
-                    }}
-                    src={next}
-                />
+                {optionsMarkets.length > 3 && (
+                    <Arrow
+                        onClick={() => {
+                            shouldUseInterval = false;
+                            if (!isAnimationActive) {
+                                isAnimationActive = true;
+                                document.getElementById('market-cards-wrapper')?.classList.add('next');
+                                setTimeout(() => {
+                                    isAnimationActive = false;
+                                    document.getElementById('market-cards-wrapper')?.classList.remove('next');
+                                    setCurrentMarket(
+                                        currentMarket === optionsMarkets.length - 1 ? 0 : currentMarket + 1
+                                    );
+                                }, 1000);
+                            }
+                        }}
+                        src={next}
+                    />
+                )}
             </FlexDivCentered>
             <FlexDiv className="hot-markets__mobile">
-                <MarketCard optionMarket={currentMarkets[0]}></MarketCard>
-                <Image src={coins}></Image>
+                <MarketCard optionMarket={currentMarkets[0]} exchangeRates={exchangeRates} />
+                <Image src={coins} />
             </FlexDiv>
         </Wrapper>
     );
@@ -108,7 +137,12 @@ const Arrow = styled(Image)`
 
 const Cards = styled(FlexDiv)`
     position: relative;
-    left: -376px;
+    &.animate {
+        left: -376px;
+    }
+    &.default {
+        justify-content: center;
+    }
     z-index: 0;
     &.next {
         transition: left 1s;

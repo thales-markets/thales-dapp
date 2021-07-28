@@ -40,7 +40,7 @@ export const Input = styled.input`
         box-sizing: border-box;
     }
     &:disabled {
-        opacity: 0.5;
+        opacity: 0.4;
         cursor: default;
     }
     &.error {
@@ -72,7 +72,7 @@ export const CurrencyLabel = styled.label`
     position: absolute;
     right: 0;
     &.disabled {
-        opacity: 0.5;
+        opacity: 0.4;
         cursor: default;
     }
 `;
@@ -171,6 +171,10 @@ export const ReactSelect = styled(Select)<{ isUppercase?: boolean }>`
     &.error .react-select__control {
         border: 2px solid #e53720;
     }
+    &.disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
 `;
 
 export const AmountButtonContainer = styled(FlexDivCentered)``;
@@ -192,7 +196,7 @@ export const AmountButton = styled.button`
     margin: 0 12px 20px 12px;
     padding-bottom: 2px;
     &:disabled {
-        opacity: 0.5;
+        opacity: 0.4;
         cursor: default;
     }
     &.selected {
@@ -205,7 +209,7 @@ export const AmountButton = styled.button`
         border: 2px solid #0a2e66;
         color: #b8c6e5;
     }
-    &.selected:hover {
+    &.selected:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #00f9ff;
         color: #b8c6e5;
@@ -230,7 +234,7 @@ export const SubmitButton = styled.button<{ isBuy?: boolean }>`
     color: #f6f6fe;
     padding: 8px 38px;
     &:disabled {
-        opacity: 0.5;
+        opacity: 0.4;
         cursor: default;
     }
     &.selected,
@@ -298,7 +302,7 @@ export const FilterButton = styled.button`
     margin: 0 9px;
     padding: 6px 16px;
     &:disabled {
-        opacity: 0.5;
+        opacity: 0.4;
         cursor: default;
     }
     &:hover:not(:disabled) {

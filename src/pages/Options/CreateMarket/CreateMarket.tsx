@@ -8,9 +8,8 @@ import add from 'date-fns/add';
 import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
-import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
-import { bytesFormatter, bigNumberFormatter, getAddress, parseBytes32String } from 'utils/formatters/ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
+import { gasPriceInWei, normalizeGasLimit, isMainNet } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -19,7 +18,16 @@ import { getWalletAddress, getCustomGasPrice, getGasSpeed, getNetworkId } from '
 import Currency from 'components/Currency';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { FlexDiv, FlexDivColumn, Background, MainWrapper, Text, Button, FlexDivRow } from 'theme/common';
+import {
+    FlexDiv,
+    FlexDivColumn,
+    Background,
+    MainWrapper,
+    Text,
+    Button,
+    FlexDivRow,
+    FlexDivColumnCentered,
+} from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
 import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'utils/formatters/date';
@@ -37,7 +45,6 @@ import {
     SliderContainer,
     SliderRange,
 } from '../Market/components';
-import { Message } from 'semantic-ui-react';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
 import { CheckboxContainer } from '../Market/TradeOptions/MintOptions/MintOptions';
@@ -58,6 +65,9 @@ import { refetchOrderbook } from 'utils/queryConnector';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
+import { getIsAppReady } from 'redux/modules/app';
+import ValidationMessage from 'components/ValidationMessage';
+import { ZERO_ADDRESS } from '../../../constants/network';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -68,6 +78,12 @@ const roundMinutes = (date: Date) => {
 };
 
 const Today: Date = new Date();
+
+const datePickerMinDate: Date = new Date();
+
+const datePickerMaxDate: Date = new Date();
+
+datePickerMaxDate.setFullYear(datePickerMaxDate.getFullYear() + 2);
 
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
@@ -121,8 +137,9 @@ export const CreateMarket: React.FC = () => {
     const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const exchangeRatesQuery = useExchangeRatesQuery();
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
 
@@ -202,112 +219,64 @@ export const CreateMarket: React.FC = () => {
                 console.log(e);
             }
         };
-        const setEventListeners = () => {
-            SynthsUSD.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === binaryOptionsMarketManagerContract.address) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            });
-        };
         getAllowanceForCurrentWallet();
-        setEventListeners();
-        return () => {
-            SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
     }, [walletAddress]);
 
     const getOrderEndDate = () => toBigNumber(Math.round((optionsMarket as any)?.timeRemaining / 1000));
 
-    useEffect(() => {
-        if (!isCreatingMarket) return;
-        const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-        binaryOptionsMarketManagerContract.on(
-            BINARY_OPTIONS_EVENTS.MARKET_CREATED,
-            (
-                market: string,
-                creator: string,
-                oracleKey: string,
-                _strikePrice: string,
-                _maturityDate: string,
-                _expiryDate: string,
-                long: string,
-                short: string
-            ) => {
-                if (
-                    creator === walletAddress &&
-                    parseBytes32String(oracleKey) === (currencyKey as CurrencyKeyOptionType).value
-                ) {
-                    setMarket(market);
-                    setLong(long);
-                    setShort(short);
-                    setIsMarketCreated(true);
-                    setIsCreatingMarket(false);
-                    if (!sellLong && !sellShort) {
-                        navigateToOptionsMarket(market);
+    const handleMarketCreation = async () => {
+        if (gasPrice !== null) {
+            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+            try {
+                setTxErrorMessage(null);
+                setIsCreatingMarket(true);
+                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
+                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const tx = (await BOMMContractWithSigner.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint,
+                    false,
+                    ZERO_ADDRESS,
+                    {
+                        gasPrice: gasPriceInWei(gasPrice),
+                        gasLimit,
                     }
-
-                    if (sellLong) {
-                        const erc20Instance = new ethers.Contract(long, erc20Contract.abi, snxJSConnector.signer);
-                        const getAllowance = async () => {
-                            try {
-                                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                                setLongAllowance(!!bigNumberFormatter(allowance));
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        };
-
-                        const registerAllowanceListener = () => {
-                            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                                    setLongAllowance(true);
-                                    setIsLongAllowing(false);
-                                }
-                            });
-                        };
-                        getAllowance();
-                        registerAllowanceListener();
-                    }
-
-                    if (sellShort) {
-                        const erc20Instance = new ethers.Contract(short, erc20Contract.abi, snxJSConnector.signer);
-
-                        const getAllowance = async () => {
-                            try {
-                                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                                setShortAllowance(!!bigNumberFormatter(allowance));
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        };
-
-                        const registerAllowanceListener = () => {
-                            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                                    setShortAllowance(true);
-                                    setIsShortAllowing(false);
-                                }
-                            });
-                        };
-                        getAllowance();
-                        registerAllowanceListener();
+                )) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
+                if (txResult && txResult.events) {
+                    const rawData = txResult.events[txResult.events?.length - 1];
+                    if (rawData && rawData.decode) {
+                        const goodData = rawData.decode(rawData.data);
+                        setMarket(goodData.market);
+                        setLong(goodData.long);
+                        setShort(goodData.short);
+                        setIsMarketCreated(true);
+                        setIsCreatingMarket(false);
+                        if (!sellLong && !sellShort) {
+                            navigateToOptionsMarket(goodData.market);
+                        }
                     }
                 }
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsCreatingMarket(false);
             }
-        );
-        return () => {
-            binaryOptionsMarketManagerContract.removeAllListeners(BINARY_OPTIONS_EVENTS.MARKET_CREATED);
-        };
-    }, [isCreatingMarket]);
+        }
+    };
 
     useEffect(() => {
+        if (!hasAllowance) return;
         const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
         try {
             const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
             const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect((snxJSConnector as any).signer);
             BOMMContractWithSigner.estimateGas
-                .createMarket(oracleKey, price, maturity, initialMint)
+                .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
                 .then((gasEstimate: any) => {
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                     setUserHasEnoughFunds(true);
@@ -319,7 +288,7 @@ export const CreateMarket: React.FC = () => {
                     setGasLimit(null);
                 });
         } catch (e) {}
-    }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount]);
+    }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, hasAllowance]);
 
     useEffect(() => {
         if (initialFundingAmount) {
@@ -346,35 +315,20 @@ export const CreateMarket: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256
                 );
-                await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                });
+                const tx = (await SynthsUSD.approve(
+                    binaryOptionsMarketManagerContract.address,
+                    ethers.constants.MaxUint256,
+                    {
+                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                        gasPrice: gasPriceInWei(gasPrice),
+                    }
+                )) as ethers.ContractTransaction;
+                await tx.wait();
+                setIsAllowing(false);
+                setAllowance(true);
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
-            }
-        }
-    };
-
-    const handleMarketCreation = async () => {
-        if (gasPrice !== null) {
-            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-            try {
-                setTxErrorMessage(null);
-                setIsCreatingMarket(true);
-                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                await BOMMContractWithSigner.createMarket(oracleKey, price, maturity, initialMint, {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                });
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsCreatingMarket(false);
             }
         }
     };
@@ -388,10 +342,13 @@ export const CreateMarket: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+                await tx.wait();
+                setLongAllowance(true);
+                setIsLongAllowing(false);
             } catch (e) {
                 console.log(e);
                 setIsLongAllowing(false);
@@ -408,10 +365,13 @@ export const CreateMarket: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+                await tx.wait();
+                setShortAllowance(true);
+                setIsShortAllowing(false);
             } catch (e) {
                 console.log(e);
                 setIsShortAllowing(false);
@@ -534,6 +494,10 @@ export const CreateMarket: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
+        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        if (isMainNet(networkId)) {
+            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        }
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -544,6 +508,7 @@ export const CreateMarket: React.FC = () => {
                     takerAmount,
                     maker: walletAddress,
                     sender: NULL_ADDRESS,
+                    pool,
                     expiry,
                     salt,
                     chainId: networkId,
@@ -608,7 +573,6 @@ export const CreateMarket: React.FC = () => {
                     <Text className="create-market" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
-
                     <FlexDiv style={{ padding: '50px 100px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
                             <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
@@ -619,7 +583,13 @@ export const CreateMarket: React.FC = () => {
                             </Text>
                             <InputsWrapper>
                                 <FlexDivRow>
-                                    <ShortInputContainer style={{ marginBottom: 40, zIndex: 4 }}>
+                                    <ShortInputContainer
+                                        style={{
+                                            marginBottom: 40,
+                                            zIndex: 4,
+                                            opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                        }}
+                                    >
                                         <ReactSelect
                                             className={!isCurrencyKeyValid ? 'error' : ''}
                                             filterOption={(option: any, rawInput: any) =>
@@ -650,13 +620,19 @@ export const CreateMarket: React.FC = () => {
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
                                             }}
+                                            isDisabled={isCreatingMarket || isMarketCreated}
                                         />
                                         <InputLabel style={{ zIndex: 100 }}>
                                             {t('options.create-market.details.select-asset-label')}
                                         </InputLabel>
                                         <ErrorMessage show={!isCurrencyKeyValid} text="Please select asset." />
                                     </ShortInputContainer>
-                                    <ShortInputContainer style={{ marginBottom: 40 }}>
+                                    <ShortInputContainer
+                                        style={{
+                                            marginBottom: 40,
+                                            opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                        }}
+                                    >
                                         <Input
                                             className={!isStrikePriceValid ? 'error' : ''}
                                             value={strikePrice}
@@ -673,11 +649,10 @@ export const CreateMarket: React.FC = () => {
 
                                                 if (Number(trimmedValue) > 0) {
                                                     setIsStrikePriceValid(true);
-                                                    setStrikePrice(trimmedValue);
                                                 } else {
                                                     setIsStrikePriceValid(false);
-                                                    setStrikePrice('');
                                                 }
+                                                setStrikePrice(trimmedValue);
 
                                                 if (Number(trimmedValue) > 0 && currencyKey) {
                                                     const currentPrice = get(exchangeRates, currencyKey.value, null);
@@ -698,6 +673,7 @@ export const CreateMarket: React.FC = () => {
                                                     setIsStrikePriceValid(false);
                                                 }
                                             }}
+                                            readOnly={isCreatingMarket || isMarketCreated}
                                             type="number"
                                         />
                                         <InputLabel>{t('options.create-market.details.strike-price-label')}</InputLabel>
@@ -716,21 +692,36 @@ export const CreateMarket: React.FC = () => {
                                 </FlexDivRow>
                                 <FlexDivRow>
                                     <FlexDivRow style={{ width: '50%', marginRight: 10 }}>
-                                        <ShortInputContainer style={{ marginBottom: 40, flex: 3 }}>
+                                        <ShortInputContainer
+                                            style={{
+                                                marginBottom: 40,
+                                                flex: 3,
+                                                opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                            }}
+                                        >
                                             <DatePicker
                                                 className="maturity-date"
                                                 dateFormat="MMM d, yyyy"
-                                                minDate={new Date()}
+                                                minDate={datePickerMinDate}
+                                                maxDate={datePickerMaxDate}
                                                 startDate={Today}
                                                 selected={maturityDate}
                                                 endDate={maturityDate}
                                                 onChange={(d: Date) => setMaturityDate(d)}
+                                                readOnly={isCreatingMarket || isMarketCreated}
                                             />
                                             <InputLabel>
                                                 {t('options.create-market.details.market-maturity-date-label')}
                                             </InputLabel>
                                         </ShortInputContainer>
-                                        <ShortInputContainer style={{ marginBottom: 40, flex: 1, minWidth: 90 }}>
+                                        <ShortInputContainer
+                                            style={{
+                                                marginBottom: 40,
+                                                flex: 1,
+                                                minWidth: 90,
+                                                opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                            }}
+                                        >
                                             <DatePicker
                                                 className="maturity-date"
                                                 dateFormat="h:mm aa"
@@ -738,6 +729,7 @@ export const CreateMarket: React.FC = () => {
                                                 showTimeSelect={true}
                                                 selected={convertUTCToLocalDate(maturityDate)}
                                                 onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
+                                                readOnly={isCreatingMarket || isMarketCreated}
                                             />
                                             <InputLabel>
                                                 {t('options.create-market.details.market-maturity-time-label')}
@@ -747,7 +739,11 @@ export const CreateMarket: React.FC = () => {
 
                                     <ShortInputContainer
                                         className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
-                                        style={{ position: 'relative', marginBottom: 40 }}
+                                        style={{
+                                            position: 'relative',
+                                            marginBottom: 40,
+                                            opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
+                                        }}
                                     >
                                         <Input
                                             className={!isAmountValid || !userHasEnoughFunds ? 'error' : ''}
@@ -773,6 +769,7 @@ export const CreateMarket: React.FC = () => {
                                                     : setIsAmountValid(false);
                                             }}
                                             type="number"
+                                            readOnly={isCreatingMarket || isMarketCreated}
                                         />
                                         <InputLabel>
                                             {t('options.create-market.details.funding-amount.label')}
@@ -806,13 +803,39 @@ export const CreateMarket: React.FC = () => {
                                         />
                                     </ShortInputContainer>
                                 </FlexDivRow>
-                                <Text className="text-xxxs pale-grey bold ls1 uppercase">
+                                <Text
+                                    style={{
+                                        opacity:
+                                            !initialFundingAmount ||
+                                            !isAmountValid ||
+                                            isLongSubmitting ||
+                                            isLongSubmitted
+                                                ? 0.4
+                                                : 1,
+                                    }}
+                                    className="text-xxxs pale-grey bold ls1 uppercase"
+                                >
                                     {t('options.create-market.sellOptions')}
                                 </Text>
-                                <FlexDiv>
+                                <FlexDiv
+                                    style={{
+                                        opacity:
+                                            !initialFundingAmount ||
+                                            !isAmountValid ||
+                                            isLongSubmitting ||
+                                            isLongSubmitted
+                                                ? 0.4
+                                                : 1,
+                                    }}
+                                >
                                     <CheckboxContainer>
                                         <Checkbox
-                                            disabled={!initialFundingAmount || !isAmountValid}
+                                            disabled={
+                                                !initialFundingAmount ||
+                                                !isAmountValid ||
+                                                isLongSubmitting ||
+                                                isLongSubmitted
+                                            }
                                             checked={sellLong}
                                             value={sellLong.toString()}
                                             onChange={(e: any) => setSellLong(e.target.checked || false)}
@@ -825,7 +848,7 @@ export const CreateMarket: React.FC = () => {
                                             max={1}
                                             min={0}
                                             onChange={(_, value) => setLongPrice(Number(value))}
-                                            disabled={!sellLong}
+                                            disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                         />
                                         <FlexDivRow>
                                             <SliderRange color={COLORS.LONG}>{`${USD_SIGN}0`}</SliderRange>
@@ -836,7 +859,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={longPrice}
                                             onChange={(_, value) => setLongPrice(value)}
-                                            disabled={!sellLong}
+                                            disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                             className={isLongPriceValid ? '' : 'error'}
                                             step="0.01"
                                         />
@@ -860,7 +883,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={longAmount}
                                             onChange={(_, value) => setLongAmount(value)}
-                                            disabled={!sellLong}
+                                            disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                             className={isLongAmountValid ? '' : 'error'}
                                         />
                                         <InputLabel>
@@ -884,10 +907,25 @@ export const CreateMarket: React.FC = () => {
                                         />
                                     </DoubleShortInputContainer>
                                 </FlexDiv>
-                                <FlexDiv>
+                                <FlexDiv
+                                    style={{
+                                        opacity:
+                                            !initialFundingAmount ||
+                                            !isAmountValid ||
+                                            isShortSubmitting ||
+                                            isShortSubmitted
+                                                ? 0.4
+                                                : 1,
+                                    }}
+                                >
                                     <CheckboxContainer>
                                         <Checkbox
-                                            disabled={!initialFundingAmount || !isAmountValid}
+                                            disabled={
+                                                !initialFundingAmount ||
+                                                !isAmountValid ||
+                                                isShortSubmitting ||
+                                                isShortSubmitted
+                                            }
                                             checked={sellShort}
                                             value={sellShort.toString()}
                                             onChange={(e: any) => setSellShort(e.target.checked || false)}
@@ -900,7 +938,7 @@ export const CreateMarket: React.FC = () => {
                                             max={1}
                                             min={0}
                                             onChange={(_, value) => setShortPrice(Number(value))}
-                                            disabled={!sellShort}
+                                            disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                         />
                                         <FlexDivRow>
                                             <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}0`}</SliderRange>
@@ -911,7 +949,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={shortPrice}
                                             onChange={(_, value) => setShortPrice(value)}
-                                            disabled={!sellShort}
+                                            disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                             className={isShortPriceValid ? '' : 'error'}
                                             step="0.01"
                                         />
@@ -935,7 +973,7 @@ export const CreateMarket: React.FC = () => {
                                         <NumericInput
                                             value={shortAmount}
                                             onChange={(_, value) => setShortAmount(value)}
-                                            disabled={!sellShort}
+                                            disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                             className={isShortAmountValid ? '' : 'error'}
                                         />
                                         <InputLabel>
@@ -964,28 +1002,14 @@ export const CreateMarket: React.FC = () => {
                         </FlexDivColumn>
                         <MarketSummary
                             currencyKey={currencyKey}
-                            strikingPrice={
-                                strikePrice ? parseFloat(strikePrice.toString()).toFixed(4).replace(/\.0+$/, '') : ''
-                            }
+                            strikingPrice={strikePrice}
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
                             marketFees={marketFees}
-                            currentPrice={
-                                currencyKey ? get(exchangeRates, currencyKey.value, null)?.toFixed(4).toString() : ''
-                            }
+                            currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                         ></MarketSummary>
                     </FlexDiv>
-                    <div>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
-                            {getSubmitButton()}
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                            {txErrorMessage && (
-                                <Message content={txErrorMessage} onDismiss={() => setTxErrorMessage(null)} />
-                            )}
-                        </div>
-                    </div>
                     <ProgressTracker
                         isWalletAccessEnabled={hasAllowance}
                         isAllowing={isAllowing}
@@ -1002,6 +1026,38 @@ export const CreateMarket: React.FC = () => {
                         showLongProcess={sellLong}
                         showShortProcess={sellShort}
                     ></ProgressTracker>
+                    <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 120 }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: 50,
+                            }}
+                        >
+                            {getSubmitButton()}
+                            {isMarketCreated ? (
+                                <>
+                                    <Text
+                                        className="pale-grey text-s"
+                                        style={{ margin: '0 70px', display: sellLong || sellShort ? 'block' : 'none' }}
+                                    >
+                                        or
+                                    </Text>
+                                    <Button className="tertiary" onClick={() => navigateToOptionsMarket(market)}>
+                                        Go to market
+                                    </Button>
+                                </>
+                            ) : (
+                                <></>
+                            )}
+                        </div>
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
+                    </FlexDivColumnCentered>
                 </FlexDivColumn>
             </MainWrapper>
         </Background>

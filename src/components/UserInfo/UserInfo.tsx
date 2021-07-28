@@ -11,6 +11,7 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import { truncateAddress } from 'utils/formatters/string';
 import avatar from 'assets/images/avatar.svg';
 import UserInfoModal from './UserInfoModal';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -31,7 +32,7 @@ const UserInfo: React.FC = () => {
     return (
         <>
             <UserInfoWrapper onClick={setOpen.bind(this, true)}>
-                <EthBalance>{sUSDBalance.toFixed(2)} SUSD</EthBalance>
+                <EthBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</EthBalance>
                 <NetworkWrapper>
                     <AddressWrapper>
                         <p>{truncateAddress(walletAddress)}</p>
@@ -70,7 +71,6 @@ const EthBalance = styled.p`
     text-align: center;
     letter-spacing: 0.4px;
     color: #f6f6fe;
-    text-transform: uppercase;
 `;
 
 const NetworkWrapper = styled(FlexDiv)`

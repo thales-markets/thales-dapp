@@ -12,6 +12,7 @@ import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMar
 import { COLORS } from 'constants/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 
 type OptionsPriceChartContentProps = {
     optionsMarket: OptionsMarketInfo;
@@ -32,15 +33,15 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
             const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
-            return formatCurrencyWithSign(USD_SIGN, marketPrice, 4);
+            return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
         }
         if (sellOrders.length > 0) {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            return formatCurrencyWithSign(USD_SIGN, lowestSellOrderPrice, 4);
+            return formatCurrencyWithSign(USD_SIGN, lowestSellOrderPrice, DEFAULT_OPTIONS_DECIMALS);
         }
         if (buyOrders.length > 0) {
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            return formatCurrencyWithSign(USD_SIGN, highestBuyOrderPrice, 4);
+            return formatCurrencyWithSign(USD_SIGN, highestBuyOrderPrice, DEFAULT_OPTIONS_DECIMALS);
         }
 
         return EMPTY_VALUE;

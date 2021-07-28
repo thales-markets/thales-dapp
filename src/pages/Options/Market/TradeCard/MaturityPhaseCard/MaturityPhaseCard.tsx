@@ -30,6 +30,7 @@ import {
 } from '../../components';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
@@ -104,12 +105,15 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
 
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
+                dispatchMarketNotification(t('options.market.trade-card.maturity.confirm-button.confirmation-message'));
                 dispatch(
                     updateOptionsPendingTransactionStatus({
                         hash: txResult.transactionHash,
                         status: 'confirmed',
                     })
                 );
+                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                setIsExercising(false);
             }
         } catch (e) {
             console.log(e);

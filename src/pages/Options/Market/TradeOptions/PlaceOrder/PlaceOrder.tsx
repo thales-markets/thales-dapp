@@ -19,12 +19,12 @@ import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey, toBigNumber } from 'utils/formatters/number';
+import { formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import {
@@ -35,7 +35,7 @@ import {
     ORDER_PERIOD_ITEMS_MAP,
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import { ValueType } from 'react-select';
@@ -64,6 +64,7 @@ import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
 import { COLORS } from 'constants/ui';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -252,6 +253,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
+        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        if (isMainNet(networkId)) {
+            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        }
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -262,6 +267,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     takerAmount,
                     maker: walletAddress,
                     sender: NULL_ADDRESS,
+                    pool,
                     expiry,
                     salt,
                     chainId: networkId,
@@ -287,6 +293,9 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     url: placeOrderUrl,
                     data: signedOrder,
                 });
+                dispatchMarketNotification(
+                    t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+                );
                 refetchOrderbook(baseToken);
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
@@ -305,7 +314,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         if (isBuy && price === '') return;
         const maxsOPTBalance = isBuy ? sUSDBalance / Number(price) : tokenBalance;
         const newAmount = (maxsOPTBalance * percentage) / 100;
-        setAmount(newAmount);
+        setAmount(truncToDecimals(newAmount, DEFAULT_OPTIONS_DECIMALS));
     };
 
     const getSubmitButton = () => {
@@ -394,6 +403,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         onChange={(option: any) => setOrderSide(option)}
                         isSearchable={false}
                         isUppercase
+                        isDisabled={isSubmitting}
+                        className={isSubmitting ? 'disabled' : ''}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </ShortInputContainer>
@@ -411,6 +422,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                                 setIsPriceValid(Number(value) <= 1);
                                 setPrice(Number(value));
                             }}
+                            disabled={isSubmitting}
                         />
                     ) : (
                         <SellSlider
@@ -422,6 +434,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                                 setIsPriceValid(Number(value) <= 1);
                                 setPrice(Number(value));
                             }}
+                            disabled={isSubmitting}
                         />
                     )}
                     <FlexDivRow>
@@ -438,13 +451,14 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         }}
                         step="0.01"
                         className={isPriceValid ? '' : 'error'}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.price-label', {
                             currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
                         })}
                     </InputLabel>
-                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isPriceValid}
                         message={t(`common.errors.invalid-price-max`, { max: 1 })}
@@ -457,11 +471,14 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         value={amount}
                         onChange={(_, value) => setAmount(value)}
                         className={isAmountValid ? '' : 'error'}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
-                    <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                        {OPTIONS_CURRENCY_MAP[optionSide]}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid}
                         message={t(`common.errors.insufficient-balance-wallet`, {
@@ -477,6 +494,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                         value={expiration}
                         onChange={(option: any) => setExpiration(option)}
                         isSearchable={false}
+                        isDisabled={isSubmitting}
+                        className={isSubmitting ? 'disabled' : ''}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
                 </ShortInputContainer>
@@ -486,7 +505,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     <AmountButton
                         key={percentage}
                         onClick={() => calculateAmount(percentage)}
-                        disabled={!isWalletConnected || (isBuy && price === '')}
+                        disabled={!isWalletConnected || (isBuy && price === '') || isSubmitting}
                     >
                         {`${percentage}%`}
                     </AmountButton>

@@ -17,7 +17,10 @@ const useBinaryOptionsUserTransactionsQuery = (
                 account: walletAddress,
                 network: networkId,
             }),
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

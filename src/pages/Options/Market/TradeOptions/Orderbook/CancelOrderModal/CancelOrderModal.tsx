@@ -117,7 +117,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 </ModalHeader>
                 <OrderDetails order={order.displayOrder} optionSide={optionSide} />
                 <ModalSummaryContainer>
-                    <NetworkFees gasLimit={gasLimit} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isCanceling} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>
                     <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleCancelOrder}>

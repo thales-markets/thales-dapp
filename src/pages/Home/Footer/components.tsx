@@ -1,24 +1,46 @@
 import styled from 'styled-components';
 import { FlexDivColumnCentered } from 'theme/common';
-import github from 'assets/images/github.svg';
-import twitter from 'assets/images/twitter.svg';
-import discord from 'assets/images/discord.svg';
+import { ReactComponent as GithubIcon } from 'assets/images/github.svg';
+import { ReactComponent as TwitterIcon } from 'assets/images/twitter.svg';
+import { ReactComponent as DiscordIcon } from 'assets/images/discord.svg';
 
-export const FooterIcon = styled.div`
+export const StyledGithubIcon = styled(GithubIcon)`
     width: 30px;
     height: 30px;
     margin: 60px;
     @media (max-width: 468px) {
         margin: 40px;
     }
-    &.github {
-        content: url(${github});
+    &:hover {
+        & path {
+            fill: #00f9ff;
+        }
     }
-    &.twitter {
-        content: url(${twitter});
+`;
+export const StyledTwitterIcon = styled(TwitterIcon)`
+    width: 30px;
+    height: 30px;
+    margin: 60px;
+    @media (max-width: 468px) {
+        margin: 40px;
     }
-    &.discord {
-        content: url(${discord});
+    &:hover {
+        & path {
+            fill: #00f9ff;
+        }
+    }
+`;
+export const StyledDiscordIcon = styled(DiscordIcon)`
+    width: 30px;
+    height: 30px;
+    margin: 60px;
+    @media (max-width: 468px) {
+        margin: 40px;
+    }
+    &:hover {
+        & path {
+            fill: #00f9ff;
+        }
     }
 `;
 

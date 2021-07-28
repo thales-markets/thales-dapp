@@ -130,6 +130,21 @@ export const binaryOptionMarketContract = {
         },
         {
             constant: true,
+            inputs: [],
+            name: 'accumulatedFees',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
             inputs: [
                 {
                     internalType: 'address',
@@ -178,6 +193,21 @@ export const binaryOptionMarketContract = {
                     internalType: 'address',
                     name: '',
                     type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'customMarket',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
                 },
             ],
             payable: false,
@@ -252,6 +282,21 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
+            name: 'iOracleInstance',
+            outputs: [
+                {
+                    internalType: 'contract IOracleInstance',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'initialMint',
             outputs: [
                 {
@@ -311,6 +356,16 @@ export const binaryOptionMarketContract = {
                     internalType: 'uint256[2]',
                     name: '_fees',
                     type: 'uint256[2]',
+                },
+                {
+                    internalType: 'bool',
+                    name: '_customMarket',
+                    type: 'bool',
+                },
+                {
+                    internalType: 'address',
+                    name: '_iOracleInstanceAddress',
+                    type: 'address',
                 },
             ],
             name: 'initialize',
@@ -418,6 +473,16 @@ export const binaryOptionMarketContract = {
                     internalType: 'uint256',
                     name: 'finalPrice',
                     type: 'uint256',
+                },
+                {
+                    internalType: 'bool',
+                    name: 'customMarket',
+                    type: 'bool',
+                },
+                {
+                    internalType: 'address',
+                    name: 'iOracleInstanceAddress',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -535,6 +600,21 @@ export const binaryOptionMarketContract = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'setIOracleInstance',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {

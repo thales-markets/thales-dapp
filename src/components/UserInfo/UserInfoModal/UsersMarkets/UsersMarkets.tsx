@@ -1,11 +1,12 @@
 import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import React from 'react';
-import { LightTooltip, Text } from 'theme/common';
+import { Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { MarketRow } from '../UserInfoModal';
+import { MarketRow, Row } from '../UserInfoModal';
 
 type UsersMarketsProps = {
     usersMarkets: OptionsMarkets;
@@ -15,6 +16,20 @@ type UsersMarketsProps = {
 const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) => {
     return (
         <>
+            <Row>
+                <Text className="bold" style={{ flex: 2 }}>
+                    Asset
+                </Text>
+                <Text className="bold" style={{ flex: 1 }}>
+                    Strike Price
+                </Text>
+                <Text className="bold" style={{ flex: 1 }}>
+                    Maturity Date
+                </Text>
+                <Text className="bold" style={{ flex: 1 }}>
+                    Pool Size
+                </Text>
+            </Row>
             {usersMarkets?.map((market, index) => (
                 <MarketRow
                     className="text-xs"
@@ -34,16 +49,9 @@ const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) =>
                             iconProps={{ type: 'asset' }}
                         />
                     </div>
-
-                    <LightTooltip title="Strike price">
-                        <Text style={{ flex: 1 }}>{USD_SIGN + market.strikePrice.toFixed(2)}</Text>
-                    </LightTooltip>
-                    <LightTooltip title="Maturity date">
-                        <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
-                    </LightTooltip>
-                    <LightTooltip title="Pool size">
-                        <Text style={{ flex: 1 }}>{USD_SIGN + market.poolSize.toFixed(2)}</Text>
-                    </LightTooltip>
+                    <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
+                    <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
+                    <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                 </MarketRow>
             ))}
         </>

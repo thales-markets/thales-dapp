@@ -16,6 +16,7 @@ import { COLORS } from 'constants/ui';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { USD_SIGN } from 'constants/currency';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 
 type OrderbookSideProps = {
     orders: Orders;
@@ -73,7 +74,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         accessor: 'displayOrder.price',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['price']>) => (
                             <Price orderSide={orderSide}>
-                                {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 3)}
+                                {formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, DEFAULT_OPTIONS_DECIMALS)}
                             </Price>
                         ),
                         width: 300,
@@ -83,7 +84,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Header: <>{t('options.market.trade-options.orderbook.table.amount-col')}</>,
                         accessor: 'displayOrder.fillableAmount',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['amount']>) => (
-                            <p>{formatCurrency(cellProps.cell.value, 2)}</p>
+                            <p>{formatCurrency(cellProps.cell.value, DEFAULT_OPTIONS_DECIMALS)}</p>
                         ),
                         width: 300,
                         sortable: false,
@@ -92,7 +93,7 @@ const OrderbookSide: React.FC<OrderbookSideProps> = ({
                         Header: <>{t('options.market.trade-options.orderbook.table.total-col')}</>,
                         accessor: 'displayOrder.fillableTotal',
                         Cell: (cellProps: CellProps<DisplayOrder, DisplayOrder['total']>) => (
-                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, 2)}</p>
+                            <p>{formatCurrencyWithSign(USD_SIGN, cellProps.cell.value, DEFAULT_OPTIONS_DECIMALS)}</p>
                         ),
                         width: 300,
                         sortable: false,

@@ -20,6 +20,7 @@ import {
     formatCurrencyWithSign,
     formatPercentageWithSign,
     toBigNumber,
+    truncToDecimals,
 } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -32,7 +33,7 @@ import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorC
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { Web3Wrapper } from '@0x/web3-wrapper';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import {
     Container,
@@ -69,6 +70,8 @@ import NumericInput from '../../components/NumericInput';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
+import { dispatchMarketNotification } from '../../../../../utils/options';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -251,6 +254,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 refetchTrades(optionsMarket.address);
                 refetchUserTrades(optionsMarket.address, walletAddress);
                 setIsSubmitting(false);
+                dispatchMarketNotification(
+                    t(
+                        `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                    )
+                );
             }
         } catch (e) {
             console.log(e);
@@ -262,7 +270,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         if (isBuy) return;
         const maxsOPTBalance = tokenBalance;
         const newAmount = (maxsOPTBalance * percentage) / 100;
-        setAmount(newAmount);
+        setAmount(truncToDecimals(newAmount, DEFAULT_OPTIONS_DECIMALS));
     };
 
     const resetQuote = () => {
@@ -275,7 +283,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         setPriceImpactPercentage('0');
     };
 
-    useEffect(() => {
+    useDebouncedEffect(() => {
         const get0xPrice = async () => {
             if (isAmountEntered && isSlippageValid) {
                 const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
@@ -460,6 +468,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         onChange={(option: any) => setOrderSide(option)}
                         isSearchable={false}
                         isUppercase
+                        isDisabled={isSubmitting}
+                        className={isSubmitting ? 'disabled' : ''}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                 </ShortInputContainer>
@@ -468,11 +478,14 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         value={amount}
                         onChange={(_, value) => setAmount(value)}
                         className={isAmountValid && !insufficientLiquidity ? '' : 'error'}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: orderSide.value })}
                     </InputLabel>
-                    <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                        {OPTIONS_CURRENCY_MAP[optionSide]}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid || insufficientLiquidity}
                         message={t(
@@ -492,7 +505,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         <AmountButton
                             key={percentage}
                             onClick={() => calculateAmount(percentage)}
-                            disabled={!isWalletConnected || (isBuy && price === '')}
+                            disabled={!isWalletConnected || (isBuy && price === '') || isSubmitting}
                         >
                             {`${percentage}%`}
                         </AmountButton>
@@ -516,13 +529,18 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                                     className={percentage === slippage ? 'selected' : ''}
                                     key={percentage}
                                     onClick={() => setSlippage(percentage)}
+                                    disabled={isSubmitting}
                                 >
                                     {`${percentage}%`}
                                 </SlippageButton>
                             ))}
                             <SlippageContainer>
-                                <SlippageInput value={slippage} onChange={(_: any, value: any) => setSlippage(value)} />
-                                <PercentageLabel>%</PercentageLabel>
+                                <SlippageInput
+                                    value={slippage}
+                                    onChange={(_: any, value: any) => setSlippage(value)}
+                                    disabled={isSubmitting}
+                                />
+                                <PercentageLabel className={isSubmitting ? 'disabled' : ''}>%</PercentageLabel>
                             </SlippageContainer>
                         </FlexDivEnd>
                         <FieldValidationMessage
@@ -565,7 +583,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     </ProtocolFeeLabel>
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>
-                <NetworkFees gasLimit={gasLimit} />
+                <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
             </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

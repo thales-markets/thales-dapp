@@ -1,7 +1,9 @@
+import ROUTES from 'constants/routes';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
+import { navigateTo } from 'utils/routes';
 
 const HeroSection: React.FC = () => {
     const { t } = useTranslation();
@@ -13,8 +15,13 @@ const HeroSection: React.FC = () => {
                 {t('landing-page.description')}
             </Text>
             <FlexDiv>
-                <Button id="use-app" className="secondary" style={{ marginRight: '20px' }} onClick={() => ''}>
-                    Coming Soon
+                <Button
+                    id="use-app"
+                    className="secondary"
+                    style={{ marginRight: '20px' }}
+                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
+                >
+                    {t('landing-page.launch')}
                 </Button>
                 <Button
                     onClick={() => {

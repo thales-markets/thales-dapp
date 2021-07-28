@@ -43,7 +43,7 @@
             "title": "To get started you'll need",
             "first": "Web3 wallet, like Metamask",
             "second": "Ether to pay for network fees (also called gas)",
-            "third": "Synthetix USD (sUSD) which can be obtained on Uniswap, 1inch, Curve, etc."
+            "third": "Synth USD (sUSD), which can be obtained on"
         },
         "faq": {
             "title": "FAQ",
@@ -155,7 +155,9 @@
             "approve-progress-label": "Approving {{currencyKey}}..."
         },
         "sidebar": {
-            "markets-label": "Markets overview",
+            "trending-label": "Trending markets",
+            "overview-label": "Markets overview",
+            "olympics-label": "Olympics markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
             "maturity-label": "Exercise options"
@@ -184,6 +186,14 @@
             "expiry": "expired"
         },
         "home": {
+            "market-card": {
+                "current-asset-price": "Current asset price",
+                "pool-size": "Pool size",
+                "end-date": "End date",
+                "strike-price": "Strike price",
+                "open-orders": "Open orders",
+                "difference-text": "Difference between current and strike price"
+            },
             "market-creation": {
                 "not-connected": {
                     "title": "Connect a wallet to create a market or place a bid"
@@ -279,6 +289,7 @@
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
+                "difference-text-tooltip": "Difference between current and strike price",
                 "current-price-label": "Current {{currencyKey}} price",
                 "final-price-label": "Final {{currencyKey}} price",
                 "maturity-label": "Maturity",
@@ -319,6 +330,8 @@
                 "chart-options-price-widget": "Options price",
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
+                "custom-market-results-widget": "Results",
+                "custom-market-results-odds-widget": "Odds",
                 "button": {
                     "customize-layout": "Customize view",
                     "reset-layout": "Reset layout"
@@ -383,7 +396,8 @@
                     "confirm-button": {
                         "label": "Exercise options",
                         "progress-label": "Exercising in progress...",
-                        "success-label": "Nothing to exercise"
+                        "success-label": "Nothing to exercise",
+                        "confirmation-message": "Options successfully exercised"
                     }
                 }
             },
@@ -436,21 +450,24 @@
                     "slippage-label": "Slippage tolerance",
                     "slippage-tooltip": "Your transaction will revert if the price chnages unfavorably by more than this percentage",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
                     "confirm-button": {
                         "label": "Submit order",
                         "long": "Submit sLong",
                         "short": "Submit sShort",
-                        "progress-label": "Submitting order in progress..."
+                        "progress-label": "Submitting order in progress...",
+                        "confirmation-message": "Order successfully submitted"
                     },
                     "swap-confirm-button": {
                         "buy": {
                             "label": "Buy",
-                            "progress-label": "Buying in progress..."
+                            "progress-label": "Buying in progress...",
+                            "confirmation-message": "Successfully bought"
                         },
                         "sell": {
                             "label": "Sell",
-                            "progress-label": "Selling in progress..."
+                            "progress-label": "Selling in progress...",
+                            "confirmation-message": "Successfully sold"
                         }
                     }
                 },
@@ -469,7 +486,8 @@
                         "label": "Mint",
                         "progress-label": "Minting in progress...",
                         "submit-long-progress-label": "Submitting LONG order in progress...",
-                        "submit-short-progress-label": "Submitting SHORT order in progress.."
+                        "submit-short-progress-label": "Submitting SHORT order in progress..",
+                        "confirmation-message": "Options successfully minted"
                     }
                 },
                 "fill-order": {
@@ -483,7 +501,7 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "total-label": "Total (sUSD)",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."

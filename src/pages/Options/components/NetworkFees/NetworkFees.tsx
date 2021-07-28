@@ -16,11 +16,10 @@ import styled from 'styled-components';
 
 type NetworkFeesProps = {
     gasLimit: number | null;
-    labelColor?: string;
-    priceColor?: string;
+    disabled?: boolean;
 };
 
-const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
+const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, disabled }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
@@ -50,7 +49,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
             </NetworkFeeSummaryItem>
             <NetworkFeeSummaryItem>
                 <NetworkFeeSummaryLabel>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
-                <SelectGasMenu gasPrice={gasPrice} />
+                <SelectGasMenu gasPrice={gasPrice} disabled={disabled} />
             </NetworkFeeSummaryItem>
         </>
     );

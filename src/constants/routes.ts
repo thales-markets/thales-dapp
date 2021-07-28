@@ -1,9 +1,11 @@
 export const ROUTES = {
     Home: '/',
     Options: {
-        Home: '/options',
-        CreateMarket: '/options/create-market',
-        MarketMatch: '/options/:marketAddress',
+        Home: '/markets',
+        Olympics: '/markets#olympics',
+        Overview: '/markets#overview',
+        CreateMarket: '/markets/create-market',
+        MarketMatch: '/markets/:marketAddress',
     },
 };
 export default ROUTES;

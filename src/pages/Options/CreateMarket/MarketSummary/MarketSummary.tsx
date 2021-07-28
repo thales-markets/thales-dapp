@@ -4,11 +4,11 @@ import React, { useMemo } from 'react';
 import { FlexDivCentered, FlexDivColumn, Image, LightTooltip, Text } from 'theme/common';
 import styled from 'styled-components';
 import Currency from 'components/Currency';
-import { USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
-import { formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
 import arrowUp from 'assets/images/green-arrow-up.svg';
 import arrowDown from 'assets/images/red-arrow-down.svg';
+import { USD_SIGN } from 'constants/currency';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
@@ -52,7 +52,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     <div style={{ flex: 2, textAlign: 'center' }}>
                         <Text className="text-xs dusty bold">{t('options.create-market.summary.strikePrice')}</Text>
                         <Text className="text-s pale-grey bold">
-                            {`${USD_SIGN}  ${props.strikingPrice ? props.strikingPrice.toString() : 0}`}
+                            {formatCurrencyWithSign(USD_SIGN, Number(props.strikingPrice))}
                         </Text>
                     </div>
                     <div style={{ flex: 1, textAlign: 'center' }}>
@@ -79,7 +79,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                     <div style={{ flex: 2, textAlign: 'center' }}>
                         <Text className="text-xs dusty bold">{t('options.create-market.summary.current')}</Text>
                         <Text className="text-s pale-grey bold">
-                            {`${USD_SIGN}   ${props.currentPrice ? props.currentPrice : 0}`}
+                            {formatCurrencyWithSign(USD_SIGN, Number(props.currentPrice))}
                         </Text>
                     </div>
                 </FlexDivCentered>

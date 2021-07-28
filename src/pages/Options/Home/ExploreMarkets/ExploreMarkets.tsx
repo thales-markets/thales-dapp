@@ -9,6 +9,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import styled from 'styled-components';
 import myMarkets from 'assets/images/filters/my-markets.svg';
+import olympicsImg from 'assets/images/filters/olympics.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
@@ -27,16 +28,20 @@ import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import { SYNTHS_MAP } from '../../../../constants/currency';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import { useEffect } from 'react';
 
 type ExploreMarketsProps = {
+    exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
+    olympics?: boolean;
 };
 
 export enum PhaseFilterEnum {
-    all = 'all',
     trading = 'trading',
     maturity = 'maturity',
     expiry = 'expiry',
+    all = 'all',
 }
 
 enum UserFilterEnum {
@@ -48,6 +53,7 @@ enum UserFilterEnum {
     Recent = 'Recently Added',
     Bitcoin = 'Bitcoin',
     Ethereum = 'Ethereum',
+    Olympics = 'Olympics',
 }
 
 const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
@@ -65,21 +71,25 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
     );
 };
 
-const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
+const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
-    const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.all);
+    const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.trading);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
-    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress);
+    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
     const userAssets = useMemo(
         () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
         [userAssetsQuery]
     );
-    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress);
+    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
     const userOrders = useMemo(
         () =>
             userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records)
@@ -94,8 +104,21 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
 
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
+    useEffect(() => {
+        if (olympics) {
+            setUserFilter(UserFilterEnum.Olympics);
+        } else {
+            if (userFilter === UserFilterEnum.Olympics) setUserFilter(UserFilterEnum.All);
+        }
+    }, [olympics]);
+
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
+        if (userFilter === UserFilterEnum.Olympics) {
+            filteredMarkets = filteredMarkets.filter(({ customMarket }) => customMarket === true);
+        } else {
+            filteredMarkets = filteredMarkets.filter(({ customMarket }) => customMarket === false);
+        }
         switch (userFilter) {
             case UserFilterEnum.MyMarkets:
                 filteredMarkets = filteredMarkets.filter(
@@ -154,8 +177,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const onClickUserFilter = (filter: UserFilterEnum) => {
-        if (isWalletConnected) {
+    const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        if (!isDisabled) {
             setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
         }
         return;
@@ -177,6 +200,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                 return myAssets;
             case UserFilterEnum.MyOrders:
                 return myOpenOrders;
+            case UserFilterEnum.Olympics:
+                return olympicsImg;
         }
     };
 
@@ -194,20 +219,27 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                             isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
                             key !== UserFilterEnum.All
                     )
-                    .map((key) => (
-                        <UserFilter
-                            className={`${
-                                isWalletConnected && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
-                                    ? 'selected'
-                                    : ''
-                            }`}
-                            disabled={!isWalletConnected}
-                            onClick={onClickUserFilter.bind(this, UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                            key={key}
-                            img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                            text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                        />
-                    ))}
+                    .map((key, index) => {
+                        const isDisabled = !isWalletConnected && index < 4;
+                        return (
+                            <UserFilter
+                                className={`${
+                                    !isDisabled && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                        ? 'selected'
+                                        : ''
+                                }`}
+                                disabled={isDisabled}
+                                onClick={onClickUserFilter.bind(
+                                    this,
+                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                    isDisabled
+                                )}
+                                key={key}
+                                img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                                text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                            />
+                        );
+                    })}
             </FlexDivCentered>
 
             <FlexDiv
@@ -243,10 +275,12 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
             </FlexDiv>
 
             <MarketsTable
+                exchangeRates={exchangeRates}
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
                 watchlistedMarkets={watchlistedMarkets}
                 isLoading={false} // TODO put logic
                 phase={phaseFilter}
+                isCustomMarket={userFilter === UserFilterEnum.Olympics}
                 onChange={watchlistedMarketsQuery.refetch}
             >
                 <NoMarkets>
@@ -255,7 +289,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets }) => {
                             <Text className="text-l bold pale-grey">
                                 {t('options.home.explore-markets.table.no-markets-found')}
                             </Text>
-                            <Button className="primary" onClick={setPhaseFilter.bind(this, PhaseFilterEnum.all)}>
+                            <Button className="primary" onClick={resetFilters}>
                                 {t('options.home.explore-markets.table.view-all-markets')}
                             </Button>
                         </>

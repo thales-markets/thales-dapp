@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { OptionsMarketInfo } from 'types/options';
-import { FlexDiv, FlexDivCentered, FlexDivColumnCentered } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
 import styled from 'styled-components';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,10 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import arrowUp from 'assets/images/arrow-up.svg';
+import arrowDown from 'assets/images/arrow-down.svg';
+import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import ReactCountryFlag from 'react-country-flag';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -27,79 +31,184 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
 
     return (
         <>
-            <Container>
-                <ItemContainer>
-                    <FlexDivCentered>
-                        <CurrencyIcon
-                            currencyKey={optionsMarket.currencyKey}
-                            synthIconStyle={{ width: 40, height: 40 }}
-                        />
-                        <FlexDivColumnCentered>
-                            <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
-                                <StyledLink
-                                    href={getEtherscanAddressLink(networkId, optionsMarket.address)}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName>{' '}
-                                    <ArrowIcon width="10" height="10" />
-                                </StyledLink>
-                            </LightTooltip>
-                            <CryptoKey>{optionsMarket.asset}</CryptoKey>
-                        </FlexDivColumnCentered>
-                    </FlexDivCentered>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>{t(`options.market.overview.strike-price-label`)}</Title>
-                    <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}</Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>
-                        {optionsMarket.isResolved
-                            ? t('options.market.overview.final-price-label', {
-                                  currencyKey: optionsMarket.asset,
-                              })
-                            : t('options.market.overview.current-price-label', {
-                                  currencyKey: optionsMarket.asset,
-                              })}
-                    </Title>
-                    <Content>
-                        {formatCurrencyWithSign(
-                            USD_SIGN,
-                            optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
-                        )}
-                    </Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>
-                        {t('options.market.overview.deposited-currency-label', {
-                            currencyKey: SYNTHS_MAP.sUSD,
-                        })}
-                    </Title>
-                    <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>{t('options.market.overview.time-remaining-label')}</Title>
-                    <Content>
-                        {optionsMarket.isResolved ? (
-                            <TimeRemaining end={optionsMarket.expiryDate} fontSize={16} />
-                        ) : (
-                            <TimeRemaining end={optionsMarket.maturityDate} fontSize={16} />
-                        )}
-                    </Content>
-                </ItemContainer>
-                <ItemContainer>
-                    <Title>
-                        {optionsMarket.isResolved
-                            ? t('options.market.overview.final-result-label')
-                            : t('options.market.overview.current-result-label')}
-                    </Title>
-                    <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
-                </ItemContainer>
-                <ItemContainer>
-                    <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
-                </ItemContainer>
-            </Container>
+            {optionsMarket.customMarket ? (
+                <Container>
+                    <ItemContainer>
+                        <FlexDivCentered>
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(optionsMarket.country as any)}
+                                style={{ width: 40, height: 40, marginRight: 10 }}
+                                svg
+                            />
+                            <FlexDivColumnCentered>
+                                <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
+                                    <StyledLink
+                                        href={getEtherscanAddressLink(networkId, optionsMarket.address)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <CryptoName>{optionsMarket.country}</CryptoName>
+                                        <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                                    </StyledLink>
+                                </LightTooltip>
+                            </FlexDivColumnCentered>
+                        </FlexDivCentered>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>Event Name</Title>
+                        <Content fontSize={16}>
+                            <FlexDivCentered>{optionsMarket.eventName}</FlexDivCentered>
+                        </Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>Rank</Title>
+                        <Content fontSize={16}>{optionsMarket.outcome}</Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>
+                            {t('options.market.overview.deposited-currency-label', {
+                                currencyKey: SYNTHS_MAP.sUSD,
+                            })}
+                        </Title>
+                        <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>{t('options.market.overview.time-remaining-label')}</Title>
+                        <Content>
+                            {optionsMarket.isResolved ? (
+                                <TimeRemaining end={optionsMarket.expiryDate} fontSize={16} />
+                            ) : (
+                                <TimeRemaining end={optionsMarket.maturityDate} fontSize={16} />
+                            )}
+                        </Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>
+                            {optionsMarket.isResolved
+                                ? t('options.market.overview.final-result-label')
+                                : t('options.market.overview.current-result-label')}
+                        </Title>
+                        <StyledLink
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://www.espn.com/olympics/summer/2020/medals/_/view/overall"
+                        >
+                            ESPN
+                        </StyledLink>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
+                    </ItemContainer>
+                </Container>
+            ) : (
+                <Container>
+                    <ItemContainer>
+                        <FlexDivCentered>
+                            <CurrencyIcon
+                                currencyKey={optionsMarket.currencyKey}
+                                synthIconStyle={{ width: 40, height: 40 }}
+                            />
+                            <FlexDivColumnCentered>
+                                <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
+                                    <StyledLink
+                                        href={getEtherscanAddressLink(networkId, optionsMarket.address)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <CryptoName>{getSynthName(optionsMarket.currencyKey)}</CryptoName>{' '}
+                                        <ArrowIcon width="10" height="10" />
+                                    </StyledLink>
+                                </LightTooltip>
+                                <CryptoKey>{optionsMarket.asset}</CryptoKey>
+                            </FlexDivColumnCentered>
+                        </FlexDivCentered>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>{t(`options.market.overview.strike-price-label`)}</Title>
+                        <Content fontSize={optionsMarket.strikePrice < 0.01 ? 14 : 16}>
+                            <FlexDiv>
+                                {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
+                                {!optionsMarket.isResolved && (
+                                    <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
+                                        {optionsMarket.currentPrice > optionsMarket.strikePrice ? (
+                                            <RedText>
+                                                (<PriceArrow src={arrowDown} />
+                                                {getPercentageDifference(
+                                                    optionsMarket.currentPrice,
+                                                    optionsMarket.strikePrice
+                                                ).toFixed(2)}
+                                                %)
+                                            </RedText>
+                                        ) : (
+                                            <GreenText>
+                                                (<PriceArrow src={arrowUp} />
+                                                {getPercentageDifference(
+                                                    optionsMarket.currentPrice,
+                                                    optionsMarket.strikePrice
+                                                ).toFixed(2)}
+                                                %)
+                                            </GreenText>
+                                        )}
+                                    </LightTooltip>
+                                )}
+                            </FlexDiv>
+                        </Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>
+                            {optionsMarket.isResolved
+                                ? t('options.market.overview.final-price-label', {
+                                      currencyKey: optionsMarket.asset,
+                                  })
+                                : t('options.market.overview.current-price-label', {
+                                      currencyKey: optionsMarket.asset,
+                                  })}
+                        </Title>
+                        <Content
+                            fontSize={
+                                (optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice) <
+                                0.01
+                                    ? 14
+                                    : 16
+                            }
+                        >
+                            {formatCurrencyWithSign(
+                                USD_SIGN,
+                                optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
+                            )}
+                        </Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>
+                            {t('options.market.overview.deposited-currency-label', {
+                                currencyKey: SYNTHS_MAP.sUSD,
+                            })}
+                        </Title>
+                        <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>{t('options.market.overview.time-remaining-label')}</Title>
+                        <Content>
+                            {optionsMarket.isResolved ? (
+                                <TimeRemaining end={optionsMarket.expiryDate} fontSize={16} />
+                            ) : (
+                                <TimeRemaining end={optionsMarket.maturityDate} fontSize={16} />
+                            )}
+                        </Content>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Title>
+                            {optionsMarket.isResolved
+                                ? t('options.market.overview.final-result-label')
+                                : t('options.market.overview.current-result-label')}
+                        </Title>
+                        <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
+                    </ItemContainer>
+                    <ItemContainer>
+                        <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
+                    </ItemContainer>
+                </Container>
+            )}
         </>
     );
 };
@@ -137,12 +246,16 @@ const Title = styled.p`
     color: #b8c6e5;
 `;
 
-const Content = styled.p`
+const Content = styled.div<{ fontSize?: number }>`
     font-style: normal;
     font-weight: bold;
-    font-size: 16px;
+    font-size: ${(props) => props.fontSize || 16}px;
     line-height: 18px;
     color: #f6f6fe;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 `;
 
 const Phase = styled(PhaseLabel)`
@@ -183,5 +296,21 @@ const StyledLink = styled.a`
 `;
 
 export const ArrowIcon = styled(ArrowHyperlinkIcon)``;
+
+const PriceArrow = styled(Image)`
+    width: 16px;
+    height: 16px;
+    margin-bottom: -2px;
+`;
+
+const GreenText = styled.span`
+    color: #01b977;
+    padding-left: 5px;
+`;
+
+const RedText = styled.span`
+    color: #be2727;
+    padding-left: 5px;
+`;
 
 export default MarketOverview;

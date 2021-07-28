@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { DisplayOrder, OptionSide } from 'types/options';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { formatCurrencyWithKey, formatPercentage } from 'utils/formatters/number';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import {
     SummaryItem,
     SummaryLabel,
@@ -30,7 +31,9 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
                         currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
                     })}
                 </SummaryDetailsLabel>
-                <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.price, 3)}</SummaryDetailsContent>
+                <SummaryDetailsContent>
+                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.price, DEFAULT_OPTIONS_DECIMALS)}
+                </SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>
@@ -39,13 +42,17 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
                     })}
                 </SummaryDetailsLabel>
                 <SummaryDetailsContent>
-                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.fillableAmount, 2)}
+                    {formatCurrencyWithKey(
+                        OPTIONS_CURRENCY_MAP[optionSide],
+                        order.fillableAmount,
+                        DEFAULT_OPTIONS_DECIMALS
+                    )}
                 </SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>{t('options.market.trade-options.order-details.total-label')}</SummaryDetailsLabel>
                 <SummaryDetailsContent>
-                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.fillableTotal, 2)}
+                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.fillableTotal, DEFAULT_OPTIONS_DECIMALS)}
                 </SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
@@ -64,7 +71,7 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
                     })}
                 </SummaryDetailsLabel>
                 <SummaryDetailsContent>
-                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.amount, 2)}
+                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], order.amount, DEFAULT_OPTIONS_DECIMALS)}
                 </SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
@@ -73,7 +80,9 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order, optionSide })
                         currencyKey: SYNTHS_MAP.sUSD,
                     })}
                 </SummaryDetailsLabel>
-                <SummaryDetailsContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.total, 2)}</SummaryDetailsContent>
+                <SummaryDetailsContent>
+                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, order.total, DEFAULT_OPTIONS_DECIMALS)}
+                </SummaryDetailsContent>
             </SummaryDetailsItem>
             <SummaryDetailsItem>
                 <SummaryDetailsLabel>

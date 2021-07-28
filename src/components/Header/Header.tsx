@@ -1,13 +1,12 @@
 import ROUTES from 'constants/routes';
+import { Link } from 'react-router-dom';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Logo } from 'theme/common';
+import { Button, Logo } from 'theme/common';
 import burger from 'assets/images/burger.svg';
-import play from 'assets/images/play.svg';
-import playHover from 'assets/images/play-hover.svg';
-import pause from 'assets/images/pause.svg';
-import pauseHover from 'assets/images/pause-hover.svg';
+import { ReactComponent as PlayIcon } from 'assets/images/play.svg';
+import { ReactComponent as PauseIcon } from 'assets/images/pause.svg';
 import Cookies from 'universal-cookie';
 import { LightTooltip } from 'pages/Options/Market/components';
 
@@ -79,17 +78,31 @@ const Header: React.FC = () => {
                     {t('header.links.faq')}
                 </CommunityLink>
                 <LightTooltip title="Toogle animation">
-                    <AnimationButton
-                        id="animation-button"
-                        onClick={() => {
-                            cookies.set('animation', animationState === AnimationState.Active ? false : true);
-                            setAnimationState(
-                                animationState === AnimationState.Active ? AnimationState.Paused : AnimationState.Active
-                            );
-                        }}
-                        className={animationState === AnimationState.Active ? 'active' : 'stop'}
-                    ></AnimationButton>
+                    <>
+                        {animationState === AnimationState.Active && (
+                            <StyledPauseIcon
+                                onClick={() => {
+                                    cookies.set('animation', false);
+                                    setAnimationState(AnimationState.Paused);
+                                }}
+                            />
+                        )}
+                        {animationState === AnimationState.Paused && (
+                            <StyledPlayIcon
+                                onClick={() => {
+                                    cookies.set('animation', true);
+                                    setAnimationState(AnimationState.Active);
+                                }}
+                            />
+                        )}
+                    </>
                 </LightTooltip>
+
+                <NavLink to={ROUTES.Options.Home}>
+                    <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>
+                        {t('landing-page.use-app')}
+                    </Button>
+                </NavLink>
             </Links>
             <BurdgerIcon
                 onClick={() =>
@@ -171,34 +184,34 @@ const Links = styled.div`
     }
 `;
 
-// const NavLink = styled(Link)`
-//     margin-right: 40px;
-//     font-weight: 600;
-//     font-size: 16px;
-//     line-height: 32px;
-//     letter-spacing: 0.15px;
-//     color: #f6f6fe;
-//     &:last-child {
-//         margin-right: 0;
-//     }
-//     &:hover {
-//         color: #44e1e2;
-//     }
-//     @media (max-width: 768px) {
-//         border-top: 1px solid #748bc6;
-//         width: 100%;
-//         text-align: center;
-//         margin: 0;
-//         padding: 6px 0;
-//         .primary {
-//             margin: 50px 0 !important;
-//             width: 140px;
-//             font-size: 16px;
-//             line-height: 24px;
-//             padding: 8px 16px !important;
-//         }
-//     }
-// `;
+const NavLink = styled(Link)`
+    margin-right: 40px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 32px;
+    letter-spacing: 0.15px;
+    color: #f6f6fe;
+    &:last-child {
+        margin-right: 0;
+    }
+    &:hover {
+        color: #44e1e2;
+    }
+    @media (max-width: 768px) {
+        border-top: 1px solid #748bc6;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 6px 0;
+        .primary {
+            margin: 50px 0 !important;
+            width: 140px;
+            font-size: 16px;
+            line-height: 24px;
+            padding: 8px 16px !important;
+        }
+    }
+`;
 
 const CommunityLink = styled.a`
     margin-right: 40px;
@@ -230,21 +243,35 @@ const CommunityLink = styled.a`
     }
 `;
 
-const AnimationButton = styled.div`
+const StyledPlayIcon = styled(PlayIcon)`
     width: 40px;
     height: 40px;
     padding: 4px;
     cursor: pointer;
-    &.active {
-        content: url(${pause});
-        &:hover {
-            content: url(${pauseHover});
+    &:hover {
+        & path:first-child {
+            fill: #00f9ff;
+        }
+        & path:nth-of-type(2) {
+            fill: #04045a;
         }
     }
-    &.stop {
-        content: url(${play});
-        &:hover {
-            content: url(${playHover});
+`;
+
+const StyledPauseIcon = styled(PauseIcon)`
+    width: 40px;
+    height: 40px;
+    padding: 4px;
+    cursor: pointer;
+    &:hover {
+        & path:first-child {
+            fill: #00f9ff;
+        }
+        & path:nth-of-type(2) {
+            fill: #04045a;
+        }
+        & path:nth-of-type(3) {
+            fill: #04045a;
         }
     }
 `;

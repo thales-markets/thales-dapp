@@ -1,7 +1,7 @@
 import ROUTES from 'constants/routes';
 import React from 'react';
 import { FlexDiv, Logo, MainWrapper, IconLink } from 'theme/common';
-import { FooterIcon, VerticalWrapper } from './components';
+import { VerticalWrapper, StyledGithubIcon, StyledTwitterIcon, StyledDiscordIcon } from './components';
 import styled from 'styled-components';
 
 export const Background = styled.section`
@@ -16,13 +16,13 @@ const Footer: React.FC = () => (
             <VerticalWrapper>
                 <FlexDiv>
                     <IconLink target="_blank" rel="noreferrer" href="https://github.com/thales-markets">
-                        <FooterIcon className="github"></FooterIcon>
+                        <StyledGithubIcon />
                     </IconLink>
                     <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
-                        <FooterIcon className="twitter"></FooterIcon>
+                        <StyledTwitterIcon />
                     </IconLink>
                     <IconLink target="_blank" rel="noreferrer" href="https://discord.gg/cFGv5zyVEj">
-                        <FooterIcon className="discord"></FooterIcon>
+                        <StyledDiscordIcon />
                     </IconLink>
                 </FlexDiv>
                 <FlexDiv style={{ marginBottom: 60 }}>

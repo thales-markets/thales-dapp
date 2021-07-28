@@ -24,11 +24,17 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign, toBigNumber } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithKey,
+    formatCurrencyWithSign,
+    toBigNumber,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { calculate0xProtocolFee } from 'utils/0x';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
@@ -87,7 +93,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
-    const [amount, setAmount] = useState<number | string>(order.displayOrder.fillableAmount);
+    const [amount, setAmount] = useState<number | string>(
+        truncToDecimals(order.displayOrder.fillableAmount, DEFAULT_OPTIONS_DECIMALS)
+    );
     const [isFilling, setIsFilling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
@@ -286,7 +294,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         const maxWalletsOPT = isBuy ? tokenBalance : sUSDBalance / order.displayOrder.price;
         const maxAmount =
             order.displayOrder.fillableAmount < maxWalletsOPT ? order.displayOrder.fillableAmount : maxWalletsOPT;
-        setAmount(maxAmount);
+        setAmount(truncToDecimals(maxAmount, DEFAULT_OPTIONS_DECIMALS));
     };
 
     useEffect(() => {
@@ -376,13 +384,16 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             value={amount}
                             onChange={(_, value) => setAmount(value)}
                             className={isAmountValid && !insufficientOrderAmount ? '' : 'error'}
+                            disabled={isFilling}
                         />
                         <InputLabel>
                             {t('options.market.trade-options.fill-order.amount-label', {
                                 orderSide: isBuy ? t('common.sell') : t('common.buy'),
                             })}
                         </InputLabel>
-                        <CurrencyLabel>{OPTIONS_CURRENCY_MAP[optionSide]}</CurrencyLabel>
+                        <CurrencyLabel className={isFilling ? 'disabled' : ''}>
+                            {OPTIONS_CURRENCY_MAP[optionSide]}
+                        </CurrencyLabel>
                         <FieldValidationMessage
                             showValidation={!isAmountValid || insufficientOrderAmount}
                             message={
@@ -422,7 +433,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             )}
                         </ProtocolFeeItem>
                     </ProtocolFeeContainer>
-                    <NetworkFees gasLimit={gasLimit} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

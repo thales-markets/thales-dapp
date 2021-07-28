@@ -45,7 +45,10 @@ const useBinaryOptionsMarketOrderbook = (
 
             return orderbook;
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

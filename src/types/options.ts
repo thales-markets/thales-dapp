@@ -55,6 +55,12 @@ export type HistoricalOptionsMarketInfo = {
     orders: Array<any>;
     longAddress: string;
     shortAddress: string;
+    customMarket: boolean;
+    customOracle: string;
+    result: OptionSide;
+    country?: string;
+    eventName?: string;
+    outcome?: string;
 };
 
 export type OptionsMarketInfo = {
@@ -86,6 +92,11 @@ export type OptionsMarketInfo = {
     // BN: BNOptionValue;
     longAddress: string;
     shortAddress: string;
+    customMarket: boolean;
+    oracleAdress: string;
+    country?: string;
+    eventName?: string;
+    outcome?: string;
 };
 
 export type AccountMarketInfo = {

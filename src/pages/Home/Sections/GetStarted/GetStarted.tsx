@@ -99,7 +99,22 @@ const GetStarted: React.FC = () => {
             <Wrapper className={carousel === CAROUSEL_SELECTED.LAST ? 'animate' : ''}>
                 <CardsSmall className="animate-l">
                     <Image src={third} style={{ width: 30, height: 92, marginRight: 32 }}></Image>
-                    <Text className="pale-grey text-s lh24 ls25">{t('landing-page.get-started.third')}</Text>
+                    <Text className="pale-grey text-s lh24 ls25">
+                        {t('landing-page.get-started.third')}
+                        &nbsp;
+                        <Links target="_blank" rel="noreferrer" href="https://app.uniswap.org/#/swap">
+                            Uniswap
+                        </Links>
+                        ,&nbsp;
+                        <Links target="_blank" rel="noreferrer" href="https://app.1inch.io/#/1/swap/ETH/susd">
+                            1inch,
+                        </Links>
+                        &nbsp;
+                        <Links target="_blank" rel="noreferrer" href="https://curve.fi/susdv2/">
+                            Curve
+                        </Links>
+                        &nbsp;etc.
+                    </Text>
                 </CardsSmall>
                 <Image className="animate-r" src={image3} style={{ width: 250, height: 200 }}></Image>
             </Wrapper>
@@ -196,6 +211,14 @@ const Carousel = styled(FlexDivColumn)`
 const Eclipse = styled(Image)`
     width: 20px;
     height: 20px;
+`;
+
+const Links = styled.a`
+    display: inline-block;
+    color: #f6f6fe;
+    &:hover {
+        color: #00f9ff;
+    }
 `;
 
 export default GetStarted;

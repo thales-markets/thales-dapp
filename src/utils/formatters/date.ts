@@ -32,7 +32,7 @@ export const formattedDuration = (duration: Duration, delimiter = ' ', firstTwo 
         return `${duration.hours} ${duration.hours > 1 ? 'hours' : 'hour'}`;
     }
     if (duration.minutes) {
-        if (duration.minutes > 10) {
+        if (duration.minutes > 9) {
             return `${duration.minutes} minutes`;
         }
         formatted.push(`${duration.minutes}m`);

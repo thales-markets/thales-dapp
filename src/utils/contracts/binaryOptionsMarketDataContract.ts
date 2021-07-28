@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const binaryOptionsMarketDataContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x2206BD16eb8216A89Cb779590301a0D61b1b6e41',
-        [NetworkId.Ropsten]: '0x94fb789D8799FcB657Af26ac16CFB46C8B86358c',
+        [NetworkId.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
+        [NetworkId.Ropsten]: '0x7a774cE863eE0af8B5cFa38B550977F9104e9d15',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x4a50146bbC71b46C4A392531beeBe5E8f457F710',
+        [NetworkId.Kovan]: '0x3e4E650f61C7A747A4baDCfF5C3b3e2BaF37AEc3',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
@@ -221,6 +221,16 @@ export const binaryOptionsMarketDataContract = {
                                     internalType: 'uint256',
                                     name: 'finalPrice',
                                     type: 'uint256',
+                                },
+                                {
+                                    internalType: 'bool',
+                                    name: 'customMarket',
+                                    type: 'bool',
+                                },
+                                {
+                                    internalType: 'address',
+                                    name: 'iOracleInstanceAddress',
+                                    type: 'address',
                                 },
                             ],
                             internalType: 'struct BinaryOptionMarket.OracleDetails',

@@ -16,8 +16,8 @@ import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import { APPROVAL_EVENTS, BINARY_OPTIONS_EVENTS } from 'constants/events';
+import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
+import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -44,25 +44,31 @@ import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } f
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
 import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
-import { formatCurrency, formatCurrencyWithSign, formatPercentage, toBigNumber } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatPercentage,
+    toBigNumber,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivRow } from 'theme/common';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { get0xBaseURL } from 'utils/0x';
-import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import axios from 'axios';
-import { SIDE } from 'constants/options';
+// import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
 import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
-import numbro from 'numbro';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -180,27 +186,27 @@ const MintOptions: React.FC = () => {
         };
     }, [walletAddress]);
 
-    useEffect(() => {
-        if (walletAddress) {
-            BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
-                if (walletAddress === account) {
-                    if (SIDE[side] === 'long' && sellLong) {
-                        await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
-                    }
-                    if (SIDE[side] === 'short' && sellShort) {
-                        await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
-                    }
-                    setIsMinting(false);
-                }
-                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
-            });
-        }
-        return () => {
-            if (walletAddress) {
-                BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
-            }
-        };
-    }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
+    // useEffect(() => {
+    //     if (walletAddress) {
+    //         BOMContract.on(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED, async (side: number, account: string) => {
+    //             if (walletAddress === account) {
+    //                 if (SIDE[side] === 'long' && sellLong) {
+    //                     await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
+    //                 }
+    //                 if (SIDE[side] === 'short' && sellShort) {
+    //                     await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
+    //                 }
+    //                 setIsMinting(false);
+    //             }
+    //             refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+    //         });
+    //     }
+    //     return () => {
+    //         if (walletAddress) {
+    //             BOMContract.removeAllListeners(BINARY_OPTIONS_EVENTS.OPTIONS_MINTED);
+    //         }
+    //     };
+    // }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
@@ -268,13 +274,27 @@ const MintOptions: React.FC = () => {
 
                 const txResult = await tx.wait();
                 if (txResult && txResult.transactionHash) {
+                    if (!sellShort && !sellLong) {
+                        dispatchMarketNotification(
+                            t('options.market.trade-options.mint.confirm-button.confirmation-message')
+                        );
+                    }
                     dispatch(
                         updateOptionsPendingTransactionStatus({
                             hash: txResult.transactionHash,
                             status: 'confirmed',
                         })
                     );
+
+                    if (sellLong) {
+                        await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
+                    }
+                    if (sellShort) {
+                        await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
+                    }
+                    refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
                 }
+                setIsMinting(false);
             } catch (e) {
                 console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -481,6 +501,10 @@ const MintOptions: React.FC = () => {
         );
         const expiry = getOrderEndDate();
         const salt = generatePseudoRandomSalt();
+        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
+        if (isMainNet(networkId)) {
+            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
+        }
 
         try {
             const createSignedOrderV4Async = async () => {
@@ -491,6 +515,7 @@ const MintOptions: React.FC = () => {
                     takerAmount,
                     maker: walletAddress,
                     sender: NULL_ADDRESS,
+                    pool,
                     expiry,
                     salt,
                     chainId: networkId,
@@ -517,6 +542,7 @@ const MintOptions: React.FC = () => {
                     data: signedOrder,
                 });
                 refetchOrderbook(makerToken);
+                dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -537,10 +563,7 @@ const MintOptions: React.FC = () => {
     }, [amount, marketFees]);
 
     useEffect(() => {
-        const formatedAmountMinted = numbro(Number(mintedAmount)).format({
-            trimMantissa: true,
-            mantissa: 4,
-        });
+        const formatedAmountMinted = truncToDecimals(mintedAmount, DEFAULT_OPTIONS_DECIMALS);
 
         setLongAmount(formatedAmountMinted);
         setShortAmount(formatedAmountMinted);
@@ -570,6 +593,8 @@ const MintOptions: React.FC = () => {
         );
     }, [sellShort, shortAmount, mintedAmount]);
 
+    const actionInProgress = isMinting || isLongSubmitting || isShortSubmitting;
+
     return (
         <Container>
             <GridContainer>
@@ -583,9 +608,10 @@ const MintOptions: React.FC = () => {
                             setAmount(value);
                         }}
                         className={isAmountValid ? '' : 'error'}
+                        disabled={actionInProgress}
                     />
                     <InputLabel>{t('options.market.trade-options.mint.amount-label')}</InputLabel>
-                    <CurrencyLabel>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={actionInProgress ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid}
                         message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: SYNTHS_MAP.sUSD })}
@@ -598,13 +624,17 @@ const MintOptions: React.FC = () => {
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
                     <SummaryLabel color={COLORS.LONG}>{t('options.market.trade-options.mint.long-label')}</SummaryLabel>
-                    <SummaryContent color={COLORS.LONG}>{formatCurrency(mintedAmount)}</SummaryContent>
+                    <SummaryContent color={COLORS.LONG}>
+                        {formatCurrency(mintedAmount, DEFAULT_OPTIONS_DECIMALS)}
+                    </SummaryContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem>
                     <SummaryLabel color={COLORS.SHORT}>
                         {t('options.market.trade-options.mint.short-label')}
                     </SummaryLabel>
-                    <SummaryContent color={COLORS.SHORT}>{formatCurrency(mintedAmount)}</SummaryContent>
+                    <SummaryContent color={COLORS.SHORT}>
+                        {formatCurrency(mintedAmount, DEFAULT_OPTIONS_DECIMALS)}
+                    </SummaryContent>
                 </MintingInnerSummaryItem>
             </SummaryContainer>
             <Divider />
@@ -612,6 +642,7 @@ const MintOptions: React.FC = () => {
             <FlexDiv>
                 <CheckboxContainer>
                     <Checkbox
+                        disabled={actionInProgress}
                         checked={sellLong}
                         value={sellLong.toString()}
                         onChange={(e: any) => setSellLong(e.target.checked || false)}
@@ -624,7 +655,7 @@ const MintOptions: React.FC = () => {
                         max={1}
                         min={0}
                         onChange={(_, value) => setLongPrice(Number(value))}
-                        disabled={!sellLong}
+                        disabled={!sellLong || actionInProgress}
                     />
                     <FlexDivRow>
                         <SliderRange color={COLORS.LONG}>{`${USD_SIGN}0`}</SliderRange>
@@ -635,14 +666,16 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={longPrice}
                         onChange={(_, value) => setLongPrice(value)}
-                        disabled={!sellLong}
+                        disabled={!sellLong || actionInProgress}
                         className={isLongPriceValid ? '' : 'error'}
                         step="0.01"
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sLONG })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={!sellLong || actionInProgress ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sUSD}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isLongPriceValid}
                         message={t(
@@ -655,13 +688,15 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={longAmount}
                         onChange={(_, value) => setLongAmount(value)}
-                        disabled={!sellLong}
+                        disabled={!sellLong || actionInProgress}
                         className={isLongAmountValid ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellLong ? 'disabled' : ''}>{SYNTHS_MAP.sLONG}</CurrencyLabel>
+                    <CurrencyLabel className={!sellLong || actionInProgress ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sLONG}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isLongAmountValid}
                         message={t(
@@ -676,6 +711,7 @@ const MintOptions: React.FC = () => {
             <FlexDiv>
                 <CheckboxContainer>
                     <Checkbox
+                        disabled={actionInProgress}
                         checked={sellShort}
                         value={sellShort.toString()}
                         onChange={(e: any) => setSellShort(e.target.checked || false)}
@@ -688,7 +724,7 @@ const MintOptions: React.FC = () => {
                         max={1}
                         min={0}
                         onChange={(_, value) => setShortPrice(Number(value))}
-                        disabled={!sellShort}
+                        disabled={!sellShort || actionInProgress}
                     />
                     <FlexDivRow>
                         <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}0`}</SliderRange>
@@ -699,14 +735,16 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={shortPrice}
                         onChange={(_, value) => setShortPrice(value)}
-                        disabled={!sellShort}
+                        disabled={!sellShort || actionInProgress}
                         className={isShortPriceValid ? '' : 'error'}
                         step="0.01"
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.price-label', { currencyKey: SYNTHS_MAP.sSHORT })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sUSD}</CurrencyLabel>
+                    <CurrencyLabel className={!sellShort || actionInProgress ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sUSD}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isShortPriceValid}
                         message={t(
@@ -719,13 +757,15 @@ const MintOptions: React.FC = () => {
                     <NumericInput
                         value={shortAmount}
                         onChange={(_, value) => setShortAmount(value)}
-                        disabled={!sellShort}
+                        disabled={!sellShort || actionInProgress}
                         className={isShortAmountValid ? '' : 'error'}
                     />
                     <InputLabel>
                         {t('options.market.trade-options.place-order.amount-label', { orderSide: 'sell' })}
                     </InputLabel>
-                    <CurrencyLabel className={!sellShort ? 'disabled' : ''}>{SYNTHS_MAP.sSHORT}</CurrencyLabel>
+                    <CurrencyLabel className={!sellShort || actionInProgress ? 'disabled' : ''}>
+                        {SYNTHS_MAP.sSHORT}
+                    </CurrencyLabel>
                     <FieldValidationMessage
                         showValidation={!isShortAmountValid}
                         message={t(
@@ -750,7 +790,7 @@ const MintOptions: React.FC = () => {
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
                         marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
-                        2
+                        DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingSummaryItem>
                 <MintingInnerSummaryItem>
@@ -760,7 +800,7 @@ const MintOptions: React.FC = () => {
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
                         marketFees ? Number(amount) * marketFees.creator : 0,
-                        2
+                        DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
                 <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
@@ -770,10 +810,10 @@ const MintOptions: React.FC = () => {
                     )} (${formatCurrencyWithSign(
                         USD_SIGN,
                         marketFees ? Number(amount) * marketFees.pool : 0,
-                        2
+                        DEFAULT_OPTIONS_DECIMALS
                     )})`}</ProtocolFeeContent>
                 </MintingInnerSummaryItem>
-                <NetworkFees gasLimit={gasLimit} />
+                <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} />
             </FeeSummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

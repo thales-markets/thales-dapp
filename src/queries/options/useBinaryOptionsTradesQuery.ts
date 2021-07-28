@@ -71,7 +71,10 @@ const useBinaryOptionsTradesQuery = (
             ];
             return trades;
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 
