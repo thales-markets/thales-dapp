@@ -331,6 +331,7 @@
                 "recent-transactions-widget": "Recent market activity",
                 "your-transactions-widget": "Your activity",
                 "custom-market-results-widget": "Results",
+                "custom-market-results-odds-widget": "Odds",
                 "button": {
                     "customize-layout": "Customize view",
                     "reset-layout": "Reset layout"

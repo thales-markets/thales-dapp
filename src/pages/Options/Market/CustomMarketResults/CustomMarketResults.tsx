@@ -8,22 +8,41 @@ import { useMarketContext } from '../contexts/MarketContext';
 import MedalsCountResults from './MedalsCountResults';
 import BasketballResults from './BasketballResults';
 import VolleyballResults from './VolleyballResults';
+import { useTranslation } from 'react-i18next';
 
-export const CustomMarketEventMap: Record<string, any> = {
-    'Olympics Gold Medals Ranking': <MedalsCountResults />,
-    'Olympics Basketball Rankings (m)': <BasketballResults />,
-    'Olympics Volleyball Rankings (m)': <VolleyballResults />,
+enum CustomMarketEvent {
+    OLYMPICS_GOLD_MEDALS_RANKING = 'Olympics Gold Medals Ranking',
+    OLYMPICS_MEN_BASKETBALL_RANKING = 'Olympics Basketball Rankings (m)',
+    OLYMPICS_MEN_VOLLEYBALL_RANKING = 'Olympics Volleyball Rankings (m)',
+}
+
+const CustomMarketEventMap: Record<string, any> = {
+    [CustomMarketEvent.OLYMPICS_GOLD_MEDALS_RANKING]: <MedalsCountResults />,
+    [CustomMarketEvent.OLYMPICS_MEN_BASKETBALL_RANKING]: <BasketballResults />,
+    [CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING]: <VolleyballResults />,
 };
 
 const CustomMarketResults: React.FC = () => {
     const optionsMarket = useMarketContext();
+    const { t } = useTranslation();
 
     return (
         <>
-            <MarketWidgetHeader widgetKey={MarketWidgetKey.CUSTOM_MARKET_RESULTS}></MarketWidgetHeader>
+            <MarketWidgetHeader
+                widgetKey={MarketWidgetKey.CUSTOM_MARKET_RESULTS}
+                title={
+                    optionsMarket.eventName == CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING
+                        ? t(`options.market.widgets.custom-market-results-odds-widget`)
+                        : undefined
+                }
+            ></MarketWidgetHeader>
             <MarketWidgetContent>
                 <Container
-                    background={optionsMarket.eventName === 'Olympics Gold Medals Ranking' ? '#ffffff' : '#04045a'}
+                    background={
+                        optionsMarket.eventName === CustomMarketEvent.OLYMPICS_GOLD_MEDALS_RANKING
+                            ? '#ffffff'
+                            : '#04045a'
+                    }
                 >
                     {CustomMarketEventMap[optionsMarket.eventName || '']}
                 </Container>
@@ -36,7 +55,6 @@ const Container = styled(FlexDivColumn)<{ background: string }>`
     background: ${(props) => props.background};
     width: 100%;
     height: 100%;
-    overflow: hidden;
 `;
 
 export default CustomMarketResults;

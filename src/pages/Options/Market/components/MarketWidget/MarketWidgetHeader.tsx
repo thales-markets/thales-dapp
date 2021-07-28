@@ -10,15 +10,16 @@ import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
 type MarketWidgetHeaderProps = {
     widgetKey: MarketWidgetKey;
     children?: React.ReactNode;
+    title?: string;
 };
 
-export const MarketWidgetHeader: React.FC<MarketWidgetHeaderProps> = ({ widgetKey, children }) => {
+export const MarketWidgetHeader: React.FC<MarketWidgetHeaderProps> = ({ widgetKey, children, title }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     return (
         <WidgetHeader className="grid-component-header">
-            <WidgetTitle>{t(`options.market.widgets.${widgetKey}`)}</WidgetTitle>
+            <WidgetTitle>{title || t(`options.market.widgets.${widgetKey}`)}</WidgetTitle>
             <FlexDivRowCentered>
                 {children}
                 <CloseIconContainer

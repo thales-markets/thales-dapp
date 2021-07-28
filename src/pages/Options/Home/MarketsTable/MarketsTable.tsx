@@ -579,6 +579,12 @@ export const countryToCountryCode = (country: string) => {
                 return 'RS';
             case 'AUS':
                 return 'AU';
+            case 'SLO':
+                return 'SI';
+            case 'POL':
+                return 'PL';
+            case 'ESP':
+                return 'ES';
         }
     }
 };
