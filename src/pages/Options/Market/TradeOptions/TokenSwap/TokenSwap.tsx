@@ -71,6 +71,7 @@ import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -282,7 +283,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         setPriceImpactPercentage('0');
     };
 
-    useEffect(() => {
+    useDebouncedEffect(() => {
         const get0xPrice = async () => {
             if (isAmountEntered && isSlippageValid) {
                 const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
