@@ -448,7 +448,7 @@
                     "total-max-label": "Maximum sent (sUSD)",
                     "total-min-label": "Minimum received (sUSD)",
                     "slippage-label": "Slippage tolerance",
-                    "slippage-tooltip": "Your transaction will revert if the price chnages unfavorably by more than this percentage",
+                    "slippage-tooltip": "Your transaction will revert if the price changes unfavorably by more than this percentage",
                     "protocol-fee-label": "0x protocol fee",
                     "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
                     "confirm-button": {
