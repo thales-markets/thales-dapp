@@ -120,7 +120,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
             {filteredOrders?.map((order: any, index) => (
                 <MarketRow
                     style={{
-                        background: order.isBuy ? 'rgb(61, 186, 162, 0.6)' : 'rgb(255, 122, 104, 0.6)',
+                        background: order.isBuy ? 'rgb(4, 193, 157, 0.12)' : 'rgb(255, 62, 36, 0.12)',
                     }}
                     key={index}
                     onClick={() => {
