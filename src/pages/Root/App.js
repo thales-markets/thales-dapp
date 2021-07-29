@@ -46,7 +46,7 @@ const App = () => {
                 );
                 snxJSConnector.setContractSettings({ networkId, provider });
             }
-            dispatch(updateNetworkSettings({ networkId, networkName: name.toLowerCase() }));
+            dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
 
             dispatch(setAppReady());
         };
@@ -82,7 +82,7 @@ const App = () => {
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
                             })
                         );
                     }
@@ -102,7 +102,7 @@ const App = () => {
                         dispatch(
                             updateNetworkSettings({
                                 networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId].toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
                             })
                         );
                         setSelectedWallet(wallet.name);
