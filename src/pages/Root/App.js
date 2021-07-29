@@ -1,12 +1,12 @@
 import React, { useEffect, lazy, Suspense, useState } from 'react';
-import { Router, Switch, Route, Redirect } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import { QueryClientProvider } from 'react-query';
 import { getEthereumNetwork, SUPPORTED_NETWORKS } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
-import { getIsWalletConnected, updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
+import { updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import queryConnector from 'utils/queryConnector';
@@ -27,7 +27,6 @@ const OptionsMarket = lazy(() => import('../Options/Market'));
 
 const App = () => {
     const dispatch = useDispatch();
-    const isWalletConnected = useSelector((state) => getIsWalletConnected(state));
     const isAppReady = useSelector((state) => getIsAppReady(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
@@ -144,19 +143,12 @@ const App = () => {
             <Suspense fallback={<Loader />}>
                 <Router history={history}>
                     <Switch>
-                        <Route
-                            exact
-                            path={ROUTES.Options.CreateMarket}
-                            render={() =>
-                                isWalletConnected ? (
-                                    <MainLayout>
-                                        <OptionsCreateMarket />
-                                    </MainLayout>
-                                ) : (
-                                    <Redirect to={ROUTES.Options.Home} />
-                                )
-                            }
-                        />
+                        <Route exact path={ROUTES.Options.CreateMarket}>
+                            <MainLayout>
+                                <OptionsCreateMarket />
+                            </MainLayout>
+                        </Route>
+
                         <Route
                             exact
                             path={ROUTES.Options.MarketMatch}
@@ -166,11 +158,13 @@ const App = () => {
                                 </MainLayout>
                             )}
                         />
+
                         <Route exact path={ROUTES.Options.Home}>
                             <MainLayout>
                                 <OptionsHome />
                             </MainLayout>
                         </Route>
+
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>
                                 <Home />
