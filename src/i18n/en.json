@@ -324,7 +324,7 @@
             "widgets": {
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
-                "orderbook-widget": "Orderbook",
+                "orderbook-widget": "Order book",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
                 "chart-options-price-widget": "Options price",
@@ -408,7 +408,7 @@
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",
                 "orderbook": {
-                    "title": "Orderbook",
+                    "title": "Order book",
                     "buy": {
                         "no-results": "No buy orders found."
                     },
@@ -450,7 +450,7 @@
                     "slippage-label": "Slippage tolerance",
                     "slippage-tooltip": "Your transaction will revert if the price changes unfavorably by more than this percentage",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
                     "confirm-button": {
                         "label": "Submit order",
                         "long": "Submit sLong",
@@ -501,7 +501,7 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "total-label": "Total (sUSD)",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
