@@ -11,7 +11,6 @@ import { isNetworkSupported } from 'utils/network';
 
 const Loader: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    console.log(history);
     useEffect(() => {
         return () => {
             history.location.state = '';
