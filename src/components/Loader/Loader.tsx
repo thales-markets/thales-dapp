@@ -11,7 +11,7 @@ import { isNetworkSupported } from 'utils/network';
 
 const Loader: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-
+    console.log(history);
     useEffect(() => {
         return () => {
             history.location.state = '';
@@ -19,7 +19,7 @@ const Loader: React.FC = () => {
     });
     return (
         <Wrapper>
-            {history.location.pathname === '' ? (
+            {history.location.pathname === '/' ? (
                 <CircularProgress />
             ) : isNetworkSupported(networkId) ? (
                 history.location.state === 'show' ? (
