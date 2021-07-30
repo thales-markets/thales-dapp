@@ -529,7 +529,7 @@
                     "total-label": "Total (sUSD)",
                     "filled-label": "Filled (%)",
                     "return-label": "Return",
-                    "return-col-tooltip": "Potential return if this option win",
+                    "return-col-tooltip": "Potential return if this option wins",
                     "inital-amount-label": "Inital amount ({{currencyKey}})",
                     "inital-total-label": "Inital total ({{currencyKey}})"
                 }
