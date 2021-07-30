@@ -433,7 +433,7 @@
                         "amount-col": "AMOUNT ({{currencyKey}})",
                         "filled-col": "FILLED (%)",
                         "return-col": "RETURN",
-                        "return-col-tooltip": "Potential return if this option win",
+                        "return-col-tooltip": "Potential return if this option wins",
                         "total-col": "TOTAL (sUSD)",
                         "time-remaining-col": "TIME REMAINING",
                         "cancel-col-tooltip": "Click to cancel your order"
