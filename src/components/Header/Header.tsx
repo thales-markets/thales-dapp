@@ -55,6 +55,9 @@ const Header: React.FC = () => {
                 }}
             >
                 <Logo className="burger-logo" onClick={() => setShowBurdgerMenu(BurgerState.Hide)} to={ROUTES.Home} />
+                <CommunityLink target="_blank" rel="noreferrer" href="https://docs.thales.market/">
+                    {t('header.links.docs')}
+                </CommunityLink>
                 <CommunityLink
                     onClick={() => {
                         document.getElementById('partners')?.scrollIntoView({ behavior: 'smooth' });
