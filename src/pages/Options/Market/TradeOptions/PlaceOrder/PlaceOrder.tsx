@@ -38,7 +38,6 @@ import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
-import { ValueType } from 'react-select';
 import {
     Container,
     InputLabel,
@@ -65,12 +64,12 @@ import { COLORS } from 'constants/ui';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
 import { dispatchMarketNotification } from '../../../../../utils/options';
+import ExpirationDropdown from '../components/ExpirationDropdown';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
 };
 
-export type ExpirationOptionType = { value: string; label: string };
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
 const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
@@ -156,9 +155,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         };
     });
 
-    const [expiration, setExpiration] = useState<ValueType<ExpirationOptionType, false>>(
-        expirationOptions[expirationOptions.length - 1]
-    );
+    const [expiration, setExpiration] = useState<OrderPeriod | undefined>(OrderPeriod.TRADING_END);
+    const [customHoursExpiration, setCustomHoursExpiration] = useState<number | string>('');
 
     const isPriceEntered = Number(price) > 0;
     const isAmountEntered = Number(amount) > 0;
@@ -180,10 +178,12 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         let orderEndDate = 0;
         if (expiration) {
             orderEndDate =
-                expiration.value === OrderPeriod.TRADING_END
+                expiration === OrderPeriod.TRADING_END
                     ? Math.round(optionsMarket.timeRemaining / 1000)
-                    : Math.round(new Date().getTime() / 1000) +
-                      ORDER_PERIOD_IN_SECONDS[expiration.value as OrderPeriod];
+                    : expiration === OrderPeriod.CUSTOM
+                    ? Math.round(new Date().getTime() / 1000) +
+                      Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR]
+                    : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
         }
         return toBigNumber(orderEndDate);
     };
@@ -488,17 +488,19 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     />
                 </ShortInputContainer>
                 <ShortInputContainer>
-                    <ReactSelect
-                        formatOptionLabel={(option: any) => option.label}
-                        options={expirationOptions}
-                        placeholder={''}
-                        value={expiration}
+                    <ExpirationDropdown
+                        expirationOptions={expirationOptions}
                         onChange={(option: any) => setExpiration(option)}
-                        isSearchable={false}
-                        isDisabled={isSubmitting}
-                        className={isSubmitting ? 'disabled' : ''}
+                        value={expiration}
+                        customValue={customHoursExpiration}
+                        onCustomChange={(value: string | number) => setCustomHoursExpiration(value)}
+                        disabled={isSubmitting}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
+                    <FieldValidationMessage
+                        showValidation={!isExpirationEntered}
+                        message={t(`common.errors.insufficient-balance-wallet1`)}
+                    />
                 </ShortInputContainer>
             </FlexDiv>
             <AmountButtonContainer>

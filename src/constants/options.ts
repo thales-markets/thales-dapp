@@ -27,6 +27,7 @@ export enum OrderPeriod {
     ONE_DAY = 'ONE_DAY',
     ONE_WEEK = 'ONE_WEEK',
     TRADING_END = 'TRADING_END',
+    CUSTOM = 'CUSTOM',
 }
 
 export const ORDER_PERIOD_IN_SECONDS: Record<OrderPeriod, number> = {
@@ -35,6 +36,7 @@ export const ORDER_PERIOD_IN_SECONDS: Record<OrderPeriod, number> = {
     ONE_DAY: 86400,
     ONE_WEEK: 604800,
     TRADING_END: 0,
+    CUSTOM: 0,
 };
 
 export type OrderPeriodItem = {
