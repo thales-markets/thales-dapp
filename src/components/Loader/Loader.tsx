@@ -19,14 +19,22 @@ const Loader: React.FC = () => {
     });
     return (
         <Wrapper>
-            {isNetworkSupported(networkId) ? (
+            {history.location.pathname === '' ? (
+                <CircularProgress />
+            ) : isNetworkSupported(networkId) ? (
                 history.location.state === 'show' ? (
                     <Image style={{ width: 100, height: 100 }} src={coin}></Image>
                 ) : (
                     <CircularProgress />
                 )
             ) : (
-                <Text className="pale-grey bold text-xl">Please switch to Mainnet!!!</Text>
+                <WrongNetworkWrapper>
+                    <Text className="pale-grey text-l ls25">Oops! You are on wrong network!</Text>
+                    <Text style={{ marginTop: 45 }} className="pale-grey text-s lh32 ls35">
+                        You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to
+                        continue.
+                    </Text>
+                </WrongNetworkWrapper>
             )}
         </Wrapper>
     );
@@ -40,6 +48,15 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+const WrongNetworkWrapper = styled.div`
+    background: #04045a;
+    border-radius: 23px;
+    display: flex;
+    flex-direction: column;
+    max-width: 550px;
+    padding: 40px;
 `;
 
 export default Loader;
