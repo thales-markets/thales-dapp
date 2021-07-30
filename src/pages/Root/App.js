@@ -3,7 +3,7 @@ import { Router, Switch, Route } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import { QueryClientProvider } from 'react-query';
-import { getEthereumNetwork, SUPPORTED_NETWORKS } from 'utils/network';
+import { getEthereumNetwork, isNetworkSupported, SUPPORTED_NETWORKS } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
@@ -38,23 +38,27 @@ const App = () => {
     useEffect(() => {
         const init = async () => {
             const { networkId, name } = await getEthereumNetwork();
-            if (!snxJSConnector.initialized) {
-                const provider = new ethers.providers.InfuraProvider(
-                    networkId,
-                    process.env.REACT_APP_INFURA_PROJECT_ID
-                );
-                snxJSConnector.setContractSettings({ networkId, provider });
+            try {
+                dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
+                if (!snxJSConnector.initialized) {
+                    const provider = new ethers.providers.InfuraProvider(
+                        networkId,
+                        process.env.REACT_APP_INFURA_PROJECT_ID
+                    );
+                    snxJSConnector.setContractSettings({ networkId, provider });
+                }
+                dispatch(setAppReady());
+            } catch (e) {
+                dispatch(setAppReady());
+                console.log(e);
             }
-            dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
-
-            dispatch(setAppReady());
         };
 
         init();
     }, []);
 
     useEffect(() => {
-        if (isAppReady && networkId) {
+        if (isAppReady && networkId && isNetworkSupported(networkId)) {
             const onboard = initOnboard(networkId, {
                 address: (walletAddress) => {
                     dispatch(updateWallet({ walletAddress: walletAddress }));
