@@ -293,6 +293,7 @@ const MintOptions: React.FC = () => {
                         await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
                     }
                     refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                    resetForm();
                 }
                 setIsMinting(false);
             } catch (e) {
@@ -594,6 +595,16 @@ const MintOptions: React.FC = () => {
     }, [sellShort, shortAmount, mintedAmount]);
 
     const actionInProgress = isMinting || isLongSubmitting || isShortSubmitting;
+
+    const resetForm = () => {
+        setAmount('');
+        setLongAmount('');
+        setShortAmount('');
+        setLongPrice(1);
+        setShortPrice(1);
+        setSellLong(false);
+        setSellShort(false);
+    };
 
     return (
         <Container>
