@@ -259,6 +259,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
                     )
                 );
+                resetForm();
             }
         } catch (e) {
             console.log(e);
@@ -456,6 +457,17 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         }
         return 'rgb(49, 208, 170)';
     };
+
+    const resetForm = () => {
+        setAmount('');
+        setOrderSide(orderSideOptions[0]);
+        setIsAmountValid(true);
+        resetQuote();
+    };
+
+    useEffect(() => {
+        resetForm();
+    }, [optionSide]);
 
     return (
         <Container>

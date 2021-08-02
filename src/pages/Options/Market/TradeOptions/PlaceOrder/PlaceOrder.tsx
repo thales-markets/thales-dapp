@@ -298,6 +298,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     t('options.market.trade-options.place-order.confirm-button.confirmation-message')
                 );
                 refetchOrderbook(baseToken);
+                resetForm();
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -380,6 +381,20 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
             </SubmitButton>
         );
     };
+
+    const resetForm = () => {
+        setAmount('');
+        setPrice('');
+        setExpiration(OrderPeriod.TRADING_END);
+        setCustomHoursExpiration('');
+        setOrderSide(orderSideOptions[0]);
+        setIsPriceValid(true);
+        setIsAmountValid(true);
+    };
+
+    useEffect(() => {
+        resetForm();
+    }, [optionSide]);
 
     useEffect(() => {
         const total = Number(price) * Number(amount);
