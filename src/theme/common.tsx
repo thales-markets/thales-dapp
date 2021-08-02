@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import logo from 'assets/images/logo.svg';
 import xSign from 'assets/images/x-sign.svg';
 import React from 'react';
-import { Tooltip, withStyles } from '@material-ui/core';
 
 export const FlexDiv = styled.div`
     display: flex;
@@ -212,18 +211,6 @@ export const Button = styled.button`
         padding: 8px 16px !important;
     }
 `;
-
-export const LightTooltip = withStyles(() => ({
-    tooltip: {
-        fontSize: '12px',
-        backgroundColor: '#748BC6',
-        border: '1px solid #748BC6',
-        padding: 6,
-    },
-    arrow: {
-        color: '#748BC6',
-    },
-}))(Tooltip);
 
 export const Text = styled.p`
     strong {
