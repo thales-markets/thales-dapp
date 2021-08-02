@@ -89,10 +89,12 @@ const App = () => {
                             })
                         );
                     } else {
-                        updateNetworkSettings({
-                            networkId: networkId,
-                            networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
-                        });
+                        dispatch(
+                            updateNetworkSettings({
+                                networkId: networkId,
+                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                            })
+                        );
                     }
                 },
                 wallet: async (wallet) => {
@@ -107,6 +109,7 @@ const App = () => {
                                 provider,
                                 signer,
                             });
+
                             dispatch(
                                 updateNetworkSettings({
                                     networkId,
@@ -115,6 +118,7 @@ const App = () => {
                             );
                             setSelectedWallet(wallet.name);
                         }
+
                         dispatch(
                             updateNetworkSettings({
                                 networkId,
