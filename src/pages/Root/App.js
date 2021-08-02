@@ -1,5 +1,5 @@
 import React, { useEffect, lazy, Suspense, useState } from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import { QueryClientProvider } from 'react-query';
@@ -189,6 +189,10 @@ const App = () => {
                             <MainLayout>
                                 <Home />
                             </MainLayout>
+                        </Route>
+
+                        <Route>
+                            <Redirect to={ROUTES.Options.Home} />
                         </Route>
                     </Switch>
                 </Router>
