@@ -1,6 +1,7 @@
 import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
 import { LimitOrder, Signature } from '@0x/protocol-utils';
+import { OrderPeriod } from 'constants/options';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
 
@@ -190,3 +191,10 @@ export type ZeroExValidationError = {
     code: number;
     reason: string;
 };
+
+export type ExpirationOption = {
+    value: OrderPeriod;
+    label: string;
+};
+
+export type ExpirationOptions = ExpirationOption[];

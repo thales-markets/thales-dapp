@@ -200,6 +200,7 @@ export const CreateMarket: React.FC = () => {
     };
 
     useEffect(() => {
+        if (!walletAddress) return;
         const {
             contracts: { SynthsUSD },
         } = snxJSConnector.snxJS as any;

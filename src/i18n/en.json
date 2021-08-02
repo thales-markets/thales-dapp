@@ -6,7 +6,8 @@
             "faq": "FAQ",
             "partners": "Integrations",
             "community": "Community",
-            "blog": "Blog"
+            "blog": "Blog",
+            "docs": "Docs"
         },
         "connect-wallet": "Connect wallet",
         "disconnect-wallet": "Disconnect wallet"
@@ -324,7 +325,7 @@
             "widgets": {
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
-                "orderbook-widget": "Orderbook",
+                "orderbook-widget": "Order book",
                 "trade-widget": "Trade",
                 "chart-trading-view-widget": "Trading view",
                 "chart-options-price-widget": "Options price",
@@ -408,7 +409,7 @@
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",
                 "orderbook": {
-                    "title": "Orderbook",
+                    "title": "Order book",
                     "buy": {
                         "no-results": "No buy orders found."
                     },
@@ -433,7 +434,7 @@
                         "amount-col": "AMOUNT ({{currencyKey}})",
                         "filled-col": "FILLED (%)",
                         "return-col": "RETURN",
-                        "return-col-tooltip": "Potential return if this option win",
+                        "return-col-tooltip": "Potential return if this option wins",
                         "total-col": "TOTAL (sUSD)",
                         "time-remaining-col": "TIME REMAINING",
                         "cancel-col-tooltip": "Click to cancel your order"
@@ -448,9 +449,9 @@
                     "total-max-label": "Maximum sent (sUSD)",
                     "total-min-label": "Minimum received (sUSD)",
                     "slippage-label": "Slippage tolerance",
-                    "slippage-tooltip": "Your transaction will revert if the price chnages unfavorably by more than this percentage",
+                    "slippage-tooltip": "Your transaction will revert if the price changes unfavorably by more than this percentage",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
                     "confirm-button": {
                         "label": "Submit order",
                         "long": "Submit sLong",
@@ -501,7 +502,7 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "total-label": "Total (sUSD)",
                     "protocol-fee-label": "0x protocol fee",
-                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's orderbooks",
+                    "protocol-fee-tooltip": "This is the base fee charged by 0x for interacting with the 0x protocol's order books",
                     "confirm-button": {
                         "label": "Fill order",
                         "progress-label": "Filling order in progress..."
@@ -529,7 +530,7 @@
                     "total-label": "Total (sUSD)",
                     "filled-label": "Filled (%)",
                     "return-label": "Return",
-                    "return-col-tooltip": "Potential return if this option win",
+                    "return-col-tooltip": "Potential return if this option wins",
                     "inital-amount-label": "Inital amount ({{currencyKey}})",
                     "inital-total-label": "Inital total ({{currencyKey}})"
                 }

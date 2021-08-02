@@ -20,13 +20,18 @@ const MarketContainer: React.FC<MarketContainerProps> = (props) => {
         const { params } = props.match;
 
         if (params && params.marketAddress) {
-            setBOMContract(
-                new ethers.Contract(
-                    params.marketAddress,
-                    binaryOptionMarketContract.abi,
-                    (snxJSConnector as any).provider
-                )
+            const contract = new ethers.Contract(
+                params.marketAddress,
+                binaryOptionMarketContract.abi,
+                (snxJSConnector as any).provider
             );
+            contract.resolvedAddress
+                .then(() => {
+                    setBOMContract(contract);
+                })
+                .catch(() => {
+                    navigateTo(ROUTES.Options.Home);
+                });
         } else {
             navigateTo(ROUTES.Options.Home);
         }

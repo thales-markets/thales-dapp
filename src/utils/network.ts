@@ -2,7 +2,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_GAS_BUFFER, DEFAULT_GAS_BUFFER_MULTIPLIER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
 
-export type NetworkId = 1 | 3 | 4 | 42;
+export type NetworkId = 1 | 3 | 42;
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -12,7 +12,6 @@ type EthereumProvider = {
 export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
-    4: 'RINKEBY',
     42: 'KOVAN',
 };
 
@@ -55,5 +54,18 @@ export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
 export const getInfuraRpcURL = (networkId: NetworkId) => {
     const network = SUPPORTED_NETWORKS[networkId];
-    return `https://${network.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
+    return `https://${network?.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
+};
+
+export const isNetworkSupported = (networkId: NetworkId): boolean => {
+    switch (networkId) {
+        case 1:
+            return true;
+        case 3:
+            return true;
+        case 42:
+            return true;
+        default:
+            return false;
+    }
 };
