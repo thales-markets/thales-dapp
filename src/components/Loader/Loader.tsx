@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import coin from 'assets/images/only_coin.gif';
 import { CircularProgress } from '@material-ui/core';
-import { Image, Text } from 'theme/common';
+import { Button, Image, Text } from 'theme/common';
 import { history } from 'utils/routes';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -33,10 +33,31 @@ const Loader: React.FC = () => {
                         You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to
                         continue.
                     </Text>
+                    <Button
+                        style={{ alignSelf: 'flex-end', margin: '80px 0' }}
+                        className="primary"
+                        onClick={switchNetwork}
+                    >
+                        Switch to Mainnet
+                    </Button>
                 </WrongNetworkWrapper>
             )}
         </Wrapper>
     );
+};
+
+const switchNetwork = async () => {
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            await (window.ethereum as any).request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x1' }],
+            });
+            location.reload();
+        } catch (switchError) {
+            console.log(switchError);
+        }
+    }
 };
 
 const Wrapper = styled.div`

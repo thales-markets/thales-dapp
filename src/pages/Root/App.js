@@ -64,7 +64,7 @@ const App = () => {
                     dispatch(updateWallet({ walletAddress: walletAddress }));
                 },
                 network: (networkId) => {
-                    if (networkId) {
+                    if (networkId && isNetworkSupported(networkId)) {
                         if (onboardConnector.onboard.getState().wallet.provider) {
                             const provider = new ethers.providers.Web3Provider(
                                 onboardConnector.onboard.getState().wallet.provider
@@ -88,6 +88,11 @@ const App = () => {
                                 networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
                             })
                         );
+                    } else {
+                        updateNetworkSettings({
+                            networkId: networkId,
+                            networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                        });
                     }
                 },
                 wallet: async (wallet) => {
@@ -96,19 +101,26 @@ const App = () => {
                         const signer = provider.getSigner();
                         const network = await provider.getNetwork();
                         const networkId = network.chainId;
-
-                        snxJSConnector.setContractSettings({
-                            networkId,
-                            provider,
-                            signer,
-                        });
+                        if (networkId && isNetworkSupported(networkId)) {
+                            snxJSConnector.setContractSettings({
+                                networkId,
+                                provider,
+                                signer,
+                            });
+                            dispatch(
+                                updateNetworkSettings({
+                                    networkId,
+                                    networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                })
+                            );
+                            setSelectedWallet(wallet.name);
+                        }
                         dispatch(
                             updateNetworkSettings({
                                 networkId,
                                 networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
                             })
                         );
-                        setSelectedWallet(wallet.name);
                     } else {
                         setSelectedWallet(null);
                     }
