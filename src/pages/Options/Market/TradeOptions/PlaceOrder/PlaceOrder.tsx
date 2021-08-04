@@ -214,7 +214,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -225,10 +225,16 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);

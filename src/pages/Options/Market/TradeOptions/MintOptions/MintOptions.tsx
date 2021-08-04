@@ -184,7 +184,7 @@ const MintOptions: React.FC = () => {
                 SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
             }
         };
-    }, [walletAddress]);
+    }, [walletAddress, hasAllowance]);
 
     // useEffect(() => {
     //     if (walletAddress) {
@@ -236,10 +236,20 @@ const MintOptions: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256
                 );
-                await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                });
+                const tx = (await SynthsUSD.approve(
+                    binaryOptionsMarketManagerContract.address,
+                    ethers.constants.MaxUint256,
+                    {
+                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                        gasPrice: gasPriceInWei(gasPrice),
+                    }
+                )) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
@@ -400,7 +410,7 @@ const MintOptions: React.FC = () => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, sellLong]);
+    }, [walletAddress, isWalletConnected, sellLong, hasLongAllowance]);
 
     const handleLongAllowance = async () => {
         if (gasPrice !== null) {
@@ -415,10 +425,16 @@ const MintOptions: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setLongAllowance(true);
+                    setIsLongAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsLongAllowing(false);
@@ -452,7 +468,7 @@ const MintOptions: React.FC = () => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, sellShort]);
+    }, [walletAddress, isWalletConnected, sellShort, hasShortAllowance]);
 
     const handleShortAllowance = async () => {
         if (gasPrice !== null) {
@@ -467,10 +483,15 @@ const MintOptions: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setShortAllowance(true);
+                    setIsShortAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsShortAllowing(false);
