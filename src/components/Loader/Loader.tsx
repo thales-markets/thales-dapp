@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import coin from 'assets/images/only_coin.gif';
+import angry from 'assets/images/angry_thales.gif';
 import { CircularProgress } from '@material-ui/core';
 import { Button, Image, Text } from 'theme/common';
 import { history } from 'utils/routes';
@@ -28,7 +29,9 @@ const Loader: React.FC = () => {
                 )
             ) : (
                 <WrongNetworkWrapper>
+                    <Image style={{ width: 200, height: 200, margin: 'auto' }} src={angry}></Image>
                     <Text className="pale-grey text-l ls25">Oops! You are on wrong network!</Text>
+
                     <Text style={{ marginTop: 45 }} className="pale-grey text-s lh32 ls35">
                         You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to
                         continue.
