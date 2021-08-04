@@ -48,6 +48,7 @@ export const QUERY_KEYS = {
             marketAddress,
             walletAddress,
         ],
+        Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],

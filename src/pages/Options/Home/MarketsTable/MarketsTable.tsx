@@ -19,7 +19,7 @@ import { navigateToOptionsMarket } from 'utils/routes';
 import { Arrow, ArrowsWrapper, PhaseLabel, StyledTableCell, TableHeaderLabel, Star } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
-import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarkets';
+import { PhaseFilterEnum, UserFilterEnum } from '../ExploreMarkets/ExploreMarkets';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import star from 'assets/images/star.svg';
@@ -41,6 +41,8 @@ import volleyball from 'assets/images/volleyball.svg';
 import medals from 'assets/images/medals.png';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
+import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
+import { getIsAppReady } from 'redux/modules/app';
 
 dotenv.config();
 
@@ -50,7 +52,7 @@ type MarketsTableProps = {
     watchlistedMarkets: string[];
     isLoading?: boolean;
     phase: PhaseFilterEnum;
-    isCustomMarket: boolean;
+    userFilter: UserFilterEnum;
     onChange: any;
 };
 
@@ -72,14 +74,22 @@ const headCells: HeadCell[] = [
 ];
 
 const headCellsOlympics: HeadCell[] = [
-    { id: 1, label: '', sortable: false },
-    { id: 2, label: 'Country', sortable: false },
-    { id: 3, label: 'Event Name', sortable: false },
-    { id: 4, label: 'Rank', sortable: false },
-    { id: 5, label: 'Market Size', sortable: false },
-    { id: 6, label: 'Time Remaining', sortable: false },
-    { id: 7, label: 'Open Orders', sortable: false },
-    { id: 8, label: 'Phase', sortable: false },
+    { id: 1, label: 'Country', sortable: false },
+    { id: 2, label: 'Event Name', sortable: false },
+    { id: 3, label: 'Rank', sortable: false },
+    { id: 4, label: 'Market Size', sortable: false },
+    { id: 5, label: 'Time Remaining', sortable: false },
+    { id: 6, label: 'Open Orders', sortable: false },
+    { id: 7, label: 'Phase', sortable: false },
+];
+
+const headCellsLeaderboard: HeadCell[] = [
+    { id: 1, label: 'Rank', sortable: false },
+    { id: 2, label: 'Display Name', sortable: false },
+    { id: 3, label: '', sortable: false },
+    { id: 4, label: '', sortable: false },
+    { id: 5, label: '', sortable: false },
+    { id: 6, label: 'Volume', sortable: false },
 ];
 
 enum OrderDirection {
@@ -91,8 +101,12 @@ enum OrderDirection {
 const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
-    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates, isCustomMarket }) => {
+    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates, userFilter }) => {
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+        const networkId = useSelector((state: RootState) => getNetworkId(state));
+        const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+        const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
@@ -101,8 +115,11 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const numberOfPages = Math.ceil(optionsMarkets.length / rowsPerPage) || 1;
         const [orderBy, setOrderBy] = useState(defaultOrderBy);
         const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
-        const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-        const networkId = useSelector((state: RootState) => getNetworkId(state));
+
+        const leaderboardQuery = useLeaderboardQuery(networkId, {
+            enabled: isAppReady,
+        });
+        const leaderboard = leaderboardQuery.data ? leaderboardQuery.data.sort((a, b) => b.volume - a.volume) : [];
 
         const calcDirection = (cell: HeadCell) => {
             if (orderBy === cell.id) {
@@ -140,7 +157,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
 
         const toggleWatchlist = async (marketAddress: string) => {
             try {
-                await axios.post(process.env.REACT_APP_THALES_API_URL + '/watchlist', {
+                await axios.post('https://api.thales.market/watchlist', {
                     networkId,
                     walletAddress,
                     marketAddress,
@@ -152,7 +169,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         };
 
         const sortedMarkets = useMemo(() => {
-            if (isCustomMarket) {
+            if (userFilter === UserFilterEnum.Olympics) {
                 return optionsMarkets.filter((market) => market.customMarket);
             } else {
                 return optionsMarkets
@@ -191,228 +208,258 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                     <Table aria-label="customized table">
                         <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                             <TableRow>
-                                {!isCustomMarket
-                                    ? headCells.map((cell: HeadCell, index) => {
-                                          return (
-                                              <StyledTableCell
-                                                  onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                                  key={index}
-                                                  style={cell.sortable ? { cursor: 'pointer' } : {}}
-                                              >
-                                                  <TableHeaderLabel
-                                                      className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
-                                                  >
-                                                      {cell.label}
-                                                  </TableHeaderLabel>
-                                                  {cell.sortable && (
-                                                      <ArrowsWrapper>
-                                                          {orderBy === cell.id &&
-                                                          orderDirection !== OrderDirection.NONE ? (
-                                                              <Arrow
-                                                                  src={
-                                                                      orderDirection === OrderDirection.ASC
-                                                                          ? upSelected
-                                                                          : downSelected
-                                                                  }
-                                                              />
-                                                          ) : (
-                                                              <>
-                                                                  <Arrow src={up} />
-                                                                  <Arrow src={down} />
-                                                              </>
-                                                          )}
-                                                      </ArrowsWrapper>
-                                                  )}
-                                              </StyledTableCell>
-                                          );
-                                      })
-                                    : headCellsOlympics.map((cell: HeadCell, index) => {
-                                          return (
-                                              <StyledTableCell
-                                                  onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                                  key={index}
-                                                  style={cell.sortable ? { cursor: 'pointer' } : {}}
-                                              >
-                                                  <TableHeaderLabel
-                                                      className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
-                                                  >
-                                                      {cell.label}
-                                                  </TableHeaderLabel>
-                                                  {cell.sortable && (
-                                                      <ArrowsWrapper>
-                                                          {orderBy === cell.id &&
-                                                          orderDirection !== OrderDirection.NONE ? (
-                                                              <Arrow
-                                                                  src={
-                                                                      orderDirection === OrderDirection.ASC
-                                                                          ? upSelected
-                                                                          : downSelected
-                                                                  }
-                                                              />
-                                                          ) : (
-                                                              <>
-                                                                  <Arrow src={up} />
-                                                                  <Arrow src={down} />
-                                                              </>
-                                                          )}
-                                                      </ArrowsWrapper>
-                                                  )}
-                                              </StyledTableCell>
-                                          );
-                                      })}
+                                {userFilter === UserFilterEnum.Leaderboard &&
+                                    headCellsLeaderboard.map((cell: HeadCell, index) => {
+                                        return (
+                                            <StyledTableCell
+                                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                                key={index}
+                                                style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                            >
+                                                <TableHeaderLabel
+                                                    className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                                >
+                                                    {cell.label}
+                                                </TableHeaderLabel>
+                                                {cell.sortable && (
+                                                    <ArrowsWrapper>
+                                                        {orderBy === cell.id &&
+                                                        orderDirection !== OrderDirection.NONE ? (
+                                                            <Arrow
+                                                                src={
+                                                                    orderDirection === OrderDirection.ASC
+                                                                        ? upSelected
+                                                                        : downSelected
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <>
+                                                                <Arrow src={up} />
+                                                                <Arrow src={down} />
+                                                            </>
+                                                        )}
+                                                    </ArrowsWrapper>
+                                                )}
+                                            </StyledTableCell>
+                                        );
+                                    })}
+                                {userFilter === UserFilterEnum.Olympics &&
+                                    headCellsOlympics.map((cell: HeadCell, index) => {
+                                        return (
+                                            <StyledTableCell
+                                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                                key={index}
+                                                style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                            >
+                                                <TableHeaderLabel
+                                                    className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                                >
+                                                    {cell.label}
+                                                </TableHeaderLabel>
+                                                {cell.sortable && (
+                                                    <ArrowsWrapper>
+                                                        {orderBy === cell.id &&
+                                                        orderDirection !== OrderDirection.NONE ? (
+                                                            <Arrow
+                                                                src={
+                                                                    orderDirection === OrderDirection.ASC
+                                                                        ? upSelected
+                                                                        : downSelected
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <>
+                                                                <Arrow src={up} />
+                                                                <Arrow src={down} />
+                                                            </>
+                                                        )}
+                                                    </ArrowsWrapper>
+                                                )}
+                                            </StyledTableCell>
+                                        );
+                                    })}
+                                {userFilter !== UserFilterEnum.Olympics &&
+                                    userFilter !== UserFilterEnum.Leaderboard &&
+                                    headCells.map((cell: HeadCell, index) => {
+                                        return (
+                                            <StyledTableCell
+                                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                                key={index}
+                                                style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                            >
+                                                <TableHeaderLabel
+                                                    className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                                >
+                                                    {cell.label}
+                                                </TableHeaderLabel>
+                                                {cell.sortable && (
+                                                    <ArrowsWrapper>
+                                                        {orderBy === cell.id &&
+                                                        orderDirection !== OrderDirection.NONE ? (
+                                                            <Arrow
+                                                                src={
+                                                                    orderDirection === OrderDirection.ASC
+                                                                        ? upSelected
+                                                                        : downSelected
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <>
+                                                                <Arrow src={up} />
+                                                                <Arrow src={down} />
+                                                            </>
+                                                        )}
+                                                    </ArrowsWrapper>
+                                                )}
+                                            </StyledTableCell>
+                                        );
+                                    })}
                             </TableRow>
                         </TableHead>
 
                         <TableBody>
-                            {!isCustomMarket
-                                ? sortedMarkets.map((market, index) => {
-                                      const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
-                                      const strikeAndAssetPriceDifference = getPercentageDifference(
-                                          currentAssetPrice,
-                                          market.strikePrice
-                                      );
-                                      return (
-                                          <StyledTableRow
-                                              onClick={() => {
-                                                  if (market.phase !== 'expiry') {
-                                                      navigateToOptionsMarket(market.address);
-                                                  }
-                                              }}
-                                              className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
-                                              key={index}
-                                          >
-                                              <StyledTableCell
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      toggleWatchlist(market.address);
-                                                  }}
-                                                  style={{ paddingRight: 0 }}
-                                              >
-                                                  <Star
-                                                      style={{ visibility: isWalletConnected ? 'visible' : 'hidden' }}
-                                                      src={
-                                                          watchlistedMarkets?.includes(market.address) ? fullStar : star
-                                                      }
-                                                  />
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <Currency.Name
-                                                      currencyKey={market.currencyKey}
-                                                      showIcon={true}
-                                                      iconProps={{ type: 'asset' }}
-                                                      synthIconStyle={{ width: 32, height: 32 }}
-                                                  />
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  {currentAssetPrice
-                                                      ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
-                                                      : 'N/A'}
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <FlexDivCentered>
-                                                      <span>
-                                                          {formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
-                                                      </span>
-                                                      {currentAssetPrice > market.strikePrice ? (
-                                                          <RedText
-                                                              style={{
-                                                                  display: isFinite(strikeAndAssetPriceDifference)
-                                                                      ? 'flex'
-                                                                      : 'none',
-                                                              }}
-                                                          >
-                                                              (
-                                                              <PriceArrow src={arrowDown} />
-                                                              <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
-                                                          </RedText>
-                                                      ) : (
-                                                          <GreenText
-                                                              style={{
-                                                                  display: isFinite(strikeAndAssetPriceDifference)
-                                                                      ? 'flex'
-                                                                      : 'none',
-                                                              }}
-                                                          >
-                                                              (
-                                                              <PriceArrow src={arrowUp} />
-                                                              <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
-                                                          </GreenText>
-                                                      )}
-                                                  </FlexDivCentered>
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <TimeRemaining end={market.timeRemaining} fontSize={14} />
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  {(market.phase === 'trading' && market.openOrders) ?? (
-                                                      <StyledLoader />
-                                                  )}
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <PhaseLabel className={market.phase}>
-                                                      {t(`options.phases.${market.phase}`)}
-                                                  </PhaseLabel>
-                                              </StyledTableCell>
-                                          </StyledTableRow>
-                                      );
-                                  })
-                                : sortedMarkets.map((market: any, index) => {
-                                      return (
-                                          <StyledTableRow
-                                              onClick={() => {
-                                                  if (market.phase !== 'expiry') {
-                                                      navigateToOptionsMarket(market.address);
-                                                  }
-                                              }}
-                                              className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
-                                              key={index}
-                                          >
-                                              <StyledTableCell
-                                                  onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      toggleWatchlist(market.address);
-                                                  }}
-                                                  style={{ paddingRight: 0 }}
-                                              >
-                                                  <Star
-                                                      style={{ visibility: isWalletConnected ? 'visible' : 'hidden' }}
-                                                      src={
-                                                          watchlistedMarkets?.includes(market.address) ? fullStar : star
-                                                      }
-                                                  />
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <ReactCountryFlag
-                                                      countryCode={countryToCountryCode(market.country)}
-                                                      style={{ width: 32, height: 32, marginRight: 10 }}
-                                                      svg
-                                                  />
-                                                  {market.country}
-                                              </StyledTableCell>
-                                              <StyledTableCell>{market.eventName}</StyledTableCell>
-                                              <StyledTableCell>{market.outcome}</StyledTableCell>
-                                              <StyledTableCell>
-                                                  {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <TimeRemaining end={market.timeRemaining} fontSize={14} />
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  {(market.phase === 'trading' && market.openOrders) ?? (
-                                                      <StyledLoader />
-                                                  )}
-                                              </StyledTableCell>
-                                              <StyledTableCell>
-                                                  <PhaseLabel className={market.phase}>
-                                                      {t(`options.phases.${market.phase}`)}
-                                                  </PhaseLabel>
-                                              </StyledTableCell>
-                                          </StyledTableRow>
-                                      );
-                                  })}
+                            {userFilter === UserFilterEnum.Leaderboard &&
+                                leaderboard.map((leader: any, index: any) => {
+                                    return (
+                                        <StyledTableRow key={index}>
+                                            <StyledTableCell>{index}</StyledTableCell>
+                                            <StyledTableCell>{leader.walletAddress}</StyledTableCell>
+                                            <StyledTableCell></StyledTableCell>
+                                            <StyledTableCell></StyledTableCell>
+                                            <StyledTableCell></StyledTableCell>
+                                            <StyledTableCell>{leader.volume.toFixed(2)}</StyledTableCell>
+                                        </StyledTableRow>
+                                    );
+                                })}
+                            {userFilter === UserFilterEnum.Olympics &&
+                                sortedMarkets.map((market: any, index) => {
+                                    return (
+                                        <StyledTableRow
+                                            onClick={() => {
+                                                if (market.phase !== 'expiry') {
+                                                    navigateToOptionsMarket(market.address);
+                                                }
+                                            }}
+                                            className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
+                                            key={index}
+                                        >
+                                            <StyledTableCell>
+                                                <ReactCountryFlag
+                                                    countryCode={countryToCountryCode(market.country)}
+                                                    style={{ width: 32, height: 32, marginRight: 10 }}
+                                                    svg
+                                                />
+                                                {market.country}
+                                            </StyledTableCell>
+                                            <StyledTableCell>{market.eventName}</StyledTableCell>
+                                            <StyledTableCell>{market.outcome}</StyledTableCell>
+                                            <StyledTableCell>
+                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <TimeRemaining end={market.timeRemaining} fontSize={14} />
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <PhaseLabel className={market.phase}>
+                                                    {t(`options.phases.${market.phase}`)}
+                                                </PhaseLabel>
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    );
+                                })}
+                            {userFilter !== UserFilterEnum.Olympics &&
+                                userFilter !== UserFilterEnum.Leaderboard &&
+                                sortedMarkets.map((market, index) => {
+                                    const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
+                                    const strikeAndAssetPriceDifference = getPercentageDifference(
+                                        currentAssetPrice,
+                                        market.strikePrice
+                                    );
+                                    return (
+                                        <StyledTableRow
+                                            onClick={() => {
+                                                if (market.phase !== 'expiry') {
+                                                    navigateToOptionsMarket(market.address);
+                                                }
+                                            }}
+                                            className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
+                                            key={index}
+                                        >
+                                            <StyledTableCell
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleWatchlist(market.address);
+                                                }}
+                                                style={{ paddingRight: 0 }}
+                                            >
+                                                <Star
+                                                    style={{ visibility: isWalletConnected ? 'visible' : 'hidden' }}
+                                                    src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
+                                                />
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <Currency.Name
+                                                    currencyKey={market.currencyKey}
+                                                    showIcon={true}
+                                                    iconProps={{ type: 'asset' }}
+                                                    synthIconStyle={{ width: 32, height: 32 }}
+                                                />
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {currentAssetPrice
+                                                    ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
+                                                    : 'N/A'}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <FlexDivCentered>
+                                                    <span>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</span>
+                                                    {currentAssetPrice > market.strikePrice ? (
+                                                        <RedText
+                                                            style={{
+                                                                display: isFinite(strikeAndAssetPriceDifference)
+                                                                    ? 'flex'
+                                                                    : 'none',
+                                                            }}
+                                                        >
+                                                            (
+                                                            <PriceArrow src={arrowDown} />
+                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
+                                                        </RedText>
+                                                    ) : (
+                                                        <GreenText
+                                                            style={{
+                                                                display: isFinite(strikeAndAssetPriceDifference)
+                                                                    ? 'flex'
+                                                                    : 'none',
+                                                            }}
+                                                        >
+                                                            (
+                                                            <PriceArrow src={arrowUp} />
+                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
+                                                        </GreenText>
+                                                    )}
+                                                </FlexDivCentered>
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <TimeRemaining end={market.timeRemaining} fontSize={14} />
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
+                                            </StyledTableCell>
+                                            <StyledTableCell>
+                                                <PhaseLabel className={market.phase}>
+                                                    {t(`options.phases.${market.phase}`)}
+                                                </PhaseLabel>
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    );
+                                })}
                         </TableBody>
                         {optionsMarkets.length !== 0 && (
                             <TableFooter>
