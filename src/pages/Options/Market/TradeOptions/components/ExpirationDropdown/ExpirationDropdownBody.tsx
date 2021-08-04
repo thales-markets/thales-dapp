@@ -42,8 +42,9 @@ const ExpirationDropdownBody: React.FC<ExpirationDropdownBodyProps> = ({
                             }}
                             placeholder={t('modals.gwei.placeholder')}
                             type="number"
-                            step="1"
+                            step="any"
                             min="0"
+                            max="any"
                         />
                         <HoursLabel>hours</HoursLabel>
                     </InputContainer>
