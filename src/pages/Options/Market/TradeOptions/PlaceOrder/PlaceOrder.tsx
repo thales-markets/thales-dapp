@@ -182,7 +182,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     ? Math.round(optionsMarket.timeRemaining / 1000)
                     : expiration === OrderPeriod.CUSTOM
                     ? Math.round(new Date().getTime() / 1000) +
-                      Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR]
+                      Math.round(Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])
                     : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
         }
         return toBigNumber(orderEndDate);
