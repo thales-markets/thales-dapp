@@ -1,5 +1,5 @@
 import detectEthereumProvider from '@metamask/detect-provider';
-import { DEFAULT_GAS_BUFFER, DEFAULT_GAS_BUFFER_MULTIPLIER } from 'constants/defaults';
+import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
 
 export type NetworkId = 1 | 3 | 42;
@@ -48,7 +48,7 @@ export const isMainNet = (networkId: NetworkId) => networkId === 1;
 
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 
-export const normalizeGasLimitRelative = (gasLimit: number) => Math.trunc(gasLimit * DEFAULT_GAS_BUFFER_MULTIPLIER);
+export const normalize0xGasLimit = (gasLimit: number) => Math.trunc(gasLimit * DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER);
 
 export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
