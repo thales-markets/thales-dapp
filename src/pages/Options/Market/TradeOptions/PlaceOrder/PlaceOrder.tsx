@@ -54,6 +54,8 @@ import {
     BuySellSliderContainer,
     ShortInputContainer,
     SummaryContainer,
+    StyledQuestionMarkIcon,
+    LightTooltip,
 } from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
 import { FlexDiv, FlexDivRow } from 'theme/common';
@@ -65,6 +67,9 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import ExpirationDropdown from '../components/ExpirationDropdown';
+import { MetamaskSubprovider } from '@0x/subproviders';
+import Checkbox from 'components/Checkbox';
+import styled from 'styled-components';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -90,6 +95,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
+    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
 
     const orderSideOptions = [
         {
@@ -282,10 +288,14 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                 });
 
                 try {
-                    const signature = await order.getSignatureWithProviderAsync(
-                        (snxJSConnector.signer?.provider as any).provider,
-                        SignatureType.EIP712
-                    );
+                    const signature = useLegacySigning
+                        ? await order.getSignatureWithProviderAsync(
+                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
+                          )
+                        : await order.getSignatureWithProviderAsync(
+                              (snxJSConnector.signer?.provider as any).provider,
+                              SignatureType.EIP712
+                          );
                     return { ...order, signature };
                 } catch (e) {
                     console.log(e);
@@ -543,7 +553,21 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     </SummaryContent>
                 </SummaryItem>
             </SummaryContainer>
-            <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+            <SubmitButtonContainer>
+                {getSubmitButton()}
+                <CheckboxContainer>
+                    <Checkbox
+                        disabled={isSubmitting}
+                        checked={useLegacySigning}
+                        value={useLegacySigning.toString()}
+                        onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
+                        label="Use legacy signing"
+                    />
+                </CheckboxContainer>
+                <LightTooltip title="If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue.">
+                    <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
+                </LightTooltip>
+            </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
                 message={txErrorMessage}
@@ -552,5 +576,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         </Container>
     );
 };
+
+export const CheckboxContainer = styled.div`
+    margin-top: 12px;
+    margin-left: 10px;
+`;
 
 export default PlaceOrder;
