@@ -17,6 +17,9 @@ import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-se
 import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
 import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
+import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
+import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
+
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -87,6 +90,15 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     >
                         <SidebarIcon />
                         <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
+                    </SidebarItem>
+                    <SidebarItem
+                        onClick={() => navigateTo(ROUTES.Options.Leaderboard)}
+                        imgSrc={leaderboardDefaultIcon}
+                        imgSrcHoverSelected={leaderboardSelectedIcon}
+                        className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
+                    >
+                        <SidebarIcon />
+                        <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                     </SidebarItem>
                     {phase === 'trading' && (
                         <SidebarItem

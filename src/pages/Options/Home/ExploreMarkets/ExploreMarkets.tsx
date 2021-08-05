@@ -16,7 +16,6 @@ import bitcoin from 'assets/images/filters/bitcoin.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myAssets from 'assets/images/filters/my-assets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
-import leaderboardImg from 'assets/images/filters/leaderboard.png';
 import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
@@ -55,7 +54,6 @@ export enum UserFilterEnum {
     Bitcoin = 'Bitcoin',
     Ethereum = 'Ethereum',
     Olympics = 'Olympics',
-    Leaderboard = 'Leaderboard',
 }
 
 const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
@@ -196,8 +194,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                 return myOpenOrders;
             case UserFilterEnum.Olympics:
                 return olympicsImg;
-            case UserFilterEnum.Leaderboard:
-                return leaderboardImg;
         }
     };
 

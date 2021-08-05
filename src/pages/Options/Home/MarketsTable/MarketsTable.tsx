@@ -41,8 +41,6 @@ import volleyball from 'assets/images/volleyball.svg';
 import medals from 'assets/images/medals.png';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
-import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
-import { getIsAppReady } from 'redux/modules/app';
 
 dotenv.config();
 
@@ -83,15 +81,6 @@ const headCellsOlympics: HeadCell[] = [
     { id: 7, label: 'Phase', sortable: false },
 ];
 
-const headCellsLeaderboard: HeadCell[] = [
-    { id: 1, label: 'Rank', sortable: false },
-    { id: 2, label: 'Display Name', sortable: false },
-    { id: 3, label: '', sortable: false },
-    { id: 4, label: '', sortable: false },
-    { id: 5, label: '', sortable: false },
-    { id: 6, label: 'Volume', sortable: false },
-];
-
 enum OrderDirection {
     NONE,
     ASC,
@@ -104,7 +93,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
     ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates, userFilter }) => {
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const networkId = useSelector((state: RootState) => getNetworkId(state));
-        const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
         const [page, setPage] = useState(0);
@@ -115,11 +103,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const numberOfPages = Math.ceil(optionsMarkets.length / rowsPerPage) || 1;
         const [orderBy, setOrderBy] = useState(defaultOrderBy);
         const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
-
-        const leaderboardQuery = useLeaderboardQuery(networkId, {
-            enabled: isAppReady,
-        });
-        const leaderboard = leaderboardQuery.data ? leaderboardQuery.data.sort((a, b) => b.volume - a.volume) : [];
 
         const calcDirection = (cell: HeadCell) => {
             if (orderBy === cell.id) {
@@ -208,41 +191,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                     <Table aria-label="customized table">
                         <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                             <TableRow>
-                                {userFilter === UserFilterEnum.Leaderboard &&
-                                    headCellsLeaderboard.map((cell: HeadCell, index) => {
-                                        return (
-                                            <StyledTableCell
-                                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                                key={index}
-                                                style={cell.sortable ? { cursor: 'pointer' } : {}}
-                                            >
-                                                <TableHeaderLabel
-                                                    className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
-                                                >
-                                                    {cell.label}
-                                                </TableHeaderLabel>
-                                                {cell.sortable && (
-                                                    <ArrowsWrapper>
-                                                        {orderBy === cell.id &&
-                                                        orderDirection !== OrderDirection.NONE ? (
-                                                            <Arrow
-                                                                src={
-                                                                    orderDirection === OrderDirection.ASC
-                                                                        ? upSelected
-                                                                        : downSelected
-                                                                }
-                                                            />
-                                                        ) : (
-                                                            <>
-                                                                <Arrow src={up} />
-                                                                <Arrow src={down} />
-                                                            </>
-                                                        )}
-                                                    </ArrowsWrapper>
-                                                )}
-                                            </StyledTableCell>
-                                        );
-                                    })}
                                 {userFilter === UserFilterEnum.Olympics &&
                                     headCellsOlympics.map((cell: HeadCell, index) => {
                                         return (
@@ -279,7 +227,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         );
                                     })}
                                 {userFilter !== UserFilterEnum.Olympics &&
-                                    userFilter !== UserFilterEnum.Leaderboard &&
                                     headCells.map((cell: HeadCell, index) => {
                                         return (
                                             <StyledTableCell
@@ -318,19 +265,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                         </TableHead>
 
                         <TableBody>
-                            {userFilter === UserFilterEnum.Leaderboard &&
-                                leaderboard.map((leader: any, index: any) => {
-                                    return (
-                                        <StyledTableRow key={index}>
-                                            <StyledTableCell>{index}</StyledTableCell>
-                                            <StyledTableCell>{leader.walletAddress}</StyledTableCell>
-                                            <StyledTableCell></StyledTableCell>
-                                            <StyledTableCell></StyledTableCell>
-                                            <StyledTableCell></StyledTableCell>
-                                            <StyledTableCell>{leader.volume.toFixed(2)}</StyledTableCell>
-                                        </StyledTableRow>
-                                    );
-                                })}
                             {userFilter === UserFilterEnum.Olympics &&
                                 sortedMarkets.map((market: any, index) => {
                                     return (
@@ -371,7 +305,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                     );
                                 })}
                             {userFilter !== UserFilterEnum.Olympics &&
-                                userFilter !== UserFilterEnum.Leaderboard &&
                                 sortedMarkets.map((market, index) => {
                                     const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
                                     const strikeAndAssetPriceDifference = getPercentageDifference(
@@ -495,7 +428,7 @@ const StyledLoader = styled(CircularProgress)`
     width: 16px !important;
 `;
 
-const StyledTableRow = withStyles(() => ({
+export const StyledTableRow = withStyles(() => ({
     root: {
         background: '#04045a',
         '&:last-child': {
@@ -517,7 +450,7 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-const PaginationWrapper = styled(TablePagination)`
+export const PaginationWrapper = styled(TablePagination)`
     border: none !important;
     display: flex;
     .MuiToolbar-root {

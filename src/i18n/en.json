@@ -161,7 +161,8 @@
             "olympics-label": "Olympics markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
-            "maturity-label": "Exercise options"
+            "maturity-label": "Exercise options",
+            "leaderboard-label": "Leaderboard"
         }
     },
     "modals": {

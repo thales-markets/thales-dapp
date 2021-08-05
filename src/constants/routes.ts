@@ -6,6 +6,7 @@ export const ROUTES = {
         Overview: '/markets#overview',
         CreateMarket: '/markets/create-market',
         MarketMatch: '/markets/:marketAddress',
+        Leaderboard: '/markets/leaderboard',
     },
 };
 export default ROUTES;
