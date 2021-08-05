@@ -18,13 +18,17 @@ import Pagination from '../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../SearchMarket/SearchMarket';
 import MarketHeader from '../MarketHeader';
 import ROUTES from 'constants/routes';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
+import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
+import { getEtherscanAddressLink } from 'utils/etherscan';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: '', sortable: false },
     { id: 3, label: 'Rank', sortable: false },
     { id: 4, label: 'Display Name', sortable: false },
-    { id: 5, label: 'Number Of Trades', sortable: false },
+    { id: 5, label: 'Trades', sortable: false },
     { id: 6, label: 'Volume', sortable: false },
 ];
 
@@ -115,9 +119,19 @@ const LeaderboardPage: React.FC<any> = () => {
                                                     )}
                                                 </StyledTableCell>
                                                 <StyledTableCell>{index + 1}</StyledTableCell>
-                                                <StyledTableCell>{leader.walletAddress}</StyledTableCell>
+                                                <StyledTableCell>
+                                                    <StyledLink
+                                                        href={getEtherscanAddressLink(networkId, leader.walletAddress)}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                    >
+                                                        {leader.walletAddress}
+                                                    </StyledLink>
+                                                </StyledTableCell>
                                                 <StyledTableCell>{leader.trades}</StyledTableCell>
-                                                <StyledTableCell>{leader.volume.toFixed(2)}</StyledTableCell>
+                                                <StyledTableCell>
+                                                    {formatCurrencyWithSign(USD_SIGN, leader.volume)}
+                                                </StyledTableCell>
                                             </StyledTableRow>
                                         );
                                     })}
