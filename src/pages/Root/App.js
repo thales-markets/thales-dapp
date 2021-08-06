@@ -200,6 +200,9 @@ const App = () => {
 
                         <Route>
                             <Redirect to={ROUTES.Options.Home} />
+                            <MainLayout>
+                                <OptionsHome />
+                            </MainLayout>
                         </Route>
                     </Switch>
                 </Router>
