@@ -118,7 +118,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                                         ></Image>
                                                     )}
                                                 </StyledTableCell>
-                                                <StyledTableCell>{index + 1}</StyledTableCell>
+                                                <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                                                 <StyledTableCell>
                                                     <StyledLink
                                                         href={getEtherscanAddressLink(networkId, leader.walletAddress)}
