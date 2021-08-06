@@ -111,7 +111,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                             <StyledTableRow key={index}>
                                                 <StyledTableCell></StyledTableCell>
                                                 <StyledTableCell>
-                                                    {index < 3 && (
+                                                    {page === 0 && index < 3 && (
                                                         <Image
                                                             src={getMedal(index)}
                                                             style={{ width: 40, height: 40 }}
