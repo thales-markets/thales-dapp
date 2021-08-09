@@ -51,14 +51,14 @@ const Faq: React.FC = () => {
                     marginBottom: 100,
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '14px 35px',
+                    padding: '16px 26px',
                 }}
                 onClick={() => {
                     window.open('https://discord.gg/cFGv5zyVEj', '_blank');
                 }}
             >
-                <Image src={discord} style={{ height: 50, width: 90 }}></Image>
-                <Text className="text-xl pale-grey bold">Join Discord</Text>
+                <Image src={discord} style={{ height: 37, width: 32, marginRight: 8 }}></Image>
+                <Text className="text-l pale-grey bold">Join Discord</Text>
             </Button>
         </FlexDivColumn>
     );
