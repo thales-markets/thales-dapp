@@ -26,7 +26,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalize0xGasLimit, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorCode } from 'constants/options';
@@ -72,6 +72,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import WarningMessage from 'components/WarningMessage';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -221,7 +222,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -232,10 +233,16 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
@@ -248,7 +255,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 setTxErrorMessage(null);
                 setIsSubmitting(true);
                 window.web3 = new Web3(Web3.givenProvider);
-                const quote = { ...swapQuote, from: walletAddress };
+                const quote = {
+                    ...swapQuote,
+                    from: walletAddress,
+                    protocolFee: normalize0xGasLimit(swapQuote.protocolFee).toString(),
+                };
                 await window.web3.eth.sendTransaction(quote);
                 refetchOrderbook(baseToken);
                 refetchTrades(optionsMarket.address);
@@ -259,6 +270,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
                     )
                 );
+                resetForm();
             }
         } catch (e) {
             console.log(e);
@@ -302,7 +314,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         setMinimumReceived(Number(amount) * Number(quote.guaranteedPrice));
                         setSwapQuote(quote);
                         if (ethRate !== null) {
-                            setProtocolFee((quote.protocolFee * ethRate) / GWEI_UNIT / GWEI_UNIT);
+                            setProtocolFee((normalize0xGasLimit(quote.protocolFee) * ethRate) / GWEI_UNIT / GWEI_UNIT);
                         }
                         setGasLimit(quote.gas);
                         if (isBuy) {
@@ -457,6 +469,17 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         return 'rgb(49, 208, 170)';
     };
 
+    const resetForm = () => {
+        setAmount('');
+        setOrderSide(orderSideOptions[0]);
+        setIsAmountValid(true);
+        resetQuote();
+    };
+
+    useEffect(() => {
+        resetForm();
+    }, [optionSide]);
+
     return (
         <Container>
             <FlexDivRow>
@@ -584,6 +607,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
+                <WarningMessage message={t('options.common.warning.gas-price-change')} />
             </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage

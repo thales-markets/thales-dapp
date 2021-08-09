@@ -54,9 +54,11 @@ import {
     BuySellSliderContainer,
     ShortInputContainer,
     SummaryContainer,
+    StyledQuestionMarkIcon,
+    LightTooltip,
 } from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
 import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
@@ -65,6 +67,9 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import ExpirationDropdown from '../components/ExpirationDropdown';
+import { MetamaskSubprovider } from '@0x/subproviders';
+import Checkbox from 'components/Checkbox';
+import styled from 'styled-components';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -90,6 +95,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
+    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
 
     const orderSideOptions = [
         {
@@ -182,7 +188,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     ? Math.round(optionsMarket.timeRemaining / 1000)
                     : expiration === OrderPeriod.CUSTOM
                     ? Math.round(new Date().getTime() / 1000) +
-                      Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR]
+                      Math.round(Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])
                     : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
         }
         return toBigNumber(orderEndDate);
@@ -214,7 +220,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, isBuy, optionSide]);
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
     const handleAllowance = async () => {
         if (gasPrice !== null) {
@@ -225,10 +231,16 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
@@ -276,10 +288,14 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                 });
 
                 try {
-                    const signature = await order.getSignatureWithProviderAsync(
-                        (snxJSConnector.signer?.provider as any).provider,
-                        SignatureType.EIP712
-                    );
+                    const signature = useLegacySigning
+                        ? await order.getSignatureWithProviderAsync(
+                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
+                          )
+                        : await order.getSignatureWithProviderAsync(
+                              (snxJSConnector.signer?.provider as any).provider,
+                              SignatureType.EIP712
+                          );
                     return { ...order, signature };
                 } catch (e) {
                     console.log(e);
@@ -298,6 +314,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     t('options.market.trade-options.place-order.confirm-button.confirmation-message')
                 );
                 refetchOrderbook(baseToken);
+                resetForm();
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -380,6 +397,20 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
             </SubmitButton>
         );
     };
+
+    const resetForm = () => {
+        setAmount('');
+        setPrice('');
+        setExpiration(OrderPeriod.TRADING_END);
+        setCustomHoursExpiration('');
+        setOrderSide(orderSideOptions[0]);
+        setIsPriceValid(true);
+        setIsAmountValid(true);
+    };
+
+    useEffect(() => {
+        resetForm();
+    }, [optionSide]);
 
     useEffect(() => {
         const total = Number(price) * Number(amount);
@@ -522,7 +553,23 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                     </SummaryContent>
                 </SummaryItem>
             </SummaryContainer>
-            <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+            <SubmitButtonContainer>
+                <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
+                <FlexDivCentered>
+                    <UseLegacySigningContainer>
+                        <Checkbox
+                            disabled={isSubmitting}
+                            checked={useLegacySigning}
+                            value={useLegacySigning.toString()}
+                            onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
+                            label={t('options.common.legacy-signing.label')}
+                        />
+                    </UseLegacySigningContainer>
+                    <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
+                        <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
+                    </LightTooltip>
+                </FlexDivCentered>
+            </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
                 message={txErrorMessage}
@@ -531,5 +578,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         </Container>
     );
 };
+
+export const UseLegacySigningContainer = styled.div`
+    margin-top: 12px;
+    margin-left: 10px;
+`;
 
 export default PlaceOrder;

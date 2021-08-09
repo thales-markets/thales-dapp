@@ -17,7 +17,7 @@ const useUserWatchlistedMarketsQuery = (
     return useQuery<Watchlist>(
         QUERY_KEYS.User.Watchlist(walletAddress, networkId),
         async () => {
-            const baseUrl = process.env.REACT_APP_THALES_API_URL + '/watchlist/' + networkId;
+            const baseUrl = 'https://api.thales.market/watchlist/' + networkId;
             const response = await fetch(baseUrl + '/' + walletAddress);
             const result = await response.text();
 

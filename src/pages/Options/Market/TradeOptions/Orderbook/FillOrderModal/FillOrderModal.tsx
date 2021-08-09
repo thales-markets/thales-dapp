@@ -77,6 +77,7 @@ import styled from 'styled-components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { GWEI_UNIT } from 'constants/network';
+import WarningMessage from 'components/WarningMessage';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -189,7 +190,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected]);
+    }, [walletAddress, isWalletConnected, hasAllowance]);
 
     useEffect(() => {
         if (is0xReady) {
@@ -248,10 +249,16 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
@@ -434,6 +441,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         </ProtocolFeeItem>
                     </ProtocolFeeContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
+                    <WarningMessage message={t('options.common.warning.gas-price-change')} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

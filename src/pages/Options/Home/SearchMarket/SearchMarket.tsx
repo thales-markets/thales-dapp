@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import searchIcon from 'assets/images/search-icon.svg';
 
-const Wrapper = styled(FlexDiv)`
+export const SearchWrapper = styled(FlexDiv)`
     align-items: center;
     position: relative;
     background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
@@ -17,7 +17,7 @@ const Wrapper = styled(FlexDiv)`
     }
 `;
 
-const SearchInput = styled.input`
+export const SearchInput = styled.input`
     height: 40px;
     width: 204px;
     border-radius: 23px;
@@ -45,9 +45,9 @@ type SearchMarketProp = {
 };
 
 const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch }) => (
-    <Wrapper>
+    <SearchWrapper>
         <SearchInput onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} placeholder="Try ETH" />
-    </Wrapper>
+    </SearchWrapper>
 );
 
 export default SearchMarket;

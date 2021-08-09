@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { toBigNumber } from './formatters/number';
-import { isMainNet, NetworkId } from './network';
+import { isMainNet, NetworkId, normalize0xGasLimit } from './network';
 
 export const SUPPORTED_NETWORKS_0X: Record<NetworkId, string | null> = {
     1: 'MAINNET',
@@ -28,10 +28,10 @@ export const get0xWebSocketBaseURL = (networkId: NetworkId) => {
     return `wss://${network.toLowerCase()}.api.0x.org/sra/v4`;
 };
 
-const PROTOCOL_FEE_MULTIPLIER = toBigNumber(70000);
+const PROTOCOL_FEE_GAS = toBigNumber(normalize0xGasLimit(70000));
 
 export const calculate0xProtocolFee = (orders: Array<any>, gasPrice: BigNumber | number | null): BigNumber => {
-    return toBigNumber(PROTOCOL_FEE_MULTIPLIER)
+    return toBigNumber(PROTOCOL_FEE_GAS)
         .times(gasPrice !== null ? gasPrice : 1)
         .times(orders.length);
 };

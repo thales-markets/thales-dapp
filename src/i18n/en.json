@@ -161,7 +161,8 @@
             "olympics-label": "Olympics markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
-            "maturity-label": "Exercise options"
+            "maturity-label": "Exercise options",
+            "leaderboard-label": "Leaderboard"
         }
     },
     "modals": {
@@ -557,6 +558,13 @@
                 "1D": "1 day",
                 "1W": "1 week",
                 "trading-end": "At trading period expiration"
+            },
+            "warning": {
+                "gas-price-change": "Please don't change the gas price after tx is submitted"
+            },
+            "legacy-signing": {
+                "label": "Use legacy signing",
+                "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue."
             }
         }
     }

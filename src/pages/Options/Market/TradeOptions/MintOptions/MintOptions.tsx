@@ -38,6 +38,8 @@ import {
     DoubleShortInputContainer,
     DefaultSubmitButton,
     Divider,
+    StyledQuestionMarkIcon,
+    LightTooltip,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -52,7 +54,7 @@ import {
     truncToDecimals,
 } from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { get0xBaseURL } from 'utils/0x';
@@ -69,6 +71,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
+import { MetamaskSubprovider } from '@0x/subproviders';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -107,6 +110,7 @@ const MintOptions: React.FC = () => {
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const [mintedAmount, setMintedAmount] = useState<number | string>('');
+    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -184,7 +188,7 @@ const MintOptions: React.FC = () => {
                 SynthsUSD.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
             }
         };
-    }, [walletAddress]);
+    }, [walletAddress, hasAllowance]);
 
     // useEffect(() => {
     //     if (walletAddress) {
@@ -236,10 +240,20 @@ const MintOptions: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256
                 );
-                await SynthsUSD.approve(binaryOptionsMarketManagerContract.address, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                });
+                const tx = (await SynthsUSD.approve(
+                    binaryOptionsMarketManagerContract.address,
+                    ethers.constants.MaxUint256,
+                    {
+                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                        gasPrice: gasPriceInWei(gasPrice),
+                    }
+                )) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsAllowing(false);
@@ -293,6 +307,7 @@ const MintOptions: React.FC = () => {
                         await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
                     }
                     refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                    resetForm();
                 }
                 setIsMinting(false);
             } catch (e) {
@@ -399,7 +414,7 @@ const MintOptions: React.FC = () => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, sellLong]);
+    }, [walletAddress, isWalletConnected, sellLong, hasLongAllowance]);
 
     const handleLongAllowance = async () => {
         if (gasPrice !== null) {
@@ -414,10 +429,16 @@ const MintOptions: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setLongAllowance(true);
+                    setIsLongAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsLongAllowing(false);
@@ -451,7 +472,7 @@ const MintOptions: React.FC = () => {
         return () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
-    }, [walletAddress, isWalletConnected, sellShort]);
+    }, [walletAddress, isWalletConnected, sellShort, hasShortAllowance]);
 
     const handleShortAllowance = async () => {
         if (gasPrice !== null) {
@@ -466,10 +487,15 @@ const MintOptions: React.FC = () => {
                     addressToApprove,
                     ethers.constants.MaxUint256
                 );
-                await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
                     gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     gasPrice: gasPriceInWei(gasPrice),
-                });
+                })) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setShortAllowance(true);
+                    setIsShortAllowing(false);
+                }
             } catch (e) {
                 console.log(e);
                 setIsShortAllowing(false);
@@ -523,10 +549,14 @@ const MintOptions: React.FC = () => {
                 });
 
                 try {
-                    const signature = await order.getSignatureWithProviderAsync(
-                        (snxJSConnector.signer?.provider as any).provider,
-                        SignatureType.EIP712
-                    );
+                    const signature = useLegacySigning
+                        ? await order.getSignatureWithProviderAsync(
+                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
+                          )
+                        : await order.getSignatureWithProviderAsync(
+                              (snxJSConnector.signer?.provider as any).provider,
+                              SignatureType.EIP712
+                          );
                     return { ...order, signature };
                 } catch (e) {
                     console.log(e);
@@ -594,6 +624,16 @@ const MintOptions: React.FC = () => {
     }, [sellShort, shortAmount, mintedAmount]);
 
     const actionInProgress = isMinting || isLongSubmitting || isShortSubmitting;
+
+    const resetForm = () => {
+        setAmount('');
+        setLongAmount('');
+        setShortAmount('');
+        setLongPrice(1);
+        setShortPrice(1);
+        setSellLong(false);
+        setSellShort(false);
+    };
 
     return (
         <Container>
@@ -815,7 +855,25 @@ const MintOptions: React.FC = () => {
                 </MintingInnerSummaryItem>
                 <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} />
             </FeeSummaryContainer>
-            <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+            <SubmitButtonContainer style={{ marginTop: '20px' }}>
+                <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
+                {(sellLong || sellShort) && (
+                    <FlexDivCentered>
+                        <UseLegacySigningContainer>
+                            <Checkbox
+                                disabled={actionInProgress}
+                                checked={useLegacySigning}
+                                value={useLegacySigning.toString()}
+                                onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
+                                label={t('options.common.legacy-signing.label')}
+                            />
+                        </UseLegacySigningContainer>
+                        <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
+                            <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
+                        </LightTooltip>
+                    </FlexDivCentered>
+                )}
+            </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
                 message={txErrorMessage}
@@ -858,6 +916,11 @@ export const PlaceInOrderbook = styled.div`
 export const CheckboxContainer = styled.div`
     margin-top: 21px;
     margin-left: 5px;
+`;
+
+export const UseLegacySigningContainer = styled.div`
+    margin-top: 12px;
+    margin-left: 10px;
 `;
 
 export const StyledCheckbox = styled(Checkbox)`

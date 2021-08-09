@@ -282,7 +282,7 @@ const CryptoKey = styled.span`
     color: #808191;
 `;
 
-const StyledLink = styled.a`
+export const StyledLink = styled.a`
     color: #f6f6fe;
     &path {
         fill: #f6f6fe;

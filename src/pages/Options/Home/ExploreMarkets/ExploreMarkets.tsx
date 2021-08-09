@@ -44,7 +44,7 @@ export enum PhaseFilterEnum {
     all = 'all',
 }
 
-enum UserFilterEnum {
+export enum UserFilterEnum {
     All = 'All',
     MyMarkets = 'My Markets',
     MyOrders = 'My Orders',
@@ -80,28 +80,20 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.trading);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const userAssets = useMemo(
-        () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
-        [userAssetsQuery]
-    );
     const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const userOrders = useMemo(
-        () =>
-            userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records)
-                ? userOrdersQuery.data.records
-                : [],
-        [userOrdersQuery]
-    );
-
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
+    const userAssets = userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : [];
+    const userOrders =
+        userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records) ? userOrdersQuery.data.records : [];
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     useEffect(() => {
@@ -280,7 +272,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                 watchlistedMarkets={watchlistedMarkets}
                 isLoading={false} // TODO put logic
                 phase={phaseFilter}
-                isCustomMarket={userFilter === UserFilterEnum.Olympics}
+                userFilter={userFilter}
                 onChange={watchlistedMarketsQuery.refetch}
             >
                 <NoMarkets>

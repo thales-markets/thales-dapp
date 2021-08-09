@@ -1,7 +1,7 @@
 import { ValueType } from 'react-select';
 import { CurrencyKeyOptionType, MarketFees } from '../CreateMarket';
 import React, { useMemo } from 'react';
-import { FlexDivCentered, FlexDivColumn, Image, LightTooltip, Text } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
 import styled from 'styled-components';
 import Currency from 'components/Currency';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/numbe
 import arrowUp from 'assets/images/green-arrow-up.svg';
 import arrowDown from 'assets/images/red-arrow-down.svg';
 import { USD_SIGN } from 'constants/currency';
+import { LightTooltip } from 'pages/Options/Market/components';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;

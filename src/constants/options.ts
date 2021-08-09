@@ -82,3 +82,5 @@ export enum Zero0xErrorReason {
     MAKER_WALLET_INSUFFICIENT_BALANCE = 'WalletExecuteDelegateCallFailedError',
     TAKER_WALLET_INSUFFICIENT_BALANCE = 'SpenderERC20TransferFromFailedError',
 }
+
+export const ORDERBOOK_AMOUNT_THRESHOLD = 0.01;

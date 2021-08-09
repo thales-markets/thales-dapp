@@ -5,6 +5,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { get0xBaseURL } from 'utils/0x';
 import { NetworkId } from 'utils/network';
 import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
+import { ORDERBOOK_AMOUNT_THRESHOLD } from 'constants/options';
 
 const useBinaryOptionsMarketOrderbook = (
     networkId: NetworkId,
@@ -29,18 +30,22 @@ const useBinaryOptionsMarketOrderbook = (
 
             const responseJ = await response.json();
             if (responseJ.asks.records && responseJ.asks.records.length > 0) {
-                orderbook.sellOrders = responseJ.asks.records.map(
-                    (record: any): OrderItem => {
-                        return prepSellOrder(record);
-                    }
-                );
+                orderbook.sellOrders = responseJ.asks.records
+                    .map(
+                        (record: any): OrderItem => {
+                            return prepSellOrder(record);
+                        }
+                    )
+                    .filter((order: OrderItem) => order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD);
             }
             if (responseJ.bids.records && responseJ.bids.records.length > 0) {
-                orderbook.buyOrders = responseJ.bids.records.map(
-                    (record: any): OrderItem => {
-                        return prepBuyOrder(record);
-                    }
-                );
+                orderbook.buyOrders = responseJ.bids.records
+                    .map(
+                        (record: any): OrderItem => {
+                            return prepBuyOrder(record);
+                        }
+                    )
+                    .filter((order: OrderItem) => order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD);
             }
 
             return orderbook;
