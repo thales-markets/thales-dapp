@@ -77,6 +77,7 @@ import styled from 'styled-components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { GWEI_UNIT } from 'constants/network';
+import WarningMessage from 'components/WarningMessage';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -440,6 +441,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         </ProtocolFeeItem>
                     </ProtocolFeeContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
+                    <WarningMessage message={t('options.common.warning.gas-price-change')} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

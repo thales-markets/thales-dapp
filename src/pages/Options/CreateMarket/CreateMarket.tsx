@@ -27,6 +27,7 @@ import {
     Button,
     FlexDivRow,
     FlexDivColumnCentered,
+    FlexDivCentered,
 } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketSummary from './MarketSummary';
@@ -40,10 +41,12 @@ import {
     DoubleShortInputContainer,
     Input,
     InputLabel,
+    LightTooltip,
     ReactSelect,
     ShortInputContainer,
     SliderContainer,
     SliderRange,
+    StyledQuestionMarkIcon,
 } from '../Market/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
@@ -68,6 +71,8 @@ import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
 import { ZERO_ADDRESS } from '../../../constants/network';
+import { MetamaskSubprovider } from '@0x/subproviders';
+import styled from 'styled-components';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -138,6 +143,7 @@ export const CreateMarket: React.FC = () => {
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
 
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -517,10 +523,14 @@ export const CreateMarket: React.FC = () => {
                 });
 
                 try {
-                    const signature = await order.getSignatureWithProviderAsync(
-                        (snxJSConnector.signer?.provider as any).provider,
-                        SignatureType.EIP712
-                    );
+                    const signature = useLegacySigning
+                        ? await order.getSignatureWithProviderAsync(
+                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
+                          )
+                        : await order.getSignatureWithProviderAsync(
+                              (snxJSConnector.signer?.provider as any).provider,
+                              SignatureType.EIP712
+                          );
                     return { ...order, signature };
                 } catch (e) {
                     console.log(e);
@@ -1036,7 +1046,7 @@ export const CreateMarket: React.FC = () => {
                                 marginTop: 50,
                             }}
                         >
-                            {getSubmitButton()}
+                            <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
                             {isMarketCreated ? (
                                 <>
                                     <Text
@@ -1053,6 +1063,22 @@ export const CreateMarket: React.FC = () => {
                                 <></>
                             )}
                         </div>
+                        {(sellLong || sellShort) && (
+                            <FlexDivCentered>
+                                <UseLegacySigningContainer>
+                                    <Checkbox
+                                        disabled={isCreatingMarket || isLongSubmitting || isShortSubmitting}
+                                        checked={useLegacySigning}
+                                        value={useLegacySigning.toString()}
+                                        onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
+                                        label={t('options.common.legacy-signing.label')}
+                                    />
+                                </UseLegacySigningContainer>
+                                <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
+                                    <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
+                                </LightTooltip>
+                            </FlexDivCentered>
+                        )}
                         <ValidationMessage
                             showValidation={txErrorMessage !== null}
                             message={txErrorMessage}
@@ -1064,5 +1090,10 @@ export const CreateMarket: React.FC = () => {
         </Background>
     );
 };
+
+export const UseLegacySigningContainer = styled.div`
+    margin-top: 12px;
+    margin-left: 10px;
+`;
 
 export default CreateMarket;

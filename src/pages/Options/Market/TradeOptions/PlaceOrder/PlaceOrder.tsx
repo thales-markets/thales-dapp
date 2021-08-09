@@ -58,7 +58,7 @@ import {
     LightTooltip,
 } from 'pages/Options/Market/components';
 import { refetchOrderbook } from 'utils/queryConnector';
-import { FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
 import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
@@ -554,19 +554,21 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
                 </SummaryItem>
             </SummaryContainer>
             <SubmitButtonContainer>
-                {getSubmitButton()}
-                <CheckboxContainer>
-                    <Checkbox
-                        disabled={isSubmitting}
-                        checked={useLegacySigning}
-                        value={useLegacySigning.toString()}
-                        onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                        label="Use legacy signing"
-                    />
-                </CheckboxContainer>
-                <LightTooltip title="If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue.">
-                    <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                </LightTooltip>
+                <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
+                <FlexDivCentered>
+                    <UseLegacySigningContainer>
+                        <Checkbox
+                            disabled={isSubmitting}
+                            checked={useLegacySigning}
+                            value={useLegacySigning.toString()}
+                            onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
+                            label={t('options.common.legacy-signing.label')}
+                        />
+                    </UseLegacySigningContainer>
+                    <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
+                        <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
+                    </LightTooltip>
+                </FlexDivCentered>
             </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
@@ -577,7 +579,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
     );
 };
 
-export const CheckboxContainer = styled.div`
+export const UseLegacySigningContainer = styled.div`
     margin-top: 12px;
     margin-left: 10px;
 `;

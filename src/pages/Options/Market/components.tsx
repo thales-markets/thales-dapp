@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'components/Select';
 import { COLORS } from 'constants/ui';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivRow, GridDivCol, FlexDivColumnCentered } from 'theme/common';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark-circle.svg';
@@ -216,8 +216,9 @@ export const AmountButton = styled.button`
     }
 `;
 
-export const SubmitButtonContainer = styled(FlexDivCentered)`
+export const SubmitButtonContainer = styled(FlexDivColumnCentered)`
     margin-top: 40px;
+    align-items: center;
 `;
 
 export const SubmitButton = styled.button<{ isBuy?: boolean }>`

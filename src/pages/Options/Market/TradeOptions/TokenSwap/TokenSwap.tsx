@@ -72,6 +72,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import WarningMessage from 'components/WarningMessage';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -606,6 +607,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
                 </ProtocolFeeContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
+                <WarningMessage message={t('options.common.warning.gas-price-change')} />
             </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage
