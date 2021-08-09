@@ -26,6 +26,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
@@ -53,6 +54,10 @@ const LeaderboardPage: React.FC<any> = () => {
     const leaderboard: Leaderboard[] = leaderboardQuery.data
         ? leaderboardQuery.data.sort((a, b) => b.volume - a.volume)
         : [];
+
+    const displayNamesQuery = useUsersDisplayNamesQuery({
+        enabled: isAppReady,
+    });
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
@@ -97,9 +102,24 @@ const LeaderboardPage: React.FC<any> = () => {
         return page;
     }, [page, numberOfPages]);
 
+    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
+        displayNamesQuery,
+    ]);
+
     const leaderboardData = useMemo(() => {
         const searchLeader = leaderboard.filter((leader) => {
-            return searchString === '' ? true : leader.walletAddress.includes(searchString);
+            if (searchString === '') return true;
+            if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                return true;
+            }
+
+            const disp = displayNamesMap.get(leader.walletAddress);
+
+            if (disp) {
+                return disp.toLowerCase().includes(searchString.toLowerCase());
+            }
+
+            return false;
         });
         return searchLeader.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1)).sort((a, b) => {
             if (orderBy === 5) {
@@ -131,6 +151,7 @@ const LeaderboardPage: React.FC<any> = () => {
                         <FlexDivRow>
                             <SearchWrapper style={{ alignSelf: 'flex-start' }}>
                                 <SearchInput
+                                    style={{ width: 450 }}
                                     onChange={(e) => setSearchString(e.target.value)}
                                     value={searchString}
                                     placeholder="Display Name"
@@ -207,7 +228,9 @@ const LeaderboardPage: React.FC<any> = () => {
                                                         target="_blank"
                                                         rel="noreferrer"
                                                     >
-                                                        {leader.walletAddress}
+                                                        {displayNamesMap.get(leader.walletAddress)
+                                                            ? displayNamesMap.get(leader.walletAddress)
+                                                            : leader.walletAddress}
                                                     </StyledLink>
                                                 </StyledTableCell>
                                                 <StyledTableCell>{leader.trades}</StyledTableCell>
