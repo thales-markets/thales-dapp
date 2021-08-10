@@ -15,7 +15,7 @@ import {
 import Currency from 'components/Currency';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { navigateToOptionsMarket } from 'utils/routes';
+import { buildOptionsMarketLink, navigateToOptionsMarket } from 'utils/routes';
 import { Arrow, ArrowsWrapper, PhaseLabel, StyledTableCell, TableHeaderLabel, Star } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
@@ -313,11 +313,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                     );
                                     return (
                                         <StyledTableRow
-                                            onClick={() => {
-                                                if (market.phase !== 'expiry') {
-                                                    navigateToOptionsMarket(market.address);
-                                                }
-                                            }}
                                             className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
                                             key={index}
                                         >
@@ -333,63 +328,125 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
                                                 />
                                             </StyledTableCell>
-                                            <StyledTableCell>
-                                                <Currency.Name
-                                                    currencyKey={market.currencyKey}
-                                                    showIcon={true}
-                                                    iconProps={{ type: 'asset' }}
-                                                    synthIconStyle={{ width: 32, height: 32 }}
-                                                />
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                {currentAssetPrice
-                                                    ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
-                                                    : 'N/A'}
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                <FlexDivCentered>
-                                                    <span>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</span>
-                                                    {currentAssetPrice > market.strikePrice ? (
-                                                        <RedText
-                                                            style={{
-                                                                display: isFinite(strikeAndAssetPriceDifference)
-                                                                    ? 'flex'
-                                                                    : 'none',
-                                                            }}
-                                                        >
-                                                            (
-                                                            <PriceArrow src={arrowDown} />
-                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
-                                                        </RedText>
-                                                    ) : (
-                                                        <GreenText
-                                                            style={{
-                                                                display: isFinite(strikeAndAssetPriceDifference)
-                                                                    ? 'flex'
-                                                                    : 'none',
-                                                            }}
-                                                        >
-                                                            (
-                                                            <PriceArrow src={arrowUp} />
-                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>)
-                                                        </GreenText>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    <Currency.Name
+                                                        currencyKey={market.currencyKey}
+                                                        showIcon={true}
+                                                        iconProps={{ type: 'asset' }}
+                                                        synthIconStyle={{ width: 32, height: 32 }}
+                                                    />
+                                                </StyledAnchoredTableCell>
+                                            </a>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    {currentAssetPrice
+                                                        ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
+                                                        : 'N/A'}
+                                                </StyledAnchoredTableCell>
+                                            </a>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    <FlexDivCentered>
+                                                        <span>
+                                                            {formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
+                                                        </span>
+                                                        {currentAssetPrice > market.strikePrice ? (
+                                                            <RedText
+                                                                style={{
+                                                                    display: isFinite(strikeAndAssetPriceDifference)
+                                                                        ? 'flex'
+                                                                        : 'none',
+                                                                }}
+                                                            >
+                                                                (
+                                                                <PriceArrow src={arrowDown} />
+                                                                <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                                )
+                                                            </RedText>
+                                                        ) : (
+                                                            <GreenText
+                                                                style={{
+                                                                    display: isFinite(strikeAndAssetPriceDifference)
+                                                                        ? 'flex'
+                                                                        : 'none',
+                                                                }}
+                                                            >
+                                                                (
+                                                                <PriceArrow src={arrowUp} />
+                                                                <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                                )
+                                                            </GreenText>
+                                                        )}
+                                                    </FlexDivCentered>
+                                                </StyledAnchoredTableCell>
+                                            </a>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                                </StyledAnchoredTableCell>
+                                            </a>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    <TimeRemaining end={market.timeRemaining} fontSize={14} />
+                                                </StyledAnchoredTableCell>
+                                            </a>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    {(market.phase === 'trading' && market.openOrders) ?? (
+                                                        <StyledLoader />
                                                     )}
-                                                </FlexDivCentered>
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                <TimeRemaining end={market.timeRemaining} fontSize={14} />
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                <PhaseLabel className={market.phase}>
-                                                    {t(`options.phases.${market.phase}`)}
-                                                </PhaseLabel>
-                                            </StyledTableCell>
+                                                </StyledAnchoredTableCell>
+                                            </a>
+                                            <a
+                                                style={{
+                                                    display: 'contents',
+                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                                }}
+                                                href={buildOptionsMarketLink(market.address)}
+                                            >
+                                                <StyledAnchoredTableCell>
+                                                    <PhaseLabel className={market.phase}>
+                                                        {t(`options.phases.${market.phase}`)}
+                                                    </PhaseLabel>
+                                                </StyledAnchoredTableCell>
+                                            </a>
                                         </StyledTableRow>
                                     );
                                 })}
@@ -435,10 +492,10 @@ export const StyledTableRow = withStyles(() => ({
             borderBottomLeftRadius: '23px',
             borderBottomRightRadius: '23px',
         },
-        '&:last-child td:first-child': {
+        '&:last-child > td': {
             borderBottomLeftRadius: '23px',
         },
-        '&:last-child td:last-child': {
+        '&:last-child a:last-child td': {
             borderBottomRightRadius: '23px',
         },
         '&.clickable': {
@@ -449,6 +506,10 @@ export const StyledTableRow = withStyles(() => ({
         },
     },
 }))(TableRow);
+
+const StyledAnchoredTableCell = styled(StyledTableCell)`
+    vertical-align: middle !important;
+`;
 
 export const PaginationWrapper = styled(TablePagination)`
     border: none !important;

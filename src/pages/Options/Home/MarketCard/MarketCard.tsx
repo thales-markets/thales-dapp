@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { navigateToOptionsMarket } from 'utils/routes';
+import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
@@ -28,104 +28,113 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     return (
         <>
             {optionMarket && (
-                <Card
-                    id="market-card"
-                    onClick={() => {
-                        if (optionMarket.phase !== 'expiry') {
-                            navigateToOptionsMarket(optionMarket.address);
-                        }
+                <a
+                    style={{
+                        display: 'contents',
+                        pointerEvents: optionMarket.phase !== 'expiry' ? 'auto' : 'none',
                     }}
+                    href={buildOptionsMarketLink(optionMarket.address)}
                 >
-                    <Header>
-                        <CurrencyIcon
-                            currencyKey={optionMarket.currencyKey}
-                            synthIconStyle={{ width: 48, height: 48 }}
-                        />
-                        <FlexDivColumnCentered>
-                            <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
-                            <CryptoKey>{optionMarket.asset}</CryptoKey>
-                        </FlexDivColumnCentered>
-                        <FlexDivColumn
-                            style={{
-                                padding: '15px 20px 15px 0',
-                                maxWidth: 130,
-                                height: '100%',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Phase className={optionMarket.phase}>{t(`options.phases.${optionMarket.phase}`)}</Phase>
-                            <GradientBorderWrapper style={{ borderRadius: '12px', margin: 0 }}>
-                                <GradientBorderContent>
-                                    <TimeRemaining fontSize={11} end={optionMarket.timeRemaining} />
-                                </GradientBorderContent>
-                            </GradientBorderWrapper>
-                        </FlexDivColumn>
-                    </Header>
+                    <Card id="market-card">
+                        <Header>
+                            <CurrencyIcon
+                                currencyKey={optionMarket.currencyKey}
+                                synthIconStyle={{ width: 48, height: 48 }}
+                            />
+                            <FlexDivColumnCentered>
+                                <CryptoName>{getSynthName(optionMarket.currencyKey)}</CryptoName>
+                                <CryptoKey>{optionMarket.asset}</CryptoKey>
+                            </FlexDivColumnCentered>
+                            <FlexDivColumn
+                                style={{
+                                    padding: '15px 20px 15px 0',
+                                    maxWidth: 130,
+                                    height: '100%',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Phase className={optionMarket.phase}>
+                                    {t(`options.phases.${optionMarket.phase}`)}
+                                </Phase>
+                                <GradientBorderWrapper style={{ borderRadius: '12px', margin: 0 }}>
+                                    <GradientBorderContent>
+                                        <TimeRemaining fontSize={11} end={optionMarket.timeRemaining} />
+                                    </GradientBorderContent>
+                                </GradientBorderWrapper>
+                            </FlexDivColumn>
+                        </Header>
 
-                    <Content>
-                        <Text>{t('options.home.market-card.strike-price')}</Text>
-                        <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
-                        <div style={{ visibility: isFinite(strikeAndAssetPriceDifference) ? 'visible' : 'hidden' }}>
-                            <Text>{t('options.home.market-card.difference-text')}:</Text>
-                            {currentAssetPrice > optionMarket.strikePrice ? (
-                                <FlexDivCentered
-                                    style={{
-                                        paddingTop: '5px',
-                                    }}
-                                >
-                                    <Arrow src={arrowDown} />
-                                    <RedText>{strikeAndAssetPriceDifference.toFixed(2)}%</RedText>
-                                </FlexDivCentered>
-                            ) : (
-                                <FlexDivCentered
-                                    style={{
-                                        paddingTop: '5px',
-                                    }}
-                                >
-                                    <Arrow src={arrowUp} />
-                                    <GreenText>{strikeAndAssetPriceDifference.toFixed(2)}%</GreenText>
-                                </FlexDivCentered>
-                            )}
-                        </div>
-                    </Content>
-                    <Footer className="footer">
-                        <GradientBorderWrapper>
-                            <MarketInfo>
-                                <MarketInfoTitle>{t('options.home.market-card.current-asset-price')}:</MarketInfoTitle>
-                                <span style={{ fontWeight: 'bold' }}>
-                                    {currentAssetPrice ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice) : 'N/A'}
-                                </span>
-                            </MarketInfo>
-                        </GradientBorderWrapper>
-                        <GradientBorderWrapper>
-                            <MarketInfo>
-                                <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
-                                <span style={{ fontWeight: 'bold' }}>
-                                    {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
-                                </span>
-                            </MarketInfo>
-                        </GradientBorderWrapper>
-                        <GradientBorderWrapper>
-                            <MarketInfo>
-                                <MarketInfoTitle>{t('options.home.market-card.end-date')}:</MarketInfoTitle>
-                                <span style={{ fontWeight: 'bold' }}>{formatShortDate(optionMarket.maturityDate)}</span>
-                            </MarketInfo>
-                        </GradientBorderWrapper>
-                        <GradientBorderWrapper>
-                            <MarketInfo>
-                                <MarketInfoTitle>{t('options.home.market-card.open-orders')}:</MarketInfoTitle>
-                                <span style={{ fontWeight: 'bold' }}>
-                                    {optionMarket.openOrders ?? (
-                                        <div style={{ height: '16px', width: '100%', position: 'relative' }}>
-                                            <StyledLoader />
-                                        </div>
-                                    )}
-                                </span>
-                            </MarketInfo>
-                        </GradientBorderWrapper>
-                        <ViewMarket className="view-market">View Market</ViewMarket>
-                    </Footer>
-                </Card>
+                        <Content>
+                            <Text>{t('options.home.market-card.strike-price')}</Text>
+                            <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
+                            <div style={{ visibility: isFinite(strikeAndAssetPriceDifference) ? 'visible' : 'hidden' }}>
+                                <Text>{t('options.home.market-card.difference-text')}:</Text>
+                                {currentAssetPrice > optionMarket.strikePrice ? (
+                                    <FlexDivCentered
+                                        style={{
+                                            paddingTop: '5px',
+                                        }}
+                                    >
+                                        <Arrow src={arrowDown} />
+                                        <RedText>{strikeAndAssetPriceDifference.toFixed(2)}%</RedText>
+                                    </FlexDivCentered>
+                                ) : (
+                                    <FlexDivCentered
+                                        style={{
+                                            paddingTop: '5px',
+                                        }}
+                                    >
+                                        <Arrow src={arrowUp} />
+                                        <GreenText>{strikeAndAssetPriceDifference.toFixed(2)}%</GreenText>
+                                    </FlexDivCentered>
+                                )}
+                            </div>
+                        </Content>
+                        <Footer className="footer">
+                            <GradientBorderWrapper>
+                                <MarketInfo>
+                                    <MarketInfoTitle>
+                                        {t('options.home.market-card.current-asset-price')}:
+                                    </MarketInfoTitle>
+                                    <span style={{ fontWeight: 'bold' }}>
+                                        {currentAssetPrice
+                                            ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
+                                            : 'N/A'}
+                                    </span>
+                                </MarketInfo>
+                            </GradientBorderWrapper>
+                            <GradientBorderWrapper>
+                                <MarketInfo>
+                                    <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
+                                    <span style={{ fontWeight: 'bold' }}>
+                                        {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
+                                    </span>
+                                </MarketInfo>
+                            </GradientBorderWrapper>
+                            <GradientBorderWrapper>
+                                <MarketInfo>
+                                    <MarketInfoTitle>{t('options.home.market-card.end-date')}:</MarketInfoTitle>
+                                    <span style={{ fontWeight: 'bold' }}>
+                                        {formatShortDate(optionMarket.maturityDate)}
+                                    </span>
+                                </MarketInfo>
+                            </GradientBorderWrapper>
+                            <GradientBorderWrapper>
+                                <MarketInfo>
+                                    <MarketInfoTitle>{t('options.home.market-card.open-orders')}:</MarketInfoTitle>
+                                    <span style={{ fontWeight: 'bold' }}>
+                                        {optionMarket.openOrders ?? (
+                                            <div style={{ height: '16px', width: '100%', position: 'relative' }}>
+                                                <StyledLoader />
+                                            </div>
+                                        )}
+                                    </span>
+                                </MarketInfo>
+                            </GradientBorderWrapper>
+                            <ViewMarket className="view-market">View Market</ViewMarket>
+                        </Footer>
+                    </Card>
+                </a>
             )}
         </>
     );
