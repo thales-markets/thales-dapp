@@ -18,6 +18,7 @@ import Web3 from 'web3';
 import { FilterButton, Input, InputLabel, ShortInputContainer } from 'pages/Options/Market/components';
 import axios from 'axios';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
+import { useEffect } from 'react';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -50,7 +51,13 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
     const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
 
-    const [displayName, setName] = useState('');
+    useEffect(() => {
+        if (currentDisplayName !== '') {
+            setName(currentDisplayName);
+        }
+    }, [currentDisplayName]);
+
+    const [displayName, setName] = useState(currentDisplayName);
 
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
