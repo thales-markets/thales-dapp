@@ -27,6 +27,7 @@ import { USD_SIGN } from 'constants/currency';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
+import './media.css';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
@@ -145,27 +146,35 @@ const LeaderboardPage: React.FC<any> = () => {
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
             <MainWrapper>
-                <FlexDivColumnCentered>
+                <FlexDivColumnCentered className="leaderboard">
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
-                    <FlexDivColumnCentered style={{ padding: '40px 140px' }}>
+                    <FlexDivColumnCentered className="leaderboard__wrapper" style={{ padding: '40px 140px' }}>
                         <FlexDivRow>
-                            <SearchWrapper style={{ alignSelf: 'flex-start' }}>
+                            <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600 }}>
                                 <SearchInput
-                                    style={{ width: 450 }}
+                                    style={{ width: '100%' }}
+                                    className="leaderboard__search"
                                     onChange={(e) => setSearchString(e.target.value)}
                                     value={searchString}
                                     placeholder="Display Name"
                                 ></SearchInput>
                             </SearchWrapper>
-                            <Image style={{ width: 100, height: 100 }} src={leaderboardIcon}></Image>
+                            <Image
+                                className="leaderboard__icon"
+                                style={{ width: 100, height: 100 }}
+                                src={leaderboardIcon}
+                            ></Image>
                         </FlexDivRow>
 
                         <TableContainer
                             style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
                             component={Paper}
                         >
-                            <Table aria-label="customized table">
-                                <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                            <Table className="leaderboard__table" aria-label="customized table">
+                                <TableHead
+                                    className="leaderboard__columns"
+                                    style={{ textTransform: 'uppercase', background: '#04045a' }}
+                                >
                                     <TableRow>
                                         {headCells.map((cell: HeadCell, index) => {
                                             return (
@@ -205,7 +214,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                         })}
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>
+                                <TableBody className="leaderboard__tableBody">
                                     {leaderboardData.map((leader: Leaderboard, index: any) => {
                                         return (
                                             <StyledTableRow key={index}>
