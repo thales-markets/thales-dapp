@@ -23,7 +23,7 @@ import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
-import { navigateTo } from 'utils/routes';
+import { DisplayContentsAnchor } from '../MarketsTable/components';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -54,52 +54,59 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
             </MarketHeaderWrapper>
             <Sidebar>
                 <ItemsContainer>
-                    <Logo onClick={() => navigateTo(ROUTES.Home)} className="logo"></Logo>
-                    <SidebarItem
-                        onClick={() => navigateTo(ROUTES.Options.Home)}
-                        imgSrc={trendingMarketsDefaultIcon}
-                        imgSrcHoverSelected={trendingMarketsSelectedIcon}
-                        className={route === ROUTES.Options.Home ? 'selected' : ''}
-                    >
-                        <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
-                    </SidebarItem>
-                    <SidebarItem
-                        onClick={() => navigateTo(ROUTES.Options.Overview)}
-                        imgSrc={marketOverviewDefaultIcon}
-                        imgSrcHoverSelected={marketOverviewSelectedIcon}
-                        className={route === ROUTES.Options.Overview ? 'selected' : ''}
-                    >
-                        <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
-                    </SidebarItem>
-                    <SidebarItem
-                        onClick={() => navigateTo(ROUTES.Options.Olympics)}
-                        imgSrc={olympicsMarketsDefaultIcon}
-                        imgSrcHoverSelected={olympicsMarketsSelectedIcon}
-                        className={route === ROUTES.Options.Olympics ? 'selected' : ''}
-                    >
-                        <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.olympics-label')}</SidebarText>
-                    </SidebarItem>
-                    <SidebarItem
-                        onClick={() => navigateTo(ROUTES.Options.CreateMarket)}
-                        imgSrc={createMarketDefaultIcon}
-                        imgSrcHoverSelected={createMarketSelectedIcon}
-                        className={route === ROUTES.Options.CreateMarket ? 'selected' : ''}
-                    >
-                        <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
-                    </SidebarItem>
-                    <SidebarItem
-                        onClick={() => navigateTo(ROUTES.Options.Leaderboard)}
-                        imgSrc={leaderboardDefaultIcon}
-                        imgSrcHoverSelected={leaderboardSelectedIcon}
-                        className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
-                    >
-                        <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
-                    </SidebarItem>
+                    <DisplayContentsAnchor href={ROUTES.Home}>
+                        <Logo className="logo" />
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={ROUTES.Options.HotMarkets}>
+                        <SidebarItem
+                            imgSrc={trendingMarketsDefaultIcon}
+                            imgSrcHoverSelected={trendingMarketsSelectedIcon}
+                            className={route === ROUTES.Options.Home ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={ROUTES.Options.Overview}>
+                        <SidebarItem
+                            imgSrc={marketOverviewDefaultIcon}
+                            imgSrcHoverSelected={marketOverviewSelectedIcon}
+                            className={route === ROUTES.Options.Overview ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={ROUTES.Options.Olympics}>
+                        <SidebarItem
+                            imgSrc={olympicsMarketsDefaultIcon}
+                            imgSrcHoverSelected={olympicsMarketsSelectedIcon}
+                            className={route === ROUTES.Options.Olympics ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.olympics-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
+                        <SidebarItem
+                            imgSrc={createMarketDefaultIcon}
+                            imgSrcHoverSelected={createMarketSelectedIcon}
+                            className={route === ROUTES.Options.CreateMarket ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={ROUTES.Options.Leaderboard}>
+                        <SidebarItem
+                            imgSrc={leaderboardDefaultIcon}
+                            imgSrcHoverSelected={leaderboardSelectedIcon}
+                            className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseSelectedIcon}

@@ -3,6 +3,10 @@
    License: none (public domain)
 */
 
+html {
+    scroll-behavior: smooth;
+}
+
 html,
 body,
 div,

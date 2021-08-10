@@ -16,7 +16,15 @@ import Currency from 'components/Currency';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { buildOptionsMarketLink, navigateToOptionsMarket } from 'utils/routes';
-import { Arrow, ArrowsWrapper, PhaseLabel, StyledTableCell, TableHeaderLabel, Star } from './components';
+import {
+    Arrow,
+    ArrowsWrapper,
+    PhaseLabel,
+    StyledTableCell,
+    TableHeaderLabel,
+    Star,
+    DisplayContentsAnchor,
+} from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
 import { PhaseFilterEnum, UserFilterEnum } from '../ExploreMarkets/ExploreMarkets';
@@ -328,9 +336,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
                                                 />
                                             </StyledTableCell>
-                                            <a
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -343,10 +350,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         synthIconStyle={{ width: 32, height: 32 }}
                                                     />
                                                 </StyledAnchoredTableCell>
-                                            </a>
-                                            <a
+                                            </DisplayContentsAnchor>
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -356,10 +362,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
                                                         : 'N/A'}
                                                 </StyledAnchoredTableCell>
-                                            </a>
-                                            <a
+                                            </DisplayContentsAnchor>
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -398,10 +403,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         )}
                                                     </FlexDivCentered>
                                                 </StyledAnchoredTableCell>
-                                            </a>
-                                            <a
+                                            </DisplayContentsAnchor>
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -409,10 +413,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 <StyledAnchoredTableCell>
                                                     {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
                                                 </StyledAnchoredTableCell>
-                                            </a>
-                                            <a
+                                            </DisplayContentsAnchor>
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -420,10 +423,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 <StyledAnchoredTableCell>
                                                     <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                                 </StyledAnchoredTableCell>
-                                            </a>
-                                            <a
+                                            </DisplayContentsAnchor>
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -433,10 +435,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         <StyledLoader />
                                                     )}
                                                 </StyledAnchoredTableCell>
-                                            </a>
-                                            <a
+                                            </DisplayContentsAnchor>
+                                            <DisplayContentsAnchor
                                                 style={{
-                                                    display: 'contents',
                                                     pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                                 }}
                                                 href={buildOptionsMarketLink(market.address)}
@@ -446,7 +447,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         {t(`options.phases.${market.phase}`)}
                                                     </PhaseLabel>
                                                 </StyledAnchoredTableCell>
-                                            </a>
+                                            </DisplayContentsAnchor>
                                         </StyledTableRow>
                                     );
                                 })}

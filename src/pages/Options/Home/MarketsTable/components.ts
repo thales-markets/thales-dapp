@@ -74,3 +74,7 @@ export const Star = styled(Image)`
     display: block;
     width: 14px;
 `;
+
+export const DisplayContentsAnchor = styled.a`
+    display: contents;
+`;

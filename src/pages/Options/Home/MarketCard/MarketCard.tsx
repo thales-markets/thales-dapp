@@ -11,7 +11,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
-import { PhaseLabel } from '../MarketsTable/components';
+import { DisplayContentsAnchor, PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
@@ -28,9 +28,8 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     return (
         <>
             {optionMarket && (
-                <a
+                <DisplayContentsAnchor
                     style={{
-                        display: 'contents',
                         pointerEvents: optionMarket.phase !== 'expiry' ? 'auto' : 'none',
                     }}
                     href={buildOptionsMarketLink(optionMarket.address)}
@@ -134,7 +133,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <ViewMarket className="view-market">View Market</ViewMarket>
                         </Footer>
                     </Card>
-                </a>
+                </DisplayContentsAnchor>
             )}
         </>
     );
