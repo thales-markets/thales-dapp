@@ -15,7 +15,7 @@ import {
 import Currency from 'components/Currency';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { navigateToOptionsMarket } from 'utils/routes';
+import { buildOptionsMarketLink, navigateToOptionsMarket } from 'utils/routes';
 import { Arrow, ArrowsWrapper, PhaseLabel, StyledTableCell, TableHeaderLabel, Star } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
@@ -313,9 +313,22 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                     );
                                     return (
                                         <StyledTableRow
-                                            onClick={() => {
-                                                if (market.phase !== 'expiry') {
-                                                    navigateToOptionsMarket(market.address);
+                                            onMouseDown={(e) => {
+                                                // right click
+                                                if (e.button === 2) {
+                                                    return;
+                                                }
+                                                // middle click
+                                                if (e.button === 1) {
+                                                    e.preventDefault();
+                                                    window.open(buildOptionsMarketLink(market.address));
+                                                }
+
+                                                // left click
+                                                if (e.button === 0) {
+                                                    if (market.phase !== 'expiry') {
+                                                        navigateToOptionsMarket(market.address);
+                                                    }
                                                 }
                                             }}
                                             className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}

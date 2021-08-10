@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { navigateToOptionsMarket } from 'utils/routes';
+import { buildOptionsMarketLink, navigateToOptionsMarket } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
@@ -30,9 +30,22 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
             {optionMarket && (
                 <Card
                     id="market-card"
-                    onClick={() => {
-                        if (optionMarket.phase !== 'expiry') {
-                            navigateToOptionsMarket(optionMarket.address);
+                    onMouseDown={(e) => {
+                        // right click
+                        if (e.button === 2) {
+                            return;
+                        }
+                        // middle click
+                        if (e.button === 1) {
+                            e.preventDefault();
+                            window.open(buildOptionsMarketLink(optionMarket.address));
+                        }
+
+                        // left click
+                        if (e.button === 0) {
+                            if (optionMarket.phase !== 'expiry') {
+                                navigateToOptionsMarket(optionMarket.address);
+                            }
                         }
                     }}
                 >
