@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button } from 'theme/common';
+import { Button, FlexDiv, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
@@ -19,11 +19,13 @@ import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
-
+import burger from 'assets/images/burger.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
+import { useState } from 'react';
+import './media.scss';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -32,17 +34,51 @@ type MarketHeaderProps = {
     route: string;
 };
 
+enum BurgerState {
+    Init,
+    Show,
+    Hide,
+}
+
 const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
+
+    useMemo(() => {
+        if (showBurgerMenu !== BurgerState.Init) {
+            // const hero = document.getElementById('landing-hero');
+            // if (hero && showBurgerMenu === BurgerState.Show) {
+            //     hero.className += ' higher-z-index';
+            // }
+            // if (hero && showBurgerMenu === BurgerState.Hide) {
+            //     hero.className.replace(' higher-z-index', '');
+            // }
+        }
+    }, [showBurgerMenu]);
+
     return (
         <>
-            <MarketHeaderWrapper id="market-header" showCustomizeLayout={showCustomizeLayout}>
+            <MarketHeaderWrapper id="dapp-header" className="dapp-header" showCustomizeLayout={showCustomizeLayout}>
+                <FlexDiv className="dapp-header__logoWrapper">
+                    <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
+                    <BurdgerIcon
+                        className="dapp-header__logoWrapper__burger"
+                        onClick={() =>
+                            setShowBurdgerMenu(
+                                showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
+                            )
+                        }
+                        hidden={showBurgerMenu === BurgerState.Show}
+                        src={burger}
+                    />
+                </FlexDiv>
+
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 {!isWalletConnected ? (
                     <Button
-                        className="primary"
+                        className="primary dapp-header__connectWallet"
                         style={{ fontSize: '16px', alignSelf: 'center' }}
                         onClick={() => onboardConnector.connectWallet()}
                     >
@@ -52,10 +88,10 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     <UserInfo />
                 )}
             </MarketHeaderWrapper>
-            <Sidebar>
+            <Sidebar className="dapp-header__nav">
                 <ItemsContainer>
                     <DisplayContentsAnchor href={ROUTES.Home}>
-                        <Logo className="logo" />
+                        <LogoLocal className="logo" />
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={ROUTES.Options.HotMarkets}>
                         <SidebarItem
@@ -174,7 +210,7 @@ const Sidebar = styled.nav`
     }
 `;
 
-const Logo = styled.div`
+const LogoLocal = styled.div`
     cursor: pointer;
     height: 50px;
     margin-bottom: 60px;
@@ -230,6 +266,13 @@ const SidebarText = styled.span`
     letter-spacing: 0.35px;
     white-space: nowrap;
     display: none;
+`;
+
+const BurdgerIcon = styled.img`
+    position: absolute;
+    right: 30px;
+    top: 32px;
+    padding: 10px;
 `;
 
 export default MarketHeader;

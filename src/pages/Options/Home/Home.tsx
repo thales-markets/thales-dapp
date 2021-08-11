@@ -76,7 +76,7 @@ export const Home: React.FC = () => {
             {marketsQuery.isSuccess ? (
                 <>
                     <Section>
-                        <FlexDivColumn>
+                        <FlexDivColumn style={{ width: '100%' }}>
                             <MarketHeader
                                 route={
                                     location.hash === '#overview'
