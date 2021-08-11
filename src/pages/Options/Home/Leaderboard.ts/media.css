@@ -11,7 +11,16 @@
 .leaderboard__columns {
 }
 
-.leaderboard__tableBody {
+.leaderboard__tableBody > tr:last-child > td {
+    border-radius: 0 !important;
+}
+
+.leaderboard__tableBody > tr:last-child > td:first-child {
+    border-bottom-left-radius: 23px !important;
+}
+
+.leaderboard__tableBody > tr:last-child > td:last-child {
+    border-bottom-right-radius: 23px !important;
 }
 
 @media (max-width: 1400px) {
