@@ -8,7 +8,12 @@
 .leaderboard__table {
 }
 
-.leaderboard__columns {
+.leaderboard__columns > tr > th:first-child {
+    border-top-left-radius: 23px !important;
+}
+
+.leaderboard__columns > tr > th:last-child {
+    border-top-right-radius: 23px !important;
 }
 
 .leaderboard__tableBody > tr:last-child > td {
@@ -34,6 +39,13 @@
     .leaderboard__tableBody > tr > td:first-child {
         display: none;
     }
+    .leaderboard__tableBody > tr:last-child > td:nth-child(2) {
+        border-bottom-left-radius: 23px !important;
+    }
+
+    .leaderboard__columns > tr > th:nth-child(2) {
+        border-top-left-radius: 23px !important;
+    }
 }
 
 @media (max-width: 900px) {
@@ -42,6 +54,14 @@
     .leaderboard__tableBody > tr > td:first-child,
     .leaderboard__tableBody > tr > td:nth-child(2) {
         display: none;
+    }
+
+    .leaderboard__tableBody > tr:last-child > td:nth-child(3) {
+        border-bottom-left-radius: 23px !important;
+    }
+
+    .leaderboard__columns > tr > th:nth-child(3) {
+        border-top-left-radius: 23px !important;
     }
 
     .leaderboard__tableBody > tr > td {
