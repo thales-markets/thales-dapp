@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketsTable from '../MarketsTable';
@@ -20,7 +21,7 @@ import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import { navigateTo } from 'utils/routes';
+import { history, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
@@ -30,6 +31,7 @@ import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalance
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
@@ -81,6 +83,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [secondLevelUserFilter, setSecondLevelUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const searchFilter = useLocation();
+    const queryString = require('query-string');
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -146,6 +150,18 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                 return market.phase === phaseFilter;
             });
         }
+
+        const userFilterParamValue = queryString.parse(searchFilter.search).userFilter;
+        const secondLevelUserFilterParamValue = queryString.parse(searchFilter.search).userFilter2;
+
+        if (userFilterParamValue && userFilter === UserFilterEnum.All) {
+            setUserFilter(userFilterParamValue);
+        }
+
+        if (secondLevelUserFilterParamValue && secondLevelUserFilter === UserFilterEnum.All) {
+            setSecondLevelUserFilter(secondLevelUserFilterParamValue);
+        }
+
         return filteredMarkets;
     }, [optionsMarkets, userFilter, phaseFilter, isWalletConnected, walletAddress, watchlistedMarkets, assetSearch]);
 
@@ -189,6 +205,20 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     }, [filteredOptionsMarkets, secondLevelUserFilter, phaseFilter]);
 
     const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+
+        if (!isDisabled && userFilterValue !== filter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({ userFilter: [filter] }),
+            });
+        } else if (userFilterValue === filter && userFilter !== UserFilterEnum.All) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: '',
+            });
+        }
+
         if (secondLevelUserFilter !== UserFilterEnum.All && userFilter !== UserFilterEnum.All && !isDisabled) {
             setSecondLevelUserFilter(UserFilterEnum.All);
         }
@@ -199,6 +229,33 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     };
 
     const onClickSecondLevelUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+        const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
+
+        if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                    userFilter2: [filter],
+                }),
+            });
+        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== UserFilterEnum.All) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                }),
+            });
+        } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter2: [filter],
+                }),
+            });
+        }
+
         if (!isDisabled && filter === UserFilterEnum.Olympics) {
             setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
         }

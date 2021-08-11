@@ -508,7 +508,7 @@ export const CreateMarket: React.FC = () => {
 
         try {
             const createSignedOrderV4Async = async () => {
-                const order = new LimitOrder({f
+                const order = new LimitOrder({
                     makerToken,
                     takerToken: SynthsUSD.address,
                     makerAmount,
