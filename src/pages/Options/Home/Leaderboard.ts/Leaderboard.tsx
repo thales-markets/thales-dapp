@@ -92,6 +92,7 @@ const LeaderboardPage: React.FC<any> = () => {
             }
         } else {
             setOrderBy(parseInt(cell.id.toString()));
+            setPage(0);
             setOrderDirection(OrderDirection.DESC);
         }
     };
@@ -154,7 +155,7 @@ const LeaderboardPage: React.FC<any> = () => {
                         <FlexDivRow>
                             <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600 }}>
                                 <SearchInput
-                                    style={{ width: '100%' }}
+                                    style={{ width: '100%', paddingRight: 40 }}
                                     className="leaderboard__search"
                                     onChange={(e) => setSearchString(e.target.value)}
                                     value={searchString}
