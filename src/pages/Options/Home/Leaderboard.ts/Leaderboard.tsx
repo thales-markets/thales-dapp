@@ -122,25 +122,27 @@ const LeaderboardPage: React.FC<any> = () => {
 
             return false;
         });
-        return searchLeader.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1)).sort((a, b) => {
-            if (orderBy === 5) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.trades - a.trades;
+        return searchLeader
+            .sort((a, b) => {
+                if (orderBy === 5) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.trades - a.trades;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.trades - b.trades;
+                    }
                 }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.trades - b.trades;
+                if (orderBy === 6) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.volume - a.volume;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.volume - b.volume;
+                    }
                 }
-            }
-            if (orderBy === 6) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.volume - a.volume;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.volume - b.volume;
-                }
-            }
-            return 0;
-        });
+                return 0;
+            })
+            .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [rowsPerPage, memoizedPage, searchString, leaderboard, orderBy, orderDirection]);
 
     return (
