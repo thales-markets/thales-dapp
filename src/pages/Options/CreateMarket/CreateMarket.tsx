@@ -520,6 +520,7 @@ export const CreateMarket: React.FC = () => {
                     salt,
                     chainId: networkId,
                     verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+                    feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
                 });
 
                 try {
