@@ -1,0 +1,19 @@
+.markets-desktop {
+    @media screen and (max-width: 900px) {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 901px) {
+    .markets-mobile {
+        display: none;
+        &__search {
+        }
+    }
+}
+
+.markets-mobile {
+    &__search > input {
+        width: 100%;
+    }
+}

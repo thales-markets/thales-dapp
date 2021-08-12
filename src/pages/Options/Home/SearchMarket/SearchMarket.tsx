@@ -42,10 +42,11 @@ export const SearchInput = styled.input`
 type SearchMarketProp = {
     assetSearch: string;
     setAssetSearch: (param: string) => void;
+    className?: string;
 };
 
-const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch }) => (
-    <SearchWrapper>
+const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch, className }) => (
+    <SearchWrapper className={className ? className : ''}>
         <SearchInput onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} placeholder="Try ETH" />
     </SearchWrapper>
 );
