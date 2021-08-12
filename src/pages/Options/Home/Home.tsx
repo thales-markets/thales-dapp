@@ -69,7 +69,7 @@ export const Home: React.FC = () => {
         } else {
             document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [location]);
+    }, [location.hash]);
 
     return (
         <>

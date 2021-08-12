@@ -234,6 +234,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
         if (!isDisabled) {
             setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
         }
+
+        document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+
         return;
     };
 
@@ -291,6 +294,8 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
         if (!isDisabled) {
             setSecondLevelUserFilter(secondLevelUserFilter === filter ? UserFilterEnum.All : filter);
         }
+
+        document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
         return;
     };
 
