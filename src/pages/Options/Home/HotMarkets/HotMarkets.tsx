@@ -8,8 +8,8 @@ import { FlexDivColumn } from 'theme/common';
 import useInterval from 'hooks/useInterval';
 import previous from 'assets/images/previous-page.svg';
 import next from 'assets/images/next-page.svg';
-import coins from 'assets/images/coins-mono.png';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import './media.scss';
 
 type HotMarketsProps = {
     exchangeRates: Rates | null;
@@ -60,10 +60,8 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
     }, 10000);
 
     return (
-        <Wrapper id="hot-markets">
-            <Text className="text-xxl pale-grey" style={{ fontSize: '39px', paddingLeft: '65px' }}>
-                {t('options.home.explore-markets.trending')}
-            </Text>
+        <Wrapper id="hot-markets" className="hot-markets">
+            <Text className="text-xxl pale-grey hot-markets__title">{t('options.home.explore-markets.trending')}</Text>
             <FlexDivCentered className="hot-markets__desktop">
                 {optionsMarkets.length > 3 && (
                     <Arrow
@@ -82,11 +80,15 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
                             }
                         }}
                         src={previous}
+                        className="hot-markets__arrow"
                     />
                 )}
 
                 <div style={{ width: 1128, overflow: 'hidden' }}>
-                    <Cards className={optionsMarkets.length <= 3 ? 'default' : 'animate'} id="market-cards-wrapper">
+                    <Cards
+                        className={(optionsMarkets.length <= 3 ? 'default' : 'animate') + ' hot-markets__cards'}
+                        id="market-cards-wrapper"
+                    >
                         {currentMarkets.map((optionsMarket, index) => {
                             return (
                                 <MarketCard key={index} optionMarket={optionsMarket} exchangeRates={exchangeRates} />
@@ -111,13 +113,10 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
                             }
                         }}
                         src={next}
+                        className="hot-markets__arrow"
                     />
                 )}
             </FlexDivCentered>
-            <FlexDiv className="hot-markets__mobile">
-                <MarketCard optionMarket={currentMarkets[0]} exchangeRates={exchangeRates} />
-                <Image src={coins} />
-            </FlexDiv>
         </Wrapper>
     );
 };
@@ -126,6 +125,7 @@ const Wrapper = styled(FlexDivColumn)`
     padding: 50px 110px;
     position: relative;
     max-height: 490px;
+    padding-left: 198px;
 `;
 
 const Arrow = styled(Image)`
@@ -137,21 +137,6 @@ const Arrow = styled(Image)`
 
 const Cards = styled(FlexDiv)`
     position: relative;
-    &.animate {
-        left: -376px;
-    }
-    &.default {
-        justify-content: center;
-    }
-    z-index: 0;
-    &.next {
-        transition: left 1s;
-        left: -752px;
-    }
-    &.previous {
-        transition: left 1s;
-        left: 0;
-    }
 `;
 
 export default HotMarkets;

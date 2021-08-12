@@ -1,0 +1,27 @@
+.market-creation {
+}
+@media screen and (max-width: 1400px) {
+    .market-creation {
+    }
+}
+@media screen and (max-width: 900px) {
+    .market-creation {
+        padding-top: 16px !important;
+        padding-bottom: 24px !important;
+        &__exploreBtn {
+            display: none;
+        }
+        &__orTxt {
+            display: none;
+        }
+        &__createBtn {
+            font-size: 16px !important;
+            padding: 8px 32px !important;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .market-creation {
+    }
+}

@@ -7,6 +7,7 @@ import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
+import './media.scss';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
@@ -14,10 +15,10 @@ const MarketCreation: React.FC = () => {
 
     return (
         <FlexDivColumn id="market-creation">
-            <SideWrapper>
+            <SideWrapper className="market-creation">
                 <FlexDivCentered>
                     <Button
-                        className="secondary"
+                        className="secondary market-creation__exploreBtn"
                         style={{ padding: '13px 24px', fontSize: 20 }}
                         onClick={() =>
                             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' })
@@ -27,12 +28,15 @@ const MarketCreation: React.FC = () => {
                     </Button>
                     {isWalletConnected && (
                         <>
-                            <Text className="text-m pale-grey" style={{ margin: '0 135px' }}>
+                            <Text className="text-m pale-grey  market-creation__orTxt" style={{ margin: '0 135px' }}>
                                 or
                             </Text>
                             {
                                 <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
-                                    <Button className="primary" style={{ padding: '13px 24px', fontSize: 20 }}>
+                                    <Button
+                                        className="primary market-creation__createBtn"
+                                        style={{ padding: '13px 24px', fontSize: 20 }}
+                                    >
                                         {t('options.home.market-creation.create-market-button-label')}
                                     </Button>
                                 </DisplayContentsAnchor>

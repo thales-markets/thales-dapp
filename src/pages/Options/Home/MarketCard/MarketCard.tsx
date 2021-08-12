@@ -29,6 +29,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
         <>
             {optionMarket && (
                 <DisplayContentsAnchor
+                    className="hot-markets__card"
                     style={{
                         pointerEvents: optionMarket.phase !== 'expiry' ? 'auto' : 'none',
                     }}
