@@ -65,13 +65,17 @@ const QuickTradingPage: React.FC<any> = () => {
     const ordersQuery = useBinaryOptionsOrders(networkId, isBuyMode ? 'sells' : 'buys', {
         enabled: isAppReady,
     });
+    const myOrdersQuery = useBinaryOptionsOrders(networkId, isBuyMode ? 'buys' : 'sells', {
+        enabled: isAppReady,
+    });
     const orders: ExtendedOrderItem[] = ordersQuery.isSuccess && ordersQuery.data ? ordersQuery.data : [];
+    const myOrders: ExtendedOrderItem[] = myOrdersQuery.isSuccess && myOrdersQuery.data ? myOrdersQuery.data : [];
 
     const filteredOrders = useMemo(() => {
         let filteredOrders = orders;
         switch (userFilter) {
             case UserFilterEnum.MyOrders:
-                filteredOrders = filteredOrders.filter(
+                filteredOrders = myOrders.filter(
                     (order) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase()
                 );
                 break;
@@ -87,6 +91,11 @@ const QuickTradingPage: React.FC<any> = () => {
             case UserFilterEnum.Short:
                 filteredOrders = filteredOrders.filter((order) => order.optionSide === 'short');
                 break;
+        }
+        if (userFilter !== UserFilterEnum.MyOrders) {
+            filteredOrders = filteredOrders.filter(
+                (order) => order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase()
+            );
         }
         return filteredOrders;
     }, [orders, userFilter, isWalletConnected, walletAddress]);
