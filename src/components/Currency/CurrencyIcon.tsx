@@ -32,7 +32,7 @@ export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, synthIc
 
     return (
         <AssetIcon
-            style={{ marginRight: 10, width: synthIconStyle?.width, height: synthIconStyle?.height }}
+            style={{ marginRight: 10, width: synthIconStyle?.width, height: synthIconStyle?.height, ...synthIconStyle }}
             {...props}
         />
     );

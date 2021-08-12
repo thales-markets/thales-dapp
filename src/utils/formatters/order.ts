@@ -11,6 +11,7 @@ export function prepSellOrder(record: any) {
     const filled = (amount - fillableAmount) / amount;
     const orderHash = record.metaData.orderHash;
     const potentialReturn = 1 / price - 1;
+    const potentialReturnAmount = fillableAmount - fillableTotal;
 
     return {
         rawOrder: record.order,
@@ -25,6 +26,7 @@ export function prepSellOrder(record: any) {
             filled,
             orderHash,
             potentialReturn,
+            potentialReturnAmount,
         },
     };
 }
@@ -39,6 +41,7 @@ export function prepBuyOrder(record: any) {
     const filled = (amount - fillableAmount) / amount;
     const orderHash = record.metaData.orderHash;
     const potentialReturn = 1 / price - 1;
+    const potentialReturnAmount = fillableAmount - fillableTotal;
 
     return {
         rawOrder: record.order,
@@ -53,6 +56,7 @@ export function prepBuyOrder(record: any) {
             filled,
             orderHash,
             potentialReturn,
+            potentialReturnAmount,
         },
     };
 }

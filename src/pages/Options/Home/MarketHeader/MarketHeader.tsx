@@ -16,6 +16,7 @@ import createMarketSelectedIcon from 'assets/images/sidebar/create-market-select
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
 import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
 import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected.svg';
+import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
@@ -100,9 +101,18 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                         <SidebarIcon />
                         <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                     </SidebarItem>
+                    <SidebarItem
+                        onClick={() => navigateTo(ROUTES.Options.QuickTrading)}
+                        imgSrc={tradeExerciseDefaultIcon}
+                        imgSrcHoverSelected={tradeExerciseSelectedIcon}
+                        className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
+                    >
+                        <SidebarIcon />
+                        <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
+                    </SidebarItem>
                     {phase === 'trading' && (
                         <SidebarItem
-                            imgSrc={tradeExerciseSelectedIcon}
+                            imgSrc={tradeExerciseDefaultIcon}
                             imgSrcHoverSelected={tradeExerciseSelectedIcon}
                             className={'selected'}
                             style={{ cursor: 'default' }}
@@ -113,7 +123,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     )}
                     {phase === 'maturity' && (
                         <SidebarItem
-                            imgSrc={tradeExerciseSelectedIcon}
+                            imgSrc={tradeExerciseDefaultIcon}
                             imgSrcHoverSelected={tradeExerciseSelectedIcon}
                             className={'selected'}
                             style={{ cursor: 'default' }}

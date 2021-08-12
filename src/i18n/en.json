@@ -162,7 +162,8 @@
             "create-market-label": "Create market",
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
-            "leaderboard-label": "Leaderboard"
+            "leaderboard-label": "Leaderboard",
+            "quick-trading-label": "Quick trading"
         }
     },
     "modals": {
@@ -186,6 +187,10 @@
             "trading": "trading",
             "maturity": "maturity",
             "expiry": "expired"
+        },
+        "trading-mode": {
+            "buy": "BUYING",
+            "sell": "SELLING"
         },
         "home": {
             "market-card": {
@@ -442,6 +447,14 @@
                     }
                 },
                 "place-order": {
+                    "modal": {
+                        "buy": {
+                            "title": "Place buy order"
+                        },
+                        "sell": {
+                            "title": "Place sell order"
+                        }
+                    },
                     "order-type-label": "Order type",
                     "amount-label": "Amount to {{orderSide}}",
                     "price-label": "Price per {{currencyKey}}",
@@ -536,6 +549,15 @@
                     "inital-total-label": "Inital total ({{currencyKey}})"
                 }
             }
+        },
+        "quick-trading": {
+            "title": "Quick Trading",
+            "mode-label": "MODE",
+            "cancel-tooltip": "Click to cancel your order",
+            "counter-offer-button-label": "Make counter offer",
+            "view-market-tooltip": "View market",
+            "no-orders-found": "No orders found.",
+            "view-all-orders": "View all orders"
         },
         "common": {
             "time-remaining": {

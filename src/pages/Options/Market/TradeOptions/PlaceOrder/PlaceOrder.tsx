@@ -73,13 +73,15 @@ import styled from 'styled-components';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
+    market?: any;
+    defaultOrderSide?: OrderSide;
 };
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
-const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
+const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide, market, defaultOrderSide }) => {
     const { t } = useTranslation();
-    const optionsMarket = useMarketContext();
+    const optionsMarket = market || useMarketContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -107,7 +109,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
             label: t('common.sell'),
         },
     ];
-    const [orderSide, setOrderSide] = useState<OrderSideOptionType>(orderSideOptions[0]);
+    const defaultOrderSideOption = orderSideOptions.find((option) => option.value === defaultOrderSide);
+    const [orderSide, setOrderSide] = useState<OrderSideOptionType>(defaultOrderSideOption || orderSideOptions[0]);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -403,7 +406,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
         setPrice('');
         setExpiration(OrderPeriod.TRADING_END);
         setCustomHoursExpiration('');
-        setOrderSide(orderSideOptions[0]);
+        const defaultOrderSideOption = orderSideOptions.find((option) => option.value === defaultOrderSide);
+        setOrderSide(defaultOrderSideOption || orderSideOptions[0]);
         setIsPriceValid(true);
         setIsAmountValid(true);
     };
@@ -426,22 +430,24 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide }) => {
 
     return (
         <Container>
-            <FlexDivRow>
-                <ShortInputContainer>
-                    <ReactSelect
-                        formatOptionLabel={(option: any) => option.label}
-                        options={orderSideOptions}
-                        value={orderSide}
-                        onChange={(option: any) => setOrderSide(option)}
-                        isSearchable={false}
-                        isUppercase
-                        isDisabled={isSubmitting}
-                        className={isSubmitting ? 'disabled' : ''}
-                    />
-                    <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
-                </ShortInputContainer>
-                <ShortInputContainer></ShortInputContainer>
-            </FlexDivRow>
+            {!defaultOrderSide && (
+                <FlexDivRow>
+                    <ShortInputContainer>
+                        <ReactSelect
+                            formatOptionLabel={(option: any) => option.label}
+                            options={orderSideOptions}
+                            value={orderSide}
+                            onChange={(option: any) => setOrderSide(option)}
+                            isSearchable={false}
+                            isUppercase
+                            isDisabled={isSubmitting}
+                            className={isSubmitting ? 'disabled' : ''}
+                        />
+                        <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
+                    </ShortInputContainer>
+                    <ShortInputContainer></ShortInputContainer>
+                </FlexDivRow>
+            )}
             <FlexDiv>
                 <BuySellSliderContainer>
                     {isBuy ? (

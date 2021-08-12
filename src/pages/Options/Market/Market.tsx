@@ -36,6 +36,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import { ethers } from 'ethers';
 import CustomMarketResults from './CustomMarketResults';
+import { useLocation } from 'react-router-dom';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -112,7 +113,11 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         ],
         [t]
     );
-    const [optionsActiveTab, setOptionsActiveTab] = useState(optionsTabContent[0]);
+    const { search } = useLocation();
+    const query = new URLSearchParams(search);
+    const paramOption = query.get('option');
+    const defaultOptionsTab = paramOption === 'short' ? optionsTabContent[1] : optionsTabContent[0];
+    const [optionsActiveTab, setOptionsActiveTab] = useState(defaultOptionsTab);
 
     const reactGridConfig = {
         className: 'layout',

@@ -84,11 +84,12 @@ type FillOrderModalProps = {
     optionSide: OptionSide;
     orderSide: OrderSide;
     onClose: () => void;
+    market?: any;
 };
 
-export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, orderSide, optionSide }) => {
+export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, orderSide, optionSide, market }) => {
     const { t } = useTranslation();
-    const optionsMarket = useMarketContext();
+    const optionsMarket = market || useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
