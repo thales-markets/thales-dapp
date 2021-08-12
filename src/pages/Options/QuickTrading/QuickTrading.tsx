@@ -215,7 +215,7 @@ const QuickTradingPage: React.FC<any> = () => {
                             <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
                         </FlexDiv>
                         <QuickTradingTable
-                            orders={searchFilteredOrders}
+                            orders={assetSearch ? searchFilteredOrders : filteredOrders}
                             isLoading={ordersQuery.isLoading}
                             tradingModeFilter={tradingModeFilter}
                             userFilter={userFilter}

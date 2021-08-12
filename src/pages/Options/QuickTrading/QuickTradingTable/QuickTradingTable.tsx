@@ -33,7 +33,7 @@ import styled from 'styled-components';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { useTranslation } from 'react-i18next';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { FlexDiv } from 'theme/common';
+import { FlexDiv, FlexDivColumn } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 
 interface HeadCell {
@@ -325,7 +325,6 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                             );
                         })}
                     </TableBody>
-                    {isLoading && <SimpleLoader />}
                     {sortedMarkets.length !== 0 && (
                         <TableFooter>
                             <TableRow>
@@ -378,6 +377,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                     />
                 )}
             </TableContainer>
+            {isLoading && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
+            )}
             {sortedMarkets.length === 0 && !isLoading && children}
         </>
     );
@@ -464,6 +468,13 @@ const CounterOfferButton = styled(DefaultSubmitButton)`
     min-height: 20px;
     font-size: 14px;
     padding: 4px 20px;
+`;
+
+const LoaderContainer = styled(FlexDivColumn)`
+    min-height: 400px;
+    background: #04045a;
+    justify-content: space-evenly;
+    position: relative;
 `;
 
 export default QuickTradingTable;

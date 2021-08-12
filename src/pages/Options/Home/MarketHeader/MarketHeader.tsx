@@ -108,15 +108,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <SidebarItem
-                        onClick={() => navigateTo(ROUTES.Options.QuickTrading)}
-                        imgSrc={tradeExerciseDefaultIcon}
-                        imgSrcHoverSelected={tradeExerciseSelectedIcon}
-                        className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
-                    >
-                        <SidebarIcon />
-                        <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
-                    </SidebarItem>
+                    <DisplayContentsAnchor href={ROUTES.Options.QuickTrading}>
+                        <SidebarItem
+                            imgSrc={tradeExerciseDefaultIcon}
+                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
+                            className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
