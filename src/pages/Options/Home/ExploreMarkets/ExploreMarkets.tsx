@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import MarketsTable from '../MarketsTable';
@@ -20,7 +21,7 @@ import UserFilter from './UserFilters';
 import SearchMarket from '../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import { navigateTo } from 'utils/routes';
+import { history, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 import onboardConnector from 'utils/onboardConnector';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
@@ -30,6 +31,7 @@ import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalance
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
@@ -79,7 +81,10 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const { t } = useTranslation();
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.trading);
     const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
+    const [secondLevelUserFilter, setSecondLevelUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const searchFilter = useLocation();
+    const queryString = require('query-string');
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -138,12 +143,6 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                     isRecentlyAdded(new Date(), new Date(timestamp))
                 );
                 break;
-            case UserFilterEnum.Bitcoin:
-                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC);
-                break;
-            case UserFilterEnum.Ethereum:
-                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH);
-                break;
         }
 
         if (phaseFilter !== PhaseFilterEnum.all) {
@@ -151,6 +150,18 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                 return market.phase === phaseFilter;
             });
         }
+
+        const userFilterParamValue = queryString.parse(searchFilter.search).userFilter;
+        const secondLevelUserFilterParamValue = queryString.parse(searchFilter.search).userFilter2;
+
+        if (userFilterParamValue && userFilter === UserFilterEnum.All) {
+            setUserFilter(userFilterParamValue);
+        }
+
+        if (secondLevelUserFilterParamValue && secondLevelUserFilter === UserFilterEnum.All) {
+            setSecondLevelUserFilter(secondLevelUserFilterParamValue);
+        }
+
         return filteredMarkets;
     }, [optionsMarkets, userFilter, phaseFilter, isWalletConnected, walletAddress, watchlistedMarkets, assetSearch]);
 
@@ -169,9 +180,88 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
+    const searchSecondLevelFilteredOptionsMarket = useMemo(() => {
+        let secondLevelFilteredOptionsMarket = filteredOptionsMarkets;
+        switch (secondLevelUserFilter) {
+            case UserFilterEnum.Bitcoin:
+                secondLevelFilteredOptionsMarket = filteredOptionsMarkets.filter(
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC
+                );
+                break;
+            case UserFilterEnum.Ethereum:
+                secondLevelFilteredOptionsMarket = filteredOptionsMarkets.filter(
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH
+                );
+                break;
+        }
+
+        if (phaseFilter !== PhaseFilterEnum.all) {
+            secondLevelFilteredOptionsMarket = secondLevelFilteredOptionsMarket.filter((market) => {
+                return market.phase === phaseFilter;
+            });
+        }
+
+        return secondLevelFilteredOptionsMarket;
+    }, [filteredOptionsMarkets, secondLevelUserFilter, phaseFilter]);
+
     const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+
+        if (!isDisabled && userFilterValue !== filter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({ userFilter: [filter] }),
+            });
+        } else if (userFilterValue === filter && userFilter !== UserFilterEnum.All) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: '',
+            });
+        }
+
+        if (secondLevelUserFilter !== UserFilterEnum.All && userFilter !== UserFilterEnum.All && !isDisabled) {
+            setSecondLevelUserFilter(UserFilterEnum.All);
+        }
         if (!isDisabled) {
             setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        }
+        return;
+    };
+
+    const onClickSecondLevelUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+        const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
+
+        if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                    userFilter2: [filter],
+                }),
+            });
+        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== UserFilterEnum.All) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                }),
+            });
+        } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter2: [filter],
+                }),
+            });
+        }
+
+        if (!isDisabled && filter === UserFilterEnum.Olympics) {
+            setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+        }
+
+        if (!isDisabled) {
+            setSecondLevelUserFilter(secondLevelUserFilter === filter ? UserFilterEnum.All : filter);
         }
         return;
     };
@@ -200,6 +290,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const resetFilters = () => {
         setPhaseFilter(PhaseFilterEnum.all);
         setUserFilter(UserFilterEnum.All);
+        setSecondLevelUserFilter(UserFilterEnum.All);
     };
 
     return (
@@ -207,9 +298,10 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
             <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                 {Object.keys(UserFilterEnum)
                     .filter(
-                        (key) =>
+                        (key, index) =>
                             isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
-                            key !== UserFilterEnum.All
+                            key !== UserFilterEnum.All &&
+                            index <= 5
                     )
                     .map((key, index) => {
                         const isDisabled = !isWalletConnected && index < 4;
@@ -222,6 +314,50 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                                 }`}
                                 disabled={isDisabled}
                                 onClick={onClickUserFilter.bind(
+                                    this,
+                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                    isDisabled
+                                )}
+                                key={key}
+                                img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                                text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                            />
+                        );
+                    })}
+            </FlexDivCentered>
+
+            <FlexDivCentered style={{ flexFlow: 'wrap' }}>
+                {Object.keys(UserFilterEnum)
+                    .filter(
+                        (key, index) =>
+                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
+                            key !== UserFilterEnum.All &&
+                            index > 5
+                    )
+                    .map((key) => {
+                        const isBtcMarketsEmpty =
+                            filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
+                                .length === 0;
+                        const isEthMarketsEmpty =
+                            filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
+                                .length === 0;
+                        const isDisabled =
+                            (UserFilterEnum.Bitcoin === key &&
+                                isBtcMarketsEmpty &&
+                                userFilter !== UserFilterEnum.Ethereum) ||
+                            (UserFilterEnum.Ethereum === key &&
+                                isEthMarketsEmpty &&
+                                userFilter !== UserFilterEnum.Bitcoin);
+                        return (
+                            <UserFilter
+                                className={`${
+                                    !isDisabled &&
+                                    secondLevelUserFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                        ? 'selected'
+                                        : ''
+                                }`}
+                                disabled={isDisabled}
+                                onClick={onClickSecondLevelUserFilter.bind(
                                     this,
                                     UserFilterEnum[key as keyof typeof UserFilterEnum],
                                     isDisabled
@@ -268,7 +404,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
 
             <MarketsTable
                 exchangeRates={exchangeRates}
-                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
+                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
                 watchlistedMarkets={watchlistedMarkets}
                 isLoading={false} // TODO put logic
                 phase={phaseFilter}

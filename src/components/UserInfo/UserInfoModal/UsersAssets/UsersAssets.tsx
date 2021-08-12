@@ -14,7 +14,8 @@ import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number'
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow, Row } from '../UserInfoModal';
 import ReactCountryFlag from 'react-country-flag';
-
+import { LightTooltip } from '../../../../pages/Options/Market/components';
+import exerciseOptionIcon from '../../../../assets/images/exercise-option.svg';
 type UsersAssetsProps = {
     optionsMarkets: OptionsMarkets;
     walletAddress: string;
@@ -34,7 +35,6 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
         () => (userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : []),
         [userAssetsQuery]
     );
-
     return (
         <>
             <Row>
@@ -56,12 +56,10 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
             </Row>
             {assets.map((asset, index) => {
                 if (asset.balances.long || asset.balances.short) {
-                    // const hasFundsToExercise =
-                    //     asset.market.phase === 'maturity' &&
-                    //     asset.market.result &&
-                    //     !!asset.balances[asset.market.result];
-                    // console.log(hasFundsToExercise);
-
+                    const hasFundsToExercise =
+                        asset.market.phase === 'maturity' &&
+                        asset.market.result &&
+                        !!asset.balances[asset.market.result];
                     return (
                         <MarketRow
                             className="text-xs"
@@ -116,13 +114,13 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                                 {formatCurrency(asset.balances.short)}
                             </Text>
 
-                            {/* <LightTooltip placement="top" arrow={true} title="Has options to exercise">
+                            <LightTooltip title="Has options to exercise">
                                 <FlexDiv style={{ width: 15, height: 15 }}>
                                     {hasFundsToExercise && (
                                         <Image src={exerciseOptionIcon} style={{ width: 15, height: 15 }} />
                                     )}
                                 </FlexDiv>
-                            </LightTooltip> */}
+                            </LightTooltip>
                         </MarketRow>
                     );
                 }

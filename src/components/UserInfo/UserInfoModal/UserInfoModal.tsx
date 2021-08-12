@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivCentered, Image, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
 import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
@@ -14,7 +14,11 @@ import { truncateAddress } from 'utils/formatters/string';
 import UsersAssets from './UsersAssets';
 import UsersOrders from './UsersOrders';
 import UsersMarkets from './UsersMarkets';
-import { FilterButton } from 'pages/Options/Market/components';
+import Web3 from 'web3';
+import { FilterButton, Input, InputLabel, ShortInputContainer } from 'pages/Options/Market/components';
+import axios from 'axios';
+import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
+import { useEffect } from 'react';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -29,11 +33,31 @@ enum Filters {
     ASSETS = 'Assets',
 }
 
+const ethEnabled = () => {
+    if (window.ethereum) {
+        window.web3 = new Web3(Web3.givenProvider) as any;
+        return true;
+    }
+    return false;
+};
+
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, walletAddress, network }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: open,
     });
+
+    const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
+
+    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
+
+    useEffect(() => {
+        if (currentDisplayName !== '') {
+            setName(currentDisplayName);
+        }
+    }, [currentDisplayName]);
+
+    const [displayName, setName] = useState(currentDisplayName);
 
     const [filter, setFilter] = useState(Filters.MARKETS);
     const { synthsMap } = snxJSConnector;
@@ -55,6 +79,25 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
         [optionsMarkets, filter]
     );
 
+    const setDisplayName = async (walletAddress: string, displayName: string) => {
+        if (!ethEnabled()) {
+            alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
+        }
+
+        (window.web3?.eth as any).personal.sign(displayName, walletAddress, async (_test: any, signature: any) => {
+            try {
+                await axios.post('https://api.thales.market/display-name', {
+                    walletAddress,
+                    displayName,
+                    signature,
+                });
+                displayNameQuery.refetch();
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    };
+
     return (
         <Modal
             open={open}
@@ -64,7 +107,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
         >
             <ModalWrapper>
                 <Header>
-                    <Text className="text-m bold pale-grey">Connected Wallet</Text>
+                    <Text className="text-m bold pale-grey">{currentDisplayName}</Text>
                     <XButton onClick={() => handleClose(false)} />
                 </Header>
                 <WalletWrapper>
@@ -101,6 +144,26 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         </Button>
                     </FlexDivColumn>
                 </WalletWrapper>
+                <FlexDivCentered style={{ justifyContent: 'space-between', margin: 25 }}>
+                    <ShortInputContainer style={{ margin: 0 }}>
+                        <InputLabel>Display Name</InputLabel>
+                        <Input
+                            onChange={(event) => {
+                                setName(event.target.value);
+                            }}
+                            value={displayName}
+                        ></Input>
+                    </ShortInputContainer>
+                    <Button
+                        onClick={() => {
+                            setDisplayName(walletAddress, displayName);
+                        }}
+                        className="primary"
+                    >
+                        Change Display Name
+                    </Button>
+                </FlexDivCentered>
+
                 <FilterWrapper>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
