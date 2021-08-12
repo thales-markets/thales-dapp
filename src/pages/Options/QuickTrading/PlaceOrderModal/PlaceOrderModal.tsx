@@ -30,10 +30,19 @@ type PlaceOrderModalProps = {
     optionSide: OptionSide;
     orderSide: OrderSide;
     onClose: () => void;
-    market?: any;
+    market: any;
+    defaultPrice: number | string;
+    defaultAmount: number | string;
 };
 
-export const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({ onClose, optionSide, market, orderSide }) => {
+export const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
+    onClose,
+    optionSide,
+    market,
+    orderSide,
+    defaultPrice,
+    defaultAmount,
+}) => {
     const { t } = useTranslation();
     const optionsMarket = market || useMarketContext();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -86,7 +95,13 @@ export const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({ onClose, optio
                         <CloseIconContainer onClick={onClose} />
                     </FlexDivRow>
                 </PlaceOrderModalHeader>
-                <PlaceOrder optionSide={optionSide} market={market} defaultOrderSide={orderSide} />
+                <PlaceOrder
+                    optionSide={optionSide}
+                    market={market}
+                    defaultOrderSide={orderSide}
+                    defaultPrice={defaultPrice}
+                    defaultAmount={defaultAmount}
+                />
             </PlaceOrderModalContainer>
         </StyledPlaceOrderModal>
     );

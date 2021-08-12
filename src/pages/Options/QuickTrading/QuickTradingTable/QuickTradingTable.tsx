@@ -5,7 +5,7 @@ import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../../H
 import { PaginationWrapper, StyledTableRow } from '../../Home/MarketsTable/MarketsTable';
 import { TableFooter } from '@material-ui/core';
 import Pagination from '../../Home/MarketsTable/Pagination';
-import { formatCurrencyWithSign, formatPercentage } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import {
     DisplayOrder,
@@ -35,6 +35,7 @@ import { useTranslation } from 'react-i18next';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { FlexDiv, FlexDivColumn } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
+import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -51,20 +52,6 @@ const headCells: HeadCell[] = [
     { id: 6, label: 'Actions', sortable: false },
 ];
 
-export enum TradingModeFilterEnum {
-    Buy = 'buy',
-    Sell = 'sell',
-}
-
-export enum UserFilterEnum {
-    All = 'All',
-    MyOrders = 'My Orders',
-    Bitcoin = 'Bitcoin',
-    Ethereum = 'Ethereum',
-    Long = 'Long',
-    Short = 'Short',
-}
-
 const DEFAULT_ORDER_BY = 3; // market expiration time
 
 enum OrderDirection {
@@ -77,13 +64,17 @@ type QuickTradingTableProps = {
     orders: ExtendedOrders;
     isLoading?: boolean;
     tradingModeFilter: TradingModeFilterEnum;
-    userFilter: UserFilterEnum;
+    orderFilter: OrderFilterEnum;
+    coinFilter: CoinFilterEnum;
+    optionFilter: OptionFilterEnum;
 };
 
 const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     orders,
     tradingModeFilter,
-    userFilter,
+    orderFilter,
+    coinFilter,
+    optionFilter,
     isLoading,
     children,
 }) => {
@@ -153,7 +144,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
         }
     };
 
-    useEffect(() => setPage(0), [tradingModeFilter, userFilter, orderBy, orderDirection]);
+    useEffect(() => setPage(0), [tradingModeFilter, orderFilter, coinFilter, optionFilter, orderBy, orderDirection]);
 
     // const sortedMarkets = orders;
     const sortedMarkets = useMemo(() => {
@@ -362,6 +353,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                         orderSide={isBuyMode ? 'buy' : 'sell'}
                         onClose={() => setPlaceOrderModalVisible(false)}
                         market={selectedOrder.market}
+                        defaultPrice={truncToDecimals(selectedOrder.displayOrder.price, DEFAULT_OPTIONS_DECIMALS)}
+                        defaultAmount={truncToDecimals(
+                            selectedOrder.displayOrder.fillableAmount,
+                            DEFAULT_OPTIONS_DECIMALS
+                        )}
                     />
                 )}
                 {cancelOrderModalVisible && selectedOrder !== null && (

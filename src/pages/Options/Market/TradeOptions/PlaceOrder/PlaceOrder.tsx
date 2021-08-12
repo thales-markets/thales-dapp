@@ -75,11 +75,19 @@ type PlaceOrderProps = {
     optionSide: OptionSide;
     market?: any;
     defaultOrderSide?: OrderSide;
+    defaultPrice?: number | string;
+    defaultAmount?: number | string;
 };
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
 
-const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide, market, defaultOrderSide }) => {
+const PlaceOrder: React.FC<PlaceOrderProps> = ({
+    optionSide,
+    market,
+    defaultOrderSide,
+    defaultPrice,
+    defaultAmount,
+}) => {
     const { t } = useTranslation();
     const optionsMarket = market || useMarketContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -88,8 +96,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide, market, defaultOrde
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
-    const [price, setPrice] = useState<number | string>('');
-    const [amount, setAmount] = useState<number | string>('');
+    const [price, setPrice] = useState<number | string>(defaultPrice || '');
+    const [amount, setAmount] = useState<number | string>(defaultAmount || '');
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
@@ -402,8 +410,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({ optionSide, market, defaultOrde
     };
 
     const resetForm = () => {
-        setAmount('');
-        setPrice('');
+        setAmount(defaultAmount || '');
+        setPrice(defaultPrice || '');
         setExpiration(OrderPeriod.TRADING_END);
         setCustomHoursExpiration('');
         const defaultOrderSideOption = orderSideOptions.find((option) => option.value === defaultOrderSide);

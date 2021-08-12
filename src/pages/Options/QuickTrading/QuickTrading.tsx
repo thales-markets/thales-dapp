@@ -41,11 +41,19 @@ export enum TradingModeFilterEnum {
     Sell = 'sell',
 }
 
-export enum UserFilterEnum {
+export enum OrderFilterEnum {
     All = 'All',
     MyOrders = 'My Orders',
+}
+
+export enum CoinFilterEnum {
+    All = 'All',
     Bitcoin = 'Bitcoin',
     Ethereum = 'Ethereum',
+}
+
+export enum OptionFilterEnum {
+    All = 'All',
     Long = 'Long',
     Short = 'Short',
 }
@@ -57,7 +65,9 @@ const QuickTradingPage: React.FC<any> = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [tradingModeFilter, setTradingModeFilter] = useState<TradingModeFilterEnum>(TradingModeFilterEnum.Buy);
-    const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
+    const [orderFilter, setOrderFilter] = useState<OrderFilterEnum>(OrderFilterEnum.All);
+    const [coinFilter, setCoinFilter] = useState<CoinFilterEnum>(CoinFilterEnum.All);
+    const [optionFilter, setOptionFilter] = useState<OptionFilterEnum>(OptionFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
     const dispatch = useDispatch();
 
@@ -73,32 +83,33 @@ const QuickTradingPage: React.FC<any> = () => {
 
     const filteredOrders = useMemo(() => {
         let filteredOrders = orders;
-        switch (userFilter) {
-            case UserFilterEnum.MyOrders:
-                filteredOrders = myOrders.filter(
-                    (order) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase()
-                );
-                break;
-            case UserFilterEnum.Bitcoin:
-                filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sBTC);
-                break;
-            case UserFilterEnum.Ethereum:
-                filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sETH);
-                break;
-            case UserFilterEnum.Long:
-                filteredOrders = filteredOrders.filter((order) => order.optionSide === 'long');
-                break;
-            case UserFilterEnum.Short:
-                filteredOrders = filteredOrders.filter((order) => order.optionSide === 'short');
-                break;
-        }
-        if (userFilter !== UserFilterEnum.MyOrders) {
+        if (orderFilter === OrderFilterEnum.MyOrders) {
+            filteredOrders = myOrders.filter(
+                (order) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase()
+            );
+        } else {
             filteredOrders = filteredOrders.filter(
                 (order) => order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase()
             );
         }
+        switch (coinFilter) {
+            case CoinFilterEnum.Bitcoin:
+                filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sBTC);
+                break;
+            case CoinFilterEnum.Ethereum:
+                filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sETH);
+                break;
+        }
+        switch (optionFilter) {
+            case OptionFilterEnum.Long:
+                filteredOrders = filteredOrders.filter((order) => order.optionSide === 'long');
+                break;
+            case OptionFilterEnum.Short:
+                filteredOrders = filteredOrders.filter((order) => order.optionSide === 'short');
+                break;
+        }
         return filteredOrders;
-    }, [orders, userFilter, isWalletConnected, walletAddress]);
+    }, [orders, orderFilter, coinFilter, optionFilter, isWalletConnected, walletAddress]);
 
     const searchFilteredOrders = useDebouncedMemo(
         () => {
@@ -115,13 +126,6 @@ const QuickTradingPage: React.FC<any> = () => {
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
-        if (!isDisabled) {
-            setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
-        }
-        return;
-    };
-
     useEffect(() => {
         // For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering.
         // Timeout added to delay initialization and not block page rendering.
@@ -133,7 +137,9 @@ const QuickTradingPage: React.FC<any> = () => {
     }, [networkId, isWalletConnected]);
 
     const resetFilters = () => {
-        setUserFilter(UserFilterEnum.All);
+        setOrderFilter(OrderFilterEnum.All);
+        setCoinFilter(CoinFilterEnum.All);
+        setOptionFilter(OptionFilterEnum.All);
     };
 
     return (
@@ -144,34 +150,50 @@ const QuickTradingPage: React.FC<any> = () => {
                     <FlexDivColumnCentered style={{ padding: '40px 140px' }}>
                         <Title>{t('options.quick-trading.title')}</Title>
                         <FlexDivCentered style={{ flexFlow: 'wrap' }}>
-                            {Object.keys(UserFilterEnum)
-                                .filter(
-                                    (key) =>
-                                        isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
-                                        key !== UserFilterEnum.All
-                                )
-                                .map((key, index) => {
-                                    const isDisabled = !isWalletConnected && index < 1;
-                                    return (
-                                        <UserFilter
-                                            className={`${
-                                                !isDisabled &&
-                                                userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
-                                                    ? 'selected'
-                                                    : ''
-                                            }`}
-                                            disabled={isDisabled}
-                                            onClick={onClickUserFilter.bind(
-                                                this,
-                                                UserFilterEnum[key as keyof typeof UserFilterEnum],
-                                                isDisabled
-                                            )}
-                                            key={key}
-                                            img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                                            text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                                        />
-                                    );
-                                })}
+                            {Object.values(OrderFilterEnum).map((filterItem) => {
+                                return filterItem === OrderFilterEnum.All ? null : (
+                                    <UserFilter
+                                        className={isWalletConnected && orderFilter === filterItem ? 'selected' : ''}
+                                        disabled={!isWalletConnected}
+                                        onClick={() =>
+                                            setOrderFilter(
+                                                orderFilter === filterItem ? OrderFilterEnum.All : filterItem
+                                            )
+                                        }
+                                        key={filterItem}
+                                        img={getOrderImage(filterItem)}
+                                        text={filterItem}
+                                    />
+                                );
+                            })}
+                            {Object.values(CoinFilterEnum).map((filterItem) => {
+                                return filterItem === CoinFilterEnum.All ? null : (
+                                    <UserFilter
+                                        className={coinFilter === filterItem ? 'selected' : ''}
+                                        onClick={() =>
+                                            setCoinFilter(coinFilter === filterItem ? CoinFilterEnum.All : filterItem)
+                                        }
+                                        key={filterItem}
+                                        img={getCoinImage(filterItem)}
+                                        text={filterItem}
+                                    />
+                                );
+                            })}
+                            {Object.values(OptionFilterEnum).map((filterItem) => {
+                                return filterItem === OptionFilterEnum.All ? null : (
+                                    <UserFilter
+                                        className={optionFilter === filterItem ? 'selected' : ''}
+                                        onClick={() =>
+                                            setOptionFilter(
+                                                filterItem === optionFilter ? OptionFilterEnum.All : filterItem
+                                            )
+                                        }
+                                        key={filterItem}
+                                        img={getOptionImage(filterItem)}
+                                        text={filterItem}
+                                    />
+                                );
+                            })}
                         </FlexDivCentered>
                         <FlexDiv
                             className="table-filters"
@@ -218,7 +240,9 @@ const QuickTradingPage: React.FC<any> = () => {
                             orders={assetSearch ? searchFilteredOrders : filteredOrders}
                             isLoading={ordersQuery.isLoading}
                             tradingModeFilter={tradingModeFilter}
-                            userFilter={userFilter}
+                            orderFilter={orderFilter}
+                            coinFilter={coinFilter}
+                            optionFilter={optionFilter}
                         >
                             <NoOrders>
                                 <>
@@ -238,17 +262,27 @@ const QuickTradingPage: React.FC<any> = () => {
     );
 };
 
-const getImage = (filter: UserFilterEnum) => {
+const getOrderImage = (filter: OrderFilterEnum) => {
     switch (filter) {
-        case UserFilterEnum.Bitcoin:
-            return bitcoin;
-        case UserFilterEnum.Ethereum:
-            return ethereum;
-        case UserFilterEnum.MyOrders:
+        case OrderFilterEnum.MyOrders:
             return myOpenOrders;
-        case UserFilterEnum.Long:
+    }
+};
+
+const getCoinImage = (filter: CoinFilterEnum) => {
+    switch (filter) {
+        case CoinFilterEnum.Bitcoin:
+            return bitcoin;
+        case CoinFilterEnum.Ethereum:
+            return ethereum;
+    }
+};
+
+const getOptionImage = (filter: OptionFilterEnum) => {
+    switch (filter) {
+        case OptionFilterEnum.Long:
             return long;
-        case UserFilterEnum.Short:
+        case OptionFilterEnum.Short:
             return short;
     }
 };
