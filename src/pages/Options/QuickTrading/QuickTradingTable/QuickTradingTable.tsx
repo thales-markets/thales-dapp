@@ -5,7 +5,7 @@ import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../../H
 import { PaginationWrapper, StyledTableRow } from '../../Home/MarketsTable/MarketsTable';
 import { TableFooter } from '@material-ui/core';
 import Pagination from '../../Home/MarketsTable/Pagination';
-import { formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import {
     DisplayOrder,
@@ -26,7 +26,7 @@ import downSelected from 'assets/images/down-selected.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import Currency from 'components/Currency';
 import CancelOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/CancelOrderModal';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -43,12 +43,21 @@ interface HeadCell {
     sortable: boolean;
 }
 
-const headCells: HeadCell[] = [
+const buyHeadCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: 'Condition', sortable: true },
     { id: 3, label: 'When', sortable: true },
     { id: 4, label: 'Amount to deposit', sortable: true },
     { id: 5, label: 'Return if win', sortable: true },
+    { id: 6, label: 'Actions', sortable: false },
+];
+
+const sellHeadCells: HeadCell[] = [
+    { id: 1, label: '', sortable: false },
+    { id: 2, label: 'Condition', sortable: true },
+    { id: 3, label: 'When', sortable: true },
+    { id: 4, label: 'Amount to recieve', sortable: true },
+    { id: 5, label: 'Options amount to sell', sortable: true },
     { id: 6, label: 'Actions', sortable: false },
 ];
 
@@ -84,6 +93,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     const [cancelOrderModalVisible, setCancelOrderModalVisible] = useState<boolean>(false);
     const [selectedOrder, setSelectedOrder] = useState<ExtendedOrderItem | null>(null);
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     const openFillOrderModal = useCallback((order: ExtendedOrderItem) => {
         setFillOrderModalVisible(true);
@@ -158,12 +168,9 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                     case 4:
                         return sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableTotal');
                     case 5:
-                        return sortByOrderField(
-                            a.displayOrder,
-                            b.displayOrder,
-                            orderDirection,
-                            'potentialReturnAmount'
-                        );
+                        return isBuyMode
+                            ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturnAmount')
+                            : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
                     default:
                         return 0;
                 }
@@ -187,6 +194,8 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                   optionsMarket.strikePrice
               )}`;
     };
+
+    const headCells = isBuyMode ? buyHeadCells : sellHeadCells;
 
     return (
         <>
@@ -275,42 +284,49 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        {`${formatCurrencyWithSign(
-                                            USD_SIGN,
-                                            order.displayOrder.potentialReturnAmount,
-                                            DEFAULT_OPTIONS_DECIMALS
-                                        )} (${formatPercentage(order.displayOrder.potentialReturn)})`}
+                                        {isBuyMode
+                                            ? `${formatCurrencyWithSign(
+                                                  USD_SIGN,
+                                                  order.displayOrder.potentialReturnAmount,
+                                                  DEFAULT_OPTIONS_DECIMALS
+                                              )} (${formatPercentage(order.displayOrder.potentialReturn)})`
+                                            : formatCurrency(
+                                                  order.displayOrder.fillableAmount,
+                                                  DEFAULT_OPTIONS_DECIMALS
+                                              )}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() && (
-                                            <>
-                                                <BuySellButton
-                                                    onClick={() => {
-                                                        openFillOrderModal(order);
-                                                    }}
-                                                    isBuy={isBuyMode}
-                                                >
-                                                    {isBuyMode ? t('common.buy') : t('common.sell')}
-                                                </BuySellButton>
-                                                <CounterOfferButton
-                                                    onClick={() => {
-                                                        openPlaceOrderModal(order);
-                                                    }}
-                                                >
-                                                    {t('options.quick-trading.counter-offer-button-label')}
-                                                </CounterOfferButton>
-                                            </>
-                                        )}
-                                        {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && (
-                                            <LightTooltip title={t('options.quick-trading.cancel-tooltip')}>
-                                                <CancelIconContainer
-                                                    onClick={(e: any) => {
-                                                        e.stopPropagation();
-                                                        openCancelOrderModal(order);
-                                                    }}
-                                                />
-                                            </LightTooltip>
-                                        )}
+                                        {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() &&
+                                            isWalletConnected && (
+                                                <>
+                                                    <BuySellButton
+                                                        onClick={() => {
+                                                            openFillOrderModal(order);
+                                                        }}
+                                                        isBuy={isBuyMode}
+                                                    >
+                                                        {isBuyMode ? t('common.buy') : t('common.sell')}
+                                                    </BuySellButton>
+                                                    <CounterOfferButton
+                                                        onClick={() => {
+                                                            openPlaceOrderModal(order);
+                                                        }}
+                                                    >
+                                                        {t('options.quick-trading.counter-offer-button-label')}
+                                                    </CounterOfferButton>
+                                                </>
+                                            )}
+                                        {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() &&
+                                            isWalletConnected && (
+                                                <LightTooltip title={t('options.quick-trading.cancel-tooltip')}>
+                                                    <CancelIconContainer
+                                                        onClick={(e: any) => {
+                                                            e.stopPropagation();
+                                                            openCancelOrderModal(order);
+                                                        }}
+                                                    />
+                                                </LightTooltip>
+                                            )}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             );

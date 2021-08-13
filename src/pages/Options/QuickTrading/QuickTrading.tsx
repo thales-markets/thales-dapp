@@ -156,9 +156,11 @@ const QuickTradingPage: React.FC<any> = () => {
                                         className={isWalletConnected && orderFilter === filterItem ? 'selected' : ''}
                                         disabled={!isWalletConnected}
                                         onClick={() =>
-                                            setOrderFilter(
-                                                orderFilter === filterItem ? OrderFilterEnum.All : filterItem
-                                            )
+                                            isWalletConnected
+                                                ? setOrderFilter(
+                                                      orderFilter === filterItem ? OrderFilterEnum.All : filterItem
+                                                  )
+                                                : {}
                                         }
                                         key={filterItem}
                                         img={getOrderImage(filterItem)}
