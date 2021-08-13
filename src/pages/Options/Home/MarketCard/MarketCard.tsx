@@ -237,7 +237,7 @@ const ViewMarket = styled.div`
     display: none;
 `;
 
-const CryptoName = styled.p`
+export const CryptoName = styled.p`
     font-family: Titillium Web;
     font-weight: 600;
     font-size: 20px;
@@ -246,7 +246,7 @@ const CryptoName = styled.p`
     color: #ffffff;
     margin-bottom: 4px;
 `;
-const CryptoKey = styled.p`
+export const CryptoKey = styled.p`
     font-family: Inter !important;
     font-weight: 600;
     font-size: 14px;
@@ -301,7 +301,7 @@ const MarketInfoTitle = styled(Text)`
     font-size: 12px;
 `;
 
-const Phase = styled(PhaseLabel)`
+export const Phase = styled(PhaseLabel)`
     font-size: 11px;
     height: 24px;
     padding: 0 !important;

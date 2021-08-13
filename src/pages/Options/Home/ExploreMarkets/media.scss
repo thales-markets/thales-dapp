@@ -7,13 +7,26 @@
 @media screen and (min-width: 901px) {
     .markets-mobile {
         display: none;
-        &__search {
-        }
     }
 }
 
 .markets-mobile {
-    &__search > input {
-        width: 100%;
+    width: 100%;
+    padding: 0 50px;
+    @media screen and (max-width: 600px) {
+        padding: 0 30px;
+        &__filters {
+            flex-direction: column;
+            & > div {
+                margin: 8px 0 !important;
+            }
+        }
+    }
+
+    &__search {
+        margin: 20px 0px !important;
+        & > input {
+            width: 100%;
+        }
     }
 }

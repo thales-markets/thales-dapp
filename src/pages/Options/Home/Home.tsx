@@ -9,7 +9,7 @@ import Loader from 'components/Loader';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { FlexDivColumn, Section } from 'theme/common';
+import { Background, FlexDivColumn, MainWrapper } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
 import ROUTES from 'constants/routes';
@@ -74,8 +74,8 @@ export const Home: React.FC = () => {
     return (
         <>
             {marketsQuery.isSuccess ? (
-                <>
-                    <Section>
+                <Background>
+                    <MainWrapper style={{ flexDirection: 'column' }}>
                         <FlexDivColumn style={{ width: '100%' }}>
                             <MarketHeader
                                 route={
@@ -87,21 +87,18 @@ export const Home: React.FC = () => {
                                 }
                             />
                         </FlexDivColumn>
-                    </Section>
-                    <Section>
+
                         {hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />}
-                    </Section>
-                    <Section>
+
                         <MarketCreation />
-                    </Section>
-                    <Section class="explore-markets">
+
                         <ExploreMarkets
                             optionsMarkets={optionsMarkets}
                             exchangeRates={exchangeRates}
                             olympics={isOlympics}
                         />
-                    </Section>
-                </>
+                    </MainWrapper>
+                </Background>
             ) : (
                 <Loader />
             )}

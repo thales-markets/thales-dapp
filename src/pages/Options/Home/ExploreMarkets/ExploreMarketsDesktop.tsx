@@ -32,6 +32,8 @@ import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import { ExploreMarketsMobile } from './ExploreMarketsMobile';
+import './media.scss';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
@@ -73,7 +75,7 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
     );
 };
 
-const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
+const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -327,167 +329,181 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     };
 
     return (
-        <div id="explore-markets" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
-            <FlexDivCentered style={{ flexFlow: 'wrap' }}>
-                {Object.keys(UserFilterEnum)
-                    .filter(
-                        (key, index) =>
-                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
-                            key !== UserFilterEnum.All &&
-                            index <= 5
-                    )
-                    .map((key, index) => {
-                        const isDisabled = !isWalletConnected && index < 4;
-                        return (
-                            <UserFilter
-                                className={`${
-                                    !isDisabled && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
-                                        ? 'selected'
-                                        : ''
-                                }`}
-                                disabled={isDisabled}
-                                onClick={onClickUserFilter.bind(
-                                    this,
-                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
-                                    isDisabled
-                                )}
-                                key={key}
-                                img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                                text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                            />
-                        );
-                    })}
-            </FlexDivCentered>
-
-            <FlexDivCentered style={{ flexFlow: 'wrap' }}>
-                {Object.keys(UserFilterEnum)
-                    .filter(
-                        (key, index) =>
-                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
-                            key !== UserFilterEnum.All &&
-                            index > 5
-                    )
-                    .map((key) => {
-                        const isBtcMarketsEmpty =
-                            filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
-                                .length === 0;
-                        const isEthMarketsEmpty =
-                            filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
-                                .length === 0;
-                        const isDisabled =
-                            (UserFilterEnum.Bitcoin === key &&
-                                isBtcMarketsEmpty &&
-                                userFilter !== UserFilterEnum.Ethereum) ||
-                            (UserFilterEnum.Ethereum === key &&
-                                isEthMarketsEmpty &&
-                                userFilter !== UserFilterEnum.Bitcoin);
-                        return (
-                            <UserFilter
-                                className={`${
-                                    !isDisabled &&
-                                    secondLevelUserFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
-                                        ? 'selected'
-                                        : ''
-                                }`}
-                                disabled={isDisabled}
-                                onClick={onClickSecondLevelUserFilter.bind(
-                                    this,
-                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
-                                    isDisabled
-                                )}
-                                key={key}
-                                img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                                text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                            />
-                        );
-                    })}
-            </FlexDivCentered>
-
-            <FlexDiv
-                className="table-filters"
-                style={{
-                    justifyContent: 'space-between',
-                    marginTop: 40,
-                    background: '#04045a',
-                    borderTopLeftRadius: '23px',
-                    borderTopRightRadius: '23px',
-                }}
-            >
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                        {Object.keys(PhaseFilterEnum)
-                            .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))
-                            .map((key) => (
-                                <FilterButton
-                                    className={
-                                        phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
+        <>
+            <ExploreMarketsMobile
+                exchangeRates={exchangeRates}
+                userFilter={userFilter}
+                setUserFilter={setUserFilter}
+                phaseFilter={phaseFilter}
+                setPhaseFilter={setPhaseFilter}
+                assetSearch={assetSearch}
+                setAssetSearch={setAssetSearch}
+                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
+            ></ExploreMarketsMobile>
+            <div className="markets-desktop" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
+                <FlexDivCentered style={{ flexFlow: 'wrap' }}>
+                    {Object.keys(UserFilterEnum)
+                        .filter(
+                            (key, index) =>
+                                isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
+                                key !== UserFilterEnum.All &&
+                                index <= 5
+                        )
+                        .map((key, index) => {
+                            const isDisabled = !isWalletConnected && index < 4;
+                            return (
+                                <UserFilter
+                                    className={`${
+                                        !isDisabled && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
                                             ? 'selected'
                                             : ''
-                                    }
-                                    onClick={() => setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])}
+                                    }`}
+                                    disabled={isDisabled}
+                                    onClick={onClickUserFilter.bind(
+                                        this,
+                                        UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                        isDisabled
+                                    )}
                                     key={key}
-                                >
-                                    {t(`options.phases.${key}`)}
-                                </FilterButton>
-                            ))}
-                    </div>
-                </div>
-                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
-            </FlexDiv>
+                                    img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                                    text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                                />
+                            );
+                        })}
+                </FlexDivCentered>
 
-            <MarketsTable
-                exchangeRates={exchangeRates}
-                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
-                watchlistedMarkets={watchlistedMarkets}
-                isLoading={false} // TODO put logic
-                phase={phaseFilter}
-                userFilter={userFilter}
-                onChange={watchlistedMarketsQuery.refetch}
-            >
-                <NoMarkets>
-                    {userFilter !== UserFilterEnum.MyMarkets && (
-                        <>
-                            <Text className="text-l bold pale-grey">
-                                {t('options.home.explore-markets.table.no-markets-found')}
-                            </Text>
-                            <Button className="primary" onClick={resetFilters}>
-                                {t('options.home.explore-markets.table.view-all-markets')}
-                            </Button>
-                        </>
-                    )}
-                    {userFilter === UserFilterEnum.MyMarkets && (
-                        <>
-                            <Text className="text-l bold pale-grey">You haven’t created any market yet.</Text>
-                            <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                <Button
-                                    className="secondary"
-                                    onClick={() =>
-                                        isWalletConnected
-                                            ? navigateTo(ROUTES.Options.CreateMarket)
-                                            : onboardConnector.connectWallet()
-                                    }
-                                >
-                                    {isWalletConnected
-                                        ? t('options.home.market-creation.create-market-button-label')
-                                        : t('common.wallet.connect-your-wallet')}
-                                </Button>
-                                <Text
-                                    className="text-l bold pale-grey"
-                                    style={{
-                                        margin: 'auto 60px',
-                                    }}
-                                >
-                                    or
+                <FlexDivCentered style={{ flexFlow: 'wrap' }}>
+                    {Object.keys(UserFilterEnum)
+                        .filter(
+                            (key, index) =>
+                                isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
+                                key !== UserFilterEnum.All &&
+                                index > 5
+                        )
+                        .map((key) => {
+                            const isBtcMarketsEmpty =
+                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
+                                    .length === 0;
+                            const isEthMarketsEmpty =
+                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
+                                    .length === 0;
+                            const isDisabled =
+                                (UserFilterEnum.Bitcoin === key &&
+                                    isBtcMarketsEmpty &&
+                                    userFilter !== UserFilterEnum.Ethereum) ||
+                                (UserFilterEnum.Ethereum === key &&
+                                    isEthMarketsEmpty &&
+                                    userFilter !== UserFilterEnum.Bitcoin);
+                            return (
+                                <UserFilter
+                                    className={`${
+                                        !isDisabled &&
+                                        secondLevelUserFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                            ? 'selected'
+                                            : ''
+                                    }`}
+                                    disabled={isDisabled}
+                                    onClick={onClickSecondLevelUserFilter.bind(
+                                        this,
+                                        UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                        isDisabled
+                                    )}
+                                    key={key}
+                                    img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
+                                    text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                                />
+                            );
+                        })}
+                </FlexDivCentered>
+
+                <FlexDiv
+                    className="table-filters"
+                    style={{
+                        justifyContent: 'space-between',
+                        marginTop: 40,
+                        background: '#04045a',
+                        borderTopLeftRadius: '23px',
+                        borderTopRightRadius: '23px',
+                    }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div>
+                            {Object.keys(PhaseFilterEnum)
+                                .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))
+                                .map((key) => (
+                                    <FilterButton
+                                        className={
+                                            phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
+                                                ? 'selected'
+                                                : ''
+                                        }
+                                        onClick={() =>
+                                            setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])
+                                        }
+                                        key={key}
+                                    >
+                                        {t(`options.phases.${key}`)}
+                                    </FilterButton>
+                                ))}
+                        </div>
+                    </div>
+                    <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
+                </FlexDiv>
+
+                <MarketsTable
+                    exchangeRates={exchangeRates}
+                    optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
+                    watchlistedMarkets={watchlistedMarkets}
+                    isLoading={false} // TODO put logic
+                    phase={phaseFilter}
+                    userFilter={userFilter}
+                    onChange={watchlistedMarketsQuery.refetch}
+                >
+                    <NoMarkets>
+                        {userFilter !== UserFilterEnum.MyMarkets && (
+                            <>
+                                <Text className="text-l bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-found')}
                                 </Text>
                                 <Button className="primary" onClick={resetFilters}>
                                     {t('options.home.explore-markets.table.view-all-markets')}
                                 </Button>
-                            </FlexDiv>
-                        </>
-                    )}
-                </NoMarkets>
-            </MarketsTable>
-        </div>
+                            </>
+                        )}
+                        {userFilter === UserFilterEnum.MyMarkets && (
+                            <>
+                                <Text className="text-l bold pale-grey">You haven’t created any market yet.</Text>
+                                <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
+                                    <Button
+                                        className="secondary"
+                                        onClick={() =>
+                                            isWalletConnected
+                                                ? navigateTo(ROUTES.Options.CreateMarket)
+                                                : onboardConnector.connectWallet()
+                                        }
+                                    >
+                                        {isWalletConnected
+                                            ? t('options.home.market-creation.create-market-button-label')
+                                            : t('common.wallet.connect-your-wallet')}
+                                    </Button>
+                                    <Text
+                                        className="text-l bold pale-grey"
+                                        style={{
+                                            margin: 'auto 60px',
+                                        }}
+                                    >
+                                        or
+                                    </Text>
+                                    <Button className="primary" onClick={resetFilters}>
+                                        {t('options.home.explore-markets.table.view-all-markets')}
+                                    </Button>
+                                </FlexDiv>
+                            </>
+                        )}
+                    </NoMarkets>
+                </MarketsTable>
+            </div>
+        </>
     );
 };
 
@@ -510,4 +526,4 @@ const isRecentlyAdded = (a: Date, b: Date) => {
     return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY)) <= 7;
 };
 
-export default ExploreMarkets;
+export default ExploreMarketsDesktop;

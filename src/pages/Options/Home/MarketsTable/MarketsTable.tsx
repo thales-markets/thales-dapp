@@ -27,7 +27,7 @@ import {
 } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
-import { PhaseFilterEnum, UserFilterEnum } from '../ExploreMarkets/ExploreMarkets';
+import { PhaseFilterEnum, UserFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import star from 'assets/images/star.svg';
@@ -553,7 +553,11 @@ const RedText = styled.span`
     padding-left: 5px;
 `;
 
-const sortByTime = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketInfo, direction: OrderDirection) => {
+export const sortByTime = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection
+) => {
     if (direction === OrderDirection.ASC && a.phaseNum === b.phaseNum) {
         return a.timeRemaining > b.timeRemaining ? -1 : 1;
     }
@@ -564,7 +568,7 @@ const sortByTime = (a: HistoricalOptionsMarketInfo, b: HistoricalOptionsMarketIn
     return 0;
 };
 
-const sortByField = (
+export const sortByField = (
     a: HistoricalOptionsMarketInfo,
     b: HistoricalOptionsMarketInfo,
     direction: OrderDirection,
@@ -584,7 +588,7 @@ const sortByField = (
     return 0;
 };
 
-const sortByAssetPrice = (
+export const sortByAssetPrice = (
     a: HistoricalOptionsMarketInfo,
     b: HistoricalOptionsMarketInfo,
     direction: OrderDirection,

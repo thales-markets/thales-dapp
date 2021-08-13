@@ -122,10 +122,10 @@ export const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets, exchange
 };
 
 const Wrapper = styled(FlexDivColumn)`
-    padding: 50px 110px;
+    padding: 50px 50px;
     position: relative;
     max-height: 490px;
-    padding-left: 198px;
+    padding-left: 138px;
 `;
 
 const Arrow = styled(Image)`

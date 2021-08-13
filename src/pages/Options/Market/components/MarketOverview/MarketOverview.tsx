@@ -262,7 +262,7 @@ const Phase = styled(PhaseLabel)`
     cursor: default;
 `;
 
-const Result = styled(Content)<{ isLong: boolean }>`
+export const Result = styled(Content)<{ isLong: boolean }>`
     color: ${(props) => (props.isLong ? COLORS.LONG : COLORS.SHORT)};
     text-transform: uppercase;
 `;

@@ -72,6 +72,11 @@
         }
     }
 }
+@media screen and (max-width: 600px) {
+    .hot-markets__title {
+        padding-left: 30px;
+    }
+}
 
 @media screen and (max-width: 768px) {
     .hot-markets {

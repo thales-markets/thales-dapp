@@ -194,7 +194,9 @@
                 "end-date": "End date",
                 "strike-price": "Strike price",
                 "open-orders": "Open orders",
-                "difference-text": "Difference between current and strike price"
+                "difference-text": "Difference between current and strike price",
+                "time-remaining": "Time remaining",
+                "result": "Current result"
             },
             "market-creation": {
                 "not-connected": {

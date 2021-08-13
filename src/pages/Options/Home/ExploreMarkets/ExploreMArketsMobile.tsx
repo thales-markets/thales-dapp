@@ -1,40 +1,28 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import MarketsTable from '../MarketsTable';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
+import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
-import styled from 'styled-components';
-import myMarkets from 'assets/images/filters/my-markets.svg';
-import olympicsImg from 'assets/images/filters/olympics.svg';
-import myWatchlist from 'assets/images/filters/my-watchlist.svg';
-import recentlyAdded from 'assets/images/filters/recently-added.svg';
-import bitcoin from 'assets/images/filters/bitcoin.svg';
-import ethereum from 'assets/images/filters/ethereum.svg';
-import myAssets from 'assets/images/filters/my-assets.svg';
-import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
-import UserFilter from './UserFilters';
+import { getIsWalletConnected } from 'redux/modules/wallet';
+import { FlexDiv, Text } from 'theme/common';
 import SearchMarket from '../SearchMarket';
-import useDebouncedMemo from 'hooks/useDebouncedMemo';
-import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import { navigateTo } from 'utils/routes';
-import ROUTES from 'constants/routes';
-import onboardConnector from 'utils/onboardConnector';
-import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
-import { SYNTHS_MAP } from '../../../../constants/currency';
-import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
-import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
-import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
-import { useEffect } from 'react';
+import { PhaseFilters } from './Mobile/PhaseFilters';
+import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
+import { MarketCardMobile } from './Mobile/MarketCardMobile';
+import { sortByAssetPrice, sortByField, sortByTime } from '../MarketsTable/MarketsTable';
+import { SortyByMobile } from './Mobile/SortByMobile';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import { memo } from 'react';
 
-type ExploreMarketsProps = {
+type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
-    olympics?: boolean;
+    phaseFilter: any;
+    setPhaseFilter: (data: any) => void;
+    userFilter: any;
+    setUserFilter: (data: any) => void;
+    assetSearch: any;
+    setAssetSearch: (data: any) => void;
 };
 
 export enum PhaseFilterEnum {
@@ -42,6 +30,21 @@ export enum PhaseFilterEnum {
     maturity = 'maturity',
     expiry = 'expiry',
     all = 'all',
+}
+
+export enum SortByEnum {
+    Asset = 'Asset',
+    Asset_Price = 'Asset Price',
+    Strike_Price = 'Strike Price',
+    Pool_Size = 'Pool Size',
+    Time_Remaining = 'Time Remaining',
+    Open_Orders = 'Open Orders',
+}
+
+enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
 }
 
 export enum UserFilterEnum {
@@ -56,291 +59,153 @@ export enum UserFilterEnum {
     Olympics = 'Olympics',
 }
 
-const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
-    const {
-        contracts: { SynthsUSD },
-    } = snxJSConnector.snxJS as any;
-    const isBuy: boolean = order.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
-    return (
-        (isBuy &&
-            (market.longAddress.toLowerCase() === order.takerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.takerToken.toLowerCase())) ||
-        (!isBuy &&
-            (market.longAddress.toLowerCase() === order.makerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.makerToken.toLowerCase()))
-    );
-};
+export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
+    ({
+        optionsMarkets,
+        phaseFilter,
+        setPhaseFilter,
+        userFilter,
+        setUserFilter,
+        assetSearch,
+        setAssetSearch,
+        exchangeRates,
+    }) => {
+        const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+        const { t } = useTranslation();
+        const [showDropdownPhase, setShowDropwodnPhase] = useState(false);
+        const [showDropdownUserFilters, setShowDropwodnUserFilters] = useState(false);
 
-export const ExploreMarketsMobile: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const { t } = useTranslation();
-    const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.trading);
-    const [userFilter, setUserFilter] = useState<UserFilterEnum>(UserFilterEnum.All);
-    const [assetSearch, setAssetSearch] = useState<string>('');
+        const [showDropdownSort, setShowDropwodnSort] = useState(false);
+        const [orderBy, setOrderBy] = useState(SortByEnum.Time_Remaining);
+        const [orderDirection, _setOrderDirection] = useState(OrderDirection.DESC);
 
-    const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
-    });
-    const userOrdersQuery = useUserOrdersQuery(networkId, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
-    });
-    const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
-
-    const userAssets = userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : [];
-    const userOrders =
-        userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records) ? userOrdersQuery.data.records : [];
-    const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
-
-    useEffect(() => {
-        if (olympics) {
-            setUserFilter(UserFilterEnum.Olympics);
-        } else {
-            if (userFilter === UserFilterEnum.Olympics) setUserFilter(UserFilterEnum.All);
-        }
-    }, [olympics]);
-
-    const filteredOptionsMarkets = useMemo(() => {
-        let filteredMarkets = optionsMarkets;
-        if (userFilter === UserFilterEnum.Olympics) {
-            filteredMarkets = filteredMarkets.filter(({ customMarket }) => customMarket === true);
-        } else {
-            filteredMarkets = filteredMarkets.filter(({ customMarket }) => customMarket === false);
-        }
-        switch (userFilter) {
-            case UserFilterEnum.MyMarkets:
-                filteredMarkets = filteredMarkets.filter(
-                    ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
-                );
-                break;
-            case UserFilterEnum.MyWatchlist:
-                filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
-                break;
-            case UserFilterEnum.MyAssets:
-                filteredMarkets = userAssets.reduce((acc: HistoricalOptionsMarketInfo[], { market, balances }) => {
-                    if (balances.long || balances.short) {
-                        acc.push(market);
+        const sortedMarkets = useMemo(() => {
+            if (userFilter === UserFilterEnum.Olympics) {
+                return optionsMarkets.filter((market) => market.customMarket);
+            } else {
+                return optionsMarkets.sort((a, b) => {
+                    switch (orderBy) {
+                        case SortByEnum.Asset:
+                            return sortByField(a, b, orderDirection, 'asset');
+                        case SortByEnum.Asset_Price:
+                            return sortByAssetPrice(a, b, orderDirection, exchangeRates);
+                        case SortByEnum.Strike_Price:
+                            return sortByField(a, b, orderDirection, 'strikePrice');
+                        case SortByEnum.Pool_Size:
+                            return sortByField(a, b, orderDirection, 'poolSize');
+                        case SortByEnum.Time_Remaining:
+                            return sortByTime(a, b, orderDirection);
+                        case SortByEnum.Open_Orders:
+                            return orderDirection === OrderDirection.ASC
+                                ? a.openOrders - b.openOrders
+                                : b.openOrders - a.openOrders;
+                        default:
+                            return 0;
                     }
-                    return acc;
-                }, []);
-                break;
-            case UserFilterEnum.MyOrders:
-                filteredMarkets = filteredMarkets.filter((market) =>
-                    userOrders.find((order) => isOrderInMarket(order.order, market))
-                );
-                break;
-            case UserFilterEnum.Recent:
-                filteredMarkets = filteredMarkets.filter(({ timestamp }) =>
-                    isRecentlyAdded(new Date(), new Date(timestamp))
-                );
-                break;
-            case UserFilterEnum.Bitcoin:
-                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC);
-                break;
-            case UserFilterEnum.Ethereum:
-                filteredMarkets = filteredMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH);
-                break;
-        }
+                });
+            }
+        }, [optionsMarkets, orderDirection, exchangeRates, orderBy]);
 
-        if (phaseFilter !== PhaseFilterEnum.all) {
-            filteredMarkets = filteredMarkets.filter((market) => {
-                return market.phase === phaseFilter;
-            });
-        }
-        return filteredMarkets;
-    }, [optionsMarkets, userFilter, phaseFilter, isWalletConnected, walletAddress, watchlistedMarkets, assetSearch]);
+        const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+            if (!isDisabled) {
+                setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+            }
+            return;
+        };
 
-    const searchFilteredOptionsMarkets = useDebouncedMemo(
-        () => {
-            return assetSearch
-                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
-                      return (
-                          asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
-                      );
-                  })
-                : filteredOptionsMarkets;
-        },
-        [filteredOptionsMarkets, assetSearch],
-        DEFAULT_SEARCH_DEBOUNCE_MS
-    );
+        return (
+            <div className="markets-mobile">
+                <SearchMarket
+                    className="markets-mobile__search"
+                    assetSearch={assetSearch}
+                    setAssetSearch={setAssetSearch}
+                />
+                <FlexDiv className="markets-mobile__filters">
+                    <CategoryFilters
+                        onClick={setShowDropwodnUserFilters.bind(this, !showDropdownUserFilters)}
+                        filter={userFilter}
+                    >
+                        <DropDownWrapper hidden={!showDropdownUserFilters}>
+                            <DropDown>
+                                {Object.keys(UserFilterEnum)
+                                    .filter(
+                                        (key) =>
+                                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
+                                            key !== UserFilterEnum.All
+                                    )
+                                    .map((key, index) => {
+                                        const isDisabled = !isWalletConnected && index < 4;
+                                        return (
+                                            <Text
+                                                key={key}
+                                                onClick={onClickUserFilter.bind(
+                                                    this,
+                                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                                    isDisabled
+                                                )}
+                                                className={`${
+                                                    !isDisabled &&
+                                                    userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                                        ? 'selected'
+                                                        : ''
+                                                } text-s lh32 pale-grey`}
+                                            >
+                                                {UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                                            </Text>
+                                        );
+                                    })}
+                            </DropDown>
+                        </DropDownWrapper>
+                    </CategoryFilters>
+                    <PhaseFilters onClick={setShowDropwodnPhase.bind(this, !showDropdownPhase)} filter={phaseFilter}>
+                        <DropDownWrapper hidden={!showDropdownPhase}>
+                            <DropDown>
+                                {Object.keys(PhaseFilterEnum)
+                                    .filter((key) =>
+                                        isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]))
+                                    )
+                                    .map((key) => (
+                                        <Text
+                                            className={`${
+                                                phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
+                                                    ? 'selected'
+                                                    : ''
+                                            } text-s lh32 pale-grey capitalize`}
+                                            onClick={() =>
+                                                setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])
+                                            }
+                                            key={key}
+                                        >
+                                            {t(`options.phases.${key}`)}
+                                        </Text>
+                                    ))}
+                            </DropDown>
+                        </DropDownWrapper>
+                    </PhaseFilters>
+                </FlexDiv>
 
-    const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
-        if (!isDisabled) {
-            setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
-        }
-        return;
-    };
+                <SortyByMobile onClick={setShowDropwodnSort.bind(this, !showDropdownSort)} filter={orderBy}>
+                    <DropDownWrapper hidden={!showDropdownSort}>
+                        <DropDown>
+                            {Object.keys(SortByEnum)
+                                .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
+                                .map((key) => (
+                                    <Text
+                                        className={`${
+                                            orderBy === SortByEnum[key as keyof typeof SortByEnum] ? 'selected' : ''
+                                        } text-s lh32 pale-grey capitalize`}
+                                        onClick={() => setOrderBy(SortByEnum[key as keyof typeof SortByEnum])}
+                                        key={key}
+                                    >
+                                        {SortByEnum[key as keyof typeof SortByEnum]}
+                                    </Text>
+                                ))}
+                        </DropDown>
+                    </DropDownWrapper>
+                </SortyByMobile>
 
-    const getImage = (filter: UserFilterEnum) => {
-        switch (filter) {
-            case UserFilterEnum.MyMarkets:
-                return myMarkets;
-            case UserFilterEnum.MyWatchlist:
-                return myWatchlist;
-            case UserFilterEnum.Recent:
-                return recentlyAdded;
-            case UserFilterEnum.Bitcoin:
-                return bitcoin;
-            case UserFilterEnum.Ethereum:
-                return ethereum;
-            case UserFilterEnum.MyAssets:
-                return myAssets;
-            case UserFilterEnum.MyOrders:
-                return myOpenOrders;
-            case UserFilterEnum.Olympics:
-                return olympicsImg;
-        }
-    };
-
-    const resetFilters = () => {
-        setPhaseFilter(PhaseFilterEnum.all);
-        setUserFilter(UserFilterEnum.All);
-    };
-
-    return (
-        <div className="markets-mobile" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
-            <SearchMarket
-                className="markets-mobile__search"
-                assetSearch={assetSearch}
-                setAssetSearch={setAssetSearch}
-            />
-            <FlexDivCentered style={{ flexFlow: 'wrap' }}>
-                {Object.keys(UserFilterEnum)
-                    .filter(
-                        (key) =>
-                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
-                            key !== UserFilterEnum.All
-                    )
-                    .map((key, index) => {
-                        const isDisabled = !isWalletConnected && index < 4;
-                        return (
-                            <UserFilter
-                                className={`${
-                                    !isDisabled && userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
-                                        ? 'selected'
-                                        : ''
-                                }`}
-                                disabled={isDisabled}
-                                onClick={onClickUserFilter.bind(
-                                    this,
-                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
-                                    isDisabled
-                                )}
-                                key={key}
-                                img={getImage(UserFilterEnum[key as keyof typeof UserFilterEnum])}
-                                text={UserFilterEnum[key as keyof typeof UserFilterEnum]}
-                            />
-                        );
-                    })}
-            </FlexDivCentered>
-
-            <FlexDiv
-                className="table-filters"
-                style={{
-                    justifyContent: 'space-between',
-                    marginTop: 40,
-                    background: '#04045a',
-                    borderTopLeftRadius: '23px',
-                    borderTopRightRadius: '23px',
-                }}
-            >
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                        {Object.keys(PhaseFilterEnum)
-                            .filter((key) => isNaN(Number(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])))
-                            .map((key) => (
-                                <FilterButton
-                                    className={
-                                        phaseFilter === PhaseFilterEnum[key as keyof typeof PhaseFilterEnum]
-                                            ? 'selected'
-                                            : ''
-                                    }
-                                    onClick={() => setPhaseFilter(PhaseFilterEnum[key as keyof typeof PhaseFilterEnum])}
-                                    key={key}
-                                >
-                                    {t(`options.phases.${key}`)}
-                                </FilterButton>
-                            ))}
-                    </div>
-                </div>
-            </FlexDiv>
-
-            <MarketsTable
-                exchangeRates={exchangeRates}
-                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : filteredOptionsMarkets}
-                watchlistedMarkets={watchlistedMarkets}
-                isLoading={false} // TODO put logic
-                phase={phaseFilter}
-                userFilter={userFilter}
-                onChange={watchlistedMarketsQuery.refetch}
-            >
-                <NoMarkets>
-                    {userFilter !== UserFilterEnum.MyMarkets && (
-                        <>
-                            <Text className="text-l bold pale-grey">
-                                {t('options.home.explore-markets.table.no-markets-found')}
-                            </Text>
-                            <Button className="primary" onClick={resetFilters}>
-                                {t('options.home.explore-markets.table.view-all-markets')}
-                            </Button>
-                        </>
-                    )}
-                    {userFilter === UserFilterEnum.MyMarkets && (
-                        <>
-                            <Text className="text-l bold pale-grey">You haven’t created any market yet.</Text>
-                            <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                <Button
-                                    className="secondary"
-                                    onClick={() =>
-                                        isWalletConnected
-                                            ? navigateTo(ROUTES.Options.CreateMarket)
-                                            : onboardConnector.connectWallet()
-                                    }
-                                >
-                                    {isWalletConnected
-                                        ? t('options.home.market-creation.create-market-button-label')
-                                        : t('common.wallet.connect-your-wallet')}
-                                </Button>
-                                <Text
-                                    className="text-l bold pale-grey"
-                                    style={{
-                                        margin: 'auto 60px',
-                                    }}
-                                >
-                                    or
-                                </Text>
-                                <Button className="primary" onClick={resetFilters}>
-                                    {t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
-                            </FlexDiv>
-                        </>
-                    )}
-                </NoMarkets>
-            </MarketsTable>
-        </div>
-    );
-};
-
-const NoMarkets = styled(FlexDivColumn)`
-    height: 500px;
-    background: #04045a;
-    justify-content: space-evenly;
-    align-items: center;
-    .primary {
-        align-self: center;
+                <MarketCardMobile exchangeRates={exchangeRates} optionsMarkets={sortedMarkets}></MarketCardMobile>
+            </div>
+        );
     }
-`;
-
-const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-
-const isRecentlyAdded = (a: Date, b: Date) => {
-    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-
-    return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY)) <= 7;
-};
+);
