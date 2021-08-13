@@ -188,8 +188,9 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const searchSecondLevelFilteredOptionsMarket = useMemo(() => {
+    const secondLevelFilteredOptionsMarket = useMemo(() => {
         let secondLevelFilteredOptionsMarket = filteredOptionsMarkets;
+
         switch (secondLevelUserFilter) {
             case UserFilterEnum.Bitcoin:
                 secondLevelFilteredOptionsMarket = filteredOptionsMarkets.filter(
@@ -227,7 +228,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
             });
         }
 
-        if (secondLevelUserFilter !== UserFilterEnum.All && filter !== UserFilterEnum.All && !isDisabled) {
+        if (!isDisabled && secondLevelUserFilter !== UserFilterEnum.All && filter !== UserFilterEnum.All) {
             setSecondLevelUserFilter(UserFilterEnum.All);
         }
 
@@ -243,6 +244,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
     const onClickSecondLevelUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
+
         if (!isDisabled && filter === UserFilterEnum.Olympics && userFilter !== filter) {
             history.replace({
                 pathname: searchFilter.pathname,
@@ -296,6 +298,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
         }
 
         document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+
         return;
     };
 
@@ -374,13 +377,34 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
                         const isEthMarketsEmpty =
                             filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
                                 .length === 0;
-                        const isDisabled =
+                        const assetSearchNoBtc =
+                            filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                                return (
+                                    currencyKey === SYNTHS_MAP.sBTC &&
+                                    (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                                        getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()))
+                                );
+                            }).length === 0 &&
+                            assetSearch.length > 0 &&
+                            UserFilterEnum.Bitcoin === key;
+                        const assetSearchNoEth =
+                            filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                                return (
+                                    currencyKey === SYNTHS_MAP.sETH &&
+                                    (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                                        getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()))
+                                );
+                            }).length === 0 &&
+                            assetSearch.length > 0 &&
+                            UserFilterEnum.Ethereum === key;
+                        let isDisabled =
                             (UserFilterEnum.Bitcoin === key &&
                                 isBtcMarketsEmpty &&
                                 userFilter !== UserFilterEnum.Ethereum) ||
                             (UserFilterEnum.Ethereum === key &&
                                 isEthMarketsEmpty &&
                                 userFilter !== UserFilterEnum.Bitcoin);
+                        isDisabled = isDisabled || assetSearchNoBtc || assetSearchNoEth;
                         return (
                             <UserFilter
                                 className={`${
@@ -437,7 +461,7 @@ const ExploreMarkets: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchang
 
             <MarketsTable
                 exchangeRates={exchangeRates}
-                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
+                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
                 watchlistedMarkets={watchlistedMarkets}
                 isLoading={false} // TODO put logic
                 phase={phaseFilter}
