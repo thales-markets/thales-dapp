@@ -4,7 +4,7 @@ import { OptionsMarkets } from 'types/options';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
-import { FlexDiv, Text } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
 import SearchMarket from '../SearchMarket';
 import { PhaseFilters } from './Mobile/PhaseFilters';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
@@ -13,6 +13,10 @@ import { sortByAssetPrice, sortByField, sortByTime } from '../MarketsTable/Marke
 import { SortyByMobile } from './Mobile/SortByMobile';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { memo } from 'react';
+import { navigateTo } from 'utils/routes';
+import onboardConnector from 'utils/onboardConnector';
+import styled from 'styled-components';
+import ROUTES from 'constants/routes';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
@@ -111,6 +115,11 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
             return;
         };
 
+        const resetFilters = () => {
+            setPhaseFilter(PhaseFilterEnum.all);
+            setUserFilter(UserFilterEnum.All);
+        };
+
         return (
             <div className="markets-mobile">
                 <SearchMarket
@@ -126,11 +135,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                         <DropDownWrapper hidden={!showDropdownUserFilters}>
                             <DropDown>
                                 {Object.keys(UserFilterEnum)
-                                    .filter(
-                                        (key) =>
-                                            isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])) &&
-                                            key !== UserFilterEnum.All
-                                    )
+                                    .filter((key) => isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])))
                                     .map((key, index) => {
                                         const isDisabled = !isWalletConnected && index < 4;
                                         return (
@@ -202,8 +207,84 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                     </DropDownWrapper>
                 </SortyByMobile>
 
-                <MarketCardMobile exchangeRates={exchangeRates} optionsMarkets={sortedMarkets}></MarketCardMobile>
+                {sortedMarkets.length > 0 ? (
+                    <MarketCardMobile exchangeRates={exchangeRates} optionsMarkets={sortedMarkets}></MarketCardMobile>
+                ) : (
+                    <NoMarkets>
+                        <Container>
+                            {userFilter !== UserFilterEnum.MyMarkets && (
+                                <>
+                                    <Text className="text-m bold pale-grey">
+                                        {t('options.home.explore-markets.table.no-markets-found')}
+                                    </Text>
+                                    <Button className="primary" onClick={resetFilters}>
+                                        {t('options.home.explore-markets.table.view-all-markets')}
+                                    </Button>
+                                </>
+                            )}
+                            {userFilter === UserFilterEnum.MyMarkets && (
+                                <>
+                                    <Text className="text-m bold pale-grey">You haven’t created any market yet.</Text>
+                                    <FlexDiv
+                                        style={{
+                                            justifyContent: 'space-around',
+                                            alignItems: 'center',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        <Button
+                                            className="primary"
+                                            onClick={() =>
+                                                isWalletConnected
+                                                    ? navigateTo(ROUTES.Options.CreateMarket)
+                                                    : onboardConnector.connectWallet()
+                                            }
+                                        >
+                                            {isWalletConnected
+                                                ? t('options.home.market-creation.create-market-button-label')
+                                                : t('common.wallet.connect-your-wallet')}
+                                        </Button>
+                                        <Text
+                                            className="text-m bold pale-grey"
+                                            style={{
+                                                margin: '24px',
+                                            }}
+                                        >
+                                            or
+                                        </Text>
+                                        <Button className="primary" onClick={resetFilters}>
+                                            {t('options.home.explore-markets.table.view-all-markets')}
+                                        </Button>
+                                    </FlexDiv>
+                                </>
+                            )}
+                        </Container>
+                    </NoMarkets>
+                )}
             </div>
         );
     }
 );
+
+const NoMarkets = styled(FlexDivColumn)`
+    width: 100%;
+    align-items: center;
+    position: relative;
+    background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
+    min-height: 355px;
+    padding: 2px;
+    border-radius: 23px;
+    margin: 24px 0;
+    margin-bottom: 600px;
+`;
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    background: #04045a;
+    flex: 1;
+    border-radius: 23px;
+`;
