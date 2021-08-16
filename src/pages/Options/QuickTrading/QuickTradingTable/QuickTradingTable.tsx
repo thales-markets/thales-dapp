@@ -56,7 +56,7 @@ const sellHeadCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
     { id: 2, label: 'Condition', sortable: true },
     { id: 3, label: 'When', sortable: true },
-    { id: 4, label: 'Amount to recieve', sortable: true },
+    { id: 4, label: 'Amount to receive', sortable: true },
     { id: 5, label: 'Options amount to sell', sortable: true },
     { id: 6, label: 'Actions', sortable: false },
 ];
@@ -283,7 +283,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                             DEFAULT_OPTIONS_DECIMALS
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell style={isBuyMode ? {} : { width: '170px' }}>
                                         {isBuyMode
                                             ? `${formatCurrencyWithSign(
                                                   USD_SIGN,

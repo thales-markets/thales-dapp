@@ -2,13 +2,19 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getCustomGasPrice, getGasSpeed, getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getCustomGasPrice,
+    getGasSpeed,
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+} from 'redux/modules/wallet';
 import { OptionSide, OrderItem } from 'types/options';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
-import { refetchOrderbook } from 'utils/queryConnector';
+import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { getIs0xReady } from 'redux/modules/app';
@@ -36,6 +42,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
@@ -63,6 +70,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 (_, log) => {
                     if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
                         refetchOrderbook(baseToken);
+                        refetchOrders(networkId);
                         onClose();
                     }
                 }

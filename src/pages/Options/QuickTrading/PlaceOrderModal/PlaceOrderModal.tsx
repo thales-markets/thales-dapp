@@ -101,6 +101,7 @@ export const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
                     defaultOrderSide={orderSide}
                     defaultPrice={defaultPrice}
                     defaultAmount={defaultAmount}
+                    onPlaceOrder={onClose}
                 />
             </PlaceOrderModalContainer>
         </StyledPlaceOrderModal>

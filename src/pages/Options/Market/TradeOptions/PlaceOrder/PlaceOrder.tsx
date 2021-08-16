@@ -57,7 +57,7 @@ import {
     StyledQuestionMarkIcon,
     LightTooltip,
 } from 'pages/Options/Market/components';
-import { refetchOrderbook } from 'utils/queryConnector';
+import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
@@ -77,6 +77,7 @@ type PlaceOrderProps = {
     defaultOrderSide?: OrderSide;
     defaultPrice?: number | string;
     defaultAmount?: number | string;
+    onPlaceOrder?: any;
 };
 
 export type OrderSideOptionType = { value: OrderSide; label: string };
@@ -87,6 +88,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     defaultOrderSide,
     defaultPrice,
     defaultAmount,
+    onPlaceOrder,
 }) => {
     const { t } = useTranslation();
     const optionsMarket = market || useMarketContext();
@@ -325,7 +327,9 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                     t('options.market.trade-options.place-order.confirm-button.confirmation-message')
                 );
                 refetchOrderbook(baseToken);
+                refetchOrders(networkId);
                 resetForm();
+                onPlaceOrder && onPlaceOrder();
             } catch (err) {
                 console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));

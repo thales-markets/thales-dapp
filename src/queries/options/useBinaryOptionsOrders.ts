@@ -112,7 +112,10 @@ const useBinaryOptionsOrders = (
                 ...filterAndPrepareOrders('short', responseJ, isBuyOrder, shortAddresses, marketsShortAddressMap),
             ];
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

@@ -35,6 +35,7 @@ import QuickTradingTable from './QuickTradingTable';
 import styled from 'styled-components';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { useEffect } from 'react';
+import useUserAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',
@@ -81,8 +82,33 @@ const QuickTradingPage: React.FC<any> = () => {
     const orders: ExtendedOrderItem[] = ordersQuery.isSuccess && ordersQuery.data ? ordersQuery.data : [];
     const myOrders: ExtendedOrderItem[] = myOrdersQuery.isSuccess && myOrdersQuery.data ? myOrdersQuery.data : [];
 
+    const optionsMarkets = orders.map((order) => order.market);
+    const userAssetsQuery = useUserAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
+        enabled: isAppReady && isWalletConnected && optionsMarkets.length > 0 && !isBuyMode,
+    });
+
+    const trimOrders = useMemo(() => {
+        let trimOrders = orders;
+        if (!isBuyMode && isWalletConnected) {
+            const assets = userAssetsQuery.isSuccess && userAssetsQuery.data ? userAssetsQuery.data : [];
+            const optionsAdresses: string[] = [];
+            assets.forEach((asset) => {
+                if (asset.balances.long > 0) {
+                    optionsAdresses.push(asset.market.longAddress.toLowerCase());
+                }
+                if (asset.balances.short > 0) {
+                    optionsAdresses.push(asset.market.shortAddress.toLowerCase());
+                }
+            });
+            trimOrders = trimOrders.filter((order) =>
+                optionsAdresses.includes(order.rawOrder.takerToken.toLowerCase())
+            );
+        }
+        return trimOrders;
+    }, [userAssetsQuery.data, orders, tradingModeFilter, isWalletConnected, walletAddress]);
+
     const filteredOrders = useMemo(() => {
-        let filteredOrders = orders;
+        let filteredOrders = trimOrders;
         if (orderFilter === OrderFilterEnum.MyOrders) {
             filteredOrders = myOrders.filter(
                 (order) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase()
@@ -109,7 +135,7 @@ const QuickTradingPage: React.FC<any> = () => {
                 break;
         }
         return filteredOrders;
-    }, [orders, orderFilter, coinFilter, optionFilter, isWalletConnected, walletAddress]);
+    }, [trimOrders, orderFilter, coinFilter, optionFilter, isWalletConnected, walletAddress]);
 
     const searchFilteredOrders = useDebouncedMemo(
         () => {
@@ -140,6 +166,7 @@ const QuickTradingPage: React.FC<any> = () => {
         setOrderFilter(OrderFilterEnum.All);
         setCoinFilter(CoinFilterEnum.All);
         setOptionFilter(OptionFilterEnum.All);
+        setAssetSearch('');
     };
 
     return (
@@ -240,7 +267,7 @@ const QuickTradingPage: React.FC<any> = () => {
                         </FlexDiv>
                         <QuickTradingTable
                             orders={assetSearch ? searchFilteredOrders : filteredOrders}
-                            isLoading={ordersQuery.isLoading}
+                            isLoading={ordersQuery.isLoading || (!isBuyMode && userAssetsQuery.isLoading)}
                             tradingModeFilter={tradingModeFilter}
                             orderFilter={orderFilter}
                             coinFilter={coinFilter}
