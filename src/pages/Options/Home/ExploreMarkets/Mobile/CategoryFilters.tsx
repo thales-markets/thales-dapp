@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import filters from 'assets/images/filters/filters.svg';
+import checkmark from 'assets/images/checkmark.svg';
 
 export const SearchWrapper = styled(FlexDiv)`
     width: 100%;
@@ -82,6 +83,14 @@ export const DropDown = styled.div`
     height: 100%;
     border-radius: 15px;
     padding: 20px 40px;
+    .selected {
+        &:before {
+            content: url(${checkmark});
+            position: absolute;
+            right: 16px;
+            transform: scale(0.9);
+        }
+    }
 `;
 
 type CategoryFiltersProps = {
