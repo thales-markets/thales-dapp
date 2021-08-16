@@ -77,7 +77,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
 
         const [showDropdownSort, setShowDropwodnSort] = useState(false);
         const [orderBy, setOrderBy] = useState(SortByEnum.Time_Remaining);
-        const [orderDirection, _setOrderDirection] = useState(OrderDirection.DESC);
+        const orderDirection = OrderDirection.DESC;
 
         const sortedMarkets = useMemo(() => {
             if (userFilter === UserFilterEnum.Olympics) {
@@ -96,9 +96,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                         case SortByEnum.Time_Remaining:
                             return sortByTime(a, b, orderDirection);
                         case SortByEnum.Open_Orders:
-                            return orderDirection === OrderDirection.ASC
-                                ? a.openOrders - b.openOrders
-                                : b.openOrders - a.openOrders;
+                            return b.openOrders - a.openOrders;
                         default:
                             return 0;
                     }
