@@ -6,12 +6,14 @@ import { CircularProgress } from '@material-ui/core';
 import { Button, Image, Text } from 'theme/common';
 import { history } from 'utils/routes';
 import { useSelector } from 'react-redux';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
 
 const Loader: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+
     useEffect(() => {
         return () => {
             history.location.state = '';
@@ -19,15 +21,7 @@ const Loader: React.FC = () => {
     });
     return (
         <Wrapper>
-            {history.location.pathname === '/' ? (
-                <CircularProgress />
-            ) : isNetworkSupported(networkId) ? (
-                history.location.state === 'show' ? (
-                    <Image style={{ width: 100, height: 100 }} src={coin}></Image>
-                ) : (
-                    <CircularProgress />
-                )
-            ) : (
+            {isWalletConnected && !isNetworkSupported(networkId) ? (
                 <WrongNetworkWrapper>
                     <Image style={{ width: 200, height: 200, margin: 'auto' }} src={angry}></Image>
                     <Text className="pale-grey text-l ls25">Oops! You are on wrong network!</Text>
@@ -44,6 +38,12 @@ const Loader: React.FC = () => {
                         Switch to Mainnet
                     </Button>
                 </WrongNetworkWrapper>
+            ) : history.location.pathname === '/' ? (
+                <CircularProgress />
+            ) : history.location.state === 'show' ? (
+                <Image style={{ width: 100, height: 100 }} src={coin}></Image>
+            ) : (
+                <CircularProgress />
             )}
         </Wrapper>
     );
