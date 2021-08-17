@@ -26,6 +26,7 @@ import ROUTES from 'constants/routes';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
 import { useState } from 'react';
 import './media.scss';
+import { Overlay } from 'components/Header/Header';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -88,7 +89,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     <UserInfo />
                 )}
             </MarketHeaderWrapper>
-            <Sidebar className="dapp-header__nav">
+            <Sidebar
+                className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
+            >
                 <ItemsContainer>
                     <DisplayContentsAnchor href={ROUTES.Home}>
                         <LogoLocal className="logo" />
@@ -167,6 +170,12 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     )}
                 </ItemsContainer>
             </Sidebar>
+            <Overlay
+                onClick={() => {
+                    setShowBurdgerMenu(BurgerState.Hide);
+                }}
+                className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
+            ></Overlay>
         </>
     );
 };
@@ -206,6 +215,9 @@ const Sidebar = styled.nav`
     -o-user-select: none;
     user-select: none;
     .logo {
+        @media screen and (max-width: 900px) {
+            background: url(${logoIcon}) center no-repeat;
+        }
         background: url(${logoSmallIcon}) center no-repeat;
     }
 `;

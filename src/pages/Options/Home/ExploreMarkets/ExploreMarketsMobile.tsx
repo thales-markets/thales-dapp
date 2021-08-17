@@ -17,6 +17,7 @@ import { navigateTo } from 'utils/routes';
 import onboardConnector from 'utils/onboardConnector';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
+import { Overlay } from 'components/Header/Header';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
@@ -261,6 +262,14 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                         </Container>
                     </NoMarkets>
                 )}
+                <Overlay
+                    onClick={() => {
+                        setShowDropwodnPhase(false);
+                        setShowDropwodnSort(false);
+                        setShowDropwodnUserFilters(false);
+                    }}
+                    className={showDropdownPhase || showDropdownSort || showDropdownUserFilters ? 'show' : 'hide'}
+                ></Overlay>
             </div>
         );
     }

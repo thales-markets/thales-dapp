@@ -104,7 +104,9 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
                                         {t('options.market.overview.current-result-label')}
                                     </Text>
-                                    <Result isLong={market.result === 'long'}>{market.result}</Result>
+                                    <Result isLong={currentAssetPrice > market.strikePrice}>
+                                        {currentAssetPrice < market.strikePrice ? 'SHORT' : 'LONG'}
+                                    </Result>
                                 </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>

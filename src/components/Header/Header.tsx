@@ -289,7 +289,7 @@ const BurdgerIcon = styled.img`
     }
 `;
 
-const Overlay = styled.div`
+export const Overlay = styled.div`
     position: fixed;
     height: 100vh;
     width: 100vw;
@@ -297,6 +297,7 @@ const Overlay = styled.div`
     left: 0;
     background: #748bc6;
     opacity: 0.4;
+    z-index: 1;
     &.show {
         display: block;
     }

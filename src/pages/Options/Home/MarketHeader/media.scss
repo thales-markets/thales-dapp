@@ -11,6 +11,15 @@
         padding-right: 90px !important;
         &__nav {
             display: none;
+            &--show {
+                display: block;
+                right: 0;
+                left: unset !important;
+                width: 256px !important;
+                span {
+                    display: block !important;
+                }
+            }
         }
         &__logoWrapper {
             display: flex !important;
