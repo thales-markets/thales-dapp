@@ -295,7 +295,9 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                   DEFAULT_OPTIONS_DECIMALS
                                               )}
                                     </StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell
+                                        style={index === sortedMarkets.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                                    >
                                         {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() &&
                                             isWalletConnected && (
                                                 <>
