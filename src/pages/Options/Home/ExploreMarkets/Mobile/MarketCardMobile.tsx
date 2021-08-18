@@ -14,6 +14,8 @@ import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
 import { navigateToOptionsMarket } from 'utils/routes';
+import { countryToCountryCode } from '../../MarketsTable/MarketsTable';
+import ReactCountryFlag from 'react-country-flag';
 
 type MarketCardMobileProps = {
     optionsMarkets: HistoricalOptionsMarketInfo[];
@@ -39,15 +41,30 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                     >
                         <Container>
                             <FlexDivRow style={{ marginBottom: 16 }}>
-                                <CurrencyIcon
-                                    currencyKey={market.currencyKey}
-                                    synthIconStyle={{ width: 36, height: 36 }}
-                                />
+                                {market.customMarket ? (
+                                    <ReactCountryFlag
+                                        countryCode={countryToCountryCode(market.country as any)}
+                                        style={{ width: 32, height: 32, marginRight: 10 }}
+                                        svg
+                                    />
+                                ) : (
+                                    <CurrencyIcon
+                                        currencyKey={market.currencyKey}
+                                        synthIconStyle={{ width: 36, height: 36 }}
+                                    />
+                                )}
+
                                 <FlexDivColumnCentered>
-                                    <CryptoName style={{ fontSize: 16, marginBottom: 0 }}>
-                                        {getSynthName(market.currencyKey)}
-                                    </CryptoName>
-                                    <CryptoKey style={{ fontSize: 14 }}>{market.asset}</CryptoKey>
+                                    {market.customMarket ? (
+                                        <Text className="text-m pale-grey">{market.country}</Text>
+                                    ) : (
+                                        <>
+                                            <CryptoName style={{ fontSize: 16, marginBottom: 0 }}>
+                                                {getSynthName(market.currencyKey)}
+                                            </CryptoName>
+                                            <CryptoKey style={{ fontSize: 14 }}>{market.asset}</CryptoKey>
+                                        </>
+                                    )}
                                 </FlexDivColumnCentered>
                                 <Phase className={market.phase}>{t(`options.phases.${market.phase}`)}</Phase>
                             </FlexDivRow>
@@ -57,7 +74,9 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                         {t('options.home.market-card.strike-price')}
                                     </Text>
                                     <Text className="text-ms pale-grey">
-                                        {formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
+                                        {market.customMarket
+                                            ? market.eventName
+                                            : formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
                                     </Text>
                                 </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: 'right' }}>

@@ -74,7 +74,7 @@ export const Home: React.FC = () => {
     return (
         <>
             {marketsQuery.isSuccess ? (
-                <Background>
+                <Background style={{ minHeight: '100vh' }}>
                     <MainWrapper style={{ flexDirection: 'column' }}>
                         <FlexDivColumn style={{ width: '100%' }}>
                             <MarketHeader

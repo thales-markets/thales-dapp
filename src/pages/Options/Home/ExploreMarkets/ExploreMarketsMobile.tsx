@@ -13,11 +13,14 @@ import { sortByAssetPrice, sortByField, sortByTime } from '../MarketsTable/Marke
 import { SortyByMobile } from './Mobile/SortByMobile';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import { memo } from 'react';
-import { navigateTo } from 'utils/routes';
 import onboardConnector from 'utils/onboardConnector';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
 import { Overlay } from 'components/Header/Header';
+import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+import { history, navigateTo } from 'utils/routes';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
@@ -26,16 +29,11 @@ type ExploreMarketsMobileProps = {
     setPhaseFilter: (data: any) => void;
     userFilter: any;
     setUserFilter: (data: any) => void;
+    secondLevelUserFilter: any;
+    setSecondLevelUserFilter: (data: any) => void;
     assetSearch: any;
     setAssetSearch: (data: any) => void;
 };
-
-export enum PhaseFilterEnum {
-    trading = 'trading',
-    maturity = 'maturity',
-    expiry = 'expiry',
-    all = 'all',
-}
 
 export enum SortByEnum {
     Asset = 'Asset',
@@ -52,18 +50,6 @@ enum OrderDirection {
     DESC,
 }
 
-export enum UserFilterEnum {
-    All = 'All',
-    MyMarkets = 'My Markets',
-    MyOrders = 'My Orders',
-    MyAssets = 'My Assets',
-    MyWatchlist = 'Watchlist',
-    Recent = 'Recently Added',
-    Bitcoin = 'Bitcoin',
-    Ethereum = 'Ethereum',
-    Olympics = 'Olympics',
-}
-
 export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
     ({
         optionsMarkets,
@@ -74,6 +60,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
         assetSearch,
         setAssetSearch,
         exchangeRates,
+        setSecondLevelUserFilter,
+        secondLevelUserFilter,
     }) => {
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const { t } = useTranslation();
@@ -83,42 +71,100 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
         const [showDropdownSort, setShowDropwodnSort] = useState(false);
         const [orderBy, setOrderBy] = useState(SortByEnum.Time_Remaining);
         const orderDirection = OrderDirection.DESC;
+        const searchFilter = useLocation();
 
         const sortedMarkets = useMemo(() => {
-            if (userFilter === UserFilterEnum.Olympics) {
-                return optionsMarkets.filter((market) => market.customMarket);
-            } else {
-                return optionsMarkets.sort((a, b) => {
-                    switch (orderBy) {
-                        case SortByEnum.Asset:
-                            return sortByField(a, b, orderDirection, 'asset');
-                        case SortByEnum.Asset_Price:
-                            return sortByAssetPrice(a, b, orderDirection, exchangeRates);
-                        case SortByEnum.Strike_Price:
-                            return sortByField(a, b, orderDirection, 'strikePrice');
-                        case SortByEnum.Pool_Size:
-                            return sortByField(a, b, orderDirection, 'poolSize');
-                        case SortByEnum.Time_Remaining:
-                            return sortByTime(a, b, orderDirection);
-                        case SortByEnum.Open_Orders:
-                            return b.openOrders - a.openOrders;
-                        default:
-                            return 0;
-                    }
-                });
-            }
+            return optionsMarkets.sort((a, b) => {
+                switch (orderBy) {
+                    case SortByEnum.Asset:
+                        return sortByField(a, b, orderDirection, 'asset');
+                    case SortByEnum.Asset_Price:
+                        return sortByAssetPrice(a, b, orderDirection, exchangeRates);
+                    case SortByEnum.Strike_Price:
+                        return sortByField(a, b, orderDirection, 'strikePrice');
+                    case SortByEnum.Pool_Size:
+                        return sortByField(a, b, orderDirection, 'poolSize');
+                    case SortByEnum.Time_Remaining:
+                        return sortByTime(a, b, orderDirection);
+                    case SortByEnum.Open_Orders:
+                        return b.openOrders - a.openOrders;
+                    default:
+                        return 0;
+                }
+            });
         }, [optionsMarkets, orderDirection, exchangeRates, orderBy]);
 
-        const onClickUserFilter = (filter: UserFilterEnum, isDisabled: boolean) => {
+        const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
             if (!isDisabled) {
-                setUserFilter(userFilter === filter ? UserFilterEnum.All : filter);
+                setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
             }
+            return;
+        };
+
+        const onClickSecondLevelUserFilter = (filter: SecondaryFilters, isDisabled: boolean) => {
+            const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+            const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
+            if (!isDisabled && filter === SecondaryFilters.Olympics) {
+                history.replace({
+                    pathname: searchFilter.pathname,
+                    search: queryString.stringify({
+                        userFilter: [filter],
+                    }),
+                });
+            }
+            // else if (!isDisabled && filter === SecondaryFilters.Olympics && userFilter === filter) {
+            //     history.replace({
+            //         pathname: searchFilter.pathname,
+            //         search: '',
+            //     });
+            // }
+
+            if (filter !== SecondaryFilters.Olympics) {
+                if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
+                    history.replace({
+                        pathname: searchFilter.pathname,
+                        search: queryString.stringify({
+                            userFilter: [userFilterValue],
+                            userFilter2: [filter],
+                        }),
+                    });
+                } else if (
+                    userFilter &&
+                    secondLevelFilterValue === filter &&
+                    secondLevelUserFilter !== SecondaryFilters.All
+                ) {
+                    history.replace({
+                        pathname: searchFilter.pathname,
+                        search: queryString.stringify({
+                            userFilter: [userFilterValue],
+                        }),
+                    });
+                } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
+                    history.replace({
+                        pathname: searchFilter.pathname,
+                        search: queryString.stringify({
+                            userFilter2: [filter],
+                        }),
+                    });
+                }
+            }
+
+            // if (!isDisabled && filter === SecondaryFilters.Olympics) {
+            //     setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
+            // }
+
+            if (!isDisabled) {
+                setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.All : filter);
+            }
+
+            document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
             return;
         };
 
         const resetFilters = () => {
             setPhaseFilter(PhaseFilterEnum.all);
-            setUserFilter(UserFilterEnum.All);
+            setUserFilter(PrimaryFilters.All);
+            setSecondLevelUserFilter(SecondaryFilters.All);
         };
 
         return (
@@ -135,8 +181,16 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                     >
                         <DropDownWrapper hidden={!showDropdownUserFilters}>
                             <DropDown>
-                                {Object.keys(UserFilterEnum)
-                                    .filter((key) => isNaN(Number(UserFilterEnum[key as keyof typeof UserFilterEnum])))
+                                <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
+                                    Category
+                                </Text>
+                                {Object.keys(PrimaryFilters)
+                                    .filter(
+                                        (key) =>
+                                            isNaN(Number(PrimaryFilters[key as keyof typeof PrimaryFilters])) &&
+                                            PrimaryFilters[key as keyof typeof PrimaryFilters] !==
+                                                PrimaryFilters.MyWatchlist
+                                    )
                                     .map((key, index) => {
                                         const isDisabled = !isWalletConnected && index < 4;
                                         return (
@@ -144,17 +198,51 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                                                 key={key}
                                                 onClick={onClickUserFilter.bind(
                                                     this,
-                                                    UserFilterEnum[key as keyof typeof UserFilterEnum],
+                                                    PrimaryFilters[key as keyof typeof PrimaryFilters],
                                                     isDisabled
                                                 )}
                                                 className={`${
                                                     !isDisabled &&
-                                                    userFilter === UserFilterEnum[key as keyof typeof UserFilterEnum]
+                                                    userFilter === PrimaryFilters[key as keyof typeof PrimaryFilters]
                                                         ? 'selected'
                                                         : ''
                                                 } text-s lh32 pale-grey`}
+                                                style={{ marginLeft: 20 }}
                                             >
-                                                {UserFilterEnum[key as keyof typeof UserFilterEnum]}
+                                                {PrimaryFilters[key as keyof typeof PrimaryFilters]}
+                                            </Text>
+                                        );
+                                    })}
+                                <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
+                                    Discover
+                                </Text>
+                                {Object.keys(SecondaryFilters)
+                                    .filter(
+                                        (key) =>
+                                            isNaN(Number(SecondaryFilters[key as keyof typeof SecondaryFilters])) &&
+                                            SecondaryFilters[key as keyof typeof SecondaryFilters] !==
+                                                SecondaryFilters.All
+                                    )
+                                    .map((key, index) => {
+                                        const isDisabled = !isWalletConnected && index < 4;
+                                        return (
+                                            <Text
+                                                key={key}
+                                                onClick={onClickSecondLevelUserFilter.bind(
+                                                    this,
+                                                    SecondaryFilters[key as keyof typeof SecondaryFilters],
+                                                    isDisabled
+                                                )}
+                                                className={`${
+                                                    !isDisabled &&
+                                                    secondLevelUserFilter ===
+                                                        SecondaryFilters[key as keyof typeof SecondaryFilters]
+                                                        ? 'selected'
+                                                        : ''
+                                                } text-s lh32 pale-grey`}
+                                                style={{ marginLeft: 20 }}
+                                            >
+                                                {SecondaryFilters[key as keyof typeof SecondaryFilters]}
                                             </Text>
                                         );
                                     })}
@@ -213,7 +301,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                 ) : (
                     <NoMarkets>
                         <Container>
-                            {userFilter !== UserFilterEnum.MyMarkets && (
+                            {userFilter !== PrimaryFilters.MyMarkets && (
                                 <>
                                     <Text className="text-m bold pale-grey">
                                         {t('options.home.explore-markets.table.no-markets-found')}
@@ -223,7 +311,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = memo(
                                     </Button>
                                 </>
                             )}
-                            {userFilter === UserFilterEnum.MyMarkets && (
+                            {userFilter === PrimaryFilters.MyMarkets && (
                                 <>
                                     <Text className="text-m bold pale-grey">You haven’t created any market yet.</Text>
                                     <FlexDiv

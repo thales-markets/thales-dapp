@@ -15,7 +15,7 @@ import {
 import Currency from 'components/Currency';
 import { useTranslation } from 'react-i18next';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { buildOptionsMarketLink, navigateToOptionsMarket } from 'utils/routes';
+import { buildOptionsMarketLink } from 'utils/routes';
 import {
     Arrow,
     ArrowsWrapper,
@@ -27,7 +27,7 @@ import {
 } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
-import { PhaseFilterEnum, UserFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
+import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import star from 'assets/images/star.svg';
@@ -58,7 +58,6 @@ type MarketsTableProps = {
     watchlistedMarkets: string[];
     isLoading?: boolean;
     phase: PhaseFilterEnum;
-    userFilter: UserFilterEnum;
     onChange: any;
 };
 
@@ -79,16 +78,6 @@ const headCells: HeadCell[] = [
     { id: 8, label: 'Phase', sortable: false },
 ];
 
-const headCellsOlympics: HeadCell[] = [
-    { id: 1, label: 'Country', sortable: false },
-    { id: 2, label: 'Event Name', sortable: false },
-    { id: 3, label: 'Rank', sortable: false },
-    { id: 4, label: 'Market Size', sortable: false },
-    { id: 5, label: 'Time Remaining', sortable: false },
-    { id: 6, label: 'Open Orders', sortable: false },
-    { id: 7, label: 'Phase', sortable: false },
-];
-
 enum OrderDirection {
     NONE,
     ASC,
@@ -98,7 +87,7 @@ enum OrderDirection {
 const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
-    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates, userFilter }) => {
+    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates }) => {
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const networkId = useSelector((state: RootState) => getNetworkId(state));
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -160,33 +149,29 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         };
 
         const sortedMarkets = useMemo(() => {
-            if (userFilter === UserFilterEnum.Olympics) {
-                return optionsMarkets.filter((market) => market.customMarket);
-            } else {
-                return optionsMarkets
-                    .sort((a, b) => {
-                        switch (orderBy) {
-                            case 1:
-                            case 2:
-                                return sortByField(a, b, orderDirection, 'asset');
-                            case 3:
-                                return sortByAssetPrice(a, b, orderDirection, exchangeRates);
-                            case 4:
-                                return sortByField(a, b, orderDirection, 'strikePrice');
-                            case 5:
-                                return sortByField(a, b, orderDirection, 'poolSize');
-                            case 6:
-                                return sortByTime(a, b, orderDirection);
-                            case 7:
-                                return orderDirection === OrderDirection.ASC
-                                    ? a.openOrders - b.openOrders
-                                    : b.openOrders - a.openOrders;
-                            default:
-                                return 0;
-                        }
-                    })
-                    .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-            }
+            return optionsMarkets
+                .sort((a, b) => {
+                    switch (orderBy) {
+                        case 1:
+                        case 2:
+                            return sortByField(a, b, orderDirection, 'asset');
+                        case 3:
+                            return sortByAssetPrice(a, b, orderDirection, exchangeRates);
+                        case 4:
+                            return sortByField(a, b, orderDirection, 'strikePrice');
+                        case 5:
+                            return sortByField(a, b, orderDirection, 'poolSize');
+                        case 6:
+                            return sortByTime(a, b, orderDirection);
+                        case 7:
+                            return orderDirection === OrderDirection.ASC
+                                ? a.openOrders - b.openOrders
+                                : b.openOrders - a.openOrders;
+                        default:
+                            return 0;
+                    }
+                })
+                .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
         }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates, rowsPerPage]);
 
         const { t } = useTranslation();
@@ -199,149 +184,82 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                     <Table aria-label="customized table">
                         <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                             <TableRow>
-                                {userFilter === UserFilterEnum.Olympics &&
-                                    headCellsOlympics.map((cell: HeadCell, index) => {
-                                        return (
-                                            <StyledTableCell
-                                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                                key={index}
-                                                style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                {headCells.map((cell: HeadCell, index) => {
+                                    return (
+                                        <StyledTableCell
+                                            onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                            key={index}
+                                            style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                        >
+                                            <TableHeaderLabel
+                                                className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
                                             >
-                                                <TableHeaderLabel
-                                                    className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
-                                                >
-                                                    {cell.label}
-                                                </TableHeaderLabel>
-                                                {cell.sortable && (
-                                                    <ArrowsWrapper>
-                                                        {orderBy === cell.id &&
-                                                        orderDirection !== OrderDirection.NONE ? (
-                                                            <Arrow
-                                                                src={
-                                                                    orderDirection === OrderDirection.ASC
-                                                                        ? upSelected
-                                                                        : downSelected
-                                                                }
-                                                            />
-                                                        ) : (
-                                                            <>
-                                                                <Arrow src={up} />
-                                                                <Arrow src={down} />
-                                                            </>
-                                                        )}
-                                                    </ArrowsWrapper>
-                                                )}
-                                            </StyledTableCell>
-                                        );
-                                    })}
-                                {userFilter !== UserFilterEnum.Olympics &&
-                                    headCells.map((cell: HeadCell, index) => {
-                                        return (
-                                            <StyledTableCell
-                                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                                key={index}
-                                                style={cell.sortable ? { cursor: 'pointer' } : {}}
-                                            >
-                                                <TableHeaderLabel
-                                                    className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
-                                                >
-                                                    {cell.label}
-                                                </TableHeaderLabel>
-                                                {cell.sortable && (
-                                                    <ArrowsWrapper>
-                                                        {orderBy === cell.id &&
-                                                        orderDirection !== OrderDirection.NONE ? (
-                                                            <Arrow
-                                                                src={
-                                                                    orderDirection === OrderDirection.ASC
-                                                                        ? upSelected
-                                                                        : downSelected
-                                                                }
-                                                            />
-                                                        ) : (
-                                                            <>
-                                                                <Arrow src={up} />
-                                                                <Arrow src={down} />
-                                                            </>
-                                                        )}
-                                                    </ArrowsWrapper>
-                                                )}
-                                            </StyledTableCell>
-                                        );
-                                    })}
+                                                {cell.label}
+                                            </TableHeaderLabel>
+                                            {cell.sortable && (
+                                                <ArrowsWrapper>
+                                                    {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                        <Arrow
+                                                            src={
+                                                                orderDirection === OrderDirection.ASC
+                                                                    ? upSelected
+                                                                    : downSelected
+                                                            }
+                                                        />
+                                                    ) : (
+                                                        <>
+                                                            <Arrow src={up} />
+                                                            <Arrow src={down} />
+                                                        </>
+                                                    )}
+                                                </ArrowsWrapper>
+                                            )}
+                                        </StyledTableCell>
+                                    );
+                                })}
                             </TableRow>
                         </TableHead>
 
                         <TableBody>
-                            {userFilter === UserFilterEnum.Olympics &&
-                                sortedMarkets.map((market: any, index) => {
-                                    return (
-                                        <StyledTableRow
-                                            onClick={() => {
-                                                if (market.phase !== 'expiry') {
-                                                    navigateToOptionsMarket(market.address);
-                                                }
+                            {sortedMarkets.map((market, index) => {
+                                const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
+                                const strikeAndAssetPriceDifference = getPercentageDifference(
+                                    currentAssetPrice,
+                                    market.strikePrice
+                                );
+                                return (
+                                    <StyledTableRow
+                                        className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
+                                        key={index}
+                                    >
+                                        <StyledTableCell
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleWatchlist(market.address);
                                             }}
-                                            className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
-                                            key={index}
+                                            style={{ paddingRight: 0 }}
                                         >
-                                            <StyledTableCell>
-                                                <ReactCountryFlag
-                                                    countryCode={countryToCountryCode(market.country)}
-                                                    style={{ width: 32, height: 32, marginRight: 10 }}
-                                                    svg
-                                                />
-                                                {market.country}
-                                            </StyledTableCell>
-                                            <StyledTableCell>{market.eventName}</StyledTableCell>
-                                            <StyledTableCell>{market.outcome}</StyledTableCell>
-                                            <StyledTableCell>
-                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                <TimeRemaining end={market.timeRemaining} fontSize={14} />
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
-                                            </StyledTableCell>
-                                            <StyledTableCell>
-                                                <PhaseLabel className={market.phase}>
-                                                    {t(`options.phases.${market.phase}`)}
-                                                </PhaseLabel>
-                                            </StyledTableCell>
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            {userFilter !== UserFilterEnum.Olympics &&
-                                sortedMarkets.map((market, index) => {
-                                    const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
-                                    const strikeAndAssetPriceDifference = getPercentageDifference(
-                                        currentAssetPrice,
-                                        market.strikePrice
-                                    );
-                                    return (
-                                        <StyledTableRow
-                                            className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
-                                            key={index}
+                                            <Star
+                                                style={{ visibility: isWalletConnected ? 'visible' : 'hidden' }}
+                                                src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
+                                            />
+                                        </StyledTableCell>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
-                                            <StyledTableCell
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleWatchlist(market.address);
-                                                }}
-                                                style={{ paddingRight: 0 }}
-                                            >
-                                                <Star
-                                                    style={{ visibility: isWalletConnected ? 'visible' : 'hidden' }}
-                                                    src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
-                                                />
-                                            </StyledTableCell>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
+                                            {market.customMarket ? (
+                                                <StyledAnchoredTableCell style={{ textAlign: 'left' }}>
+                                                    <ReactCountryFlag
+                                                        countryCode={countryToCountryCode(market.country as any)}
+                                                        style={{ width: 32, height: 32, marginRight: 10 }}
+                                                        svg
+                                                    />
+                                                    {market.country}
+                                                </StyledAnchoredTableCell>
+                                            ) : (
                                                 <StyledAnchoredTableCell>
                                                     <Currency.Name
                                                         currencyKey={market.currencyKey}
@@ -350,26 +268,30 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         synthIconStyle={{ width: 32, height: 32 }}
                                                     />
                                                 </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
-                                                <StyledAnchoredTableCell>
-                                                    {currentAssetPrice
-                                                        ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
-                                                        : 'N/A'}
-                                                </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
-                                                <StyledAnchoredTableCell>
+                                            )}
+                                        </DisplayContentsAnchor>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
+                                        >
+                                            <StyledAnchoredTableCell>
+                                                {currentAssetPrice
+                                                    ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
+                                                    : 'N/A'}
+                                            </StyledAnchoredTableCell>
+                                        </DisplayContentsAnchor>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
+                                        >
+                                            <StyledAnchoredTableCell>
+                                                {market.customMarket ? (
+                                                    market.eventName
+                                                ) : (
                                                     <FlexDivCentered>
                                                         <span>
                                                             {formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
@@ -402,55 +324,54 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                             </GreenText>
                                                         )}
                                                     </FlexDivCentered>
-                                                </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
-                                                <StyledAnchoredTableCell>
-                                                    {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
-                                                </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
-                                                <StyledAnchoredTableCell>
-                                                    <TimeRemaining end={market.timeRemaining} fontSize={14} />
-                                                </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
-                                                <StyledAnchoredTableCell>
-                                                    {(market.phase === 'trading' && market.openOrders) ?? (
-                                                        <StyledLoader />
-                                                    )}
-                                                </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                            <DisplayContentsAnchor
-                                                style={{
-                                                    pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                                                }}
-                                                href={buildOptionsMarketLink(market.address)}
-                                            >
-                                                <StyledAnchoredTableCell>
-                                                    <PhaseLabel className={market.phase}>
-                                                        {t(`options.phases.${market.phase}`)}
-                                                    </PhaseLabel>
-                                                </StyledAnchoredTableCell>
-                                            </DisplayContentsAnchor>
-                                        </StyledTableRow>
-                                    );
-                                })}
+                                                )}
+                                            </StyledAnchoredTableCell>
+                                        </DisplayContentsAnchor>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
+                                        >
+                                            <StyledAnchoredTableCell>
+                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            </StyledAnchoredTableCell>
+                                        </DisplayContentsAnchor>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
+                                        >
+                                            <StyledAnchoredTableCell>
+                                                <TimeRemaining end={market.timeRemaining} fontSize={14} />
+                                            </StyledAnchoredTableCell>
+                                        </DisplayContentsAnchor>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
+                                        >
+                                            <StyledAnchoredTableCell>
+                                                {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
+                                            </StyledAnchoredTableCell>
+                                        </DisplayContentsAnchor>
+                                        <DisplayContentsAnchor
+                                            style={{
+                                                pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                                            }}
+                                            href={buildOptionsMarketLink(market.address)}
+                                        >
+                                            <StyledAnchoredTableCell>
+                                                <PhaseLabel className={market.phase}>
+                                                    {t(`options.phases.${market.phase}`)}
+                                                </PhaseLabel>
+                                            </StyledAnchoredTableCell>
+                                        </DisplayContentsAnchor>
+                                    </StyledTableRow>
+                                );
+                            })}
                         </TableBody>
                         {optionsMarkets.length !== 0 && (
                             <TableFooter>

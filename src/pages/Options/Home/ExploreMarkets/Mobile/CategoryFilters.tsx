@@ -84,10 +84,11 @@ export const DropDown = styled.div`
     border-radius: 15px;
     padding: 20px 40px;
     .selected {
+        color: #00f9ff !important;
         &:before {
             content: url(${checkmark});
             position: absolute;
-            right: 16px;
+            right: 40px;
             transform: scale(0.9);
         }
     }
