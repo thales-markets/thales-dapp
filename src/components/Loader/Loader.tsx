@@ -6,13 +6,12 @@ import { CircularProgress } from '@material-ui/core';
 import { Button, Image, Text } from 'theme/common';
 import { history } from 'utils/routes';
 import { useSelector } from 'react-redux';
-import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
 
 const Loader: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
     useEffect(() => {
         return () => {
@@ -21,7 +20,7 @@ const Loader: React.FC = () => {
     });
     return (
         <Wrapper>
-            {isWalletConnected && !isNetworkSupported(networkId) ? (
+            {networkId && !isNetworkSupported(networkId) ? (
                 <WrongNetworkWrapper>
                     <Image style={{ width: 200, height: 200, margin: 'auto' }} src={angry}></Image>
                     <Text className="pale-grey text-l ls25">Oops! You are on wrong network!</Text>
