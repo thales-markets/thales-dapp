@@ -35,7 +35,6 @@ import { convertLocalToUTCDate, convertUTCToLocalDate, formatShortDate } from 'u
 import { Error, ErrorMessage, InputsWrapper, LongSlider, ShortSlider } from './components';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
-
 import {
     CurrencyLabel,
     DoubleShortInputContainer,
@@ -73,6 +72,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import { ZERO_ADDRESS } from '../../../constants/network';
 import { MetamaskSubprovider } from '@0x/subproviders';
 import styled from 'styled-components';
+import './media.scss';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -419,7 +419,7 @@ export const CreateMarket: React.FC = () => {
             return (
                 <Button
                     style={{ padding: '8px 24px' }}
-                    className="primary"
+                    className="primary  button-div-responsive__upper"
                     disabled={isLongAllowing}
                     onClick={handleLongAllowance}
                 >
@@ -436,7 +436,7 @@ export const CreateMarket: React.FC = () => {
             return (
                 <Button
                     style={{ padding: '8px 24px' }}
-                    className="primary"
+                    className="primary  button-div-responsive__upper"
                     disabled={isShortAllowing}
                     onClick={handleShortAllowance}
                 >
@@ -452,7 +452,7 @@ export const CreateMarket: React.FC = () => {
             return (
                 <Button
                     style={{ padding: '8px 24px' }}
-                    className="primary"
+                    className="primary  button-div-responsive__upper"
                     disabled={!isLongAmountValid || isLongSubmitting || isLongSubmitted}
                     onClick={handleSubmitOrder.bind(this, longPrice, longAddress, longAmount, true)}
                 >
@@ -467,7 +467,7 @@ export const CreateMarket: React.FC = () => {
             return (
                 <Button
                     style={{ padding: '8px 24px' }}
-                    className="primary"
+                    className="primary  button-div-responsive__upper"
                     disabled={!isShortAmountValid || isShortSubmitting || isShortSubmitted}
                     onClick={handleSubmitOrder.bind(this, shortPrice, shortAddress, shortAmount, false)}
                 >
@@ -582,20 +582,23 @@ export const CreateMarket: React.FC = () => {
             <MainWrapper>
                 <FlexDivColumn>
                     <MarketHeader route={ROUTES.Options.CreateMarket} />
-                    <Text className="create-market" style={{ padding: '50px 100px 0' }}>
+                    <Text className="create-market create-market-title" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
-                    <FlexDiv style={{ padding: '50px 100px' }}>
+                    <FlexDiv className="create-market-content" style={{ padding: '50px 100px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
-                            <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
-                                {t('options.create-market.subtitle')}
-                            </Text>
-                            <Text className="text-s pale-grey lh24" style={{ margin: '30px 2px' }}>
-                                {t('options.create-market.note')}
-                            </Text>
-                            <InputsWrapper>
-                                <FlexDivRow>
+                            <div className="create-market-content__info">
+                                <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
+                                    {t('options.create-market.subtitle')}
+                                </Text>
+                                <Text className="text-s pale-grey lh24" style={{ margin: '30px 2px' }}>
+                                    {t('options.create-market.note')}
+                                </Text>
+                            </div>
+                            <InputsWrapper className="create-market-content__wrapper">
+                                <FlexDivRow className="create-market-content__parameters">
                                     <ShortInputContainer
+                                        className="create-market-content__parameters__field"
                                         style={{
                                             marginBottom: 40,
                                             zIndex: 4,
@@ -640,6 +643,7 @@ export const CreateMarket: React.FC = () => {
                                         <ErrorMessage show={!isCurrencyKeyValid} text="Please select asset." />
                                     </ShortInputContainer>
                                     <ShortInputContainer
+                                        className="create-market-content__parameters__field"
                                         style={{
                                             marginBottom: 40,
                                             opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
@@ -702,9 +706,13 @@ export const CreateMarket: React.FC = () => {
                                         )}
                                     </ShortInputContainer>
                                 </FlexDivRow>
-                                <FlexDivRow>
-                                    <FlexDivRow style={{ width: '50%', marginRight: 10 }}>
+                                <FlexDivRow className="create-market-content__parameters">
+                                    <FlexDivRow
+                                        className="create-market-content__double-fields"
+                                        style={{ width: '50%', marginRight: 10 }}
+                                    >
                                         <ShortInputContainer
+                                            className="create-market-content__double-fields__field"
                                             style={{
                                                 marginBottom: 40,
                                                 flex: 3,
@@ -727,6 +735,7 @@ export const CreateMarket: React.FC = () => {
                                             </InputLabel>
                                         </ShortInputContainer>
                                         <ShortInputContainer
+                                            className="create-market-content__double-fields__field"
                                             style={{
                                                 marginBottom: 40,
                                                 flex: 1,
@@ -750,7 +759,10 @@ export const CreateMarket: React.FC = () => {
                                     </FlexDivRow>
 
                                     <ShortInputContainer
-                                        className={isAmountValid && userHasEnoughFunds ? '' : 'error'}
+                                        className={
+                                            (isAmountValid && userHasEnoughFunds ? '' : 'error') +
+                                            ' create-market-content__double-fields'
+                                        }
                                         style={{
                                             position: 'relative',
                                             marginBottom: 40,
@@ -830,6 +842,7 @@ export const CreateMarket: React.FC = () => {
                                     {t('options.create-market.sellOptions')}
                                 </Text>
                                 <FlexDiv
+                                    className="create-market-content__multi-fields-parent"
                                     style={{
                                         opacity:
                                             !initialFundingAmount ||
@@ -840,7 +853,8 @@ export const CreateMarket: React.FC = () => {
                                                 : 1,
                                     }}
                                 >
-                                    <CheckboxContainer>
+                                    {/* <FlexDiv className="create-market-content__multi-fields-parent__slider-container"> */}
+                                    <CheckboxContainer className="create-market-content__multi-fields-parent__checkbox">
                                         <Checkbox
                                             disabled={
                                                 !initialFundingAmount ||
@@ -853,7 +867,7 @@ export const CreateMarket: React.FC = () => {
                                             onChange={(e: any) => setSellLong(e.target.checked || false)}
                                         />
                                     </CheckboxContainer>
-                                    <SliderContainer>
+                                    <SliderContainer className="create-market-content__multi-fields-parent__slider">
                                         <LongSlider
                                             value={Number(longPrice)}
                                             step={0.01}
@@ -867,7 +881,9 @@ export const CreateMarket: React.FC = () => {
                                             <SliderRange color={COLORS.LONG}>{`${USD_SIGN}1`}</SliderRange>
                                         </FlexDivRow>
                                     </SliderContainer>
-                                    <DoubleShortInputContainer>
+                                    {/* </FlexDiv> */}
+                                    {/* <FlexDiv className="create-market-content__multi-fields-parent__double-input-fields"> */}
+                                    <DoubleShortInputContainer className="create-market-content__multi-fields-parent__double-input-fields__field">
                                         <NumericInput
                                             value={longPrice}
                                             onChange={(_, value) => setLongPrice(value)}
@@ -891,7 +907,7 @@ export const CreateMarket: React.FC = () => {
                                             )}
                                         />
                                     </DoubleShortInputContainer>
-                                    <DoubleShortInputContainer>
+                                    <DoubleShortInputContainer className="create-market-content__multi-fields-parent__double-input-fields__field--last">
                                         <NumericInput
                                             value={longAmount}
                                             onChange={(_, value) => setLongAmount(value)}
@@ -918,8 +934,10 @@ export const CreateMarket: React.FC = () => {
                                             )}
                                         />
                                     </DoubleShortInputContainer>
+                                    {/* </FlexDiv> */}
                                 </FlexDiv>
                                 <FlexDiv
+                                    className="create-market-content__multi-fields-parent"
                                     style={{
                                         opacity:
                                             !initialFundingAmount ||
@@ -930,7 +948,8 @@ export const CreateMarket: React.FC = () => {
                                                 : 1,
                                     }}
                                 >
-                                    <CheckboxContainer>
+                                    {/* <FlexDiv className="create-market-content__multi-fields-parent__slider-container"> */}
+                                    <CheckboxContainer className="create-market-content__multi-fields-parent__checkbox">
                                         <Checkbox
                                             disabled={
                                                 !initialFundingAmount ||
@@ -943,7 +962,7 @@ export const CreateMarket: React.FC = () => {
                                             onChange={(e: any) => setSellShort(e.target.checked || false)}
                                         />
                                     </CheckboxContainer>
-                                    <SliderContainer>
+                                    <SliderContainer className="create-market-content__multi-fields-parent__slider">
                                         <ShortSlider
                                             value={Number(shortPrice)}
                                             step={0.01}
@@ -957,7 +976,9 @@ export const CreateMarket: React.FC = () => {
                                             <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}1`}</SliderRange>
                                         </FlexDivRow>
                                     </SliderContainer>
-                                    <DoubleShortInputContainer>
+                                    {/* </FlexDiv> */}
+                                    {/* <FlexDiv className="create-market-content__multi-fields-parent__double-input-fields"> */}
+                                    <DoubleShortInputContainer className="create-market-content__multi-fields-parent__double-input-fields__field">
                                         <NumericInput
                                             value={shortPrice}
                                             onChange={(_, value) => setShortPrice(value)}
@@ -981,7 +1002,7 @@ export const CreateMarket: React.FC = () => {
                                             )}
                                         />
                                     </DoubleShortInputContainer>
-                                    <DoubleShortInputContainer>
+                                    <DoubleShortInputContainer className="create-market-content__multi-fields-parent__double-input-fields__field--last">
                                         <NumericInput
                                             value={shortAmount}
                                             onChange={(_, value) => setShortAmount(value)}
@@ -1008,6 +1029,7 @@ export const CreateMarket: React.FC = () => {
                                             )}
                                         />
                                     </DoubleShortInputContainer>
+                                    {/* </FlexDiv> */}
                                 </FlexDiv>
                                 <NetworkFees gasLimit={gasLimit} />
                             </InputsWrapper>
@@ -1040,6 +1062,7 @@ export const CreateMarket: React.FC = () => {
                     ></ProgressTracker>
                     <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 120 }}>
                         <div
+                            className="button-div-responsive"
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -1056,7 +1079,10 @@ export const CreateMarket: React.FC = () => {
                                     >
                                         or
                                     </Text>
-                                    <Button className="tertiary" onClick={() => navigateToOptionsMarket(market)}>
+                                    <Button
+                                        className="tertiary button-div-responsive__bottom"
+                                        onClick={() => navigateToOptionsMarket(market)}
+                                    >
                                         Go to market
                                     </Button>
                                 </>

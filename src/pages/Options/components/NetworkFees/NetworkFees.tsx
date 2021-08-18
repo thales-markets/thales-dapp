@@ -65,11 +65,27 @@ const NetworkFeeSummaryItem = styled(SummaryItem)`
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 13px;
     line-height: 24px;
+    @media screen and (max-width: 375px) {
+        width: 50%;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0.25px;
+    }
 `;
 
 const NetworkFeeSummaryContent = styled(SummaryContent)`
     font-size: 13px;
     line-height: 24px;
+    @media screen and (max-width: 375px) {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 24px;
+        text-align: right;
+        letter-spacing: 0.25px;
+    }
 `;
 
 export default NetworkFees;

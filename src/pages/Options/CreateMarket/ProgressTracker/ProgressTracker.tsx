@@ -4,6 +4,7 @@ import stateComplete from 'assets/images/state-completed.svg';
 import stateCurrent from 'assets/images/state-current.svg';
 import stateEmpty from 'assets/images/state-empty.svg';
 import styled from 'styled-components';
+import './media.scss';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
@@ -25,7 +26,10 @@ type ProgressTrackerProps = {
 const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
     return (
         <Wrapper>
-            <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
+            <FlexDiv
+                className={(props.isMarketCreated ? 'responsive-hide' : '') + ' progress-tracker-step'}
+                style={{ alignItems: 'center', position: 'relative', flex: 1 }}
+            >
                 <Image
                     className={props.isAllowing ? 'blob' : ''}
                     src={props.isWalletAccessEnabled ? stateComplete : stateCurrent}
@@ -36,7 +40,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 </Label>
             </FlexDiv>
 
-            <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
+            <FlexDiv className="progress-tracker-step" style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
                 <Image
                     className={props.isCreating ? 'blob' : ''}
                     src={
@@ -47,7 +51,10 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 <Label className="text-s pale-grey">Creating market</Label>
             </FlexDiv>
             {!props.showLongProcess && !props.showShortProcess && (
-                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 0 }}>
+                <FlexDiv
+                    className="progress-tracker-step"
+                    style={{ alignItems: 'center', position: 'relative', flex: 0 }}
+                >
                     <Image src={!props.isMarketCreated ? stateEmpty : stateComplete}></Image>
                     <Label className="text-s pale-grey" style={{ left: -20 }}>
                         Finished
@@ -55,18 +62,32 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 </FlexDiv>
             )}
             {props.showLongProcess && (
-                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
+                <FlexDiv
+                    className="progress-tracker-step"
+                    style={{ alignItems: 'center', position: 'relative', flex: 1 }}
+                >
                     <Image
                         className={props.isLongAllowing ? 'blob' : ''}
                         src={!props.isMarketCreated ? stateEmpty : props.isLongApproved ? stateComplete : stateCurrent}
                     ></Image>
-                    <Line className={props.isLongApproved ? 'fill' : ''}></Line>
+                    <Line
+                        className={
+                            (!props.isMarketCreated && !props.isLongApproved && !props.showShortProcess
+                                ? 'responsive-hide'
+                                : '') +
+                            ' ' +
+                            (props.isLongApproved ? 'fill' : '')
+                        }
+                    ></Line>
                     <Label className="text-s pale-grey">Approving sLong</Label>
                 </FlexDiv>
             )}
 
             {props.showShortProcess && (
-                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 1 }}>
+                <FlexDiv
+                    className="progress-tracker-step"
+                    style={{ alignItems: 'center', position: 'relative', flex: 1 }}
+                >
                     <Image
                         className={props.isShortAllowing ? 'blob' : ''}
                         src={
@@ -77,13 +98,25 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                                 : stateCurrent
                         }
                     ></Image>
-                    <Line className={props.isShortApproved ? 'fill' : ''}></Line>
+                    <Line
+                        className={
+                            (!props.isMarketCreated && !props.isShortApproved ? 'responsive-hide' : '') +
+                            ' ' +
+                            (props.isShortApproved ? 'fill' : '')
+                        }
+                    ></Line>
                     <Label className="text-s pale-grey">Approving sShort</Label>
                 </FlexDiv>
             )}
 
             {props.showLongProcess && (
-                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: props.showShortProcess ? 1 : 0 }}>
+                <FlexDiv
+                    className={
+                        (!props.isMarketCreated || props.isLongApproved ? 'responsive-hide' : '') +
+                        ' progress-tracker-step'
+                    }
+                    style={{ alignItems: 'center', position: 'relative', flex: props.showShortProcess ? 1 : 0 }}
+                >
                     <Image
                         className={props.isLongSubmitting ? 'blob' : ''}
                         src={
@@ -100,7 +133,13 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
             )}
 
             {props.showShortProcess && (
-                <FlexDiv style={{ alignItems: 'center', position: 'relative', flex: 0 }}>
+                <FlexDiv
+                    className={
+                        (!props.isMarketCreated || props.isShortApproved ? 'responsive-hide' : '') +
+                        ' progress-tracker-step'
+                    }
+                    style={{ alignItems: 'center', position: 'relative', flex: 0 }}
+                >
                     <Image
                         className={props.isShortSubmitting ? 'blob' : ''}
                         src={
@@ -128,6 +167,10 @@ const Wrapper = styled(FlexDiv)`
     img {
         width: 24px;
     }
+    @media screen and (max-width: 375px) {
+        display: block;
+        margin-top: 1900px;
+    }
 `;
 
 const Line = styled.div`
@@ -137,6 +180,18 @@ const Line = styled.div`
     &.fill {
         background: #3936c7;
     }
+    @media screen and (max-width: 375px) {
+        width: 4px;
+        height: 60px;
+        background: #b8c6e5;
+        margin-left: 10px;
+        margin-top: 21px;
+        margin-bottom: -1px;
+        border-radius: 10px;
+        &.fill {
+            background: #3936c7;
+        }
+    }
 `;
 
 const Label = styled(Text)`
@@ -144,4 +199,7 @@ const Label = styled(Text)`
     top: 40px;
     left: -46px;
     width: 160px;
+    @media screen and (max-width: 375px) {
+        top: 26px;
+    }
 `;
