@@ -36,6 +36,8 @@ import { navigateToOptionsMarket } from 'utils/routes';
 import { FlexDiv, FlexDivColumn } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
+import longIcon from 'assets/images/long_small.svg';
+import shortIcon from 'assets/images/short_small.svg';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -268,6 +270,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                 >
                                                     <CryptoName>
                                                         {marketHeading(order.market, order.optionSide)}
+                                                        {order.optionSide === 'long' ? (
+                                                            <SideImage src={longIcon} />
+                                                        ) : (
+                                                            <SideImage src={shortIcon} />
+                                                        )}
                                                     </CryptoName>{' '}
                                                 </StyledLink>
                                             </LightTooltip>
@@ -276,7 +283,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                     <StyledTableCell>
                                         {formatShortDateWithTime(order.market.maturityDate)}
                                     </StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell style={{ width: '170px' }}>
                                         {formatCurrencyWithSign(
                                             USD_SIGN,
                                             order.displayOrder.fillableTotal,
@@ -287,7 +294,8 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                         {isBuyMode
                                             ? `${formatCurrencyWithSign(
                                                   USD_SIGN,
-                                                  order.displayOrder.potentialReturnAmount,
+                                                  order.displayOrder.potentialReturnAmount +
+                                                      order.displayOrder.fillableTotal,
                                                   DEFAULT_OPTIONS_DECIMALS
                                               )} (${formatPercentage(order.displayOrder.potentialReturn)})`
                                             : formatCurrency(
@@ -489,6 +497,11 @@ const LoaderContainer = styled(FlexDivColumn)`
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
+`;
+
+const SideImage = styled.img`
+    width: 32px;
+    margin-left: 4px;
 `;
 
 export default QuickTradingTable;
