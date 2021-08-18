@@ -554,7 +554,8 @@
             "title": "Quick Trading",
             "mode-label": "I WANT TO",
             "cancel-tooltip": "Click to cancel your order",
-            "counter-offer-button-label": "Make counter offer",
+            "counter-offer-button-label": "Counter",
+            "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",
             "view-all-orders": "View all orders"

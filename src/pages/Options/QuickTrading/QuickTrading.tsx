@@ -59,6 +59,10 @@ export enum OptionFilterEnum {
     Short = 'Short',
 }
 
+type OptionsBalance = {
+    [address: string]: number;
+};
+
 const QuickTradingPage: React.FC<any> = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -92,17 +96,23 @@ const QuickTradingPage: React.FC<any> = () => {
         if (!isBuyMode && isWalletConnected) {
             const assets = userAssetsQuery.isSuccess && userAssetsQuery.data ? userAssetsQuery.data : [];
             const optionsAdresses: string[] = [];
+            const optionsBalance: OptionsBalance = {};
             assets.forEach((asset) => {
                 if (asset.balances.long > 0) {
                     optionsAdresses.push(asset.market.longAddress.toLowerCase());
+                    optionsBalance[asset.market.longAddress.toLowerCase()] = asset.balances.long;
                 }
                 if (asset.balances.short > 0) {
                     optionsAdresses.push(asset.market.shortAddress.toLowerCase());
+                    optionsBalance[asset.market.shortAddress.toLowerCase()] = asset.balances.short;
                 }
             });
             trimOrders = trimOrders.filter((order) =>
                 optionsAdresses.includes(order.rawOrder.takerToken.toLowerCase())
             );
+            trimOrders.forEach((order) => {
+                order.walletBalance = optionsBalance[order.rawOrder.takerToken.toLowerCase()] || 0;
+            });
         }
         return trimOrders;
     }, [userAssetsQuery.data, orders, tradingModeFilter, isWalletConnected, walletAddress]);

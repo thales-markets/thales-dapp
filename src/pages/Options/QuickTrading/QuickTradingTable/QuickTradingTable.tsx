@@ -32,7 +32,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { useTranslation } from 'react-i18next';
-import { navigateToOptionsMarket } from 'utils/routes';
+import { buildOptionsMarketLink } from 'utils/routes';
 import { FlexDiv, FlexDivColumn } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
@@ -60,7 +60,8 @@ const sellHeadCells: HeadCell[] = [
     { id: 3, label: 'When', sortable: true },
     { id: 4, label: 'Amount to receive', sortable: true },
     { id: 5, label: 'Options amount to sell', sortable: true },
-    { id: 6, label: 'Actions', sortable: false },
+    { id: 6, label: 'Options in wallet', sortable: true },
+    { id: 7, label: 'Actions', sortable: false },
 ];
 
 const DEFAULT_ORDER_BY = 3; // market expiration time
@@ -171,7 +172,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                         return sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableTotal');
                     case 5:
                         return isBuyMode
-                            ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturnAmount')
+                            ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturn')
                             : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
                     default:
                         return 0;
@@ -264,9 +265,10 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                             />{' '}
                                             <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
                                                 <StyledLink
-                                                    onClick={() =>
-                                                        navigateToOptionsMarket(order.market.address, order.optionSide)
-                                                    }
+                                                    href={buildOptionsMarketLink(
+                                                        order.market.address,
+                                                        order.optionSide
+                                                    )}
                                                 >
                                                     <CryptoName>
                                                         {marketHeading(order.market, order.optionSide)}
@@ -290,7 +292,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                             DEFAULT_OPTIONS_DECIMALS
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell style={isBuyMode ? {} : { width: '170px' }}>
+                                    <StyledTableCell style={isBuyMode ? { textAlign: 'left' } : { width: '170px' }}>
                                         {isBuyMode
                                             ? `${formatCurrencyWithSign(
                                                   USD_SIGN,
@@ -303,6 +305,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                   DEFAULT_OPTIONS_DECIMALS
                                               )}
                                     </StyledTableCell>
+                                    {!isBuyMode && (
+                                        <StyledTableCell style={{ width: '160px' }}>
+                                            {formatCurrency(order.walletBalance || 0, DEFAULT_OPTIONS_DECIMALS)}
+                                        </StyledTableCell>
+                                    )}
                                     <StyledTableCell
                                         style={index === sortedMarkets.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
                                     >
@@ -317,13 +324,17 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                     >
                                                         {isBuyMode ? t('common.buy') : t('common.sell')}
                                                     </BuySellButton>
-                                                    <CounterOfferButton
-                                                        onClick={() => {
-                                                            openPlaceOrderModal(order);
-                                                        }}
+                                                    <LightTooltip
+                                                        title={t('options.quick-trading.counter-offer-button-tooltip')}
                                                     >
-                                                        {t('options.quick-trading.counter-offer-button-label')}
-                                                    </CounterOfferButton>
+                                                        <CounterOfferButton
+                                                            onClick={() => {
+                                                                openPlaceOrderModal(order);
+                                                            }}
+                                                        >
+                                                            {t('options.quick-trading.counter-offer-button-label')}
+                                                        </CounterOfferButton>
+                                                    </LightTooltip>
                                                 </>
                                             )}
                                         {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() &&
@@ -470,7 +481,7 @@ const YellowDot = styled.span`
 
 const CryptoName = styled.span``;
 
-export const StyledLink = styled.p`
+export const StyledLink = styled.a`
     color: #f6f6fe;
     &:hover {
         color: #00f9ff;
