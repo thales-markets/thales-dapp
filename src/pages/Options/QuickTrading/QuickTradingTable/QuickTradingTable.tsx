@@ -38,6 +38,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
+import { EMPTY_VALUE } from 'constants/placeholder';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -59,7 +60,7 @@ const sellHeadCells: HeadCell[] = [
     { id: 2, label: 'Condition', sortable: true },
     { id: 3, label: 'When', sortable: true },
     { id: 4, label: 'Amount to receive', sortable: true },
-    { id: 5, label: 'Options amount to sell', sortable: true },
+    { id: 5, label: 'Options to sell', sortable: true },
     { id: 6, label: 'Options in wallet', sortable: true },
     { id: 7, label: 'Actions', sortable: false },
 ];
@@ -174,6 +175,8 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                         return isBuyMode
                             ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturn')
                             : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
+                    case 6:
+                        return sortByField(a, b, orderDirection, 'walletBalance');
                     default:
                         return 0;
                 }
@@ -285,14 +288,14 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                     <StyledTableCell>
                                         {formatShortDateWithTime(order.market.maturityDate)}
                                     </StyledTableCell>
-                                    <StyledTableCell style={{ width: '170px' }}>
+                                    <StyledTableCell style={{ width: '140px' }}>
                                         {formatCurrencyWithSign(
                                             USD_SIGN,
                                             order.displayOrder.fillableTotal,
                                             DEFAULT_OPTIONS_DECIMALS
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell style={isBuyMode ? { textAlign: 'left' } : { width: '170px' }}>
+                                    <StyledTableCell style={isBuyMode ? { textAlign: 'left' } : { width: '140px' }}>
                                         {isBuyMode
                                             ? `${formatCurrencyWithSign(
                                                   USD_SIGN,
@@ -306,8 +309,10 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                               )}
                                     </StyledTableCell>
                                     {!isBuyMode && (
-                                        <StyledTableCell style={{ width: '160px' }}>
-                                            {formatCurrency(order.walletBalance || 0, DEFAULT_OPTIONS_DECIMALS)}
+                                        <StyledTableCell style={{ width: '140px' }}>
+                                            {isWalletConnected
+                                                ? formatCurrency(order.walletBalance || 0, DEFAULT_OPTIONS_DECIMALS)
+                                                : EMPTY_VALUE}
                                         </StyledTableCell>
                                     )}
                                     <StyledTableCell
@@ -426,6 +431,22 @@ const sortByTime = (a: ExtendedOrderItem, b: ExtendedOrderItem, direction: Order
     }
     if (direction === OrderDirection.DESC && a.market.phaseNum === b.market.phaseNum) {
         return a.market.timeRemaining > b.market.timeRemaining ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (
+    a: ExtendedOrderItem,
+    b: ExtendedOrderItem,
+    direction: OrderDirection,
+    field: keyof ExtendedOrderItem
+) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
     }
 
     return 0;
