@@ -14,7 +14,7 @@ export const StyledModal = withStyles(() => ({
 }))(Dialog);
 
 export const ModalContainer = styled.div`
-    padding: 20px 30px 30px 30px;
+    padding: 20px 30px 35px 30px;
     overflow: auto;
 `;
 

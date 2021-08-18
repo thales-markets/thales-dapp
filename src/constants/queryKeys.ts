@@ -49,11 +49,14 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
+        Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
         Orders: (walletAddress: string, networkId: NetworkId) => ['user', 'orders', walletAddress, networkId],
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
+        DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
+        DisplayNames: () => ['user', 'displayNames'],
     },
 };
 

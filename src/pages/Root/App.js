@@ -20,6 +20,7 @@ import { history } from 'utils/routes';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard.ts';
+import QuickTradingPage from 'pages/Options/QuickTrading';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -173,6 +174,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.Leaderboard}>
                             <MainLayout>
                                 <LeaderboardPage />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.QuickTrading}>
+                            <MainLayout>
+                                <QuickTradingPage />
                             </MainLayout>
                         </Route>
 

@@ -26,6 +26,8 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
+import './media.css';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
@@ -53,6 +55,10 @@ const LeaderboardPage: React.FC<any> = () => {
     const leaderboard: Leaderboard[] = leaderboardQuery.data
         ? leaderboardQuery.data.sort((a, b) => b.volume - a.volume)
         : [];
+
+    const displayNamesQuery = useUsersDisplayNamesQuery({
+        enabled: isAppReady,
+    });
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
@@ -86,6 +92,7 @@ const LeaderboardPage: React.FC<any> = () => {
             }
         } else {
             setOrderBy(parseInt(cell.id.toString()));
+            setPage(0);
             setOrderDirection(OrderDirection.DESC);
         }
     };
@@ -97,54 +104,80 @@ const LeaderboardPage: React.FC<any> = () => {
         return page;
     }, [page, numberOfPages]);
 
+    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
+        displayNamesQuery,
+    ]);
+
     const leaderboardData = useMemo(() => {
         const searchLeader = leaderboard.filter((leader) => {
-            return searchString === '' ? true : leader.walletAddress.includes(searchString);
-        });
-        return searchLeader.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1)).sort((a, b) => {
-            if (orderBy === 5) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.trades - a.trades;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.trades - b.trades;
-                }
+            if (searchString === '') return true;
+            if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                return true;
             }
-            if (orderBy === 6) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.volume - a.volume;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.volume - b.volume;
-                }
+
+            const disp = displayNamesMap.get(leader.walletAddress);
+
+            if (disp) {
+                return disp.toLowerCase().includes(searchString.toLowerCase());
             }
-            return 0;
+
+            return false;
         });
+        return searchLeader
+            .sort((a, b) => {
+                if (orderBy === 5) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.trades - a.trades;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.trades - b.trades;
+                    }
+                }
+                if (orderBy === 6) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.volume - a.volume;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.volume - b.volume;
+                    }
+                }
+                return 0;
+            })
+            .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [rowsPerPage, memoizedPage, searchString, leaderboard, orderBy, orderDirection]);
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
             <MainWrapper>
-                <FlexDivColumnCentered>
+                <FlexDivColumnCentered className="leaderboard">
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
-                    <FlexDivColumnCentered style={{ padding: '40px 140px' }}>
+                    <FlexDivColumnCentered className="leaderboard__wrapper" style={{ padding: '40px 140px' }}>
                         <FlexDivRow>
-                            <SearchWrapper style={{ alignSelf: 'flex-start' }}>
+                            <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600 }}>
                                 <SearchInput
+                                    style={{ width: '100%', paddingRight: 40 }}
+                                    className="leaderboard__search"
                                     onChange={(e) => setSearchString(e.target.value)}
                                     value={searchString}
                                     placeholder="Display Name"
                                 ></SearchInput>
                             </SearchWrapper>
-                            <Image style={{ width: 100, height: 100 }} src={leaderboardIcon}></Image>
+                            <Image
+                                className="leaderboard__icon"
+                                style={{ width: 100, height: 100 }}
+                                src={leaderboardIcon}
+                            ></Image>
                         </FlexDivRow>
 
                         <TableContainer
                             style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
                             component={Paper}
                         >
-                            <Table aria-label="customized table">
-                                <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                            <Table className="leaderboard__table" aria-label="customized table">
+                                <TableHead
+                                    className="leaderboard__columns"
+                                    style={{ textTransform: 'uppercase', background: '#04045a' }}
+                                >
                                     <TableRow>
                                         {headCells.map((cell: HeadCell, index) => {
                                             return (
@@ -184,7 +217,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                         })}
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>
+                                <TableBody className="leaderboard__tableBody">
                                     {leaderboardData.map((leader: Leaderboard, index: any) => {
                                         return (
                                             <StyledTableRow key={index}>
@@ -207,7 +240,9 @@ const LeaderboardPage: React.FC<any> = () => {
                                                         target="_blank"
                                                         rel="noreferrer"
                                                     >
-                                                        {leader.walletAddress}
+                                                        {displayNamesMap.get(leader.walletAddress)
+                                                            ? displayNamesMap.get(leader.walletAddress)
+                                                            : leader.walletAddress}
                                                     </StyledLink>
                                                 </StyledTableCell>
                                                 <StyledTableCell>{leader.trades}</StyledTableCell>

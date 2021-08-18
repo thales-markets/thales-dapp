@@ -131,6 +131,13 @@ export type OrderItem = {
     displayOrder: DisplayOrder;
 };
 
+export type ExtendedOrderItem = OrderItem & {
+    market: HistoricalOptionsMarketInfo;
+    optionSide: OptionSide;
+};
+
+export type ExtendedOrders = ExtendedOrderItem[];
+
 export type DisplayOrder = {
     price: number;
     amount: number;
@@ -142,6 +149,7 @@ export type DisplayOrder = {
     orderHash: string;
     percentageOfMaximum?: number;
     potentialReturn: number;
+    potentialReturnAmount: number;
 };
 
 export type OrderSide = 'buy' | 'sell';
