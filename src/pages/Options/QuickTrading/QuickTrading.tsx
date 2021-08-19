@@ -36,6 +36,7 @@ import styled from 'styled-components';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { useEffect } from 'react';
 import useUserAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
+import { useLocation } from 'react-router-dom';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',
@@ -69,12 +70,22 @@ const QuickTradingPage: React.FC<any> = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const [tradingModeFilter, setTradingModeFilter] = useState<TradingModeFilterEnum>(TradingModeFilterEnum.Buy);
     const [orderFilter, setOrderFilter] = useState<OrderFilterEnum>(OrderFilterEnum.All);
     const [coinFilter, setCoinFilter] = useState<CoinFilterEnum>(CoinFilterEnum.All);
     const [optionFilter, setOptionFilter] = useState<OptionFilterEnum>(OptionFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
     const dispatch = useDispatch();
+
+    const { search } = useLocation();
+    const query = new URLSearchParams(search);
+    const paramOrder = query.get('order');
+    const paramOrderType = query.get('orderType');
+    const [orderHash, setOrderHash] = useState<string | null>(paramOrder);
+    const [tradingModeFilter, setTradingModeFilter] = useState<TradingModeFilterEnum>(
+        paramOrderType === 'buy' ? TradingModeFilterEnum.Sell : TradingModeFilterEnum.Buy
+    );
+
+    const isSingleMode = orderHash !== null;
 
     const isBuyMode = tradingModeFilter === TradingModeFilterEnum.Buy;
     const ordersQuery = useBinaryOptionsOrders(networkId, isBuyMode ? 'sells' : 'buys', {
@@ -93,7 +104,7 @@ const QuickTradingPage: React.FC<any> = () => {
 
     const trimOrders = useMemo(() => {
         let trimOrders = orders;
-        if (!isBuyMode && isWalletConnected) {
+        if (!isBuyMode && isWalletConnected && !isSingleMode) {
             const assets = userAssetsQuery.isSuccess && userAssetsQuery.data ? userAssetsQuery.data : [];
             const optionsAdresses: string[] = [];
             const optionsBalance: OptionsBalance = {};
@@ -115,9 +126,26 @@ const QuickTradingPage: React.FC<any> = () => {
             });
         }
         return trimOrders;
-    }, [userAssetsQuery.data, orders, tradingModeFilter, isWalletConnected, walletAddress]);
+    }, [userAssetsQuery.data, orders, tradingModeFilter, isWalletConnected, walletAddress, orderHash]);
 
-    const filteredOrders = useMemo(() => {
+    const singleOrders = useMemo(() => {
+        if (orderHash !== null) {
+            const singleBuy = myOrders.filter(
+                (order) => order.displayOrder.orderHash.toLowerCase() === orderHash.toLowerCase()
+            );
+            const singleSell = trimOrders.filter(
+                (order) => order.displayOrder.orderHash.toLowerCase() === orderHash.toLowerCase()
+            );
+
+            return [...singleBuy, ...singleSell];
+        }
+
+        return [];
+    }, [trimOrders, myOrders]);
+
+    const filteredAllOrders = useMemo(() => {
+        if (orderHash !== null) return [];
+
         let filteredOrders = trimOrders;
         if (orderFilter === OrderFilterEnum.MyOrders) {
             filteredOrders = myOrders.filter(
@@ -145,12 +173,14 @@ const QuickTradingPage: React.FC<any> = () => {
                 break;
         }
         return filteredOrders;
-    }, [trimOrders, orderFilter, coinFilter, optionFilter, isWalletConnected, walletAddress]);
+    }, [trimOrders, myOrders, orderFilter, coinFilter, optionFilter, isWalletConnected, walletAddress, orderHash]);
+
+    const filteredOrders = orderHash !== null ? singleOrders : filteredAllOrders;
 
     const searchFilteredOrders = useDebouncedMemo(
         () => {
             return assetSearch
-                ? filteredOrders.filter((order) => {
+                ? filteredOrders.filter((order: ExtendedOrderItem) => {
                       return (
                           order.market.asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                           getSynthName(order.market.currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
@@ -177,7 +207,10 @@ const QuickTradingPage: React.FC<any> = () => {
         setCoinFilter(CoinFilterEnum.All);
         setOptionFilter(OptionFilterEnum.All);
         setAssetSearch('');
+        setOrderHash(null);
     };
+
+    console.log(filteredOrders);
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
@@ -191,7 +224,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                 return filterItem === OrderFilterEnum.All ? null : (
                                     <UserFilter
                                         className={isWalletConnected && orderFilter === filterItem ? 'selected' : ''}
-                                        disabled={!isWalletConnected}
+                                        disabled={!isWalletConnected || isSingleMode}
                                         onClick={() =>
                                             isWalletConnected
                                                 ? setOrderFilter(
@@ -209,6 +242,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                 return filterItem === CoinFilterEnum.All ? null : (
                                     <UserFilter
                                         className={coinFilter === filterItem ? 'selected' : ''}
+                                        disabled={isSingleMode}
                                         onClick={() =>
                                             setCoinFilter(coinFilter === filterItem ? CoinFilterEnum.All : filterItem)
                                         }
@@ -222,6 +256,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                 return filterItem === OptionFilterEnum.All ? null : (
                                     <UserFilter
                                         className={optionFilter === filterItem ? 'selected' : ''}
+                                        disabled={isSingleMode}
                                         onClick={() =>
                                             setOptionFilter(
                                                 filterItem === optionFilter ? OptionFilterEnum.All : filterItem
@@ -267,13 +302,16 @@ const QuickTradingPage: React.FC<any> = () => {
                                                     )
                                                 }
                                                 key={key}
+                                                disabled={isSingleMode}
                                             >
                                                 {t(`options.trading-mode.${key.toLowerCase()}`)}
                                             </FilterButton>
                                         ))}
                                 </FlexDivRowCentered>
                             </div>
-                            <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
+                            {!isSingleMode && (
+                                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
+                            )}
                         </FlexDiv>
                         <QuickTradingTable
                             orders={assetSearch ? searchFilteredOrders : filteredOrders}
@@ -282,6 +320,8 @@ const QuickTradingPage: React.FC<any> = () => {
                             orderFilter={orderFilter}
                             coinFilter={coinFilter}
                             optionFilter={optionFilter}
+                            isSingleMode={isSingleMode}
+                            resetFilters={resetFilters}
                         >
                             <NoOrders>
                                 <>
@@ -353,6 +393,7 @@ const NoOrders = styled(FlexDivColumn)`
     .primary {
         align-self: center;
     }
+    border-radius: 0 0 23px 23px;
 `;
 
 export default QuickTradingPage;

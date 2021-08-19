@@ -33,7 +33,7 @@ import styled from 'styled-components';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { useTranslation } from 'react-i18next';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { FlexDiv, FlexDivColumn } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
 import longIcon from 'assets/images/long_small.svg';
@@ -80,6 +80,8 @@ type QuickTradingTableProps = {
     orderFilter: OrderFilterEnum;
     coinFilter: CoinFilterEnum;
     optionFilter: OptionFilterEnum;
+    isSingleMode: boolean;
+    resetFilters: any;
 };
 
 const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
@@ -90,6 +92,8 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     optionFilter,
     isLoading,
     children,
+    isSingleMode,
+    resetFilters,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -248,7 +252,13 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                         {sortedMarkets.map((order: ExtendedOrderItem, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
-                                    <StyledTableCell style={{ paddingRight: 0 }}>
+                                    <StyledTableCell
+                                        style={
+                                            index === sortedMarkets.length - 1 && isSingleMode
+                                                ? { paddingRight: 0, borderRadius: 0 }
+                                                : { paddingRight: 0 }
+                                        }
+                                    >
                                         {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && (
                                             <YellowDotContainer>
                                                 <YellowDot />
@@ -316,7 +326,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                         </StyledTableCell>
                                     )}
                                     <StyledTableCell
-                                        style={index === sortedMarkets.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                                        style={
+                                            index === sortedMarkets.length - 1 && !isSingleMode
+                                                ? { borderRadius: '0 0 23px 0' }
+                                                : {}
+                                        }
                                     >
                                         {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() &&
                                             isWalletConnected && (
@@ -358,7 +372,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                             );
                         })}
                     </TableBody>
-                    {sortedMarkets.length !== 0 && (
+                    {sortedMarkets.length !== 0 && !isSingleMode && (
                         <TableFooter>
                             <TableRow>
                                 <PaginationWrapper
@@ -421,6 +435,15 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                 </LoaderContainer>
             )}
             {sortedMarkets.length === 0 && !isLoading && children}
+            {sortedMarkets.length > 0 && !isLoading && isSingleMode && (
+                <ViewAllOrdersContainer>
+                    <>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.quick-trading.view-all-orders')}
+                        </Button>
+                    </>
+                </ViewAllOrdersContainer>
+            )}
         </>
     );
 };
@@ -529,11 +552,21 @@ const LoaderContainer = styled(FlexDivColumn)`
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
+    border-radius: 0 0 23px 23px;
 `;
 
 const SideImage = styled.img`
     width: 32px;
     margin-left: 4px;
+`;
+
+const ViewAllOrdersContainer = styled(FlexDivColumn)`
+    min-height: 150px;
+    background: #04045a;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 0 0 23px 23px;
+    padding-bottom: 16px;
 `;
 
 export default QuickTradingTable;

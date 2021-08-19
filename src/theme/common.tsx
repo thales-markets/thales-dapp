@@ -311,6 +311,16 @@ export const FilterButton = styled(Button)`
         border-radius: 32px;
         color: #00f9ff;
     }
+    &:disabled {
+        background: transparent !important;
+        color: #f6f6fe !important;
+        opacity: 0.4;
+    }
+    &.selected:disabled {
+        background: #0a2e66 !important;
+        color: #00f9ff !important;
+        opacity: 0.4;
+    }
 `;
 
 export const IconLink = styled.a``;
