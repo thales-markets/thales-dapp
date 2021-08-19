@@ -37,6 +37,7 @@ import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { useEffect } from 'react';
 import useUserAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import { useLocation } from 'react-router-dom';
+import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',
@@ -101,6 +102,9 @@ const QuickTradingPage: React.FC<any> = () => {
     const userAssetsQuery = useUserAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected && optionsMarkets.length > 0 && !isBuyMode,
     });
+
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
 
     const trimOrders = useMemo(() => {
         let trimOrders = orders;
@@ -209,8 +213,6 @@ const QuickTradingPage: React.FC<any> = () => {
         setAssetSearch('');
         setOrderHash(null);
     };
-
-    console.log(filteredOrders);
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
@@ -322,6 +324,7 @@ const QuickTradingPage: React.FC<any> = () => {
                             optionFilter={optionFilter}
                             isSingleMode={isSingleMode}
                             resetFilters={resetFilters}
+                            exchangeRates={exchangeRates}
                         >
                             <NoOrders>
                                 <>

@@ -5,7 +5,13 @@ import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../../H
 import { PaginationWrapper, StyledTableRow } from '../../Home/MarketsTable/MarketsTable';
 import { TableFooter } from '@material-ui/core';
 import Pagination from '../../Home/MarketsTable/Pagination';
-import { formatCurrency, formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatPercentage,
+    getPercentageDifference,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import {
     DisplayOrder,
@@ -33,12 +39,15 @@ import styled from 'styled-components';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { useTranslation } from 'react-i18next';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { Button, FlexDiv, FlexDivColumn } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Image } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import arrowDown from 'assets/images/arrow-down.svg';
+import arrowUp from 'assets/images/arrow-up.svg';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -82,6 +91,7 @@ type QuickTradingTableProps = {
     optionFilter: OptionFilterEnum;
     isSingleMode: boolean;
     resetFilters: any;
+    exchangeRates: Rates | null;
 };
 
 const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
@@ -94,6 +104,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     children,
     isSingleMode,
     resetFilters,
+    exchangeRates,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -250,13 +261,19 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                     </TableHead>
                     <TableBody>
                         {sortedMarkets.map((order: ExtendedOrderItem, index: any) => {
+                            const currentAssetPrice = exchangeRates?.[order.market.currencyKey] || 0;
+                            const strikeAndAssetPriceDifference = getPercentageDifference(
+                                currentAssetPrice,
+                                order.market.strikePrice
+                            );
+
                             return (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell
                                         style={
                                             index === sortedMarkets.length - 1 && isSingleMode
-                                                ? { paddingRight: 0, borderRadius: 0 }
-                                                : { paddingRight: 0 }
+                                                ? { paddingRight: 0, paddingLeft: 0, borderRadius: 0 }
+                                                : { paddingRight: 0, paddingLeft: 0 }
                                         }
                                     >
                                         {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && (
@@ -265,8 +282,33 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                             </YellowDotContainer>
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell style={{ textAlign: 'left' }}>
+                                    <StyledTableCell style={{ textAlign: 'left', paddingRight: 0, paddingLeft: 0 }}>
                                         <FlexDiv>
+                                            <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
+                                                {currentAssetPrice > order.market.strikePrice ? (
+                                                    <RedText
+                                                        style={{
+                                                            display: isFinite(strikeAndAssetPriceDifference)
+                                                                ? 'flex'
+                                                                : 'none',
+                                                        }}
+                                                    >
+                                                        <PriceArrow src={arrowDown} />
+                                                        <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                    </RedText>
+                                                ) : (
+                                                    <GreenText
+                                                        style={{
+                                                            display: isFinite(strikeAndAssetPriceDifference)
+                                                                ? 'flex'
+                                                                : 'none',
+                                                        }}
+                                                    >
+                                                        <PriceArrow src={arrowUp} />
+                                                        <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                    </GreenText>
+                                                )}
+                                            </LightTooltip>
                                             <Currency.Icon
                                                 synthIconStyle={{
                                                     width: 24,
@@ -298,14 +340,14 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                     <StyledTableCell>
                                         {formatShortDateWithTime(order.market.maturityDate)}
                                     </StyledTableCell>
-                                    <StyledTableCell style={{ width: '140px' }}>
+                                    <StyledTableCell style={{ width: '120px' }}>
                                         {formatCurrencyWithSign(
                                             USD_SIGN,
                                             order.displayOrder.fillableTotal,
                                             DEFAULT_OPTIONS_DECIMALS
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell style={isBuyMode ? { textAlign: 'left' } : { width: '140px' }}>
+                                    <StyledTableCell style={isBuyMode ? { textAlign: 'left' } : { width: '120px' }}>
                                         {isBuyMode
                                             ? `${formatCurrencyWithSign(
                                                   USD_SIGN,
@@ -319,7 +361,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                               )}
                                     </StyledTableCell>
                                     {!isBuyMode && (
-                                        <StyledTableCell style={{ width: '140px' }}>
+                                        <StyledTableCell style={{ width: '120px' }}>
                                             {isWalletConnected
                                                 ? formatCurrency(order.walletBalance || 0, DEFAULT_OPTIONS_DECIMALS)
                                                 : EMPTY_VALUE}
@@ -567,6 +609,30 @@ const ViewAllOrdersContainer = styled(FlexDivColumn)`
     align-items: center;
     border-radius: 0 0 23px 23px;
     padding-bottom: 16px;
+`;
+
+const PriceArrow = styled(Image)`
+    width: 14px;
+    height: 14px;
+    margin-bottom: -2px;
+`;
+
+const GreenText = styled.span`
+    color: #01b977;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+    width: 70px;
+`;
+
+const RedText = styled.span`
+    color: #be2727;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+    width: 70px;
 `;
 
 export default QuickTradingTable;
