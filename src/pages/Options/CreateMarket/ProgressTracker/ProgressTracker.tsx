@@ -167,9 +167,14 @@ const Wrapper = styled(FlexDiv)`
     img {
         width: 24px;
     }
-    @media screen and (max-width: 375px) {
+
+    @media screen and (max-width: 900px) {
+        padding: 0 48px;
+    }
+
+    @media screen and (max-width: 600px) {
         display: block;
-        margin-top: 1900px;
+        padding: 0 48%;
     }
 `;
 
@@ -180,7 +185,7 @@ const Line = styled.div`
     &.fill {
         background: #3936c7;
     }
-    @media screen and (max-width: 375px) {
+    @media screen and (max-width: 600px) {
         width: 4px;
         height: 60px;
         background: #b8c6e5;
@@ -199,7 +204,15 @@ const Label = styled(Text)`
     top: 40px;
     left: -46px;
     width: 160px;
-    @media screen and (max-width: 375px) {
+    @media screen and (max-width: 900px) {
+        left: -40px !important;
+        text-align: center;
+        width: 100px;
+    }
+    @media screen and (max-width: 600px) {
         top: 26px;
+        text-align: center;
+        left: -67px !important;
+        width: 160px;
     }
 `;

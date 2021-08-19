@@ -1,4 +1,32 @@
-@media screen and (max-width: 375px) {
+@media screen and (max-width: 900px) {
+    .create-market-title {
+        padding: 50px 50px 0px !important;
+        font-family: Titillium Web !important;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 31px;
+        line-height: 42px;
+        color: #F6F6FE;
+    }
+
+    .create-market-content {
+        display: block;
+        padding: 50px 50px !important;
+
+        &__info {
+            font-family: Titillium Web !important;;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+            letter-spacing: 0.25px;
+            color: #F6F6FE;
+            width: 90%;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
 
     .react-select__control {
         border: 2px solid #0C1C68;
@@ -7,31 +35,25 @@
     }
 
     .create-market-title {
-        padding: 178px 21px 0px 20px !important;
+        padding: 40px 21px 0px 20px !important;
         font-family: Titillium Web !important;
         font-style: normal;
         font-weight: bold;
         font-size: 31px;
         line-height: 42px;
         color: #F6F6FE;
-        width: 334px;
         height: 84px;
-        left: 0px;
-        top: 0px;
-        position: absolute;
+        width: 90%;
+        display: block;
     }
     
 
     .create-market-content {
-        padding: 110px 20px 0px !important;
-        width: 335px;
-        left: 0px;
-        top: 165px;
-        position: absolute;
+        padding: 50px 20px 0px !important;
         display: block;
 
         &__wrapper {
-            width: 340px;
+            width: 100%;
         }
 
         &__info {
@@ -43,13 +65,14 @@
             letter-spacing: 0.25px;
             color: #F6F6FE;
             height: 268px;
-            width: 345px;
+            width: 100%;
+            display: block;
         }
 
         &__parameters {
             display: block !important;
             &__field {
-                width: 304px;
+                width: 100%;
                 margin-bottom: 20px !important;
             }
             
@@ -81,7 +104,7 @@
                     margin-top: 10px;
                     position: absolute;
                     &--last {
-                        margin-left: 155px !important;
+                        margin-left: 50% !important;
                         width: 46.5%;
                         float: left;
                         overflow: hidden;
@@ -116,7 +139,7 @@
             margin-bottom: 10px;
             width: 100%;
         }
-        
+
         &__bottom {
             margin-top: 10px;
             width: 100%;
