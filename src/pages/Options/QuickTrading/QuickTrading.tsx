@@ -98,7 +98,7 @@ const QuickTradingPage: React.FC<any> = () => {
     const orders: ExtendedOrderItem[] = ordersQuery.isSuccess && ordersQuery.data ? ordersQuery.data : [];
     const myOrders: ExtendedOrderItem[] = myOrdersQuery.isSuccess && myOrdersQuery.data ? myOrdersQuery.data : [];
 
-    const optionsMarkets = orders.map((order) => order.market);
+    const optionsMarkets = [...orders.map((order) => order.market), ...myOrders.map((order) => order.market)];
     const userAssetsQuery = useUserAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected && optionsMarkets.length > 0 && !isBuyMode,
     });
@@ -107,7 +107,7 @@ const QuickTradingPage: React.FC<any> = () => {
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
 
     const trimOrders = useMemo(() => {
-        let trimOrders = orders;
+        let trimOrders = orderFilter === OrderFilterEnum.MyOrders ? myOrders : orders;
         if (!isBuyMode && isWalletConnected && !isSingleMode) {
             const assets = userAssetsQuery.isSuccess && userAssetsQuery.data ? userAssetsQuery.data : [];
             const optionsAdresses: string[] = [];
@@ -123,29 +123,62 @@ const QuickTradingPage: React.FC<any> = () => {
                 }
             });
             trimOrders = trimOrders.filter((order) =>
-                optionsAdresses.includes(order.rawOrder.takerToken.toLowerCase())
+                optionsAdresses.includes(
+                    orderFilter === OrderFilterEnum.MyOrders
+                        ? order.rawOrder.makerToken.toLowerCase()
+                        : order.rawOrder.takerToken.toLowerCase()
+                )
             );
             trimOrders.forEach((order) => {
-                order.walletBalance = optionsBalance[order.rawOrder.takerToken.toLowerCase()] || 0;
+                order.walletBalance =
+                    optionsBalance[
+                        orderFilter === OrderFilterEnum.MyOrders
+                            ? order.rawOrder.makerToken.toLowerCase()
+                            : order.rawOrder.takerToken.toLowerCase()
+                    ] || 0;
             });
         }
         return trimOrders;
-    }, [userAssetsQuery.data, orders, tradingModeFilter, isWalletConnected, walletAddress, orderHash]);
+    }, [
+        userAssetsQuery.data,
+        orders,
+        myOrders,
+        tradingModeFilter,
+        isWalletConnected,
+        walletAddress,
+        orderHash,
+        orderFilter,
+    ]);
 
     const singleOrders = useMemo(() => {
         if (orderHash !== null) {
-            const singleBuy = myOrders.filter(
+            const singleOrders = trimOrders.filter(
                 (order) => order.displayOrder.orderHash.toLowerCase() === orderHash.toLowerCase()
             );
-            const singleSell = trimOrders.filter(
-                (order) => order.displayOrder.orderHash.toLowerCase() === orderHash.toLowerCase()
-            );
+            if (!isBuyMode && isWalletConnected) {
+                const assets = userAssetsQuery.isSuccess && userAssetsQuery.data ? userAssetsQuery.data : [];
+                const optionsAdresses: string[] = [];
+                const optionsBalance: OptionsBalance = {};
+                assets.forEach((asset) => {
+                    if (asset.balances.long > 0) {
+                        optionsAdresses.push(asset.market.longAddress.toLowerCase());
+                        optionsBalance[asset.market.longAddress.toLowerCase()] = asset.balances.long;
+                    }
+                    if (asset.balances.short > 0) {
+                        optionsAdresses.push(asset.market.shortAddress.toLowerCase());
+                        optionsBalance[asset.market.shortAddress.toLowerCase()] = asset.balances.short;
+                    }
+                });
+                singleOrders.forEach((order) => {
+                    order.walletBalance = optionsBalance[order.rawOrder.takerToken.toLowerCase()] || 0;
+                });
+            }
 
-            return [...singleBuy, ...singleSell];
+            return singleOrders;
         }
 
         return [];
-    }, [trimOrders, myOrders]);
+    }, [trimOrders, myOrders, userAssetsQuery.data, isWalletConnected]);
 
     const filteredAllOrders = useMemo(() => {
         if (orderHash !== null) return [];
