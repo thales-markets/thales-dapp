@@ -1,31 +1,31 @@
 .white {
-    color: #f6f6fe;
+    color: #f6f6fe !important;
 }
 
 .pale-grey {
-    color: #f6f6fe;
+    color: #f6f6fe !important;
 }
 
 .dark {
-    color: #04045a;
+    color: #04045a !important;
 }
 
 .dusty {
-    color: #748bc6;
+    color: #748bc6 !important;
 }
 
 .grey {
-    color: #b8c6e5;
+    color: #b8c6e5 !important;
 }
 
 .green {
-    color: #4fbf67;
+    color: #4fbf67 !important;
 }
 
 .red {
-    color: #e53720;
+    color: #e53720 !important;
 }
 
 .warning {
-    color: orange;
+    color: orange !important;
 }

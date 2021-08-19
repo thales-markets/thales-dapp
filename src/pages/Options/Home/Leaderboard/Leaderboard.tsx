@@ -27,7 +27,7 @@ import { USD_SIGN } from 'constants/currency';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
-import './media.css';
+import './media.scss';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
@@ -36,6 +36,7 @@ const headCells: HeadCell[] = [
     { id: 4, label: 'Display Name', sortable: false },
     { id: 5, label: 'Trades', sortable: true },
     { id: 6, label: 'Volume', sortable: true },
+    { id: 7, label: 'NetProfit', sortable: true },
 ];
 
 enum OrderDirection {
@@ -141,6 +142,15 @@ const LeaderboardPage: React.FC<any> = () => {
                         return a.volume - b.volume;
                     }
                 }
+
+                if (orderBy === 7) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.netProfit - a.netProfit;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.netProfit - b.netProfit;
+                    }
+                }
                 return 0;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
@@ -151,7 +161,7 @@ const LeaderboardPage: React.FC<any> = () => {
             <MainWrapper>
                 <FlexDivColumnCentered className="leaderboard">
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
-                    <FlexDivColumnCentered className="leaderboard__wrapper" style={{ padding: '40px 140px' }}>
+                    <FlexDivColumnCentered className="leaderboard__wrapper">
                         <FlexDivRow>
                             <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600 }}>
                                 <SearchInput
@@ -247,7 +257,18 @@ const LeaderboardPage: React.FC<any> = () => {
                                                 </StyledTableCell>
                                                 <StyledTableCell>{leader.trades}</StyledTableCell>
                                                 <StyledTableCell>
-                                                    {formatCurrencyWithSign(USD_SIGN, leader.volume)}
+                                                    {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
+                                                >
+                                                    {formatCurrencyWithSign(
+                                                        USD_SIGN,
+                                                        leader.netProfit < 0
+                                                            ? Math.abs(leader.netProfit)
+                                                            : leader.netProfit,
+                                                        2
+                                                    )}
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                         );

@@ -9,6 +9,7 @@ export interface Leaderboard {
     walletAddress: string;
     trades: number;
     volume: number;
+    netProfit: number;
 }
 
 const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<[Leaderboard]>) => {
@@ -19,7 +20,12 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<[Le
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             return result.data.map((record: any) => {
-                return { walletAddress: record[0], volume: record[1].volume, trades: record[1].trades };
+                return {
+                    walletAddress: record[0],
+                    volume: record[1].volume,
+                    trades: record[1].trades,
+                    netProfit: record[1].netProfit,
+                };
             });
         },
         options
