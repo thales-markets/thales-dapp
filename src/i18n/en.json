@@ -163,7 +163,8 @@
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
-            "quick-trading-label": "Quick trading"
+            "quick-trading-label": "Quick trading",
+            "earn-label": "Earn"
         }
     },
     "modals": {
@@ -247,6 +248,41 @@
                 "time-remaining-col": "time remaining",
                 "openorders": "open orders",
                 "actions": "actions"
+            }
+        },
+        "earn": {
+            "snx-stakers": {
+                "tab-title": "SNX stakers",
+                "retro-airdrop": {
+                    "title": "Retro Airdrop"
+                },
+                "ongoing-rewards": {
+                    "title": "Ongoing Rewards"
+                },
+                "retro-rewards": {
+                    "title": "Retro Rewards"
+                },
+                "amount-to-claim": "Amount to claim",
+                "claim": "Claim",
+                "claiming": "Claiming...",
+                "claimed": "Claimed",
+                "claim-unlocked": "Claim Unlocked",
+                "claiming-unlocked": "Claiming Unlocked...",
+                "unlocked": "Unlocked",
+                "locked": "Locked",
+                "total": "Total"
+            },
+            "thales-staking": {
+                "tab-title": "Thales staking"
+            },
+            "vesting": {
+                "tab-title": "Vesting"
+            },
+            "lp-staking": {
+                "tab-title": "LP staking"
+            },
+            "thales-airdrop": {
+                "tab-title": "Thales users airdrop"
             }
         },
         "create-market": {

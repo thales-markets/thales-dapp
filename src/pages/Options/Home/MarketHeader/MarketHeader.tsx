@@ -21,6 +21,9 @@ import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg'
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
 import burger from 'assets/images/burger.svg';
+import earnDefaultIcon from 'assets/images/sidebar/earn-default.svg';
+import earnSelectedIcon from 'assets/images/sidebar/earn-selected.svg';
+
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -145,6 +148,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={ROUTES.Options.Earn}>
+                        <SidebarItem
+                            imgSrc={earnDefaultIcon}
+                            imgSrcHoverSelected={earnSelectedIcon}
+                            className={route === ROUTES.Options.Earn ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={ROUTES.Options.QuickTrading}>

@@ -3,9 +3,21 @@ import { CurrencyKey } from './currency';
 
 export const QUERY_KEYS = {
     WalletBalances: {
+        Airdrop: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'airdrop',
+            walletAddress,
+            networkId,
+        ],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
+        Vesting: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'vesting',
+            walletAddress,
+            networkId,
+        ],
     },
     Rates: {
         HistoricalRates: (currencyKey: CurrencyKey) => ['rates', 'historicalRates', currencyKey],

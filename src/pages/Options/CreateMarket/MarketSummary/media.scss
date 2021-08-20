@@ -55,12 +55,11 @@
                     font-size: 14px;
                     line-height: 16px;
                     letter-spacing: 0.25px;
-                    color: #F6F6FE;
+                    color: #f6f6fe;
                 }
             }
         }
     }
-
 }
 
 @media screen and (max-width: 600px) {
@@ -76,7 +75,7 @@
         &__price {
             width: 100%;
             position: relative;
-    
+
             &__left {
                 text-align: left !important;
                 padding-left: 5px;
@@ -98,7 +97,7 @@
                     letter-spacing: 1.5px;
                 }
             }
-    
+
             &__right {
                 text-align: right !important;
                 padding-right: 5px;
@@ -120,7 +119,7 @@
                     letter-spacing: 0.25px;
                 }
             }
-    
+
             &__center {
                 position: absolute;
                 &__tip {
