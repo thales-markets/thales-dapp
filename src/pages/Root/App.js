@@ -19,7 +19,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { history } from 'utils/routes';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import LeaderboardPage from 'pages/Options/Home/Leaderboard.ts';
+import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
