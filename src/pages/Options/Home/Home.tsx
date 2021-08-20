@@ -30,7 +30,6 @@ export const Home: React.FC = () => {
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { synthsMap } = snxJSConnector;
     const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
-    const [isOlympics, setIsOlympics] = useState(false);
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
@@ -60,19 +59,15 @@ export const Home: React.FC = () => {
     }, [networkId, optionsMarkets]);
 
     useEffect(() => {
-        if (location.hash === '#overview') {
+        if (location.search === '?anchor=overview') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
-            setIsOlympics(false);
-        } else if (location.hash === '#olympics') {
+        } else if (location.search === '?userFilter2=Olympics') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
-            setIsOlympics(true);
-        } else if (location.hash === '#hot-markets') {
+        } else if (location.search === '?anchor=hot-markets') {
             document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
-            setIsOlympics(false);
         } else {
-            setIsOlympics(false);
         }
-    }, [location.hash]);
+    }, [location]);
 
     return (
         <>
@@ -82,9 +77,11 @@ export const Home: React.FC = () => {
                         <FlexDivColumn style={{ width: '100%' }}>
                             <MarketHeader
                                 route={
-                                    location.hash === '#overview'
+                                    location.search === '?anchor=overview'
                                         ? ROUTES.Options.Overview
-                                        : location.hash === '#olympics'
+                                        : location.search === '?anchor=hot-markets'
+                                        ? ROUTES.Options.Home
+                                        : location.search === '?userFilter2=Olympics'
                                         ? ROUTES.Options.Olympics
                                         : ROUTES.Options.Home
                                 }
@@ -95,11 +92,7 @@ export const Home: React.FC = () => {
 
                         <MarketCreation />
 
-                        <ExploreMarkets
-                            optionsMarkets={optionsMarkets}
-                            exchangeRates={exchangeRates}
-                            olympics={isOlympics}
-                        />
+                        <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
                     </MainWrapper>
                 </Background>
             ) : (

@@ -29,7 +29,6 @@ import { SYNTHS_MAP } from '../../../../constants/currency';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
-import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import { ExploreMarketsMobile } from './ExploreMarketsMobile';
@@ -38,7 +37,6 @@ import './media.scss';
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
-    olympics?: boolean;
 };
 
 export enum OrderDirection {
@@ -87,7 +85,7 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
 
 const defaultOrderBy = 5; // time remaining
 
-const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
+const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -115,20 +113,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const userOrders =
         userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records) ? userOrdersQuery.data.records : [];
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
-
-    useEffect(() => {
-        if (olympics) {
-            if (queryString.parse(searchFilter.hash)) {
-                history.replace({
-                    pathname: searchFilter.pathname,
-                    search: queryString.stringify({
-                        userFilter2: [SecondaryFilters.Olympics],
-                    }),
-                });
-                setSecondLevelUserFilter(SecondaryFilters.Olympics);
-            }
-        }
-    }, [olympics]);
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
@@ -177,7 +161,9 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
+        if (!secondLevelUserFilterParamValue) {
+            setSecondLevelUserFilter(SecondaryFilters.All);
+        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
             Object.keys(SecondaryFilters).forEach((key) => {
                 if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue)
                     setSecondLevelUserFilter(secondLevelUserFilterParamValue);
@@ -262,12 +248,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
 
         if (!isDisabled && userFilterValue !== filter) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({ userFilter: [filter] }),
             });
         } else if (userFilterValue === filter && userFilter !== PrimaryFilters.All) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: '',
             });
@@ -291,7 +277,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
 
         if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
@@ -299,14 +285,14 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 }),
             });
         } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.All) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
                 }),
             });
         } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter2: [filter],
@@ -366,7 +352,11 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
             ></ExploreMarketsMobile>
-            <div className="markets-desktop" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
+            <div
+                id="explore-markets"
+                className="markets-desktop"
+                style={{ padding: '0 150px 50px 150px', width: '100%' }}
+            >
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.keys(PrimaryFilters)
                         .filter(
