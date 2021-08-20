@@ -399,7 +399,7 @@ export const StyledTableRow = withStyles(() => ({
             borderBottomLeftRadius: '23px',
             borderBottomRightRadius: '23px',
         },
-        '&:last-child > td': {
+        '&:last-child > td:first-child': {
             borderBottomLeftRadius: '23px',
         },
         '&:last-child a:last-child td': {

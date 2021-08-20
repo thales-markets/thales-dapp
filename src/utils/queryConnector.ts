@@ -44,4 +44,9 @@ export const refetchWatchlistedMarkets = (walletAddress: string, networkId: Netw
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Watchlist(walletAddress, networkId));
 };
 
+export const refetchOrders = (networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Orders('buys', networkId));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.User.Orders('sells', networkId));
+};
+
 export default queryConnector;
