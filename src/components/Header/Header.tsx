@@ -21,7 +21,11 @@ enum AnimationState {
     Paused,
 }
 
-const Header: React.FC = () => {
+type HeaderProps = {
+    isAnimationAvailable: boolean;
+};
+
+const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
     const { t } = useTranslation();
     const cookies = new Cookies();
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
@@ -80,26 +84,28 @@ const Header: React.FC = () => {
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
-                <LightTooltip title="Toogle animation">
-                    <>
-                        {animationState === AnimationState.Active && (
-                            <StyledPauseIcon
-                                onClick={() => {
-                                    cookies.set('animation', false);
-                                    setAnimationState(AnimationState.Paused);
-                                }}
-                            />
-                        )}
-                        {animationState === AnimationState.Paused && (
-                            <StyledPlayIcon
-                                onClick={() => {
-                                    cookies.set('animation', true);
-                                    setAnimationState(AnimationState.Active);
-                                }}
-                            />
-                        )}
-                    </>
-                </LightTooltip>
+                {isAnimationAvailable && (
+                    <LightTooltip title="Toogle animation">
+                        <>
+                            {animationState === AnimationState.Active && (
+                                <StyledPauseIcon
+                                    onClick={() => {
+                                        cookies.set('animation', false);
+                                        setAnimationState(AnimationState.Paused);
+                                    }}
+                                />
+                            )}
+                            {animationState === AnimationState.Paused && (
+                                <StyledPlayIcon
+                                    onClick={() => {
+                                        cookies.set('animation', true);
+                                        setAnimationState(AnimationState.Active);
+                                    }}
+                                />
+                            )}
+                        </>
+                    </LightTooltip>
+                )}
 
                 <NavLink to={ROUTES.Options.Home}>
                     <Button className="primary" style={{ marginLeft: '60px', fontSize: 16 }}>

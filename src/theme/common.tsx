@@ -73,12 +73,13 @@ export const Background = styled.section`
         }
         position: relative;
         z-index: 2;
-        background: transparent;
+        &.hide-background {
+            background: transparent;
+        }
 
         & ~ section {
             position: relative;
             z-index: 2;
-            background: transparent;
             &:not(:last-of-type):after {
                 content: '';
                 display: block;
@@ -97,6 +98,9 @@ export const Background = styled.section`
             }
             &:last-of-type {
                 backdrop-filter: blur(20px);
+            }
+            &.hide-background {
+                background: transparent;
             }
         }
     }

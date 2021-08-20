@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from 'components/Header';
 import { FlexDivColumn, Section } from 'theme/common';
 import Footer from './Footer/Footer';
@@ -9,39 +9,54 @@ import Partners from './Sections/Partners';
 import Thales from './Sections/ThalesSection';
 import GetStarted from './Sections/GetStarted';
 import Faq from './Sections/Faq';
+import { WebGLRenderer } from 'three';
 
 const Home: React.FC = () => {
+    const [isAnimationAvailable, setIsAnimationAvailable] = useState(true);
+
     useEffect(() => {
-        setupThreeJS();
+        let renderer: WebGLRenderer | null = null;
+        try {
+            renderer = new WebGLRenderer();
+            if (renderer !== null) {
+                setupThreeJS(renderer);
+            }
+        } catch {
+            setIsAnimationAvailable(false);
+            console.log('Animation not available');
+        }
+
         return () => {
-            removeThreeJS();
+            if (renderer !== null) {
+                removeThreeJS(renderer);
+            }
         };
     }, []);
 
     return (
         <>
-            <Section id="landing-hero" class="hero">
+            <Section id="landing-hero" class={isAnimationAvailable ? 'hero hide-background' : 'hero'}>
                 <FlexDivColumn>
-                    <Header />
+                    <Header isAnimationAvailable={isAnimationAvailable} />
                     <HeroSection />
                 </FlexDivColumn>
             </Section>
-            <Section id="cards">
+            <Section id="cards" class={isAnimationAvailable ? 'hide-background' : ''}>
                 <Cards />
             </Section>
-            <Section id="partners">
+            <Section id="partners" class={isAnimationAvailable ? 'hide-background' : ''}>
                 <Partners />
             </Section>
-            <Section id="get-started">
+            <Section id="get-started" class={isAnimationAvailable ? 'hide-background' : ''}>
                 <GetStarted />
             </Section>
-            <Section id="thales">
+            <Section id="thales" class={isAnimationAvailable ? 'hide-background' : ''}>
                 <Thales />
             </Section>
-            <Section id="faq">
+            <Section id="faq" class={isAnimationAvailable ? 'hide-background' : ''}>
                 <Faq />
             </Section>
-            <Footer></Footer>
+            <Footer isAnimationAvailable={isAnimationAvailable}></Footer>
         </>
     );
 };
