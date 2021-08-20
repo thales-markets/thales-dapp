@@ -83,7 +83,7 @@ export const Home: React.FC = () => {
                                         ? ROUTES.Options.Home
                                         : location.search === '?userFilter2=Olympics'
                                         ? ROUTES.Options.Olympics
-                                        : ROUTES.Options.Home
+                                        : ROUTES.Options.Overview
                                 }
                             />
                         </FlexDivColumn>
