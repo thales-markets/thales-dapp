@@ -118,14 +118,16 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     useEffect(() => {
         if (olympics) {
-            setSecondLevelUserFilter(SecondaryFilters.Olympics);
+            if (queryString.parse(searchFilter.hash)) {
+                history.replace({
+                    pathname: searchFilter.pathname,
+                    search: queryString.stringify({
+                        userFilter2: [SecondaryFilters.Olympics],
+                    }),
+                });
+                setSecondLevelUserFilter(SecondaryFilters.Olympics);
+            }
         }
-        // else {
-        //     const userFilterParamValue = queryString.parse(searchFilter.search).userFilter;
-        //     if (userFilter === PrimaryFilters.Olympics && !userFilterParamValue) {
-        //         setUserFilter(PrimaryFilters.All);
-        //     }
-        // }
     }, [olympics]);
 
     const filteredOptionsMarkets = useMemo(() => {
@@ -222,7 +224,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 
-    const searchSecondLevelFilteredOptionsMarket = useMemo(() => {
+    const secondLevelFilteredOptionsMarket = useMemo(() => {
         let secondLevelFilteredOptionsMarket = filteredOptionsMarkets;
         switch (secondLevelUserFilter) {
             case SecondaryFilters.Bitcoin:
@@ -284,7 +286,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        if (secondLevelUserFilter !== SecondaryFilters.All && filter !== PrimaryFilters.All && !isDisabled) {
+        if (!isDisabled && secondLevelUserFilter !== SecondaryFilters.All && filter !== PrimaryFilters.All) {
             setSecondLevelUserFilter(SecondaryFilters.All);
         }
 
@@ -300,54 +302,30 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const onClickSecondLevelUserFilter = (filter: SecondaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
-        if (!isDisabled && filter === SecondaryFilters.Olympics) {
+
+        if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
             history.replace({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
-                    userFilter: [filter],
+                    userFilter: [userFilterValue],
+                    userFilter2: [filter],
+                }),
+            });
+        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.All) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                }),
+            });
+        } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
+            history.replace({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter2: [filter],
                 }),
             });
         }
-        // else if (!isDisabled && filter === SecondaryFilters.Olympics && userFilter === filter) {
-        //     history.replace({
-        //         pathname: searchFilter.pathname,
-        //         search: '',
-        //     });
-        // }
-
-        if (filter !== SecondaryFilters.Olympics) {
-            if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
-                history.replace({
-                    pathname: searchFilter.pathname,
-                    search: queryString.stringify({
-                        userFilter: [userFilterValue],
-                        userFilter2: [filter],
-                    }),
-                });
-            } else if (
-                userFilter &&
-                secondLevelFilterValue === filter &&
-                secondLevelUserFilter !== SecondaryFilters.All
-            ) {
-                history.replace({
-                    pathname: searchFilter.pathname,
-                    search: queryString.stringify({
-                        userFilter: [userFilterValue],
-                    }),
-                });
-            } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
-                history.replace({
-                    pathname: searchFilter.pathname,
-                    search: queryString.stringify({
-                        userFilter2: [filter],
-                    }),
-                });
-            }
-        }
-
-        // if (!isDisabled && filter === SecondaryFilters.Olympics) {
-        //     setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
-        // }
 
         if (!isDisabled) {
             setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.All : filter);
@@ -396,7 +374,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 setPhaseFilter={setPhaseFilter}
                 assetSearch={assetSearch}
                 setAssetSearch={setAssetSearch}
-                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
+                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
             ></ExploreMarketsMobile>
@@ -439,15 +417,54 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                 key !== SecondaryFilters.All
                         )
                         .map((key) => {
+                            const isCustomMarketsEmpty =
+                                filteredOptionsMarkets.filter(({ customMarket }) => customMarket).length === 0;
                             const isBtcMarketsEmpty =
                                 filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
                                     .length === 0;
                             const isEthMarketsEmpty =
                                 filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
                                     .length === 0;
-                            const isDisabled =
-                                (SecondaryFilters.Bitcoin === key && isBtcMarketsEmpty) ||
-                                (SecondaryFilters.Ethereum === key && isEthMarketsEmpty);
+                            const assetSearchNoBtc =
+                                filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                                    return (
+                                        currencyKey === SYNTHS_MAP.sBTC &&
+                                        (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                                            getSynthName(currencyKey)
+                                                ?.toLowerCase()
+                                                .includes(assetSearch.toLowerCase()))
+                                    );
+                                }).length === 0 &&
+                                assetSearch.length > 0 &&
+                                SecondaryFilters.Bitcoin === key;
+                            const assetSearchNoEth =
+                                filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                                    return (
+                                        currencyKey === SYNTHS_MAP.sETH &&
+                                        (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                                            getSynthName(currencyKey)
+                                                ?.toLowerCase()
+                                                .includes(assetSearch.toLowerCase()))
+                                    );
+                                }).length === 0 &&
+                                assetSearch.length > 0 &&
+                                SecondaryFilters.Ethereum === key;
+                            let isDisabled = false;
+                            switch (key) {
+                                case SecondaryFilters.Bitcoin:
+                                    isBtcMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
+                                    break;
+                                case SecondaryFilters.Ethereum:
+                                    isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
+                                    break;
+                                case SecondaryFilters.Olympics:
+                                    (userFilter !== PrimaryFilters.All && isCustomMarketsEmpty) ||
+                                    assetSearch.length > 0
+                                        ? (isDisabled = true)
+                                        : (isDisabled = false);
+                                    break;
+                            }
+                            isDisabled = isDisabled || assetSearchNoBtc || assetSearchNoEth;
                             return (
                                 <UserFilter
                                     className={`${
@@ -506,7 +523,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
                 <MarketsTable
                     exchangeRates={exchangeRates}
-                    optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
+                    optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
                     watchlistedMarkets={watchlistedMarkets}
                     isLoading={false} // TODO put logic
                     phase={phaseFilter}
