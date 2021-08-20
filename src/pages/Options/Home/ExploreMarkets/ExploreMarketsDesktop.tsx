@@ -161,9 +161,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        if (!secondLevelUserFilterParamValue) {
-            setSecondLevelUserFilter(SecondaryFilters.All);
-        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
+        if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
             Object.keys(SecondaryFilters).forEach((key) => {
                 if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue)
                     setSecondLevelUserFilter(secondLevelUserFilterParamValue);
