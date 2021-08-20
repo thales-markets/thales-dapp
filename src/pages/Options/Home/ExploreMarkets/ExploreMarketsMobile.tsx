@@ -24,7 +24,8 @@ import { getSynthName } from 'utils/snxJSConnector';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
-    optionsMarkets: OptionsMarkets;
+    allMarkets: OptionsMarkets;
+    filteredMarkets: OptionsMarkets;
     phaseFilter: any;
     setPhaseFilter: (data: any) => void;
     userFilter: any;
@@ -47,7 +48,8 @@ export enum SortByEnum {
 }
 
 export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
-    optionsMarkets,
+    allMarkets,
+    filteredMarkets,
     phaseFilter,
     setPhaseFilter,
     userFilter,
@@ -193,15 +195,15 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                 )
                                 .map((key) => {
                                     const isCustomMarketsEmpty =
-                                        optionsMarkets.filter(({ customMarket }) => customMarket).length === 0;
+                                        allMarkets.filter(({ customMarket }) => customMarket).length === 0;
                                     const isBtcMarketsEmpty =
-                                        optionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
+                                        allMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
                                             .length === 0;
                                     const isEthMarketsEmpty =
-                                        optionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
+                                        allMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
                                             .length === 0;
                                     const assetSearchNoBtc =
-                                        optionsMarkets.filter(({ asset, currencyKey }) => {
+                                        allMarkets.filter(({ asset, currencyKey }) => {
                                             return (
                                                 currencyKey === SYNTHS_MAP.sBTC &&
                                                 (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
@@ -213,7 +215,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         assetSearch.length > 0 &&
                                         SecondaryFilters.Bitcoin === key;
                                     const assetSearchNoEth =
-                                        optionsMarkets.filter(({ asset, currencyKey }) => {
+                                        allMarkets.filter(({ asset, currencyKey }) => {
                                             return (
                                                 currencyKey === SYNTHS_MAP.sETH &&
                                                 (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
@@ -315,8 +317,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                 </DropDownWrapper>
             </SortyByMobile>
 
-            {optionsMarkets.length > 0 ? (
-                <MarketCardMobile exchangeRates={exchangeRates} optionsMarkets={optionsMarkets}></MarketCardMobile>
+            {filteredMarkets.length > 0 ? (
+                <MarketCardMobile exchangeRates={exchangeRates} optionsMarkets={filteredMarkets}></MarketCardMobile>
             ) : (
                 <NoMarkets>
                     <Container>

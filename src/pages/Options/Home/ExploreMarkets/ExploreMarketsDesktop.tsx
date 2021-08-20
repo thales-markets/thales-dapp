@@ -361,7 +361,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 setPhaseFilter={setPhaseFilter}
                 assetSearch={assetSearch}
                 setAssetSearch={setAssetSearch}
-                optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
+                allMarkets={filteredOptionsMarkets}
+                filteredMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
             ></ExploreMarketsMobile>
