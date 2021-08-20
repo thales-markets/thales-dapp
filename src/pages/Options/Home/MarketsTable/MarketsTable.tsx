@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
-import { HistoricalOptionsMarketInfo, OptionsMarkets } from 'types/options';
+import { OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
     Paper,
@@ -27,7 +27,7 @@ import {
 } from './components';
 import Pagination from './Pagination';
 import styled from 'styled-components';
-import { PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
+import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import star from 'assets/images/star.svg';
@@ -58,6 +58,10 @@ type MarketsTableProps = {
     watchlistedMarkets: string[];
     isLoading?: boolean;
     phase: PhaseFilterEnum;
+    orderBy: number;
+    setOrderBy: (data: any) => void;
+    orderDirection: OrderDirection;
+    setOrderDirection: (data: any) => void;
     onChange: any;
 };
 
@@ -78,16 +82,21 @@ const headCells: HeadCell[] = [
     { id: 8, label: 'Phase', sortable: false },
 ];
 
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
 const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
-    ({ optionsMarkets, watchlistedMarkets, children, phase, onChange, exchangeRates }) => {
+    ({
+        optionsMarkets,
+        watchlistedMarkets,
+        children,
+        phase,
+        onChange,
+        exchangeRates,
+        orderBy,
+        setOrderDirection,
+        orderDirection,
+        setOrderBy,
+    }) => {
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const networkId = useSelector((state: RootState) => getNetworkId(state));
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -98,8 +107,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         };
         const [rowsPerPage, setRowsPerPage] = React.useState(10);
         const numberOfPages = Math.ceil(optionsMarkets.length / rowsPerPage) || 1;
-        const [orderBy, setOrderBy] = useState(defaultOrderBy);
-        const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
         const calcDirection = (cell: HeadCell) => {
             if (orderBy === cell.id) {
@@ -149,29 +156,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         };
 
         const sortedMarkets = useMemo(() => {
-            return optionsMarkets
-                .sort((a, b) => {
-                    switch (orderBy) {
-                        case 1:
-                        case 2:
-                            return sortByField(a, b, orderDirection, 'asset');
-                        case 3:
-                            return sortByAssetPrice(a, b, orderDirection, exchangeRates);
-                        case 4:
-                            return sortByField(a, b, orderDirection, 'strikePrice');
-                        case 5:
-                            return sortByField(a, b, orderDirection, 'poolSize');
-                        case 6:
-                            return sortByTime(a, b, orderDirection);
-                        case 7:
-                            return orderDirection === OrderDirection.ASC
-                                ? a.openOrders - b.openOrders
-                                : b.openOrders - a.openOrders;
-                        default:
-                            return 0;
-                    }
-                })
-                .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+            return optionsMarkets.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
         }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates, rowsPerPage]);
 
         const { t } = useTranslation();
@@ -473,63 +458,6 @@ const RedText = styled.span`
     align-items: center;
     padding-left: 5px;
 `;
-
-export const sortByTime = (
-    a: HistoricalOptionsMarketInfo,
-    b: HistoricalOptionsMarketInfo,
-    direction: OrderDirection
-) => {
-    if (direction === OrderDirection.ASC && a.phaseNum === b.phaseNum) {
-        return a.timeRemaining > b.timeRemaining ? -1 : 1;
-    }
-    if (direction === OrderDirection.DESC && a.phaseNum === b.phaseNum) {
-        return a.timeRemaining > b.timeRemaining ? 1 : -1;
-    }
-
-    return 0;
-};
-
-export const sortByField = (
-    a: HistoricalOptionsMarketInfo,
-    b: HistoricalOptionsMarketInfo,
-    direction: OrderDirection,
-    field: keyof HistoricalOptionsMarketInfo
-) => {
-    if (direction === OrderDirection.ASC) {
-        if (a.phaseNum === b.phaseNum) {
-            return (a[field] as any) > (b[field] as any) ? 1 : -1;
-        }
-    }
-    if (direction === OrderDirection.DESC) {
-        if (a.phaseNum === b.phaseNum) {
-            return (a[field] as any) > (b[field] as any) ? -1 : 1;
-        }
-    }
-
-    return 0;
-};
-
-export const sortByAssetPrice = (
-    a: HistoricalOptionsMarketInfo,
-    b: HistoricalOptionsMarketInfo,
-    direction: OrderDirection,
-    exchangeRates: Rates | null
-) => {
-    const assetPriceA = exchangeRates?.[a.currencyKey] || 0;
-    const assetPriceB = exchangeRates?.[b.currencyKey] || 0;
-    if (direction === OrderDirection.ASC) {
-        if (a.phaseNum === b.phaseNum) {
-            return assetPriceA > assetPriceB ? 1 : -1;
-        }
-    }
-    if (direction === OrderDirection.DESC) {
-        if (a.phaseNum === b.phaseNum) {
-            return assetPriceA > assetPriceB ? -1 : 1;
-        }
-    }
-
-    return 0;
-};
 
 export const countryToCountryCode = (country: string) => {
     if (country) {

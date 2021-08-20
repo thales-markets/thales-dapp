@@ -41,6 +41,12 @@ type ExploreMarketsProps = {
     olympics?: boolean;
 };
 
+export enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
 export enum PhaseFilterEnum {
     trading = 'trading',
     maturity = 'maturity',
@@ -79,6 +85,8 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
     );
 };
 
+const defaultOrderBy = 5; // time remaining
+
 const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -89,6 +97,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const [userFilter, setUserFilter] = useState<PrimaryFilters>(PrimaryFilters.All);
     const [secondLevelUserFilter, setSecondLevelUserFilter] = useState<SecondaryFilters>(SecondaryFilters.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const [orderBy, setOrderBy] = useState(defaultOrderBy);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const searchFilter = useLocation();
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
@@ -178,12 +188,34 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
         () => {
             return assetSearch
-                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
-                      return (
-                          asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
-                      );
-                  })
+                ? filteredOptionsMarkets
+                      .filter(({ asset, currencyKey }) => {
+                          return (
+                              asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                              getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
+                          );
+                      })
+                      .sort((a, b) => {
+                          switch (orderBy) {
+                              case 1:
+                              case 2:
+                                  return sortByField(a, b, orderDirection, 'asset');
+                              case 3:
+                                  return sortByAssetPrice(a, b, orderDirection, exchangeRates);
+                              case 4:
+                                  return sortByField(a, b, orderDirection, 'strikePrice');
+                              case 5:
+                                  return sortByField(a, b, orderDirection, 'poolSize');
+                              case 6:
+                                  return sortByTime(a, b, orderDirection);
+                              case 7:
+                                  return orderDirection === OrderDirection.ASC
+                                      ? a.openOrders - b.openOrders
+                                      : b.openOrders - a.openOrders;
+                              default:
+                                  return 0;
+                          }
+                      })
                 : filteredOptionsMarkets;
         },
         [filteredOptionsMarkets, assetSearch],
@@ -214,7 +246,27 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        return secondLevelFilteredOptionsMarket;
+        return secondLevelFilteredOptionsMarket.sort((a, b) => {
+            switch (orderBy) {
+                case 1:
+                case 2:
+                    return sortByField(a, b, orderDirection, 'asset');
+                case 3:
+                    return sortByAssetPrice(a, b, orderDirection, exchangeRates);
+                case 4:
+                    return sortByField(a, b, orderDirection, 'strikePrice');
+                case 5:
+                    return sortByField(a, b, orderDirection, 'poolSize');
+                case 6:
+                    return sortByTime(a, b, orderDirection);
+                case 7:
+                    return orderDirection === OrderDirection.ASC
+                        ? a.openOrders - b.openOrders
+                        : b.openOrders - a.openOrders;
+                default:
+                    return 0;
+            }
+        });
     }, [filteredOptionsMarkets, secondLevelUserFilter, phaseFilter]);
 
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
@@ -345,6 +397,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 assetSearch={assetSearch}
                 setAssetSearch={setAssetSearch}
                 optionsMarkets={assetSearch ? searchFilteredOptionsMarkets : searchSecondLevelFilteredOptionsMarket}
+                orderBy={orderBy}
+                setOrderBy={setOrderBy}
             ></ExploreMarketsMobile>
             <div className="markets-desktop" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
@@ -457,6 +511,10 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     isLoading={false} // TODO put logic
                     phase={phaseFilter}
                     onChange={watchlistedMarketsQuery.refetch}
+                    orderBy={orderBy}
+                    setOrderBy={setOrderBy}
+                    orderDirection={orderDirection}
+                    setOrderDirection={setOrderDirection}
                 >
                     <NoMarkets>
                         {userFilter !== PrimaryFilters.MyMarkets && (
@@ -523,6 +581,63 @@ const isRecentlyAdded = (a: Date, b: Date) => {
     const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
     return Math.abs(Math.floor((utc2 - utc1) / _MS_PER_DAY)) <= 7;
+};
+
+export const sortByField = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection,
+    field: keyof HistoricalOptionsMarketInfo
+) => {
+    if (direction === OrderDirection.ASC) {
+        if (a.phaseNum === b.phaseNum) {
+            return (a[field] as any) > (b[field] as any) ? 1 : -1;
+        }
+    }
+    if (direction === OrderDirection.DESC) {
+        if (a.phaseNum === b.phaseNum) {
+            return (a[field] as any) > (b[field] as any) ? -1 : 1;
+        }
+    }
+
+    return 0;
+};
+
+export const sortByTime = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection
+) => {
+    if (direction === OrderDirection.ASC && a.phaseNum === b.phaseNum) {
+        return a.timeRemaining > b.timeRemaining ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC && a.phaseNum === b.phaseNum) {
+        return a.timeRemaining > b.timeRemaining ? 1 : -1;
+    }
+
+    return 0;
+};
+
+export const sortByAssetPrice = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection,
+    exchangeRates: Rates | null
+) => {
+    const assetPriceA = exchangeRates?.[a.currencyKey] || 0;
+    const assetPriceB = exchangeRates?.[b.currencyKey] || 0;
+    if (direction === OrderDirection.ASC) {
+        if (a.phaseNum === b.phaseNum) {
+            return assetPriceA > assetPriceB ? 1 : -1;
+        }
+    }
+    if (direction === OrderDirection.DESC) {
+        if (a.phaseNum === b.phaseNum) {
+            return assetPriceA > assetPriceB ? -1 : 1;
+        }
+    }
+
+    return 0;
 };
 
 export default ExploreMarketsDesktop;
