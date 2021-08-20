@@ -184,40 +184,47 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        return filteredMarkets;
-    }, [optionsMarkets, userFilter, phaseFilter, isWalletConnected, walletAddress, watchlistedMarkets, assetSearch]);
+        return filteredMarkets.sort((a, b) => {
+            switch (orderBy) {
+                case 1:
+                case 2:
+                    return sortByField(a, b, orderDirection, 'asset');
+                case 3:
+                    return sortByAssetPrice(a, b, orderDirection, exchangeRates);
+                case 4:
+                    return sortByField(a, b, orderDirection, 'strikePrice');
+                case 5:
+                    return sortByField(a, b, orderDirection, 'poolSize');
+                case 6:
+                    return sortByTime(a, b, orderDirection);
+                case 7:
+                    return orderDirection === OrderDirection.ASC
+                        ? a.openOrders - b.openOrders
+                        : b.openOrders - a.openOrders;
+                default:
+                    return 0;
+            }
+        });
+    }, [
+        optionsMarkets,
+        userFilter,
+        phaseFilter,
+        isWalletConnected,
+        walletAddress,
+        watchlistedMarkets,
+        assetSearch,
+        orderBy,
+    ]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
         () => {
             return assetSearch
-                ? filteredOptionsMarkets
-                      .filter(({ asset, currencyKey }) => {
-                          return (
-                              asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                              getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
-                          );
-                      })
-                      .sort((a, b) => {
-                          switch (orderBy) {
-                              case 1:
-                              case 2:
-                                  return sortByField(a, b, orderDirection, 'asset');
-                              case 3:
-                                  return sortByAssetPrice(a, b, orderDirection, exchangeRates);
-                              case 4:
-                                  return sortByField(a, b, orderDirection, 'strikePrice');
-                              case 5:
-                                  return sortByField(a, b, orderDirection, 'poolSize');
-                              case 6:
-                                  return sortByTime(a, b, orderDirection);
-                              case 7:
-                                  return orderDirection === OrderDirection.ASC
-                                      ? a.openOrders - b.openOrders
-                                      : b.openOrders - a.openOrders;
-                              default:
-                                  return 0;
-                          }
-                      })
+                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                      return (
+                          asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
+                      );
+                  })
                 : filteredOptionsMarkets;
         },
         [filteredOptionsMarkets, assetSearch],
@@ -248,27 +255,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        return secondLevelFilteredOptionsMarket.sort((a, b) => {
-            switch (orderBy) {
-                case 1:
-                case 2:
-                    return sortByField(a, b, orderDirection, 'asset');
-                case 3:
-                    return sortByAssetPrice(a, b, orderDirection, exchangeRates);
-                case 4:
-                    return sortByField(a, b, orderDirection, 'strikePrice');
-                case 5:
-                    return sortByField(a, b, orderDirection, 'poolSize');
-                case 6:
-                    return sortByTime(a, b, orderDirection);
-                case 7:
-                    return orderDirection === OrderDirection.ASC
-                        ? a.openOrders - b.openOrders
-                        : b.openOrders - a.openOrders;
-                default:
-                    return 0;
-            }
-        });
+        return secondLevelFilteredOptionsMarket;
     }, [filteredOptionsMarkets, secondLevelUserFilter, phaseFilter]);
 
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
