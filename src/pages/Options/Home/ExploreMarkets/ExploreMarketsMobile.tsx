@@ -378,3 +378,10 @@ const Container = styled.div`
     flex: 1;
     border-radius: 23px;
 `;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    background: #04045a;
+    flex: 1;
+    border-radius: 23px;
+`;

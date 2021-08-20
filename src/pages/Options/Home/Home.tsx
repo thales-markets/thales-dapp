@@ -66,8 +66,11 @@ export const Home: React.FC = () => {
         } else if (location.hash === '#olympics') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
             setIsOlympics(true);
-        } else {
+        } else if (location.hash === '#hot-markets') {
             document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
+            setIsOlympics(false);
+        } else {
+            setIsOlympics(false);
         }
     }, [location.hash]);
 
