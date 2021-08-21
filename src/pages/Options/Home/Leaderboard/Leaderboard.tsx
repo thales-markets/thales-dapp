@@ -110,21 +110,24 @@ const LeaderboardPage: React.FC<any> = () => {
     ]);
 
     const leaderboardData = useMemo(() => {
-        const searchLeader = leaderboard.filter((leader) => {
-            if (searchString === '') return true;
-            if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
-                return true;
-            }
-
-            const disp = displayNamesMap.get(leader.walletAddress);
-
-            if (disp) {
-                return disp.toLowerCase().includes(searchString.toLowerCase());
-            }
-
-            return false;
+        const data = leaderboard.map((leader, index) => {
+            return { rank: index + 1, ...leader };
         });
-        return searchLeader
+        return data
+            .filter((leader) => {
+                if (searchString === '') return true;
+                if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                    return true;
+                }
+
+                const disp = displayNamesMap.get(leader.walletAddress);
+
+                if (disp) {
+                    return disp.toLowerCase().includes(searchString.toLowerCase());
+                }
+
+                return false;
+            })
             .sort((a, b) => {
                 if (orderBy === 5) {
                     if (orderDirection === OrderDirection.DESC) {
@@ -153,8 +156,9 @@ const LeaderboardPage: React.FC<any> = () => {
                 }
                 return 0;
             })
+
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, searchString, leaderboard, orderBy, orderDirection]);
+    }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
@@ -243,7 +247,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                                             ></Image>
                                                         )}
                                                 </StyledTableCell>
-                                                <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
+                                                <StyledTableCell>{(leader as any).rank}</StyledTableCell>
                                                 <StyledTableCell>
                                                     <StyledLink
                                                         href={getEtherscanAddressLink(networkId, leader.walletAddress)}
