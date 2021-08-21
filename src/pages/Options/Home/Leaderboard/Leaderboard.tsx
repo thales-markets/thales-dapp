@@ -110,8 +110,39 @@ const LeaderboardPage: React.FC<any> = () => {
     ]);
 
     const leaderboardData = useMemo(() => {
-        const data = leaderboard.map((leader, index) => {
-            return { rank: index + 1, ...leader };
+        const sortedData = leaderboard.sort((a, b) => {
+            if (orderBy === 5) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.trades - a.trades;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.trades - b.trades;
+                }
+            }
+            if (orderBy === 6) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.volume - a.volume;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.volume - b.volume;
+                }
+            }
+
+            if (orderBy === 7) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.netProfit - a.netProfit;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.netProfit - b.netProfit;
+                }
+            }
+            return 0;
+        });
+        const data = sortedData.map((leader, index) => {
+            if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+            else {
+            }
+            return { rank: sortedData.length - index, ...leader };
         });
         return data
             .filter((leader) => {
@@ -128,35 +159,6 @@ const LeaderboardPage: React.FC<any> = () => {
 
                 return false;
             })
-            .sort((a, b) => {
-                if (orderBy === 5) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.trades - a.trades;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.trades - b.trades;
-                    }
-                }
-                if (orderBy === 6) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.volume - a.volume;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.volume - b.volume;
-                    }
-                }
-
-                if (orderBy === 7) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.netProfit - a.netProfit;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.netProfit - b.netProfit;
-                    }
-                }
-                return 0;
-            })
-
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
 
@@ -237,15 +239,12 @@ const LeaderboardPage: React.FC<any> = () => {
                                             <StyledTableRow key={index}>
                                                 <StyledTableCell></StyledTableCell>
                                                 <StyledTableCell>
-                                                    {page === 0 &&
-                                                        index < 3 &&
-                                                        orderDirection === OrderDirection.DESC &&
-                                                        orderBy === 6 && (
-                                                            <Image
-                                                                src={getMedal(index)}
-                                                                style={{ width: 40, height: 40 }}
-                                                            ></Image>
-                                                        )}
+                                                    {(leader as any).rank <= 3 && (
+                                                        <Image
+                                                            src={getMedal(leader)}
+                                                            style={{ width: 40, height: 40 }}
+                                                        ></Image>
+                                                    )}
                                                 </StyledTableCell>
                                                 <StyledTableCell>{(leader as any).rank}</StyledTableCell>
                                                 <StyledTableCell>
@@ -316,13 +315,13 @@ interface HeadCell {
 
 export default LeaderboardPage;
 
-const getMedal = (index: number) => {
-    switch (index) {
-        case 0:
-            return gold;
+const getMedal = (leader: any) => {
+    switch (leader.rank) {
         case 1:
-            return silver;
+            return gold;
         case 2:
+            return silver;
+        case 3:
             return bronze;
         default:
             return '';
