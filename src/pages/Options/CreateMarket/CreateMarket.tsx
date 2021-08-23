@@ -731,6 +731,11 @@ export const CreateMarket: React.FC = () => {
                                                 startDate={Today}
                                                 selected={maturityDate}
                                                 endDate={maturityDate}
+                                                onFocus={(e) =>
+                                                    document.body.clientWidth < 600
+                                                        ? (e.target.readOnly = true)
+                                                        : (e.target.readOnly = false)
+                                                }
                                                 onChange={(d: Date) => setMaturityDate(d)}
                                                 readOnly={isCreatingMarket || isMarketCreated}
                                             />
@@ -752,6 +757,11 @@ export const CreateMarket: React.FC = () => {
                                                 dateFormat="h:mm aa"
                                                 showTimeSelectOnly={true}
                                                 showTimeSelect={true}
+                                                onFocus={(e) =>
+                                                    document.body.clientWidth < 600
+                                                        ? (e.target.readOnly = true)
+                                                        : (e.target.readOnly = false)
+                                                }
                                                 selected={convertUTCToLocalDate(maturityDate)}
                                                 onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
                                                 readOnly={isCreatingMarket || isMarketCreated}
