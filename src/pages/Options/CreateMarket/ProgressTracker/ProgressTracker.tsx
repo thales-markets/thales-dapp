@@ -111,10 +111,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
 
             {props.showLongProcess && (
                 <FlexDiv
-                    className={
-                        (!props.isMarketCreated || props.isLongApproved ? 'responsive-hide' : '') +
-                        ' progress-tracker-step'
-                    }
+                    className={(!props.isMarketCreated ? 'responsive-hide' : '') + ' progress-tracker-step'}
                     style={{ alignItems: 'center', position: 'relative', flex: props.showShortProcess ? 1 : 0 }}
                 >
                     <Image
@@ -134,10 +131,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
 
             {props.showShortProcess && (
                 <FlexDiv
-                    className={
-                        (!props.isMarketCreated || props.isShortApproved ? 'responsive-hide' : '') +
-                        ' progress-tracker-step'
-                    }
+                    className={(!props.isMarketCreated ? 'responsive-hide' : '') + ' progress-tracker-step'}
                     style={{ alignItems: 'center', position: 'relative', flex: 0 }}
                 >
                     <Image

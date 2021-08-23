@@ -132,17 +132,21 @@
         
     }
 
-    .button-div-responsive {
-        display: block !important;
-
-        &__upper {
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        &__bottom {
-            margin-top: 10px;
-            width: 100%;
+    .progress-tracker-controls {
+        margin-bottom: 25px !important;
+        &__button-div-responsive {
+            display: block !important;
+    
+            &__upper {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+    
+            &__bottom {
+                margin-top: 10px;
+                width: 100%;
+            }
         }
     }
+    
 }

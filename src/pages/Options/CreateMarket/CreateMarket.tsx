@@ -148,6 +148,7 @@ export const CreateMarket: React.FC = () => {
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    let isCurrencySelected = false;
 
     const marketQuery = useBinaryOptionsMarketQuery(market, {
         enabled: isMarketCreated,
@@ -624,14 +625,17 @@ export const CreateMarket: React.FC = () => {
                                                 );
                                             }}
                                             onBlur={() => {
-                                                currencyKey
-                                                    ? setIsCurrencyKeyValid(true)
-                                                    : setIsCurrencyKeyValid(false);
+                                                !isCurrencySelected
+                                                    ? currencyKey
+                                                        ? setIsCurrencyKeyValid(true)
+                                                        : setIsCurrencyKeyValid(false)
+                                                    : '';
                                             }}
                                             options={assetsOptions}
                                             placeholder={t('common.eg-val', { val: CRYPTO_CURRENCY_MAP.BTC })}
                                             value={currencyKey}
                                             onChange={(option: any) => {
+                                                isCurrencySelected = true;
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
                                             }}
@@ -1060,9 +1064,12 @@ export const CreateMarket: React.FC = () => {
                         showLongProcess={sellLong}
                         showShortProcess={sellShort}
                     ></ProgressTracker>
-                    <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 120 }}>
+                    <FlexDivColumnCentered
+                        className="progress-tracker-controls"
+                        style={{ alignItems: 'center', marginBottom: 120 }}
+                    >
                         <div
-                            className="button-div-responsive"
+                            className="progress-tracker-controls__button-div-responsive"
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -1080,7 +1087,7 @@ export const CreateMarket: React.FC = () => {
                                         or
                                     </Text>
                                     <Button
-                                        className="tertiary button-div-responsive__bottom"
+                                        className="tertiary progress-tracker-controls__button-div-responsive__bottom"
                                         onClick={() => navigateToOptionsMarket(market)}
                                     >
                                         Go to market
