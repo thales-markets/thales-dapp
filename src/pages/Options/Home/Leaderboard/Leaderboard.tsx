@@ -28,6 +28,7 @@ import { StyledLink } from 'pages/Options/Market/components/MarketOverview/Marke
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import './media.scss';
+import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
@@ -203,10 +204,16 @@ const LeaderboardPage: React.FC<any> = () => {
                                                     style={cell.sortable ? { cursor: 'pointer' } : {}}
                                                 >
                                                     <TableHeaderLabel
-                                                        className={
-                                                            cell.sortable && orderBy === cell.id ? 'selected' : ''
-                                                        }
+                                                        className={`
+                                                            ${
+                                                                cell.sortable && orderBy === cell.id ? 'selected' : ''
+                                                            }  ${
+                                                            cell.id === 7 ? 'leaderboard__columns__net-profit' : ''
+                                                        }`}
                                                     >
+                                                        {cell.id === 7 && (
+                                                            <TooltipIcon title="Profit is only calculated on the matured markets"></TooltipIcon>
+                                                        )}
                                                         {cell.label}
                                                     </TableHeaderLabel>
                                                     {cell.sortable && (

@@ -1,98 +1,3 @@
-// .leaderboard {
-//     width: 100%;
-// }
-
-// .leaderboard__wrapper {
-// }
-
-// .leaderboard__table {
-// }
-
-// }
-
-// @media (max-width: 1400px) {
-//     .leaderboard__wrapper {
-//         padding-right: 50px !important;
-//     }
-// }
-
-// @media (max-width: 1000px) {
-//     .leaderboard__columns > tr > th:first-child,
-//     .leaderboard__tableBody > tr > td:first-child {
-//         display: none;
-//     }
-//     .leaderboard__tableBody > tr:last-child > td:nth-child(2) {
-//         border-bottom-left-radius: 23px !important;
-//     }
-
-//     .leaderboard__columns > tr > th:nth-child(2) {
-//         border-top-left-radius: 23px !important;
-//     }
-// }
-
-// @media (max-width: 900px) {
-//     .leaderboard__columns > tr > th:first-child,
-//     .leaderboard__columns > tr > th:nth-child(2),
-//     .leaderboard__tableBody > tr > td:first-child,
-//     .leaderboard__tableBody > tr > td:nth-child(2) {
-//         display: none;
-//     }
-
-//     .leaderboard__tableBody > tr:last-child > td:nth-child(3) {
-//         border-bottom-left-radius: 23px !important;
-//     }
-
-//     .leaderboard__columns > tr > th:nth-child(3) {
-//         border-top-left-radius: 23px !important;
-//     }
-
-//     .leaderboard__tableBody > tr > td {
-//     }
-// }
-
-// @media (max-width: 768px) {
-//     .leaderboard__wrapper {
-//         padding-left: 120px !important;
-//         padding-right: 30px !important;
-//     }
-//     .leaderboard__table {
-//         table-layout: fixed;
-//     }
-//     .leaderboard__tableBody > tr > td,
-//     .leaderboard__columns > tr > th {
-//         font-size: 12px;
-//         padding: 10px;
-//         max-width: 120px;
-//         width: 100%;
-//     }
-
-//     .leaderboard__tableBody > tr > td:nth-child(3),
-//     .leaderboard__columns > tr > th:nth-child(3) {
-//         width: 50px;
-//     }
-
-//     .leaderboard__icon {
-//         display: none;
-//     }
-
-//     .leaderboard__search {
-//         font-size: 12px !important;
-//     }
-// }
-
-// @media (max-width: 512px) {
-//     .leaderboard__wrapper {
-//         padding-left: 100px !important;
-//         padding-right: 10px !important;
-//     }
-//     .leaderboard__tableBody > tr > td,
-//     .leaderboard__columns > tr > th {
-//         font-size: 10px;
-//         padding: 6px;
-//         max-width: 60px;
-//     }
-// }
-
 .leaderboard {
     width: 100%;
     &__wrapper {
@@ -106,6 +11,19 @@
     &__search {
     }
     &__columns {
+        &__net-profit {
+            .tooltip-icon {
+                border: 1px solid #f6f6fe !important;
+                border-radius: 50%;
+                padding: 1px;
+                width: 18px;
+                height: 18px;
+                padding: 2px;
+                position: relative;
+                top: 4px;
+                right: 6px;
+            }
+        }
         & > tr {
             th:first-child {
                 border-top-left-radius: 23px !important;
