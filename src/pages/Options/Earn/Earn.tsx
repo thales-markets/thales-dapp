@@ -19,6 +19,7 @@ import useRetroAirdropQuery from '../../../queries/walletBalances/useRetroAirdro
 import ThalesStaking from './ThalesStaking';
 import ongoingAirdropHashes from '../../../utils/contracts/ongoing-airdrop-hashes-period-1.json';
 import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
+import { ethers } from 'ethers';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -125,7 +126,6 @@ const EarnPage: React.FC = () => {
                 }
             }
         } catch (e) {
-            console.log(e);
             setRetroRewardsTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsClaimingRetroRewards(false);
         }
@@ -166,11 +166,12 @@ const EarnPage: React.FC = () => {
         try {
             setIsClaimingOngoingAirdrop(true);
             const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
-            const tx = await ongoingAirdropContractWithSigner.claim(
+            console.log(ongoingAirdrop?.index, ongoingAirdrop?.balance, ongoingAirdrop?.proof);
+            const tx = (await ongoingAirdropContractWithSigner.claim(
                 ongoingAirdrop?.index,
                 ongoingAirdrop && ongoingAirdrop.balance,
                 ongoingAirdrop && ongoingAirdrop?.proof
-            );
+            )) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
             if (txResult && txResult.events) {

@@ -13,8 +13,9 @@ const useOngoingAirdropQuery = (
     return useQuery<{ claimed: boolean }>(
         QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId),
         async () => {
-            const claimed1 = await (snxJSConnector as any).ongoingAirdropContract.claimed(index);
-            const claimed = !!bigNumberFormatter(claimed1[0]);
+            const claimed = !!bigNumberFormatter(
+                await (snxJSConnector as any).ongoingAirdropContract.claimed(index)[0]
+            );
             return { claimed };
         },
         options
