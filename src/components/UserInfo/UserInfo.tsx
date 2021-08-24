@@ -31,7 +31,7 @@ const UserInfo: React.FC = () => {
 
     return (
         <>
-            <UserInfoWrapper onClick={setOpen.bind(this, true)}>
+            <UserInfoWrapper className="dapp-header__userInfo" onClick={setOpen.bind(this, true)}>
                 <EthBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</EthBalance>
                 <NetworkWrapper>
                     <AddressWrapper>

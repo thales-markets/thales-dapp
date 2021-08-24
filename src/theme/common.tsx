@@ -73,12 +73,13 @@ export const Background = styled.section`
         }
         position: relative;
         z-index: 2;
-        background: transparent;
+        &.hide-background {
+            background: transparent;
+        }
 
         & ~ section {
             position: relative;
             z-index: 2;
-            background: transparent;
             &:not(:last-of-type):after {
                 content: '';
                 display: block;
@@ -97,6 +98,9 @@ export const Background = styled.section`
             }
             &:last-of-type {
                 backdrop-filter: blur(20px);
+            }
+            &.hide-background {
+                background: transparent;
             }
         }
     }
@@ -310,6 +314,16 @@ export const FilterButton = styled(Button)`
         border: 2px solid #00f9ff;
         border-radius: 32px;
         color: #00f9ff;
+    }
+    &:disabled {
+        background: transparent !important;
+        color: #f6f6fe !important;
+        opacity: 0.4;
+    }
+    &.selected:disabled {
+        background: #0a2e66 !important;
+        color: #00f9ff !important;
+        opacity: 0.4;
     }
 `;
 

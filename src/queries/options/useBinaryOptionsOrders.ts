@@ -10,6 +10,7 @@ import { keyBy } from 'lodash';
 import { ethers } from 'ethers';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import { sortOptionsMarkets } from 'utils/options';
+import { ORDERBOOK_AMOUNT_THRESHOLD } from 'constants/options';
 
 const filterAndPrepareOrders = (
     optionSide: OptionSide,
@@ -27,19 +28,27 @@ const filterAndPrepareOrders = (
                 : optionsAddresses.includes(record.order.makerToken.toLowerCase())
         );
 
-        preparedOrders = filteredOrders.map(
-            (record: any): ExtendedOrderItem => {
-                const preparedOrder: OrderItem = isBuyOrder ? prepBuyOrder(record) : prepSellOrder(record);
-                return {
-                    ...preparedOrder,
-                    market:
-                        marketsAddressMap[
-                            isBuyOrder ? record.order.takerToken.toLowerCase() : record.order.makerToken.toLowerCase()
-                        ],
-                    optionSide,
-                };
-            }
-        );
+        preparedOrders = filteredOrders
+            .map(
+                (record: any): ExtendedOrderItem => {
+                    const preparedOrder: OrderItem = isBuyOrder ? prepBuyOrder(record) : prepSellOrder(record);
+                    return {
+                        ...preparedOrder,
+                        market:
+                            marketsAddressMap[
+                                isBuyOrder
+                                    ? record.order.takerToken.toLowerCase()
+                                    : record.order.makerToken.toLowerCase()
+                            ],
+                        optionSide,
+                    };
+                }
+            )
+            .filter(
+                (order: ExtendedOrderItem) =>
+                    order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
+                    order.displayOrder.potentialReturnAmount >= ORDERBOOK_AMOUNT_THRESHOLD
+            );
     }
 
     return preparedOrders;

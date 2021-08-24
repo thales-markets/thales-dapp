@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PerspectiveCamera } from 'three';
+import { PerspectiveCamera, WebGLRenderer } from 'three';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
@@ -23,15 +23,14 @@ let particleSpeed = MIN_SPEED;
 let speedUp = false;
 let countRender = 0;
 
-const renderer = new THREE.WebGLRenderer();
 const camera = new PerspectiveCamera(75, window.innerWidth / window.screen.height, 1, 1000);
-const onWindowResize = () => {
+const onWindowResize = (renderer: WebGLRenderer) => {
     camera.aspect = window.innerWidth / window.screen.height;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.screen.height);
 };
 
-export const setupThreeJS = () => {
+export const setupThreeJS = (renderer: WebGLRenderer) => {
     if (!init) {
         init = true;
         const root: any = document.getElementById('root');
@@ -94,7 +93,7 @@ export const setupThreeJS = () => {
         const ambientLight = new THREE.AmbientLight(0x04045a);
         scene.add(ambientLight);
 
-        window.addEventListener('resize', onWindowResize, false);
+        window.addEventListener('resize', () => onWindowResize(renderer), false);
 
         const animate = function () {
             renderer.render(scene, camera);
@@ -140,12 +139,12 @@ export const setupThreeJS = () => {
     }
 };
 
-export const removeThreeJS = () => {
+export const removeThreeJS = (renderer: WebGLRenderer) => {
     particleSpeed = MIN_SPEED;
     eventListenerSet = false;
     speedUp = false;
     countRender = 0;
     init = false;
-    window.removeEventListener('resize', onWindowResize);
+    window.removeEventListener('resize', () => onWindowResize(renderer));
     document.getElementById('root')?.removeChild(renderer.domElement);
 };

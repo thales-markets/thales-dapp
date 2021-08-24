@@ -1,0 +1,47 @@
+.dapp-header {
+    &__logoWrapper {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .dapp-header {
+        justify-content: space-between !important;
+        padding-left: 50px !important;
+        padding-right: 90px !important;
+        &__nav {
+            display: none;
+            &--show {
+                display: block;
+                right: 0;
+                left: unset !important;
+                width: 256px !important;
+                span {
+                    display: block !important;
+                }
+            }
+        }
+        &__logoWrapper {
+            display: flex !important;
+            &__logo {
+                height: 32px !important;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .dapp-header {
+        height: 120px !important;
+        flex-direction: column;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+        margin-top: 40px !important;
+        &__logoWrapper {
+            align-self: flex-start;
+            &__burger {
+                top: 40px !important;
+            }
+        }
+    }
+}

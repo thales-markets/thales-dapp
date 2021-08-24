@@ -42,11 +42,21 @@ export const SearchInput = styled.input`
 type SearchMarketProp = {
     assetSearch: string;
     setAssetSearch: (param: string) => void;
+    className?: string;
 };
 
-const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch }) => (
-    <SearchWrapper>
-        <SearchInput onChange={(e) => setAssetSearch(e.target.value)} value={assetSearch} placeholder="Try ETH" />
+const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch, className }) => (
+    <SearchWrapper className={className ? className : ''}>
+        <SearchInput
+            onChange={(e) => setAssetSearch(e.target.value)}
+            onFocus={() =>
+                document.body.clientWidth < 600
+                    ? document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' })
+                    : ''
+            }
+            value={assetSearch}
+            placeholder="Try ETH"
+        />
     </SearchWrapper>
 );
 

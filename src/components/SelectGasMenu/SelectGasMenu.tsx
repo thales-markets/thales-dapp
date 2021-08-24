@@ -67,6 +67,14 @@ const Text = styled.p`
     line-height: 16px;
     letter-spacing: 0.25px;
     margin-top: 1px !important;
+    @media screen and (max-width: 900px) {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+        text-align: center;
+        letter-spacing: 0.25px;
+    }
 `;
 
 export default SelectGasMenu;

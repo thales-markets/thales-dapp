@@ -134,6 +134,7 @@ export type OrderItem = {
 export type ExtendedOrderItem = OrderItem & {
     market: HistoricalOptionsMarketInfo;
     optionSide: OptionSide;
+    walletBalance?: number;
 };
 
 export type ExtendedOrders = ExtendedOrderItem[];

@@ -29,6 +29,7 @@ export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
             style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"
+            className="tooltip-icon"
         />
     </LightTooltip>
 );

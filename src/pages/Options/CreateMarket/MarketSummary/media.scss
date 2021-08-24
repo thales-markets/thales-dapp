@@ -1,0 +1,138 @@
+@media screen and (max-width: 900px) {
+    .summary-market {
+        &__price {
+            &__left {
+                text-align: left !important;
+                padding-left: 20px;
+                margin-top: -45px;
+
+                &__label {
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 14px !important;
+                    line-height: 24px;
+                    letter-spacing: 0.4px;
+                }
+
+                &__strike-price {
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 16px;
+                    line-height: 24px;
+                    letter-spacing: 1.5px;
+                }
+            }
+
+            &__right {
+                text-align: right !important;
+                padding-right: 20px;
+                margin-top: -45px;
+
+                &__label {
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 14px !important;
+                    line-height: 24px;
+                    letter-spacing: 0.4px;
+                }
+
+                &__current-price {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 16px;
+                    line-height: 24px;
+                    letter-spacing: 0.25px;
+                }
+            }
+
+            &__center {
+                position: absolute;
+                &__tip {
+                    display: block !important;
+                    margin-top: 75px;
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 14px;
+                    line-height: 16px;
+                    letter-spacing: 0.25px;
+                    color: #F6F6FE;
+                }
+            }
+        }
+    }
+
+}
+
+@media screen and (max-width: 600px) {
+    .summary-market {
+        min-height: 130px !important;
+        margin-bottom: 24px;
+
+        &__currency {
+            place-content: baseline;
+            padding-left: 10px;
+        }
+
+        &__price {
+            width: 100%;
+            position: relative;
+    
+            &__left {
+                text-align: left !important;
+                padding-left: 5px;
+                margin-top: 0px;
+
+                &__label {
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 14px;
+                    line-height: 24px;
+                    letter-spacing: 0.4px;
+                }
+
+                &__strike-price {
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 16px;
+                    line-height: 24px;
+                    letter-spacing: 1.5px;
+                }
+            }
+    
+            &__right {
+                text-align: right !important;
+                padding-right: 5px;
+                margin-top: 0px;
+
+                &__label {
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 14px;
+                    line-height: 24px;
+                    letter-spacing: 0.4px;
+                }
+
+                &__current-price {
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 16px;
+                    line-height: 24px;
+                    letter-spacing: 0.25px;
+                }
+            }
+    
+            &__center {
+                position: absolute;
+                &__tip {
+                    display: block !important;
+                    margin-top: 130px;
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 14px;
+                    line-height: 24px;
+                    letter-spacing: 0.4px;
+                }
+            }
+        }
+    }
+}

@@ -199,7 +199,9 @@
                 "end-date": "End date",
                 "strike-price": "Strike price",
                 "open-orders": "Open orders",
-                "difference-text": "Difference between current and strike price"
+                "difference-text": "Difference between current and strike price",
+                "time-remaining": "Time remaining",
+                "result": "Current result"
             },
             "market-creation": {
                 "not-connected": {
@@ -289,7 +291,9 @@
                 "approve-manager-button-label": "Approve",
                 "waiting-for-approval-button-label": "Approving...",
                 "note": "*When creating a market you will:",
-                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.\nPay zero Thales protocol fees for minting options tokens.\nPay Ethereum network fees (gas) when approving the market creation."
+                "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.",
+                "note2": "Pay zero Thales protocol fees for minting options tokens.",
+                "note3": "Pay Ethereum network fees (gas) when approving the market creation."
             }
         },
         "market": {
@@ -554,7 +558,8 @@
             "title": "Quick Trading",
             "mode-label": "I WANT TO",
             "cancel-tooltip": "Click to cancel your order",
-            "counter-offer-button-label": "Make counter offer",
+            "counter-offer-button-label": "Counter",
+            "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",
             "view-all-orders": "View all orders"

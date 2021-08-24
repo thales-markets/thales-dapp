@@ -1,0 +1,152 @@
+@media screen and (max-width: 900px) {
+    .create-market-title {
+        padding: 50px 50px 0px !important;
+        font-family: Titillium Web !important;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 31px;
+        line-height: 42px;
+        color: #F6F6FE;
+    }
+
+    .create-market-content {
+        display: block;
+        padding: 50px 50px !important;
+
+        &__info {
+            font-family: Titillium Web !important;;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+            letter-spacing: 0.25px;
+            color: #F6F6FE;
+            width: 90%;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    .react-select__control {
+        border: 2px solid #0C1C68;
+        background: #0C1C68;
+        mix-blend-mode: normal;
+    }
+
+    .create-market-title {
+        padding: 40px 21px 0px 20px !important;
+        font-family: Titillium Web !important;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 31px;
+        line-height: 42px;
+        color: #F6F6FE;
+        height: 84px;
+        width: 90%;
+        display: block;
+    }
+    
+
+    .create-market-content {
+        padding: 50px 20px 0px !important;
+        display: block;
+
+        &__wrapper {
+            width: 100%;
+        }
+
+        &__info {
+            font-family: Titillium Web !important;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 24px;
+            letter-spacing: 0.25px;
+            color: #F6F6FE;
+            height: 268px;
+            width: 100%;
+            display: block;
+        }
+
+        &__parameters {
+            display: block !important;
+            &__field {
+                width: 100%;
+                margin-bottom: 20px !important;
+            }
+            
+        }
+
+        &__double-fields {
+            width: 101% !important;
+            margin-right: 0px !important;
+            &__field {
+                margin-bottom: 20px !important;
+            }
+        }
+
+        &__multi-fields-parent {
+            position: relative;
+            display: inline-block;
+            width: 105%;
+            margin-bottom: 15px;
+
+            &__double-input-fields {
+                position: absolute;
+                display: block;
+                margin-top: 80px;
+                width: 96%;
+                &__field {
+                    width: 46.5%;
+                    float: left;
+                    overflow: hidden;
+                    margin-top: 10px;
+                    position: absolute;
+                    &--last {
+                        margin-left: 50% !important;
+                        width: 46.5%;
+                        float: left;
+                        overflow: hidden;
+                        margin-top: 10px;
+                        position: absolute;
+                    
+                    }
+                }
+            }
+        
+            &__checkbox {
+                width: 8%;
+                margin-bottom: 33px;
+                margin-top: 100px;
+                float: left;
+            }
+
+            &__slider {
+                width: 90%;
+                margin-top: 87px;
+                float: left;
+            }
+        }
+
+        
+    }
+
+    .progress-tracker-controls {
+        margin-bottom: 25px !important;
+        &__button-div-responsive {
+            display: block !important;
+    
+            &__upper {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+    
+            &__bottom {
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+    }
+    
+}

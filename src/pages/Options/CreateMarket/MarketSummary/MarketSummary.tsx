@@ -10,6 +10,7 @@ import arrowUp from 'assets/images/green-arrow-up.svg';
 import arrowDown from 'assets/images/red-arrow-down.svg';
 import { USD_SIGN } from 'constants/currency';
 import { LightTooltip } from 'pages/Options/Market/components';
+import './media.scss';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
@@ -37,8 +38,14 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
             <SummaryHeader>
                 <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>
             </SummaryHeader>
-            <FlexDivColumn style={{ justifyContent: 'space-around', flex: 0, minHeight: 160 }}>
-                <FlexDivCentered className="text-m pale-grey bold uppercase ls5" style={{ height: 32 }}>
+            <FlexDivColumn
+                className="summary-market"
+                style={{ justifyContent: 'space-around', flex: 0, minHeight: 160 }}
+            >
+                <FlexDivCentered
+                    className="text-m pale-grey bold uppercase ls5 summary-market__currency"
+                    style={{ height: 32 }}
+                >
                     {props.currencyKey && (
                         <>
                             <Currency.Icon
@@ -49,14 +56,22 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                         </>
                     )}
                 </FlexDivCentered>
-                <FlexDivCentered>
-                    <div style={{ flex: 2, textAlign: 'center' }}>
-                        <Text className="text-xs dusty bold">{t('options.create-market.summary.strikePrice')}</Text>
-                        <Text className="text-s pale-grey bold">
+                <FlexDivCentered className="summary-market__price">
+                    <div className="summary-market__price__left" style={{ flex: 2, textAlign: 'center' }}>
+                        <Text className="text-xs dusty bold summary-market__price__left__label">
+                            {t('options.create-market.summary.strikePrice')}
+                        </Text>
+                        <Text className="text-s pale-grey bold summary-market__price__left__strike-price">
                             {formatCurrencyWithSign(USD_SIGN, Number(props.strikingPrice))}
                         </Text>
                     </div>
-                    <div style={{ flex: 1, textAlign: 'center' }}>
+                    <div className="summary-market__price__center" style={{ flex: 1, textAlign: 'center' }}>
+                        <Text
+                            className="text-xs dusty bold summary-market__price__center__tip"
+                            style={{ display: 'none' }}
+                        >
+                            {t('options.create-market.summary.difference')}
+                        </Text>
                         {difference && (
                             <LightTooltip title="Difference between strike and current price">
                                 <FlexDivCentered style={{ alignItems: 'center' }}>
@@ -77,9 +92,11 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                             </LightTooltip>
                         )}
                     </div>
-                    <div style={{ flex: 2, textAlign: 'center' }}>
-                        <Text className="text-xs dusty bold">{t('options.create-market.summary.current')}</Text>
-                        <Text className="text-s pale-grey bold">
+                    <div className="summary-market__price__right" style={{ flex: 2, textAlign: 'center' }}>
+                        <Text className="text-xs dusty bold summary-market__price__right__label">
+                            {t('options.create-market.summary.current')}
+                        </Text>
+                        <Text className="text-s pale-grey bold summary-market__price__right__current-price">
                             {formatCurrencyWithSign(USD_SIGN, Number(props.currentPrice))}
                         </Text>
                     </div>
@@ -145,9 +162,23 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                 <Text className="text-xs bold pale-grey ls25" style={{ marginBottom: 12 }}>
                     {t('options.create-market.summary.note')}
                 </Text>
-                <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
-                    {t('options.create-market.summary.note1')}
-                </Text>
+                <ul style={{ listStyleType: 'disc', color: 'white', marginLeft: '20px' }}>
+                    <li>
+                        <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                            {t('options.create-market.summary.note1')}
+                        </Text>
+                    </li>
+                    <li>
+                        <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                            {t('options.create-market.summary.note2')}
+                        </Text>
+                    </li>
+                    <li>
+                        <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                            {t('options.create-market.summary.note3')}
+                        </Text>
+                    </li>
+                </ul>
             </MarketInfo>
         </Wrapper>
     );
@@ -166,6 +197,14 @@ const Wrapper = styled(FlexDivColumn)`
         background: #00f9ff;
         top: 60px;
         filter: blur(1px);
+    }
+    @media screen and (max-width: 900px) {
+        margin-left: 0px;
+        padding-left: 0px;
+        margin-top: 50px;
+        &:before {
+            background: none;
+        }
     }
 `;
 
@@ -189,6 +228,12 @@ const SummaryHeader = styled.div`
     width: 100%;
     border-bottom: 0.5px solid #748bc6;
     text-align: center;
+    @media screen and (max-width: 600px) {
+        text-align: left;
+        width: 100%;
+        margin-bottom: 0px;
+        text-indent: 5px;
+    }
 `;
 
 // const StrikeBy = styled(FlexDiv)`
@@ -200,6 +245,14 @@ const SummaryHeader = styled.div`
 const MarketInfo = styled(FlexDivColumn)`
     padding: 20px 38px;
     font-size: 12px;
+    @media screen and (max-width: 900px) {
+        padding: 35px 38px;
+    }
+    @media screen and (max-width: 600px) {
+        padding: 0px;
+        width: 100%;
+        margin-top: 45px;
+    }
 `;
 
 export default MarketSummary;

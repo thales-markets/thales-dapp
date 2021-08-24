@@ -4,14 +4,19 @@ import { FlexDiv, Logo, MainWrapper, IconLink } from 'theme/common';
 import { VerticalWrapper, StyledGithubIcon, StyledTwitterIcon, StyledDiscordIcon } from './components';
 import styled from 'styled-components';
 
-export const Background = styled.section`
+export const Background = styled.section<{ isAnimationAvailable: boolean }>`
     position: relative;
     z-index: 2;
-    background: transparent;
+    background: ${(props) =>
+        props.isAnimationAvailable ? 'transparent' : 'linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%)'};
 `;
 
-const Footer: React.FC = () => (
-    <Background>
+type FooterProps = {
+    isAnimationAvailable: boolean;
+};
+
+const Footer: React.FC<FooterProps> = ({ isAnimationAvailable }) => (
+    <Background isAnimationAvailable={isAnimationAvailable}>
         <MainWrapper>
             <VerticalWrapper>
                 <FlexDiv>

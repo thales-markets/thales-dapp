@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button } from 'theme/common';
+import { Button, FlexDiv, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
@@ -20,11 +20,16 @@ import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
-
+import burger from 'assets/images/burger.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
+import { useState } from 'react';
+import './media.scss';
+import { history } from 'utils/routes';
+import { Overlay } from 'components/Header/Header';
+import queryString from 'query-string';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -33,17 +38,51 @@ type MarketHeaderProps = {
     route: string;
 };
 
+enum BurgerState {
+    Init,
+    Show,
+    Hide,
+}
+
 const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
+
+    useMemo(() => {
+        if (showBurgerMenu !== BurgerState.Init) {
+            // const hero = document.getElementById('landing-hero');
+            // if (hero && showBurgerMenu === BurgerState.Show) {
+            //     hero.className += ' higher-z-index';
+            // }
+            // if (hero && showBurgerMenu === BurgerState.Hide) {
+            //     hero.className.replace(' higher-z-index', '');
+            // }
+        }
+    }, [showBurgerMenu]);
+
     return (
         <>
-            <MarketHeaderWrapper id="market-header" showCustomizeLayout={showCustomizeLayout}>
+            <MarketHeaderWrapper id="dapp-header" className="dapp-header" showCustomizeLayout={showCustomizeLayout}>
+                <FlexDiv className="dapp-header__logoWrapper">
+                    <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
+                    <BurdgerIcon
+                        className="dapp-header__logoWrapper__burger"
+                        onClick={() =>
+                            setShowBurdgerMenu(
+                                showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
+                            )
+                        }
+                        hidden={showBurgerMenu === BurgerState.Show}
+                        src={burger}
+                    />
+                </FlexDiv>
+
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 {!isWalletConnected ? (
                     <Button
-                        className="primary"
+                        className="primary dapp-header__connectWallet"
                         style={{ fontSize: '16px', alignSelf: 'center' }}
                         onClick={() => onboardConnector.connectWallet()}
                     >
@@ -53,12 +92,26 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     <UserInfo />
                 )}
             </MarketHeaderWrapper>
-            <Sidebar>
+            <Sidebar
+                className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
+            >
                 <ItemsContainer>
                     <DisplayContentsAnchor href={ROUTES.Home}>
-                        <Logo className="logo" />
+                        <LogoLocal className="logo" />
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.HotMarkets}>
+                    <DisplayContentsAnchor
+                        href={ROUTES.Options.HotMarkets}
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ anchor: ['hot-markets'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                    >
                         <SidebarItem
                             imgSrc={trendingMarketsDefaultIcon}
                             imgSrcHoverSelected={trendingMarketsSelectedIcon}
@@ -68,7 +121,19 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.Overview}>
+                    <DisplayContentsAnchor
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ anchor: ['overview'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                        href={ROUTES.Options.Overview}
+                    >
                         <SidebarItem
                             imgSrc={marketOverviewDefaultIcon}
                             imgSrcHoverSelected={marketOverviewSelectedIcon}
@@ -78,7 +143,19 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.Olympics}>
+                    <DisplayContentsAnchor
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ userFilter2: ['Olympics'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                        href={ROUTES.Options.Olympics}
+                    >
                         <SidebarItem
                             imgSrc={olympicsMarketsDefaultIcon}
                             imgSrcHoverSelected={olympicsMarketsSelectedIcon}
@@ -142,6 +219,12 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     )}
                 </ItemsContainer>
             </Sidebar>
+            <Overlay
+                onClick={() => {
+                    setShowBurdgerMenu(BurgerState.Hide);
+                }}
+                className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
+            ></Overlay>
         </>
     );
 };
@@ -181,11 +264,14 @@ const Sidebar = styled.nav`
     -o-user-select: none;
     user-select: none;
     .logo {
+        @media screen and (max-width: 900px) {
+            background: url(${logoIcon}) center no-repeat;
+        }
         background: url(${logoSmallIcon}) center no-repeat;
     }
 `;
 
-const Logo = styled.div`
+const LogoLocal = styled.div`
     cursor: pointer;
     height: 50px;
     margin-bottom: 60px;
@@ -241,6 +327,13 @@ const SidebarText = styled.span`
     letter-spacing: 0.35px;
     white-space: nowrap;
     display: none;
+`;
+
+const BurdgerIcon = styled.img`
+    position: absolute;
+    right: 30px;
+    top: 32px;
+    padding: 10px;
 `;
 
 export default MarketHeader;

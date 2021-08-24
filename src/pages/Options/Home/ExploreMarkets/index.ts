@@ -1,1 +1,1 @@
-export { default } from './ExploreMarkets';
+export { default } from './ExploreMarketsDesktop';

@@ -5,7 +5,13 @@ import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../../H
 import { PaginationWrapper, StyledTableRow } from '../../Home/MarketsTable/MarketsTable';
 import { TableFooter } from '@material-ui/core';
 import Pagination from '../../Home/MarketsTable/Pagination';
-import { formatCurrency, formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
+import {
+    formatCurrency,
+    formatCurrencyWithSign,
+    formatPercentage,
+    getPercentageDifference,
+    truncToDecimals,
+} from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 import {
     DisplayOrder,
@@ -32,12 +38,16 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ReactComponent as CancelIcon } from 'assets/images/close-red.svg';
 import { useTranslation } from 'react-i18next';
-import { navigateToOptionsMarket } from 'utils/routes';
-import { FlexDiv, FlexDivColumn } from 'theme/common';
+import { buildOptionsMarketLink } from 'utils/routes';
+import { Button, FlexDiv, FlexDivColumn, Image } from 'theme/common';
 import SimpleLoader from 'components/SimpleLoader';
 import { CoinFilterEnum, OptionFilterEnum, OrderFilterEnum, TradingModeFilterEnum } from '../QuickTrading';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
+import { EMPTY_VALUE } from 'constants/placeholder';
+import arrowDown from 'assets/images/arrow-down.svg';
+import arrowUp from 'assets/images/arrow-up.svg';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -59,8 +69,9 @@ const sellHeadCells: HeadCell[] = [
     { id: 2, label: 'Condition', sortable: true },
     { id: 3, label: 'When', sortable: true },
     { id: 4, label: 'Amount to receive', sortable: true },
-    { id: 5, label: 'Options amount to sell', sortable: true },
-    { id: 6, label: 'Actions', sortable: false },
+    { id: 5, label: 'Options to sell', sortable: true },
+    { id: 6, label: 'Options in wallet', sortable: true },
+    { id: 7, label: 'Actions', sortable: false },
 ];
 
 const DEFAULT_ORDER_BY = 3; // market expiration time
@@ -78,6 +89,9 @@ type QuickTradingTableProps = {
     orderFilter: OrderFilterEnum;
     coinFilter: CoinFilterEnum;
     optionFilter: OptionFilterEnum;
+    isSingleMode: boolean;
+    resetFilters: any;
+    exchangeRates: Rates | null;
 };
 
 const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
@@ -88,6 +102,9 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     optionFilter,
     isLoading,
     children,
+    isSingleMode,
+    resetFilters,
+    exchangeRates,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -171,8 +188,10 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                         return sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableTotal');
                     case 5:
                         return isBuyMode
-                            ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturnAmount')
+                            ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturn')
                             : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
+                    case 6:
+                        return sortByField(a, b, orderDirection, 'walletBalance');
                     default:
                         return 0;
                 }
@@ -201,210 +220,283 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
 
     return (
         <>
-            <TableContainer style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }} component={Paper}>
-                <Table aria-label="customized table">
-                    <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
-                        <TableRow>
-                            {headCells.map((cell: HeadCell, index) => {
-                                return (
-                                    <StyledTableCell
-                                        onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                        key={index}
-                                        style={cell.sortable ? { cursor: 'pointer' } : {}}
-                                    >
-                                        <TableHeaderLabel
-                                            className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+            {!isLoading && (
+                <TableContainer
+                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
+                    component={Paper}
+                >
+                    <Table aria-label="customized table">
+                        <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                            <TableRow>
+                                {headCells.map((cell: HeadCell, index) => {
+                                    return (
+                                        <StyledTableCell
+                                            onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                            key={index}
+                                            style={cell.sortable ? { cursor: 'pointer' } : {}}
                                         >
-                                            {cell.label}
-                                        </TableHeaderLabel>
-                                        {cell.sortable && (
-                                            <ArrowsWrapper>
-                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                                    <Arrow
-                                                        src={
-                                                            orderDirection === OrderDirection.ASC
-                                                                ? upSelected
-                                                                : downSelected
-                                                        }
-                                                    />
-                                                ) : (
+                                            <TableHeaderLabel
+                                                className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                            >
+                                                {cell.label}
+                                            </TableHeaderLabel>
+                                            {cell.sortable && (
+                                                <ArrowsWrapper>
+                                                    {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                        <Arrow
+                                                            src={
+                                                                orderDirection === OrderDirection.ASC
+                                                                    ? upSelected
+                                                                    : downSelected
+                                                            }
+                                                        />
+                                                    ) : (
+                                                        <>
+                                                            <Arrow src={up} />
+                                                            <Arrow src={down} />
+                                                        </>
+                                                    )}
+                                                </ArrowsWrapper>
+                                            )}
+                                        </StyledTableCell>
+                                    );
+                                })}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {sortedMarkets.map((order: ExtendedOrderItem, index: any) => {
+                                const currentAssetPrice = exchangeRates?.[order.market.currencyKey] || 0;
+                                const strikeAndAssetPriceDifference = getPercentageDifference(
+                                    currentAssetPrice,
+                                    order.market.strikePrice
+                                );
+
+                                return (
+                                    <StyledTableRow key={index}>
+                                        <StyledTableCell
+                                            style={
+                                                index === sortedMarkets.length - 1 && isSingleMode
+                                                    ? { paddingRight: 0, paddingLeft: 0, borderRadius: 0 }
+                                                    : { paddingRight: 0, paddingLeft: 0 }
+                                            }
+                                        >
+                                            {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && (
+                                                <YellowDotContainer>
+                                                    <YellowDot />
+                                                </YellowDotContainer>
+                                            )}
+                                        </StyledTableCell>
+                                        <StyledTableCell style={{ textAlign: 'left', paddingRight: 0, paddingLeft: 0 }}>
+                                            <FlexDiv>
+                                                <LightTooltip
+                                                    title={t('options.market.overview.difference-text-tooltip')}
+                                                >
+                                                    {currentAssetPrice > order.market.strikePrice ? (
+                                                        <RedText
+                                                            style={{
+                                                                display: isFinite(strikeAndAssetPriceDifference)
+                                                                    ? 'flex'
+                                                                    : 'none',
+                                                            }}
+                                                        >
+                                                            <PriceArrow src={arrowDown} />
+                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                        </RedText>
+                                                    ) : (
+                                                        <GreenText
+                                                            style={{
+                                                                display: isFinite(strikeAndAssetPriceDifference)
+                                                                    ? 'flex'
+                                                                    : 'none',
+                                                            }}
+                                                        >
+                                                            <PriceArrow src={arrowUp} />
+                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                        </GreenText>
+                                                    )}
+                                                </LightTooltip>
+                                                <Currency.Icon
+                                                    synthIconStyle={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        marginRight: 6,
+                                                        marginBottom: -6,
+                                                    }}
+                                                    currencyKey={order.market.currencyKey}
+                                                />{' '}
+                                                <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                                    <StyledLink
+                                                        href={buildOptionsMarketLink(
+                                                            order.market.address,
+                                                            order.optionSide
+                                                        )}
+                                                    >
+                                                        <CryptoName>
+                                                            {marketHeading(order.market, order.optionSide)}
+                                                            {order.optionSide === 'long' ? (
+                                                                <SideImage src={longIcon} />
+                                                            ) : (
+                                                                <SideImage src={shortIcon} />
+                                                            )}
+                                                        </CryptoName>{' '}
+                                                    </StyledLink>
+                                                </LightTooltip>
+                                            </FlexDiv>
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatShortDateWithTime(order.market.maturityDate)}
+                                        </StyledTableCell>
+                                        <StyledTableCell style={{ width: '120px' }}>
+                                            {formatCurrencyWithSign(
+                                                USD_SIGN,
+                                                order.displayOrder.fillableTotal,
+                                                DEFAULT_OPTIONS_DECIMALS
+                                            )}
+                                        </StyledTableCell>
+                                        <StyledTableCell style={isBuyMode ? { textAlign: 'left' } : { width: '120px' }}>
+                                            {isBuyMode
+                                                ? `${formatCurrencyWithSign(
+                                                      USD_SIGN,
+                                                      order.displayOrder.potentialReturnAmount +
+                                                          order.displayOrder.fillableTotal,
+                                                      DEFAULT_OPTIONS_DECIMALS
+                                                  )} (${formatPercentage(order.displayOrder.potentialReturn)})`
+                                                : formatCurrency(
+                                                      order.displayOrder.fillableAmount,
+                                                      DEFAULT_OPTIONS_DECIMALS
+                                                  )}
+                                        </StyledTableCell>
+                                        {!isBuyMode && (
+                                            <StyledTableCell style={{ width: '120px' }}>
+                                                {isWalletConnected
+                                                    ? formatCurrency(order.walletBalance || 0, DEFAULT_OPTIONS_DECIMALS)
+                                                    : EMPTY_VALUE}
+                                            </StyledTableCell>
+                                        )}
+                                        <StyledTableCell
+                                            style={
+                                                index === sortedMarkets.length - 1 && !isSingleMode
+                                                    ? { borderRadius: '0 0 23px 0' }
+                                                    : {}
+                                            }
+                                        >
+                                            {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() &&
+                                                isWalletConnected && (
                                                     <>
-                                                        <Arrow src={up} />
-                                                        <Arrow src={down} />
+                                                        <BuySellButton
+                                                            onClick={() => {
+                                                                openFillOrderModal(order);
+                                                            }}
+                                                            isBuy={isBuyMode}
+                                                            disabled={order.walletBalance === 0}
+                                                        >
+                                                            {isBuyMode ? t('common.buy') : t('common.sell')}
+                                                        </BuySellButton>
+                                                        <LightTooltip
+                                                            title={t(
+                                                                'options.quick-trading.counter-offer-button-tooltip'
+                                                            )}
+                                                        >
+                                                            <CounterOfferButton
+                                                                onClick={() => {
+                                                                    openPlaceOrderModal(order);
+                                                                }}
+                                                                disabled={order.walletBalance === 0}
+                                                            >
+                                                                {t('options.quick-trading.counter-offer-button-label')}
+                                                            </CounterOfferButton>
+                                                        </LightTooltip>
                                                     </>
                                                 )}
-                                            </ArrowsWrapper>
-                                        )}
-                                    </StyledTableCell>
+                                            {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() &&
+                                                isWalletConnected && (
+                                                    <LightTooltip title={t('options.quick-trading.cancel-tooltip')}>
+                                                        <CancelIconContainer
+                                                            onClick={(e: any) => {
+                                                                e.stopPropagation();
+                                                                openCancelOrderModal(order);
+                                                            }}
+                                                        />
+                                                    </LightTooltip>
+                                                )}
+                                        </StyledTableCell>
+                                    </StyledTableRow>
                                 );
                             })}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {sortedMarkets.map((order: ExtendedOrderItem, index: any) => {
-                            return (
-                                <StyledTableRow key={index}>
-                                    <StyledTableCell style={{ paddingRight: 0 }}>
-                                        {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && (
-                                            <YellowDotContainer>
-                                                <YellowDot />
-                                            </YellowDotContainer>
+                        </TableBody>
+                        {sortedMarkets.length !== 0 && !isSingleMode && (
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationWrapper
+                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        count={sortedMarkets.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={memoizedPage}
+                                        onPageChange={handleChangePage}
+                                        ActionsComponent={() => (
+                                            <Pagination
+                                                page={memoizedPage}
+                                                numberOfPages={numberOfPages}
+                                                setPage={setPage}
+                                            />
                                         )}
-                                    </StyledTableCell>
-                                    <StyledTableCell style={{ textAlign: 'left' }}>
-                                        <FlexDiv>
-                                            <Currency.Icon
-                                                synthIconStyle={{
-                                                    width: 24,
-                                                    height: 24,
-                                                    marginRight: 6,
-                                                    marginBottom: -6,
-                                                }}
-                                                currencyKey={order.market.currencyKey}
-                                            />{' '}
-                                            <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                                <StyledLink
-                                                    onClick={() =>
-                                                        navigateToOptionsMarket(order.market.address, order.optionSide)
-                                                    }
-                                                >
-                                                    <CryptoName>
-                                                        {marketHeading(order.market, order.optionSide)}
-                                                        {order.optionSide === 'long' ? (
-                                                            <SideImage src={longIcon} />
-                                                        ) : (
-                                                            <SideImage src={shortIcon} />
-                                                        )}
-                                                    </CryptoName>{' '}
-                                                </StyledLink>
-                                            </LightTooltip>
-                                        </FlexDiv>
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {formatShortDateWithTime(order.market.maturityDate)}
-                                    </StyledTableCell>
-                                    <StyledTableCell style={{ width: '170px' }}>
-                                        {formatCurrencyWithSign(
-                                            USD_SIGN,
-                                            order.displayOrder.fillableTotal,
-                                            DEFAULT_OPTIONS_DECIMALS
-                                        )}
-                                    </StyledTableCell>
-                                    <StyledTableCell style={isBuyMode ? {} : { width: '170px' }}>
-                                        {isBuyMode
-                                            ? `${formatCurrencyWithSign(
-                                                  USD_SIGN,
-                                                  order.displayOrder.potentialReturnAmount +
-                                                      order.displayOrder.fillableTotal,
-                                                  DEFAULT_OPTIONS_DECIMALS
-                                              )} (${formatPercentage(order.displayOrder.potentialReturn)})`
-                                            : formatCurrency(
-                                                  order.displayOrder.fillableAmount,
-                                                  DEFAULT_OPTIONS_DECIMALS
-                                              )}
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        style={index === sortedMarkets.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
-                                    >
-                                        {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() &&
-                                            isWalletConnected && (
-                                                <>
-                                                    <BuySellButton
-                                                        onClick={() => {
-                                                            openFillOrderModal(order);
-                                                        }}
-                                                        isBuy={isBuyMode}
-                                                    >
-                                                        {isBuyMode ? t('common.buy') : t('common.sell')}
-                                                    </BuySellButton>
-                                                    <CounterOfferButton
-                                                        onClick={() => {
-                                                            openPlaceOrderModal(order);
-                                                        }}
-                                                    >
-                                                        {t('options.quick-trading.counter-offer-button-label')}
-                                                    </CounterOfferButton>
-                                                </>
-                                            )}
-                                        {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() &&
-                                            isWalletConnected && (
-                                                <LightTooltip title={t('options.quick-trading.cancel-tooltip')}>
-                                                    <CancelIconContainer
-                                                        onClick={(e: any) => {
-                                                            e.stopPropagation();
-                                                            openCancelOrderModal(order);
-                                                        }}
-                                                    />
-                                                </LightTooltip>
-                                            )}
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            );
-                        })}
-                    </TableBody>
-                    {sortedMarkets.length !== 0 && (
-                        <TableFooter>
-                            <TableRow>
-                                <PaginationWrapper
-                                    rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                    count={sortedMarkets.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={memoizedPage}
-                                    onPageChange={handleChangePage}
-                                    ActionsComponent={() => (
-                                        <Pagination
-                                            page={memoizedPage}
-                                            numberOfPages={numberOfPages}
-                                            setPage={setPage}
-                                        />
-                                    )}
-                                />
-                            </TableRow>
-                        </TableFooter>
-                    )}
-                </Table>
-                {fillOrderModalVisible && selectedOrder !== null && (
-                    <FillOrderModal
-                        order={selectedOrder}
-                        optionSide={selectedOrder.optionSide}
-                        orderSide={isBuyMode ? 'sell' : 'buy'}
-                        onClose={() => setFillOrderModalVisible(false)}
-                        market={selectedOrder.market}
-                    />
-                )}
-                {placeOrderModalVisible && selectedOrder !== null && (
-                    <PlaceOrderModal
-                        optionSide={selectedOrder.optionSide}
-                        orderSide={isBuyMode ? 'buy' : 'sell'}
-                        onClose={() => setPlaceOrderModalVisible(false)}
-                        market={selectedOrder.market}
-                        defaultPrice={truncToDecimals(selectedOrder.displayOrder.price, DEFAULT_OPTIONS_DECIMALS)}
-                        defaultAmount={truncToDecimals(
-                            selectedOrder.displayOrder.fillableAmount,
-                            DEFAULT_OPTIONS_DECIMALS
+                                    />
+                                </TableRow>
+                            </TableFooter>
                         )}
-                    />
-                )}
-                {cancelOrderModalVisible && selectedOrder !== null && (
-                    <CancelOrderModal
-                        order={selectedOrder}
-                        baseToken={
-                            selectedOrder.optionSide === 'long'
-                                ? selectedOrder.market.longAddress
-                                : selectedOrder.market.shortAddress
-                        }
-                        optionSide={selectedOrder.optionSide}
-                        onClose={() => setCancelOrderModalVisible(false)}
-                    />
-                )}
-            </TableContainer>
+                    </Table>
+                    {fillOrderModalVisible && selectedOrder !== null && (
+                        <FillOrderModal
+                            order={selectedOrder}
+                            optionSide={selectedOrder.optionSide}
+                            orderSide={isBuyMode ? 'sell' : 'buy'}
+                            onClose={() => setFillOrderModalVisible(false)}
+                            market={selectedOrder.market}
+                        />
+                    )}
+                    {placeOrderModalVisible && selectedOrder !== null && (
+                        <PlaceOrderModal
+                            optionSide={selectedOrder.optionSide}
+                            orderSide={isBuyMode ? 'buy' : 'sell'}
+                            onClose={() => setPlaceOrderModalVisible(false)}
+                            market={selectedOrder.market}
+                            defaultPrice={truncToDecimals(selectedOrder.displayOrder.price, DEFAULT_OPTIONS_DECIMALS)}
+                            defaultAmount={truncToDecimals(
+                                selectedOrder.displayOrder.fillableAmount,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )}
+                        />
+                    )}
+                    {cancelOrderModalVisible && selectedOrder !== null && (
+                        <CancelOrderModal
+                            order={selectedOrder}
+                            baseToken={
+                                selectedOrder.optionSide === 'long'
+                                    ? selectedOrder.market.longAddress
+                                    : selectedOrder.market.shortAddress
+                            }
+                            optionSide={selectedOrder.optionSide}
+                            onClose={() => setCancelOrderModalVisible(false)}
+                        />
+                    )}
+                </TableContainer>
+            )}
             {isLoading && (
                 <LoaderContainer>
                     <SimpleLoader />
                 </LoaderContainer>
             )}
             {sortedMarkets.length === 0 && !isLoading && children}
+            {sortedMarkets.length > 0 && !isLoading && isSingleMode && (
+                <ViewAllOrdersContainer>
+                    <>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.quick-trading.view-all-orders')}
+                        </Button>
+                    </>
+                </ViewAllOrdersContainer>
+            )}
         </>
     );
 };
@@ -415,6 +507,22 @@ const sortByTime = (a: ExtendedOrderItem, b: ExtendedOrderItem, direction: Order
     }
     if (direction === OrderDirection.DESC && a.market.phaseNum === b.market.phaseNum) {
         return a.market.timeRemaining > b.market.timeRemaining ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (
+    a: ExtendedOrderItem,
+    b: ExtendedOrderItem,
+    direction: OrderDirection,
+    field: keyof ExtendedOrderItem
+) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
     }
 
     return 0;
@@ -470,7 +578,7 @@ const YellowDot = styled.span`
 
 const CryptoName = styled.span``;
 
-export const StyledLink = styled.p`
+export const StyledLink = styled.a`
     color: #f6f6fe;
     &:hover {
         color: #00f9ff;
@@ -497,11 +605,45 @@ const LoaderContainer = styled(FlexDivColumn)`
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
+    border-radius: 0 0 23px 23px;
 `;
 
 const SideImage = styled.img`
     width: 32px;
     margin-left: 4px;
+`;
+
+const ViewAllOrdersContainer = styled(FlexDivColumn)`
+    min-height: 150px;
+    background: #04045a;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 0 0 23px 23px;
+    padding-bottom: 16px;
+`;
+
+const PriceArrow = styled(Image)`
+    width: 14px;
+    height: 14px;
+    margin-bottom: -2px;
+`;
+
+const GreenText = styled.span`
+    color: #01b977;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+    width: 70px;
+`;
+
+const RedText = styled.span`
+    color: #be2727;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    padding-right: 5px;
+    width: 70px;
 `;
 
 export default QuickTradingTable;
