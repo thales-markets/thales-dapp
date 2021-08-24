@@ -99,3 +99,21 @@
         }
     }
 }
+
+@media screen and (max-width: 420px) {
+    .hot-markets {
+        &__desktop > div {
+            max-width: 80%;
+            min-width: 80%;
+        }
+        &__cards {
+            &.animate {
+                left: -7%;
+            }
+        }
+        &__card > div {
+            max-width: 100%;
+            min-width: 100%;
+        }
+    }
+}
