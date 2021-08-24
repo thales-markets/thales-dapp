@@ -16,6 +16,7 @@ import { formatShortDateWithTime } from '../../../utils/formatters/date';
 import { airdropHashes } from '../../../utils/contracts/airdrop_hashes';
 import { bigNumberFormatter } from '../../../utils/formatters/ethers';
 import useRetroAirdropQuery from '../../../queries/walletBalances/useRetroAirdropQuery';
+import ThalesStaking from './ThalesStaking';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -222,7 +223,7 @@ const EarnPage: React.FC = () => {
                                             </FlexDiv>
                                         </SectionContent>
                                     </EarnSection>
-                                    <EarnSection style={{ gridColumn: 'span 2' }}>
+                                    <EarnSection style={{ gridColumn: 'span 10' }}>
                                         <SectionHeader>
                                             {t('options.earn.snx-stakers.retro-rewards.title')}
                                         </SectionHeader>
@@ -338,6 +339,7 @@ const EarnPage: React.FC = () => {
                                     </EarnSection>
                                 </>
                             )}
+                            {selectedTab === 'thales-staking' && <ThalesStaking />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </MainContent>
@@ -414,12 +416,12 @@ const WidgetsContainer = styled.div`
     background-color: #0a2e66;
     position: relative;
     display: grid;
-    grid-template-columns: 50% auto;
+    grid-template-columns: repeat(10, 1fr);
     grid-gap: 10px;
     padding: 10px;
 `;
 
-const EarnSection = styled.section`
+export const EarnSection = styled.section`
     padding-bottom: 0px;
     height: 100%;
     display: flex;
@@ -429,9 +431,11 @@ const EarnSection = styled.section`
     border-radius: 23px;
     overflow: hidden;
     color: white;
+    grid-column: span 5;
+    margin-bottom: 15px;
 `;
 
-const SectionHeader = styled(FlexDivRowCentered)`
+export const SectionHeader = styled(FlexDivRowCentered)`
     font-weight: 600;
     font-size: 20px;
     letter-spacing: 0.15px;
@@ -441,17 +445,18 @@ const SectionHeader = styled(FlexDivRowCentered)`
     padding: 0px 20px 0 30px;
 `;
 
-const SectionContent = styled(FlexDiv)`
+export const SectionContent = styled(FlexDiv)`
     padding: 30px 30px 15px 30px;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 `;
 
-const ClaimDiv = styled(FlexDiv)`
+export const ClaimDiv = styled(FlexDiv)`
     align-items: center;
 `;
 
-const ClaimTitle = styled.span`
+export const ClaimTitle = styled.span`
     font-size: 18px;
     padding-right: 5px;
 `;
