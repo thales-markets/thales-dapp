@@ -9,6 +9,12 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        OngoingAirdrop: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'ongoingAirdrop',
+            walletAddress,
+            networkId,
+        ],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],

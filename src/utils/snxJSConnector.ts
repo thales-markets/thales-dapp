@@ -4,6 +4,7 @@ import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketData
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import vestingEscrow from './contracts/vestingEscrow';
 import airdrop from './contracts/airdrop';
+import ongoingAirdrop from './contracts/ongoingAirdrop';
 import keyBy from 'lodash/keyBy';
 import initSynthetixJS, { Synth } from '@synthetixio/contracts-interface';
 import { SynthsMap, ContractSettings } from 'types/synthetix';
@@ -21,6 +22,7 @@ type SnxJSConnector = {
     binaryOptionsMarketManagerContract: ethers.Contract;
     retroAirdropContract: ethers.Contract;
     vestingEscrowContract: ethers.Contract;
+    ongoingAirdropContract: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
 };
 
@@ -58,6 +60,11 @@ const snxJSConnector: SnxJSConnector = {
         this.vestingEscrowContract = new ethers.Contract(
             vestingEscrow.addresses[contractSettings.networkId],
             vestingEscrow.abi,
+            this.provider
+        );
+        this.ongoingAirdropContract = new ethers.Contract(
+            ongoingAirdrop.addresses[contractSettings.networkId],
+            ongoingAirdrop.abi,
             this.provider
         );
     },
