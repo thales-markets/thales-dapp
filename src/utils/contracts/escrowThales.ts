@@ -145,6 +145,42 @@ export const escrowThales = {
         {
             constant: true,
             inputs: [],
+            name: '_delayedWeeks',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: '_lastWeekAddedReward',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: '_weeksOfVesting',
             outputs: [
                 {
@@ -231,7 +267,75 @@ export const escrowThales = {
                     type: 'address',
                 },
             ],
+            name: 'getEscrowedBalance',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
             name: 'getLastWeekAddedReward',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
+            name: 'getStakedEscrowedBalance',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'index',
+                    type: 'uint256',
+                },
+            ],
+            name: 'getStakerField',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -295,6 +399,21 @@ export const escrowThales = {
                 },
             ],
             name: 'getStakerWeeksLength',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'getTotalEscrowedRewards',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -454,6 +573,21 @@ export const escrowThales = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'totalEscrowedRewards',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {

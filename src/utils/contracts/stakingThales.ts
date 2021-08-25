@@ -212,6 +212,27 @@ export const stakingThales = {
             type: 'event',
         },
         {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: '_lastUnstakeTime',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [],
             name: 'acceptOwnership',
@@ -271,6 +292,21 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
+            name: 'distributeFeesEnabled',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'durationPeriod',
             outputs: [
                 {
@@ -292,6 +328,21 @@ export const stakingThales = {
                     internalType: 'contract IERC20',
                     name: '',
                     type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'fixedWeeklyReward',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
                 },
             ],
             payable: false,
@@ -578,6 +629,36 @@ export const stakingThales = {
                 },
             ],
             name: 'selfDestruct',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
+                    name: '_distributeFeesEnabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'setDistributeFeesEnabled',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_fixedReward',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setFixedWeeklyReward',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
