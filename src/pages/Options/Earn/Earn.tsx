@@ -17,9 +17,12 @@ import { airdropHashes } from '../../../utils/contracts/airdrop_hashes';
 import { bigNumberFormatter } from '../../../utils/formatters/ethers';
 import useRetroAirdropQuery from '../../../queries/walletBalances/useRetroAirdropQuery';
 import ThalesStaking from './ThalesStaking';
-import ongoingAirdropHashes from '../../../utils/contracts/ongoing-airdrop-hashes-period-1.json';
 import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
 import { ethers } from 'ethers';
+import { Airdrop } from 'types/token';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { THALES_CURRENCY } from 'constants/currency';
+import { refetchOngoingAirdrop } from 'utils/queryConnector';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -35,10 +38,6 @@ const EarnPage: React.FC = () => {
     const retroAirdrop = useMemo(() => airdropHashes.find((airdrop) => airdrop.address === walletAddress), [
         walletAddress,
     ]);
-    const ongoingAirdrop = useMemo(
-        () => ongoingAirdropHashes.find((airdrop: any) => airdrop.address === walletAddress),
-        [walletAddress]
-    );
 
     const vestingQuery = useVestingBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -46,13 +45,13 @@ const EarnPage: React.FC = () => {
     const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, retroAirdrop?.index, {
         enabled: !!retroAirdrop && isAppReady && isWalletConnected,
     });
-    const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, ongoingAirdrop?.index, {
-        enabled: !!ongoingAirdrop && isAppReady && isWalletConnected,
+    const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
     });
 
     const [vestingInfo, setVestingInfo] = useState({ unlocked: 0, initialLocked: 0, totalClaimed: 0 } as VestingInfo);
     const [retroAirdropInfo, setRetroAirdropInfo] = useState({ claimed: true });
-    const [ongoingAirdropInfo, setOngoingAirdropInfo] = useState({ claimed: true });
+    const [ongoingAirdrop, setOngoingAirdrop] = useState<Airdrop | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState('snx-stakers');
     const [isClaimingRetroRewards, setIsClaimingRetroRewards] = useState(false);
     const [isClaimingRetroAirdrop, setIsClaimingRetroAirdrop] = useState(false);
@@ -72,9 +71,9 @@ const EarnPage: React.FC = () => {
 
     useEffect(() => {
         if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
-            setOngoingAirdropInfo(ongoingAirdropQuery.data);
+            setOngoingAirdrop(ongoingAirdropQuery.data);
         }
-    }, [ongoingAirdropQuery]);
+    }, [ongoingAirdropQuery.isSuccess, ongoingAirdropQuery.data]);
 
     const optionsTabContent: Array<{
         id: string;
@@ -160,33 +159,40 @@ const EarnPage: React.FC = () => {
         }
     };
 
+    const isOngoingAirdropClaimAvailable =
+        ongoingAirdrop &&
+        ongoingAirdrop.accountInfo &&
+        ongoingAirdrop.hasClaimRights &&
+        !ongoingAirdrop.claimed &&
+        !ongoingAirdrop.isClaimPaused;
+
     const handleClaimOngoingAirdrop = async () => {
-        const { ongoingAirdropContract } = snxJSConnector as any;
+        if (isOngoingAirdropClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo) {
+            const { ongoingAirdropContract } = snxJSConnector as any;
 
-        try {
-            setIsClaimingOngoingAirdrop(true);
-            const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
-            console.log(ongoingAirdrop?.index, ongoingAirdrop?.balance, ongoingAirdrop?.proof);
-            const tx = (await ongoingAirdropContractWithSigner.claim(
-                ongoingAirdrop?.index,
-                ongoingAirdrop && ongoingAirdrop.balance,
-                ongoingAirdrop && ongoingAirdrop?.proof
-            )) as ethers.ContractTransaction;
-            const txResult = await tx.wait();
+            try {
+                setIsClaimingOngoingAirdrop(true);
+                const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
+                const tx = (await ongoingAirdropContractWithSigner.claim(
+                    ongoingAirdrop.accountInfo.index,
+                    ongoingAirdrop.accountInfo.rawBalance,
+                    ongoingAirdrop.accountInfo.proof
+                )) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
 
-            if (txResult && txResult.events) {
-                const rawData = txResult.events[txResult.events?.length - 1];
-                if (rawData && rawData.decode) {
-                    setOngoingAirdropInfo({
+                if (txResult && txResult.transactionHash) {
+                    refetchOngoingAirdrop(walletAddress, networkId);
+                    setOngoingAirdrop({
+                        ...ongoingAirdrop,
                         claimed: true,
                     });
                     setIsClaimingOngoingAirdrop(false);
                 }
+            } catch (e) {
+                console.log(e);
+                setOngoingAirdropTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsClaimingOngoingAirdrop(false);
             }
-        } catch (e) {
-            console.log(e);
-            setOngoingAirdropTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            setIsClaimingOngoingAirdrop(false);
         }
     };
 
@@ -264,16 +270,22 @@ const EarnPage: React.FC = () => {
                                                     {t('options.earn.snx-stakers.amount-to-claim')}:
                                                 </ClaimTitle>
                                                 <span>
-                                                    {ongoingAirdrop && !ongoingAirdropInfo.claimed
-                                                        ? bigNumberFormatter(ongoingAirdrop.balance)
-                                                        : 0}{' '}
-                                                    THALES
+                                                    {isOngoingAirdropClaimAvailable &&
+                                                    ongoingAirdrop &&
+                                                    ongoingAirdrop.accountInfo
+                                                        ? formatCurrencyWithKey(
+                                                              THALES_CURRENCY,
+                                                              ongoingAirdrop.accountInfo.balance
+                                                          )
+                                                        : 0}
                                                 </span>
                                             </ClaimDiv>
                                             <FlexDiv>
                                                 <Button
                                                     onClick={handleClaimOngoingAirdrop}
-                                                    disabled={ongoingAirdropInfo.claimed || isClaimingOngoingAirdrop}
+                                                    disabled={
+                                                        !isOngoingAirdropClaimAvailable || isClaimingOngoingAirdrop
+                                                    }
                                                     className="primary"
                                                 >
                                                     {isClaimingOngoingAirdrop
