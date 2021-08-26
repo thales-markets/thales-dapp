@@ -17,12 +17,7 @@ import { airdropHashes } from '../../../utils/contracts/airdrop_hashes';
 import { bigNumberFormatter } from '../../../utils/formatters/ethers';
 import useRetroAirdropQuery from '../../../queries/walletBalances/useRetroAirdropQuery';
 import ThalesStaking from './ThalesStaking';
-import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
-import { ethers } from 'ethers';
-import { Airdrop } from 'types/token';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
-import { THALES_CURRENCY } from 'constants/currency';
-import { refetchOngoingAirdrop } from 'utils/queryConnector';
+import OngoingAirdrop from './OngoingAirdrop';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -33,7 +28,6 @@ const EarnPage: React.FC = () => {
 
     const [retroRewardsTxErrorMessage, setRetroRewardsTxErrorMessage] = useState<string | null>(null);
     const [retroAirdropTxErrorMessage, setRetroAirdropTxErrorMessage] = useState<string | null>(null);
-    const [ongoingAirdropTxErrorMessage, setOngoingAirdropTxErrorMessage] = useState<string | null>(null);
 
     const retroAirdrop = useMemo(() => airdropHashes.find((airdrop) => airdrop.address === walletAddress), [
         walletAddress,
@@ -45,17 +39,12 @@ const EarnPage: React.FC = () => {
     const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, retroAirdrop?.index, {
         enabled: !!retroAirdrop && isAppReady && isWalletConnected,
     });
-    const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
 
     const [vestingInfo, setVestingInfo] = useState({ unlocked: 0, initialLocked: 0, totalClaimed: 0 } as VestingInfo);
     const [retroAirdropInfo, setRetroAirdropInfo] = useState({ claimed: true });
-    const [ongoingAirdrop, setOngoingAirdrop] = useState<Airdrop | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState('snx-stakers');
     const [isClaimingRetroRewards, setIsClaimingRetroRewards] = useState(false);
     const [isClaimingRetroAirdrop, setIsClaimingRetroAirdrop] = useState(false);
-    const [isClaimingOngoingAirdrop, setIsClaimingOngoingAirdrop] = useState(false);
 
     useEffect(() => {
         if (vestingQuery.isSuccess && vestingQuery.data) {
@@ -68,12 +57,6 @@ const EarnPage: React.FC = () => {
             setRetroAirdropInfo(airdropQuery.data);
         }
     }, [airdropQuery.isSuccess]);
-
-    useEffect(() => {
-        if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
-            setOngoingAirdrop(ongoingAirdropQuery.data);
-        }
-    }, [ongoingAirdropQuery.isSuccess, ongoingAirdropQuery.data]);
 
     const optionsTabContent: Array<{
         id: string;
@@ -159,43 +142,6 @@ const EarnPage: React.FC = () => {
         }
     };
 
-    const isOngoingAirdropClaimAvailable =
-        ongoingAirdrop &&
-        ongoingAirdrop.accountInfo &&
-        ongoingAirdrop.hasClaimRights &&
-        !ongoingAirdrop.claimed &&
-        !ongoingAirdrop.isClaimPaused;
-
-    const handleClaimOngoingAirdrop = async () => {
-        if (isOngoingAirdropClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo) {
-            const { ongoingAirdropContract } = snxJSConnector as any;
-
-            try {
-                setIsClaimingOngoingAirdrop(true);
-                const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
-                const tx = (await ongoingAirdropContractWithSigner.claim(
-                    ongoingAirdrop.accountInfo.index,
-                    ongoingAirdrop.accountInfo.rawBalance,
-                    ongoingAirdrop.accountInfo.proof
-                )) as ethers.ContractTransaction;
-                const txResult = await tx.wait();
-
-                if (txResult && txResult.transactionHash) {
-                    refetchOngoingAirdrop(walletAddress, networkId);
-                    setOngoingAirdrop({
-                        ...ongoingAirdrop,
-                        claimed: true,
-                    });
-                    setIsClaimingOngoingAirdrop(false);
-                }
-            } catch (e) {
-                console.log(e);
-                setOngoingAirdropTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsClaimingOngoingAirdrop(false);
-            }
-        }
-    };
-
     const locked = vestingInfo.initialLocked - vestingInfo.unlocked - vestingInfo.totalClaimed;
 
     return (
@@ -260,48 +206,7 @@ const EarnPage: React.FC = () => {
                                             />
                                         </div>
                                     </EarnSection>
-                                    <EarnSection>
-                                        <SectionHeader>
-                                            {t('options.earn.snx-stakers.ongoing-airdrop.title')}
-                                        </SectionHeader>
-                                        <SectionContent>
-                                            <ClaimDiv>
-                                                <ClaimTitle>
-                                                    {t('options.earn.snx-stakers.amount-to-claim')}:
-                                                </ClaimTitle>
-                                                <span>
-                                                    {isOngoingAirdropClaimAvailable &&
-                                                    ongoingAirdrop &&
-                                                    ongoingAirdrop.accountInfo
-                                                        ? formatCurrencyWithKey(
-                                                              THALES_CURRENCY,
-                                                              ongoingAirdrop.accountInfo.balance
-                                                          )
-                                                        : 0}
-                                                </span>
-                                            </ClaimDiv>
-                                            <FlexDiv>
-                                                <Button
-                                                    onClick={handleClaimOngoingAirdrop}
-                                                    disabled={
-                                                        !isOngoingAirdropClaimAvailable || isClaimingOngoingAirdrop
-                                                    }
-                                                    className="primary"
-                                                >
-                                                    {isClaimingOngoingAirdrop
-                                                        ? t('options.earn.snx-stakers.claiming')
-                                                        : t('options.earn.snx-stakers.claim')}
-                                                </Button>
-                                            </FlexDiv>
-                                        </SectionContent>
-                                        <div style={{ marginBottom: '15px' }}>
-                                            <ValidationMessage
-                                                showValidation={ongoingAirdropTxErrorMessage !== null}
-                                                message={ongoingAirdropTxErrorMessage}
-                                                onDismiss={() => setOngoingAirdropTxErrorMessage(null)}
-                                            />
-                                        </div>
-                                    </EarnSection>
+                                    <OngoingAirdrop />
                                     <EarnSection style={{ gridColumn: 'span 10' }}>
                                         <SectionHeader>
                                             {t('options.earn.snx-stakers.retro-rewards.title')}
@@ -563,4 +468,9 @@ const RewardsInfoColumn = styled(FlexDivColumn)`
     align-items: center;
     font-size: 16px !important;
 `;
+
+export const ValidationMessageConatiner = styled.div`
+    margin-bottom: 15px;
+`;
+
 export default EarnPage;
