@@ -278,7 +278,27 @@
                 "total": "Total"
             },
             "thales-staking": {
-                "tab-title": "Thales staking"
+                "tab-title": "Thales staking",
+                "stake": {
+                    "stake": "Stake",
+                    "staking": "Staking...",
+                    "available-to-stake": "Available to stake",
+                    "amount-to-stake": "Amount to stake"
+                },
+                "my-stake": {
+                    "staked-in-contract": "Staked in Contract",
+                    "locked-in-escrow": "Locked in Escrow",
+                    "total-staked": "Total staked"
+                },
+                "unstake": {
+                    "unlock-cooldown-text": "Start unlock cooldown of 7 days during which you are not eliigible for staking rewards",
+                    "start-unstaking": "Start unstaking",
+                    "unstaking": "Instaking..."
+                },
+                "my-rewards": {
+                    "amount-to-claim": "Amount to claim",
+                    "claim": "Claim"
+                }
             },
             "vesting": {
                 "tab-title": "Vesting"

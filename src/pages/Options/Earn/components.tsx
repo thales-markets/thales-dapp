@@ -65,3 +65,11 @@ export const ClaimMessage = styled.div`
     color: #ffcc00;
     margin-top: 10px;
 `;
+
+export const FullRow = styled(FlexDiv)`
+    flex-basis: 100%;
+    display: flex;
+    font-size: 20px;
+    justify-content: center;
+    margin-bottom: 10px;
+`;

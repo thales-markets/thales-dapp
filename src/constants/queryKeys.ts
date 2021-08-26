@@ -18,6 +18,7 @@ export const QUERY_KEYS = {
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
+        Thales: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'thales', walletAddress, networkId],
         Vesting: (walletAddress: string, networkId: NetworkId) => [
             'walletBalances',
             'vesting',
@@ -75,6 +76,10 @@ export const QUERY_KEYS = {
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
+    },
+    Staking: {
+        Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
+        Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
     },
 };
 

@@ -122,6 +122,7 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     padding-bottom: 15px;
     border-left: 1px solid #0a2e66;
     border-right: 1px solid #0a2e66;
+    user-select: none;
     &.selected {
         background-color: #0a2e66;
         transition: 0.2s;
