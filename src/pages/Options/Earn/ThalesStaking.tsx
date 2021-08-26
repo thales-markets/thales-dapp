@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ClaimDiv, ClaimTitle, EarnSection, SectionContent, SectionHeader } from './Earn';
+import { ClaimDiv, ClaimTitle, EarnSection, SectionContent, SectionHeader } from './components';
 import { Button, FlexDiv } from '../../../theme/common';
 import { useTranslation } from 'react-i18next';
 import ValidationMessage from '../../../components/ValidationMessage/ValidationMessage';

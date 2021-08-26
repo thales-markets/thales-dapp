@@ -11,7 +11,7 @@ import { VestingInfo } from 'types/token';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { EarnSection, SectionContent, SectionHeader } from '../../Earn';
+import { EarnSection, SectionContent, SectionHeader } from '../../components';
 
 const initialVestingInfo = {
     unlocked: 0,

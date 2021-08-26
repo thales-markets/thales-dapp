@@ -20,7 +20,7 @@ import {
     SectionContent,
     SectionHeader,
     ValidationMessageConatiner,
-} from '../../Earn';
+} from '../../components';
 import { normalizeGasLimit } from 'utils/network';
 
 const OngoingAirdrop: React.FC = () => {

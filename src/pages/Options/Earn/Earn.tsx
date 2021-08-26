@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRowCentered } from '../../../theme/common';
+import { Background, FlexDivCentered, FlexDivColumn } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
@@ -145,52 +145,6 @@ const WidgetsContainer = styled.div`
     grid-template-columns: repeat(10, 1fr);
     grid-gap: 10px;
     padding: 10px;
-`;
-
-export const EarnSection = styled.section`
-    padding-bottom: 0px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background: #04045a;
-    border-radius: 23px;
-    overflow: hidden;
-    color: white;
-    grid-column: span 5;
-    margin-bottom: 15px;
-`;
-
-export const SectionHeader = styled(FlexDivRowCentered)`
-    font-weight: 600;
-    font-size: 20px;
-    letter-spacing: 0.15px;
-    color: #f6f6fe;
-    min-height: 50px;
-    border-bottom: 1px solid rgba(228, 228, 228, 0.1);
-    padding: 0px 20px 0 30px;
-`;
-
-export const SectionContent = styled(FlexDiv)`
-    padding: 30px 30px 15px 30px;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-`;
-
-export const ClaimDiv = styled(FlexDiv)`
-    align-items: center;
-`;
-
-export const ClaimTitle = styled.span`
-    font-size: 18px;
-    padding-right: 5px;
-`;
-
-export const ValidationMessageConatiner = styled.div`
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-bottom: 15px;
 `;
 
 export default EarnPage;
