@@ -262,7 +262,7 @@
                     "title": "Ongoing Airdrop",
                     "claimed-message": "You have already claimed the airdrop for this week. Please come next week.",
                     "not-eligible-message": "You are not eligible for this airdrop.",
-                    "paused-message": "The claim is suspended, please try later."
+                    "paused-message": "The claiming is paused, please try later."
                 },
                 "retro-rewards": {
                     "title": "Retro Rewards"
@@ -275,7 +275,10 @@
                 "claiming-unlocked": "Claiming Unlocked...",
                 "unlocked": "Unlocked",
                 "locked": "Locked",
-                "total": "Total"
+                "total": "Total",
+                "start-time": "Start time",
+                "end-time": "End time",
+                "initial-locked": "Initial Locked"
             },
             "thales-staking": {
                 "tab-title": "Thales staking"
