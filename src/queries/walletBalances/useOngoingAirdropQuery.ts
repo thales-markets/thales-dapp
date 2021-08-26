@@ -15,12 +15,18 @@ const useOngoingAirdropQuery = (walletAddress: string, networkId: NetworkId, opt
                 (snxJSConnector as any).ongoingAirdropContract.period(),
             ]);
 
-            const ongoingAirdropHashesResponse = await fetch(getOngoingAirdropHashesURL(period));
-            const ongoingAirdropHashes = await ongoingAirdropHashesResponse.json();
+            let ongoingAirdropHashes: any = [];
+            let isHashFileAvailable = true;
+            try {
+                const ongoingAirdropHashesResponse = await fetch(getOngoingAirdropHashesURL(period));
+                ongoingAirdropHashes = await ongoingAirdropHashesResponse.json();
+            } catch {
+                isHashFileAvailable = false;
+            }
             const ongoingAirdropHash = ongoingAirdropHashes.find((airdrop: any) => airdrop.address === walletAddress);
 
             const airdrop: Airdrop = {
-                isClaimPaused: paused,
+                isClaimPaused: paused || !isHashFileAvailable,
                 hasClaimRights: ongoingAirdropHash !== undefined,
                 claimed: true,
             };

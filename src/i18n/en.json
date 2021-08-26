@@ -254,10 +254,15 @@
             "snx-stakers": {
                 "tab-title": "SNX stakers",
                 "retro-airdrop": {
-                    "title": "Retro Airdrop"
+                    "title": "Retro Airdrop",
+                    "claimed-message": "You have already claimed the airdrop.",
+                    "not-eligible-message": "You are not eligible for this airdrop."
                 },
                 "ongoing-airdrop": {
-                    "title": "Ongoing Airdrop"
+                    "title": "Ongoing Airdrop",
+                    "claimed-message": "You have already claimed the airdrop for this week. Please come next week.",
+                    "not-eligible-message": "You are not eligible for this airdrop.",
+                    "paused-message": "The claim is suspended, please try later."
                 },
                 "retro-rewards": {
                     "title": "Retro Rewards"

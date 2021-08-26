@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FlexDiv } from 'theme/common';
+import { Button } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import {
+    getCustomGasPrice,
+    getGasSpeed,
+    getIsWalletConnected,
+    getNetworkId,
+    getWalletAddress,
+} from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
@@ -14,14 +20,19 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchOngoingAirdrop } from 'utils/queryConnector';
 import {
-    ClaimDiv,
+    ButtonContainer,
+    ClaimContent,
+    ClaimItem,
+    ClaimMessage,
     ClaimTitle,
     EarnSection,
-    SectionContent,
+    SectionContentContainer,
     SectionHeader,
-    ValidationMessageConatiner,
 } from '../../components';
-import { normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import NetworkFees from 'pages/Options/components/NetworkFees';
+import { Divider } from 'pages/Options/Market/components';
 
 const OngoingAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -29,6 +40,8 @@ const OngoingAirdrop: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
+    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [ongoingAirdrop, setOngoingAirdrop] = useState<Airdrop | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -44,6 +57,17 @@ const OngoingAirdrop: React.FC = () => {
     const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+
+    const ethGasPriceQuery = useEthGasPriceQuery();
+    const gasPrice = useMemo(
+        () =>
+            customGasPrice !== null
+                ? customGasPrice
+                : ethGasPriceQuery.data != null
+                ? ethGasPriceQuery.data[gasSpeed]
+                : null,
+        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
+    );
 
     useEffect(() => {
         if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
@@ -76,7 +100,7 @@ const OngoingAirdrop: React.FC = () => {
     }, [isWalletConnected, isClaimAvailable]);
 
     const handleClaimOngoingAirdrop = async () => {
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo) {
+        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo && gasPrice !== null) {
             const { ongoingAirdropContract } = snxJSConnector as any;
 
             try {
@@ -87,7 +111,7 @@ const OngoingAirdrop: React.FC = () => {
                     ongoingAirdrop.accountInfo.rawBalance,
                     ongoingAirdrop.accountInfo.proof,
                     {
-                        // gasPrice: gasPriceInWei(gasPrice),
+                        gasPrice: gasPriceInWei(gasPrice),
                         gasLimit,
                     }
                 )) as ethers.ContractTransaction;
@@ -112,16 +136,21 @@ const OngoingAirdrop: React.FC = () => {
     return (
         <EarnSection>
             <SectionHeader>{t('options.earn.snx-stakers.ongoing-airdrop.title')}</SectionHeader>
-            <SectionContent>
-                <ClaimDiv>
+            <SectionContentContainer>
+                <ClaimItem>
                     <ClaimTitle>{t('options.earn.snx-stakers.amount-to-claim')}:</ClaimTitle>
-                    <span>
-                        {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.accountInfo.balance)
-                            : 0}
-                    </span>
-                </ClaimDiv>
-                <FlexDiv>
+                    <ClaimContent>
+                        {formatCurrencyWithKey(
+                            THALES_CURRENCY,
+                            isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
+                                ? ongoingAirdrop.accountInfo.balance
+                                : 0
+                        )}
+                    </ClaimContent>
+                </ClaimItem>
+                <Divider />
+                <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
+                <ButtonContainer>
                     <Button
                         onClick={handleClaimOngoingAirdrop}
                         disabled={!isClaimAvailable || isClaiming}
@@ -129,15 +158,27 @@ const OngoingAirdrop: React.FC = () => {
                     >
                         {isClaiming ? t('options.earn.snx-stakers.claiming') : t('options.earn.snx-stakers.claim')}
                     </Button>
-                </FlexDiv>
-            </SectionContent>
-            <ValidationMessageConatiner>
+                    {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
+                        <ClaimMessage>{t('options.earn.snx-stakers.ongoing-airdrop.paused-message')}</ClaimMessage>
+                    )}
+                    {ongoingAirdrop && !ongoingAirdrop.isClaimPaused && !ongoingAirdrop.hasClaimRights && (
+                        <ClaimMessage>
+                            {t('options.earn.snx-stakers.ongoing-airdrop.not-eligible-message')}
+                        </ClaimMessage>
+                    )}
+                    {ongoingAirdrop &&
+                        ongoingAirdrop.hasClaimRights &&
+                        !ongoingAirdrop.isClaimPaused &&
+                        ongoingAirdrop.claimed && (
+                            <ClaimMessage>{t('options.earn.snx-stakers.ongoing-airdrop.claimed-message')}</ClaimMessage>
+                        )}
+                </ButtonContainer>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}
                     message={txErrorMessage}
                     onDismiss={() => setTxErrorMessage(null)}
                 />
-            </ValidationMessageConatiner>
+            </SectionContentContainer>
         </EarnSection>
     );
 };

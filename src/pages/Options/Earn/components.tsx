@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDivRowCentered, FlexDiv } from 'theme/common';
+import { FlexDivRowCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 
 export const EarnSection = styled.section`
     padding-bottom: 0px;
@@ -41,8 +41,27 @@ export const ClaimTitle = styled.span`
     padding-right: 5px;
 `;
 
-export const ValidationMessageConatiner = styled.div`
-    padding-left: 30px;
-    padding-right: 30px;
-    margin-bottom: 15px;
+export const ClaimContent = styled.span`
+    font-size: 16px;
+`;
+
+export const SectionContentContainer = styled(FlexDivColumn)`
+    padding: 40px 30px 35px 30px;
+`;
+
+export const ClaimItem = styled(FlexDivRow)`
+    margin-bottom: 20px;
+`;
+
+export const ButtonContainer = styled(FlexDivColumnCentered)`
+    margin-top: 40px;
+    align-items: center;
+`;
+
+export const ClaimMessage = styled.div`
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
+    color: #ffcc00;
+    margin-top: 10px;
 `;
