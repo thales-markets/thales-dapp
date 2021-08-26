@@ -3,9 +3,9 @@ import { CurrencyKey } from './currency';
 
 export const QUERY_KEYS = {
     WalletBalances: {
-        Airdrop: (walletAddress: string, networkId: NetworkId) => [
+        RetroAirdrop: (walletAddress: string, networkId: NetworkId) => [
             'walletBalances',
-            'airdrop',
+            'retroAirdrop',
             walletAddress,
             networkId,
         ],

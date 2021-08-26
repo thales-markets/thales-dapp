@@ -11,3 +11,11 @@ export type Airdrop = {
     claimed: boolean;
     accountInfo?: AccountInfo;
 };
+
+export type VestingInfo = {
+    startTime: number;
+    endTime: number;
+    initialLocked: number;
+    totalClaimed: number;
+    unlocked: number;
+};

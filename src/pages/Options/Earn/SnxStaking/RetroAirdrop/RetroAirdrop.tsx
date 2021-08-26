@@ -1,61 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FlexDiv } from '../../../../theme/common';
+import { Button, FlexDiv } from 'theme/common';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../redux/modules/wallet';
-import { getIsAppReady } from '../../../../redux/modules/app';
-import snxJSConnector from '../../../../utils/snxJSConnector';
-import ValidationMessage from '../../../../components/ValidationMessage/ValidationMessage';
-import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import snxJSConnector from 'utils/snxJSConnector';
+import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
+import useRetroAirdropQuery from 'queries/walletBalances/useRetroAirdropQuery';
+import {
+    ClaimDiv,
+    ClaimTitle,
+    EarnSection,
+    SectionContent,
+    SectionHeader,
+    ValidationMessageConatiner,
+} from '../../Earn';
+import { normalizeGasLimit } from 'utils/network';
+import { refetchRetroAirdrop } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import { Airdrop } from 'types/token';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { refetchOngoingAirdrop } from 'utils/queryConnector';
-import { ClaimDiv, ClaimTitle, EarnSection, SectionContent, SectionHeader, ValidationMessageConatiner } from '../Earn';
-import { normalizeGasLimit } from 'utils/network';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 
-const OngoingAirdrop: React.FC = () => {
+const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [ongoingAirdrop, setOngoingAirdrop] = useState<Airdrop | undefined>(undefined);
+    const [retroAirdrop, setRetroAirdrop] = useState<Airdrop | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const isClaimAvailable =
-        ongoingAirdrop &&
-        ongoingAirdrop.accountInfo &&
-        ongoingAirdrop.hasClaimRights &&
-        !ongoingAirdrop.claimed &&
-        !ongoingAirdrop.isClaimPaused;
+        retroAirdrop && retroAirdrop.accountInfo && retroAirdrop.hasClaimRights && !retroAirdrop.claimed;
 
-    const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
+    const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
 
     useEffect(() => {
-        if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
-            setOngoingAirdrop(ongoingAirdropQuery.data);
+        if (airdropQuery.isSuccess && airdropQuery.data) {
+            setRetroAirdrop(airdropQuery.data);
         }
-    }, [ongoingAirdropQuery.isSuccess, ongoingAirdropQuery.data]);
+    }, [airdropQuery.isSuccess, airdropQuery.data]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            if (ongoingAirdrop && ongoingAirdrop.accountInfo) {
-                const { ongoingAirdropContract } = snxJSConnector as any;
+            if (retroAirdrop && retroAirdrop.accountInfo) {
+                const { retroAirdropContract } = snxJSConnector as any;
                 try {
-                    const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect(
-                        (snxJSConnector as any).signer
-                    );
-                    const gasEstimate = await ongoingAirdropContractWithSigner.estimateGas.claim(
-                        ongoingAirdrop.accountInfo.index,
-                        ongoingAirdrop.accountInfo.rawBalance,
-                        ongoingAirdrop.accountInfo.proof
+                    const retroAirdropContractWithSigner = retroAirdropContract.connect((snxJSConnector as any).signer);
+                    const gasEstimate = await retroAirdropContractWithSigner.estimateGas.claim(
+                        retroAirdrop.accountInfo.index,
+                        retroAirdrop.accountInfo.rawBalance,
+                        retroAirdrop.accountInfo.proof
                     );
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                 } catch (e) {
@@ -68,17 +69,17 @@ const OngoingAirdrop: React.FC = () => {
         fetchGasLimit();
     }, [isWalletConnected, isClaimAvailable]);
 
-    const handleClaimOngoingAirdrop = async () => {
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo) {
-            const { ongoingAirdropContract } = snxJSConnector as any;
+    const handleClaimRetroAirdrop = async () => {
+        if (isClaimAvailable && retroAirdrop && retroAirdrop.accountInfo) {
+            const { retroAirdropContract } = snxJSConnector as any;
 
             try {
                 setIsClaiming(true);
-                const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
-                const tx = (await ongoingAirdropContractWithSigner.claim(
-                    ongoingAirdrop.accountInfo.index,
-                    ongoingAirdrop.accountInfo.rawBalance,
-                    ongoingAirdrop.accountInfo.proof,
+                const airdropContractWithSigner = retroAirdropContract.connect((snxJSConnector as any).signer);
+                const tx = (await airdropContractWithSigner.claim(
+                    retroAirdrop.accountInfo.index,
+                    retroAirdrop.accountInfo.rawBalance,
+                    retroAirdrop.accountInfo.proof,
                     {
                         // gasPrice: gasPriceInWei(gasPrice),
                         gasLimit,
@@ -87,9 +88,9 @@ const OngoingAirdrop: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    refetchOngoingAirdrop(walletAddress, networkId);
-                    setOngoingAirdrop({
-                        ...ongoingAirdrop,
+                    refetchRetroAirdrop(walletAddress, networkId);
+                    setRetroAirdrop({
+                        ...retroAirdrop,
                         claimed: true,
                     });
                     setIsClaiming(false);
@@ -101,22 +102,21 @@ const OngoingAirdrop: React.FC = () => {
             }
         }
     };
-
     return (
         <EarnSection>
-            <SectionHeader>{t('options.earn.snx-stakers.ongoing-airdrop.title')}</SectionHeader>
+            <SectionHeader>{t('options.earn.snx-stakers.retro-airdrop.title')}</SectionHeader>
             <SectionContent>
                 <ClaimDiv>
                     <ClaimTitle>{t('options.earn.snx-stakers.amount-to-claim')}:</ClaimTitle>
                     <span>
-                        {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
-                            ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.accountInfo.balance)
+                        {isClaimAvailable && retroAirdrop && retroAirdrop.accountInfo
+                            ? formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop.accountInfo.balance)
                             : 0}
                     </span>
                 </ClaimDiv>
                 <FlexDiv>
                     <Button
-                        onClick={handleClaimOngoingAirdrop}
+                        onClick={handleClaimRetroAirdrop}
                         disabled={!isClaimAvailable || isClaiming}
                         className="primary"
                     >
@@ -135,4 +135,4 @@ const OngoingAirdrop: React.FC = () => {
     );
 };
 
-export default OngoingAirdrop;
+export default RetroAirdrop;
