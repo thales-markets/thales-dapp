@@ -44,7 +44,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked }) => {
 
     return (
         <EarnSection style={{ gridColumn: 'span 4' }}>
-            <SectionHeader>My Stake</SectionHeader>
+            <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
             <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
                 <FullRow>
                     <div>

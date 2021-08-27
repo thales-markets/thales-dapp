@@ -33,7 +33,7 @@ const MyRewards: React.FC = () => {
 
     return (
         <EarnSection style={{ gridColumn: 'span 4' }}>
-            <SectionHeader>My Rewards</SectionHeader>
+            <SectionHeader>{t('options.earn.thales-staking.my-rewards.my-rewards')}</SectionHeader>
             <SectionContent>
                 <ClaimDiv>
                     <ClaimTitle>{t('options.earn.thales-staking.my-rewards.amount-to-claim')}:</ClaimTitle>

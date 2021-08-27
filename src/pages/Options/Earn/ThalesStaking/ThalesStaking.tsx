@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Stake from './Stake/Stake';
+import Stake from './Stake';
 import MyStake from './MyStake';
 import Unstake from './Unstake';
 import MyRewards from './MyRewards';

@@ -19,7 +19,7 @@ const Unstake: React.FC = () => {
 
     return (
         <EarnSection style={{ gridColumn: 'span 6' }}>
-            <SectionHeader>Unstake</SectionHeader>
+            <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
             <SectionContent>
                 <FlexDivColumn>
                     <ClaimTitle>

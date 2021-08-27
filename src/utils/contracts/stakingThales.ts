@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const stakingThales = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0xd6BEd7D753DCbbbb8937Dd009788d6c815aE3094',
+        [NetworkId.Ropsten]: '0x91c90116c1B73d5b5b374d656749ff30578C40cD',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings

@@ -289,16 +289,19 @@
                     "amount-to-stake": "Amount to stake"
                 },
                 "my-stake": {
+                    "my-stake": "My Stake",
                     "staked-in-contract": "Staked in Contract",
                     "locked-in-escrow": "Locked in Escrow",
                     "total-staked": "Total staked"
                 },
                 "unstake": {
+                    "unstake": "Unstake",
                     "unlock-cooldown-text": "Start unlock cooldown of 7 days during which you are not eliigible for staking rewards",
                     "start-unstaking": "Start unstaking",
                     "unstaking": "Instaking..."
                 },
                 "my-rewards": {
+                    "my-rewards": "My Rewards",
                     "amount-to-claim": "Amount to claim",
                     "claim": "Claim"
                 }
