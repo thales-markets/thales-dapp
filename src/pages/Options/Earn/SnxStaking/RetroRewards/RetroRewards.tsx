@@ -118,7 +118,7 @@ const RetroRewards: React.FC = () => {
     const locked = vestingInfo.initialLocked - vestingInfo.unlocked - vestingInfo.totalClaimed;
 
     return (
-        <EarnSection style={{ gridColumn: 'span 10' }}>
+        <EarnSection style={{ gridColumn: 'span 6' }}>
             <SectionHeader>{t('options.earn.snx-stakers.retro-rewards.title')}</SectionHeader>
             <SectionContentContainer>
                 <FlexDiv>
@@ -175,9 +175,7 @@ const RetroRewards: React.FC = () => {
                     <ProgressSlice backgroundColor="#0a2e66" width={(locked * 100) / vestingInfo.initialLocked} />
                 </ProgressContainer>
                 <Divider />
-                <NetworkFeesContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
-                </NetworkFeesContainer>
+                <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
                     <Button
                         disabled={!isClaimAvailable || isClaiming}
@@ -239,10 +237,6 @@ const AmountsContainer = styled(FlexDiv)`
 
 const ProgressContainer = styled.div`
     margin-bottom: 20px;
-`;
-
-const NetworkFeesContainer = styled.div`
-    padding: 0 350px;
 `;
 
 export default RetroRewards;

@@ -127,7 +127,7 @@ const RetroAirdrop: React.FC = () => {
         }
     };
     return (
-        <EarnSection>
+        <EarnSection style={{ gridColumn: 'span 4' }}>
             <SectionHeader>{t('options.earn.snx-stakers.retro-airdrop.title')}</SectionHeader>
             <SectionContentContainer>
                 <ClaimItem>

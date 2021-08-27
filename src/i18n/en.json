@@ -258,12 +258,6 @@
                     "claimed-message": "You have already claimed the airdrop.",
                     "not-eligible-message": "You are not eligible for this airdrop."
                 },
-                "ongoing-airdrop": {
-                    "title": "Ongoing Airdrop",
-                    "claimed-message": "You have already claimed the airdrop for this week. Please come next week.",
-                    "not-eligible-message": "You are not eligible for this airdrop.",
-                    "paused-message": "The claiming is paused, please try later."
-                },
                 "retro-rewards": {
                     "title": "Retro Rewards"
                 },
@@ -300,10 +294,15 @@
                     "start-unstaking": "Start unstaking",
                     "unstaking": "Instaking..."
                 },
-                "my-rewards": {
-                    "my-rewards": "My Rewards",
-                    "amount-to-claim": "Amount to claim",
-                    "claim": "Claim"
+                "staking-rewards": {
+                    "title": "Staking Rewards",
+                    "amount-to-claim-snx": "Rewards from SNX staking",
+                    "amount-to-claim-thales": "Rewards from THALES staking",
+                    "claim": "Claim",
+                    "claiming": "Claiming...",
+                    "claimed-message": "You have already claimed the rewards for this week. Please come next week.",
+                    "not-eligible-message": "You are not eligible for these rewards.",
+                    "paused-message": "The claiming is paused, please try later."
                 }
             },
             "vesting": {

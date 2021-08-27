@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Stake from './Stake';
 import MyStake from './MyStake';
 import Unstake from './Unstake';
-import MyRewards from './MyRewards';
+import StakingRewards from './StakingRewards';
 
 const ThalesStaking: React.FC = () => {
     const [thalesStaked, setThalesStaked] = useState<number>(0);
@@ -10,9 +10,9 @@ const ThalesStaking: React.FC = () => {
     return (
         <>
             <Stake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
-            <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
+            <StakingRewards />
             <Unstake />
-            <MyRewards />
+            <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
         </>
     );
 };

@@ -34,7 +34,7 @@ import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Divider } from 'pages/Options/Market/components';
 
-const OngoingAirdrop: React.FC = () => {
+const StakingRewards: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -134,11 +134,22 @@ const OngoingAirdrop: React.FC = () => {
     };
 
     return (
-        <EarnSection>
-            <SectionHeader>{t('options.earn.snx-stakers.ongoing-airdrop.title')}</SectionHeader>
+        <EarnSection style={{ gridColumn: 'span 4' }}>
+            <SectionHeader>{t('options.earn.thales-staking.staking-rewards.title')}</SectionHeader>
             <SectionContentContainer>
                 <ClaimItem>
-                    <ClaimTitle>{t('options.earn.snx-stakers.amount-to-claim')}:</ClaimTitle>
+                    <ClaimTitle>{t('options.earn.thales-staking.staking-rewards.amount-to-claim-snx')}:</ClaimTitle>
+                    <ClaimContent>
+                        {formatCurrencyWithKey(
+                            THALES_CURRENCY,
+                            isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
+                                ? ongoingAirdrop.accountInfo.balance
+                                : 0
+                        )}
+                    </ClaimContent>
+                </ClaimItem>
+                <ClaimItem>
+                    <ClaimTitle>{t('options.earn.thales-staking.staking-rewards.amount-to-claim-thales')}:</ClaimTitle>
                     <ClaimContent>
                         {formatCurrencyWithKey(
                             THALES_CURRENCY,
@@ -156,21 +167,25 @@ const OngoingAirdrop: React.FC = () => {
                         disabled={!isClaimAvailable || isClaiming}
                         className="primary"
                     >
-                        {isClaiming ? t('options.earn.snx-stakers.claiming') : t('options.earn.snx-stakers.claim')}
+                        {isClaiming
+                            ? t('options.earn.thales-staking.staking-rewards.claiming')
+                            : t('options.earn.thales-staking.staking-rewards.claim')}
                     </Button>
                     {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
-                        <ClaimMessage>{t('options.earn.snx-stakers.ongoing-airdrop.paused-message')}</ClaimMessage>
+                        <ClaimMessage>{t('options.earn.thales-staking.staking-rewards.paused-message')}</ClaimMessage>
                     )}
                     {ongoingAirdrop && !ongoingAirdrop.isClaimPaused && !ongoingAirdrop.hasClaimRights && (
                         <ClaimMessage>
-                            {t('options.earn.snx-stakers.ongoing-airdrop.not-eligible-message')}
+                            {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
                         </ClaimMessage>
                     )}
                     {ongoingAirdrop &&
                         ongoingAirdrop.hasClaimRights &&
                         !ongoingAirdrop.isClaimPaused &&
                         ongoingAirdrop.claimed && (
-                            <ClaimMessage>{t('options.earn.snx-stakers.ongoing-airdrop.claimed-message')}</ClaimMessage>
+                            <ClaimMessage>
+                                {t('options.earn.thales-staking.staking-rewards.claimed-message')}
+                            </ClaimMessage>
                         )}
                 </ButtonContainer>
                 <ValidationMessage
@@ -183,4 +198,4 @@ const OngoingAirdrop: React.FC = () => {
     );
 };
 
-export default OngoingAirdrop;
+export default StakingRewards;
