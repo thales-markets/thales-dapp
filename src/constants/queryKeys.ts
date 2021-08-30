@@ -82,7 +82,12 @@ export const QUERY_KEYS = {
         Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
     },
     Token: {
-        Claims: (walletAddress: string, networkId: NetworkId) => ['token', 'claims', walletAddress, networkId],
+        Transactions: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'transactions',
+            walletAddress,
+            networkId,
+        ],
     },
 };
 

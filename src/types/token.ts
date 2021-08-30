@@ -20,14 +20,34 @@ export type VestingInfo = {
     unlocked: number;
 };
 
-export type ClaimTransactionType = 'retroAirdrop' | 'retroRewards' | 'stakingRewards';
+export type TokenTransactionType =
+    | 'claimRetroAirdrop'
+    | 'claimRetroUnlocked'
+    | 'claimStakingRewards'
+    | 'stake'
+    | 'startUnstaking'
+    | 'unstake'
+    | 'addToEscrow'
+    | 'vest';
 
-export type ClaimTransaction = {
+export type TokenTransaction = {
     hash: string;
-    type: ClaimTransactionType;
-    claimer: string;
+    type: TokenTransactionType;
+    account: string;
     timestamp: number;
     amount: number | string;
 };
 
-export type ClaimTransactions = ClaimTransaction[];
+export enum TransactionFilterEnum {
+    ALL = 'all',
+    CLAIM_RETRO_AIRDROP = 'claimRetroAirdrop',
+    CLAIM_RETRO_UNLOCKED = 'claimRetroUnlocked',
+    CLAIM_STAKING_REWARDS = 'claimStakingRewards',
+    STAKE = 'stake',
+    START_UNSTAKE = 'startUnstake',
+    UNSTAKE = 'unstake',
+    ADD_TO_ESCROW = 'addToEscrow',
+    VEST = 'vest',
+}
+
+export type TokenTransactions = TokenTransaction[];

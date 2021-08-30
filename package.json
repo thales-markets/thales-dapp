@@ -54,7 +54,7 @@
         "redux": "^4.0.5",
         "styled-components": "^5.2.3",
         "synthetix-data": "^2.1.42",
-        "thales-data": "^0.0.20",
+        "thales-data": "^0.0.22",
         "three": "^0.129.0",
         "typescript": "^4.2.2",
         "universal-cookie": "^4.0.4",
