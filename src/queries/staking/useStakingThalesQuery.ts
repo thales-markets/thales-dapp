@@ -7,18 +7,26 @@ import { bigNumberFormatter } from '../../utils/formatters/ethers';
 const useStakingThalesQuery = (
     walletAddress: string,
     networkId: NetworkId,
-    options?: UseQueryOptions<{ thalesStaked: number; rewards: number }>
+    options?: UseQueryOptions<{ thalesStaked: number; rewards: number; lastUnstakeTime: number; isUnstaking: boolean }>
 ) => {
-    return useQuery<{ thalesStaked: number; rewards: number }>(
+    return useQuery<{ thalesStaked: number; rewards: number; lastUnstakeTime: number; isUnstaking: boolean }>(
         QUERY_KEYS.Staking.Thales(walletAddress, networkId),
         async () => {
             let rewards = 0;
-
-            const thalesStaked = bigNumberFormatter(
-                await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress)
-            );
+            let thalesStaked = 0;
+            let lastUnstakeTime = Date.now();
+            let isUnstaking = false;
 
             try {
+                isUnstaking = await (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress);
+
+                lastUnstakeTime =
+                    Number(await (snxJSConnector as any).stakingThalesContract._lastUnstakeTime(walletAddress)) * 1000;
+
+                thalesStaked = bigNumberFormatter(
+                    await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress)
+                );
+                console.log(thalesStaked);
                 rewards = bigNumberFormatter(
                     await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress)
                 );
@@ -26,7 +34,7 @@ const useStakingThalesQuery = (
                 console.error(e);
             }
 
-            return { thalesStaked, rewards };
+            return { thalesStaked, rewards, lastUnstakeTime, isUnstaking };
         },
         options
     );

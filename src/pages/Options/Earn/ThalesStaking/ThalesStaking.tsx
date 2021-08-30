@@ -6,12 +6,27 @@ import StakingRewards from './StakingRewards';
 
 const ThalesStaking: React.FC = () => {
     const [thalesStaked, setThalesStaked] = useState<number>(0);
+    const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
+    const [thalesBalance, setThalesBalance] = useState(0);
 
     return (
         <>
-            <Stake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
+            <Stake
+                balance={thalesBalance}
+                setBalance={setThalesBalance}
+                isUnstaking={isUnstaking}
+                thalesStaked={thalesStaked}
+                setThalesStaked={setThalesStaked}
+            />
             <StakingRewards />
-            <Unstake />
+            <Unstake
+                isUnstakingInContract={isUnstaking}
+                setIsUnstakingInContract={setIsUnstaking}
+                thalesStaked={thalesStaked}
+                setThalesStaked={setThalesStaked}
+                thalesBalance={thalesBalance}
+                setThalesBalance={setThalesBalance}
+            />
             <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
         </>
     );

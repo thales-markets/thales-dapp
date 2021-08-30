@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const stakingThales = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0x91c90116c1B73d5b5b374d656749ff30578C40cD',
+        [NetworkId.Ropsten]: '0x2313e80c960e9Df1d3C956a6E7c4dB39c717E858',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
@@ -33,6 +33,16 @@ export const stakingThales = {
                     internalType: 'address',
                     name: '_feeToken',
                     type: 'address',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_durationPeriod',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_unstakeDurationPeriod',
+                    type: 'uint256',
                 },
             ],
             payable: false,
@@ -188,6 +198,12 @@ export const stakingThales = {
                     name: 'cooldownTime',
                     type: 'uint256',
                 },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
             ],
             name: 'UnstakeCooldown',
             type: 'event',
@@ -239,6 +255,21 @@ export const stakingThales = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'claimEnabled',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
@@ -639,11 +670,56 @@ export const stakingThales = {
             inputs: [
                 {
                     internalType: 'bool',
+                    name: '_claimEnabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'setClaimEnabled',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'bool',
                     name: '_distributeFeesEnabled',
                     type: 'bool',
                 },
             ],
             name: 'setDistributeFeesEnabled',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_durationPeriod',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setDurationPeriod',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_escrowThalesContract',
+                    type: 'address',
+                },
+            ],
+            name: 'setEscrow',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -674,6 +750,21 @@ export const stakingThales = {
                 },
             ],
             name: 'setPaused',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_unstakeDurationPeriod',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setUnstakeDurationPeriod',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -838,6 +929,27 @@ export const stakingThales = {
                     internalType: 'uint256',
                     name: '',
                     type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: 'unstaking',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
                 },
             ],
             payable: false,

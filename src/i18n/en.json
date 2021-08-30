@@ -292,7 +292,7 @@
                     "unstake": "Unstake",
                     "unlock-cooldown-text": "Start unlock cooldown of 7 days during which you are not eliigible for staking rewards",
                     "start-unstaking": "Start unstaking",
-                    "unstaking": "Instaking..."
+                    "unstaking": "Unstaking..."
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
