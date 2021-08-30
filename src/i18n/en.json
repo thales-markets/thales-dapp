@@ -313,6 +313,44 @@
             },
             "thales-airdrop": {
                 "tab-title": "Thales users airdrop"
+            },
+            "table": {
+                "title": "Your activity",
+                "date-time-col": "date | time",
+                "type-col": "type",
+                "amount-col": "amount",
+                "tx-status-col": "tx status",
+                "no-results": {
+                    "all": "No transactions associated with this wallet.",
+                    "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
+                    "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
+                    "stake": "No stake transactions associated with this wallet.",
+                    "startUnstake": "No start unstake transactions associated with this wallet.",
+                    "unstake": "No unstake transactions associated with this wallet.",
+                    "addToEscrow": "No add to escrow transactions associated with this wallet.",
+                    "vest": "No vest transactions associated with this wallet."
+                },
+                "types": {
+                    "claimRetroAirdrop": "Claim retro airdrop",
+                    "claimRetroUnlocked": "Claim retro unlocked",
+                    "claimStakingRewards": "Claim staking rewards",
+                    "stake": "Stake",
+                    "startUnstake": "Start unstake",
+                    "unstake": "Unstake",
+                    "addToEscrow": "Add to escrow",
+                    "vest": "Vest"
+                },
+                "filter": {
+                    "all": "All",
+                    "claimRetroAirdrop": "Retro airdrop",
+                    "claimRetroUnlocked": "Retro unlocked",
+                    "claimStakingRewards": "Staking rewards",
+                    "stake": "Stake",
+                    "startUnstake": "Start unstake",
+                    "unstake": "Unstake",
+                    "addToEscrow": "Add to escrow",
+                    "vest": "Vest"
+                }
             }
         },
         "create-market": {

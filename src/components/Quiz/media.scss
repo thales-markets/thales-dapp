@@ -1,0 +1,100 @@
+.quiz {
+    &__modal-dialog {
+        &__title {
+            text-align: center;
+            background: #04045a;
+            color: white;
+        }
+        &__content {
+            &__radio-form {
+                display: block !important;
+                background: #04045a;
+                color: white;
+                box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
+                border-radius: 23px;
+                margin: 15px 0px;
+                float: left;
+                width: 47%;
+                margin-left: 27px;
+                height: 232px;
+                &__text {
+                    background: transparent;
+                    color: white !important;
+                    width: 100%;
+                    padding-left: 27px !important;
+                    padding-top: 10px !important;
+                }
+                &__group {
+                    margin: 0 20px;
+                    &__answer {
+                        border-bottom: 0.5px solid #748bc6;
+                        margin-left: 0px !important;
+                        margin-right: 0px !important;
+                    }
+
+                    label:last-of-type {
+                        border-bottom: 0px;
+                    }
+
+                    .MuiFormControlLabel-label {
+                        float: left;
+                        clear: left;
+                        width: 100%;
+                        padding-left: 9px;
+                    }
+                    &__overlay {
+                        position: absolute;
+                        width: 100%;
+                        top: 0;
+                        left: 0;
+                        text-align: center;
+                        height: 228px;
+                        margin-top: -26px;
+                        background: linear-gradient(
+                            148.33deg,
+                            rgba(255, 255, 255, 0.06) -2.8%,
+                            rgba(255, 255, 255, 0.02) 106.83%
+                        );
+                        box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
+                        backdrop-filter: blur(4px);
+                        border-radius: 23px;
+                        text-align: center;
+                        vertical-align: middle;
+                        line-height: 145px;
+                        font-style: normal;
+                        font-weight: bold;
+                        font-size: 20px;
+                        letter-spacing: 0.5px; // z-index: 4;
+                        &__image {
+                            display: block;
+                            margin-left: auto;
+                            margin-right: auto;
+                        }
+
+                        &--true {
+                            background: linear-gradient(
+                                148.33deg,
+                                rgba(29, 189, 15, 0.3) -2.8%,
+                                rgba(7, 129, 85, 0.225) 106.83%
+                            );
+                            color: #01d930;
+                        }
+
+                        &--false {
+                            background: linear-gradient(
+                                148.33deg,
+                                rgba(225, 8, 47, 0.375) -2.8%,
+                                rgba(129, 7, 109, 0.2) 106.83%
+                            );
+                            color: #ff0000;
+                        }
+                    }
+                }
+                &__hint {
+                    background: #04045a;
+                    color: white !important;
+                }
+            }
+        }
+    }
+}

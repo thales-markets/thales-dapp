@@ -3,6 +3,7 @@ import Stake from './Stake';
 import MyStake from './MyStake';
 import Unstake from './Unstake';
 import StakingRewards from './StakingRewards';
+import YourTransactions from './Transactions';
 
 const ThalesStaking: React.FC = () => {
     const [thalesStaked, setThalesStaked] = useState<number>(0);
@@ -28,6 +29,7 @@ const ThalesStaking: React.FC = () => {
                 setThalesBalance={setThalesBalance}
             />
             <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
+            <YourTransactions />
         </>
     );
 };

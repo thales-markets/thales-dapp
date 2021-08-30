@@ -81,6 +81,14 @@ export const QUERY_KEYS = {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
         Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
     },
+    Token: {
+        Transactions: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'transactions',
+            walletAddress,
+            networkId,
+        ],
+    },
 };
 
 export default QUERY_KEYS;
