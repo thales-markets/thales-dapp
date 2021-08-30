@@ -1,4 +1,4 @@
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .create-market-title {
         padding: 50px 50px 0px !important;
         font-family: Titillium Web !important;
@@ -6,7 +6,7 @@
         font-weight: bold;
         font-size: 31px;
         line-height: 42px;
-        color: #F6F6FE;
+        color: #f6f6fe;
     }
 
     .create-market-content {
@@ -14,23 +14,26 @@
         padding: 50px 50px !important;
 
         &__info {
-            font-family: Titillium Web !important;;
+            font-family: Titillium Web !important;
             font-style: normal;
             font-weight: normal;
             font-size: 16px;
             line-height: 24px;
             letter-spacing: 0.25px;
-            color: #F6F6FE;
+            color: #f6f6fe;
             width: 90%;
         }
     }
+
+    .progress-tracker-controls {
+        padding: 0 !important;
+    }
 }
 
-@media screen and (max-width: 600px) {
-
+@media screen and (max-width: 767px) {
     .react-select__control {
-        border: 2px solid #0C1C68;
-        background: #0C1C68;
+        border: 2px solid #0c1c68;
+        background: #0c1c68;
         mix-blend-mode: normal;
     }
 
@@ -41,12 +44,11 @@
         font-weight: bold;
         font-size: 31px;
         line-height: 42px;
-        color: #F6F6FE;
+        color: #f6f6fe;
         height: 84px;
         width: 90%;
         display: block;
     }
-    
 
     .create-market-content {
         padding: 50px 20px 0px !important;
@@ -63,7 +65,7 @@
             font-size: 16px;
             line-height: 24px;
             letter-spacing: 0.25px;
-            color: #F6F6FE;
+            color: #f6f6fe;
             height: 268px;
             width: 100%;
             display: block;
@@ -75,7 +77,6 @@
                 width: 100%;
                 margin-bottom: 20px !important;
             }
-            
         }
 
         &__double-fields {
@@ -110,11 +111,10 @@
                         overflow: hidden;
                         margin-top: 10px;
                         position: absolute;
-                    
                     }
                 }
             }
-        
+
             &__checkbox {
                 width: 8%;
                 margin-bottom: 33px;
@@ -128,25 +128,22 @@
                 float: left;
             }
         }
-
-        
     }
 
     .progress-tracker-controls {
         margin-bottom: 25px !important;
         &__button-div-responsive {
             display: block !important;
-    
+
             &__upper {
                 margin-bottom: 10px;
                 width: 100%;
             }
-    
+
             &__bottom {
                 margin-top: 10px;
                 width: 100%;
             }
         }
     }
-    
 }

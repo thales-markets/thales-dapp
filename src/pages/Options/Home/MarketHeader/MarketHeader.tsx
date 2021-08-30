@@ -275,7 +275,7 @@ const Sidebar = styled.nav`
     -o-user-select: none;
     user-select: none;
     .logo {
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 1024px) {
             background: url(${logoIcon}) center no-repeat;
         }
         background: url(${logoSmallIcon}) center no-repeat;

@@ -50,7 +50,7 @@
         }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1024px) {
         padding-left: 30px;
         &__customizeBtn {
             display: none;
@@ -138,7 +138,7 @@
         }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 767px) {
         padding-left: 10px;
         padding-right: 10px;
     }

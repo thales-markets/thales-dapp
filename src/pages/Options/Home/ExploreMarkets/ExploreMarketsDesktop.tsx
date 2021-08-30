@@ -373,11 +373,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
             ></ExploreMarketsMobile>
-            <div
-                id="explore-markets"
-                className="markets-desktop"
-                style={{ padding: '0 150px 50px 150px', width: '100%' }}
-            >
+            <div id="explore-markets" className="markets-desktop" style={{ width: '100%' }}>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.keys(PrimaryFilters)
                         .filter(

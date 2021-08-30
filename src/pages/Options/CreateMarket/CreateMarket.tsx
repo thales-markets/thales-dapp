@@ -586,7 +586,7 @@ export const CreateMarket: React.FC = () => {
                     <Text className="create-market create-market-title" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
-                    <FlexDiv className="create-market-content" style={{ padding: '50px 100px' }}>
+                    <FlexDiv className="create-market-content" style={{ padding: '50px 30px 50px 120px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
                             <div className="create-market-content__info">
                                 <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
@@ -1076,7 +1076,7 @@ export const CreateMarket: React.FC = () => {
                     ></ProgressTracker>
                     <FlexDivColumnCentered
                         className="progress-tracker-controls"
-                        style={{ alignItems: 'center', marginBottom: 120 }}
+                        style={{ alignItems: 'center', marginBottom: 120, paddingLeft: 90 }}
                     >
                         <div
                             className="progress-tracker-controls__button-div-responsive"

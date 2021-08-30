@@ -73,14 +73,14 @@
         }
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1024px) {
         &__wrapper {
             padding: 0 30px !important;
             padding-bottom: 50px !important;
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         &__table {
             table-layout: fixed;
         }
@@ -115,7 +115,7 @@
         }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 767px) {
         &__wrapper {
             padding-top: 20px !important;
         }

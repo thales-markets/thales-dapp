@@ -9,7 +9,7 @@ import Loader from 'components/Loader';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { Background, FlexDivColumn, MainWrapper } from 'theme/common';
+import { Background, FlexDivColumn } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
 import ROUTES from 'constants/routes';
@@ -17,6 +17,7 @@ import useExchangeRatesQuery from '../../../queries/rates/useExchangeRatesQuery'
 import { getIsAppReady } from '../../../redux/modules/app';
 import { fetchOrders, openOrdersMapCache } from '../../../queries/options/fetchMarketOrders';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 
 let fetchOrdersInterval: NodeJS.Timeout;
 const MAX_HOT_MARKETS = 9;
@@ -73,7 +74,7 @@ export const Home: React.FC = () => {
         <>
             {marketsQuery.isSuccess ? (
                 <Background style={{ minHeight: '100vh' }}>
-                    <MainWrapper style={{ flexDirection: 'column' }}>
+                    <Wrapper style={{ flexDirection: 'column' }}>
                         <FlexDivColumn style={{ width: '100%' }}>
                             <MarketHeader
                                 route={
@@ -93,7 +94,7 @@ export const Home: React.FC = () => {
                         <MarketCreation />
 
                         <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
-                    </MainWrapper>
+                    </Wrapper>
                 </Background>
             ) : (
                 <Loader />
@@ -101,5 +102,23 @@ export const Home: React.FC = () => {
         </>
     );
 };
+
+const Wrapper = styled(FlexDivColumn)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1440px;
+    flex-direction: column;
+    margin: auto;
+    padding-left: 120px;
+    padding-right: 30px;
+    @media (max-width: 1024px) {
+        padding-left: 30px;
+    }
+    @media (max-width: 400px) {
+        padding: 0 10px;
+    }
+`;
 
 export default Home;

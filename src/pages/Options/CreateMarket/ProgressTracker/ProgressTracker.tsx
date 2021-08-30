@@ -155,18 +155,18 @@ export default ProgressTracker;
 
 const Wrapper = styled(FlexDiv)`
     margin: 30px 0;
-    padding: 0 200px;
+    padding: 0 110px 0 200px;
     align-items: center;
     justify-content: center;
     img {
         width: 24px;
     }
 
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1024px) {
         padding: 0 48px;
     }
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         display: block;
         padding: 0 48%;
     }
@@ -179,7 +179,7 @@ const Line = styled.div`
     &.fill {
         background: #3936c7;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         width: 4px;
         height: 60px;
         background: #b8c6e5;
@@ -198,12 +198,12 @@ const Label = styled(Text)`
     top: 40px;
     left: -46px;
     width: 160px;
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1024px) {
         left: -40px !important;
         text-align: center;
         width: 100px;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         top: 26px;
         text-align: center;
         left: -67px !important;

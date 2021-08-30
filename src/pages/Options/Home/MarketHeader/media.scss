@@ -4,7 +4,7 @@
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .dapp-header {
         justify-content: space-between !important;
         padding-left: 50px !important;
@@ -35,7 +35,7 @@
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     .dapp-header {
         height: 120px !important;
         flex-direction: column;
