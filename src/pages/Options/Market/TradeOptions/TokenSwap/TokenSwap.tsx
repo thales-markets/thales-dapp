@@ -482,7 +482,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
 
     return (
         <Container>
-            <FlexDivRow>
+            <FlexDivRow className="marketTab">
                 <ShortInputContainer>
                     <ReactSelect
                         formatOptionLabel={(option: any) => option.label}
@@ -523,7 +523,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 </ShortInputContainer>
             </FlexDivRow>
             {!isBuy && (
-                <AmountButtonContainer>
+                <AmountButtonContainer className="marketTab__amountWrapper">
                     {AMOUNT_PERCENTAGE.map((percentage: number) => (
                         <AmountButton
                             key={percentage}
@@ -535,7 +535,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     ))}
                 </AmountButtonContainer>
             )}
-            <SummaryContainer>
+            <SummaryContainer className="marketTab__summary">
                 <SummaryItem>
                     <FlexDivColumn>
                         <SlippageLabel>

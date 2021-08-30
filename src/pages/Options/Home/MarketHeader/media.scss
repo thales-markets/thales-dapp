@@ -9,6 +9,11 @@
         justify-content: space-between !important;
         padding-left: 50px !important;
         padding-right: 90px !important;
+        &--noPadding {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+        }
+
         &__nav {
             display: none;
             &--show {
@@ -36,6 +41,14 @@
         flex-direction: column;
         padding-left: 30px !important;
         padding-right: 30px !important;
+        &--noPadding {
+            padding-left: 10px !important;
+            padding-right: 0 !important;
+            .dapp-header__logoWrapper__burger {
+                right: 20px;
+            }
+        }
+
         margin-top: 40px !important;
         &__logoWrapper {
             align-self: flex-start;

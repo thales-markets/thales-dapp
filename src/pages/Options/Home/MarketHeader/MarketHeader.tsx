@@ -36,6 +36,7 @@ type MarketHeaderProps = {
     phase?: string;
     isCustomMarket?: boolean;
     route: string;
+    className?: string;
 };
 
 enum BurgerState {
@@ -44,7 +45,13 @@ enum BurgerState {
     Hide,
 }
 
-const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket }) => {
+const MarketHeader: React.FC<MarketHeaderProps> = ({
+    showCustomizeLayout,
+    phase,
+    route,
+    isCustomMarket,
+    className,
+}) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
@@ -64,7 +71,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
 
     return (
         <>
-            <MarketHeaderWrapper id="dapp-header" className="dapp-header" showCustomizeLayout={showCustomizeLayout}>
+            <MarketHeaderWrapper
+                id="dapp-header"
+                className={`dapp-header ${className}`}
+                showCustomizeLayout={showCustomizeLayout}
+            >
                 <FlexDiv className="dapp-header__logoWrapper">
                     <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
                     <BurdgerIcon
@@ -230,7 +241,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
 };
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
-    padding: 0 75px;
+    padding: 0 30px;
     width: 100%;
     display: flex;
     height: 100px;
