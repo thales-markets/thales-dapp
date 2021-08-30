@@ -272,7 +272,30 @@
                 "total": "Total",
                 "start-time": "Start time",
                 "end-time": "End time",
-                "initial-locked": "Initial Locked"
+                "initial-locked": "Initial Locked",
+                "table": {
+                    "title": "Your activity",
+                    "date-time-col": "date | time",
+                    "type-col": "type",
+                    "amount-col": "amount",
+                    "tx-status-col": "tx status",
+                    "no-results": {
+                        "all": "No transactions associated with this wallet.",
+                        "retroAirdrop": "No retro airdrop transactions associated with this wallet.",
+                        "retroRewards": "No retro rewards transactions associated with this wallet."
+                    },
+                    "types": {
+                        "retroAirdrop": "Claim retro airdrop",
+                        "retroRewards": "Claim retro rewards",
+                        "stakingRewards": "Claim staking rewards"
+                    },
+                    "filter": {
+                        "all": "All",
+                        "retroAirdrop": "Retro Airdrop",
+                        "retroRewards": "Retro Rewards",
+                        "stakingRewards": "Staking Rewards"
+                    }
+                }
             },
             "thales-staking": {
                 "tab-title": "Thales staking",

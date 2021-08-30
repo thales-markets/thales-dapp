@@ -19,3 +19,15 @@ export type VestingInfo = {
     totalClaimed: number;
     unlocked: number;
 };
+
+export type ClaimTransactionType = 'retroAirdrop' | 'retroRewards' | 'stakingRewards';
+
+export type ClaimTransaction = {
+    hash: string;
+    type: ClaimTransactionType;
+    claimer: string;
+    timestamp: number;
+    amount: number | string;
+};
+
+export type ClaimTransactions = ClaimTransaction[];
