@@ -100,7 +100,7 @@ const TradeOptions: React.FC<TradeOptionsProps> = ({ optionSide }) => {
             <MarketWidgetContent>
                 <Container>
                     <FlexDivRowCentered>
-                        <FilterContainer>
+                        <FilterContainer className="market__tradeTabBtn">
                             {tabContent.map((tab) => (
                                 <TradeFilterButton
                                     key={tab.id}

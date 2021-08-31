@@ -28,6 +28,7 @@ import { StyledLink } from 'pages/Options/Market/components/MarketOverview/Marke
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import './media.scss';
+import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 
 const headCells: HeadCell[] = [
     { id: 1, label: '', sortable: false },
@@ -110,51 +111,57 @@ const LeaderboardPage: React.FC<any> = () => {
     ]);
 
     const leaderboardData = useMemo(() => {
-        const searchLeader = leaderboard.filter((leader) => {
-            if (searchString === '') return true;
-            if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
-                return true;
+        const sortedData = leaderboard.sort((a, b) => {
+            if (orderBy === 5) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.trades - a.trades;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.trades - b.trades;
+                }
+            }
+            if (orderBy === 6) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.volume - a.volume;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.volume - b.volume;
+                }
             }
 
-            const disp = displayNamesMap.get(leader.walletAddress);
-
-            if (disp) {
-                return disp.toLowerCase().includes(searchString.toLowerCase());
+            if (orderBy === 7) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.netProfit - a.netProfit;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.netProfit - b.netProfit;
+                }
             }
-
-            return false;
+            return 0;
         });
-        return searchLeader
-            .sort((a, b) => {
-                if (orderBy === 5) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.trades - a.trades;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.trades - b.trades;
-                    }
-                }
-                if (orderBy === 6) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.volume - a.volume;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.volume - b.volume;
-                    }
+        const data = sortedData.map((leader, index) => {
+            if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+            else {
+            }
+            return { rank: sortedData.length - index, ...leader };
+        });
+        return data
+            .filter((leader) => {
+                if (searchString === '') return true;
+                if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                    return true;
                 }
 
-                if (orderBy === 7) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.netProfit - a.netProfit;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.netProfit - b.netProfit;
-                    }
+                const disp = displayNamesMap.get(leader.walletAddress);
+
+                if (disp) {
+                    return disp.toLowerCase().includes(searchString.toLowerCase());
                 }
-                return 0;
+
+                return false;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, searchString, leaderboard, orderBy, orderDirection]);
+    }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
@@ -197,10 +204,16 @@ const LeaderboardPage: React.FC<any> = () => {
                                                     style={cell.sortable ? { cursor: 'pointer' } : {}}
                                                 >
                                                     <TableHeaderLabel
-                                                        className={
-                                                            cell.sortable && orderBy === cell.id ? 'selected' : ''
-                                                        }
+                                                        className={`
+                                                            ${
+                                                                cell.sortable && orderBy === cell.id ? 'selected' : ''
+                                                            }  ${
+                                                            cell.id === 7 ? 'leaderboard__columns__net-profit' : ''
+                                                        }`}
                                                     >
+                                                        {cell.id === 7 && (
+                                                            <TooltipIcon title="Profit is only calculated on the matured markets"></TooltipIcon>
+                                                        )}
                                                         {cell.label}
                                                     </TableHeaderLabel>
                                                     {cell.sortable && (
@@ -233,17 +246,14 @@ const LeaderboardPage: React.FC<any> = () => {
                                             <StyledTableRow key={index}>
                                                 <StyledTableCell></StyledTableCell>
                                                 <StyledTableCell>
-                                                    {page === 0 &&
-                                                        index < 3 &&
-                                                        orderDirection === OrderDirection.DESC &&
-                                                        orderBy === 6 && (
-                                                            <Image
-                                                                src={getMedal(index)}
-                                                                style={{ width: 40, height: 40 }}
-                                                            ></Image>
-                                                        )}
+                                                    {(leader as any).rank <= 3 && (
+                                                        <Image
+                                                            src={getMedal(leader)}
+                                                            style={{ width: 40, height: 40 }}
+                                                        ></Image>
+                                                    )}
                                                 </StyledTableCell>
-                                                <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
+                                                <StyledTableCell>{(leader as any).rank}</StyledTableCell>
                                                 <StyledTableCell>
                                                     <StyledLink
                                                         href={getEtherscanAddressLink(networkId, leader.walletAddress)}
@@ -312,13 +322,13 @@ interface HeadCell {
 
 export default LeaderboardPage;
 
-const getMedal = (index: number) => {
-    switch (index) {
-        case 0:
-            return gold;
+const getMedal = (leader: any) => {
+    switch (leader.rank) {
         case 1:
-            return silver;
+            return gold;
         case 2:
+            return silver;
+        case 3:
             return bronze;
         default:
             return '';

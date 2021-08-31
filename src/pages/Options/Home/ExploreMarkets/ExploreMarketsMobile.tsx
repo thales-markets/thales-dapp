@@ -92,7 +92,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
             setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
         }
 
-        document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
         return;
     };
 
@@ -128,7 +128,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
             setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.All : filter);
         }
 
-        document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
         return;
     };
 
@@ -296,7 +296,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                 onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
                 filter={mapOrderByToEnum(orderBy)}
             >
-                <DropDownWrapper hidden={!showDropdownSort}>
+                <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
                         {Object.keys(SortByEnum)
                             .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))

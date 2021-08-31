@@ -125,7 +125,6 @@ const Wrapper = styled(FlexDivColumn)`
     padding: 50px 50px;
     position: relative;
     max-height: 490px;
-    padding-left: 138px;
 `;
 
 const Arrow = styled(Image)`

@@ -148,6 +148,7 @@ export const CreateMarket: React.FC = () => {
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    let isCurrencySelected = false;
 
     const marketQuery = useBinaryOptionsMarketQuery(market, {
         enabled: isMarketCreated,
@@ -585,7 +586,7 @@ export const CreateMarket: React.FC = () => {
                     <Text className="create-market create-market-title" style={{ padding: '50px 100px 0' }}>
                         {t('options.create-market.title')}
                     </Text>
-                    <FlexDiv className="create-market-content" style={{ padding: '50px 100px' }}>
+                    <FlexDiv className="create-market-content" style={{ padding: '50px 30px 50px 120px' }}>
                         <FlexDivColumn style={{ flex: 1 }}>
                             <div className="create-market-content__info">
                                 <Text className="text-s pale-grey lh24" style={{ margin: '0px 2px' }}>
@@ -624,14 +625,17 @@ export const CreateMarket: React.FC = () => {
                                                 );
                                             }}
                                             onBlur={() => {
-                                                currencyKey
-                                                    ? setIsCurrencyKeyValid(true)
-                                                    : setIsCurrencyKeyValid(false);
+                                                !isCurrencySelected
+                                                    ? currencyKey
+                                                        ? setIsCurrencyKeyValid(true)
+                                                        : setIsCurrencyKeyValid(false)
+                                                    : '';
                                             }}
                                             options={assetsOptions}
                                             placeholder={t('common.eg-val', { val: CRYPTO_CURRENCY_MAP.BTC })}
                                             value={currencyKey}
                                             onChange={(option: any) => {
+                                                isCurrencySelected = true;
                                                 setCurrencyKey(option);
                                                 setIsCurrencyKeyValid(true);
                                             }}
@@ -727,6 +731,11 @@ export const CreateMarket: React.FC = () => {
                                                 startDate={Today}
                                                 selected={maturityDate}
                                                 endDate={maturityDate}
+                                                onFocus={(e) =>
+                                                    document.body.clientWidth < 600
+                                                        ? (e.target.readOnly = true)
+                                                        : (e.target.readOnly = false)
+                                                }
                                                 onChange={(d: Date) => setMaturityDate(d)}
                                                 readOnly={isCreatingMarket || isMarketCreated}
                                             />
@@ -748,6 +757,11 @@ export const CreateMarket: React.FC = () => {
                                                 dateFormat="h:mm aa"
                                                 showTimeSelectOnly={true}
                                                 showTimeSelect={true}
+                                                onFocus={(e) =>
+                                                    document.body.clientWidth < 600
+                                                        ? (e.target.readOnly = true)
+                                                        : (e.target.readOnly = false)
+                                                }
                                                 selected={convertUTCToLocalDate(maturityDate)}
                                                 onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
                                                 readOnly={isCreatingMarket || isMarketCreated}
@@ -1060,9 +1074,12 @@ export const CreateMarket: React.FC = () => {
                         showLongProcess={sellLong}
                         showShortProcess={sellShort}
                     ></ProgressTracker>
-                    <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 120 }}>
+                    <FlexDivColumnCentered
+                        className="progress-tracker-controls"
+                        style={{ alignItems: 'center', marginBottom: 120, paddingLeft: 90 }}
+                    >
                         <div
-                            className="button-div-responsive"
+                            className="progress-tracker-controls__button-div-responsive"
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -1080,7 +1097,7 @@ export const CreateMarket: React.FC = () => {
                                         or
                                     </Text>
                                     <Button
-                                        className="tertiary button-div-responsive__bottom"
+                                        className="tertiary progress-tracker-controls__button-div-responsive__bottom"
                                         onClick={() => navigateToOptionsMarket(market)}
                                     >
                                         Go to market

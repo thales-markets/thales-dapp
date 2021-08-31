@@ -28,7 +28,7 @@ export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase, isCusto
 
     return (
         <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
-            <Container>
+            <Container className="market__customizeBtn">
                 <CustomizeLayoutButton
                     onClick={() => {
                         setDropdownIsOpen(!layoutDropdownIsOpen);

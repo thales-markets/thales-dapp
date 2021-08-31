@@ -4,11 +4,16 @@
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .dapp-header {
         justify-content: space-between !important;
         padding-left: 50px !important;
         padding-right: 90px !important;
+        &--noPadding {
+            padding-left: 0 !important;
+            padding-right: 50px !important;
+        }
+
         &__nav {
             display: none;
             &--show {
@@ -30,12 +35,20 @@
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     .dapp-header {
         height: 120px !important;
         flex-direction: column;
         padding-left: 30px !important;
         padding-right: 30px !important;
+        &--noPadding {
+            padding-left: 10px !important;
+            padding-right: 0 !important;
+            .dapp-header__logoWrapper__burger {
+                right: 20px;
+            }
+        }
+
         margin-top: 40px !important;
         &__logoWrapper {
             align-self: flex-start;

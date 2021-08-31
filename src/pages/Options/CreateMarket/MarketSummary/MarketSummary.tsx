@@ -198,7 +198,7 @@ const Wrapper = styled(FlexDivColumn)`
         top: 60px;
         filter: blur(1px);
     }
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1024px) {
         margin-left: 0px;
         padding-left: 0px;
         margin-top: 50px;
@@ -228,7 +228,7 @@ const SummaryHeader = styled.div`
     width: 100%;
     border-bottom: 0.5px solid #748bc6;
     text-align: center;
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         text-align: left;
         width: 100%;
         margin-bottom: 0px;
@@ -245,10 +245,13 @@ const SummaryHeader = styled.div`
 const MarketInfo = styled(FlexDivColumn)`
     padding: 20px 38px;
     font-size: 12px;
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1200px) {
+        padding: 20px 0px;
+    }
+    @media screen and (max-width: 1024px) {
         padding: 35px 38px;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         padding: 0px;
         width: 100%;
         margin-top: 45px;

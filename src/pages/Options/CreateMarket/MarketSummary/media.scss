@@ -1,4 +1,4 @@
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .summary-market {
         &__price {
             &__left {
@@ -62,7 +62,7 @@
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     .summary-market {
         min-height: 130px !important;
         margin-bottom: 24px;

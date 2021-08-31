@@ -1,44 +1,43 @@
-import React, { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import MarketsTable from '../MarketsTable';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
-import { RootState } from 'redux/rootReducer';
-import { useSelector } from 'react-redux';
-import { getWalletAddress, getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
-import { getIsAppReady } from 'redux/modules/app';
-import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
-import styled from 'styled-components';
-import myMarkets from 'assets/images/filters/my-markets.svg';
-import olympicsImg from 'assets/images/filters/olympics.svg';
-import myWatchlist from 'assets/images/filters/my-watchlist.svg';
-import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myAssets from 'assets/images/filters/my-assets.svg';
+import myMarkets from 'assets/images/filters/my-markets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
-import UserFilter from './UserFilters';
-import SearchMarket from '../SearchMarket';
-import useDebouncedMemo from 'hooks/useDebouncedMemo';
+import myWatchlist from 'assets/images/filters/my-watchlist.svg';
+import olympicsImg from 'assets/images/filters/olympics.svg';
+import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import { history, navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import onboardConnector from 'utils/onboardConnector';
+import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
+import queryString from 'query-string';
+import React, { useMemo, useState } from 'react';
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
+import onboardConnector from 'utils/onboardConnector';
+import { history, navigateTo } from 'utils/routes';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import { SYNTHS_MAP } from '../../../../constants/currency';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
-import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+import MarketsTable from '../MarketsTable';
+import SearchMarket from '../SearchMarket';
 import { ExploreMarketsMobile } from './ExploreMarketsMobile';
 import './media.scss';
+import UserFilter from './UserFilters';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
     optionsMarkets: OptionsMarkets;
-    olympics?: boolean;
 };
 
 export enum OrderDirection {
@@ -87,7 +86,7 @@ const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boo
 
 const defaultOrderBy = 5; // time remaining
 
-const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates, olympics }) => {
+const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, exchangeRates }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -117,18 +116,24 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     useEffect(() => {
-        if (olympics) {
-            if (queryString.parse(searchFilter.hash)) {
-                history.replace({
-                    pathname: searchFilter.pathname,
-                    search: queryString.stringify({
-                        userFilter2: [SecondaryFilters.Olympics],
-                    }),
-                });
-                setSecondLevelUserFilter(SecondaryFilters.Olympics);
-            }
+        const tradingMarkets = filteredOptionsMarkets.filter((market) => {
+            return market.phase === PhaseFilterEnum.trading;
+        });
+
+        if (tradingMarkets.length === 0 && phaseFilter !== PhaseFilterEnum.maturity) {
+            setPhaseFilter(PhaseFilterEnum.maturity);
         }
-    }, [olympics]);
+    }, [userFilter]);
+
+    useEffect(() => {
+        const tradingMarkets = secondLevelFilteredOptionsMarket.filter((market) => {
+            return market.phase === PhaseFilterEnum.trading;
+        });
+
+        if (tradingMarkets.length === 0 && phaseFilter !== PhaseFilterEnum.maturity) {
+            setPhaseFilter(PhaseFilterEnum.maturity);
+        }
+    }, [secondLevelUserFilter]);
 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
@@ -177,7 +182,9 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             });
         }
 
-        if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
+        if (!secondLevelUserFilterParamValue && secondLevelUserFilter !== SecondaryFilters.All) {
+            setSecondLevelUserFilter(SecondaryFilters.All);
+        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
             Object.keys(SecondaryFilters).forEach((key) => {
                 if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue)
                     setSecondLevelUserFilter(secondLevelUserFilterParamValue);
@@ -214,6 +221,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         watchlistedMarkets,
         assetSearch,
         orderBy,
+        orderDirection,
     ]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
@@ -232,42 +240,42 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     );
 
     const secondLevelFilteredOptionsMarket = useMemo(() => {
-        let secondLevelFilteredOptionsMarket = filteredOptionsMarkets;
+        let secondLevelFilteredOptionsMarkets = filteredOptionsMarkets;
         switch (secondLevelUserFilter) {
             case SecondaryFilters.Bitcoin:
-                secondLevelFilteredOptionsMarket = filteredOptionsMarkets.filter(
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
                     ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC
                 );
                 break;
             case SecondaryFilters.Ethereum:
-                secondLevelFilteredOptionsMarket = filteredOptionsMarkets.filter(
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
                     ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH
                 );
                 break;
             case SecondaryFilters.Olympics:
-                secondLevelFilteredOptionsMarket = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
                 break;
         }
 
         if (phaseFilter !== PhaseFilterEnum.all) {
-            secondLevelFilteredOptionsMarket = secondLevelFilteredOptionsMarket.filter((market) => {
+            secondLevelFilteredOptionsMarkets = secondLevelFilteredOptionsMarkets.filter((market) => {
                 return market.phase === phaseFilter;
             });
         }
 
-        return secondLevelFilteredOptionsMarket;
+        return secondLevelFilteredOptionsMarkets;
     }, [filteredOptionsMarkets, secondLevelUserFilter, phaseFilter]);
 
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
 
         if (!isDisabled && userFilterValue !== filter) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({ userFilter: [filter] }),
             });
         } else if (userFilterValue === filter && userFilter !== PrimaryFilters.All) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: '',
             });
@@ -291,7 +299,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
 
         if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
@@ -299,14 +307,14 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 }),
             });
         } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.All) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
                 }),
             });
         } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
-            history.replace({
+            history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter2: [filter],
@@ -366,7 +374,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
             ></ExploreMarketsMobile>
-            <div className="markets-desktop" style={{ padding: '0 150px 50px 150px', width: '100%' }}>
+            <div id="explore-markets" className="markets-desktop" style={{ width: '100%' }}>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.keys(PrimaryFilters)
                         .filter(

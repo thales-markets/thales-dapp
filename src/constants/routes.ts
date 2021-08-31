@@ -2,9 +2,9 @@ export const ROUTES = {
     Home: '/',
     Options: {
         Home: '/markets',
-        HotMarkets: '/markets#hot-markets',
-        Olympics: '/markets#olympics',
-        Overview: '/markets#overview',
+        HotMarkets: '/markets?anchor=hot-markets',
+        Olympics: '/markets?userFilter2=Olympics',
+        Overview: '/markets?anchor=overview',
         CreateMarket: '/markets/create-market',
         MarketMatch: '/markets/:marketAddress',
         Leaderboard: '/markets/leaderboard',

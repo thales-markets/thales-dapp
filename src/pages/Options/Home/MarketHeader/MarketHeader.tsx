@@ -30,13 +30,16 @@ import ROUTES from 'constants/routes';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
 import { useState } from 'react';
 import './media.scss';
+import { history } from 'utils/routes';
 import { Overlay } from 'components/Header/Header';
+import queryString from 'query-string';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
     phase?: string;
     isCustomMarket?: boolean;
     route: string;
+    className?: string;
 };
 
 enum BurgerState {
@@ -45,7 +48,13 @@ enum BurgerState {
     Hide,
 }
 
-const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket }) => {
+const MarketHeader: React.FC<MarketHeaderProps> = ({
+    showCustomizeLayout,
+    phase,
+    route,
+    isCustomMarket,
+    className,
+}) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
@@ -65,7 +74,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
 
     return (
         <>
-            <MarketHeaderWrapper id="dapp-header" className="dapp-header" showCustomizeLayout={showCustomizeLayout}>
+            <MarketHeaderWrapper
+                id="dapp-header"
+                className={`dapp-header ${className}`}
+                showCustomizeLayout={showCustomizeLayout}
+            >
                 <FlexDiv className="dapp-header__logoWrapper">
                     <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
                     <BurdgerIcon
@@ -100,7 +113,19 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                     <DisplayContentsAnchor href={ROUTES.Home}>
                         <LogoLocal className="logo" />
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.HotMarkets}>
+                    <DisplayContentsAnchor
+                        href={ROUTES.Options.HotMarkets}
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ anchor: ['hot-markets'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                    >
                         <SidebarItem
                             imgSrc={trendingMarketsDefaultIcon}
                             imgSrcHoverSelected={trendingMarketsSelectedIcon}
@@ -110,7 +135,19 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.Overview}>
+                    <DisplayContentsAnchor
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ anchor: ['overview'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                        href={ROUTES.Options.Overview}
+                    >
                         <SidebarItem
                             imgSrc={marketOverviewDefaultIcon}
                             imgSrcHoverSelected={marketOverviewSelectedIcon}
@@ -120,7 +157,19 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.Olympics}>
+                    <DisplayContentsAnchor
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ userFilter2: ['Olympics'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                        href={ROUTES.Options.Olympics}
+                    >
                         <SidebarItem
                             imgSrc={olympicsMarketsDefaultIcon}
                             imgSrcHoverSelected={olympicsMarketsSelectedIcon}
@@ -205,7 +254,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
 };
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
-    padding: 0 75px;
+    padding: 0 30px;
     width: 100%;
     display: flex;
     height: 100px;
@@ -239,7 +288,7 @@ const Sidebar = styled.nav`
     -o-user-select: none;
     user-select: none;
     .logo {
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 1024px) {
             background: url(${logoIcon}) center no-repeat;
         }
         background: url(${logoSmallIcon}) center no-repeat;

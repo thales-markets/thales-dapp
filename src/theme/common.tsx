@@ -68,7 +68,7 @@ export const Background = styled.section`
 
     &#landing-hero {
         min-height: 900px;
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             min-height: 600px;
         }
         position: relative;
@@ -112,7 +112,7 @@ export const Background = styled.section`
     }
 
     &:nth-child(even) {
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             & > div {
                 flex-flow: column-reverse;
             }
@@ -126,7 +126,7 @@ export const MainWrapper = styled.div`
     align-items: center;
     width: min(100%, 1440px);
     margin: auto;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         flex-direction: column;
         width: 100%;
     }
@@ -145,7 +145,7 @@ export const Section: React.FC<SectionProps> = (props) => (
 export const Side = styled(FlexDivColumnCentered)`
     flex: 1;
     padding: 120px 100px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         padding: 40px !important;
         width: 100%;
     }

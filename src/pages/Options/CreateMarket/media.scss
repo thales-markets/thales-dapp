@@ -1,4 +1,4 @@
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .create-market-title {
         padding: 50px 50px 0px !important;
         font-family: Titillium Web !important;
@@ -24,9 +24,13 @@
             width: 90%;
         }
     }
+
+    .progress-tracker-controls {
+        padding: 0 !important;
+    }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     .react-select__control {
         border: 2px solid #0c1c68;
         background: #0c1c68;
@@ -126,17 +130,20 @@
         }
     }
 
-    .button-div-responsive {
-        display: block !important;
+    .progress-tracker-controls {
+        margin-bottom: 25px !important;
+        &__button-div-responsive {
+            display: block !important;
 
-        &__upper {
-            margin-bottom: 10px;
-            width: 100%;
-        }
+            &__upper {
+                margin-bottom: 10px;
+                width: 100%;
+            }
 
-        &__bottom {
-            margin-top: 10px;
-            width: 100%;
+            &__bottom {
+                margin-top: 10px;
+                width: 100%;
+            }
         }
     }
 }

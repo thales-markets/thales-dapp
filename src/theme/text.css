@@ -127,7 +127,7 @@
     text-transform: capitalize;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .title {
         font-size: 48px;
         line-height: 64px;

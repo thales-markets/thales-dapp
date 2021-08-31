@@ -29,7 +29,7 @@
         }
     }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .hot-markets {
         padding: 50px 0 0;
         width: 100%;
@@ -72,13 +72,13 @@
         }
     }
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     .hot-markets__title {
         padding-left: 30px;
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
     .hot-markets {
         &__desktop > div {
             max-width: 352px;
@@ -96,6 +96,24 @@
                     left: 0;
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .hot-markets {
+        &__desktop > div {
+            max-width: 300px;
+            min-width: 300px;
+        }
+        &__cards {
+            &.animate {
+                left: -7%;
+            }
+        }
+        &__card > div {
+            max-width: 100%;
+            min-width: 100%;
         }
     }
 }

@@ -37,6 +37,9 @@ import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import { ethers } from 'ethers';
 import CustomMarketResults from './CustomMarketResults';
 import { useLocation } from 'react-router-dom';
+import './media.scss';
+import { MarketOverviewMobile } from './components/MarketOverview/MarketOverviewMobile';
+import MarketMobile from './MarketMobile';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -52,9 +55,12 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const dispatch = useDispatch();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const visibilityMap = useSelector((state: RootState) => getVisibilityMap(state));
-    const curentLayout = useSelector((state: RootState) => getCurrentLayout(state));
+    const currentLayout = useSelector((state: RootState) => getCurrentLayout(state));
     const fullLayout = useSelector((state: RootState) => getFullLayout(state));
+    const [isMobileView, setIsMobileView] = useState(false);
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
+
+    const [layout, setLayout] = useState(currentLayout);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
@@ -218,10 +224,21 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         }
     }, [networkId, isWalletConnected, marketQuery.isSuccess, optionsMarket]);
 
+    const handleResize = () => {
+        if (window.innerWidth <= 900) {
+            setIsMobileView(true);
+        } else {
+            setIsMobileView(false);
+        }
+    };
+
     useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
         return () => {
             marketQuery.remove();
             accountMarketInfoQuery.remove();
+            window.removeEventListener('resize', handleResize);
         };
     }, []);
 
@@ -230,39 +247,43 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     }, []);
 
     const onLayoutChange = (layout: Layout[]) => {
+        setLayout(layout);
         dispatch(setMarketWidgetLayout(layout));
     };
 
     return optionsMarket ? (
         <MarketProvider optionsMarket={optionsMarket}>
             <Background>
-                <Container>
-                    <FlexDivColumn>
-                        <MarketHeader
-                            showCustomizeLayout
-                            phase={optionsMarket.phase}
-                            isCustomMarket={optionsMarket.customMarket}
-                            route={ROUTES.Options.MarketMatch}
-                        />
-                    </FlexDivColumn>
-                </Container>
-                <Container>
-                    <MainContent>
-                        <MarketOverview optionsMarket={optionsMarket} />{' '}
-                        <MainContentContainer>
+                <FlexDivColumn className="market">
+                    <MarketHeader
+                        showCustomizeLayout
+                        phase={optionsMarket.phase}
+                        isCustomMarket={optionsMarket.customMarket}
+                        route={ROUTES.Options.MarketMatch}
+                        className="dapp-header--noPadding"
+                    />
+
+                    <FlexDivColumn className="market__content">
+                        {isMobileView ? (
+                            <MarketOverviewMobile optionsMarket={optionsMarket} />
+                        ) : (
+                            <MarketOverview optionsMarket={optionsMarket} />
+                        )}
+
+                        <MainContentContainer className="market__container">
                             {optionsMarket.phase === 'trading' && (
-                                <OptionsTabContainer>
+                                <OptionsTabContainer className="market__container__tabs">
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab
                                             isActive={tab.id === optionsActiveTab.id}
                                             isLong={tab.id === 'long'}
                                             key={tab.id}
                                             onClick={() => setOptionsActiveTab(tab)}
-                                            className={tab.id === optionsActiveTab.id ? 'selected' : ''}
-                                            // name={tab.id}
-                                            // color={tab.color}
+                                            className={`market__container__tab ${
+                                                tab.id === optionsActiveTab.id ? 'selected' : 'idle'
+                                            } `}
                                         >
-                                            {tab.name}{' '}
+                                            {tab.name}
                                             {tab.id === 'long' ? (
                                                 <OptionsIcon src={longIcon} />
                                             ) : (
@@ -272,18 +293,30 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                     ))}
                                 </OptionsTabContainer>
                             )}
-                            <ReactGridContainer phase={optionsMarket.phase} optionsActiveTab={optionsActiveTab.id}>
-                                <ReactGridLayout
-                                    layout={curentLayout}
-                                    {...reactGridConfig}
-                                    onLayoutChange={onLayoutChange}
-                                >
-                                    {renderWidgets(optionsMarket)}
-                                </ReactGridLayout>
+                            <ReactGridContainer
+                                className="market__gridWrapper"
+                                phase={optionsMarket.phase}
+                                optionsActiveTab={optionsActiveTab.id}
+                            >
+                                {isMobileView ? (
+                                    <MarketMobile
+                                        side={optionsActiveTab.id}
+                                        market={optionsMarket}
+                                        accountInfo={accountMarketInfo}
+                                    />
+                                ) : (
+                                    <ReactGridLayout
+                                        layout={layout}
+                                        {...reactGridConfig}
+                                        onLayoutChange={onLayoutChange}
+                                    >
+                                        {renderWidgets(optionsMarket)}
+                                    </ReactGridLayout>
+                                )}
                             </ReactGridContainer>
                         </MainContentContainer>
-                    </MainContent>
-                </Container>
+                    </FlexDivColumn>
+                </FlexDivColumn>
             </Background>
         </MarketProvider>
     ) : (
@@ -297,22 +330,6 @@ export const Background = styled.section`
     z-index: 2;
     height: 100vh;
     overflow: auto;
-`;
-
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: min(100%, 1440px);
-    margin: auto;
-    @media (max-width: 768px) {
-        flex-direction: column;
-        width: 100%;
-    }
-`;
-
-const MainContent = styled(FlexDivColumn)`
-    padding: 20px 108px;
 `;
 
 const MainContentContainer = styled.div`

@@ -65,14 +65,14 @@ const NetworkFeeSummaryItem = styled(SummaryItem)`
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 13px;
     line-height: 24px;
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1024px) {
         font-style: normal;
         font-weight: normal;
         font-size: 16px;
         line-height: 24px;
         letter-spacing: 0.25px;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         width: 50%;
     }
 `;
@@ -80,14 +80,14 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
 const NetworkFeeSummaryContent = styled(SummaryContent)`
     font-size: 13px;
     line-height: 24px;
-    @media screen and (max-width: 900px) {
+    @media screen and (max-width: 1024px) {
         font-style: normal;
         font-weight: normal;
         font-size: 16px;
         line-height: 24px;
         letter-spacing: 0.25px;
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 767px) {
         text-align: right;
     }
 `;

@@ -150,7 +150,7 @@ const Wrapper = styled.div`
     .cardWrapper:nth-child(even) {
         justify-self: end;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         grid-template-columns: repeat(1, 1fr);
         .cardWrapper {
             justify-self: center !important;
@@ -166,8 +166,9 @@ const CardWrapper = styled(FlexDiv)`
     height: 192px;
     padding: 1px;
     border-radius: 23px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         max-width: 400px;
+        height: 100%;
     }
 `;
 

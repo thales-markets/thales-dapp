@@ -38,7 +38,7 @@ const HeroSection: React.FC = () => {
 
 const Hero = styled(FlexDivColumn)`
     padding: 160px 140px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         padding: 50px;
     }
     @media (max-width: 568px) {

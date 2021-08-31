@@ -7,7 +7,7 @@ export const HeroSection = styled(FlexDiv)`
     width: 50%;
     position: fixed;
     bottom: 10%;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         position: relative;
         width: 100%;
     }
@@ -39,7 +39,7 @@ export const HeaderWrapper = styled.div`
     display: flex;
     height: 100px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         padding: 0 50px;
     }
     @media (max-width: 468px) {
@@ -66,7 +66,7 @@ export const Side = styled(FlexDivColumnCentered)`
     flex: 1;
     padding-bottom: 80px;
     padding-left: 120px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         padding: 40px !important;
     }
     @media (max-width: 468px) {

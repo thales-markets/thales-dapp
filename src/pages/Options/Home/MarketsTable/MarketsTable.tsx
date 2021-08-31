@@ -155,7 +155,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
             }
         };
 
-        const sortedMarkets = useMemo(() => {
+        const slicedMarkets = useMemo(() => {
             return optionsMarkets.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
         }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates, rowsPerPage]);
 
@@ -206,7 +206,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                         </TableHead>
 
                         <TableBody>
-                            {sortedMarkets.map((market, index) => {
+                            {slicedMarkets.map((market, index) => {
                                 const currentAssetPrice = exchangeRates?.[market.currencyKey] || 0;
                                 const strikeAndAssetPriceDifference = getPercentageDifference(
                                     currentAssetPrice,
