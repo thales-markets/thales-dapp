@@ -333,10 +333,10 @@
                 },
                 "types": {
                     "claimRetroAirdrop": "Claim retro airdrop",
-                    "claimRetroUnlocked": "Claim retro unlocked",
+                    "claimRetroUnlocked": "Claim retro unlock",
                     "claimStakingRewards": "Claim staking rewards",
                     "stake": "Stake",
-                    "startUnstake": "Start unstake",
+                    "startUnstake": "Start unstaking",
                     "unstake": "Unstake",
                     "addToEscrow": "Add to escrow",
                     "vest": "Vest"
@@ -344,10 +344,10 @@
                 "filter": {
                     "all": "All",
                     "claimRetroAirdrop": "Retro airdrop",
-                    "claimRetroUnlocked": "Retro unlocked",
+                    "claimRetroUnlocked": "Retro unlock",
                     "claimStakingRewards": "Staking rewards",
                     "stake": "Stake",
-                    "startUnstake": "Start unstake",
+                    "startUnstake": "Start unstaking",
                     "unstake": "Unstake",
                     "addToEscrow": "Add to escrow",
                     "vest": "Vest"
