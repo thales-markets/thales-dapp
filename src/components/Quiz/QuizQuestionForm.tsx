@@ -23,15 +23,23 @@ type QuizQuestionProps = {
 export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handleRadioChange }: QuizQuestionProps) => {
     const [selectedAnswer, setSelectedAnswer] = useState(0);
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(true);
+    const [answerIndex, setAnswerIndex] = useState(0);
     const [showOverlay, setShowOverlay] = useState(false);
     const onClick = () => (showOverlay ? setShowOverlay(false) : setShowOverlay(true));
 
     useEffect(() => {
-        console.log('works, too');
         if (selectedAnswer) {
             question.correctAnswer === selectedAnswer
-                ? (setIsAnswerCorrect(true), setShowOverlay(true))
-                : (setIsAnswerCorrect(false), setShowOverlay(true));
+                ? (setIsAnswerCorrect(true),
+                  setShowOverlay(true),
+                  setTimeout(() => {
+                      setShowOverlay(false);
+                  }, 2000))
+                : (setIsAnswerCorrect(false),
+                  setShowOverlay(true),
+                  setTimeout(() => {
+                      setShowOverlay(false);
+                  }, 2000));
         }
     }, [selectedAnswer]);
 
@@ -53,14 +61,14 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
                         {question.questionText}
                     </FormLabel>
                     <RadioGroup
-                        onChange={(e) => handleRadioChange(e, question.correctAnswer)}
+                        onChange={(e) => handleRadioChange(e, question)}
                         className="quiz__modal-dialog__content__radio-form__group"
                     >
-                        {question.answers.map((answer) => {
+                        {question.answers.map((answer, index) => {
                             return (
                                 <>
                                     <FormControlLabel
-                                        key={answer.index}
+                                        key={index + '' + answer.index}
                                         value={answer.index}
                                         checked={selectedAnswer === answer.index}
                                         control={<RadioButton />}
@@ -68,39 +76,44 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
                                         labelPlacement="start"
                                         className="quiz__modal-dialog__content__radio-form__group__answer"
                                         onClick={(e) => {
+                                            setAnswerIndex(answer.index);
                                             setSelectedAnswer(Number((e.target as HTMLInputElement).value));
                                         }}
                                     />
-                                    {selectedAnswer === answer.index && isAnswerCorrect && showOverlay ? (
-                                        <MessageOverlay
-                                            onClick={onClick}
-                                            className="quiz__modal-dialog__content__radio-form__group__overlay quiz__modal-dialog__content__radio-form__group__overlay--true"
-                                        >
-                                            <span>Your answer is correct!</span>{' '}
-                                            <img
-                                                className="quiz__modal-dialog__content__radio-form__group__overlay__image "
-                                                src={check}
-                                                style={{ marginTop: '-45px' }}
-                                            ></img>
-                                        </MessageOverlay>
-                                    ) : selectedAnswer === answer.index && !isAnswerCorrect && showOverlay ? (
-                                        <MessageOverlay
-                                            onClick={onClick}
-                                            className="quiz__modal-dialog__content__radio-form__group__overlay quiz__modal-dialog__content__radio-form__group__overlay--false"
-                                        >
-                                            <span>Ooops! Wrong answer!</span>
-                                            <img
-                                                className="quiz__modal-dialog__content__radio-form__group__overlay__image"
-                                                src={thales}
-                                                style={{ height: '180px', marginTop: '-85px' }}
-                                            ></img>
-                                        </MessageOverlay>
-                                    ) : null}
                                 </>
                             );
                         })}
                     </RadioGroup>
                 </FormControl>
+                {selectedAnswer === answerIndex && isAnswerCorrect && showOverlay ? (
+                    <MessageOverlay
+                        onClick={onClick}
+                        className={`quiz__modal-dialog__content__radio-form__group__overlay quiz__modal-dialog__content__radio-form__group__overlay--true ${
+                            showOverlay ? 'alert-shown' : 'alert-hidden'
+                        }`}
+                    >
+                        <span>Your answer is correct!</span>
+                        <img
+                            className="quiz__modal-dialog__content__radio-form__group__overlay__image "
+                            src={check}
+                            style={{ marginTop: '-45px' }}
+                        ></img>
+                    </MessageOverlay>
+                ) : selectedAnswer === answerIndex && !isAnswerCorrect && showOverlay ? (
+                    <MessageOverlay
+                        onClick={onClick}
+                        className={`quiz__modal-dialog__content__radio-form__group__overlay quiz__modal-dialog__content__radio-form__group__overlay--false ${
+                            showOverlay ? 'alert-shown' : 'alert-hidden'
+                        }`}
+                    >
+                        <span>Ooops! Wrong answer!</span>
+                        <img
+                            className="quiz__modal-dialog__content__radio-form__group__overlay__image"
+                            src={thales}
+                            style={{ height: '180px', marginTop: '-85px' }}
+                        ></img>
+                    </MessageOverlay>
+                ) : null}
             </div>
         </>
     );

@@ -1,15 +1,19 @@
 .quiz {
     &__modal-dialog {
         &__title {
-            text-align: center;
             background: #04045a;
-            color: white;
+            color: #f6f6fe;
+            font-weight: 600;
+            font-size: 25px;
+            margin-left: 40px !important;
+            line-height: 48px;
         }
         &__content {
             &__radio-form {
                 display: block !important;
+                position: relative;
                 background: #04045a;
-                color: white;
+                color: #f6f6fe;
                 box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
                 border-radius: 23px;
                 margin: 15px 0px;
@@ -19,10 +23,15 @@
                 height: 232px;
                 &__text {
                     background: transparent;
-                    color: white !important;
                     width: 100%;
                     padding-left: 27px !important;
                     padding-top: 10px !important;
+                    font-style: normal;
+                    font-weight: bold !important;
+                    line-height: 24px !important;
+                    letter-spacing: 0.5px !important;
+                    color: #f6f6fe !important;
+                    margin-bottom: 10px;
                 }
                 &__group {
                     margin: 0 20px;
@@ -48,8 +57,9 @@
                         top: 0;
                         left: 0;
                         text-align: center;
+                        opacity: 1;
+                        transition: opacity 2s;
                         height: 228px;
-                        margin-top: -26px;
                         background: linear-gradient(
                             148.33deg,
                             rgba(255, 255, 255, 0.06) -2.8%,
@@ -90,11 +100,17 @@
                         }
                     }
                 }
-                &__hint {
-                    background: #04045a;
-                    color: white !important;
-                }
             }
         }
     }
+}
+
+.alert-shown {
+    opacity: 1;
+    transition: all 2s ease-in-out;
+}
+
+.alert-hidden {
+    opacity: 0;
+    transition: all 2s ease-in-out;
 }

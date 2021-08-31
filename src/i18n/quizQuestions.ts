@@ -234,7 +234,7 @@ export const airdropClaimQuizQuestions = [
                 answerText: "It's the name of the cofounder",
             },
         ],
-        correctAnswer: 2,
+        correctAnswer: 1,
     },
     {
         questionText: 'Thales the historical person was',
