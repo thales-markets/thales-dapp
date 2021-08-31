@@ -221,6 +221,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         watchlistedMarkets,
         assetSearch,
         orderBy,
+        orderDirection,
     ]);
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
