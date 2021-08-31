@@ -13,13 +13,7 @@ import {
     truncToDecimals,
 } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
-import {
-    DisplayOrder,
-    ExtendedOrderItem,
-    ExtendedOrders,
-    HistoricalOptionsMarketInfo,
-    OptionSide,
-} from 'types/options';
+import { ExtendedOrderItem, ExtendedOrders, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { getSynthName } from 'utils/snxJSConnector';
@@ -92,6 +86,10 @@ type QuickTradingTableProps = {
     isSingleMode: boolean;
     resetFilters: any;
     exchangeRates: Rates | null;
+    orderBy: number;
+    setOrderBy: (data: any) => void;
+    orderDirection: OrderDirection;
+    setOrderDirection: (data: any) => void;
 };
 
 const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
@@ -105,6 +103,10 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     isSingleMode,
     resetFilters,
     exchangeRates,
+    orderBy,
+    orderDirection,
+    setOrderBy,
+    setOrderDirection,
 }) => {
     const { t } = useTranslation();
     const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
@@ -150,9 +152,6 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
         return page;
     }, [page, numberOfPages]);
 
-    const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
-
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
             switch (orderDirection) {
@@ -175,28 +174,8 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
 
     useEffect(() => setPage(0), [tradingModeFilter, orderFilter, coinFilter, optionFilter, orderBy, orderDirection]);
 
-    // const sortedMarkets = orders;
     const sortedMarkets = useMemo(() => {
-        return orders
-            .sort((a, b) => {
-                switch (orderBy) {
-                    case 2:
-                        return sortByMarketField(a.market, b.market, orderDirection, 'asset');
-                    case 3:
-                        return sortByTime(a, b, orderDirection);
-                    case 4:
-                        return sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableTotal');
-                    case 5:
-                        return isBuyMode
-                            ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturn')
-                            : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
-                    case 6:
-                        return sortByField(a, b, orderDirection, 'walletBalance');
-                    default:
-                        return 0;
-                }
-            })
-            .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+        return orders.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [orders, orderBy, orderDirection, memoizedPage, rowsPerPage]);
 
     const marketHeading = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
@@ -499,60 +478,6 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
             )}
         </>
     );
-};
-
-const sortByTime = (a: ExtendedOrderItem, b: ExtendedOrderItem, direction: OrderDirection) => {
-    if (direction === OrderDirection.ASC && a.market.phaseNum === b.market.phaseNum) {
-        return a.market.timeRemaining > b.market.timeRemaining ? -1 : 1;
-    }
-    if (direction === OrderDirection.DESC && a.market.phaseNum === b.market.phaseNum) {
-        return a.market.timeRemaining > b.market.timeRemaining ? 1 : -1;
-    }
-
-    return 0;
-};
-
-const sortByField = (
-    a: ExtendedOrderItem,
-    b: ExtendedOrderItem,
-    direction: OrderDirection,
-    field: keyof ExtendedOrderItem
-) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
-};
-
-const sortByOrderField = (a: DisplayOrder, b: DisplayOrder, direction: OrderDirection, field: keyof DisplayOrder) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
-};
-
-const sortByMarketField = (
-    a: HistoricalOptionsMarketInfo,
-    b: HistoricalOptionsMarketInfo,
-    direction: OrderDirection,
-    field: keyof HistoricalOptionsMarketInfo
-) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
 };
 
 const CancelIconContainer = styled(CancelIcon)`

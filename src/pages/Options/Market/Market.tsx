@@ -24,7 +24,7 @@ import MarketWidget from './components/MarketWidget';
 import { MarketWidgetKey } from 'constants/ui';
 import { getVisibilityMap, setMarketWidgetLayout, getCurrentLayout, getFullLayout } from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
-import { FlexDivCentered, FlexDivColumn } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, Wrapper } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketOverview from './components/MarketOverview';
 import styled from 'styled-components';
@@ -254,13 +254,12 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     return optionsMarket ? (
         <MarketProvider optionsMarket={optionsMarket}>
             <Background>
-                <FlexDivColumn className="market">
+                <Wrapper className="market">
                     <MarketHeader
                         showCustomizeLayout
                         phase={optionsMarket.phase}
                         isCustomMarket={optionsMarket.customMarket}
                         route={ROUTES.Options.MarketMatch}
-                        className="dapp-header--noPadding"
                     />
 
                     <FlexDivColumn className="market__content">
@@ -316,7 +315,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                             </ReactGridContainer>
                         </MainContentContainer>
                     </FlexDivColumn>
-                </FlexDivColumn>
+                </Wrapper>
             </Background>
         </MarketProvider>
     ) : (

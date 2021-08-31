@@ -155,17 +155,13 @@ export default ProgressTracker;
 
 const Wrapper = styled(FlexDiv)`
     margin: 30px 0;
-    padding: 0 110px 0 200px;
+    padding: 0 50px;
+    width: 100%;
     align-items: center;
     justify-content: center;
     img {
         width: 24px;
     }
-
-    @media screen and (max-width: 1024px) {
-        padding: 0 48px;
-    }
-
     @media screen and (max-width: 767px) {
         display: block;
         padding: 0 48%;

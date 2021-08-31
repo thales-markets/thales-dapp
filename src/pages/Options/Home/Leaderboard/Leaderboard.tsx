@@ -16,7 +16,7 @@ import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import upSelected from 'assets/images/up-selected.svg';
-import { Background, FlexDivColumnCentered, FlexDivRow, Image, MainWrapper } from 'theme/common';
+import { Background, FlexDivColumnCentered, FlexDivRow, Image, Wrapper } from 'theme/common';
 import { TableFooter } from '@material-ui/core';
 import Pagination from '../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../SearchMarket/SearchMarket';
@@ -164,13 +164,15 @@ const LeaderboardPage: React.FC<any> = () => {
     }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
 
     return (
-        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
-            <MainWrapper>
+        <Background>
+            <Wrapper>
                 <FlexDivColumnCentered className="leaderboard">
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
                     <FlexDivColumnCentered className="leaderboard__wrapper">
-                        <FlexDivRow>
-                            <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600 }}>
+                        <FlexDivRow style={{ marginTop: 50 }}>
+                            <SearchWrapper
+                                style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600, margin: '22px 0' }}
+                            >
                                 <SearchInput
                                     style={{ width: '100%', paddingRight: 40 }}
                                     className="leaderboard__search"
@@ -309,7 +311,7 @@ const LeaderboardPage: React.FC<any> = () => {
                         </TableContainer>
                     </FlexDivColumnCentered>
                 </FlexDivColumnCentered>
-            </MainWrapper>
+            </Wrapper>
         </Background>
     );
 };
