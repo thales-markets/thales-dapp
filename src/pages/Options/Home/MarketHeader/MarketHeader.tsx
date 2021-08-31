@@ -253,7 +253,7 @@ const Sidebar = styled.nav`
     top: 0;
     left: 0;
     width: 88px;
-    height: 100vh;
+    min-height: 100vh;
     z-index: 100;
     background: #748bc6;
     padding: 35px 19px;
