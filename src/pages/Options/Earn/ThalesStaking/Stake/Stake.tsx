@@ -25,6 +25,7 @@ import ValidationMessage from '../../../../../components/ValidationMessage/Valid
 import NetworkFees from '../../../components/NetworkFees';
 import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
 import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
+import { refetchUserTokenTransactions } from 'utils/queryConnector';
 
 type Properties = {
     thalesStaked: number;
@@ -162,6 +163,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
+                        refetchUserTokenTransactions(walletAddress, networkId);
                         setBalance(balance - Number(amountToStake));
                         setAmountToStake(0);
                         setThalesStaked(thalesStaked + Number(amountToStake));

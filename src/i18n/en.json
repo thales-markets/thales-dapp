@@ -324,6 +324,7 @@
                     "all": "No transactions associated with this wallet.",
                     "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
                     "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
+                    "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
                     "stake": "No stake transactions associated with this wallet.",
                     "startUnstake": "No start unstake transactions associated with this wallet.",
                     "unstake": "No unstake transactions associated with this wallet.",

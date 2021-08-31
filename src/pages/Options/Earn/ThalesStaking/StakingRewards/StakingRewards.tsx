@@ -18,7 +18,7 @@ import { ethers } from 'ethers';
 import { Airdrop } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { refetchOngoingAirdrop } from 'utils/queryConnector';
+import { refetchOngoingAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import {
     ButtonContainer,
     ClaimContent,
@@ -119,6 +119,7 @@ const StakingRewards: React.FC = () => {
 
                 if (txResult && txResult.transactionHash) {
                     refetchOngoingAirdrop(walletAddress, networkId);
+                    refetchUserTokenTransactions(walletAddress, networkId);
                     setOngoingAirdrop({
                         ...ongoingAirdrop,
                         claimed: true,

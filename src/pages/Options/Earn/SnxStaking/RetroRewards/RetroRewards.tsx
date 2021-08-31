@@ -18,7 +18,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { ButtonContainer, EarnSection, SectionContentContainer, SectionHeader } from '../../components';
-import { refetchVestingBalance } from 'utils/queryConnector';
+import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
@@ -101,6 +101,7 @@ const RetroRewards: React.FC = () => {
 
                 if (txResult && txResult.transactionHash) {
                     refetchVestingBalance(walletAddress, networkId);
+                    refetchUserTokenTransactions(walletAddress, networkId);
                     setVestingInfo({
                         ...vestingInfo,
                         unlocked: 0,
@@ -166,13 +167,22 @@ const RetroRewards: React.FC = () => {
                 <ProgressContainer>
                     <ProgressSlice
                         backgroundColor="#b6bce2"
-                        width={(vestingInfo.unlocked * 100) / vestingInfo.initialLocked}
+                        width={
+                            vestingInfo.initialLocked > 0 ? (vestingInfo.unlocked * 100) / vestingInfo.initialLocked : 0
+                        }
                     />
                     <ProgressSlice
                         backgroundColor="#3f51b5"
-                        width={(vestingInfo.totalClaimed * 100) / vestingInfo.initialLocked}
+                        width={
+                            vestingInfo.initialLocked > 0
+                                ? (vestingInfo.totalClaimed * 100) / vestingInfo.initialLocked
+                                : 0
+                        }
                     />
-                    <ProgressSlice backgroundColor="#0a2e66" width={(locked * 100) / vestingInfo.initialLocked} />
+                    <ProgressSlice
+                        backgroundColor="#0a2e66"
+                        width={vestingInfo.initialLocked > 0 ? (locked * 100) / vestingInfo.initialLocked : 0}
+                    />
                 </ProgressContainer>
                 <Divider />
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />

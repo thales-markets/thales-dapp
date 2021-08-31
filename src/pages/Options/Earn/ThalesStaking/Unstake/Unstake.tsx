@@ -21,6 +21,7 @@ import NetworkFees from '../../../components/NetworkFees';
 import styled from 'styled-components';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
 import { getIsAppReady } from '../../../../../redux/modules/app';
+import { refetchUserTokenTransactions } from 'utils/queryConnector';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -117,6 +118,7 @@ const Unstake: React.FC<Properties> = ({
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
+                        refetchUserTokenTransactions(walletAddress, networkId);
                         setIsUnstaking(false);
                         setIsUnstakingInContract(true);
                     }

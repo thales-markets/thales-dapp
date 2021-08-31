@@ -61,4 +61,8 @@ export const refetchVestingBalance = (walletAddress: string, networkId: NetworkI
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Vesting(walletAddress, networkId));
 };
 
+export const refetchUserTokenTransactions = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.Transactions(walletAddress, networkId));
+};
+
 export default queryConnector;

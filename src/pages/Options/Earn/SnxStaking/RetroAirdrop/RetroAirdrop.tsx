@@ -25,7 +25,7 @@ import {
     SectionHeader,
 } from '../../components';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import { refetchRetroAirdrop } from 'utils/queryConnector';
+import { refetchRetroAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import { Airdrop } from 'types/token';
 import { THALES_CURRENCY } from 'constants/currency';
@@ -113,6 +113,7 @@ const RetroAirdrop: React.FC = () => {
 
                 if (txResult && txResult.transactionHash) {
                     refetchRetroAirdrop(walletAddress, networkId);
+                    refetchUserTokenTransactions(walletAddress, networkId);
                     setRetroAirdrop({
                         ...retroAirdrop,
                         claimed: true,
