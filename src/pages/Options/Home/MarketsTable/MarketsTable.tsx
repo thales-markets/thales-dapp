@@ -42,12 +42,13 @@ import { USD_SIGN } from 'constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { FlexDivCentered, Image } from '../../../../theme/common';
 import arrowDown from 'assets/images/arrow-down.svg';
-import { formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
 import arrowUp from 'assets/images/arrow-up.svg';
 import basketball from 'assets/images/basketball.svg';
 import volleyball from 'assets/images/volleyball.svg';
 import medals from 'assets/images/medals.png';
 import tennis from 'assets/images/tennis.svg';
+import xyz from 'assets/images/xyz.png';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
 
@@ -281,7 +282,11 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         >
                                             <StyledAnchoredTableCell>
                                                 {market.customMarket ? (
-                                                    market.eventName
+                                                    market.eventName === 'XYZ airdrop claims' ? (
+                                                        formatCurrency(market.outcome || 0, 0)
+                                                    ) : (
+                                                        market.eventName
+                                                    )
                                                 ) : (
                                                     <FlexDivCentered>
                                                         <span>
@@ -466,7 +471,6 @@ const RedText = styled.span`
 `;
 
 export const countryToCountryCode = (country: string) => {
-    console.log(country);
     if (country) {
         switch (country) {
             case 'USA':
@@ -492,7 +496,6 @@ export const countryToCountryCode = (country: string) => {
 };
 
 export const eventToIcon = (event: string) => {
-    console.log(event);
     if (event) {
         if (event.toLowerCase().indexOf('basketball') !== -1) {
             return basketball;
@@ -505,6 +508,9 @@ export const eventToIcon = (event: string) => {
         }
         if (event.toLowerCase().indexOf('tennis') !== -1 || event.toLowerCase().indexOf('us open') !== -1) {
             return tennis;
+        }
+        if (event.toLowerCase().indexOf('xyz') !== -1) {
+            return xyz;
         }
     }
 };
