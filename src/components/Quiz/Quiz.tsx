@@ -108,7 +108,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                     <span className="quiz__modal-dialog__title__text">{t('options.quiz.title')}</span>
                     <div style={{ float: 'right', marginBottom: '30px' }}>
                         <a
-                            className="quiz__modal-dialog__title__link pale-grey"
+                            className="quiz__modal-dialog__title__link"
                             target="_blank"
                             rel="noreferrer"
                             href="https://discord.gg/cFGv5zyVEj"

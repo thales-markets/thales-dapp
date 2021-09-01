@@ -150,7 +150,7 @@ const RetroAirdrop: React.FC = () => {
             );
         } else {
             return (
-                <Button onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
+                <Button onClick={startQuiz} className="primary">
                     {t('options.earn.snx-stakers.start-quiz')}
                 </Button>
             );
