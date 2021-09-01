@@ -2,7 +2,12 @@ import { Paper } from '@material-ui/core';
 import { Table, TableBody, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../../Home/MarketsTable/components';
-import { PaginationWrapper, StyledTableRow } from '../../Home/MarketsTable/MarketsTable';
+import {
+    countryToCountryCode,
+    eventToIcon,
+    PaginationWrapper,
+    StyledTableRow,
+} from '../../Home/MarketsTable/MarketsTable';
 import { TableFooter } from '@material-ui/core';
 import Pagination from '../../Home/MarketsTable/Pagination';
 import {
@@ -331,6 +336,12 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                             order.optionSide
                                                         )}
                                                     >
+                                                        {order.market.customMarket &&
+                                                            !countryToCountryCode(order.market.country as any) && (
+                                                                <CustomIcon
+                                                                    src={eventToIcon(order.market.eventName as any)}
+                                                                ></CustomIcon>
+                                                            )}
                                                         <CryptoName>
                                                             {marketHeading(order.market, order.optionSide)}
                                                             {order.optionSide === 'long' ? (
@@ -646,4 +657,10 @@ const RedText = styled.span`
     width: 70px;
 `;
 
+export const CustomIcon = styled(Image)`
+    margin-bottom: -6px;
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
+`;
 export default QuickTradingTable;
