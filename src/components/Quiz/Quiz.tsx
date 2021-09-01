@@ -170,7 +170,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                             </Button>
                         </ButtonContainer>
                         <div className="pale-grey quiz__modal-dialog__content__page-number">
-                            {pageNumber + 1 + ' / ' + numberOfPages()}
+                            {pageNumber + 1 + ' of ' + numberOfPages()}
                         </div>
                         <ButtonContainer
                             style={{
