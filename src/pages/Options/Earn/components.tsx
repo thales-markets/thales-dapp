@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDivRowCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 
 export const EarnSection = styled.section`
     padding-bottom: 0px;
@@ -8,11 +8,25 @@ export const EarnSection = styled.section`
     flex-direction: column;
     position: relative;
     background: #04045a;
-    border-radius: 23px;
-    overflow: hidden;
+    border-radius: 15px;
     color: white;
     grid-column: span 5;
+    grid-row: span 3;
     margin-bottom: 15px;
+    border: solid 1px transparent;
+    padding: 10px;
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        margin: -3px;
+        border-radius: inherit;
+        background: linear-gradient(rgba(202, 145, 220, 0.6), rgba(106, 193, 213, 0.6));
+    }
 `;
 
 export const SectionHeader = styled(FlexDivRowCentered)`
@@ -21,7 +35,6 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     letter-spacing: 0.15px;
     color: #f6f6fe;
     min-height: 50px;
-    border-bottom: 1px solid rgba(228, 228, 228, 0.1);
     padding: 0px 20px 0 30px;
 `;
 
@@ -37,8 +50,10 @@ export const ClaimDiv = styled(FlexDiv)`
 `;
 
 export const ClaimTitle = styled.span`
-    font-size: 18px;
-    padding-right: 5px;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.15px;
+    padding-bottom: 20px;
 `;
 
 export const ClaimContent = styled.span`
@@ -46,11 +61,12 @@ export const ClaimContent = styled.span`
 `;
 
 export const SectionContentContainer = styled(FlexDivColumn)`
-    padding: 40px 30px 35px 30px;
+    padding: 40px 30px 0 30px;
 `;
 
-export const ClaimItem = styled(FlexDivRow)`
+export const ClaimItem = styled(FlexDivColumnCentered)`
     margin-bottom: 20px;
+    align-items: center;
 `;
 
 export const ButtonContainer = styled(FlexDivColumnCentered)`
@@ -72,4 +88,11 @@ export const FullRow = styled(FlexDiv)`
     font-size: 20px;
     justify-content: center;
     margin-bottom: 10px;
+`;
+
+export const EarnSymbol = styled(FlexDivCentered)`
+    color: #00f9ff;
+    font-weight: 600;
+    font-size: 39px;
+    padding: 20px;
 `;

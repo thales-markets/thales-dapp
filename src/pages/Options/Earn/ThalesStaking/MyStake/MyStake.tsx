@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, FullRow, SectionContent, SectionHeader } from '../../components';
+import { ClaimTitle, EarnSection, EarnSymbol, SectionContent, SectionHeader } from '../../components';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
@@ -9,6 +9,7 @@ import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
+import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
 
 type Properties = {
     thalesStaked: number;
@@ -43,27 +44,41 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked }) => {
     }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess]);
 
     return (
-        <EarnSection style={{ gridColumn: 'span 4' }}>
+        <EarnSection style={{ gridColumn: 'span 6', gridRow: 'span 2', textAlign: 'center' }}>
             <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
             <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
-                <FullRow>
-                    <div>
-                        {t('options.earn.thales-staking.my-stake.staked-in-contract')}:{' '}
+                <FlexDivColumnCentered>
+                    <ClaimTitle>{t('options.earn.thales-staking.my-stake.staked-in-contract')}:</ClaimTitle>
+                    <GradientText
+                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                        fontSize={25}
+                        fontWeight={600}
+                    >
                         {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                    </div>
-                </FullRow>
-                <FullRow>
-                    <div>
-                        {t('options.earn.thales-staking.my-stake.locked-in-escrow')}:{' '}
+                    </GradientText>
+                </FlexDivColumnCentered>
+                <EarnSymbol>+</EarnSymbol>
+                <FlexDivColumnCentered>
+                    <ClaimTitle>{t('options.earn.thales-staking.my-stake.locked-in-escrow')}:</ClaimTitle>
+                    <GradientText
+                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                        fontSize={25}
+                        fontWeight={600}
+                    >
                         {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
-                    </div>
-                </FullRow>
-                <FullRow>
-                    <div>
-                        {t('options.earn.thales-staking.my-stake.total-staked')}:{' '}
+                    </GradientText>
+                </FlexDivColumnCentered>
+                <EarnSymbol>=</EarnSymbol>
+                <FlexDivColumnCentered>
+                    <ClaimTitle>{t('options.earn.thales-staking.my-stake.total-staked')}:</ClaimTitle>
+                    <GradientText
+                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                        fontSize={25}
+                        fontWeight={600}
+                    >
                         {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
-                    </div>
-                </FullRow>
+                    </GradientText>
+                </FlexDivColumnCentered>
             </SectionContent>
         </EarnSection>
     );

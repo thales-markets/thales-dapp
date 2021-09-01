@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { EarnSection, SectionContentContainer, SectionHeader } from '../../components';
-import { Button, FlexDivCentered, FlexDivColumnCentered } from '../../../../../theme/common';
+import { Button, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,6 @@ import {
     getWalletAddress,
 } from '../../../../../redux/modules/wallet';
 import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
-import { Divider } from '../../../Market/components';
 import NetworkFees from '../../../components/NetworkFees';
 import styled from 'styled-components';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
@@ -31,9 +30,9 @@ type Properties = {
     thalesBalance: number;
     setThalesBalance: (staked: number) => void;
 };
-// 7 days - 7 * 24 * 60 * 60 * 1000
+
 const addWeek = (date: Date) => {
-    return new Date(date.getTime() + 60 * 60 * 1000);
+    return new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000);
 };
 
 const Unstake: React.FC<Properties> = ({
@@ -81,7 +80,9 @@ const Unstake: React.FC<Properties> = ({
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
             setIsUnstakingInContract(stakingThalesQuery.data.isUnstaking);
-            setUnstakeEndTime(addWeek(new Date(stakingThalesQuery.data.lastUnstakeTime)));
+            if (stakingThalesQuery.data.isUnstaking) {
+                setUnstakeEndTime(addWeek(new Date(stakingThalesQuery.data.lastUnstakeTime)));
+            }
         }
     }, [stakingThalesQuery.isSuccess]);
 
@@ -180,21 +181,28 @@ const Unstake: React.FC<Properties> = ({
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 6' }}>
+        <EarnSection style={{ gridColumn: 'span 4' }}>
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
-            <SectionContentContainer style={{ flexDirection: 'column' }}>
-                <FlexDivColumnCentered>
+            <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
+                <FlexDivColumn>
                     <UnstakingTitleText>
-                        {!isUnstakingInContract ? (
-                            t('options.earn.thales-staking.unstake.unlock-cooldown-text')
-                        ) : (
-                            <TimeRemaining end={unstakeEndTime} fontSize={18} />
-                        )}
+                        {isUnstakingInContract
+                            ? t('cooldown-started-text')
+                            : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
+                        :
                     </UnstakingTitleText>
-                </FlexDivColumnCentered>
-                <Divider />
+                    <FlexDivCentered style={{ height: '100%' }}>
+                        <GradientText
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                            fontSize={25}
+                            fontWeight={600}
+                        >
+                            {isUnstakingInContract ? '7 days' : <TimeRemaining end={unstakeEndTime} fontSize={25} />}
+                        </GradientText>
+                    </FlexDivCentered>
+                </FlexDivColumn>
                 <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
-                <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
+                <FlexDivCentered style={{ paddingTop: '15px' }}>{getSubmitButton()}</FlexDivCentered>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}
                     message={txErrorMessage}
@@ -206,7 +214,8 @@ const Unstake: React.FC<Properties> = ({
 };
 
 const UnstakingTitleText = styled.span`
-    text-align: center;
+    font-size: 16px;
+    line-height: 24px;
 `;
 
 export default Unstake;

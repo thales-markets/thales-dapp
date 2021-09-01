@@ -252,7 +252,7 @@
         },
         "earn": {
             "snx-stakers": {
-                "tab-title": "SNX stakers",
+                "tab-title": "Retro rewards",
                 "retro-airdrop": {
                     "title": "Retro Airdrop",
                     "claimed-message": "You have already claimed the airdrop.",
@@ -261,7 +261,7 @@
                 "retro-rewards": {
                     "title": "Retro Rewards"
                 },
-                "amount-to-claim": "Amount to claim",
+                "airdropped-amount": "Airdropped amount",
                 "claim": "Claim",
                 "claiming": "Claiming...",
                 "claimed": "Claimed",
@@ -275,7 +275,7 @@
                 "initial-locked": "Initial Locked"
             },
             "thales-staking": {
-                "tab-title": "Thales staking",
+                "tab-title": "Staking",
                 "stake": {
                     "stake": "Stake",
                     "staking": "Staking...",
@@ -291,6 +291,7 @@
                 "unstake": {
                     "unstake": "Unstake",
                     "unlock-cooldown-text": "Start unlock cooldown of 7 days during which you are not eliigible for staking rewards",
+                    "cooldown-started-text": "Your staking has started, you will be eligable for staking rewards in",
                     "start-unstaking": "Start unstaking",
                     "unstaking": "Unstaking..."
                 },

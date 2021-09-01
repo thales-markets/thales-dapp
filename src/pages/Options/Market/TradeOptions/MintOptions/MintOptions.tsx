@@ -575,7 +575,6 @@ const MintOptions: React.FC = () => {
                 refetchOrderbook(makerToken);
                 dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
             } catch (err) {
-                console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             }

@@ -19,6 +19,7 @@ const ThalesStaking: React.FC = () => {
                 thalesStaked={thalesStaked}
                 setThalesStaked={setThalesStaked}
             />
+            <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
             <StakingRewards />
             <Unstake
                 isUnstakingInContract={isUnstaking}
@@ -28,7 +29,6 @@ const ThalesStaking: React.FC = () => {
                 thalesBalance={thalesBalance}
                 setThalesBalance={setThalesBalance}
             />
-            <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
             <YourTransactions />
         </>
     );

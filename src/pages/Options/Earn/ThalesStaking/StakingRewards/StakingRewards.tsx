@@ -135,7 +135,7 @@ const StakingRewards: React.FC = () => {
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 4' }}>
+        <EarnSection style={{ gridColumn: 'span 6', gridRow: 'span 4' }}>
             <SectionHeader>{t('options.earn.thales-staking.staking-rewards.title')}</SectionHeader>
             <SectionContentContainer>
                 <ClaimItem>

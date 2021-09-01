@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, FlexDivColumn } from '../../../theme/common';
+import { Background, FlexDivColumn, Text } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
@@ -32,10 +32,6 @@ const EarnPage: React.FC = () => {
                 id: 'lp-staking',
                 name: t('options.earn.lp-staking.tab-title'),
             },
-            {
-                id: 'thales-airdrop',
-                name: t('options.earn.thales-airdrop.tab-title'),
-            },
         ],
         [t]
     );
@@ -49,6 +45,7 @@ const EarnPage: React.FC = () => {
             </Container>
             <Container>
                 <MainContent>
+                    <EarnTitle className="pale-grey">Earn</EarnTitle>
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (
@@ -91,61 +88,64 @@ const MainContent = styled(FlexDivColumn)`
 `;
 
 const MainContentContainer = styled.div`
-    border: 1px solid #0a2e66;
-    border-radius: 15px;
     overflow: hidden;
 `;
 
 const OptionsTabContainer = styled.div`
-    height: 75px;
+    display: flex;
+    justify-content: space-evenly;
     position: relative;
+    margin-bottom: 20px;
 `;
 
-const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
-    position: absolute;
-    top: 0;
-    left: ${(props) => props.index * 20 + '% '};
+const OptionsTab = styled.button<{ isActive: boolean; index: number }>`
+    border: 2px solid transparent;
+    border-radius: 50px;
+    min-height: 32px;
     background-color: transparent;
-    width: 20%;
-    z-index: ${(props) => (props.isActive ? props.index + 1 : 0)};
-    transition: 0.5s;
-    transition-property: color;
-    height: 75px;
-    border-radius: 15px 15px 0px 0px;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 18px;
     line-height: 40px;
     text-align: center;
-    letter-spacing: 0.15px;
-    color: #b8c6e5;
-    padding-bottom: 15px;
-    border-left: 1px solid #0a2e66;
-    border-right: 1px solid #0a2e66;
-    user-select: none;
-    &.selected {
-        background-color: #0a2e66;
-        transition: 0.2s;
-        color: #f6f6fe;
+    letter-spacing: 0.5px;
+    color: #f6f6fe;
+    margin: 0 9px;
+    padding: 6px 16px;
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
     }
-    &:hover:not(.selected) {
-        cursor: pointer;
-        border: 1.5px solid #00f9ff;
+    &:hover:not(:disabled) {
+        background: rgba(1, 38, 81, 0.8);
+        border: 2px solid #0a2e66;
+        color: #b8c6e5;
+    }
+    &.selected {
+        background: #0a2e66;
+        border: 2px solid #00f9ff;
         color: #00f9ff;
     }
-    img {
-        margin-left: 10px;
-        margin-bottom: 5px;
+    &.selected:hover {
+        background: rgba(1, 38, 81, 0.8);
+        border: 2px solid #00f9ff;
+        color: #b8c6e5;
     }
 `;
 
 const WidgetsContainer = styled.div`
-    background-color: #0a2e66;
     position: relative;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    grid-gap: 10px;
+    grid-template-rows: repeat(10, 1fr);
+    grid-gap: 20px;
     padding: 10px;
+`;
+
+const EarnTitle = styled(Text)`
+    font-size: 39px;
+    padding: 30px;
 `;
 
 export default EarnPage;

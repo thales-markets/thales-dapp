@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'theme/common';
+import { Button, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -16,7 +16,6 @@ import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import useRetroAirdropQuery from 'queries/walletBalances/useRetroAirdropQuery';
 import {
     ButtonContainer,
-    ClaimContent,
     ClaimItem,
     ClaimMessage,
     ClaimTitle,
@@ -32,7 +31,6 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { Divider } from 'pages/Options/Market/components';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -132,17 +130,20 @@ const RetroAirdrop: React.FC = () => {
             <SectionHeader>{t('options.earn.snx-stakers.retro-airdrop.title')}</SectionHeader>
             <SectionContentContainer>
                 <ClaimItem>
-                    <ClaimTitle>{t('options.earn.snx-stakers.amount-to-claim')}:</ClaimTitle>
-                    <ClaimContent>
+                    <ClaimTitle>{t('options.earn.snx-stakers.airdropped-amount')}:</ClaimTitle>
+                    <GradientText
+                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                        fontSize={31}
+                        fontWeight={600}
+                    >
                         {formatCurrencyWithKey(
                             THALES_CURRENCY,
                             isClaimAvailable && retroAirdrop && retroAirdrop.accountInfo
                                 ? retroAirdrop.accountInfo.balance
                                 : 0
                         )}
-                    </ClaimContent>
+                    </GradientText>
                 </ClaimItem>
-                <Divider />
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
                     <Button

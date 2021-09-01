@@ -559,7 +559,6 @@ export const CreateMarket: React.FC = () => {
                     return;
                 }
             } catch (err) {
-                console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             }
