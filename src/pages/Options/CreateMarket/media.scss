@@ -1,6 +1,5 @@
 @media screen and (max-width: 1024px) {
     .create-market-title {
-        padding: 50px 50px 0px !important;
         font-family: Titillium Web !important;
         font-style: normal;
         font-weight: bold;
@@ -11,7 +10,6 @@
 
     .create-market-content {
         display: block;
-        padding: 50px 50px !important;
 
         &__info {
             font-family: Titillium Web !important;
@@ -38,7 +36,6 @@
     }
 
     .create-market-title {
-        padding: 40px 21px 0px 20px !important;
         font-family: Titillium Web !important;
         font-style: normal;
         font-weight: bold;
@@ -51,7 +48,6 @@
     }
 
     .create-market-content {
-        padding: 50px 20px 0px !important;
         display: block;
 
         &__wrapper {
@@ -66,7 +62,6 @@
             line-height: 24px;
             letter-spacing: 0.25px;
             color: #f6f6fe;
-            height: 268px;
             width: 100%;
             display: block;
         }

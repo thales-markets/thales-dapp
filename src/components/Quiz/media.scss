@@ -2,35 +2,66 @@
     &__modal-dialog {
         &__title {
             background: #04045a;
-            color: #f6f6fe;
             font-weight: 600;
             font-size: 25px;
             margin-left: 40px !important;
             line-height: 48px;
+            &__text {
+                font-size: 25px;
+                line-height: 48px;
+                font-weight: 600;
+                display: block;
+                margin-bottom: -75px;
+                margin-top: 40px;
+            }
+            &__link {
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 32px;
+                letter-spacing: 0.35px;
+                color: #f6f6fe;
+                &:visited {
+                    color: #00f9ff;
+                }
+            }
         }
         &__content {
+            &__page-number {
+                display: block;
+                float: left;
+                margin: 0% 22.5%;
+                margin-top: 45px;
+                font-size: 16px;
+                line-height: 32px;
+                letter-spacing: 0.35px;
+            }
             &__radio-form {
                 display: block !important;
                 position: relative;
-                background: #04045a;
-                color: #f6f6fe;
+                background: linear-gradient(
+                    148.33deg,
+                    rgba(255, 255, 255, 0.03) -2.8%,
+                    rgba(255, 255, 255, 0.01) 106.83%
+                );
                 box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
+                border: 2px solid #212470;
                 border-radius: 23px;
                 margin: 15px 0px;
                 float: left;
                 width: 47%;
-                margin-left: 27px;
+                margin-left: 13px;
+                margin-right: 13px;
                 height: 232px;
                 &__text {
                     background: transparent;
                     width: 100%;
+                    padding-right: 10px !important;
                     padding-left: 27px !important;
                     padding-top: 10px !important;
                     font-style: normal;
                     font-weight: bold !important;
                     line-height: 24px !important;
                     letter-spacing: 0.5px !important;
-                    color: #f6f6fe !important;
                     margin-bottom: 10px;
                 }
                 &__group {
@@ -74,7 +105,8 @@
                         font-style: normal;
                         font-weight: bold;
                         font-size: 20px;
-                        letter-spacing: 0.5px; // z-index: 4;
+                        letter-spacing: 0.5px;
+                        z-index: 4;
                         &__image {
                             display: block;
                             margin-left: auto;

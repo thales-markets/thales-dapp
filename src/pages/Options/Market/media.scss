@@ -1,14 +1,4 @@
 .market {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 1440px;
-    flex-direction: column;
-    margin: auto;
-    padding-left: 120px;
-    padding-right: 30px;
-
     @media (max-width: 1250px) {
         &__overview {
             &__cell {

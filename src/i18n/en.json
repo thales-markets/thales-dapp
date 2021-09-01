@@ -272,7 +272,8 @@
                 "total": "Total",
                 "start-time": "Start time",
                 "end-time": "End time",
-                "initial-locked": "Initial Locked"
+                "initial-locked": "Initial Locked",
+                "start-quiz": "Start Quiz"
             },
             "thales-staking": {
                 "tab-title": "Staking",
@@ -353,6 +354,18 @@
                     "addToEscrow": "Add to escrow",
                     "vest": "Vest"
                 }
+            }
+        },
+        "quiz": {
+            "title": "Quiz",
+            "discord-link": "Ask our Discord community for help",
+            "docs-link": "Find answer in our docs",
+            "discord-button": "Ask Discord for help",
+            "submit-answers": "Submit answers",
+            "next-page": "Next page",
+            "question": {
+                "correct-answer": "Your answer is correct!",
+                "wrong-answer": "Ooops! Wrong answer!"
             }
         },
         "create-market": {

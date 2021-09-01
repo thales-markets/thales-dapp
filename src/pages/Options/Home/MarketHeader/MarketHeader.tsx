@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDiv, Logo } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
@@ -73,7 +73,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
     }, [showBurgerMenu]);
 
     return (
-        <>
+        <FlexDivColumn style={{ width: '100%' }}>
             <MarketHeaderWrapper
                 id="dapp-header"
                 className={`dapp-header ${className}`}
@@ -249,12 +249,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 }}
                 className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
             ></Overlay>
-        </>
+        </FlexDivColumn>
     );
 };
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
-    padding: 0 30px;
     width: 100%;
     display: flex;
     height: 100px;
@@ -267,7 +266,7 @@ const Sidebar = styled.nav`
     top: 0;
     left: 0;
     width: 88px;
-    height: 100vh;
+    min-height: 100vh;
     z-index: 100;
     background: #748bc6;
     padding: 35px 19px;

@@ -7,12 +7,8 @@
 @media screen and (max-width: 1024px) {
     .dapp-header {
         justify-content: space-between !important;
-        padding-left: 50px !important;
-        padding-right: 90px !important;
-        &--noPadding {
-            padding-left: 0 !important;
-            padding-right: 50px !important;
-        }
+        padding-left: 0 !important;
+        padding-right: 50px !important;
 
         &__nav {
             display: none;
@@ -38,15 +34,10 @@
 @media screen and (max-width: 767px) {
     .dapp-header {
         height: 120px !important;
+        padding-right: 0 !important;
         flex-direction: column;
-        padding-left: 30px !important;
-        padding-right: 30px !important;
-        &--noPadding {
-            padding-left: 10px !important;
-            padding-right: 0 !important;
-            .dapp-header__logoWrapper__burger {
-                right: 20px;
-            }
+        .dapp-header__logoWrapper__burger {
+            right: 10px;
         }
 
         margin-top: 40px !important;

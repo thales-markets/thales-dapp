@@ -205,7 +205,7 @@ export const airdropClaimQuizQuestions = [
                 answerText: 'Decentralized feeds provided by Chainlink',
             },
         ],
-        correctAnswer: 2,
+        correctAnswer: 4,
     },
     {
         questionText: 'Binary options are traded on Thales using',
