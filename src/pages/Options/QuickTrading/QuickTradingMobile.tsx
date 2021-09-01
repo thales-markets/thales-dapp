@@ -12,12 +12,12 @@ import SearchMarket from '../Home/SearchMarket';
 import { CategoryFilters, DropDown, DropDownWrapper } from '../Home/ExploreMarkets/Mobile/CategoryFilters';
 import { PhaseFilters } from '../Home/ExploreMarkets/Mobile/PhaseFilters';
 import { SortyByMobile } from '../Home/ExploreMarkets/Mobile/SortByMobile';
-// import { MarketCardMobile } from '../Home/ExploreMarkets/Mobile/MarketCardMobile';
+import OrderCardMobile from '../Home/ExploreMarkets/Mobile/OrderCardMobile';
 import { ExtendedOrders } from 'types/options';
 
-type ExploreMarketsMobileProps = {
+type QuickTradingMobileProps = {
     exchangeRates: Rates | null;
-    filteredMarkets: ExtendedOrders;
+    orders: ExtendedOrders;
     tradingModeFilter: TradingModeFilterEnum;
     orderFilter: OrderFilterEnum;
     coinFilter: CoinFilterEnum;
@@ -42,8 +42,8 @@ export enum SortByEnum {
     Open_Orders = 'Open Orders',
 }
 
-const QuickTradingMobile: React.FC<ExploreMarketsMobileProps> = ({
-    filteredMarkets,
+const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
+    orders,
     tradingModeFilter,
     orderFilter,
     coinFilter,
@@ -57,6 +57,7 @@ const QuickTradingMobile: React.FC<ExploreMarketsMobileProps> = ({
     orderBy,
     setOrderBy,
     isSingleMode,
+    exchangeRates,
 }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const { t } = useTranslation();
@@ -134,13 +135,13 @@ const QuickTradingMobile: React.FC<ExploreMarketsMobileProps> = ({
     };
 
     return (
-        <div className="markets-mobile">
+        <div className="quick-trading-mobile">
             <SearchMarket
-                className="markets-mobile__search"
+                className="quick-trading-mobile__search"
                 assetSearch={assetSearch}
                 setAssetSearch={setAssetSearch}
             />
-            <FlexDiv className="markets-mobile__filters">
+            <FlexDiv className="quick-trading-mobile__filters">
                 <CategoryFilters
                     onClick={setShowDropwodnUserFilters.bind(this, !showDropdownUserFilters)}
                     filter={orderFilter}
@@ -245,7 +246,7 @@ const QuickTradingMobile: React.FC<ExploreMarketsMobileProps> = ({
                 onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
                 filter={mapOrderByToEnum(orderBy)}
             >
-                <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
+                <DropDownWrapper className="quick-trading-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
                         {Object.keys(SortByEnum)
                             .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
@@ -266,8 +267,9 @@ const QuickTradingMobile: React.FC<ExploreMarketsMobileProps> = ({
                 </DropDownWrapper>
             </SortyByMobile>
 
-            {filteredMarkets.length > 0 ? null : (
-                // <MarketCardMobile exchangeRates={exchangeRates} optionsMarkets={filteredMarkets}></MarketCardMobile>
+            {orders.length > 0 ? (
+                <OrderCardMobile exchangeRates={exchangeRates} orders={orders}></OrderCardMobile>
+            ) : (
                 <NoOrders>
                     <Container>
                         <Text className="text-l bold pale-grey">{t('options.quick-trading.no-orders-found')}</Text>

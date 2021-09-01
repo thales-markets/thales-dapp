@@ -526,7 +526,7 @@ export const StyledLink = styled.a`
     cursor: pointer;
 `;
 
-const BuySellButton = styled(SubmitButton)`
+export const BuySellButton = styled(SubmitButton)`
     min-height: 20px;
     font-size: 14px;
     padding: 4px 20px;
@@ -534,7 +534,7 @@ const BuySellButton = styled(SubmitButton)`
     text-transform: capitalize;
 `;
 
-const CounterOfferButton = styled(DefaultSubmitButton)`
+export const CounterOfferButton = styled(DefaultSubmitButton)`
     min-height: 20px;
     font-size: 14px;
     padding: 4px 20px;
