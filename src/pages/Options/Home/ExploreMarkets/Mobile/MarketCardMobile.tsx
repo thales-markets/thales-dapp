@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow, Image, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
-import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
@@ -75,7 +75,9 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                     </Text>
                                     <Text className="text-ms pale-grey">
                                         {market.customMarket
-                                            ? market.eventName
+                                            ? market.eventName === 'XYZ airdrop claims'
+                                                ? formatCurrency(market.outcome || 0, 0)
+                                                : market.eventName
                                             : formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
                                     </Text>
                                 </FlexDivColumnCentered>
