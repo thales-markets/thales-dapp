@@ -47,6 +47,7 @@ import arrowUp from 'assets/images/arrow-up.svg';
 import basketball from 'assets/images/basketball.svg';
 import volleyball from 'assets/images/volleyball.svg';
 import medals from 'assets/images/medals.png';
+import tennis from 'assets/images/tennis.svg';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
 
@@ -242,6 +243,11 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         style={{ width: 32, height: 32, marginRight: 10 }}
                                                         svg
                                                     />
+                                                    {!countryToCountryCode(market.country as any) && (
+                                                        <CustomIcon
+                                                            src={eventToIcon(market.eventName as any)}
+                                                        ></CustomIcon>
+                                                    )}
                                                     {market.country}
                                                 </StyledAnchoredTableCell>
                                             ) : (
@@ -460,6 +466,7 @@ const RedText = styled.span`
 `;
 
 export const countryToCountryCode = (country: string) => {
+    console.log(country);
     if (country) {
         switch (country) {
             case 'USA':
@@ -485,6 +492,7 @@ export const countryToCountryCode = (country: string) => {
 };
 
 export const eventToIcon = (event: string) => {
+    console.log(event);
     if (event) {
         if (event.toLowerCase().indexOf('basketball') !== -1) {
             return basketball;
@@ -495,7 +503,17 @@ export const eventToIcon = (event: string) => {
         if (event.toLowerCase().indexOf('medals') !== -1) {
             return medals;
         }
+        if (event.toLowerCase().indexOf('tennis') !== -1 || event.toLowerCase().indexOf('us open') !== -1) {
+            return tennis;
+        }
     }
 };
+
+export const CustomIcon = styled(Image)`
+    margin-bottom: -6px;
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
+`;
 
 export default MarketsTable;
