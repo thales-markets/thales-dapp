@@ -75,19 +75,17 @@ export const Home: React.FC = () => {
             {marketsQuery.isSuccess ? (
                 <Background style={{ minHeight: '100vh' }}>
                     <Wrapper style={{ flexDirection: 'column' }}>
-                        <FlexDivColumn style={{ width: '100%' }}>
-                            <MarketHeader
-                                route={
-                                    location.search === '?anchor=overview'
-                                        ? ROUTES.Options.Overview
-                                        : location.search === '?anchor=hot-markets'
-                                        ? ROUTES.Options.Home
-                                        : location.search === '?userFilter2=Olympics'
-                                        ? ROUTES.Options.Olympics
-                                        : ROUTES.Options.Overview
-                                }
-                            />
-                        </FlexDivColumn>
+                        <MarketHeader
+                            route={
+                                location.search === '?anchor=overview'
+                                    ? ROUTES.Options.Overview
+                                    : location.search === '?anchor=hot-markets'
+                                    ? ROUTES.Options.Home
+                                    : location.search === '?userFilter2=Olympics'
+                                    ? ROUTES.Options.Olympics
+                                    : ROUTES.Options.Overview
+                            }
+                        />
 
                         {hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />}
 

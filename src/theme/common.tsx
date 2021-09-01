@@ -132,6 +132,26 @@ export const MainWrapper = styled.div`
     }
 `;
 
+export const Wrapper = styled(FlexDivColumn)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1440px;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: auto;
+    padding-left: 120px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    @media (max-width: 1024px) {
+        padding-left: 30px;
+    }
+    @media (max-width: 400px) {
+        padding: 0 10px;
+    }
+`;
+
 type SectionProps = {
     class?: string;
     id?: string;

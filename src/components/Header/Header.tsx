@@ -155,7 +155,7 @@ const Links = styled.div`
         top: 0;
         left: 102vw;
         width: 300px;
-        height: 100vh;
+        min-height: 100vh;
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         justify-content: flex-start;
         z-index: 2;
@@ -297,7 +297,7 @@ const BurdgerIcon = styled.img`
 
 export const Overlay = styled.div`
     position: fixed;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     top: 0;
     left: 0;

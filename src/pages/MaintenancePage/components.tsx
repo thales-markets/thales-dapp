@@ -16,7 +16,7 @@ export const HeroSection = styled(FlexDiv)`
 export const Background = styled.section`
     background-size: cover !important;
     background: url(${image}) no-repeat;
-    height: 100vh;
+    min-height: 100vh;
 `;
 
 export const Section: React.FC = (props) => (

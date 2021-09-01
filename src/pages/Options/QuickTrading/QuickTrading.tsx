@@ -10,17 +10,16 @@ import {
     FlexDiv,
     FlexDivCentered,
     FlexDivColumn,
-    FlexDivColumnCentered,
     FlexDivRowCentered,
-    MainWrapper,
     Text,
+    Wrapper,
 } from 'theme/common';
 import SearchMarket from '../Home/SearchMarket/SearchMarket';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from 'constants/routes';
 import { SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsOrders from 'queries/options/useBinaryOptionsOrders';
-import { ExtendedOrderItem } from 'types/options';
+import { DisplayOrder, ExtendedOrderItem, HistoricalOptionsMarketInfo } from 'types/options';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import UserFilter from '../Home/ExploreMarkets/UserFilters';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +60,14 @@ export enum OptionFilterEnum {
     Short = 'Short',
 }
 
+enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
+const DEFAULT_ORDER_BY = 3; // market expiration time
+
 type OptionsBalance = {
     [address: string]: number;
 };
@@ -75,6 +82,8 @@ const QuickTradingPage: React.FC<any> = () => {
     const [coinFilter, setCoinFilter] = useState<CoinFilterEnum>(CoinFilterEnum.All);
     const [optionFilter, setOptionFilter] = useState<OptionFilterEnum>(OptionFilterEnum.All);
     const [assetSearch, setAssetSearch] = useState<string>('');
+    const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const dispatch = useDispatch();
 
     const { search } = useLocation();
@@ -209,8 +218,36 @@ const QuickTradingPage: React.FC<any> = () => {
                 filteredOrders = filteredOrders.filter((order) => order.optionSide === 'short');
                 break;
         }
-        return filteredOrders;
-    }, [trimOrders, myOrders, orderFilter, coinFilter, optionFilter, isWalletConnected, walletAddress, orderHash]);
+        return filteredOrders.sort((a, b) => {
+            switch (orderBy) {
+                case 2:
+                    return sortByMarketField(a.market, b.market, orderDirection, 'asset');
+                case 3:
+                    return sortByTime(a, b, orderDirection);
+                case 4:
+                    return sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableTotal');
+                case 5:
+                    return isBuyMode
+                        ? sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'potentialReturn')
+                        : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
+                case 6:
+                    return sortByField(a, b, orderDirection, 'walletBalance');
+                default:
+                    return 0;
+            }
+        });
+    }, [
+        trimOrders,
+        myOrders,
+        orderFilter,
+        coinFilter,
+        optionFilter,
+        isWalletConnected,
+        walletAddress,
+        orderHash,
+        orderBy,
+        orderDirection,
+    ]);
 
     const filteredOrders = orderHash !== null ? singleOrders : filteredAllOrders;
 
@@ -248,131 +285,123 @@ const QuickTradingPage: React.FC<any> = () => {
     };
 
     return (
-        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
-            <MainWrapper>
-                <FlexDivColumnCentered>
-                    <MarketHeader route={ROUTES.Options.QuickTrading} />
-                    <FlexDivColumnCentered style={{ padding: '40px 140px' }}>
-                        <Title>{t('options.quick-trading.title')}</Title>
-                        <FlexDivCentered style={{ flexFlow: 'wrap' }}>
-                            {Object.values(OrderFilterEnum).map((filterItem) => {
-                                return filterItem === OrderFilterEnum.All ? null : (
-                                    <UserFilter
-                                        className={isWalletConnected && orderFilter === filterItem ? 'selected' : ''}
-                                        disabled={!isWalletConnected || isSingleMode}
-                                        onClick={() =>
-                                            isWalletConnected
-                                                ? setOrderFilter(
-                                                      orderFilter === filterItem ? OrderFilterEnum.All : filterItem
-                                                  )
-                                                : {}
+        <Background>
+            <Wrapper>
+                <MarketHeader route={ROUTES.Options.QuickTrading} />
+
+                <Title style={{ alignSelf: 'flex-start' }}>{t('options.quick-trading.title')}</Title>
+                <FlexDivCentered style={{ flexFlow: 'wrap' }}>
+                    {Object.values(OrderFilterEnum).map((filterItem) => {
+                        return filterItem === OrderFilterEnum.All ? null : (
+                            <UserFilter
+                                className={isWalletConnected && orderFilter === filterItem ? 'selected' : ''}
+                                disabled={!isWalletConnected || isSingleMode}
+                                onClick={() =>
+                                    isWalletConnected
+                                        ? setOrderFilter(orderFilter === filterItem ? OrderFilterEnum.All : filterItem)
+                                        : {}
+                                }
+                                key={filterItem}
+                                img={getOrderImage(filterItem)}
+                                text={filterItem}
+                            />
+                        );
+                    })}
+                    {Object.values(CoinFilterEnum).map((filterItem) => {
+                        return filterItem === CoinFilterEnum.All ? null : (
+                            <UserFilter
+                                className={coinFilter === filterItem ? 'selected' : ''}
+                                disabled={isSingleMode}
+                                onClick={() =>
+                                    setCoinFilter(coinFilter === filterItem ? CoinFilterEnum.All : filterItem)
+                                }
+                                key={filterItem}
+                                img={getCoinImage(filterItem)}
+                                text={filterItem}
+                            />
+                        );
+                    })}
+                    {Object.values(OptionFilterEnum).map((filterItem) => {
+                        return filterItem === OptionFilterEnum.All ? null : (
+                            <UserFilter
+                                className={optionFilter === filterItem ? 'selected' : ''}
+                                disabled={isSingleMode}
+                                onClick={() =>
+                                    setOptionFilter(filterItem === optionFilter ? OptionFilterEnum.All : filterItem)
+                                }
+                                key={filterItem}
+                                img={getOptionImage(filterItem)}
+                                text={filterItem}
+                            />
+                        );
+                    })}
+                </FlexDivCentered>
+                <FlexDiv
+                    className="table-filters"
+                    style={{
+                        justifyContent: 'space-between',
+                        marginTop: 40,
+                        background: '#04045a',
+                        borderTopLeftRadius: '23px',
+                        borderTopRightRadius: '23px',
+                        width: '100%',
+                    }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <FlexDivRowCentered>
+                            <ModeLabel>{t('options.quick-trading.mode-label')}:</ModeLabel>
+                            {Object.keys(TradingModeFilterEnum)
+                                .filter((key) =>
+                                    isNaN(Number(TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]))
+                                )
+                                .map((key) => (
+                                    <FilterButton
+                                        className={
+                                            tradingModeFilter ===
+                                            TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]
+                                                ? 'selected'
+                                                : ''
                                         }
-                                        key={filterItem}
-                                        img={getOrderImage(filterItem)}
-                                        text={filterItem}
-                                    />
-                                );
-                            })}
-                            {Object.values(CoinFilterEnum).map((filterItem) => {
-                                return filterItem === CoinFilterEnum.All ? null : (
-                                    <UserFilter
-                                        className={coinFilter === filterItem ? 'selected' : ''}
-                                        disabled={isSingleMode}
                                         onClick={() =>
-                                            setCoinFilter(coinFilter === filterItem ? CoinFilterEnum.All : filterItem)
-                                        }
-                                        key={filterItem}
-                                        img={getCoinImage(filterItem)}
-                                        text={filterItem}
-                                    />
-                                );
-                            })}
-                            {Object.values(OptionFilterEnum).map((filterItem) => {
-                                return filterItem === OptionFilterEnum.All ? null : (
-                                    <UserFilter
-                                        className={optionFilter === filterItem ? 'selected' : ''}
-                                        disabled={isSingleMode}
-                                        onClick={() =>
-                                            setOptionFilter(
-                                                filterItem === optionFilter ? OptionFilterEnum.All : filterItem
+                                            setTradingModeFilter(
+                                                TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]
                                             )
                                         }
-                                        key={filterItem}
-                                        img={getOptionImage(filterItem)}
-                                        text={filterItem}
-                                    />
-                                );
-                            })}
-                        </FlexDivCentered>
-                        <FlexDiv
-                            className="table-filters"
-                            style={{
-                                justifyContent: 'space-between',
-                                marginTop: 40,
-                                background: '#04045a',
-                                borderTopLeftRadius: '23px',
-                                borderTopRightRadius: '23px',
-                            }}
-                        >
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FlexDivRowCentered>
-                                    <ModeLabel>{t('options.quick-trading.mode-label')}:</ModeLabel>
-                                    {Object.keys(TradingModeFilterEnum)
-                                        .filter((key) =>
-                                            isNaN(
-                                                Number(TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum])
-                                            )
-                                        )
-                                        .map((key) => (
-                                            <FilterButton
-                                                className={
-                                                    tradingModeFilter ===
-                                                    TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]
-                                                        ? 'selected'
-                                                        : ''
-                                                }
-                                                onClick={() =>
-                                                    setTradingModeFilter(
-                                                        TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]
-                                                    )
-                                                }
-                                                key={key}
-                                                disabled={isSingleMode}
-                                            >
-                                                {t(`options.trading-mode.${key.toLowerCase()}`)}
-                                            </FilterButton>
-                                        ))}
-                                </FlexDivRowCentered>
-                            </div>
-                            {!isSingleMode && (
-                                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
-                            )}
-                        </FlexDiv>
-                        <QuickTradingTable
-                            orders={assetSearch ? searchFilteredOrders : filteredOrders}
-                            isLoading={ordersQuery.isLoading || (!isBuyMode && userAssetsQuery.isLoading)}
-                            tradingModeFilter={tradingModeFilter}
-                            orderFilter={orderFilter}
-                            coinFilter={coinFilter}
-                            optionFilter={optionFilter}
-                            isSingleMode={isSingleMode}
-                            resetFilters={resetFilters}
-                            exchangeRates={exchangeRates}
-                        >
-                            <NoOrders>
-                                <>
-                                    <Text className="text-l bold pale-grey">
-                                        {t('options.quick-trading.no-orders-found')}
-                                    </Text>
-                                    <Button className="primary" onClick={resetFilters}>
-                                        {t('options.quick-trading.view-all-orders')}
-                                    </Button>
-                                </>
-                            </NoOrders>
-                        </QuickTradingTable>
-                    </FlexDivColumnCentered>
-                </FlexDivColumnCentered>
-            </MainWrapper>
+                                        key={key}
+                                        disabled={isSingleMode}
+                                    >
+                                        {t(`options.trading-mode.${key.toLowerCase()}`)}
+                                    </FilterButton>
+                                ))}
+                        </FlexDivRowCentered>
+                    </div>
+                    {!isSingleMode && <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />}
+                </FlexDiv>
+                <QuickTradingTable
+                    orders={assetSearch ? searchFilteredOrders : filteredOrders}
+                    isLoading={ordersQuery.isLoading || (!isBuyMode && userAssetsQuery.isLoading)}
+                    tradingModeFilter={tradingModeFilter}
+                    orderFilter={orderFilter}
+                    coinFilter={coinFilter}
+                    optionFilter={optionFilter}
+                    isSingleMode={isSingleMode}
+                    resetFilters={resetFilters}
+                    exchangeRates={exchangeRates}
+                    orderBy={orderBy}
+                    orderDirection={orderDirection}
+                    setOrderBy={setOrderBy}
+                    setOrderDirection={setOrderDirection}
+                >
+                    <NoOrders>
+                        <>
+                            <Text className="text-l bold pale-grey">{t('options.quick-trading.no-orders-found')}</Text>
+                            <Button className="primary" onClick={resetFilters}>
+                                {t('options.quick-trading.view-all-orders')}
+                            </Button>
+                        </>
+                    </NoOrders>
+                </QuickTradingTable>
+            </Wrapper>
         </Background>
     );
 };
@@ -400,6 +429,60 @@ const getOptionImage = (filter: OptionFilterEnum) => {
         case OptionFilterEnum.Short:
             return short;
     }
+};
+
+const sortByTime = (a: ExtendedOrderItem, b: ExtendedOrderItem, direction: OrderDirection) => {
+    if (direction === OrderDirection.ASC && a.market.phaseNum === b.market.phaseNum) {
+        return a.market.timeRemaining > b.market.timeRemaining ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC && a.market.phaseNum === b.market.phaseNum) {
+        return a.market.timeRemaining > b.market.timeRemaining ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (
+    a: ExtendedOrderItem,
+    b: ExtendedOrderItem,
+    direction: OrderDirection,
+    field: keyof ExtendedOrderItem
+) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
+
+    return 0;
+};
+
+const sortByOrderField = (a: DisplayOrder, b: DisplayOrder, direction: OrderDirection, field: keyof DisplayOrder) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
+
+    return 0;
+};
+
+const sortByMarketField = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection,
+    field: keyof HistoricalOptionsMarketInfo
+) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
+
+    return 0;
 };
 
 const Title = styled.p`

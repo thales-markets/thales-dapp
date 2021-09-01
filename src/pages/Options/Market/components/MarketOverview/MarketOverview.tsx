@@ -18,7 +18,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
-import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import ReactCountryFlag from 'react-country-flag';
 
 type MarketOverviewProps = {
@@ -40,6 +40,9 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                 style={{ width: 40, height: 40, marginRight: 10 }}
                                 svg
                             />
+                            {!countryToCountryCode(optionsMarket.country as any) && (
+                                <CustomIcon src={eventToIcon(optionsMarket.eventName as any)}></CustomIcon>
+                            )}
                             <FlexDivColumnCentered>
                                 <LightTooltip title={t('options.market.overview.view-market-contract-tooltip')}>
                                     <StyledLink
@@ -61,7 +64,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>Rank</Title>
+                        <Title>{optionsMarket.eventName === 'XYZ airdrop claims' ? 'Strike price' : 'Rank'}</Title>
                         <Content fontSize={16}>{optionsMarket.outcome}</Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
@@ -311,6 +314,12 @@ export const GreenText = styled.span`
 export const RedText = styled.span`
     color: #be2727;
     padding-left: 5px;
+`;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
 `;
 
 export default MarketOverview;
