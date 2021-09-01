@@ -14,6 +14,7 @@ import './media.scss';
 import { QuizQuestion } from './QuizQuestion';
 import check from 'assets/images/check.svg';
 import thales from 'assets/images/red-thales.png';
+import { useTranslation } from 'react-i18next';
 
 type QuizQuestionProps = {
     question: QuizQuestion;
@@ -21,6 +22,7 @@ type QuizQuestionProps = {
 };
 
 export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handleRadioChange }: QuizQuestionProps) => {
+    const { t } = useTranslation();
     const [selectedAnswer, setSelectedAnswer] = useState(0);
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(true);
     const [answerIndex, setAnswerIndex] = useState(0);
@@ -46,18 +48,13 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
     return (
         <>
             <div
-                className="quiz__modal-dialog__content__radio-form"
+                className="quiz__modal-dialog__content__radio-form pale-grey"
                 style={{
-                    border:
-                        isAnswerCorrect && question.correctAnswer === selectedAnswer
-                            ? '2px solid #00f9ff'
-                            : !isAnswerCorrect && question.correctAnswer !== selectedAnswer
-                            ? '2px solid #e53720'
-                            : '',
+                    border: isAnswerCorrect && question.correctAnswer === selectedAnswer ? '2px solid #00f9ff' : '',
                 }}
             >
                 <FormControl component="fieldset" style={{ width: '100%' }}>
-                    <FormLabel component="legend" className="quiz__modal-dialog__content__radio-form__text">
+                    <FormLabel component="legend" className="quiz__modal-dialog__content__radio-form__text pale-grey">
                         {question.questionText}
                     </FormLabel>
                     <RadioGroup
@@ -92,7 +89,7 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
                             showOverlay ? 'alert-shown' : 'alert-hidden'
                         }`}
                     >
-                        <span>Your answer is correct!</span>
+                        <span>{t('options.quiz.question.correct-answer')}</span>
                         <img
                             className="quiz__modal-dialog__content__radio-form__group__overlay__image "
                             src={check}
@@ -106,7 +103,7 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
                             showOverlay ? 'alert-shown' : 'alert-hidden'
                         }`}
                     >
-                        <span>Ooops! Wrong answer!</span>
+                        <span>{t('options.quiz.question.wrong-answer')}</span>
                         <img
                             className="quiz__modal-dialog__content__radio-form__group__overlay__image"
                             src={thales}

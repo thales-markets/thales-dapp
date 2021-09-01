@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import close from 'assets/images/close.svg';
 import { ButtonContainer } from 'pages/Options/Earn/components';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from 'theme/common';
 import './media.scss';
 import { QuizQuestion } from './QuizQuestion';
@@ -14,6 +15,7 @@ type QuizProps = {
 };
 
 export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: QuizProps) => {
+    const { t } = useTranslation();
     const [answeredQuestionsTotal, setAnsweredQuestionsTotal] = useState([] as any);
     const [answeredQuestionsPerPage, setAnsweredQuestionsPerPage] = useState([] as any);
     const [pageNumber, setPageNumber] = useState(0);
@@ -39,6 +41,16 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
         setOpenQuiz(false);
     };
 
+    const numberOfPages = () => {
+        const numberOfPages = quizData.length / 6;
+        const decimalLeftover = numberOfPages % 2;
+        return decimalLeftover === 0
+            ? numberOfPages
+            : decimalLeftover < 0.5
+            ? Math.round(numberOfPages) + 1
+            : Math.round(numberOfPages);
+    };
+
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>, question: QuizQuestion) => {
         const selectedAnswer = Number((event.target as HTMLInputElement).value);
         if (selectedAnswer === question.correctAnswer) {
@@ -60,13 +72,11 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                         { question: question.questionText, answer: question.correctAnswer },
                     ]);
                 }
-                console.log(answeredQuestionsPerPage);
             }
         }
     };
 
     const moveToTheNextPage = (event: React.FormEvent<HTMLButtonElement>) => {
-        console.log(pageNumber);
         event.preventDefault();
         setAnsweredQuestionsPerPage([]);
         setPageNumber(pageNumber + 1);
@@ -94,11 +104,34 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                     },
                 }}
             >
-                <DialogTitle className="quiz__modal-dialog__title">
-                    Quiz
-                    <Button style={{ backgroundColor: 'transparent', float: 'right' }} onClick={handleDialogClosing}>
-                        <img src={close} />
-                    </Button>
+                <DialogTitle className="quiz__modal-dialog__title pale-grey">
+                    <span className="quiz__modal-dialog__title__text">{t('options.quiz.title')}</span>
+                    <div style={{ float: 'right', marginBottom: '30px' }}>
+                        <a
+                            className="quiz__modal-dialog__title__link pale-grey"
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://discord.gg/cFGv5zyVEj"
+                            style={{ marginRight: '30px' }}
+                        >
+                            {t('options.quiz.discord-link')}
+                        </a>
+
+                        <a
+                            className="quiz__modal-dialog__title__link"
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://docs.thales.market/"
+                        >
+                            {t('options.quiz.docs-link')}
+                        </a>
+                        <Button
+                            style={{ backgroundColor: 'transparent', float: 'right' }}
+                            onClick={handleDialogClosing}
+                        >
+                            <img src={close} />
+                        </Button>
+                    </div>
                 </DialogTitle>
                 <DialogContent className="quiz__modal-dialog__content">
                     <form onSubmit={handleSubmit} style={{ overflow: 'hidden' }}>
@@ -122,8 +155,29 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                         <ButtonContainer
                             style={{
                                 display: 'block',
+                                float: 'left',
+                                marginBottom: '30px',
+                                marginLeft: '20px',
+                            }}
+                        >
+                            <Button
+                                style={{
+                                    background:
+                                        'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)',
+                                }}
+                            >
+                                {t('options.quiz.discord-button')}
+                            </Button>
+                        </ButtonContainer>
+                        <div className="pale-grey quiz__modal-dialog__content__page-number">
+                            {pageNumber + 1 + ' / ' + numberOfPages()}
+                        </div>
+                        <ButtonContainer
+                            style={{
+                                display: 'block',
                                 float: 'right',
-                                marginBottom: '10px',
+                                marginBottom: '30px',
+                                marginRight: '25px',
                             }}
                         >
                             {quizData.length === answeredQuestionsTotal.length ? (
@@ -131,22 +185,20 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     type="submit"
                                     disabled={!isEveryQuestionAnswered}
                                     style={{
-                                        background:
-                                            'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)',
+                                        background: '#3936C7',
                                     }}
                                 >
-                                    Submit Answers
+                                    {t('options.quiz.submit-answers')}
                                 </Button>
                             ) : (
                                 <Button
                                     onClick={(e) => moveToTheNextPage(e)}
                                     disabled={!everyQuestionOnPageAnswered}
                                     style={{
-                                        background:
-                                            'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)',
+                                        background: '#3936C7',
                                     }}
                                 >
-                                    Next
+                                    {t('options.quiz.next-page')}
                                 </Button>
                             )}
                         </ButtonContainer>
