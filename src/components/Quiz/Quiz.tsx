@@ -136,7 +136,13 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                 <DialogContent className="quiz__modal-dialog__content">
                     <form onSubmit={handleSubmit} style={{ overflow: 'hidden' }}>
                         {quizData.map((quizQuestion, index) => {
-                            return index < 6 && pageNumber === 0 ? (
+                            return quizData.length <= 6 ? (
+                                <QuizQuestionForm
+                                    key={index}
+                                    question={quizQuestion}
+                                    handleRadioChange={handleRadioChange}
+                                ></QuizQuestionForm>
+                            ) : index < 6 && pageNumber === 0 ? (
                                 <QuizQuestionForm
                                     key={index}
                                     question={quizQuestion}
@@ -169,9 +175,13 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                 {t('options.quiz.discord-button')}
                             </Button>
                         </ButtonContainer>
-                        <div className="pale-grey quiz__modal-dialog__content__page-number">
-                            {pageNumber + 1 + ' of ' + numberOfPages()}
-                        </div>
+                        {quizData.length > 6 ? (
+                            <div className="pale-grey quiz__modal-dialog__content__page-number">
+                                {pageNumber + 1 + ' of ' + numberOfPages()}
+                            </div>
+                        ) : (
+                            ''
+                        )}
                         <ButtonContainer
                             style={{
                                 display: 'block',
@@ -180,7 +190,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                 marginRight: '25px',
                             }}
                         >
-                            {quizData.length === answeredQuestionsTotal.length ? (
+                            {quizData.length === answeredQuestionsTotal.length || pageNumber + 1 === numberOfPages() ? (
                                 <Button
                                     type="submit"
                                     disabled={!isEveryQuestionAnswered}
