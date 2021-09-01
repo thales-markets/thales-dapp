@@ -37,6 +37,7 @@ import { useEffect } from 'react';
 import useUserAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import { useLocation } from 'react-router-dom';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import QuickTradingMobile from './QuickTradingMobile';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',
@@ -288,8 +289,24 @@ const QuickTradingPage: React.FC<any> = () => {
         <Background>
             <Wrapper>
                 <MarketHeader route={ROUTES.Options.QuickTrading} />
-
                 <Title style={{ alignSelf: 'flex-start' }}>{t('options.quick-trading.title')}</Title>
+                <QuickTradingMobile
+                    exchangeRates={exchangeRates}
+                    tradingModeFilter={tradingModeFilter}
+                    orderFilter={orderFilter}
+                    coinFilter={coinFilter}
+                    optionFilter={optionFilter}
+                    setTradingModeFilter={setTradingModeFilter}
+                    setOrderFilter={setOrderFilter}
+                    setCoinFilter={setCoinFilter}
+                    setOptionFilter={setOptionFilter}
+                    assetSearch={assetSearch}
+                    setAssetSearch={setAssetSearch}
+                    filteredMarkets={assetSearch ? searchFilteredOrders : filteredOrders}
+                    orderBy={orderBy}
+                    setOrderBy={setOrderBy}
+                    isSingleMode={isSingleMode}
+                ></QuickTradingMobile>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.values(OrderFilterEnum).map((filterItem) => {
                         return filterItem === OrderFilterEnum.All ? null : (
@@ -350,29 +367,16 @@ const QuickTradingPage: React.FC<any> = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <FlexDivRowCentered>
                             <ModeLabel>{t('options.quick-trading.mode-label')}:</ModeLabel>
-                            {Object.keys(TradingModeFilterEnum)
-                                .filter((key) =>
-                                    isNaN(Number(TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]))
-                                )
-                                .map((key) => (
-                                    <FilterButton
-                                        className={
-                                            tradingModeFilter ===
-                                            TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]
-                                                ? 'selected'
-                                                : ''
-                                        }
-                                        onClick={() =>
-                                            setTradingModeFilter(
-                                                TradingModeFilterEnum[key as keyof typeof TradingModeFilterEnum]
-                                            )
-                                        }
-                                        key={key}
-                                        disabled={isSingleMode}
-                                    >
-                                        {t(`options.trading-mode.${key.toLowerCase()}`)}
-                                    </FilterButton>
-                                ))}
+                            {Object.values(TradingModeFilterEnum).map((filterItem) => (
+                                <FilterButton
+                                    className={tradingModeFilter === filterItem ? 'selected' : ''}
+                                    onClick={() => setTradingModeFilter(filterItem)}
+                                    key={filterItem}
+                                    disabled={isSingleMode}
+                                >
+                                    {t(`options.trading-mode.${filterItem.toLowerCase()}`)}
+                                </FilterButton>
+                            ))}
                         </FlexDivRowCentered>
                     </div>
                     {!isSingleMode && <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />}
