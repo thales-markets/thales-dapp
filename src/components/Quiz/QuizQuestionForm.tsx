@@ -118,9 +118,13 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
 
 const RadioButton = withStyles({
     root: {
-        color: '#00f9ff',
+        color: '#f6f6fe',
         '&$checked': {
             color: '#00f9ff',
+        },
+        '& svg': {
+            width: '16px',
+            height: '16px',
         },
     },
     checked: {},
