@@ -35,7 +35,7 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     letter-spacing: 0.15px;
     color: #f6f6fe;
     min-height: 50px;
-    padding: 0px 20px 0 30px;
+    padding: 0px 20px 0 20px;
 `;
 
 export const SectionContent = styled(FlexDiv)`
@@ -61,7 +61,7 @@ export const ClaimContent = styled.span`
 `;
 
 export const SectionContentContainer = styled(FlexDivColumn)`
-    padding: 40px 30px 0 30px;
+    padding: 20px 20px 0 20px;
 `;
 
 export const ClaimItem = styled(FlexDivColumnCentered)`

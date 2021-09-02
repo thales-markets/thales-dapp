@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import MaterialTooltip from '@material-ui/core/Tooltip';
 import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -34,6 +35,7 @@ import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
+import { withStyles } from '@material-ui/core';
 
 const StakingRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -137,7 +139,7 @@ const StakingRewards: React.FC = () => {
 
     const pieData = useMemo(() => {
         return [
-            { name: 'Thales', value: 150 },
+            { name: 'Thales', value: 60 },
             { name: 'SNX', value: 50, color: '#00D1FF' },
         ];
     }, [ongoingAirdrop]);
@@ -146,9 +148,12 @@ const StakingRewards: React.FC = () => {
         <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
             <SectionHeader>{t('options.earn.thales-staking.staking-rewards.title')}</SectionHeader>
             <SectionContentContainer>
-                <PieChartContainer style={{ alignItems: 'center', marginBottom: '50px' }}>
-                    <FlexDivColumn style={{ marginRight: '20px' }}>
-                        <StakingRewardsAmountContainer gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)">
+                <PieChartContainer style={{ alignItems: 'flex-end', marginBottom: '77px' }}>
+                    <FlexDivColumn style={{ marginRight: '30px' }}>
+                        <StakingRewardsAmountContainer
+                            style={{ marginRight: '30px' }}
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                        >
                             <StakingRewardsAmount>
                                 <StakingRewardsTitle>
                                     {t('options.earn.thales-staking.staking-rewards.amount-to-claim-thales')}
@@ -193,7 +198,7 @@ const StakingRewards: React.FC = () => {
                             </linearGradient>
                         </defs>
                         <Pie
-                            activeIndex={0}
+                            isAnimationActive={false}
                             blendStroke={true}
                             data={pieData}
                             dataKey={'value'}
@@ -207,8 +212,8 @@ const StakingRewards: React.FC = () => {
                             ))}
                         </Pie>
                     </PieChart>
-                    <FlexDivColumn style={{ marginLeft: '20px' }}>
-                        <StakingRewardsAmountContainer gradient="#00D1FF">
+                    <FlexDivColumn style={{ marginLeft: '30px' }}>
+                        <StakingRewardsAmountContainer style={{ marginLeft: '30px' }} gradient="#00D1FF">
                             <StakingRewardsAmount>
                                 <StakingRewardsTitle>
                                     {t('options.earn.thales-staking.staking-rewards.amount-to-claim-snx')}
@@ -254,6 +259,14 @@ const StakingRewards: React.FC = () => {
                             </GradientText>
                         </FlexDivColumnCentered>
                     </PieChartCenterDiv>
+                    <LearnMore>
+                        <StyledMaterialTooltip
+                            arrow={true}
+                            title="Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards."
+                        >
+                            <span>Learn more</span>
+                        </StyledMaterialTooltip>
+                    </LearnMore>
                 </PieChartContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
@@ -329,5 +342,36 @@ const StakingRewardsInfoContent = styled.span`
     font-size: 16px;
     line-height: 24px;
 `;
+
+const LearnMore = styled.span`
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: #00f9ff;
+    font-size: 16px;
+    line-height: 24px;
+    cursor: pointer;
+`;
+
+const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #00D1FF',
+        },
+        color: '#04045A',
+    },
+    tooltip: {
+        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
+        borderRadius: '23px',
+        border: '1px solid #00D1FF',
+        padding: '20px',
+        fontSize: '16px',
+        lineHeight: '24px',
+        letterSpacing: '0.4px',
+        color: '#F6F6FE',
+        maxWidth: 700,
+    },
+}))(MaterialTooltip);
 
 export default StakingRewards;

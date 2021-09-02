@@ -136,7 +136,7 @@ const RetroAirdrop: React.FC = () => {
                         fontSize={31}
                         fontWeight={600}
                     >
-                        {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0)}
+                        {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0, 0, true)}
                     </GradientText>
                 </ClaimItem>
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />

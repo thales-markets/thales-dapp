@@ -149,7 +149,7 @@ const RetroRewards: React.FC = () => {
                     </InfoDiv>
                     <PieChart height={200} width={200}>
                         <Pie
-                            activeIndex={0}
+                            isAnimationActive={false}
                             blendStroke={true}
                             data={pieData}
                             dataKey={'value'}

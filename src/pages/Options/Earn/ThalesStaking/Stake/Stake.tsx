@@ -247,7 +247,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                     </MaxButtonContainer>
                 </FlexDiv>
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
-                <FlexDivCentered style={{ paddingTop: '15px' }}>{getStakeButton()}</FlexDivCentered>
+                <FlexDivCentered style={{ paddingTop: '40px' }}>{getStakeButton()}</FlexDivCentered>
                 <FullRow>
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}
@@ -268,6 +268,7 @@ const BalanceTitle = styled.span`
 const MaxButtonContainer = styled(FlexDiv)`
     justify-content: flex-end;
     flex: 1;
+    margin-left: 10px;
 `;
 
 const MaxButton = styled.button`
