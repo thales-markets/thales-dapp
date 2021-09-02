@@ -181,7 +181,7 @@ const Unstake: React.FC<Properties> = ({
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 4' }}>
+        <EarnSection style={{ gridColumn: 'span 3', gridRow: 'span 2' }}>
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
             <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
                 <FlexDivColumn>

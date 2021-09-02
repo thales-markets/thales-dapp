@@ -44,7 +44,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked }) => {
     }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess]);
 
     return (
-        <EarnSection style={{ gridColumn: 'span 6', gridRow: 'span 2', textAlign: 'center' }}>
+        <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}>
             <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
             <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
                 <FlexDivColumnCentered>

@@ -209,7 +209,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 4' }}>
+        <EarnSection style={{ gridColumn: 'span 3', gridRow: 'span 2' }}>
             <SectionHeader>{t('options.earn.thales-staking.stake.stake')}</SectionHeader>
             <SectionContentContainer style={{ height: '100%' }}>
                 <ClaimItem>

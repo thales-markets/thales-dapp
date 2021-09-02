@@ -31,7 +31,6 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { Divider } from 'pages/Options/Market/components';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -137,15 +136,9 @@ const RetroAirdrop: React.FC = () => {
                         fontSize={31}
                         fontWeight={600}
                     >
-                        {formatCurrencyWithKey(
-                            THALES_CURRENCY,
-                            isClaimAvailable && retroAirdrop && retroAirdrop.accountInfo
-                                ? retroAirdrop.accountInfo.balance
-                                : 0
-                        )}
+                        {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0)}
                     </GradientText>
                 </ClaimItem>
-                <Divider />
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
                     <Button

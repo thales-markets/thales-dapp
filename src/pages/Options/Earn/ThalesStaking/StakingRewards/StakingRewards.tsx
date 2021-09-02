@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'theme/common';
+import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -21,18 +21,19 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { refetchOngoingAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import {
     ButtonContainer,
-    ClaimContent,
-    ClaimItem,
     ClaimMessage,
-    ClaimTitle,
     EarnSection,
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
     SectionContentContainer,
     SectionHeader,
 } from '../../components';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { Divider } from 'pages/Options/Market/components';
+import { Cell, Pie, PieChart } from 'recharts';
+import styled from 'styled-components';
 
 const StakingRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -134,33 +135,126 @@ const StakingRewards: React.FC = () => {
         }
     };
 
+    const pieData = useMemo(() => {
+        return [
+            { name: 'Thales', value: 150 },
+            { name: 'SNX', value: 50, color: '#00D1FF' },
+        ];
+    }, [ongoingAirdrop]);
+
     return (
-        <EarnSection style={{ gridColumn: 'span 6', gridRow: 'span 4' }}>
+        <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
             <SectionHeader>{t('options.earn.thales-staking.staking-rewards.title')}</SectionHeader>
             <SectionContentContainer>
-                <ClaimItem>
-                    <ClaimTitle>{t('options.earn.thales-staking.staking-rewards.amount-to-claim-snx')}:</ClaimTitle>
-                    <ClaimContent>
-                        {formatCurrencyWithKey(
-                            THALES_CURRENCY,
-                            isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
-                                ? ongoingAirdrop.accountInfo.balance
-                                : 0
-                        )}
-                    </ClaimContent>
-                </ClaimItem>
-                <ClaimItem>
-                    <ClaimTitle>{t('options.earn.thales-staking.staking-rewards.amount-to-claim-thales')}:</ClaimTitle>
-                    <ClaimContent>
-                        {formatCurrencyWithKey(
-                            THALES_CURRENCY,
-                            isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
-                                ? ongoingAirdrop.accountInfo.balance
-                                : 0
-                        )}
-                    </ClaimContent>
-                </ClaimItem>
-                <Divider />
+                <PieChartContainer style={{ alignItems: 'center', marginBottom: '50px' }}>
+                    <FlexDivColumn style={{ marginRight: '20px' }}>
+                        <StakingRewardsAmountContainer gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)">
+                            <StakingRewardsAmount>
+                                <StakingRewardsTitle>
+                                    {t('options.earn.thales-staking.staking-rewards.amount-to-claim-thales')}
+                                </StakingRewardsTitle>
+                                <GradientText
+                                    gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                    fontSize={25}
+                                    fontWeight={600}
+                                >
+                                    {formatCurrencyWithKey(
+                                        THALES_CURRENCY,
+                                        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
+                                            ? ongoingAirdrop.accountInfo.balance
+                                            : 0,
+                                        0,
+                                        true
+                                    )}
+                                </GradientText>
+                            </StakingRewardsAmount>
+                        </StakingRewardsAmountContainer>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>For last period:</StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {formatCurrencyWithKey(THALES_CURRENCY, 200, 0, true)}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>Unclaimed from previous period:</StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {formatCurrencyWithKey(THALES_CURRENCY, 700, 0, true)}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                    </FlexDivColumn>
+                    <PieChart height={300} width={300}>
+                        <defs>
+                            <linearGradient
+                                id={`thalesGradient`}
+                                gradientTransform="translate(1, 0) rotate(200) scale(0.6)"
+                            >
+                                <stop offset="0%" stopColor={'#3936C7'} />
+                                <stop offset="100%" stopColor={'#2D83D2'} />
+                            </linearGradient>
+                        </defs>
+                        <Pie
+                            activeIndex={0}
+                            blendStroke={true}
+                            data={pieData}
+                            dataKey={'value'}
+                            outerRadius={150}
+                            innerRadius={115}
+                            startAngle={-270}
+                            endAngle={90}
+                        >
+                            {pieData.map((slice, index) => (
+                                <Cell key={index} fill={slice.color || 'url(#thalesGradient)'} />
+                            ))}
+                        </Pie>
+                    </PieChart>
+                    <FlexDivColumn style={{ marginLeft: '20px' }}>
+                        <StakingRewardsAmountContainer gradient="#00D1FF">
+                            <StakingRewardsAmount>
+                                <StakingRewardsTitle>
+                                    {t('options.earn.thales-staking.staking-rewards.amount-to-claim-snx')}
+                                </StakingRewardsTitle>
+                                <GradientText
+                                    gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                    fontSize={25}
+                                    fontWeight={600}
+                                >
+                                    {formatCurrencyWithKey(
+                                        THALES_CURRENCY,
+                                        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
+                                            ? ongoingAirdrop.accountInfo.balance
+                                            : 0,
+                                        0,
+                                        true
+                                    )}
+                                </GradientText>
+                            </StakingRewardsAmount>
+                        </StakingRewardsAmountContainer>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>For last period:</StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {formatCurrencyWithKey(THALES_CURRENCY, 200, 0, true)}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>Unclaimed from previous period:</StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {formatCurrencyWithKey(THALES_CURRENCY, 700, 0, true)}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                    </FlexDivColumn>
+                    <PieChartCenterDiv>
+                        <FlexDivColumnCentered>
+                            <PieChartCenterText>Total</PieChartCenterText>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={20}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, 1502, 0, true)}
+                            </GradientText>
+                        </FlexDivColumnCentered>
+                    </PieChartCenterDiv>
+                </PieChartContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
                     <Button
@@ -198,5 +292,42 @@ const StakingRewards: React.FC = () => {
         </EarnSection>
     );
 };
+
+const StakingRewardsAmountContainer = styled.div<{ gradient: string }>`
+    position: relative;
+    background: ${(props) => props.gradient};
+    border-radius: 15px;
+    margin-bottom: 20px;
+`;
+
+const StakingRewardsAmount = styled(FlexDivColumn)`
+    position: relative;
+    background: #04045a;
+    margin: 2px;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+`;
+
+const StakingRewardsTitle = styled.span`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    padding-bottom: 10px;
+`;
+
+const StakingRewardsInfoTitle = styled.span`
+    padding-top: 10px;
+    font-size: 16px;
+    line-height: 24px;
+    flex: 1;
+`;
+
+const StakingRewardsInfoContent = styled.span`
+    padding-top: 15px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+`;
 
 export default StakingRewards;

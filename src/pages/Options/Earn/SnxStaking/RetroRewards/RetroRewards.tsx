@@ -18,7 +18,15 @@ import { VestingInfo } from 'types/token';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { ButtonContainer, EarnSection, SectionContentContainer, SectionHeader } from '../../components';
+import {
+    ButtonContainer,
+    EarnSection,
+    PieChartCenterDiv,
+    PieChartCenterText,
+    PieChartContainer,
+    SectionContentContainer,
+    SectionHeader,
+} from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
@@ -121,7 +129,6 @@ const RetroRewards: React.FC = () => {
     }, [vestingInfo]);
 
     const pieData = useMemo(() => {
-        console.log('new data');
         return [
             { name: 'Unlocked', value: vestingInfo.unlocked, color: '#FFD9BA' },
             { name: 'Claimed', value: vestingInfo.totalClaimed, color: '#AFC171' },
@@ -140,7 +147,7 @@ const RetroRewards: React.FC = () => {
                             {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
                         </InfoContent>
                     </InfoDiv>
-                    <PieChart height={250} width={250}>
+                    <PieChart height={200} width={200}>
                         <Pie
                             activeIndex={0}
                             blendStroke={true}
@@ -162,7 +169,7 @@ const RetroRewards: React.FC = () => {
                     </InfoDiv>
                     <PieChartCenterDiv>
                         <FlexDivColumnCentered>
-                            <CenterText>{t('options.earn.snx-stakers.initial-locked')}</CenterText>
+                            <PieChartCenterText>{t('options.earn.snx-stakers.initial-locked')}</PieChartCenterText>
                             <GradientText
                                 gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
                                 fontSize={20}
@@ -238,29 +245,8 @@ const Dot = styled.span<{ backgroundColor: string }>`
 `;
 
 const AmountsContainer = styled(FlexDiv)`
-    padding: 10px 0 30px 0;
+    padding: 20px 0 30px 0;
     justify-content: space-between;
-`;
-
-const PieChartContainer = styled.div`
-    position: relative;
-    display: flex;
-    justify-content: center;
-`;
-
-const PieChartCenterDiv = styled.div`
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-`;
-
-const CenterText = styled.span`
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.25px;
-    text-align: center;
-    margin-bottom: 5px;
 `;
 
 export default RetroRewards;

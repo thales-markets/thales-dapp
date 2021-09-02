@@ -96,3 +96,24 @@ export const EarnSymbol = styled(FlexDivCentered)`
     font-size: 39px;
     padding: 20px;
 `;
+
+export const PieChartContainer = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+`;
+
+export const PieChartCenterDiv = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+`;
+
+export const PieChartCenterText = styled.span`
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.25px;
+    text-align: center;
+    margin-bottom: 5px;
+`;
