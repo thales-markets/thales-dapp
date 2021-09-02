@@ -259,7 +259,7 @@
                     "not-eligible-message": "You are not eligible for this airdrop."
                 },
                 "retro-rewards": {
-                    "title": "Retro Rewards"
+                    "title": "Retro unlock"
                 },
                 "airdropped-amount": "Airdropped amount",
                 "claim": "Claim",
@@ -272,7 +272,7 @@
                 "total": "Total",
                 "start-time": "Start time",
                 "end-time": "End time",
-                "initial-locked": "Initial Locked",
+                "initial-locked": "Initially Locked",
                 "start-quiz": "Start Quiz"
             },
             "thales-staking": {

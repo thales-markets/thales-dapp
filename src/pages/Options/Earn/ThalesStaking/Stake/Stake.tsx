@@ -278,7 +278,7 @@ const MaxButton = styled.button`
     color: #f6f6fe;
     cursor: pointer;
     font-size: 16px;
-    padding: 12px 28px 12px 28px;
+    padding: 12px 32px 12px 32px;
 `;
 
 export default Stake;

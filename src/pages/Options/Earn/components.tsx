@@ -70,7 +70,7 @@ export const ClaimItem = styled(FlexDivColumnCentered)`
 `;
 
 export const ButtonContainer = styled(FlexDivColumnCentered)`
-    margin-top: 40px;
+    margin-top: 10px;
     align-items: center;
 `;
 

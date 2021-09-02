@@ -187,7 +187,7 @@ const Unstake: React.FC<Properties> = ({
                 <FlexDivColumn>
                     <UnstakingTitleText>
                         {isUnstakingInContract
-                            ? t('cooldown-started-text')
+                            ? t('options.earn.thales-staking.unstake.cooldown-started-text')
                             : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
                         :
                     </UnstakingTitleText>
@@ -197,7 +197,7 @@ const Unstake: React.FC<Properties> = ({
                             fontSize={25}
                             fontWeight={600}
                         >
-                            {isUnstakingInContract ? '7 days' : <TimeRemaining end={unstakeEndTime} fontSize={25} />}
+                            {!isUnstakingInContract ? '7 days' : <TimeRemaining end={unstakeEndTime} fontSize={25} />}
                         </GradientText>
                     </FlexDivCentered>
                 </FlexDivColumn>

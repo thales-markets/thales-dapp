@@ -146,6 +146,7 @@ const WidgetsContainer = styled.div`
 const EarnTitle = styled(Text)`
     font-size: 39px;
     padding: 30px;
+    font-weight: 600;
 `;
 
 export default EarnPage;

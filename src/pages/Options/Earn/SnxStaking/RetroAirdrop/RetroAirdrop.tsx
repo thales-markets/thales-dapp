@@ -31,9 +31,7 @@ import { THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { QuizQuestion } from 'components/Quiz/QuizQuestion';
-import { airdropClaimQuizQuestions } from 'i18n/quizQuestions';
-import { Quiz } from 'components/Quiz/Quiz';
+import { Divider } from 'pages/Options/Market/components';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -47,8 +45,6 @@ const RetroAirdrop: React.FC = () => {
     const [retroAirdrop, setRetroAirdrop] = useState<Airdrop | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [openQuiz, setOpenQuiz] = useState(false);
-    const quizData: QuizQuestion[] = airdropClaimQuizQuestions;
 
     const isClaimAvailable =
         retroAirdrop && retroAirdrop.accountInfo && retroAirdrop.hasClaimRights && !retroAirdrop.claimed;
@@ -130,31 +126,6 @@ const RetroAirdrop: React.FC = () => {
             }
         }
     };
-
-    const startQuiz = () => {
-        setOpenQuiz(true);
-    };
-
-    const getClaimButton = () => {
-        if (localStorage.getItem('quizCompleted') === 'true') {
-            return (
-                <Button
-                    onClick={handleClaimRetroAirdrop}
-                    disabled={!isClaimAvailable || isClaiming}
-                    className="primary"
-                >
-                    {isClaiming ? t('options.earn.snx-stakers.claiming') : t('options.earn.snx-stakers.claim')}
-                </Button>
-            );
-        } else {
-            return (
-                <Button onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
-                    {t('options.earn.snx-stakers.start-quiz')}
-                </Button>
-            );
-        }
-    };
-
     return (
         <EarnSection style={{ gridColumn: 'span 4' }}>
             <SectionHeader>{t('options.earn.snx-stakers.retro-airdrop.title')}</SectionHeader>
@@ -174,9 +145,16 @@ const RetroAirdrop: React.FC = () => {
                         )}
                     </GradientText>
                 </ClaimItem>
+                <Divider />
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
-                    {getClaimButton()}
+                    <Button
+                        onClick={handleClaimRetroAirdrop}
+                        disabled={!isClaimAvailable || isClaiming}
+                        className="primary"
+                    >
+                        {isClaiming ? t('options.earn.snx-stakers.claiming') : t('options.earn.snx-stakers.claim')}
+                    </Button>
                     {retroAirdrop && !retroAirdrop.hasClaimRights && (
                         <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}</ClaimMessage>
                     )}
@@ -190,7 +168,6 @@ const RetroAirdrop: React.FC = () => {
                     onDismiss={() => setTxErrorMessage(null)}
                 />
             </SectionContentContainer>
-            <Quiz quizData={quizData} openQuiz={openQuiz} setOpenQuiz={setOpenQuiz}></Quiz>
         </EarnSection>
     );
 };

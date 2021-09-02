@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -23,7 +24,6 @@ import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { Divider } from 'pages/Options/Market/components';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 
 const initialVestingInfo = {
@@ -116,75 +116,79 @@ const RetroRewards: React.FC = () => {
         }
     };
 
-    const locked = vestingInfo.initialLocked - vestingInfo.unlocked - vestingInfo.totalClaimed;
+    const locked = useMemo(() => {
+        return vestingInfo.initialLocked - vestingInfo.unlocked - vestingInfo.totalClaimed;
+    }, [vestingInfo]);
+
+    const pieData = useMemo(() => {
+        console.log('new data');
+        return [
+            { name: 'Unlocked', value: vestingInfo.unlocked, color: '#FFD9BA' },
+            { name: 'Claimed', value: vestingInfo.totalClaimed, color: '#AFC171' },
+            { name: 'Locked', value: locked, color: '#5EA0A0' },
+        ];
+    }, [vestingInfo, locked]);
 
     return (
         <EarnSection style={{ gridColumn: 'span 6' }}>
             <SectionHeader>{t('options.earn.snx-stakers.retro-rewards.title')}</SectionHeader>
             <SectionContentContainer>
-                <FlexDiv>
-                    <RewardsInfoColumn>
-                        <InfoDiv>
-                            <InfoLabel>{t('options.earn.snx-stakers.start-time')}:</InfoLabel>
-                            <InfoContent>
-                                {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
-                            </InfoContent>
-                        </InfoDiv>
-                    </RewardsInfoColumn>
-                    <RewardsInfoColumn>
-                        <InfoDiv>
-                            <InfoLabel>{t('options.earn.snx-stakers.end-time')}:</InfoLabel>
-                            <InfoContent>
-                                {vestingInfo.endTime > 0 && formatShortDateWithTime(vestingInfo.endTime)}
-                            </InfoContent>
-                        </InfoDiv>
-                    </RewardsInfoColumn>
-                    <RewardsInfoColumn>
-                        <InfoDiv>
-                            <InfoLabel>{t('options.earn.snx-stakers.initial-locked')}:</InfoLabel>
-                            <InfoContent>
-                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.initialLocked)}
-                            </InfoContent>
-                        </InfoDiv>
-                    </RewardsInfoColumn>
-                </FlexDiv>
+                <PieChartContainer>
+                    <InfoDiv>
+                        <InfoLabel>{t('options.earn.snx-stakers.start-time')}</InfoLabel>
+                        <InfoContent>
+                            {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
+                        </InfoContent>
+                    </InfoDiv>
+                    <PieChart height={250} width={250}>
+                        <Pie
+                            activeIndex={0}
+                            blendStroke={true}
+                            data={pieData}
+                            dataKey={'value'}
+                            outerRadius={100}
+                            innerRadius={75}
+                        >
+                            {pieData.map((slice, index) => (
+                                <Cell key={index} fill={slice.color} />
+                            ))}
+                        </Pie>
+                    </PieChart>
+                    <InfoDiv style={{ alignItems: 'flex-end' }}>
+                        <InfoLabel>{t('options.earn.snx-stakers.end-time')}</InfoLabel>
+                        <InfoContent style={{ textAlign: 'right' }}>
+                            {vestingInfo.endTime > 0 && formatShortDateWithTime(vestingInfo.endTime)}
+                        </InfoContent>
+                    </InfoDiv>
+                    <PieChartCenterDiv>
+                        <FlexDivColumnCentered>
+                            <CenterText>{t('options.earn.snx-stakers.initial-locked')}</CenterText>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={20}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.initialLocked, 0, true)}
+                            </GradientText>
+                        </FlexDivColumnCentered>
+                    </PieChartCenterDiv>
+                </PieChartContainer>
                 <AmountsContainer>
                     <div>
-                        <Dot backgroundColor="#b6bce2" />
+                        <Dot backgroundColor="#FFD9BA" />
                         {t('options.earn.snx-stakers.unlocked')}:{' '}
                         {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}
                     </div>
                     <div>
-                        <Dot backgroundColor="#3f51b5" />
+                        <Dot backgroundColor="#AFC171" />
                         {t('options.earn.snx-stakers.claimed')}:{' '}
                         {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
                     </div>
                     <div>
-                        <Dot backgroundColor="#0a2e66" />
+                        <Dot backgroundColor="#5EA0A0" />
                         {t('options.earn.snx-stakers.locked')}: {formatCurrencyWithKey(THALES_CURRENCY, locked)}
                     </div>
                 </AmountsContainer>
-                <ProgressContainer>
-                    <ProgressSlice
-                        backgroundColor="#b6bce2"
-                        width={
-                            vestingInfo.initialLocked > 0 ? (vestingInfo.unlocked * 100) / vestingInfo.initialLocked : 0
-                        }
-                    />
-                    <ProgressSlice
-                        backgroundColor="#3f51b5"
-                        width={
-                            vestingInfo.initialLocked > 0
-                                ? (vestingInfo.totalClaimed * 100) / vestingInfo.initialLocked
-                                : 0
-                        }
-                    />
-                    <ProgressSlice
-                        backgroundColor="#0a2e66"
-                        width={vestingInfo.initialLocked > 0 ? (locked * 100) / vestingInfo.initialLocked : 0}
-                    />
-                </ProgressContainer>
-                <Divider />
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
                     <Button
@@ -209,21 +213,19 @@ const RetroRewards: React.FC = () => {
 
 const InfoDiv = styled(FlexDivColumn)`
     padding-bottom: 10px;
-    align-items: center;
+    align-items: flex-start;
 `;
 
 const InfoLabel = styled.div`
-    padding-bottom: 10px;
     font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.25px;
 `;
 
-const InfoContent = styled.div``;
-
-const ProgressSlice = styled.div<{ backgroundColor: string; width: number }>`
-    height: 4px;
-    display: inline-block;
-    background-color: ${(props) => props.backgroundColor};
-    width: ${(props) => props.width}%;
+const InfoContent = styled.div`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
 `;
 
 const Dot = styled.span<{ backgroundColor: string }>`
@@ -235,18 +237,30 @@ const Dot = styled.span<{ backgroundColor: string }>`
     background-color: ${(props) => props.backgroundColor};
 `;
 
-const RewardsInfoColumn = styled(FlexDivColumn)`
-    align-items: center;
-    font-size: 16px !important;
-`;
-
 const AmountsContainer = styled(FlexDiv)`
-    padding: 30px 0 10px 0;
+    padding: 10px 0 30px 0;
     justify-content: space-between;
 `;
 
-const ProgressContainer = styled.div`
-    margin-bottom: 20px;
+const PieChartContainer = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+`;
+
+const PieChartCenterDiv = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+`;
+
+const CenterText = styled.span`
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.25px;
+    text-align: center;
+    margin-bottom: 5px;
 `;
 
 export default RetroRewards;
