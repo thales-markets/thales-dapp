@@ -307,6 +307,7 @@ const QuickTradingPage: React.FC<any> = () => {
                     orderBy={orderBy}
                     setOrderBy={setOrderBy}
                     isSingleMode={isSingleMode}
+                    isLoading={ordersQuery.isLoading || (!isBuyMode && userAssetsQuery.isLoading)}
                 ></QuickTradingMobile>
 
                 <div id="quick-trading" className="quick-trading-desktop" style={{ width: '100%' }}>
@@ -379,7 +380,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                         key={filterItem}
                                         disabled={isSingleMode}
                                     >
-                                        {t(`options.trading-mode.${filterItem.toLowerCase()}`)}
+                                        {t(`options.trading-mode.${filterItem.toLowerCase()}`).toUpperCase()}
                                     </FilterButton>
                                 ))}
                             </FlexDivRowCentered>
@@ -504,6 +505,11 @@ const Title = styled.p`
     font-size: 39px;
     padding-bottom: 65px;
     color: #f6f6fe;
+    @media (max-width: 1024px) {
+        font-size: 31px;
+        padding-top: 30px;
+        padding-bottom: 0;
+    }
 `;
 
 const ModeLabel = styled.div`
@@ -514,6 +520,7 @@ const ModeLabel = styled.div`
     color: #f6f6fe;
     margin-left: 30px;
     margin-right: 10px;
+    text-transform: uppercase;
 `;
 
 const NoOrders = styled(FlexDivColumn)`

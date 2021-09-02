@@ -10,10 +10,11 @@ import { Overlay } from 'components/Header/Header';
 import { TradingModeFilterEnum, OrderFilterEnum, CoinFilterEnum, OptionFilterEnum } from './QuickTrading';
 import SearchMarket from '../Home/SearchMarket';
 import { CategoryFilters, DropDown, DropDownWrapper } from '../Home/ExploreMarkets/Mobile/CategoryFilters';
-import { PhaseFilters } from '../Home/ExploreMarkets/Mobile/PhaseFilters';
+import { TradingModeFilters } from '../Home/ExploreMarkets/Mobile/TradingModeFilters';
 import { SortyByMobile } from '../Home/ExploreMarkets/Mobile/SortByMobile';
 import OrderCardMobile from '../Home/ExploreMarkets/Mobile/OrderCardMobile';
 import { ExtendedOrders } from 'types/options';
+import SimpleLoader from 'components/SimpleLoader';
 
 type QuickTradingMobileProps = {
     exchangeRates: Rates | null;
@@ -31,15 +32,22 @@ type QuickTradingMobileProps = {
     orderBy: number;
     setOrderBy: (data: any) => void;
     isSingleMode: boolean;
+    isLoading: boolean;
 };
 
-export enum SortByEnum {
-    Asset = 'Asset',
-    Asset_Price = 'Asset Price',
-    Strike_Price = 'Strike Price',
-    Pool_Size = 'Pool Size',
-    Time_Remaining = 'Time Remaining',
-    Open_Orders = 'Open Orders',
+export enum SortByBuyEnum {
+    Condition = 'Condition',
+    When = 'When',
+    AmountToDeposit = 'Amount to deposit',
+    ReturnIfWin = 'Return if win',
+}
+
+export enum SortBySellEnum {
+    Condition = 'Condition',
+    When = 'When',
+    AmountToReceive = 'Amount to receive',
+    OptionsToSell = 'Options to sell',
+    OptionsInWallet = 'Options in wallet',
 }
 
 const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
@@ -58,12 +66,15 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
     setOrderBy,
     isSingleMode,
     exchangeRates,
+    isLoading,
 }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const { t } = useTranslation();
-    const [showDropdownPhase, setShowDropwodnPhase] = useState(false);
-    const [showDropdownUserFilters, setShowDropwodnUserFilters] = useState(false);
-    const [showDropdownSort, setShowDropwodnSort] = useState(false);
+    const [showDropdownTradingMode, setShowDropdownTradingMode] = useState(false);
+    const [showDropdownUserFilters, setShowDropdownUserFilters] = useState(false);
+    const [showDropdownSort, setShowDropdownSort] = useState(false);
+
+    const isBuyMode = tradingModeFilter === TradingModeFilterEnum.Buy;
 
     // const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
     //     const userFilterValue = queryString.parse(searchFilter.search).userFilter;
@@ -134,6 +145,27 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
         setAssetSearch('');
     };
 
+    const getCategoryFilter = () => {
+        if (
+            coinFilter === CoinFilterEnum.All &&
+            optionFilter === OptionFilterEnum.All &&
+            orderFilter === OrderFilterEnum.All
+        ) {
+            return orderFilter;
+        }
+        let categoryFilter = '';
+        if (orderFilter !== OrderFilterEnum.All) {
+            categoryFilter = `${categoryFilter}, ${orderFilter}`;
+        }
+        if (coinFilter !== CoinFilterEnum.All) {
+            categoryFilter = `${categoryFilter}, ${coinFilter}`;
+        }
+        if (optionFilter !== OptionFilterEnum.All) {
+            categoryFilter = `${categoryFilter}, ${optionFilter}`;
+        }
+        return categoryFilter.substring(1);
+    };
+
     return (
         <div className="quick-trading-mobile">
             <SearchMarket
@@ -143,16 +175,17 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
             />
             <FlexDiv className="quick-trading-mobile__filters">
                 <CategoryFilters
-                    onClick={setShowDropwodnUserFilters.bind(this, !showDropdownUserFilters)}
-                    filter={orderFilter}
+                    onClick={setShowDropdownUserFilters.bind(this, !showDropdownUserFilters)}
+                    filter={getCategoryFilter()}
                 >
                     <DropDownWrapper hidden={!showDropdownUserFilters}>
                         <DropDown>
                             <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                Category
+                                {t('options.filters-labels.category')}
                             </Text>
-                            {Object.keys(OrderFilterEnum).map((filterItem) => {
-                                const isDisabled = !isWalletConnected || isSingleMode;
+                            {Object.values(OrderFilterEnum).map((filterItem) => {
+                                const isDisabled =
+                                    (!isWalletConnected || isSingleMode) && filterItem !== OrderFilterEnum.All;
                                 return (
                                     <Text
                                         key={filterItem}
@@ -173,11 +206,11 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                                 );
                             })}
                             <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                Discover
+                                {t('options.filters-labels.discover')}
                             </Text>
-                            {Object.keys(CoinFilterEnum).map((filterItem) => {
+                            {Object.values(CoinFilterEnum).map((filterItem) => {
                                 const isDisabled = isSingleMode;
-                                return (
+                                return filterItem === CoinFilterEnum.All ? null : (
                                     <Text
                                         key={filterItem}
                                         onClick={() =>
@@ -197,11 +230,11 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                                 );
                             })}
                             <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                Option
+                                {t('options.filters-labels.option')}
                             </Text>
-                            {Object.keys(OptionFilterEnum).map((filterItem) => {
+                            {Object.values(OptionFilterEnum).map((filterItem) => {
                                 const isDisabled = isSingleMode;
-                                return (
+                                return filterItem === OptionFilterEnum.All ? null : (
                                     <Text
                                         key={filterItem}
                                         onClick={() =>
@@ -223,69 +256,81 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                         </DropDown>
                     </DropDownWrapper>
                 </CategoryFilters>
-                <PhaseFilters onClick={setShowDropwodnPhase.bind(this, !showDropdownPhase)} filter={tradingModeFilter}>
-                    <DropDownWrapper hidden={!showDropdownPhase}>
+                <TradingModeFilters
+                    onClick={setShowDropdownTradingMode.bind(this, !showDropdownTradingMode)}
+                    filter={t(`options.trading-mode.${tradingModeFilter.toLowerCase()}`)}
+                    text={t('options.quick-trading.mode-label')}
+                >
+                    <DropDownWrapper hidden={!showDropdownTradingMode}>
                         <DropDown>
                             {Object.values(TradingModeFilterEnum).map((filterItem) => (
                                 <Text
                                     className={`${
                                         filterItem === tradingModeFilter ? 'selected' : ''
-                                    } text-s lh32 pale-grey capitalize`}
+                                    } text-s lh32 pale-grey`}
                                     onClick={() => setTradingModeFilter(filterItem)}
                                     key={filterItem}
                                 >
-                                    {t(`options.phases.${filterItem}`)}
+                                    {t(`options.trading-mode.${filterItem.toLowerCase()}`)}
                                 </Text>
                             ))}
                         </DropDown>
                     </DropDownWrapper>
-                </PhaseFilters>
+                </TradingModeFilters>
             </FlexDiv>
 
             <SortyByMobile
-                onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
-                filter={mapOrderByToEnum(orderBy)}
+                onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
+                filter={isBuyMode ? mapOrderByToBuyEnum(orderBy) : mapOrderByToSellEnum(orderBy)}
             >
                 <DropDownWrapper className="quick-trading-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
-                        {Object.keys(SortByEnum)
-                            .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
-                            .map((key, index) => (
-                                <Text
-                                    className={`${
-                                        mapOrderByToEnum(orderBy) === SortByEnum[key as keyof typeof SortByEnum]
-                                            ? 'selected'
-                                            : ''
-                                    } text-s lh32 pale-grey capitalize`}
-                                    onClick={() => setOrderBy(index + 2)}
-                                    key={key}
-                                >
-                                    {SortByEnum[key as keyof typeof SortByEnum]}
-                                </Text>
-                            ))}
+                        {Object.values(isBuyMode ? SortByBuyEnum : SortBySellEnum).map((filterItem, index) => (
+                            <Text
+                                className={`${
+                                    isBuyMode
+                                        ? mapOrderByToBuyEnum(orderBy)
+                                        : mapOrderByToSellEnum(orderBy) === filterItem
+                                        ? 'selected'
+                                        : ''
+                                } text-s lh32 pale-grey`}
+                                onClick={() => setOrderBy(index + 2)}
+                                key={filterItem}
+                            >
+                                {filterItem}
+                            </Text>
+                        ))}
                     </DropDown>
                 </DropDownWrapper>
             </SortyByMobile>
 
-            {orders.length > 0 ? (
-                <OrderCardMobile exchangeRates={exchangeRates} orders={orders}></OrderCardMobile>
-            ) : (
+            {isLoading && (
+                <LoaderContainer>
+                    <Container>
+                        <SimpleLoader />
+                    </Container>
+                </LoaderContainer>
+            )}
+            {orders.length === 0 && !isLoading && (
                 <NoOrders>
                     <Container>
-                        <Text className="text-l bold pale-grey">{t('options.quick-trading.no-orders-found')}</Text>
+                        <Text className="text-m bold pale-grey">{t('options.quick-trading.no-orders-found')}</Text>
                         <Button className="primary" onClick={resetFilters}>
                             {t('options.quick-trading.view-all-orders')}
                         </Button>
                     </Container>
                 </NoOrders>
             )}
+            {!isLoading && orders.length > 0 && (
+                <OrderCardMobile exchangeRates={exchangeRates} orders={orders} isBuyMode={isBuyMode}></OrderCardMobile>
+            )}
             <Overlay
                 onClick={() => {
-                    setShowDropwodnPhase(false);
-                    setShowDropwodnSort(false);
-                    setShowDropwodnUserFilters(false);
+                    setShowDropdownTradingMode(false);
+                    setShowDropdownSort(false);
+                    setShowDropdownUserFilters(false);
                 }}
-                className={showDropdownPhase || showDropdownSort || showDropdownUserFilters ? 'show' : 'hide'}
+                className={showDropdownTradingMode || showDropdownSort || showDropdownUserFilters ? 'show' : 'hide'}
             ></Overlay>
         </div>
     );
@@ -293,23 +338,37 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
 
 export default QuickTradingMobile;
 
-const mapOrderByToEnum = (data: number) => {
+const mapOrderByToBuyEnum = (data: number) => {
     switch (data) {
         case 1:
         case 2:
-            return SortByEnum.Asset;
+            return SortByBuyEnum.Condition;
         case 3:
-            return SortByEnum.Asset_Price;
+            return SortByBuyEnum.When;
         case 4:
-            return SortByEnum.Strike_Price;
+            return SortByBuyEnum.AmountToDeposit;
         case 5:
-            return SortByEnum.Pool_Size;
-        case 6:
-            return SortByEnum.Time_Remaining;
-        case 7:
-            return SortByEnum.Open_Orders;
+            return SortByBuyEnum.ReturnIfWin;
         default:
-            return SortByEnum.Time_Remaining;
+            return SortByBuyEnum.When;
+    }
+};
+
+const mapOrderByToSellEnum = (data: number) => {
+    switch (data) {
+        case 1:
+        case 2:
+            return SortBySellEnum.Condition;
+        case 3:
+            return SortBySellEnum.When;
+        case 4:
+            return SortBySellEnum.AmountToReceive;
+        case 5:
+            return SortBySellEnum.OptionsToSell;
+        case 6:
+            return SortBySellEnum.OptionsInWallet;
+        default:
+            return SortBySellEnum.When;
     }
 };
 
@@ -324,6 +383,8 @@ const NoOrders = styled(FlexDivColumn)`
     margin: 24px 0;
     margin-bottom: 600px;
 `;
+
+const LoaderContainer = styled(NoOrders)``;
 
 const Container = styled.div`
     display: flex;

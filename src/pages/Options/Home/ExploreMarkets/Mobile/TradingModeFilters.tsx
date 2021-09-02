@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
-
 import arrowDown from 'assets/images/filters/arrow-down.svg';
 
-const SortWrapper = styled(FlexDiv)`
+export const SearchWrapper = styled(FlexDiv)`
     width: 100%;
     align-items: center;
     position: relative;
-    border-bottom: 2px solid #f6f6fa;
-    margin-right: 14px;
+    background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
+    border-radius: 23px;
+    margin-left: 14px;
     &:before {
         content: url(${arrowDown});
         position: absolute;
@@ -18,7 +18,7 @@ const SortWrapper = styled(FlexDiv)`
     }
 `;
 
-const TextWrapper = styled.p`
+export const TextWrapper = styled.p`
     height: 40px;
     width: 100%;
     border-radius: 23px;
@@ -29,6 +29,7 @@ const TextWrapper = styled.p`
     line-height: 38px;
     padding: 0 10px;
     letter-spacing: 0.15px;
+    background: #04045a;
     color: #f6f6fe;
     padding-left: 20px;
     margin: 2px;
@@ -39,16 +40,17 @@ const TextWrapper = styled.p`
     }
 `;
 
-type SortyByMobileProps = {
+type TradingModeFiltersProps = {
     filter: string;
     onClick: () => void;
+    text: string;
 };
 
-export const SortyByMobile: React.FC<SortyByMobileProps> = ({ filter, onClick, children }) => (
-    <>
-        <SortWrapper className="markets-mobile__sortWrapper" onClick={onClick}>
-            <TextWrapper>Sort by: {filter}</TextWrapper>
-            {children}
-        </SortWrapper>
-    </>
+export const TradingModeFilters: React.FC<TradingModeFiltersProps> = ({ filter, children, onClick, text }) => (
+    <SearchWrapper onClick={onClick}>
+        <TextWrapper>
+            {text}: {filter}
+        </TextWrapper>
+        {children}
+    </SearchWrapper>
 );
