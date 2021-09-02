@@ -227,10 +227,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
         () => {
             return assetSearch
-                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
+                ? filteredOptionsMarkets.filter(({ asset, currencyKey, country, eventName }) => {
                       return (
                           asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
+                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          eventName?.toLowerCase().includes(assetSearch.toLowerCase())
                       );
                   })
                 : filteredOptionsMarkets;
