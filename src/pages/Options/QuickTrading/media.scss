@@ -49,3 +49,31 @@
         }
     }
 }
+
+.place-order-modal {
+    @media (max-width: 500px) {
+        .limitTab {
+            &__select {
+                width: 100%;
+                margin-right: 0;
+                & + div {
+                    display: none;
+                }
+            }
+            &__slider {
+                flex-direction: column;
+                & > div {
+                    width: 100%;
+                    margin-top: 0px;
+                    margin-bottom: 10px;
+                }
+            }
+            &__summary {
+                padding: 0;
+                & > div {
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

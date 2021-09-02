@@ -548,7 +548,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
                     <FieldValidationMessage
                         showValidation={!isExpirationEntered}
-                        message={t(`common.errors.insufficient-balance-wallet1`)}
+                        message={t(`common.errors.insufficient-balance-wallet`)}
                     />
                 </ShortInputContainer>
             </FlexDiv>

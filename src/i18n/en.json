@@ -565,6 +565,7 @@
             "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
             "counter-offer-button-label": "Counter",
+            "cancel-button-label": "Cancel",
             "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",

@@ -1,31 +1,35 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumnCentered, FlexDivRow, Image, Text } from 'theme/common';
-import { ExtendedOrders, ExtendedOrderItem } from 'types/options';
+import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow, Image, Text } from 'theme/common';
+import { ExtendedOrders, ExtendedOrderItem, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import {
     formatCurrency,
     formatCurrencyWithSign,
     formatPercentage,
     getPercentageDifference,
+    truncToDecimals,
 } from 'utils/formatters/number';
 import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
 import { navigateToOptionsMarket } from 'utils/routes';
-import { countryToCountryCode } from '../../MarketsTable/MarketsTable';
+import { countryToCountryCode, eventToIcon } from '../../MarketsTable/MarketsTable';
 import ReactCountryFlag from 'react-country-flag';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { DefaultSubmitButton, LightTooltip, SubmitButton } from 'pages/Options/Market/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import PlaceOrderModal from 'pages/Options/QuickTrading/PlaceOrderModal';
+import FillOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/FillOrderModal';
+import CancelOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/CancelOrderModal';
 
 type OrderCardMobileProps = {
     orders: ExtendedOrders;
@@ -35,8 +39,41 @@ type OrderCardMobileProps = {
 
 const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates, isBuyMode }) => {
     const { t } = useTranslation();
+    const [fillOrderModalVisible, setFillOrderModalVisible] = useState<boolean>(false);
+    const [placeOrderModalVisible, setPlaceOrderModalVisible] = useState<boolean>(false);
+    const [cancelOrderModalVisible, setCancelOrderModalVisible] = useState<boolean>(false);
+    const [selectedOrder, setSelectedOrder] = useState<ExtendedOrderItem | null>(null);
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
+    const openFillOrderModal = useCallback((order: ExtendedOrderItem) => {
+        setFillOrderModalVisible(true);
+        setSelectedOrder(order);
+    }, []);
+    const openPlaceOrderModal = useCallback((order: ExtendedOrderItem) => {
+        setPlaceOrderModalVisible(true);
+        setSelectedOrder(order);
+    }, []);
+
+    const openCancelOrderModal = useCallback((order: ExtendedOrderItem) => {
+        setCancelOrderModalVisible(true);
+        setSelectedOrder(order);
+    }, []);
+
+    const orderbookSign = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) =>
+        optionsMarket.customMarket
+            ? optionSide === 'long'
+                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                    ? '>='
+                    : '=='
+                : optionsMarket.eventName === 'XYZ airdrop claims'
+                ? '<'
+                : '!='
+            : optionSide === 'long'
+            ? '>'
+            : '<';
+
+    console.log(orders);
     return (
         <Wrapper>
             {orders.map((order: ExtendedOrderItem, index) => {
@@ -46,13 +83,12 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                     order.market.strikePrice
                 );
                 return (
-                    <CardWrapper
-                        onClick={() => navigateToOptionsMarket(order.market.address)}
-                        className="cardWrapper"
-                        key={index}
-                    >
+                    <CardWrapper className="cardWrapper" key={index}>
                         <Container>
-                            <FlexDivRow style={{ marginBottom: 16 }}>
+                            <FlexDiv
+                                style={{ marginBottom: 16 }}
+                                onClick={() => navigateToOptionsMarket(order.market.address)}
+                            >
                                 {order.market.customMarket ? (
                                     <ReactCountryFlag
                                         countryCode={countryToCountryCode(order.market.country as any)}
@@ -66,9 +102,19 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                     />
                                 )}
 
-                                <FlexDivColumnCentered>
+                                <FlexDivColumnCentered style={{ flex: 0 }}>
                                     {order.market.customMarket ? (
-                                        <Text className="text-m pale-grey">{order.market.country}</Text>
+                                        <FlexDivRow>
+                                            {order.market.customMarket &&
+                                                !countryToCountryCode(order.market.country as any) && (
+                                                    <CustomIcon
+                                                        src={eventToIcon(order.market.eventName as any)}
+                                                    ></CustomIcon>
+                                                )}
+                                            <Text className="text-m pale-grey" style={{ whiteSpace: 'nowrap' }}>
+                                                {order.market.country}
+                                            </Text>
+                                        </FlexDivRow>
                                     ) : (
                                         <>
                                             <CryptoName style={{ fontSize: 16, marginBottom: 0 }}>
@@ -78,10 +124,15 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                         </>
                                     )}
                                 </FlexDivColumnCentered>
+                                <FlexDivCentered>
+                                    <Sign>{orderbookSign(order.market, order.optionSide)}</Sign>
+                                </FlexDivCentered>
                                 <FlexDivColumnCentered>
-                                    <Text className="text-ms pale-grey">
-                                        {formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
-                                    </Text>
+                                    <Price>
+                                        {order.market.customMarket
+                                            ? order.market.outcome
+                                            : formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
+                                    </Price>
                                     <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
                                         {currentAssetPrice > order.market.strikePrice ? (
                                             <RedText
@@ -104,7 +155,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                         )}
                                     </LightTooltip>
                                 </FlexDivColumnCentered>
-                            </FlexDivRow>
+                            </FlexDiv>
                             <FlexDivRow style={{ marginBottom: 8, alignItems: 'flex-start' }}>
                                 <FlexDivColumnCentered>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
@@ -173,39 +224,91 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                     </FlexDivColumnCentered>
                                 </FlexDivRow>
                             )}
-                            <FlexDivRow style={{ marginBottom: 8 }}>
-                                <FlexDivColumnCentered>
-                                    <>
-                                        <BuySellButton
-                                            onClick={() => {
-                                                // openFillOrderModal(order);
-                                            }}
-                                            isBuy={isBuyMode}
-                                            disabled={order.walletBalance === 0}
-                                        >
-                                            {isBuyMode ? t('common.buy') : t('common.sell')}
-                                        </BuySellButton>
-                                    </>
-                                </FlexDivColumnCentered>
-                                <FlexDivColumnCentered style={{ textAlign: 'right' }}>
-                                    <>
-                                        <LightTooltip title={t('options.quick-trading.counter-offer-button-tooltip')}>
-                                            <CounterOfferButton
+                            {order.rawOrder.maker.toLowerCase() !== walletAddress.toLowerCase() && isWalletConnected && (
+                                <FlexDivRow style={{ marginBottom: 8 }}>
+                                    <FlexDivColumnCentered>
+                                        <>
+                                            <BuySellButton
                                                 onClick={() => {
-                                                    // openPlaceOrderModal(order);
+                                                    openFillOrderModal(order);
                                                 }}
+                                                isBuy={isBuyMode}
                                                 disabled={order.walletBalance === 0}
                                             >
-                                                {t('options.quick-trading.counter-offer-button-label')}
+                                                {isBuyMode ? t('common.buy') : t('common.sell')}
+                                            </BuySellButton>
+                                        </>
+                                    </FlexDivColumnCentered>
+                                    <FlexDivColumnCentered style={{ textAlign: 'right' }}>
+                                        <>
+                                            <LightTooltip
+                                                title={t('options.quick-trading.counter-offer-button-tooltip')}
+                                            >
+                                                <CounterOfferButton
+                                                    onClick={() => {
+                                                        openPlaceOrderModal(order);
+                                                    }}
+                                                    disabled={order.walletBalance === 0}
+                                                >
+                                                    {t('options.quick-trading.counter-offer-button-label')}
+                                                </CounterOfferButton>
+                                            </LightTooltip>
+                                        </>
+                                    </FlexDivColumnCentered>
+                                </FlexDivRow>
+                            )}
+                            {order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase() && isWalletConnected && (
+                                <FlexDivRow style={{ marginBottom: 8 }}>
+                                    <FlexDivColumnCentered style={{ textAlign: 'center', alignItems: 'center' }}>
+                                        <LightTooltip title={t('options.quick-trading.cancel-tooltip')}>
+                                            <CounterOfferButton
+                                                onClick={() => {
+                                                    openCancelOrderModal(order);
+                                                }}
+                                                style={{ width: 150 }}
+                                            >
+                                                {t('options.quick-trading.cancel-button-label')}
                                             </CounterOfferButton>
                                         </LightTooltip>
-                                    </>
-                                </FlexDivColumnCentered>
-                            </FlexDivRow>
+                                    </FlexDivColumnCentered>
+                                </FlexDivRow>
+                            )}
                         </Container>
                     </CardWrapper>
                 );
             })}
+
+            {fillOrderModalVisible && selectedOrder !== null && (
+                <FillOrderModal
+                    order={selectedOrder}
+                    optionSide={selectedOrder.optionSide}
+                    orderSide={isBuyMode ? 'sell' : 'buy'}
+                    onClose={() => setFillOrderModalVisible(false)}
+                    market={selectedOrder.market}
+                />
+            )}
+            {placeOrderModalVisible && selectedOrder !== null && (
+                <PlaceOrderModal
+                    optionSide={selectedOrder.optionSide}
+                    orderSide={isBuyMode ? 'buy' : 'sell'}
+                    onClose={() => setPlaceOrderModalVisible(false)}
+                    market={selectedOrder.market}
+                    defaultPrice={truncToDecimals(selectedOrder.displayOrder.price, DEFAULT_OPTIONS_DECIMALS)}
+                    defaultAmount={truncToDecimals(selectedOrder.displayOrder.fillableAmount, DEFAULT_OPTIONS_DECIMALS)}
+                />
+            )}
+            {cancelOrderModalVisible && selectedOrder !== null && (
+                <CancelOrderModal
+                    order={selectedOrder}
+                    baseToken={
+                        selectedOrder.optionSide === 'long'
+                            ? selectedOrder.market.longAddress
+                            : selectedOrder.market.shortAddress
+                    }
+                    optionSide={selectedOrder.optionSide}
+                    onClose={() => setCancelOrderModalVisible(false)}
+                />
+            )}
         </Wrapper>
     );
 };
@@ -310,4 +413,31 @@ const RedText = styled.span`
     font-size: 14px;
     display: flex;
     align-items: center;
+`;
+
+const Sign = styled.span`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    text-align: right;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    margin-left: 4px;
+    margin-right: 4px;
+`;
+
+const Price = styled.span`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    color: #ffffff;
+`;
+
+export const CustomIcon = styled(Image)`
+    margin-bottom: -6px;
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
 `;
