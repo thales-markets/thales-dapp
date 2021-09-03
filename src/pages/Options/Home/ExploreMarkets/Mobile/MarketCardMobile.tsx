@@ -131,20 +131,15 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                         <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                     </Text>
                                 </FlexDivColumnCentered>
-                                {market.strikePrice !== 0 ? (
-                                    <FlexDivColumnCentered style={{ textAlign: 'center' }}>
-                                        <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {t('options.market.overview.current-result-label')}
-                                        </Text>
+                                <FlexDivColumnCentered style={{ textAlign: 'center' }}>
+                                    <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
+                                        {t('options.market.overview.current-result-label')}
+                                    </Text>
+                                    {market.customMarket === false ? (
                                         <Result isLong={currentAssetPrice > market.strikePrice}>
                                             {currentAssetPrice < market.strikePrice ? 'SHORT' : 'LONG'}
                                         </Result>
-                                    </FlexDivColumnCentered>
-                                ) : (
-                                    <FlexDivColumnCentered style={{ textAlign: 'center' }}>
-                                        <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {t('options.market.overview.current-result-label')}
-                                        </Text>
+                                    ) : (
                                         <StyledLink
                                             target="_blank"
                                             rel="noreferrer"
@@ -152,8 +147,8 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                         >
                                             ESPN
                                         </StyledLink>
-                                    </FlexDivColumnCentered>
-                                )}
+                                    )}
+                                </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
                                         {t('options.home.market-card.open-orders')}
