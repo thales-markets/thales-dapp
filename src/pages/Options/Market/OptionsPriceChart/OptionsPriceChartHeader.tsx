@@ -94,6 +94,10 @@ const ChartTitle = styled(FlexDiv)<{ color: COLORS }>`
     letter-spacing: 0.5px;
     color: ${(props) => props.color};
     padding: 10px 30px;
+    @media (max-width: 512px) {
+        padding: 10px;
+        font-size: 16px;
+    }
 `;
 
 export default OptionsPriceChartHeader;

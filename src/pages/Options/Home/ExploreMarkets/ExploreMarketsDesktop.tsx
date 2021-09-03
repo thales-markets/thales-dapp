@@ -224,21 +224,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         orderDirection,
     ]);
 
-    const searchFilteredOptionsMarkets = useDebouncedMemo(
-        () => {
-            return assetSearch
-                ? filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
-                      return (
-                          asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                          getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
-                      );
-                  })
-                : filteredOptionsMarkets;
-        },
-        [filteredOptionsMarkets, assetSearch],
-        DEFAULT_SEARCH_DEBOUNCE_MS
-    );
-
     const secondLevelFilteredOptionsMarket = useMemo(() => {
         let secondLevelFilteredOptionsMarkets = filteredOptionsMarkets;
         switch (secondLevelUserFilter) {
@@ -265,6 +250,56 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
         return secondLevelFilteredOptionsMarkets;
     }, [filteredOptionsMarkets, secondLevelUserFilter, phaseFilter]);
+
+    const searchFilteredOptionsMarkets = useDebouncedMemo(
+        () => {
+            if (assetSearch && userFilter !== PrimaryFilters.All) {
+                if (secondLevelUserFilter === SecondaryFilters.All) {
+                    return filteredOptionsMarkets.filter(({ asset, currencyKey, country, eventName }) => {
+                        return (
+                            asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            eventName?.toLowerCase().includes(assetSearch.toLowerCase())
+                        );
+                    });
+                } else {
+                    return secondLevelFilteredOptionsMarket.filter(({ asset, currencyKey, country, eventName }) => {
+                        return (
+                            asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            eventName?.toLowerCase().includes(assetSearch.toLowerCase())
+                        );
+                    });
+                }
+            } else if (assetSearch && userFilter === PrimaryFilters.All) {
+                if (secondLevelUserFilter === SecondaryFilters.All) {
+                    return filteredOptionsMarkets.filter(({ asset, currencyKey, country, eventName }) => {
+                        return (
+                            asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            eventName?.toLowerCase().includes(assetSearch.toLowerCase())
+                        );
+                    });
+                } else {
+                    return secondLevelFilteredOptionsMarket.filter(({ asset, currencyKey, country, eventName }) => {
+                        return (
+                            asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            getSynthName(currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                            eventName?.toLowerCase().includes(assetSearch.toLowerCase())
+                        );
+                    });
+                }
+            } else {
+                return filteredOptionsMarkets;
+            }
+        },
+        [filteredOptionsMarkets, assetSearch],
+        DEFAULT_SEARCH_DEBOUNCE_MS
+    );
 
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
@@ -454,10 +489,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                     isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                     break;
                                 case SecondaryFilters.Olympics:
-                                    (userFilter !== PrimaryFilters.All && isCustomMarketsEmpty) ||
-                                    assetSearch.length > 0
-                                        ? (isDisabled = true)
-                                        : (isDisabled = false);
+                                    isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                     break;
                             }
                             isDisabled = isDisabled || assetSearchNoBtc || assetSearchNoEth;

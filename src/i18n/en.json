@@ -421,6 +421,8 @@
             "trade-options": {
                 "trade-long-options-tab-title": "Trade Long options",
                 "trade-short-options-tab-title": "Trade Short options",
+                "trade-long-options-tab-title-mobile": "Long options",
+                "trade-short-options-tab-title-mobile": "Short options",
                 "market-tab-title": "Market",
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",

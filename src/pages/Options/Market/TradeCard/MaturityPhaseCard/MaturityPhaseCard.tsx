@@ -203,12 +203,18 @@ const MaturitySummaryLabel = styled(SummaryLabel)`
     font-size: 20px;
     line-height: 32px;
     letter-spacing: 0.15px;
+    @media (max-width: 512px) {
+        font-size: 16px;
+    }
 `;
 
 const MaturitySummaryContent = styled(SummaryContent)`
     font-size: 20px !important;
     line-height: 32px;
     letter-spacing: 0.15px;
+    @media (max-width: 512px) {
+        font-size: 16px !important;
+    }
 `;
 
 export default MaturityPhaseCard;

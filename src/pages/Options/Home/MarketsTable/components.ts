@@ -9,6 +9,7 @@ export const Row = styled.tr`
 
 export const PhaseLabel = styled(Button)`
     border-radius: 15px;
+    padding: 8px 35px !important;
     text-transform: uppercase !important;
     height: 40px;
     font-weight: 600;

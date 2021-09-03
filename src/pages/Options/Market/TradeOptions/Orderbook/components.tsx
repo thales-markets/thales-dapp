@@ -16,6 +16,10 @@ export const StyledModal = withStyles(() => ({
 export const ModalContainer = styled.div`
     padding: 20px 30px 35px 30px;
     overflow: auto;
+    @media (max-width: 512px) {
+        margin-right: -10px;
+        padding: 10px;
+    }
 `;
 
 export const ModalHeader = styled(FlexDivRow)`
@@ -39,5 +43,10 @@ export const ModalSummaryContainer = styled.div`
 export const CloseIconContainer = styled(CloseIcon)`
     :hover {
         cursor: pointer;
+    }
+    @media (max-width: 512px) {
+        margin-top: 4px;
+        height: 12px;
+        width: 12px;
     }
 `;

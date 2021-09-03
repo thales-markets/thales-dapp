@@ -70,7 +70,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
     }, [showBurgerMenu]);
 
     return (
-        <FlexDivColumn style={{ width: '100%' }}>
+        <FlexDivColumn style={{ width: '100%', flex: 'unset' }}>
             <MarketHeaderWrapper
                 id="dapp-header"
                 className={`dapp-header ${className}`}
@@ -242,8 +242,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     width: 100%;
-    display: flex;
     height: 100px;
+    display: flex;
     align-items: center;
     justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
 `;

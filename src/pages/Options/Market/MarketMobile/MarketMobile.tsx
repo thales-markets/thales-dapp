@@ -44,6 +44,7 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
             case Widgets.Trade:
                 return (
                     <WidgetWrapper
+                        className={market.phase === 'maturity' ? 'market__maturity' : ''}
                         background={
                             market.phase === 'maturity'
                                 ? ''
@@ -59,17 +60,17 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                 );
             case Widgets.Orderbook:
                 return (
-                    <WidgetWrapper>
+                    <WidgetWrapper className="market__orderbook">
                         <Orderbook optionSide={side} />
                     </WidgetWrapper>
                 );
             case Widgets.Transactions:
                 return (
                     <>
-                        <WidgetWrapper>
+                        <WidgetWrapper className="market__yourTx">
                             <YourTransactions marketAddress={market.address} walletAddress={walletAddress} />
                         </WidgetWrapper>
-                        <WidgetWrapper>
+                        <WidgetWrapper className="market__recentTx">
                             <RecentTransactions marketAddress={market.address} />
                         </WidgetWrapper>
                     </>
@@ -77,10 +78,10 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
             case Widgets.Chart:
                 return (
                     <>
-                        <WidgetWrapper>
+                        <WidgetWrapper className="market__priceChart">
                             <OptionsPriceChart />
                         </WidgetWrapper>
-                        <WidgetWrapper>
+                        <WidgetWrapper className="market__tradingView">
                             <TradingView />
                         </WidgetWrapper>
                     </>
