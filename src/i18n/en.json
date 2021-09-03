@@ -266,7 +266,7 @@
                 "claiming": "Claiming...",
                 "claimed": "Claimed",
                 "claim-unlocked": "Claim Unlocked",
-                "claiming-unlocked": "Claiming Unlocked...",
+                "claiming-unlocked": "Claiming",
                 "unlocked": "Unlocked",
                 "locked": "Locked",
                 "total": "Total",
@@ -284,15 +284,15 @@
                     "amount-to-stake": "Amount to stake"
                 },
                 "my-stake": {
-                    "my-stake": "My Stake",
-                    "staked-in-contract": "Staked in Contract",
-                    "locked-in-escrow": "Locked in Escrow",
-                    "total-staked": "Total staked"
+                    "my-stake": "My Staking Balance",
+                    "staked-in-contract": "Staked directly",
+                    "locked-in-escrow": "Escrowed balance",
+                    "total-staked": "Total staked balance"
                 },
                 "unstake": {
                     "unstake": "Unstake",
-                    "unlock-cooldown-text": "Start unlock cooldown of 7 days during which you are not eliigible for staking rewards",
-                    "cooldown-started-text": "Your staking has started, you will be eligable for staking rewards in",
+                    "unlock-cooldown-text": "Start unlocking cooldown during which you will not be eligible for rewards",
+                    "cooldown-started-text": "You can unstake your THALES in",
                     "start-unstaking": "Start unstaking",
                     "unstaking": "Unstaking..."
                 },

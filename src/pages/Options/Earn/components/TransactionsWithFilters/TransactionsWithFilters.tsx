@@ -79,6 +79,7 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
 
 const SectionContainer = styled(EarnSection)`
     grid-column: span 10;
+    grid-row: span 3;
     height: 400px;
     margin-bottom: 0;
 `;

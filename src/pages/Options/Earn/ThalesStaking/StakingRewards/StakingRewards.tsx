@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import MaterialTooltip from '@material-ui/core/Tooltip';
 import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -29,13 +28,14 @@ import {
     PieChartContainer,
     SectionContentContainer,
     SectionHeader,
+    LearnMore,
+    StyledMaterialTooltip,
 } from '../../components';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core';
 
 const StakingRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -342,36 +342,5 @@ const StakingRewardsInfoContent = styled.span`
     font-size: 16px;
     line-height: 24px;
 `;
-
-const LearnMore = styled.span`
-    position: absolute;
-    bottom: 18%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    color: #00f9ff;
-    font-size: 16px;
-    line-height: 24px;
-    cursor: pointer;
-`;
-
-const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: '1px solid #00D1FF',
-        },
-        color: '#04045A',
-    },
-    tooltip: {
-        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
-        borderRadius: '23px',
-        border: '1px solid #00D1FF',
-        padding: '20px',
-        fontSize: '16px',
-        lineHeight: '24px',
-        letterSpacing: '0.4px',
-        color: '#F6F6FE',
-        maxWidth: 700,
-    },
-}))(MaterialTooltip);
 
 export default StakingRewards;

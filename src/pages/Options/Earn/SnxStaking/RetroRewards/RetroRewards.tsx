@@ -26,6 +26,8 @@ import {
     PieChartContainer,
     SectionContentContainer,
     SectionHeader,
+    LearnMore,
+    StyledMaterialTooltip,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -179,21 +181,30 @@ const RetroRewards: React.FC = () => {
                             </GradientText>
                         </FlexDivColumnCentered>
                     </PieChartCenterDiv>
+                    <LearnMore style={{ fontSize: '13px' }}>
+                        <StyledMaterialTooltip
+                            arrow={true}
+                            title="Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards."
+                        >
+                            <span>Learn more</span>
+                        </StyledMaterialTooltip>
+                    </LearnMore>
                 </PieChartContainer>
                 <AmountsContainer>
                     <div>
                         <Dot backgroundColor="#FFD9BA" />
                         {t('options.earn.snx-stakers.unlocked')}:{' '}
-                        {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}
+                        <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
                     </div>
                     <div>
                         <Dot backgroundColor="#AFC171" />
                         {t('options.earn.snx-stakers.claimed')}:{' '}
-                        {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
+                        <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}</span>
                     </div>
                     <div>
                         <Dot backgroundColor="#5EA0A0" />
-                        {t('options.earn.snx-stakers.locked')}: {formatCurrencyWithKey(THALES_CURRENCY, locked)}
+                        {t('options.earn.snx-stakers.locked')}:{' '}
+                        <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
                     </div>
                 </AmountsContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
@@ -204,8 +215,10 @@ const RetroRewards: React.FC = () => {
                         onClick={handleClaimRetroRewards}
                     >
                         {isClaiming
-                            ? t('options.earn.snx-stakers.claiming-unlocked')
-                            : t('options.earn.snx-stakers.claim-unlocked')}
+                            ? t('options.earn.snx-stakers.claiming-unlocked') +
+                              ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
+                            : t('options.earn.snx-stakers.claim') +
+                              ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
                     </Button>
                 </ButtonContainer>
                 <ValidationMessage

@@ -138,7 +138,7 @@ const WidgetsContainer = styled.div`
     position: relative;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-rows: auto min-content;
     grid-gap: 20px;
     padding: 10px;
 `;

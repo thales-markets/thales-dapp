@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { withStyles } from '@material-ui/core';
+import MaterialTooltip from '@material-ui/core/Tooltip';
 
 export const EarnSection = styled.section`
     padding-bottom: 0px;
@@ -108,6 +110,7 @@ export const PieChartCenterDiv = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
 `;
 
 export const PieChartCenterText = styled.span`
@@ -117,3 +120,34 @@ export const PieChartCenterText = styled.span`
     text-align: center;
     margin-bottom: 5px;
 `;
+
+export const LearnMore = styled.span`
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    color: #f6f6fe;
+    font-size: 16px;
+    line-height: 24px;
+    cursor: pointer;
+`;
+
+export const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #00D1FF',
+        },
+        color: '#04045A',
+    },
+    tooltip: {
+        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
+        borderRadius: '23px',
+        border: '1px solid #00D1FF',
+        padding: '20px',
+        fontSize: '16px',
+        lineHeight: '24px',
+        letterSpacing: '0.4px',
+        color: '#F6F6FE',
+        maxWidth: 700,
+    },
+}))(MaterialTooltip);

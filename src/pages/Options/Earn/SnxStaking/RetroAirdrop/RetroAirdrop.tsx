@@ -139,7 +139,7 @@ const RetroAirdrop: React.FC = () => {
                         {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0, 0, true)}
                     </GradientText>
                 </ClaimItem>
-                <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
+                {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
                 <ButtonContainer>
                     <Button
                         onClick={handleClaimRetroAirdrop}
