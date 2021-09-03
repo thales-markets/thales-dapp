@@ -156,7 +156,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                 <FilterContainer>
                     {Object.values(OrderbookFilterEnum).map((filterItem) => (
                         <OrderbookFilterButton
-                            className={filter === filterItem ? 'selected' : ''}
+                            className={` ${filter === filterItem ? 'selected' : ''} market__orderbook__headerBtn`}
                             onClick={() => setFilter(filterItem)}
                             key={filterItem}
                         >
@@ -172,7 +172,7 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
                     >
                         <OrderbookFilterButton
                             onClick={isWalletConnected ? () => setFilterMyOrders(!filterMyOrders) : undefined}
-                            className={filterMyOrders ? 'selected' : ''}
+                            className={` ${filterMyOrders ? 'selected' : ''} market__orderbook__userBtn`}
                             disabled={!isWalletConnected}
                         >
                             <UserIcon />

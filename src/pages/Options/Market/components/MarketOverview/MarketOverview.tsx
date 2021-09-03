@@ -309,11 +309,13 @@ export const PriceArrow = styled(Image)`
 export const GreenText = styled.span`
     color: #01b977;
     padding-left: 5px;
+    white-space: pre;
 `;
 
 export const RedText = styled.span`
     color: #be2727;
     padding-left: 5px;
+    white-space: pre;
 `;
 
 export const CustomIcon = styled(Image)`

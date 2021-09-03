@@ -152,8 +152,8 @@ export const Wrapper = styled(FlexDivColumn)`
     @media (max-width: 1024px) {
         padding-left: 30px;
     }
-    @media (max-width: 400px) {
-        padding: 0 10px;
+    @media (max-width: 512px) {
+        padding: 0 10px !important;
     }
 `;
 

@@ -360,7 +360,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
     return (
         <StyledModal open disableBackdropClick onClose={onClose}>
-            <ModalContainer>
+            <ModalContainer className="market__fillOrderModal">
                 <ModalHeader>
                     <ModalTitle>
                         {t(`options.market.trade-options.fill-order.${orderSide}.title`, {

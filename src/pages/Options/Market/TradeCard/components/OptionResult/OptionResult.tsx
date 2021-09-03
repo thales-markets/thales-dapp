@@ -38,6 +38,11 @@ const Container = styled(FlexDivCentered)<{ side: OptionSide }>`
     &:first-child {
         margin-right: 20px;
     }
+    @media (max-width: 512px) {
+        width: 100%;
+        margin: 12px !important;
+        max-width: 192px;
+    }
 `;
 
 const InnerContainer = styled(FlexDivCentered)`

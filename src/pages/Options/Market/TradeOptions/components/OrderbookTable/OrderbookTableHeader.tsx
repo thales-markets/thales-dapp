@@ -42,6 +42,7 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
                     </LightTooltip>
                 </>
             ),
+            className: 'return',
             width: 300,
             justifyContent: 'left',
         },
@@ -49,6 +50,7 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
             header: <>{t('options.market.trade-options.orderbook.table.time-remaining-col')}</>,
             width: 300,
             justifyContent: 'center',
+            className: 'time-remaining',
         },
         {
             header: <></>,
@@ -60,7 +62,12 @@ const OrderbookTableHeader: React.FC<OrderbookTableHeaderProps> = ({ optionsCurr
     return (
         <TableRow>
             {columns.map((column: any, columnIndex: any) => (
-                <TableCellHead style={{ width: column.width }} key={columnIndex} justifyContent={column.justifyContent}>
+                <TableCellHead
+                    style={{ width: column.width }}
+                    key={columnIndex}
+                    justifyContent={column.justifyContent}
+                    className={column.className}
+                >
                     {column.header}
                 </TableCellHead>
             ))}
@@ -79,6 +86,14 @@ const TableCellHead = styled(TableCell)<{ justifyContent?: string }>`
     background: rgba(228, 228, 228, 0.05);
     &:first-child {
         padding-left: 0;
+    }
+    @media (max-width: 512px) {
+        &.time-remaining {
+            text-align: center;
+        }
+        &.return svg {
+            display: none;
+        }
     }
 `;
 

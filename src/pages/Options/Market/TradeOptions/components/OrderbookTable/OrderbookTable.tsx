@@ -116,12 +116,16 @@ const TableBody = styled.div<{ orderSide: OrderSide }>`
 
 export const TableRow = styled(FlexDiv)`
     min-height: 32px;
+    height: 32px;
     font-weight: 600;
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
     position: relative;
+    @media (max-width: 512px) {
+        font-size: 10px;
+    }
 `;
 
 export const TableRowBody = styled(TableRow)`
@@ -133,6 +137,7 @@ export const TableRowBody = styled(TableRow)`
 
 const InnerTableRow = styled(FlexDiv)<{ width: number; orderSide: OrderSide }>`
     min-height: 32px;
+    height: 32px;
     background: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
     mix-blend-mode: normal;
     opacity: 0.12;

@@ -103,17 +103,20 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const optionsTabContent: Array<{
         id: 'long' | 'short';
         name: string;
+        mobileName: string;
         color: 'red' | 'green';
     }> = useMemo(
         () => [
             {
                 id: 'long',
                 name: t('options.market.trade-options.trade-long-options-tab-title'),
+                mobileName: t('options.market.trade-options.trade-long-options-tab-title-mobile'),
                 color: 'green',
             },
             {
                 id: 'short',
                 name: t('options.market.trade-options.trade-short-options-tab-title'),
+                mobileName: t('options.market.trade-options.trade-short-options-tab-title-mobile'),
                 color: 'red',
             },
         ],
@@ -282,7 +285,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                                 tab.id === optionsActiveTab.id ? 'selected' : 'idle'
                                             } `}
                                         >
-                                            {tab.name}
+                                            {window.innerWidth < 768 ? tab.mobileName : tab.name}
                                             {tab.id === 'long' ? (
                                                 <OptionsIcon src={longIcon} />
                                             ) : (

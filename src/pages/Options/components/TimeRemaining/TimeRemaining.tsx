@@ -81,6 +81,9 @@ const getColor = (duration: Duration) => {
 
 const Container = styled.span<{ fontSize?: number; duration: Duration; showBorder?: boolean }>`
     font-size: ${(props) => props.fontSize || 12}px;
+    @media (max-width: 512px) {
+        font-size: ${(props) => props.fontSize || 10}px;
+    }
     color: ${(props) => getColor(props.duration)};
     border: 1px solid
         ${(props) => (props.showBorder ? (getColor(props.duration) === '#D82418' ? '#D82418' : 'transparent') : 'none')};
@@ -88,6 +91,7 @@ const Container = styled.span<{ fontSize?: number; duration: Duration; showBorde
     border-radius: ${(props) => (props.showBorder ? '5px' : '0')};
     text-align: center;
     z-index: 3;
+    white-space: pre;
 `;
 
 export default TimeRemaining;

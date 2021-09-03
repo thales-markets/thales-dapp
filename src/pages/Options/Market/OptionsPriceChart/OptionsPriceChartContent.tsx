@@ -145,6 +145,10 @@ const OptionsPriceChartContent: React.FC<OptionsPriceChartContentProps> = ({ opt
 const Container = styled.div`
     height: 300px;
     padding-left: 30px;
+    @media (max-width: 512px) {
+        padding-left: 10px;
+        height: 240px;
+    }
 `;
 
 const InnerContainerRelative = styled.div`

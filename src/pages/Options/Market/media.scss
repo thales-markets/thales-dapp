@@ -8,6 +8,7 @@
                 display: none;
             }
             &--mobile {
+                max-height: 225px;
                 &__section {
                     background: #04045a;
                     &:first-child {
@@ -128,12 +129,29 @@
         }
     }
 
+    @media (max-width: 900px) {
+        .grid-component-header {
+            padding: 0;
+            padding-left: 16px;
+            white-space: pre;
+            text-transform: capitalize;
+        }
+
+        &__orderbook,
+        &__priceChart,
+        &__traddngView,
+        &__yourTx,
+        &__recentTx {
+            padding-top: 0;
+        }
+    }
+
     @media (max-width: 767px) {
         padding-left: 10px;
         padding-right: 10px;
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 512px) {
         &__tradeTabBtn {
             display: flex;
             justify-content: space-between;
@@ -144,8 +162,33 @@
                 margin: auto !important;
             }
         }
+
+        .grid-component-header {
+            font-size: 16px;
+        }
+
+        &__maturity {
+            .grid-component-header {
+                font-size: 20px;
+            }
+        }
+
+        &__orderbook {
+            &__headerBtn {
+                padding: 4px 11px !important;
+                margin: 0 5px;
+            }
+            &__userBtn {
+                padding: 4px 11px !important;
+                margin: 0 5px;
+            }
+        }
+
         .marketTab {
             flex-direction: column;
+            .react-select__menu {
+                z-index: 10;
+            }
             & > div {
                 width: 100%;
             }
