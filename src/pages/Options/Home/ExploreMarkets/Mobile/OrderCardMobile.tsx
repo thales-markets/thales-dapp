@@ -99,27 +99,24 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                             svg
                                         />
                                         <FlexDivColumnCentered style={{ flex: 0 }}>
-                                            <FlexDivRow>
+                                            <FlexDivRow style={{ alignItems: 'center' }}>
                                                 {order.market.customMarket &&
                                                     !countryToCountryCode(order.market.country as any) && (
                                                         <CustomIcon
                                                             src={eventToIcon(order.market.eventName as any)}
                                                         ></CustomIcon>
                                                     )}
-                                                <Text className="text-m pale-grey" style={{ whiteSpace: 'nowrap' }}>
-                                                    {order.market.country}
+                                                <Text
+                                                    className="text-m pale-grey"
+                                                    style={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}
+                                                >
+                                                    <>
+                                                        {order.market.country}
+                                                        {` ${orderbookSign(order.market, order.optionSide)} `}
+                                                    </>
+                                                    <Price>{order.market.outcome}</Price>
                                                 </Text>
                                             </FlexDivRow>
-                                        </FlexDivColumnCentered>
-                                        <FlexDivCentered>
-                                            <Sign style={{ fontWeight: 'normal' }}>
-                                                {orderbookSign(order.market, order.optionSide)}
-                                            </Sign>
-                                        </FlexDivCentered>
-                                        <FlexDivColumnCentered style={{ flex: 0, alignItems: 'center' }}>
-                                            <Price style={{ fontWeight: 'normal', fontSize: '20px' }}>
-                                                {order.market.outcome}
-                                            </Price>
                                         </FlexDivColumnCentered>
                                     </>
                                 ) : (
@@ -457,7 +454,6 @@ const Price = styled.span`
 `;
 
 export const CustomIcon = styled(Image)`
-    margin-top: 4px;
     margin-right: 6px;
     width: 24px;
     height: 24px;
@@ -466,5 +462,4 @@ export const CustomIcon = styled(Image)`
 const SideImage = styled.img`
     width: 44px;
     margin-left: 4px;
-    margin-top: 4px;
 `;

@@ -78,68 +78,6 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
 
     const isBuyMode = tradingModeFilter === TradingModeFilterEnum.Buy;
 
-    // const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
-    //     const userFilterValue = queryString.parse(searchFilter.search).userFilter;
-    //     if (!isDisabled && userFilterValue !== filter) {
-    //         history.replace({
-    //             pathname: searchFilter.pathname,
-    //             search: queryString.stringify({ userFilter: [filter] }),
-    //         });
-    //     } else if (userFilterValue === filter && userFilter !== PrimaryFilters.All) {
-    //         history.replace({
-    //             pathname: searchFilter.pathname,
-    //             search: '',
-    //         });
-    //     }
-
-    //     if (!isDisabled && secondLevelUserFilter !== SecondaryFilters.All && filter !== PrimaryFilters.All) {
-    //         setSecondLevelUserFilter(SecondaryFilters.All);
-    //     }
-
-    //     if (!isDisabled) {
-    //         setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
-    //     }
-
-    //     document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
-    //     return;
-    // };
-
-    // const onClickSecondLevelUserFilter = (filter: SecondaryFilters, isDisabled: boolean) => {
-    //     const userFilterValue = queryString.parse(searchFilter.search).userFilter;
-    //     const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
-
-    //     if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
-    //         history.replace({
-    //             pathname: searchFilter.pathname,
-    //             search: queryString.stringify({
-    //                 userFilter: [userFilterValue],
-    //                 userFilter2: [filter],
-    //             }),
-    //         });
-    //     } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.All) {
-    //         history.replace({
-    //             pathname: searchFilter.pathname,
-    //             search: queryString.stringify({
-    //                 userFilter: [userFilterValue],
-    //             }),
-    //         });
-    //     } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
-    //         history.replace({
-    //             pathname: searchFilter.pathname,
-    //             search: queryString.stringify({
-    //                 userFilter2: [filter],
-    //             }),
-    //         });
-    //     }
-
-    //     if (!isDisabled) {
-    //         setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.All : filter);
-    //     }
-
-    //     document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
-    //     return;
-    // };
-
     const getCategoryFilter = () => {
         if (
             coinFilter === CoinFilterEnum.All &&
