@@ -141,7 +141,18 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                         </Result>
                                     </FlexDivColumnCentered>
                                 ) : (
-                                    ''
+                                    <FlexDivColumnCentered style={{ textAlign: 'center' }}>
+                                        <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
+                                            {t('options.market.overview.current-result-label')}
+                                        </Text>
+                                        <StyledLink
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            href="http://www.espn.com/tennis/dailyResults"
+                                        >
+                                            ESPN
+                                        </StyledLink>
+                                    </FlexDivColumnCentered>
                                 )}
                                 <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
@@ -230,6 +241,19 @@ export const CustomIcon = styled(Image)`
     margin-top: 6px;
     width: 24px;
     height: 24px;
+`;
+
+export const StyledLink = styled.a`
+    color: #f6f6fe;
+    &path {
+        fill: #f6f6fe;
+    }
+    &:hover {
+        color: #00f9ff;
+        & path {
+            fill: #00f9ff;
+        }
+    }
 `;
 
 export const eventToIcon = (event: string) => {
