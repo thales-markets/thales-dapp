@@ -204,7 +204,7 @@ const Header = styled(FlexDivCentered)`
     }
 `;
 const Content = styled(FlexDivColumnCentered)`
-    height: 195px;
+    height: auto;
     text-align: center;
     font-size: 14px;
     padding-top: 11px;
