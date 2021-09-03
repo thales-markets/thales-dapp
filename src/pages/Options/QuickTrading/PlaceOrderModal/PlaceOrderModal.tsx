@@ -73,7 +73,7 @@ export const PlaceOrderModal: React.FC<PlaceOrderModalProps> = ({
 
     return (
         <StyledPlaceOrderModal open disableBackdropClick onClose={onClose}>
-            <PlaceOrderModalContainer>
+            <PlaceOrderModalContainer className="place-order-modal">
                 <PlaceOrderModalHeader>
                     <ModalTitle>{t(`options.market.trade-options.place-order.modal.${orderSide}.title`)}</ModalTitle>
                     <FlexDivRow>
