@@ -135,6 +135,22 @@ const TableRow = styled(FlexDiv)`
     min-height: 40px;
     font-weight: 600;
     font-size: 12px;
+    @media (max-width: 512px) {
+        font-size: 10px;
+        & > div {
+            justify-content: center;
+            text-align: center;
+            img {
+                width: 40px;
+            }
+        }
+        & > div:last-child {
+            padding-right: 0;
+        }
+        & > div:first-child {
+            padding-left: 6px;
+        }
+    }
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #f6f6fe;
@@ -164,6 +180,19 @@ const TableCellHead = styled(TableCell)`
     font-weight: bold;
     font-size: 14px;
     letter-spacing: 0.5px;
+    @media (max-width: 767px) {
+        span {
+            display: none;
+        }
+    }
+    @media (max-width: 512px) {
+        font-size: 10px;
+        justify-content: center;
+        text-align: center;
+        &:last-child {
+            padding-right: 0;
+        }
+    }
     color: #4564ae;
     user-select: none;
 `;
