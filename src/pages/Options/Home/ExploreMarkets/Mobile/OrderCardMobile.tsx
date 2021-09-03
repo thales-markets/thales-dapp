@@ -87,84 +87,91 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                 return (
                     <CardWrapper className="cardWrapper" key={index}>
                         <Container>
-                            <FlexDiv
+                            <FlexDivRow
                                 style={{ marginBottom: 16 }}
                                 onClick={() => navigateToOptionsMarket(order.market.address)}
                             >
-                                {order.market.customMarket ? (
-                                    <>
-                                        <ReactCountryFlag
-                                            countryCode={countryToCountryCode(order.market.country as any)}
-                                            style={{ width: 32, height: 32, marginRight: 10 }}
-                                            svg
-                                        />
-                                        <FlexDivColumnCentered style={{ flex: 0 }}>
-                                            <FlexDivRow style={{ alignItems: 'center' }}>
-                                                {order.market.customMarket &&
-                                                    !countryToCountryCode(order.market.country as any) && (
-                                                        <CustomIcon
-                                                            src={eventToIcon(order.market.eventName as any)}
-                                                        ></CustomIcon>
-                                                    )}
-                                                <Text
-                                                    className="text-m pale-grey"
-                                                    style={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}
+                                <FlexDivCentered style={{ alignItems: 'flex-start' }}>
+                                    {order.market.customMarket ? (
+                                        <>
+                                            <ReactCountryFlag
+                                                countryCode={countryToCountryCode(order.market.country as any)}
+                                                style={{ width: 32, height: 32, marginRight: 10 }}
+                                                svg
+                                            />
+                                            <FlexDivColumnCentered style={{ flex: 0 }}>
+                                                <FlexDivRow style={{ alignItems: 'center' }}>
+                                                    {order.market.customMarket &&
+                                                        !countryToCountryCode(order.market.country as any) && (
+                                                            <CustomIcon
+                                                                src={eventToIcon(order.market.eventName as any)}
+                                                            ></CustomIcon>
+                                                        )}
+                                                    <Text
+                                                        className="text-m pale-grey"
+                                                        style={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}
+                                                    >
+                                                        {`${order.market.country} ${orderbookSign(
+                                                            order.market,
+                                                            order.optionSide
+                                                        )} ${order.market.outcome}`}
+                                                    </Text>
+                                                </FlexDivRow>
+                                            </FlexDivColumnCentered>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CurrencyIcon
+                                                currencyKey={order.market.currencyKey}
+                                                synthIconStyle={{ width: 36, height: 36 }}
+                                            />
+                                            <FlexDivColumnCentered style={{ flex: 0 }}>
+                                                <CryptoName
+                                                    style={{ fontSize: 16, marginBottom: 0, whiteSpace: 'nowrap' }}
                                                 >
-                                                    <>
-                                                        {order.market.country}
-                                                        {` ${orderbookSign(order.market, order.optionSide)} `}
-                                                    </>
-                                                    <Price>{order.market.outcome}</Price>
-                                                </Text>
-                                            </FlexDivRow>
-                                        </FlexDivColumnCentered>
-                                    </>
-                                ) : (
-                                    <>
-                                        <CurrencyIcon
-                                            currencyKey={order.market.currencyKey}
-                                            synthIconStyle={{ width: 36, height: 36 }}
-                                        />
-                                        <FlexDivColumnCentered style={{ flex: 0 }}>
-                                            <CryptoName style={{ fontSize: 16, marginBottom: 0, whiteSpace: 'nowrap' }}>
-                                                {getSynthName(order.market.currencyKey)}
-                                            </CryptoName>
-                                            <CryptoKey style={{ fontSize: 14 }}>{order.market.asset}</CryptoKey>
-                                        </FlexDivColumnCentered>
-                                        <FlexDivCentered>
-                                            <Sign>{orderbookSign(order.market, order.optionSide)}</Sign>
-                                        </FlexDivCentered>
-                                        <FlexDivColumnCentered style={{ flex: 0, alignItems: 'center' }}>
-                                            <Price>{formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}</Price>
-                                            <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
-                                                {currentAssetPrice > order.market.strikePrice ? (
-                                                    <RedText
-                                                        style={{
-                                                            display: isFinite(strikeAndAssetPriceDifference)
-                                                                ? 'flex'
-                                                                : 'none',
-                                                        }}
-                                                    >
-                                                        <PriceArrow src={arrowDown} />
-                                                        <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
-                                                    </RedText>
-                                                ) : (
-                                                    <GreenText
-                                                        style={{
-                                                            display: isFinite(strikeAndAssetPriceDifference)
-                                                                ? 'flex'
-                                                                : 'none',
-                                                        }}
-                                                    >
-                                                        <PriceArrow src={arrowUp} />
-                                                        <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
-                                                    </GreenText>
-                                                )}
-                                            </LightTooltip>
-                                        </FlexDivColumnCentered>
-                                    </>
-                                )}
-                                <FlexDivCentered>
+                                                    {getSynthName(order.market.currencyKey)}
+                                                </CryptoName>
+                                                <CryptoKey style={{ fontSize: 14 }}>{order.market.asset}</CryptoKey>
+                                            </FlexDivColumnCentered>
+                                            <FlexDivCentered>
+                                                <Sign>{orderbookSign(order.market, order.optionSide)}</Sign>
+                                            </FlexDivCentered>
+                                            <FlexDivColumnCentered style={{ flex: 0, alignItems: 'center' }}>
+                                                <Price>
+                                                    {formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
+                                                </Price>
+                                                <LightTooltip
+                                                    title={t('options.market.overview.difference-text-tooltip')}
+                                                >
+                                                    {currentAssetPrice > order.market.strikePrice ? (
+                                                        <RedText
+                                                            style={{
+                                                                display: isFinite(strikeAndAssetPriceDifference)
+                                                                    ? 'flex'
+                                                                    : 'none',
+                                                            }}
+                                                        >
+                                                            <PriceArrow src={arrowDown} />
+                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                        </RedText>
+                                                    ) : (
+                                                        <GreenText
+                                                            style={{
+                                                                display: isFinite(strikeAndAssetPriceDifference)
+                                                                    ? 'flex'
+                                                                    : 'none',
+                                                            }}
+                                                        >
+                                                            <PriceArrow src={arrowUp} />
+                                                            <span>{strikeAndAssetPriceDifference.toFixed(2)}%</span>
+                                                        </GreenText>
+                                                    )}
+                                                </LightTooltip>
+                                            </FlexDivColumnCentered>
+                                        </>
+                                    )}
+                                </FlexDivCentered>
+                                <FlexDivCentered style={{ textAlign: 'right' }}>
                                     <Sign>
                                         {order.optionSide === 'long' ? (
                                             <SideImage src={longIcon} />
@@ -173,7 +180,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                         )}
                                     </Sign>
                                 </FlexDivCentered>
-                            </FlexDiv>
+                            </FlexDivRow>
                             <FlexDivRow style={{ marginBottom: 8, alignItems: 'flex-start' }}>
                                 <FlexDivColumnCentered>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
