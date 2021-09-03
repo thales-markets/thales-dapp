@@ -33,6 +33,7 @@ type QuickTradingMobileProps = {
     setOrderBy: (data: any) => void;
     isSingleMode: boolean;
     isLoading: boolean;
+    resetFilters: any;
 };
 
 export enum SortByBuyEnum {
@@ -67,6 +68,7 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
     isSingleMode,
     exchangeRates,
     isLoading,
+    resetFilters,
 }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const { t } = useTranslation();
@@ -137,13 +139,6 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
     //     document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
     //     return;
     // };
-
-    const resetFilters = () => {
-        setOrderFilter(OrderFilterEnum.All);
-        setCoinFilter(CoinFilterEnum.All);
-        setOptionFilter(OptionFilterEnum.All);
-        setAssetSearch('');
-    };
 
     const getCategoryFilter = () => {
         if (
@@ -399,13 +394,14 @@ const NoOrders = styled(FlexDivColumn)`
     padding: 2px;
     border-radius: 23px;
     margin: 24px 0;
-    margin-bottom: 600px;
+    margin-bottom: 60px;
 `;
 
 const ViewAllOrdersContainer = styled(FlexDivColumn)`
     min-height: 100px;
     justify-content: space-evenly;
     align-items: center;
+    margin-bottom: 60px;
 `;
 
 const LoaderContainer = styled(NoOrders)``;

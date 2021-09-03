@@ -308,6 +308,7 @@ const QuickTradingPage: React.FC<any> = () => {
                     setOrderBy={setOrderBy}
                     isSingleMode={isSingleMode}
                     isLoading={ordersQuery.isLoading || (!isBuyMode && userAssetsQuery.isLoading)}
+                    resetFilters={resetFilters}
                 ></QuickTradingMobile>
 
                 <div id="quick-trading" className="quick-trading-desktop" style={{ width: '100%' }}>
