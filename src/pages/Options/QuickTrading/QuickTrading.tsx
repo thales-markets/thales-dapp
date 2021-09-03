@@ -259,7 +259,9 @@ const QuickTradingPage: React.FC<any> = () => {
                 ? filteredOrders.filter((order: ExtendedOrderItem) => {
                       return (
                           order.market.asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
-                          getSynthName(order.market.currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase())
+                          getSynthName(order.market.currencyKey)?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          order.market.country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          order.market.eventName?.toLowerCase().includes(assetSearch.toLowerCase())
                       );
                   })
                 : filteredOrders;
