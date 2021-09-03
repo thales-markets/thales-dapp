@@ -16,6 +16,9 @@ export const SearchWrapper = styled(FlexDiv)`
         right: 16px;
         transform: scale(0.9);
     }
+    &.disabled {
+        opacity: 0.4;
+    }
 `;
 
 export const TextWrapper = styled.p`
@@ -44,10 +47,17 @@ type TradingModeFiltersProps = {
     filter: string;
     onClick: () => void;
     text: string;
+    disabled: boolean;
 };
 
-export const TradingModeFilters: React.FC<TradingModeFiltersProps> = ({ filter, children, onClick, text }) => (
-    <SearchWrapper onClick={onClick}>
+export const TradingModeFilters: React.FC<TradingModeFiltersProps> = ({
+    filter,
+    children,
+    onClick,
+    text,
+    disabled,
+}) => (
+    <SearchWrapper onClick={onClick} className={disabled ? 'disabled' : ''}>
         <TextWrapper>
             {text}: {filter}
         </TextWrapper>

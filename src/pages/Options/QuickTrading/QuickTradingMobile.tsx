@@ -168,98 +168,105 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
 
     return (
         <div className="quick-trading-mobile">
-            <SearchMarket
-                className="quick-trading-mobile__search"
-                assetSearch={assetSearch}
-                setAssetSearch={setAssetSearch}
-            />
+            {!isSingleMode && (
+                <SearchMarket
+                    className="quick-trading-mobile__search"
+                    assetSearch={assetSearch}
+                    setAssetSearch={setAssetSearch}
+                />
+            )}
             <FlexDiv className="quick-trading-mobile__filters">
-                <CategoryFilters
-                    onClick={setShowDropdownUserFilters.bind(this, !showDropdownUserFilters)}
-                    filter={getCategoryFilter()}
-                >
-                    <DropDownWrapper hidden={!showDropdownUserFilters}>
-                        <DropDown>
-                            <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                {t('options.filters-labels.category')}
-                            </Text>
-                            {Object.values(OrderFilterEnum).map((filterItem) => {
-                                const isDisabled =
-                                    (!isWalletConnected || isSingleMode) && filterItem !== OrderFilterEnum.All;
-                                return (
-                                    <Text
-                                        key={filterItem}
-                                        onClick={() =>
-                                            !isDisabled
-                                                ? setOrderFilter(
-                                                      orderFilter === filterItem ? OrderFilterEnum.All : filterItem
-                                                  )
-                                                : {}
-                                        }
-                                        className={`${
-                                            !isDisabled && orderFilter === filterItem ? 'selected' : ''
-                                        } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
-                                        style={{ marginLeft: 20 }}
-                                    >
-                                        {filterItem}
-                                    </Text>
-                                );
-                            })}
-                            <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                {t('options.filters-labels.discover')}
-                            </Text>
-                            {Object.values(CoinFilterEnum).map((filterItem) => {
-                                const isDisabled = isSingleMode;
-                                return filterItem === CoinFilterEnum.All ? null : (
-                                    <Text
-                                        key={filterItem}
-                                        onClick={() =>
-                                            !isDisabled
-                                                ? setCoinFilter(
-                                                      coinFilter === filterItem ? CoinFilterEnum.All : filterItem
-                                                  )
-                                                : {}
-                                        }
-                                        className={`${
-                                            !isDisabled && coinFilter === filterItem ? 'selected' : ''
-                                        } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
-                                        style={{ marginLeft: 20 }}
-                                    >
-                                        {filterItem}
-                                    </Text>
-                                );
-                            })}
-                            <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                {t('options.filters-labels.option')}
-                            </Text>
-                            {Object.values(OptionFilterEnum).map((filterItem) => {
-                                const isDisabled = isSingleMode;
-                                return filterItem === OptionFilterEnum.All ? null : (
-                                    <Text
-                                        key={filterItem}
-                                        onClick={() =>
-                                            !isDisabled
-                                                ? setOptionFilter(
-                                                      optionFilter === filterItem ? OptionFilterEnum.All : filterItem
-                                                  )
-                                                : {}
-                                        }
-                                        className={`${
-                                            !isDisabled && optionFilter === filterItem ? 'selected' : ''
-                                        } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
-                                        style={{ marginLeft: 20 }}
-                                    >
-                                        {filterItem}
-                                    </Text>
-                                );
-                            })}
-                        </DropDown>
-                    </DropDownWrapper>
-                </CategoryFilters>
+                {!isSingleMode && (
+                    <CategoryFilters
+                        onClick={setShowDropdownUserFilters.bind(this, !showDropdownUserFilters)}
+                        filter={getCategoryFilter()}
+                    >
+                        <DropDownWrapper hidden={!showDropdownUserFilters}>
+                            <DropDown>
+                                <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
+                                    {t('options.filters-labels.category')}
+                                </Text>
+                                {Object.values(OrderFilterEnum).map((filterItem) => {
+                                    const isDisabled =
+                                        (!isWalletConnected || isSingleMode) && filterItem !== OrderFilterEnum.All;
+                                    return (
+                                        <Text
+                                            key={filterItem}
+                                            onClick={() =>
+                                                !isDisabled
+                                                    ? setOrderFilter(
+                                                          orderFilter === filterItem ? OrderFilterEnum.All : filterItem
+                                                      )
+                                                    : {}
+                                            }
+                                            className={`${
+                                                !isDisabled && orderFilter === filterItem ? 'selected' : ''
+                                            } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
+                                            style={{ marginLeft: 20 }}
+                                        >
+                                            {filterItem}
+                                        </Text>
+                                    );
+                                })}
+                                <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
+                                    {t('options.filters-labels.discover')}
+                                </Text>
+                                {Object.values(CoinFilterEnum).map((filterItem) => {
+                                    const isDisabled = isSingleMode;
+                                    return filterItem === CoinFilterEnum.All ? null : (
+                                        <Text
+                                            key={filterItem}
+                                            onClick={() =>
+                                                !isDisabled
+                                                    ? setCoinFilter(
+                                                          coinFilter === filterItem ? CoinFilterEnum.All : filterItem
+                                                      )
+                                                    : {}
+                                            }
+                                            className={`${
+                                                !isDisabled && coinFilter === filterItem ? 'selected' : ''
+                                            } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
+                                            style={{ marginLeft: 20 }}
+                                        >
+                                            {filterItem}
+                                        </Text>
+                                    );
+                                })}
+                                <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
+                                    {t('options.filters-labels.option')}
+                                </Text>
+                                {Object.values(OptionFilterEnum).map((filterItem) => {
+                                    const isDisabled = isSingleMode;
+                                    return filterItem === OptionFilterEnum.All ? null : (
+                                        <Text
+                                            key={filterItem}
+                                            onClick={() =>
+                                                !isDisabled
+                                                    ? setOptionFilter(
+                                                          optionFilter === filterItem
+                                                              ? OptionFilterEnum.All
+                                                              : filterItem
+                                                      )
+                                                    : {}
+                                            }
+                                            className={`${
+                                                !isDisabled && optionFilter === filterItem ? 'selected' : ''
+                                            } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
+                                            style={{ marginLeft: 20 }}
+                                        >
+                                            {filterItem}
+                                        </Text>
+                                    );
+                                })}
+                            </DropDown>
+                        </DropDownWrapper>
+                    </CategoryFilters>
+                )}
                 <TradingModeFilters
-                    onClick={setShowDropdownTradingMode.bind(this, !showDropdownTradingMode)}
+                    onClick={!isSingleMode ? setShowDropdownTradingMode.bind(this, !showDropdownTradingMode) : () => {}}
                     filter={t(`options.trading-mode.${tradingModeFilter.toLowerCase()}`)}
                     text={t('options.quick-trading.mode-label')}
+                    disabled={isSingleMode}
                 >
                     <DropDownWrapper hidden={!showDropdownTradingMode}>
                         <DropDown>
@@ -279,30 +286,32 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                 </TradingModeFilters>
             </FlexDiv>
 
-            <SortyByMobile
-                onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
-                filter={isBuyMode ? mapOrderByToBuyEnum(orderBy) : mapOrderByToSellEnum(orderBy)}
-            >
-                <DropDownWrapper className="quick-trading-mobile__sorting-dropdown" hidden={!showDropdownSort}>
-                    <DropDown>
-                        {Object.values(isBuyMode ? SortByBuyEnum : SortBySellEnum).map((filterItem, index) => (
-                            <Text
-                                className={`${
-                                    isBuyMode
-                                        ? mapOrderByToBuyEnum(orderBy)
-                                        : mapOrderByToSellEnum(orderBy) === filterItem
-                                        ? 'selected'
-                                        : ''
-                                } text-s lh32 pale-grey`}
-                                onClick={() => setOrderBy(index + 2)}
-                                key={filterItem}
-                            >
-                                {filterItem}
-                            </Text>
-                        ))}
-                    </DropDown>
-                </DropDownWrapper>
-            </SortyByMobile>
+            {!isSingleMode && (
+                <SortyByMobile
+                    onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
+                    filter={isBuyMode ? mapOrderByToBuyEnum(orderBy) : mapOrderByToSellEnum(orderBy)}
+                >
+                    <DropDownWrapper className="quick-trading-mobile__sorting-dropdown" hidden={!showDropdownSort}>
+                        <DropDown>
+                            {Object.values(isBuyMode ? SortByBuyEnum : SortBySellEnum).map((filterItem, index) => (
+                                <Text
+                                    className={`${
+                                        isBuyMode
+                                            ? mapOrderByToBuyEnum(orderBy)
+                                            : mapOrderByToSellEnum(orderBy) === filterItem
+                                            ? 'selected'
+                                            : ''
+                                    } text-s lh32 pale-grey`}
+                                    onClick={() => setOrderBy(index + 2)}
+                                    key={filterItem}
+                                >
+                                    {filterItem}
+                                </Text>
+                            ))}
+                        </DropDown>
+                    </DropDownWrapper>
+                </SortyByMobile>
+            )}
 
             {isLoading && (
                 <LoaderContainer>
@@ -323,6 +332,15 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
             )}
             {!isLoading && orders.length > 0 && (
                 <OrderCardMobile exchangeRates={exchangeRates} orders={orders} isBuyMode={isBuyMode}></OrderCardMobile>
+            )}
+            {orders.length > 0 && !isLoading && isSingleMode && (
+                <ViewAllOrdersContainer>
+                    <>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.quick-trading.view-all-orders')}
+                        </Button>
+                    </>
+                </ViewAllOrdersContainer>
             )}
             <Overlay
                 onClick={() => {
@@ -382,6 +400,12 @@ const NoOrders = styled(FlexDivColumn)`
     border-radius: 23px;
     margin: 24px 0;
     margin-bottom: 600px;
+`;
+
+const ViewAllOrdersContainer = styled(FlexDivColumn)`
+    min-height: 100px;
+    justify-content: space-evenly;
+    align-items: center;
 `;
 
 const LoaderContainer = styled(NoOrders)``;
