@@ -89,7 +89,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                         <Container>
                             <FlexDivRow
                                 style={{ marginBottom: 16 }}
-                                onClick={() => navigateToOptionsMarket(order.market.address)}
+                                onClick={() => navigateToOptionsMarket(order.market.address, order.optionSide)}
                             >
                                 <FlexDivCentered style={{ alignItems: 'flex-start' }}>
                                     {order.market.customMarket ? (
