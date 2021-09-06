@@ -154,9 +154,15 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                         ? t('options.market.overview.final-result-label')
                         : t('options.market.overview.current-result-label')}
                 </Title>
-                <Result style={{ fontSize: 14 }} isLong={optionsMarket.result === 'long'}>
-                    {optionsMarket.result}
-                </Result>
+                {optionsMarket.customMarket === false ? (
+                    <Result style={{ fontSize: 14 }} isLong={optionsMarket.result === 'long'}>
+                        {optionsMarket.result}
+                    </Result>
+                ) : (
+                    <StyledLink target="_blank" rel="noreferrer" href="http://www.espn.com/tennis/dailyResults">
+                        ESPN
+                    </StyledLink>
+                )}
             </FlexDivColumnCentered>
         </Wrapper>
     );

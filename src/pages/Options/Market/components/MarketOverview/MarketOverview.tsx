@@ -94,7 +94,11 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         <StyledLink
                             target="_blank"
                             rel="noreferrer"
-                            href="https://www.espn.com/olympics/summer/2020/medals/_/view/overall"
+                            href={
+                                optionsMarket.eventName?.toLowerCase().indexOf('us open') !== -1
+                                    ? 'http://www.espn.com/tennis/dailyResults'
+                                    : 'https://www.espn.com/olympics/summer/2020/medals/_/view/overall'
+                            }
                         >
                             ESPN
                         </StyledLink>

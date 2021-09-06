@@ -190,8 +190,14 @@
             "expiry": "expired"
         },
         "trading-mode": {
-            "buy": "BUY",
-            "sell": "SELL"
+            "buy": "Buy",
+            "sell": "Sell"
+        },
+        "filters-labels": {
+            "category": "Category",
+            "discover": "Discover",
+            "sort-by": "Sort by",
+            "option": "Option"
         },
         "home": {
             "market-card": {
@@ -677,9 +683,10 @@
         },
         "quick-trading": {
             "title": "Quick Trading",
-            "mode-label": "I WANT TO",
+            "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
             "counter-offer-button-label": "Counter",
+            "cancel-button-label": "Cancel",
             "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",
