@@ -112,9 +112,16 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                             paddingBottom: 4,
                         }}
                     >
-                        <Text className="text-xs pale-grey lh24">
-                            {t('options.create-market.summary.dates.maturity-date')}
-                        </Text>
+                        {window.innerWidth < 900 ? (
+                            <Text className="text-xs pale-grey lh24">
+                                {t('options.create-market.summary.dates.maturity-date-mobile')}
+                            </Text>
+                        ) : (
+                            <Text className="text-xs pale-grey lh24">
+                                {t('options.create-market.summary.dates.maturity-date')}
+                            </Text>
+                        )}
+
                         <Text className="text-xs pale-grey bold lh24">{props.maturityDate}</Text>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 4 }}>

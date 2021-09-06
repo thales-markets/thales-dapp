@@ -236,10 +236,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                             isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
                                         case SecondaryFilters.Olympics:
-                                            (userFilter !== PrimaryFilters.All && isCustomMarketsEmpty) ||
-                                            assetSearch.length > 0
-                                                ? (isDisabled = true)
-                                                : (isDisabled = false);
+                                            isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
                                     }
                                     isDisabled = isDisabled || assetSearchNoBtc || assetSearchNoEth;

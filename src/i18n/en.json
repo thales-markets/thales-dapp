@@ -281,6 +281,7 @@
                 "difference": "Difference between strike and current price",
                 "dates": {
                     "maturity-date": "Maturity date",
+                    "maturity-date-mobile": "Maturity",
                     "time-to-exercise": "Time to exercise"
                 },
                 "fees": {
@@ -469,7 +470,9 @@
                     },
                     "order-type-label": "Order type",
                     "amount-label": "Amount to {{orderSide}}",
+                    "amount-label-mobile": "Amount:",
                     "price-label": "Price per {{currencyKey}}",
+                    "price-label-mobile": "Price per:",
                     "expiration-label": "Expires in",
                     "total-label": "Total (sUSD)",
                     "total-max-label": "Maximum sent (sUSD)",
