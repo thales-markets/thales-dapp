@@ -314,7 +314,15 @@
                 }
             },
             "vesting": {
-                "tab-title": "Vesting"
+                "tab-title": "Vesting",
+                "schedule": {
+                    "title": "Vesting schedule",
+                    "table": {
+                        "date-time-col": "vesting date",
+                        "amount-col": "amount",
+                        "no-results": "No vesting schedule found."
+                    }
+                }
             },
             "lp-staking": {
                 "tab-title": "LP staking"

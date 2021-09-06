@@ -1,7 +1,14 @@
 import React from 'react';
+import Schedule from './Schedule';
+import YourTransactions from './Transactions';
 
 const Vesting: React.FC = () => {
-    return <div />;
+    return (
+        <>
+            <Schedule />
+            <YourTransactions />
+        </>
+    );
 };
 
 export default Vesting;

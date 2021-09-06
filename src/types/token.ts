@@ -51,3 +51,10 @@ export enum TransactionFilterEnum {
 }
 
 export type TokenTransactions = TokenTransaction[];
+
+export type VestingScheduleItem = {
+    date: number;
+    amount: number | string;
+};
+
+export type VestingSchedule = VestingScheduleItem[];
