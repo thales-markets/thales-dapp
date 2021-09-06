@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDivColumn, Text } from '../../../theme/common';
+import { Background, FlexDivCentered, FlexDivColumn, Text } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
+import Vesting from './Vesting';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -63,6 +64,7 @@ const EarnPage: React.FC = () => {
                         <WidgetsContainer>
                             {selectedTab === 'snx-stakers' && <SnxStaking />}
                             {selectedTab === 'thales-staking' && <ThalesStaking />}
+                            {selectedTab === 'vesting' && <Vesting />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </MainContent>
@@ -88,49 +90,55 @@ const MainContent = styled(FlexDivColumn)`
 `;
 
 const MainContentContainer = styled.div`
+    padding-top: 5px;
     overflow: hidden;
 `;
 
 const OptionsTabContainer = styled.div`
-    display: flex;
-    justify-content: space-evenly;
+    height: 50px;
     position: relative;
-    margin-bottom: 20px;
+    width: 95%;
+    margin: auto;
 `;
 
-const OptionsTab = styled.button<{ isActive: boolean; index: number }>`
-    border: 2px solid transparent;
-    border-radius: 50px;
-    min-height: 32px;
-    background-color: transparent;
-    cursor: pointer;
-    margin-left: 10px;
-    font-weight: bold;
-    font-size: 18px;
+const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
+    position: absolute;
+    top: 0;
+    left: ${(props) => props.index * 24.5 + '% '};
+    background: linear-gradient(90deg, #141874, #04045a);
+    width: 26%;
+    z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
+    transition: 0.5s;
+    transition-property: color;
+    height: 50px;
+    border-radius: 15px 15px 0 0;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
     line-height: 40px;
     text-align: center;
-    letter-spacing: 0.5px;
-    color: #f6f6fe;
-    margin: 0 9px;
-    padding: 6px 16px;
-    &:disabled {
-        opacity: 0.4;
-        cursor: default;
-    }
-    &:hover:not(:disabled) {
-        background: rgba(1, 38, 81, 0.8);
-        border: 2px solid #0a2e66;
-        color: #b8c6e5;
-    }
+    letter-spacing: 0.15px;
+    color: #748bc6;
+    border-left: 1px solid rgba(116, 139, 198, 0.5);
+    border-right: 1px solid rgba(116, 139, 198, 0.5);
+    border-top: 1px solid rgba(116, 139, 198, 0.5);
+    user-select: none;
     &.selected {
-        background: #0a2e66;
-        border: 2px solid #00f9ff;
+        background: #121776;
+        transition: 0.2s;
+        color: #f6f6fe;
+        transform: scale(1.1) translateY(-1px);
+        border-top: 1px solid rgba(202, 145, 220, 0.2);
+        border-left: 1px solid rgba(202, 145, 220, 0.2);
+        border-right: 1px solid rgba(202, 145, 220, 0.2);
+    }
+    &:hover:not(.selected) {
+        cursor: pointer;
         color: #00f9ff;
     }
-    &.selected:hover {
-        background: rgba(1, 38, 81, 0.8);
-        border: 2px solid #00f9ff;
-        color: #b8c6e5;
+    img {
+        margin-left: 10px;
+        margin-bottom: 5px;
     }
 `;
 
@@ -141,6 +149,10 @@ const WidgetsContainer = styled.div`
     grid-template-rows: auto min-content;
     grid-gap: 20px;
     padding: 10px;
+    border: 1px solid rgba(202, 145, 220, 0.2);
+    border-radius: 15px;
+    background: #121776;
+    z-index: 0;
 `;
 
 const EarnTitle = styled(Text)`
