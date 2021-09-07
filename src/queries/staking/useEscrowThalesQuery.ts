@@ -17,8 +17,9 @@ const useEscrowThalesQuery = (
 
             try {
                 escrowedBalance = bigNumberFormatter(
-                    await (snxJSConnector as any).escrowThalesContract.getEscrowedBalance(walletAddress)
+                    await (snxJSConnector as any).escrowThalesContract.totalAccountEscrowedAmount(walletAddress)
                 );
+                console.log(escrowedBalance);
                 claimable = bigNumberFormatter(
                     await (snxJSConnector as any).escrowThalesContract.claimable(walletAddress)
                 );

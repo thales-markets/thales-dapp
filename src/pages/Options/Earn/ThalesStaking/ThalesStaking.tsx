@@ -9,6 +9,7 @@ const ThalesStaking: React.FC = () => {
     const [thalesStaked, setThalesStaked] = useState<number>(0);
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [thalesBalance, setThalesBalance] = useState(0);
+    const [escrowedBalance, setEscrowedBalance] = useState(0);
 
     return (
         <>
@@ -19,8 +20,13 @@ const ThalesStaking: React.FC = () => {
                 thalesStaked={thalesStaked}
                 setThalesStaked={setThalesStaked}
             />
-            <MyStake thalesStaked={thalesStaked} setThalesStaked={setThalesStaked} />
-            <StakingRewards />
+            <MyStake
+                thalesStaked={thalesStaked}
+                setThalesStaked={setThalesStaked}
+                escrowedBalance={escrowedBalance}
+                setEscrowedBalance={setEscrowedBalance}
+            />
+            <StakingRewards escrowedBalance={escrowedBalance} setEscrowedBalance={setEscrowedBalance} />
             <Unstake
                 isUnstakingInContract={isUnstaking}
                 setIsUnstakingInContract={setIsUnstaking}

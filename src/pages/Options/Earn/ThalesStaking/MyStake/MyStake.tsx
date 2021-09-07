@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ClaimTitle, EarnSection, EarnSymbol, SectionContent, SectionHeader } from '../../components';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
@@ -14,9 +14,11 @@ import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common
 type Properties = {
     thalesStaked: number;
     setThalesStaked: (staked: number) => void;
+    escrowedBalance: number;
+    setEscrowedBalance: (escrowed: number) => void;
 };
 
-const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked }) => {
+const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowedBalance, setEscrowedBalance }) => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -31,8 +33,6 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked }) => {
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-
-    const [escrowedBalance, setEscrowedBalance] = useState(0);
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {

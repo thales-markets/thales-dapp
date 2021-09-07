@@ -113,7 +113,7 @@ const Vest: React.FC = () => {
 
     const getVestButton = () => {
         return (
-            <Button onClick={handleVest} disabled={isClaiming} className="primary">
+            <Button onClick={handleVest} disabled={isClaiming || !claimable} className="primary">
                 {!isClaiming
                     ? t('options.earn.vesting.vest.vest') + ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}`
                     : t('options.earn.vesting.vest.vesting') +

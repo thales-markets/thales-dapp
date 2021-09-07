@@ -26,7 +26,7 @@ const useStakingThalesQuery = (
                 thalesStaked = bigNumberFormatter(
                     await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress)
                 );
-                console.log(thalesStaked);
+
                 rewards = bigNumberFormatter(
                     await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress)
                 );

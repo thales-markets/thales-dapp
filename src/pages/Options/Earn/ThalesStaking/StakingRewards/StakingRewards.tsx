@@ -36,8 +36,14 @@ import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
+import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 
-const StakingRewards: React.FC = () => {
+type Properties = {
+    escrowedBalance: number;
+    setEscrowedBalance: (escrowed: number) => void;
+};
+
+const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBalance }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -105,7 +111,6 @@ const StakingRewards: React.FC = () => {
     const handleClaimOngoingAirdrop = async () => {
         if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo && gasPrice !== null) {
             const { ongoingAirdropContract } = snxJSConnector as any;
-
             try {
                 setIsClaiming(true);
                 const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
@@ -127,6 +132,7 @@ const StakingRewards: React.FC = () => {
                         ...ongoingAirdrop,
                         claimed: true,
                     });
+                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(ongoingAirdrop.accountInfo.rawBalance));
                     setIsClaiming(false);
                 }
             } catch (e) {
