@@ -1,13 +1,4 @@
-import {
-    FormControl,
-    FormControlLabel,
-    // FormHelperText,
-    FormLabel,
-    Radio,
-    RadioGroup,
-    RadioProps,
-    withStyles,
-} from '@material-ui/core';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, RadioProps, withStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import './media.scss';
@@ -19,9 +10,14 @@ import { useTranslation } from 'react-i18next';
 type QuizQuestionProps = {
     question: QuizQuestion;
     handleRadioChange: (event: any, answer: any) => void;
+    answeredQuestionsPerPage: any[];
 };
 
-export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handleRadioChange }: QuizQuestionProps) => {
+export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({
+    question,
+    handleRadioChange,
+    answeredQuestionsPerPage,
+}: QuizQuestionProps) => {
     const { t } = useTranslation();
     const [selectedAnswer, setSelectedAnswer] = useState(0);
     const [isAnswerCorrect, setIsAnswerCorrect] = useState(true);
@@ -45,12 +41,20 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
         }
     }, [selectedAnswer]);
 
+    const preserveSelectedAnswers = (question: any) => {
+        const questionTexts = answeredQuestionsPerPage.map((q: { question: string; answer: number }) => q.question);
+        return questionTexts.filter((text: string) => text === question.questionText).length === 0 ? false : true;
+    };
     return (
         <>
             <div
                 className="quiz__modal-dialog__content__radio-form pale-grey"
                 style={{
-                    border: isAnswerCorrect && question.correctAnswer === selectedAnswer ? '2px solid #00f9ff' : '',
+                    border:
+                        (isAnswerCorrect && question.correctAnswer === selectedAnswer) ||
+                        preserveSelectedAnswers(question)
+                            ? '2px solid #4fbf67'
+                            : '',
                 }}
             >
                 <FormControl component="fieldset" style={{ width: '100%' }}>
@@ -67,7 +71,12 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
                                     <FormControlLabel
                                         key={index + '' + answer.index}
                                         value={answer.index}
-                                        checked={selectedAnswer === answer.index}
+                                        disabled={preserveSelectedAnswers(question)}
+                                        checked={
+                                            selectedAnswer === answer.index ||
+                                            (preserveSelectedAnswers(question) &&
+                                                answer.index === question.correctAnswer)
+                                        }
                                         control={<RadioButton />}
                                         label={answer.index + '. ' + answer.answerText}
                                         labelPlacement="start"
@@ -118,9 +127,9 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
 
 const RadioButton = withStyles({
     root: {
-        color: '#f6f6fe',
+        color: '#f6f6fe !important',
         '&$checked': {
-            color: '#00f9ff',
+            color: '#00f9ff !important',
         },
         '& svg': {
             width: '16px',

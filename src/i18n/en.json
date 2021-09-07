@@ -387,9 +387,11 @@
         },
         "quiz": {
             "title": "Quiz",
-            "discord-link": "Ask our Discord community for help",
-            "docs-link": "Find answer in our docs",
-            "discord-button": "Ask Discord for help",
+            "discord-link": "Discord",
+            "discord-tip": "Ask our Discord community for help",
+            "docs-link": "Docs",
+            "docs-tip": "Find answer in our docs",
+            "discord-button": "Ask Discord",
             "submit-answers": "Submit answers",
             "next-page": "Next page",
             "question": {

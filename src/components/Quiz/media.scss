@@ -11,8 +11,6 @@
                 line-height: 48px;
                 font-weight: 600;
                 display: block;
-                margin-bottom: -75px;
-                margin-top: 40px;
             }
             &__link {
                 font-weight: 600;
@@ -29,7 +27,7 @@
             &__page-number {
                 display: block;
                 float: left;
-                margin: 0% 22.5%;
+                margin: 0% 24.5%;
                 margin-top: 45px;
                 font-size: 16px;
                 line-height: 32px;
@@ -82,6 +80,12 @@
                         width: 100%;
                         padding-left: 9px;
                     }
+
+                    .MuiFormControlLabel-label.Mui-disabled {
+                        color: #f6f6fe;
+                    }
+
+
                     &__overlay {
                         position: absolute;
                         width: 100%;

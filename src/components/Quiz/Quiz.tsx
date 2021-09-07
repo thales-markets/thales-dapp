@@ -1,12 +1,15 @@
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import close from 'assets/images/close.svg';
 import { ButtonContainer } from 'pages/Options/Earn/components';
+import { LightTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'theme/common';
 import './media.scss';
 import { QuizQuestion } from './QuizQuestion';
 import { QuizQuestionForm } from './QuizQuestionForm';
+import discord from 'assets/images/discord.svg';
+import styled from 'styled-components';
 
 type QuizProps = {
     quizData: QuizQuestion[];
@@ -107,33 +110,40 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                 }}
             >
                 <DialogTitle className="quiz__modal-dialog__title pale-grey">
-                    <span className="quiz__modal-dialog__title__text">{t('options.quiz.title')}</span>
-                    <div style={{ float: 'right', marginBottom: '30px' }}>
-                        <a
-                            className="quiz__modal-dialog__title__link"
-                            target="_blank"
-                            rel="noreferrer"
-                            href="https://discord.gg/cFGv5zyVEj"
-                            style={{ marginRight: '30px' }}
-                        >
-                            {t('options.quiz.discord-link')}
-                        </a>
+                    <span className="quiz__modal-dialog__title__text">
+                        {t('options.quiz.title')}{' '}
+                        <div style={{ float: 'right' }}>
+                            <LightTooltip title={t('options.quiz.discord-tip')}>
+                                <a
+                                    className="quiz__modal-dialog__title__link"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href="https://discord.gg/cFGv5zyVEj"
+                                    style={{ marginRight: '30px' }}
+                                >
+                                    {t('options.quiz.discord-link')}
+                                </a>
+                            </LightTooltip>
+                            <LightTooltip title={t('options.quiz.docs-tip')}>
+                                <a
+                                    className="quiz__modal-dialog__title__link"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href="https://docs.thales.market/"
+                                    style={{ marginRight: '10px' }}
+                                >
+                                    {t('options.quiz.docs-link')}
+                                </a>
+                            </LightTooltip>
 
-                        <a
-                            className="quiz__modal-dialog__title__link"
-                            target="_blank"
-                            rel="noreferrer"
-                            href="https://docs.thales.market/"
-                        >
-                            {t('options.quiz.docs-link')}
-                        </a>
-                        <Button
-                            style={{ backgroundColor: 'transparent', float: 'right' }}
-                            onClick={handleDialogClosing}
-                        >
-                            <img src={close} />
-                        </Button>
-                    </div>
+                            <Button
+                                style={{ backgroundColor: 'transparent', float: 'right', marginTop: '8px' }}
+                                onClick={handleDialogClosing}
+                            >
+                                <img src={close} />
+                            </Button>
+                        </div>
+                    </span>
                 </DialogTitle>
                 <DialogContent className="quiz__modal-dialog__content" id="retro-airdrop-quiz">
                     <form onSubmit={handleSubmit} style={{ overflow: 'hidden' }}>
@@ -143,18 +153,21 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     key={index}
                                     question={quizQuestion}
                                     handleRadioChange={handleRadioChange}
+                                    answeredQuestionsPerPage={answeredQuestionsPerPage}
                                 ></QuizQuestionForm>
                             ) : index < 6 && pageNumber === 0 ? (
                                 <QuizQuestionForm
                                     key={index}
                                     question={quizQuestion}
                                     handleRadioChange={handleRadioChange}
+                                    answeredQuestionsPerPage={answeredQuestionsPerPage}
                                 ></QuizQuestionForm>
                             ) : pageNumber >= 1 && index >= 6 * pageNumber && index < 6 * (pageNumber + 1) ? (
                                 <QuizQuestionForm
                                     key={index}
                                     question={quizQuestion}
                                     handleRadioChange={handleRadioChange}
+                                    answeredQuestionsPerPage={answeredQuestionsPerPage}
                                 ></QuizQuestionForm>
                             ) : (
                                 ''
@@ -172,16 +185,18 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                 style={{
                                     background:
                                         'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)',
+                                    height: '40px',
                                 }}
                             >
-                                <a
+                                <LinkImage
                                     target="_blank"
                                     rel="noreferrer"
                                     href="https://discord.gg/cFGv5zyVEj"
-                                    style={{ color: 'white' }}
+                                    style={{ color: 'white', verticalAlign: 'top' }}
                                 >
                                     {t('options.quiz.discord-button')}
-                                </a>
+                                    {/* <img src={discord} style={{ verticalAlign: 'middle', marginLeft: '10px' }} /> */}
+                                </LinkImage>
                             </Button>
                         </ButtonContainer>
                         {quizData.length > 6 ? (
@@ -229,3 +244,11 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
 };
 
 export default Quiz;
+
+export const LinkImage = styled.a`
+    &:after {
+        content: url(${discord});
+        margin-left: 10px;
+        vertical-align: top;
+    }
+`;
