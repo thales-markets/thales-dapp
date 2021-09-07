@@ -54,8 +54,21 @@ export const stakingThales = {
             inputs: [
                 {
                     indexed: false,
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'ClaimEnabled',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
                     internalType: 'uint256',
-                    name: 'WeekOfStaking',
+                    name: 'PeriodOfStaking',
                     type: 'uint256',
                 },
                 {
@@ -66,6 +79,45 @@ export const stakingThales = {
                 },
             ],
             name: 'ClosedPeriod',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'DistributeFeesEnabled',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'value',
+                    type: 'uint256',
+                },
+            ],
+            name: 'DurationPeriodChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'newEscrow',
+                    type: 'address',
+                },
+            ],
+            name: 'EscrowChanged',
             type: 'event',
         },
         {
@@ -85,6 +137,19 @@ export const stakingThales = {
                 },
             ],
             name: 'FeeRewardsClaimed',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'value',
+                    type: 'uint256',
+                },
+            ],
+            name: 'FixedPeriodRewardChanged',
             type: 'event',
         },
         {
@@ -185,6 +250,12 @@ export const stakingThales = {
         },
         {
             anonymous: false,
+            inputs: [],
+            name: 'StakingPeriodStarted',
+            type: 'event',
+        },
+        {
+            anonymous: false,
             inputs: [
                 {
                     indexed: false,
@@ -206,6 +277,19 @@ export const stakingThales = {
                 },
             ],
             name: 'UnstakeCooldown',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'value',
+                    type: 'uint256',
+                },
+            ],
+            name: 'UnstakeDurationPeriodChanged',
             type: 'event',
         },
         {
@@ -293,7 +377,7 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
-            name: 'currentWeekFees',
+            name: 'currentPeriodFees',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -308,7 +392,7 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
-            name: 'currentWeekRewards',
+            name: 'currentPeriodRewards',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -368,7 +452,7 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
-            name: 'fixedWeeklyReward',
+            name: 'fixedPeriodReward',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -454,21 +538,6 @@ export const stakingThales = {
         },
         {
             constant: true,
-            inputs: [],
-            name: 'getLastWeekFees',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
             inputs: [
                 {
                     internalType: 'address',
@@ -476,22 +545,7 @@ export const stakingThales = {
                     type: 'address',
                 },
             ],
-            name: 'getLastWeekOfClaimedRewards',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'getLastWeekRewards',
+            name: 'getLastPeriodOfClaimedRewards',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -651,6 +705,21 @@ export const stakingThales = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'periodsOfStaking',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -734,7 +803,7 @@ export const stakingThales = {
                     type: 'uint256',
                 },
             ],
-            name: 'setFixedWeeklyReward',
+            name: 'setFixedPeriodReward',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -836,7 +905,7 @@ export const stakingThales = {
                     type: 'address',
                 },
             ],
-            name: 'stakerRewardsClaimed',
+            name: 'stakerLifetimeRewardsClaimed',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -889,7 +958,13 @@ export const stakingThales = {
         },
         {
             constant: false,
-            inputs: [],
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+            ],
             name: 'startUnstake',
             outputs: [],
             payable: false,
@@ -950,21 +1025,6 @@ export const stakingThales = {
                     internalType: 'bool',
                     name: '',
                     type: 'bool',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'weeksOfStaking',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
                 },
             ],
             payable: false,
