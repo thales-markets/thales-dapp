@@ -23,7 +23,9 @@ const useOngoingAirdropQuery = (walletAddress: string, networkId: NetworkId, opt
             } catch {
                 isHashFileAvailable = false;
             }
-            const ongoingAirdropHash = ongoingAirdropHashes.find((airdrop: any) => airdrop.address === walletAddress);
+            const ongoingAirdropHash = ongoingAirdropHashes.find(
+                (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
+            );
 
             const airdrop: Airdrop = {
                 isClaimPaused: paused || !isHashFileAvailable,
