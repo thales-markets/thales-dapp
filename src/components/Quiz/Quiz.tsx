@@ -81,6 +81,8 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
         setAnsweredQuestionsPerPage([]);
         setPageNumber(pageNumber + 1);
         setEveryQuestionOnPageAnswered(false);
+        const dialog = document.getElementById('retro-airdrop-quiz');
+        dialog ? (dialog.scrollTop = 0) : '';
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -133,7 +135,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                         </Button>
                     </div>
                 </DialogTitle>
-                <DialogContent className="quiz__modal-dialog__content">
+                <DialogContent className="quiz__modal-dialog__content" id="retro-airdrop-quiz">
                     <form onSubmit={handleSubmit} style={{ overflow: 'hidden' }}>
                         {quizData.map((quizQuestion, index) => {
                             return quizData.length <= 6 ? (

@@ -71,7 +71,7 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({ question, handle
                                         control={<RadioButton />}
                                         label={answer.index + '. ' + answer.answerText}
                                         labelPlacement="start"
-                                        className="quiz__modal-dialog__content__radio-form__group__answer"
+                                        className="quiz__modal-dialog__content__radio-form__group__answer no-select"
                                         onClick={(e) => {
                                             setAnswerIndex(answer.index);
                                             setSelectedAnswer(Number((e.target as HTMLInputElement).value));
