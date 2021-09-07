@@ -136,7 +136,7 @@ const RetroAirdrop: React.FC = () => {
     };
 
     const getClaimButton = () => {
-        if (localStorage.getItem('quizCompleted') === 'true') {
+        if (localStorage.getItem('quizCompleted') === 'true' || !isClaimAvailable) {
             return (
                 <Button
                     onClick={handleClaimRetroAirdrop}
