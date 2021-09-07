@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
+import { Button, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -15,7 +15,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
 import { ethers } from 'ethers';
-import { Airdrop } from 'types/token';
+import { StakingReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchOngoingAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
@@ -52,13 +52,13 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [ongoingAirdrop, setOngoingAirdrop] = useState<Airdrop | undefined>(undefined);
+    const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const isClaimAvailable =
         ongoingAirdrop &&
-        ongoingAirdrop.accountInfo &&
+        ongoingAirdrop.reward &&
         ongoingAirdrop.hasClaimRights &&
         !ongoingAirdrop.claimed &&
         !ongoingAirdrop.isClaimPaused;
@@ -86,16 +86,16 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            if (ongoingAirdrop && ongoingAirdrop.accountInfo) {
+            if (ongoingAirdrop && ongoingAirdrop.reward) {
                 const { ongoingAirdropContract } = snxJSConnector as any;
                 try {
                     const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect(
                         (snxJSConnector as any).signer
                     );
                     const gasEstimate = await ongoingAirdropContractWithSigner.estimateGas.claim(
-                        ongoingAirdrop.accountInfo.index,
-                        ongoingAirdrop.accountInfo.rawBalance,
-                        ongoingAirdrop.accountInfo.proof
+                        ongoingAirdrop.reward.index,
+                        ongoingAirdrop.reward.rawBalance,
+                        ongoingAirdrop.reward.proof
                     );
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                 } catch (e) {
@@ -109,15 +109,15 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     }, [isWalletConnected, isClaimAvailable]);
 
     const handleClaimOngoingAirdrop = async () => {
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo && gasPrice !== null) {
+        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward && gasPrice !== null) {
             const { ongoingAirdropContract } = snxJSConnector as any;
             try {
                 setIsClaiming(true);
                 const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
                 const tx = (await ongoingAirdropContractWithSigner.claim(
-                    ongoingAirdrop.accountInfo.index,
-                    ongoingAirdrop.accountInfo.rawBalance,
-                    ongoingAirdrop.accountInfo.proof,
+                    ongoingAirdrop.reward.index,
+                    ongoingAirdrop.reward.rawBalance,
+                    ongoingAirdrop.reward.proof,
                     {
                         gasPrice: gasPriceInWei(gasPrice),
                         gasLimit,
@@ -132,7 +132,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                         ...ongoingAirdrop,
                         claimed: true,
                     });
-                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(ongoingAirdrop.accountInfo.rawBalance));
+                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(ongoingAirdrop.reward.rawBalance));
                     setIsClaiming(false);
                 }
             } catch (e) {
@@ -145,8 +145,19 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
 
     const pieData = useMemo(() => {
         return [
-            { name: 'Thales', value: 60 },
-            { name: 'SNX', value: 50, color: '#00D1FF' },
+            {
+                name: 'Thales',
+                value:
+                    isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                        ? ongoingAirdrop.reward.stakingBalance
+                        : 0,
+            },
+            {
+                name: 'SNX',
+                value:
+                    isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.snxBalance : 0,
+                color: '#00D1FF',
+            },
         ];
     }, [ongoingAirdrop]);
 
@@ -155,7 +166,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
             <SectionHeader>{t('options.earn.thales-staking.staking-rewards.title')}</SectionHeader>
             <SectionContentContainer>
                 <PieChartContainer style={{ alignItems: 'flex-end', marginBottom: '77px' }}>
-                    <FlexDivColumn style={{ marginRight: '30px' }}>
+                    <FlexDivColumnCentered style={{ marginRight: '30px', alignSelf: 'center' }}>
                         <StakingRewardsAmountContainer
                             style={{ marginRight: '30px' }}
                             gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
@@ -169,30 +180,13 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                     fontSize={25}
                                     fontWeight={600}
                                 >
-                                    {formatCurrencyWithKey(
-                                        THALES_CURRENCY,
-                                        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
-                                            ? ongoingAirdrop.accountInfo.balance
-                                            : 0,
-                                        0,
-                                        true
-                                    )}
+                                    {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                                        ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.stakingBalance)
+                                        : 0}
                                 </GradientText>
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
-                        <FlexDivSpaceBetween>
-                            <StakingRewardsInfoTitle>For last period:</StakingRewardsInfoTitle>
-                            <StakingRewardsInfoContent>
-                                {formatCurrencyWithKey(THALES_CURRENCY, 200, 0, true)}
-                            </StakingRewardsInfoContent>
-                        </FlexDivSpaceBetween>
-                        <FlexDivSpaceBetween>
-                            <StakingRewardsInfoTitle>Unclaimed from previous period:</StakingRewardsInfoTitle>
-                            <StakingRewardsInfoContent>
-                                {formatCurrencyWithKey(THALES_CURRENCY, 700, 0, true)}
-                            </StakingRewardsInfoContent>
-                        </FlexDivSpaceBetween>
-                    </FlexDivColumn>
+                    </FlexDivColumnCentered>
                     <PieChart height={300} width={300}>
                         <defs>
                             <linearGradient
@@ -218,7 +212,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             ))}
                         </Pie>
                     </PieChart>
-                    <FlexDivColumn style={{ marginLeft: '30px' }}>
+                    <FlexDivColumnCentered style={{ marginLeft: '30px', alignSelf: 'center' }}>
                         <StakingRewardsAmountContainer style={{ marginLeft: '30px' }} gradient="#00D1FF">
                             <StakingRewardsAmount>
                                 <StakingRewardsTitle>
@@ -229,30 +223,13 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                     fontSize={25}
                                     fontWeight={600}
                                 >
-                                    {formatCurrencyWithKey(
-                                        THALES_CURRENCY,
-                                        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.accountInfo
-                                            ? ongoingAirdrop.accountInfo.balance
-                                            : 0,
-                                        0,
-                                        true
-                                    )}
+                                    {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                                        ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.snxBalance)
+                                        : 0}
                                 </GradientText>
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
-                        <FlexDivSpaceBetween>
-                            <StakingRewardsInfoTitle>For last period:</StakingRewardsInfoTitle>
-                            <StakingRewardsInfoContent>
-                                {formatCurrencyWithKey(THALES_CURRENCY, 200, 0, true)}
-                            </StakingRewardsInfoContent>
-                        </FlexDivSpaceBetween>
-                        <FlexDivSpaceBetween>
-                            <StakingRewardsInfoTitle>Unclaimed from previous period:</StakingRewardsInfoTitle>
-                            <StakingRewardsInfoContent>
-                                {formatCurrencyWithKey(THALES_CURRENCY, 700, 0, true)}
-                            </StakingRewardsInfoContent>
-                        </FlexDivSpaceBetween>
-                    </FlexDivColumn>
+                    </FlexDivColumnCentered>
                     <PieChartCenterDiv>
                         <FlexDivColumnCentered>
                             <PieChartCenterText>Total</PieChartCenterText>
@@ -261,7 +238,21 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 fontSize={20}
                                 fontWeight={600}
                             >
-                                {formatCurrencyWithKey(THALES_CURRENCY, 1502, 0, true)}
+                                {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                                    ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.balance)
+                                    : 0}
+                            </GradientText>
+                        </FlexDivColumnCentered>
+                        <FlexDivColumnCentered style={{ marginTop: 30, marginBottom: 30 }}>
+                            <PieChartCenterText>From previous period</PieChartCenterText>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={20}
+                                fontWeight={600}
+                            >
+                                {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                                    ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.previousBalance)
+                                    : 0}
                             </GradientText>
                         </FlexDivColumnCentered>
                     </PieChartCenterDiv>
@@ -282,8 +273,18 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                         className="primary"
                     >
                         {isClaiming
-                            ? t('options.earn.thales-staking.staking-rewards.claiming')
-                            : t('options.earn.thales-staking.staking-rewards.claim')}
+                            ? t('options.earn.thales-staking.staking-rewards.claiming') +
+                              ` ${
+                                  isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                                      ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.balance)
+                                      : 0
+                              }...`
+                            : t('options.earn.thales-staking.staking-rewards.claim') +
+                              ` ${
+                                  isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
+                                      ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.balance)
+                                      : 0
+                              }`}
                     </Button>
                     {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
                         <ClaimMessage>{t('options.earn.thales-staking.staking-rewards.paused-message')}</ClaimMessage>
@@ -333,20 +334,6 @@ const StakingRewardsTitle = styled.span`
     font-size: 16px;
     line-height: 24px;
     padding-bottom: 10px;
-`;
-
-const StakingRewardsInfoTitle = styled.span`
-    padding-top: 15px;
-    font-size: 16px;
-    line-height: 24px;
-    flex: 1;
-`;
-
-const StakingRewardsInfoContent = styled.span`
-    padding-top: 15px;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
 `;
 
 export default StakingRewards;

@@ -58,3 +58,20 @@ export type VestingScheduleItem = {
 };
 
 export type VestingSchedule = VestingScheduleItem[];
+
+type Reward = {
+    balance: number;
+    rawBalance: string;
+    stakingBalance: number;
+    snxBalance: number;
+    previousBalance: number;
+    index: number;
+    proof: string[];
+};
+
+export type StakingReward = {
+    isClaimPaused: boolean;
+    hasClaimRights: boolean;
+    claimed: boolean;
+    reward?: Reward;
+};

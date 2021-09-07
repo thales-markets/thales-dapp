@@ -3,11 +3,15 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
-import { Airdrop } from 'types/token';
+import { StakingReward } from 'types/token';
 import { getOngoingAirdropHashesURL } from 'utils/token';
 
-const useOngoingAirdropQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<Airdrop>) => {
-    return useQuery<Airdrop>(
+const useOngoingAirdropQuery = (
+    walletAddress: string,
+    networkId: NetworkId,
+    options?: UseQueryOptions<StakingReward>
+) => {
+    return useQuery<StakingReward>(
         QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId),
         async () => {
             const [paused, period] = await Promise.all([
@@ -27,15 +31,20 @@ const useOngoingAirdropQuery = (walletAddress: string, networkId: NetworkId, opt
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
             );
 
-            const airdrop: Airdrop = {
+            const airdrop: StakingReward = {
                 isClaimPaused: paused || !isHashFileAvailable,
                 hasClaimRights: ongoingAirdropHash !== undefined,
                 claimed: true,
             };
             if (ongoingAirdropHash) {
-                airdrop.accountInfo = {
+                airdrop.reward = {
                     rawBalance: ongoingAirdropHash.balance,
                     balance: bigNumberFormatter(ongoingAirdropHash.balance),
+                    previousBalance: bigNumberFormatter(ongoingAirdropHash.previousBalance || 0),
+                    stakingBalance: bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0),
+                    snxBalance:
+                        bigNumberFormatter(ongoingAirdropHash.balance) -
+                        bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0),
                     index: ongoingAirdropHash.index,
                     proof: ongoingAirdropHash.proof,
                 };
