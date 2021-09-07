@@ -174,7 +174,14 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                         'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)',
                                 }}
                             >
-                                {t('options.quiz.discord-button')}
+                                <a
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href="https://discord.gg/cFGv5zyVEj"
+                                    style={{ color: 'white' }}
+                                >
+                                    {t('options.quiz.discord-button')}
+                                </a>
                             </Button>
                         </ButtonContainer>
                         {quizData.length > 6 ? (
