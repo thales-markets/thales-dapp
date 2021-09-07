@@ -322,6 +322,19 @@
                         "amount-col": "amount",
                         "no-results": "No vesting schedule found."
                     }
+                },
+                "vest": {
+                    "available-to-vest": "Available to vest",
+                    "vest": "Vest",
+                    "vesting": "Vesting"
+                },
+                "info": {
+                    "title": "Vest your THALES staking rewards in escrow",
+                    "text": "If you have staked your THALES and minted sUSD, you are eligible to receive THALES staking rewards, which will be escrowed here which you can vest in 12 months from the claim date."
+                },
+                "lp-staking": {
+                    "title": "You can provide liquidity for THALES/ETH pair  and earn double rewards THALES + DODO",
+                    "button-text": "Click here to earn double rewards"
                 }
             },
             "lp-staking": {

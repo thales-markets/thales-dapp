@@ -330,7 +330,7 @@ const StakingRewardsTitle = styled.span`
 `;
 
 const StakingRewardsInfoTitle = styled.span`
-    padding-top: 10px;
+    padding-top: 15px;
     font-size: 16px;
     line-height: 24px;
     flex: 1;

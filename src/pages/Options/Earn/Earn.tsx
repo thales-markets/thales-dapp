@@ -7,6 +7,7 @@ import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
 import Vesting from './Vesting';
+import LPStaking from './LPStaking';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -65,6 +66,7 @@ const EarnPage: React.FC = () => {
                             {selectedTab === 'snx-stakers' && <SnxStaking />}
                             {selectedTab === 'thales-staking' && <ThalesStaking />}
                             {selectedTab === 'vesting' && <Vesting />}
+                            {selectedTab === 'lp-staking' && <LPStaking />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </MainContent>
@@ -148,7 +150,7 @@ const WidgetsContainer = styled.div`
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: auto min-content;
     grid-gap: 20px;
-    padding: 10px;
+    padding: 20px;
     border: 1px solid rgba(202, 145, 220, 0.2);
     border-radius: 15px;
     background: #121776;

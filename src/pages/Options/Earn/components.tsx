@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 
 export const EarnSection = styled.section`
-    padding-bottom: 0px;
     height: 100%;
     display: flex;
     flex-direction: column;

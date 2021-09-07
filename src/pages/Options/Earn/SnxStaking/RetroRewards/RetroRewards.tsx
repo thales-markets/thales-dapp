@@ -174,7 +174,7 @@ const RetroRewards: React.FC = () => {
                             <PieChartCenterText>{t('options.earn.snx-stakers.initial-locked')}</PieChartCenterText>
                             <GradientText
                                 gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                                fontSize={20}
+                                fontSize={17}
                                 fontWeight={600}
                             >
                                 {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.initialLocked, 0, true)}
