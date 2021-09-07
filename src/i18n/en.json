@@ -262,10 +262,12 @@
                 "retro-airdrop": {
                     "title": "Retro Airdrop",
                     "claimed-message": "You have already claimed the airdrop.",
-                    "not-eligible-message": "You are not eligible for this airdrop."
+                    "not-eligible-message": "You are not eligible for this airdrop.",
+                    "complete-quiz-to-claim": "Complete quiz to claim."
                 },
                 "retro-rewards": {
-                    "title": "Retro unlock"
+                    "title": "Retro unlock",
+                    "not-eligible-message": "You are not eligible for this distribution."
                 },
                 "airdropped-amount": "Airdropped amount",
                 "claim": "Claim",

@@ -15,7 +15,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import useRetroAirdropQuery from 'queries/walletBalances/useRetroAirdropQuery';
 import {
-    ButtonContainer,
+    ButtonContainerBottom,
     ClaimItem,
     ClaimMessage,
     ClaimTitle,
@@ -101,6 +101,7 @@ const RetroAirdrop: React.FC = () => {
             const { retroAirdropContract } = snxJSConnector as any;
 
             try {
+                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const airdropContractWithSigner = retroAirdropContract.connect((snxJSConnector as any).signer);
                 const tx = (await airdropContractWithSigner.claim(
@@ -131,12 +132,14 @@ const RetroAirdrop: React.FC = () => {
         }
     };
 
+    const quizCompleted = localStorage.getItem('quizCompleted') === 'true';
+
     const startQuiz = () => {
         setOpenQuiz(true);
     };
 
     const getClaimButton = () => {
-        if (localStorage.getItem('quizCompleted') === 'true' || !isClaimAvailable) {
+        if (quizCompleted || !isClaimAvailable) {
             return (
                 <Button
                     onClick={handleClaimRetroAirdrop}
@@ -170,15 +173,19 @@ const RetroAirdrop: React.FC = () => {
                     </GradientText>
                 </ClaimItem>
                 {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
-                <ButtonContainer>
+                <ButtonContainerBottom>
                     {getClaimButton()}
                     {retroAirdrop && !retroAirdrop.hasClaimRights && (
                         <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}</ClaimMessage>
                     )}
-                    {retroAirdrop && retroAirdrop.hasClaimRights && retroAirdrop.claimed && (
-                        <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.claimed-message')}</ClaimMessage>
+                    {retroAirdrop && retroAirdrop.hasClaimRights && (
+                        <ClaimMessage invisible={!retroAirdrop.claimed && !quizCompleted}>
+                            {!quizCompleted
+                                ? t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')
+                                : t('options.earn.snx-stakers.retro-airdrop.claimed-message')}
+                        </ClaimMessage>
                     )}
-                </ButtonContainer>
+                </ButtonContainerBottom>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}
                     message={txErrorMessage}

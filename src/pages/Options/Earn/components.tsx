@@ -75,12 +75,17 @@ export const ButtonContainer = styled(FlexDivColumnCentered)`
     align-items: center;
 `;
 
-export const ClaimMessage = styled.div`
+export const ButtonContainerBottom = styled(ButtonContainer)`
+    justify-content: flex-end;
+`;
+
+export const ClaimMessage = styled.div<{ invisible?: boolean }>`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #ffcc00;
     margin-top: 10px;
+    visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
 `;
 
 export const FullRow = styled(FlexDiv)`
@@ -112,12 +117,13 @@ export const PieChartCenterDiv = styled.div`
     text-align: center;
 `;
 
-export const PieChartCenterText = styled.span`
+export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
     text-align: center;
     margin-bottom: 5px;
+    color: ${(props) => (props.disabled ? '#B8C6E5' : 'white')};
 `;
 
 export const LearnMore = styled.span`

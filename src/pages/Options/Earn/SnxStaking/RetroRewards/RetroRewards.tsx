@@ -19,7 +19,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import {
-    ButtonContainer,
+    ButtonContainerBottom,
     EarnSection,
     PieChartCenterDiv,
     PieChartCenterText,
@@ -28,6 +28,7 @@ import {
     SectionHeader,
     LearnMore,
     StyledMaterialTooltip,
+    ClaimMessage,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -131,10 +132,13 @@ const RetroRewards: React.FC = () => {
     }, [vestingInfo]);
 
     const pieData = useMemo(() => {
+        if (!vestingInfo.initialLocked) {
+            return [{ name: 'Locked', value: 100, color: '#748bc6' }];
+        }
         return [
-            { name: 'Unlocked', value: vestingInfo.unlocked, color: '#FFD9BA' },
+            { name: 'Unlocked', value: vestingInfo.unlocked, color: '#5EA0A0' },
             { name: 'Claimed', value: vestingInfo.totalClaimed, color: '#AFC171' },
-            { name: 'Locked', value: locked, color: '#5EA0A0' },
+            { name: 'Locked', value: locked, color: '#FFD9BA' },
         ];
     }, [vestingInfo, locked]);
 
@@ -171,9 +175,15 @@ const RetroRewards: React.FC = () => {
                     </InfoDiv>
                     <PieChartCenterDiv>
                         <FlexDivColumnCentered>
-                            <PieChartCenterText>{t('options.earn.snx-stakers.initial-locked')}</PieChartCenterText>
+                            <PieChartCenterText disabled={!vestingInfo.initialLocked}>
+                                {t('options.earn.snx-stakers.initial-locked')}
+                            </PieChartCenterText>
                             <GradientText
-                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                gradient={`${
+                                    !vestingInfo.initialLocked
+                                        ? '#748BC6'
+                                        : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                }`}
                                 fontSize={17}
                                 fontWeight={600}
                             >
@@ -192,7 +202,7 @@ const RetroRewards: React.FC = () => {
                 </PieChartContainer>
                 <AmountsContainer>
                     <div>
-                        <Dot backgroundColor="#FFD9BA" />
+                        <Dot backgroundColor="#5EA0A0" />
                         {t('options.earn.snx-stakers.unlocked')}:{' '}
                         <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
                     </div>
@@ -202,13 +212,13 @@ const RetroRewards: React.FC = () => {
                         <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}</span>
                     </div>
                     <div>
-                        <Dot backgroundColor="#5EA0A0" />
+                        <Dot backgroundColor="#FFD9BA" />
                         {t('options.earn.snx-stakers.locked')}:{' '}
                         <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
                     </div>
                 </AmountsContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
-                <ButtonContainer>
+                <ButtonContainerBottom>
                     <Button
                         disabled={!isClaimAvailable || isClaiming}
                         className="primary"
@@ -220,7 +230,10 @@ const RetroRewards: React.FC = () => {
                             : t('options.earn.snx-stakers.claim') +
                               ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
                     </Button>
-                </ButtonContainer>
+                    <ClaimMessage invisible={!!vestingInfo.initialLocked}>
+                        {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
+                    </ClaimMessage>
+                </ButtonContainerBottom>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}
                     message={txErrorMessage}
