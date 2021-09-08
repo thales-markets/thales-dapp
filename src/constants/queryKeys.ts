@@ -88,7 +88,13 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        VestingSchedule: () => ['token', 'vesting', 'schedule'],
+        VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'vesting',
+            'schedule',
+            walletAddress,
+            networkId,
+        ],
     },
 };
 

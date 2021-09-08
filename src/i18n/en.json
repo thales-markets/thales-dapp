@@ -320,7 +320,7 @@
                 "schedule": {
                     "title": "Vesting schedule",
                     "table": {
-                        "date-time-col": "vesting date",
+                        "date-time-col": "vesting date | time",
                         "amount-col": "amount",
                         "no-results": "No vesting schedule found."
                     }

@@ -8,13 +8,17 @@ import { RootState } from 'redux/rootReducer';
 import { EarnSection, SectionHeader } from '../../components';
 import ScheduleTable from './ScheduleTable';
 import useVestingScheduleQuery from 'queries/token/useVestingScheduleQuery';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 
 const Schedule: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
-    const vestingScheduleQuery = useVestingScheduleQuery({
-        enabled: isAppReady,
+    const vestingScheduleQuery = useVestingScheduleQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
     });
 
     const vestingSchedule = useMemo(

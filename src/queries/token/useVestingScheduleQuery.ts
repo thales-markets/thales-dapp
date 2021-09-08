@@ -1,40 +1,53 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { VestingSchedule } from 'types/token';
+import { NetworkId } from 'utils/network';
+import snxJSConnector from '../../utils/snxJSConnector';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
+import differenceInCalendarWeeks from 'date-fns/differenceInCalendarWeeks';
+import addWeeks from 'date-fns/addWeeks';
+import getTime from 'date-fns/getTime';
+import { orderBy } from 'lodash';
 
-const useVestingScheduleQuery = (options?: UseQueryOptions<VestingSchedule>) => {
+const NUMBER_OF_VESTING_PERIODS = 10;
+
+const useVestingScheduleQuery = (
+    walletAddress: string,
+    networkId: NetworkId,
+    options?: UseQueryOptions<VestingSchedule>
+) => {
     return useQuery<VestingSchedule>(
-        QUERY_KEYS.Token.VestingSchedule(),
-        () => [
-            {
-                date: 1631491200 * 1000,
-                amount: 230.15,
-            },
-            {
-                date: 1632096000 * 1000,
-                amount: 117.4,
-            },
-            {
-                date: 1632700800 * 1000,
-                amount: 1352.5,
-            },
-            {
-                date: 1633305600 * 1000,
-                amount: 485.6,
-            },
-            {
-                date: 1633910400 * 1000,
-                amount: 1123.78,
-            },
-            {
-                date: 1634515200 * 1000,
-                amount: 213.4,
-            },
-            {
-                date: 1635292800 * 1000,
-                amount: 412.6,
-            },
-        ],
+        QUERY_KEYS.Token.VestingSchedule(walletAddress, networkId),
+        async () => {
+            const promises = [];
+            for (let index = 0; index < NUMBER_OF_VESTING_PERIODS; index++) {
+                promises.push(await (snxJSConnector as any).escrowThalesContract.vestingEntries(walletAddress, index));
+            }
+
+            const vestingEntries = await Promise.all(promises);
+
+            const [currentVestingPeriod, lastPeriodTimeStamp] = await Promise.all([
+                await (snxJSConnector as any).escrowThalesContract.currentVestingPeriod(),
+                await (snxJSConnector as any).stakingThalesContract.lastPeriodTimeStamp(),
+            ]);
+
+            const lastPeriodDateTime = new Date(Number(lastPeriodTimeStamp) * 1000);
+            const diffInWeeksCurrentDate = differenceInCalendarWeeks(new Date(), lastPeriodDateTime);
+
+            const vestingSchedule: VestingSchedule = [];
+
+            vestingEntries.forEach((entry) => {
+                const amount = bigNumberFormatter(entry[0]);
+                const period = Number(entry[1]);
+                if (amount > 0 && period > 0) {
+                    const diffInWeeksVestingPeriod = period - Number(currentVestingPeriod);
+                    const vestingDate = addWeeks(lastPeriodDateTime, diffInWeeksCurrentDate + diffInWeeksVestingPeriod);
+                    vestingSchedule.push({ date: getTime(vestingDate), amount });
+                }
+            });
+
+            return orderBy(vestingSchedule, 'date', 'asc');
+        },
         {
             refetchInterval: 5000,
             ...options,
