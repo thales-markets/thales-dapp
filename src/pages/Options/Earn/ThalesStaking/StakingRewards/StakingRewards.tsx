@@ -144,6 +144,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     };
 
     const pieData = useMemo(() => {
+        if (!isClaimAvailable) {
+            return [{ name: 'No data', value: 100, color: '#748bc6' }];
+        }
         return [
             {
                 name: 'Thales',
@@ -160,6 +163,14 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
             },
         ];
     }, [ongoingAirdrop]);
+
+    const stakingBalance =
+        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.stakingBalance : 0;
+    const snxBalance =
+        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.snxBalance : 0;
+    const balance = isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.balance : 0;
+    const previousBalance =
+        isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
 
     return (
         <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
@@ -180,9 +191,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                     fontSize={25}
                                     fontWeight={600}
                                 >
-                                    {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
-                                        ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.stakingBalance)
-                                        : 0}
+                                    {formatCurrencyWithKey(THALES_CURRENCY, stakingBalance)}
                                 </GradientText>
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
@@ -223,9 +232,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                     fontSize={25}
                                     fontWeight={600}
                                 >
-                                    {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
-                                        ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.snxBalance)
-                                        : 0}
+                                    {formatCurrencyWithKey(THALES_CURRENCY, snxBalance)}
                                 </GradientText>
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
@@ -238,9 +245,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 fontSize={20}
                                 fontWeight={600}
                             >
-                                {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
-                                    ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.balance)
-                                    : 0}
+                                {formatCurrencyWithKey(THALES_CURRENCY, balance)}
                             </GradientText>
                         </FlexDivColumnCentered>
                         <FlexDivColumnCentered style={{ marginTop: 30, marginBottom: 30 }}>
@@ -250,9 +255,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 fontSize={20}
                                 fontWeight={600}
                             >
-                                {isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
-                                    ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.previousBalance)
-                                    : 0}
+                                {formatCurrencyWithKey(THALES_CURRENCY, previousBalance)}
                             </GradientText>
                         </FlexDivColumnCentered>
                     </PieChartCenterDiv>
@@ -274,17 +277,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     >
                         {isClaiming
                             ? t('options.earn.thales-staking.staking-rewards.claiming') +
-                              ` ${
-                                  isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
-                                      ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.balance)
-                                      : 0
-                              }...`
+                              ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
                             : t('options.earn.thales-staking.staking-rewards.claim') +
-                              ` ${
-                                  isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
-                                      ? formatCurrencyWithKey(THALES_CURRENCY, ongoingAirdrop.reward.balance)
-                                      : 0
-                              }`}
+                              ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
                     </Button>
                     {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
                         <ClaimMessage>{t('options.earn.thales-staking.staking-rewards.paused-message')}</ClaimMessage>
