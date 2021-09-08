@@ -47,7 +47,7 @@ type SortyByMobileProps = {
 export const SortyByMobile: React.FC<SortyByMobileProps> = ({ filter, onClick, children }) => (
     <>
         <SortWrapper className="markets-mobile__sortWrapper" onClick={onClick}>
-            <TextWrapper>Sort by: {filter}</TextWrapper>
+            <TextWrapper>Sort by (always latest): {filter}</TextWrapper>
             {children}
         </SortWrapper>
     </>
