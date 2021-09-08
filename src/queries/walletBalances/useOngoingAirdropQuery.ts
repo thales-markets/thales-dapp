@@ -42,9 +42,9 @@ const useOngoingAirdropQuery = (
                     balance: bigNumberFormatter(ongoingAirdropHash.balance),
                     previousBalance: bigNumberFormatter(ongoingAirdropHash.previousBalance || 0),
                     stakingBalance: bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0),
-                    snxBalance:
-                        bigNumberFormatter(ongoingAirdropHash.balance) -
-                        bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0),
+                    snxBalance: bigNumberFormatter(
+                        ongoingAirdropHash.balance - (ongoingAirdropHash.stakingBalance || 0)
+                    ),
                     index: ongoingAirdropHash.index,
                     proof: ongoingAirdropHash.proof,
                 };
