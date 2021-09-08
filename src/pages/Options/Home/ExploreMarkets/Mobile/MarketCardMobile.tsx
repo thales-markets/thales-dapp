@@ -191,6 +191,9 @@ const CardWrapper = styled(FlexDiv)`
     @media (max-width: 767px) {
         max-width: 400px;
         height: 100%;
+        @supports (-webkit-touch-callout: none) {
+            height: 25vh;
+        }
     }
 `;
 
