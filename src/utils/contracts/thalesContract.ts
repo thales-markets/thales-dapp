@@ -5,7 +5,7 @@ export const thalesContract = {
         [NetworkId.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
         [NetworkId.Ropsten]: '0x30EB4F05B81dce709E8c055BA30E83316A2790DD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x6Ffa6BEda785710EA4089B5AB93Eb381da335EF4',
+        [NetworkId.Kovan]: '0x9e7769409E3e5A6821eeDcF33371FCA929fE6A48',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement

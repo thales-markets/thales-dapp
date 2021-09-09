@@ -5,7 +5,7 @@ export const escrowThales = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: '0xa61198118D595Ef9762bF32EF4fD7ec005e46d75',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: 'TBD',
+        [NetworkId.Kovan]: '0x52d5fC6A7cBeDCb7cb05624D044199cfa5894bD3',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
