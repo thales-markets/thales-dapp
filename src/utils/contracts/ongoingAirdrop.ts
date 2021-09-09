@@ -5,7 +5,7 @@ export const ongoingAirdrop = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: '0x86CB67a6D87DA9C1bBe7C2bB92E60cDBF83798eb',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xD1fe5a0256AcaeA497ecD30dc0b816cce95e23E9',
+        [NetworkId.Kovan]: '0x3e42c0D67480621C192CB73E22bC06614966D9c4',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
