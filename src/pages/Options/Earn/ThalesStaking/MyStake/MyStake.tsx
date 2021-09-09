@@ -36,7 +36,8 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            setThalesStaked(stakingThalesQuery.data.thalesStaked);
+            const { isUnstaking, thalesStaked, unstakingAmount } = stakingThalesQuery.data;
+            setThalesStaked(isUnstaking ? unstakingAmount : thalesStaked);
         }
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
