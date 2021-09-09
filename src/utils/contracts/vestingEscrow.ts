@@ -5,7 +5,7 @@ export const vestingEscrowContract = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: '0x13ecC96c51E08b2D06D8E97d5449D78B3E8D9A25',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xaF05693d2c336b40055F6531556aB6D0Ebf003D8',
+        [NetworkId.Kovan]: '0x3ec543C220443ad0d30F53fCa52DBFa346763256',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
