@@ -180,9 +180,9 @@ const RetroAirdrop: React.FC = () => {
                     )}
                     {retroAirdrop && retroAirdrop.hasClaimRights && (
                         <ClaimMessage invisible={!retroAirdrop.claimed && !quizCompleted}>
-                            {!quizCompleted
-                                ? t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')
-                                : t('options.earn.snx-stakers.retro-airdrop.claimed-message')}
+                            {quizCompleted || !isClaimAvailable
+                                ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
+                                : t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')}
                         </ClaimMessage>
                     )}
                 </ButtonContainerBottom>

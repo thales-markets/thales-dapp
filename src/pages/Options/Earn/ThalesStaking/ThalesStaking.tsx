@@ -6,9 +6,9 @@ import StakingRewards from './StakingRewards';
 import YourTransactions from './Transactions';
 
 const ThalesStaking: React.FC = () => {
-    const [thalesStaked, setThalesStaked] = useState<number>(0);
+    const [thalesStaked, setThalesStaked] = useState<string>('0');
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
-    const [thalesBalance, setThalesBalance] = useState(0);
+    const [thalesBalance, setThalesBalance] = useState('0');
     const [escrowedBalance, setEscrowedBalance] = useState(0);
 
     return (

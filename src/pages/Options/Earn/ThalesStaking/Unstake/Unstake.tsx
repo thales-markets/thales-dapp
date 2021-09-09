@@ -21,18 +21,20 @@ import styled from 'styled-components';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
+import { ethers } from 'ethers';
 
 type Properties = {
     isUnstakingInContract: boolean;
     setIsUnstakingInContract: (isUnstaking: boolean) => void;
-    thalesStaked: number;
-    setThalesStaked: (staked: number) => void;
-    thalesBalance: number;
-    setThalesBalance: (staked: number) => void;
+    thalesStaked: string;
+    setThalesStaked: (staked: string) => void;
+    thalesBalance: string;
+    setThalesBalance: (staked: string) => void;
 };
 
+// week 7 * 24 * 60 * 60 * 1000
 const addWeek = (date: Date) => {
-    return new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return new Date(date.getTime() + 60 * 1000);
 };
 
 const Unstake: React.FC<Properties> = ({
@@ -91,8 +93,13 @@ const Unstake: React.FC<Properties> = ({
             try {
                 const { stakingThalesContract } = snxJSConnector as any;
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const methodForGas = unstakingEnded ? 'unstake' : 'startUnstake';
-                const gasEstimate = await stakingThalesContractWithSigner.estimateGas[methodForGas]();
+                let gasEstimate = null;
+                if (unstakingEnded) {
+                    gasEstimate = await stakingThalesContractWithSigner.estimateGas.unstake();
+                } else {
+                    const amount = ethers.utils.parseEther(thalesStaked.toString());
+                    gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
+                }
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
             } catch (e) {
                 console.log(e);
@@ -110,7 +117,8 @@ const Unstake: React.FC<Properties> = ({
             try {
                 setIsUnstaking(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const tx = await stakingThalesContractWithSigner.startUnstake({
+                const amount = ethers.utils.parseEther(thalesStaked.toString());
+                const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
                     gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
                 });
@@ -147,10 +155,13 @@ const Unstake: React.FC<Properties> = ({
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
+                        const newThalesBalance = ethers.utils
+                            .parseEther(thalesBalance)
+                            .add(ethers.utils.parseEther(thalesStaked));
                         setIsUnstaking(false);
                         setIsUnstakingInContract(false);
-                        setThalesBalance(thalesBalance + thalesStaked);
-                        setThalesStaked(0);
+                        setThalesBalance(ethers.utils.formatEther(newThalesBalance));
+                        setThalesStaked('0');
                     }
                 }
             } catch (e) {

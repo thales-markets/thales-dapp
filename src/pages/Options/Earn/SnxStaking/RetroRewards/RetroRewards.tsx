@@ -33,7 +33,7 @@ import {
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 
@@ -186,8 +186,20 @@ const RetroRewards: React.FC = () => {
                                 }`}
                                 fontSize={17}
                                 fontWeight={600}
+                                style={{ marginBottom: '3px' }}
                             >
-                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.initialLocked, 0, true)}
+                                {formatCurrency(vestingInfo.initialLocked, 2, true)}
+                            </GradientText>
+                            <GradientText
+                                gradient={`${
+                                    !vestingInfo.initialLocked
+                                        ? '#748BC6'
+                                        : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                }`}
+                                fontSize={17}
+                                fontWeight={600}
+                            >
+                                {THALES_CURRENCY}
                             </GradientText>
                         </FlexDivColumnCentered>
                     </PieChartCenterDiv>

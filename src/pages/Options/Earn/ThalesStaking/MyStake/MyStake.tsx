@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
 
 type Properties = {
-    thalesStaked: number;
-    setThalesStaked: (staked: number) => void;
+    thalesStaked: string;
+    setThalesStaked: (staked: string) => void;
     escrowedBalance: number;
     setEscrowedBalance: (escrowed: number) => void;
 };

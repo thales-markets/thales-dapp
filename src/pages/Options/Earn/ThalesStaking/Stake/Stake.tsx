@@ -29,10 +29,10 @@ import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 
 type Properties = {
-    thalesStaked: number;
-    setThalesStaked: (staked: number) => void;
-    balance: number;
-    setBalance: (staked: number) => void;
+    thalesStaked: string;
+    setThalesStaked: (staked: string) => void;
+    balance: string;
+    setBalance: (staked: string) => void;
     isUnstaking: boolean;
 };
 
@@ -164,10 +164,16 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
+                        const netThalesBalance = ethers.utils
+                            .parseEther(balance)
+                            .sub(ethers.utils.parseEther(amountToStake.toString()));
+                        const netThalesStaked = ethers.utils
+                            .parseEther(thalesStaked)
+                            .add(ethers.utils.parseEther(amountToStake.toString()));
                         refetchUserTokenTransactions(walletAddress, networkId);
-                        setBalance(balance - Number(amountToStake));
+                        setBalance(ethers.utils.formatEther(netThalesBalance));
                         setAmountToStake(0);
-                        setThalesStaked(thalesStaked + Number(amountToStake));
+                        setThalesStaked(ethers.utils.formatEther(netThalesStaked));
                         setIsStaking(false);
                     }
                 }
@@ -227,7 +233,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                         style={{ flex: 1, padding: '15px 0px 0 20px' }}
                         value={amountToStake}
                         onChange={(_, value) => {
-                            if (+value <= balance) {
+                            if (+value <= +balance) {
                                 setAmountToStake(value);
                             }
                         }}
