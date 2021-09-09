@@ -192,7 +192,7 @@ const CardWrapper = styled(FlexDiv)`
         max-width: 400px;
         height: 100%;
         @supports (-webkit-touch-callout: none) {
-            height: 25vh;
+            height: 51vmin;
         }
     }
 `;

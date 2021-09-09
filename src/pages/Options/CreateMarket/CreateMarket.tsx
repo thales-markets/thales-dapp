@@ -787,7 +787,9 @@ export const CreateMarket: React.FC = () => {
                                             selected={convertUTCToLocalDate(maturityDate)}
                                             onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
                                             readOnly={isCreatingMarket || isMarketCreated}
-                                            popperPlacement="bottom-start"
+                                            popperPlacement={
+                                                document.body.clientWidth < 600 ? 'bottom-end' : 'bottom-start'
+                                            }
                                             popperModifiers={{
                                                 flip: {
                                                     behavior: ['bottom'],
