@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Cell, Pie, PieChart } from 'recharts';
+import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
@@ -142,6 +142,20 @@ const RetroRewards: React.FC = () => {
         ];
     }, [vestingInfo, locked]);
 
+    const CustomTooltip = ({ active, payload }: any) => {
+        if (active && payload && payload.length) {
+            return (
+                <TooltipContainer borderColor={payload[0].payload.color}>
+                    <TooltipTitle color={payload[0].payload.color}>{`${payload[0].name}:`}</TooltipTitle>
+                    <TooltipAmount color={payload[0].payload.color}>
+                        {formatCurrencyWithKey(THALES_CURRENCY, payload[0].value)}
+                    </TooltipAmount>
+                </TooltipContainer>
+            );
+        }
+        return null;
+    };
+
     return (
         <EarnSection style={{ gridColumn: 'span 6' }}>
             <SectionHeader>{t('options.earn.snx-stakers.retro-rewards.title')}</SectionHeader>
@@ -166,6 +180,11 @@ const RetroRewards: React.FC = () => {
                                 <Cell key={index} fill={slice.color} />
                             ))}
                         </Pie>
+                        <Tooltip
+                            wrapperStyle={{ zIndex: 1000 }}
+                            content={<CustomTooltip />}
+                            allowEscapeViewBox={{ x: true, y: true }}
+                        />
                     </PieChart>
                     <InfoDiv style={{ alignItems: 'flex-end' }}>
                         <InfoLabel>{t('options.earn.snx-stakers.end-time')}</InfoLabel>
@@ -285,6 +304,31 @@ const Dot = styled.span<{ backgroundColor: string }>`
 const AmountsContainer = styled(FlexDiv)`
     padding: 20px 0 30px 0;
     justify-content: space-between;
+`;
+
+const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
+    border: 3px solid ${(props) => props.borderColor};
+    border-radius: 15px;
+    z-index: 999;
+    height: 78px;
+    padding: 10px 14px;
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+`;
+
+const TooltipAmount = styled(FlexDivColumn)<{ color: string }>`
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 0.15px;
+    color: ${(props) => props.color};
+`;
+
+const TooltipTitle = styled.span<{ color: string }>`
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    color: ${(props) => props.color};
+    margin-bottom: 10px;
 `;
 
 export default RetroRewards;
