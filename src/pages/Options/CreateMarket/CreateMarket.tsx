@@ -739,13 +739,26 @@ export const CreateMarket: React.FC = () => {
                                             startDate={Today}
                                             selected={maturityDate}
                                             endDate={maturityDate}
-                                            onFocus={(e) =>
+                                            onFocus={(e) => {
                                                 document.body.clientWidth < 600
-                                                    ? (e.target.readOnly = true)
-                                                    : (e.target.readOnly = false)
-                                            }
+                                                    ? ((e.target.readOnly = true),
+                                                      e.target.scrollIntoView({ behavior: 'smooth' }))
+                                                    : (e.target.readOnly = false);
+                                            }}
                                             onChange={(d: Date) => setMaturityDate(d)}
                                             readOnly={isCreatingMarket || isMarketCreated}
+                                            popperPlacement="bottom-start"
+                                            popperModifiers={{
+                                                flip: {
+                                                    behavior: ['bottom'],
+                                                },
+                                                preventOverflow: {
+                                                    enabled: false,
+                                                },
+                                                hide: {
+                                                    enabled: false,
+                                                },
+                                            }}
                                         />
                                         <InputLabel>
                                             {t('options.create-market.details.market-maturity-date-label')}
@@ -765,14 +778,27 @@ export const CreateMarket: React.FC = () => {
                                             dateFormat="h:mm aa"
                                             showTimeSelectOnly={true}
                                             showTimeSelect={true}
-                                            onFocus={(e) =>
+                                            onFocus={(e) => {
                                                 document.body.clientWidth < 600
-                                                    ? (e.target.readOnly = true)
-                                                    : (e.target.readOnly = false)
-                                            }
+                                                    ? ((e.target.readOnly = true),
+                                                      e.target.scrollIntoView({ behavior: 'smooth' }))
+                                                    : (e.target.readOnly = false);
+                                            }}
                                             selected={convertUTCToLocalDate(maturityDate)}
                                             onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
                                             readOnly={isCreatingMarket || isMarketCreated}
+                                            popperPlacement="bottom-start"
+                                            popperModifiers={{
+                                                flip: {
+                                                    behavior: ['bottom'],
+                                                },
+                                                preventOverflow: {
+                                                    enabled: false,
+                                                },
+                                                hide: {
+                                                    enabled: false,
+                                                },
+                                            }}
                                         />
                                         <InputLabel>
                                             {t('options.create-market.details.market-maturity-time-label')}
