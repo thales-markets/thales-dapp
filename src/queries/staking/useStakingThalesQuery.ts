@@ -47,7 +47,6 @@ const useStakingThalesQuery = (
             } catch (e) {
                 console.error(e);
             }
-
             return { thalesStaked, rewards, lastUnstakeTime, isUnstaking, unstakingAmount };
         },
         options

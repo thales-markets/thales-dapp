@@ -302,7 +302,8 @@
                     "unlock-cooldown-text": "Start unlocking cooldown during which you will not be eligible for rewards",
                     "cooldown-started-text": "You can unstake your THALES in",
                     "start-unstaking": "Start unstaking",
-                    "unstaking": "Unstaking..."
+                    "unstaking": "Unstaking...",
+                    "amount-to-unstake": "Amount to unstake"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",

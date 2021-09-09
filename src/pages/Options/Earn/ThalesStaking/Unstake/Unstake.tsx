@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { EarnSection, SectionContentContainer, SectionHeader } from '../../components';
-import { Button, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
+import { EarnSection, MaxButton, MaxButtonContainer, SectionContentContainer, SectionHeader } from '../../components';
+import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +22,8 @@ import useStakingThalesQuery from '../../../../../queries/staking/useStakingThal
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
+import NumericInput from '../../../Market/components/NumericInput';
+import { InputLabel } from '../../../Market/components';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -71,6 +73,8 @@ const Unstake: React.FC<Properties> = ({
 
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [unstakeEndTime, setUnstakeEndTime] = useState<Date>(addWeek(new Date()));
+    const [amountToUnstake, setAmountToUnstake] = useState<string>('0');
+    const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
 
     const unstakingEnded = useMemo(() => {
         return isUnstakingInContract && new Date() > unstakeEndTime;
@@ -81,9 +85,11 @@ const Unstake: React.FC<Properties> = ({
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            setIsUnstakingInContract(stakingThalesQuery.data.isUnstaking);
-            if (stakingThalesQuery.data.isUnstaking) {
-                setUnstakeEndTime(addWeek(new Date(stakingThalesQuery.data.lastUnstakeTime)));
+            const { isUnstaking, unstakingAmount, lastUnstakeTime } = stakingThalesQuery.data;
+            setIsUnstakingInContract(isUnstaking);
+            setUnstakingAmount(unstakingAmount);
+            if (isUnstaking) {
+                setUnstakeEndTime(addWeek(new Date(lastUnstakeTime)));
             }
         }
     }, [stakingThalesQuery.isSuccess]);
@@ -97,7 +103,7 @@ const Unstake: React.FC<Properties> = ({
                 if (unstakingEnded) {
                     gasEstimate = await stakingThalesContractWithSigner.estimateGas.unstake();
                 } else {
-                    const amount = ethers.utils.parseEther(thalesStaked.toString());
+                    const amount = ethers.utils.parseEther(amountToUnstake);
                     gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
                 }
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
@@ -117,7 +123,7 @@ const Unstake: React.FC<Properties> = ({
             try {
                 setIsUnstaking(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const amount = ethers.utils.parseEther(thalesStaked.toString());
+                const amount = ethers.utils.parseEther(amountToUnstake);
                 const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
                     gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
@@ -130,6 +136,7 @@ const Unstake: React.FC<Properties> = ({
                         refetchUserTokenTransactions(walletAddress, networkId);
                         setIsUnstaking(false);
                         setIsUnstakingInContract(true);
+                        setUnstakingAmount(amountToUnstake);
                     }
                 }
             } catch (e) {
@@ -157,11 +164,16 @@ const Unstake: React.FC<Properties> = ({
                     if (rawData && rawData.decode) {
                         const newThalesBalance = ethers.utils
                             .parseEther(thalesBalance)
-                            .add(ethers.utils.parseEther(thalesStaked));
+                            .add(ethers.utils.parseEther(unstakingAmount));
+                        const newThalesStaked = ethers.utils
+                            .parseEther(thalesStaked)
+                            .sub(ethers.utils.parseEther(unstakingAmount.toString()));
                         setIsUnstaking(false);
                         setIsUnstakingInContract(false);
                         setThalesBalance(ethers.utils.formatEther(newThalesBalance));
-                        setThalesStaked('0');
+                        setThalesStaked(ethers.utils.formatEther(newThalesStaked));
+                        setUnstakingAmount('0');
+                        setAmountToUnstake('0');
                     }
                 }
             } catch (e) {
@@ -183,7 +195,11 @@ const Unstake: React.FC<Properties> = ({
         }
 
         return (
-            <Button className="primary" onClick={handleStartUnstakingThales} disabled={isUnstaking || !thalesStaked}>
+            <Button
+                className="primary"
+                onClick={handleStartUnstakingThales}
+                disabled={isUnstaking || !+amountToUnstake}
+            >
                 {!isUnstaking
                     ? t('options.earn.thales-staking.unstake.start-unstaking')
                     : t('options.earn.thales-staking.unstake.unstaking')}
@@ -202,7 +218,7 @@ const Unstake: React.FC<Properties> = ({
                             : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
                         :
                     </UnstakingTitleText>
-                    <FlexDivCentered style={{ height: '100%' }}>
+                    <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
                         <GradientText
                             gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
                             fontSize={25}
@@ -212,6 +228,31 @@ const Unstake: React.FC<Properties> = ({
                         </GradientText>
                     </FlexDivCentered>
                 </FlexDivColumn>
+                <FlexDiv style={{ paddingBottom: '15px' }}>
+                    <NumericInput
+                        style={{ flex: 1, padding: '15px 0px 0 20px' }}
+                        value={amountToUnstake}
+                        onChange={(_, value) => {
+                            if (+value <= +thalesStaked) {
+                                setAmountToUnstake(value);
+                            }
+                        }}
+                        step="0.01"
+                        max={thalesStaked.toString()}
+                        disabled={isUnstakingInContract}
+                    />
+                    <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
+                    <MaxButtonContainer>
+                        <MaxButton
+                            disabled={isUnstakingInContract}
+                            onClick={() => {
+                                setAmountToUnstake(thalesStaked);
+                            }}
+                        >
+                            MAX
+                        </MaxButton>
+                    </MaxButtonContainer>
+                </FlexDiv>
                 <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
                 <FlexDivCentered style={{ paddingTop: '15px' }}>{getSubmitButton()}</FlexDivCentered>
                 <ValidationMessage

@@ -156,3 +156,24 @@ export const StyledMaterialTooltip = withStyles(() => ({
         maxWidth: 700,
     },
 }))(MaterialTooltip);
+
+export const MaxButtonContainer = styled(FlexDiv)`
+    justify-content: flex-end;
+    flex: 1;
+    margin-left: 10px;
+`;
+
+export const MaxButton = styled.button`
+    background: #04045a;
+    border: 3px solid #0c1c68;
+    box-sizing: border-box;
+    border-radius: 5px;
+    color: #f6f6fe;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 12px 32px 12px 32px;
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+`;

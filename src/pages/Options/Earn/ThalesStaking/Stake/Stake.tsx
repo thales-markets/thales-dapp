@@ -1,5 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { EarnSection, SectionHeader, FullRow, SectionContentContainer, ClaimItem } from '../../components';
+import {
+    ClaimItem,
+    EarnSection,
+    FullRow,
+    MaxButton,
+    MaxButtonContainer,
+    SectionContentContainer,
+    SectionHeader,
+} from '../../components';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import { Button, FlexDiv, FlexDivCentered, GradientText } from '../../../../../theme/common';
@@ -269,23 +277,6 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
 const BalanceTitle = styled.span`
     font-size: 16px;
     padding-bottom: 8px;
-`;
-
-const MaxButtonContainer = styled(FlexDiv)`
-    justify-content: flex-end;
-    flex: 1;
-    margin-left: 10px;
-`;
-
-const MaxButton = styled.button`
-    background: #04045a;
-    border: 3px solid #0c1c68;
-    box-sizing: border-box;
-    border-radius: 5px;
-    color: #f6f6fe;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 12px 32px 12px 32px;
 `;
 
 export default Stake;

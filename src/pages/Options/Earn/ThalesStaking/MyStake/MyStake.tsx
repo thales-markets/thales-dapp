@@ -10,6 +10,7 @@ import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
+import { ethers } from 'ethers';
 
 type Properties = {
     thalesStaked: string;
@@ -36,8 +37,9 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { isUnstaking, thalesStaked, unstakingAmount } = stakingThalesQuery.data;
-            setThalesStaked(isUnstaking ? unstakingAmount : thalesStaked);
+            const { thalesStaked, unstakingAmount } = stakingThalesQuery.data;
+            const newThalesStaked = ethers.utils.parseEther(thalesStaked).add(ethers.utils.parseEther(unstakingAmount));
+            setThalesStaked(ethers.utils.formatEther(newThalesStaked));
         }
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
