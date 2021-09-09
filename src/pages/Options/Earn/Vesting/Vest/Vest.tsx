@@ -60,7 +60,7 @@ const Vest: React.FC = () => {
 
     useEffect(() => {
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
-            setClaimable(escrowThalesQuery.data.escrowedBalance);
+            setClaimable(escrowThalesQuery.data.claimable);
         }
     }, [escrowThalesQuery.isSuccess]);
 

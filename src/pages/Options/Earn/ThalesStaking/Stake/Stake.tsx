@@ -247,11 +247,12 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                         }}
                         step="0.01"
                         max={balance.toString()}
-                        disabled={false}
+                        disabled={isStaking || isUnstaking}
                     />
                     <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
                     <MaxButtonContainer>
                         <MaxButton
+                            disabled={isStaking || isUnstaking}
                             onClick={() => {
                                 setAmountToStake(balance);
                             }}
