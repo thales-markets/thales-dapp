@@ -313,7 +313,7 @@
                     "claiming": "Claiming...",
                     "claimed-message": "You have already claimed the rewards for this week. Please come next week.",
                     "not-eligible-message": "You are not eligible for these rewards.",
-                    "paused-message": "The claiming is paused, please try later."
+                    "paused-message": "Claiming is paused, please try later."
                 }
             },
             "vesting": {
