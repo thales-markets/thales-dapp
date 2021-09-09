@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const stakingThales = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0xF99FEAEE370E7D09c5183e80f2065551609Ac87D',
+        [NetworkId.Ropsten]: '0x4fd72E058E7EbB293993E6aF419e7fD85e609595',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
@@ -312,27 +312,6 @@ export const stakingThales = {
             type: 'event',
         },
         {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            name: '_lastUnstakeTime',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             constant: false,
             inputs: [],
             name: 'acceptOwnership',
@@ -633,6 +612,27 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'lastPeriodTimeStamp',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: 'lastUnstakeTime',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -1025,6 +1025,27 @@ export const stakingThales = {
                     internalType: 'bool',
                     name: '',
                     type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: 'unstakingAmount',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
                 },
             ],
             payable: false,

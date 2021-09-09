@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const escrowThales = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0x9E77603123F3Bc01224993173DD8bCEfee9aB9b4',
+        [NetworkId.Ropsten]: '0xa61198118D595Ef9762bF32EF4fD7ec005e46d75',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
@@ -183,6 +183,21 @@ export const escrowThales = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+            ],
+            name: 'addTotalEscrowBalanceNotIncludedInStaking',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'airdropContract',
@@ -231,6 +246,15 @@ export const escrowThales = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [],
+            name: 'enableTestMode',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -478,6 +502,21 @@ export const escrowThales = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+            ],
+            name: 'subtractTotalEscrowBalanceNotIncludedInStaking',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [
                 {
@@ -487,6 +526,21 @@ export const escrowThales = {
                 },
             ],
             name: 'totalAccountEscrowedAmount',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'totalEscrowBalanceNotIncludedInStaking',
             outputs: [
                 {
                     internalType: 'uint256',
