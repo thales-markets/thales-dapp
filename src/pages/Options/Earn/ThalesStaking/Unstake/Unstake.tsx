@@ -112,9 +112,9 @@ const Unstake: React.FC<Properties> = ({
                 setGasLimit(null);
             }
         };
-        if (isUnstaking) return;
+        if (isUnstaking || Number(amountToUnstake) <= 0) return;
         fetchGasLimit();
-    }, [isUnstaking, walletAddress, unstakingEnded]);
+    }, [isUnstaking, walletAddress, unstakingEnded, amountToUnstake]);
 
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;

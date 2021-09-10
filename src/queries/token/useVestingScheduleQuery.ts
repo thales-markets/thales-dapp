@@ -41,7 +41,11 @@ const useVestingScheduleQuery = (
                 const period = Number(entry[1]);
                 if (amount > 0 && period > 0) {
                     const diffInWeeksVestingPeriod = period - Number(currentVestingPeriod);
-                    const vestingDate = addWeeks(lastPeriodDateTime, diffInWeeksCurrentDate + diffInWeeksVestingPeriod);
+                    // +1 for 11 weeks of vesting period
+                    const vestingDate = addWeeks(
+                        lastPeriodDateTime,
+                        diffInWeeksCurrentDate + diffInWeeksVestingPeriod + 1
+                    );
                     vestingSchedule.push({ date: getTime(vestingDate), amount });
                 }
             });
