@@ -56,7 +56,10 @@ const useOngoingAirdropQuery = (
 
             return airdrop;
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

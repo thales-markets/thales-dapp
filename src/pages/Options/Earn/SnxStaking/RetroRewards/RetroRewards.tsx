@@ -181,11 +181,13 @@ const RetroRewards: React.FC = () => {
                                 <Cell key={index} fill={slice.color} />
                             ))}
                         </Pie>
-                        <Tooltip
-                            wrapperStyle={{ zIndex: 1000 }}
-                            content={<CustomTooltip />}
-                            allowEscapeViewBox={{ x: true, y: true }}
-                        />
+                        {!!vestingInfo.initialLocked && (
+                            <Tooltip
+                                wrapperStyle={{ zIndex: 1000 }}
+                                content={<CustomTooltip />}
+                                allowEscapeViewBox={{ x: true, y: true }}
+                            />
+                        )}
                     </PieChart>
                     <InfoDiv style={{ alignItems: 'flex-end' }}>
                         <InfoLabel>{t('options.earn.snx-stakers.end-time')}</InfoLabel>

@@ -31,7 +31,10 @@ const useVestingBalanceQuery = (
 
             return vestingInfo;
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

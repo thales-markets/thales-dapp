@@ -49,7 +49,10 @@ const useStakingThalesQuery = (
             }
             return { thalesStaked, rewards, lastUnstakeTime, isUnstaking, unstakingAmount };
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

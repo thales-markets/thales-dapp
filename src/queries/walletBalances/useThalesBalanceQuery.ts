@@ -17,7 +17,10 @@ const useThalesBalanceQuery = (
             );
             return { balance };
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 
