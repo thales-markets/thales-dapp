@@ -187,13 +187,13 @@ const RetroAirdrop: React.FC = () => {
                         <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}</ClaimMessage>
                     )}
                     {retroAirdrop && retroAirdrop.hasClaimRights && (
-                        <ClaimMessage invisible={!retroAirdrop.claimed || !quizCompleted}>
+                        <ClaimMessage>
                             {quizCompleted && isClaimAvailable
                                 ? t('options.earn.snx-stakers.retro-airdrop.completed-quiz')
-                                : quizCompleted || !isClaimAvailable
-                                ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
                                 : !quizCompleted && isClaimAvailable
                                 ? t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')
+                                : quizCompleted && !isClaimAvailable
+                                ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
                                 : ''}
                         </ClaimMessage>
                     )}
