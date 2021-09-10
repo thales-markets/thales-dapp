@@ -139,7 +139,7 @@ const RetroAirdrop: React.FC = () => {
     };
 
     const getClaimButton = () => {
-        if (quizCompleted) {
+        if (quizCompleted || !isClaimAvailable) {
             return (
                 <Button
                     onClick={handleClaimRetroAirdrop}
@@ -159,7 +159,7 @@ const RetroAirdrop: React.FC = () => {
             );
         } else {
             return (
-                <Button onClick={startQuiz} className="primary">
+                <Button onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
                     {t('options.earn.snx-stakers.start-quiz')}
                 </Button>
             );
