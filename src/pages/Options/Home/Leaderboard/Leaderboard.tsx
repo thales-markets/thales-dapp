@@ -4,7 +4,7 @@ import useLeaderboardQuery, { Leaderboard } from 'queries/options/useLeaderboard
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../MarketsTable/components';
 import { PaginationWrapper, StyledTableRow } from '../MarketsTable/MarketsTable';
@@ -38,6 +38,8 @@ const headCells: HeadCell[] = [
     { id: 5, label: 'Trades', sortable: true },
     { id: 6, label: 'Volume', sortable: true },
     { id: 7, label: 'NetProfit', sortable: true },
+    { id: 8, label: 'Investment', sortable: true },
+    { id: 9, label: 'Gain', sortable: true },
 ];
 
 enum OrderDirection {
@@ -50,13 +52,17 @@ const defaultOrderBy = 6; // Volume
 
 const LeaderboardPage: React.FC<any> = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
     const leaderboardQuery = useLeaderboardQuery(networkId, {
         enabled: isAppReady,
     });
-    const leaderboard: Leaderboard[] = leaderboardQuery.data
-        ? leaderboardQuery.data.sort((a, b) => b.volume - a.volume)
+    const leaderboard = leaderboardQuery.data?.leaderboard
+        ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
         : [];
+
+    const profiles = leaderboardQuery.data?.profiles;
 
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
@@ -77,6 +83,15 @@ const LeaderboardPage: React.FC<any> = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const profile = useMemo(() => {
+        if (profiles && walletAddress) {
+            console.log(profiles, walletAddress);
+            return profiles.get(walletAddress.trim().toLowerCase());
+        }
+    }, [profiles, walletAddress]);
+
+    console.log(profile);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -137,9 +152,27 @@ const LeaderboardPage: React.FC<any> = () => {
                     return a.netProfit - b.netProfit;
                 }
             }
+
+            if (orderBy === 8) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.investment - a.investment;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.investment - b.investment;
+                }
+            }
+
+            if (orderBy === 9) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.gain - a.gain;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.gain - b.gain;
+                }
+            }
             return 0;
         });
-        const data = sortedData.map((leader, index) => {
+        const data = sortedData.map((leader: any, index: number) => {
             if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
             else {
             }
@@ -243,7 +276,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody className="leaderboard__tableBody">
-                                    {leaderboardData.map((leader: Leaderboard, index: any) => {
+                                    {leaderboardData.map((leader: any, index: any) => {
                                         return (
                                             <StyledTableRow key={index}>
                                                 <StyledTableCell></StyledTableCell>
@@ -281,6 +314,14 @@ const LeaderboardPage: React.FC<any> = () => {
                                                             : leader.netProfit,
                                                         2
                                                     )}
+                                                </StyledTableCell>
+                                                <StyledTableCell>
+                                                    {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                                </StyledTableCell>
+                                                <StyledTableCell
+                                                    className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
+                                                >
+                                                    {Math.abs(leader.gain).toFixed(1)}%
                                                 </StyledTableCell>
                                             </StyledTableRow>
                                         );
