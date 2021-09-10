@@ -24,6 +24,7 @@ import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import NumericInput from '../../../Market/components/NumericInput';
 import { InputLabel } from '../../../Market/components';
+import ComingSoon from 'components/ComingSoon';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -208,60 +209,69 @@ const Unstake: React.FC<Properties> = ({
         );
     };
 
+    const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
+
     return (
         <EarnSection style={{ gridColumn: 'span 3', gridRow: 'span 2' }}>
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
-            <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
-                <FlexDivColumn>
-                    <UnstakingTitleText>
-                        {isUnstakingInContract
-                            ? t('options.earn.thales-staking.unstake.cooldown-started-text')
-                            : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
-                        :
-                    </UnstakingTitleText>
-                    <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
-                        <GradientText
-                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                            fontSize={25}
-                            fontWeight={600}
-                        >
-                            {!isUnstakingInContract ? '7 days' : <TimeRemaining end={unstakeEndTime} fontSize={25} />}
-                        </GradientText>
-                    </FlexDivCentered>
-                </FlexDivColumn>
-                <FlexDiv style={{ paddingBottom: '15px' }}>
-                    <NumericInput
-                        style={{ flex: 1, padding: '15px 0px 0 20px' }}
-                        value={amountToUnstake}
-                        onChange={(_, value) => {
-                            if (+value <= +thalesStaked) {
-                                setAmountToUnstake(value);
-                            }
-                        }}
-                        step="0.01"
-                        max={thalesStaked.toString()}
-                        disabled={isUnstakingInContract}
-                    />
-                    <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
-                    <MaxButtonContainer>
-                        <MaxButton
-                            disabled={isUnstakingInContract}
-                            onClick={() => {
-                                setAmountToUnstake(thalesStaked);
+            {tokenStakingDisabled && <ComingSoon />}
+            {!tokenStakingDisabled && (
+                <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
+                    <FlexDivColumn>
+                        <UnstakingTitleText>
+                            {isUnstakingInContract
+                                ? t('options.earn.thales-staking.unstake.cooldown-started-text')
+                                : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
+                            :
+                        </UnstakingTitleText>
+                        <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={25}
+                                fontWeight={600}
+                            >
+                                {!isUnstakingInContract ? (
+                                    '7 days'
+                                ) : (
+                                    <TimeRemaining end={unstakeEndTime} fontSize={25} />
+                                )}
+                            </GradientText>
+                        </FlexDivCentered>
+                    </FlexDivColumn>
+                    <FlexDiv style={{ paddingBottom: '15px' }}>
+                        <NumericInput
+                            style={{ flex: 1, padding: '15px 0px 0 20px' }}
+                            value={amountToUnstake}
+                            onChange={(_, value) => {
+                                if (+value <= +thalesStaked) {
+                                    setAmountToUnstake(value);
+                                }
                             }}
-                        >
-                            MAX
-                        </MaxButton>
-                    </MaxButtonContainer>
-                </FlexDiv>
-                <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
-                <FlexDivCentered style={{ paddingTop: '15px' }}>{getSubmitButton()}</FlexDivCentered>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
-            </SectionContentContainer>
+                            step="0.01"
+                            max={thalesStaked.toString()}
+                            disabled={isUnstakingInContract}
+                        />
+                        <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
+                        <MaxButtonContainer>
+                            <MaxButton
+                                disabled={isUnstakingInContract}
+                                onClick={() => {
+                                    setAmountToUnstake(thalesStaked);
+                                }}
+                            >
+                                MAX
+                            </MaxButton>
+                        </MaxButtonContainer>
+                    </FlexDiv>
+                    <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
+                    <FlexDivCentered style={{ paddingTop: '15px' }}>{getSubmitButton()}</FlexDivCentered>
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
+                </SectionContentContainer>
+            )}
         </EarnSection>
     );
 };

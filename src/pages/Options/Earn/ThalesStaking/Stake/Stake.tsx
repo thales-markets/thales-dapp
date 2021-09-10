@@ -35,6 +35,7 @@ import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
 import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
+import ComingSoon from 'components/ComingSoon';
 
 type Properties = {
     thalesStaked: string;
@@ -223,55 +224,60 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
         }
     };
 
+    const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
+
     return (
         <EarnSection style={{ gridColumn: 'span 3', gridRow: 'span 2' }}>
             <SectionHeader>{t('options.earn.thales-staking.stake.stake')}</SectionHeader>
-            <SectionContentContainer style={{ height: '100%' }}>
-                <ClaimItem>
-                    <BalanceTitle>{t('options.earn.thales-staking.stake.available-to-stake')}:</BalanceTitle>
-                    <GradientText
-                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                        fontSize={25}
-                        fontWeight={600}
-                    >
-                        {formatCurrencyWithKey(THALES_CURRENCY, balance)}
-                    </GradientText>
-                </ClaimItem>
-                <FlexDiv style={{ paddingBottom: '15px' }}>
-                    <NumericInput
-                        style={{ flex: 1, padding: '15px 0px 0 20px' }}
-                        value={amountToStake}
-                        onChange={(_, value) => {
-                            if (+value <= +balance) {
-                                setAmountToStake(value);
-                            }
-                        }}
-                        step="0.01"
-                        max={balance.toString()}
-                        disabled={isStaking || isUnstaking}
-                    />
-                    <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
-                    <MaxButtonContainer>
-                        <MaxButton
-                            disabled={isStaking || isUnstaking}
-                            onClick={() => {
-                                setAmountToStake(balance);
-                            }}
+            {tokenStakingDisabled && <ComingSoon />}
+            {!tokenStakingDisabled && (
+                <SectionContentContainer style={{ height: '100%' }}>
+                    <ClaimItem>
+                        <BalanceTitle>{t('options.earn.thales-staking.stake.available-to-stake')}:</BalanceTitle>
+                        <GradientText
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                            fontSize={25}
+                            fontWeight={600}
                         >
-                            MAX
-                        </MaxButton>
-                    </MaxButtonContainer>
-                </FlexDiv>
-                <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
-                <FlexDivCentered style={{ paddingTop: '40px' }}>{getStakeButton()}</FlexDivCentered>
-                <FullRow>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
-                    />
-                </FullRow>
-            </SectionContentContainer>
+                            {formatCurrencyWithKey(THALES_CURRENCY, balance)}
+                        </GradientText>
+                    </ClaimItem>
+                    <FlexDiv style={{ paddingBottom: '15px' }}>
+                        <NumericInput
+                            style={{ flex: 1, padding: '15px 0px 0 20px' }}
+                            value={amountToStake}
+                            onChange={(_, value) => {
+                                if (+value <= +balance) {
+                                    setAmountToStake(value);
+                                }
+                            }}
+                            step="0.01"
+                            max={balance.toString()}
+                            disabled={isStaking || isUnstaking}
+                        />
+                        <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
+                        <MaxButtonContainer>
+                            <MaxButton
+                                disabled={isStaking || isUnstaking}
+                                onClick={() => {
+                                    setAmountToStake(balance);
+                                }}
+                            >
+                                MAX
+                            </MaxButton>
+                        </MaxButtonContainer>
+                    </FlexDiv>
+                    <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
+                    <FlexDivCentered style={{ paddingTop: '40px' }}>{getStakeButton()}</FlexDivCentered>
+                    <FullRow>
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
+                    </FullRow>
+                </SectionContentContainer>
+            )}
         </EarnSection>
     );
 };

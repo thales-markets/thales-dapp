@@ -11,6 +11,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../.
 import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
 import { ethers } from 'ethers';
+import ComingSoon from 'components/ComingSoon';
 
 type Properties = {
     thalesStaked: string;
@@ -46,43 +47,48 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         }
     }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess]);
 
+    const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
+
     return (
         <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}>
             <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
-            <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
-                <FlexDivColumnCentered>
-                    <ClaimTitle>{t('options.earn.thales-staking.my-stake.staked-in-contract')}:</ClaimTitle>
-                    <GradientText
-                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                        fontSize={25}
-                        fontWeight={600}
-                    >
-                        {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                    </GradientText>
-                </FlexDivColumnCentered>
-                <EarnSymbol>+</EarnSymbol>
-                <FlexDivColumnCentered>
-                    <ClaimTitle>{t('options.earn.thales-staking.my-stake.locked-in-escrow')}:</ClaimTitle>
-                    <GradientText
-                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                        fontSize={25}
-                        fontWeight={600}
-                    >
-                        {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
-                    </GradientText>
-                </FlexDivColumnCentered>
-                <EarnSymbol>=</EarnSymbol>
-                <FlexDivColumnCentered>
-                    <ClaimTitle>{t('options.earn.thales-staking.my-stake.total-staked')}:</ClaimTitle>
-                    <GradientText
-                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                        fontSize={25}
-                        fontWeight={600}
-                    >
-                        {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
-                    </GradientText>
-                </FlexDivColumnCentered>
-            </SectionContent>
+            {tokenStakingDisabled && <ComingSoon />}
+            {!tokenStakingDisabled && (
+                <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
+                    <FlexDivColumnCentered>
+                        <ClaimTitle>{t('options.earn.thales-staking.my-stake.staked-in-contract')}:</ClaimTitle>
+                        <GradientText
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                            fontSize={25}
+                            fontWeight={600}
+                        >
+                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                        </GradientText>
+                    </FlexDivColumnCentered>
+                    <EarnSymbol>+</EarnSymbol>
+                    <FlexDivColumnCentered>
+                        <ClaimTitle>{t('options.earn.thales-staking.my-stake.locked-in-escrow')}:</ClaimTitle>
+                        <GradientText
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                            fontSize={25}
+                            fontWeight={600}
+                        >
+                            {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
+                        </GradientText>
+                    </FlexDivColumnCentered>
+                    <EarnSymbol>=</EarnSymbol>
+                    <FlexDivColumnCentered>
+                        <ClaimTitle>{t('options.earn.thales-staking.my-stake.total-staked')}:</ClaimTitle>
+                        <GradientText
+                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                            fontSize={25}
+                            fontWeight={600}
+                        >
+                            {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
+                        </GradientText>
+                    </FlexDivColumnCentered>
+                </SectionContent>
+            )}
         </EarnSection>
     );
 };
