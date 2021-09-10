@@ -102,6 +102,7 @@ const RetroRewards: React.FC = () => {
             const { vestingEscrowContract } = snxJSConnector as any;
 
             try {
+                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
                 const tx = await vestingContractWithSigner.claim({

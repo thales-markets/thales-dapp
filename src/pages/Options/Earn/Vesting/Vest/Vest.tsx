@@ -86,6 +86,7 @@ const Vest: React.FC = () => {
             const { escrowThalesContract } = snxJSConnector as any;
 
             try {
+                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
                 const toVest = ethers.utils.parseEther(claimable.toString());

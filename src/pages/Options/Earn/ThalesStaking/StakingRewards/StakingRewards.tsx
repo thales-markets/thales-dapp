@@ -112,6 +112,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward && gasPrice !== null) {
             const { ongoingAirdropContract } = snxJSConnector as any;
             try {
+                setTxErrorMessage(null);
                 setIsClaiming(true);
                 const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
                 const tx = (await ongoingAirdropContractWithSigner.claim(

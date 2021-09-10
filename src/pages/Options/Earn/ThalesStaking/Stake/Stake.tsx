@@ -160,6 +160,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
 
         if (gasPrice !== null) {
             try {
+                setTxErrorMessage(null);
                 setIsStaking(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const toStake = ethers.utils.parseEther(amountToStake.toString());
