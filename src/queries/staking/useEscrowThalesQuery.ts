@@ -13,22 +13,22 @@ const useEscrowThalesQuery = (
     return useQuery<{ escrowedBalance: number; claimable: string }>(
         QUERY_KEYS.Staking.Escrow(walletAddress, networkId),
         async () => {
-            let escrowedBalance = 0;
-            let claimable = '0';
-
             try {
-                escrowedBalance = bigNumberFormatter(
-                    await (snxJSConnector as any).escrowThalesContract.totalAccountEscrowedAmount(walletAddress)
-                );
+                const [escrowedBalance, claimable] = await Promise.all([
+                    await (snxJSConnector as any).escrowThalesContract.totalAccountEscrowedAmount(walletAddress),
+                    await (snxJSConnector as any).escrowThalesContract.claimable(walletAddress),
+                ]);
 
-                claimable = ethers.utils.formatEther(
-                    await (snxJSConnector as any).escrowThalesContract.claimable(walletAddress)
-                );
-            } catch (e) {
-                console.error(e);
-            }
+                return {
+                    escrowedBalance: bigNumberFormatter(escrowedBalance),
+                    claimable: ethers.utils.formatEther(claimable),
+                };
+            } catch {}
 
-            return { escrowedBalance, claimable };
+            return {
+                escrowedBalance: 0,
+                claimable: '0',
+            };
         },
         {
             refetchInterval: 5000,

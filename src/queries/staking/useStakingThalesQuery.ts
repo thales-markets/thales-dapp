@@ -21,33 +21,31 @@ const useStakingThalesQuery = (
     return useQuery<StakingThalesQueryResponse>(
         QUERY_KEYS.Staking.Thales(walletAddress, networkId),
         async () => {
-            let rewards = 0;
-            let thalesStaked = '0';
-            let unstakingAmount = '0';
-            let lastUnstakeTime = Date.now();
-            let isUnstaking = false;
+            const staking = {
+                rewards: 0,
+                thalesStaked: '0',
+                unstakingAmount: '0',
+                lastUnstakeTime: Date.now(),
+                isUnstaking: false,
+            };
 
             try {
-                isUnstaking = await (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress);
+                const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([
+                    await (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
+                    await (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
+                    await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress),
+                    await (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
+                    await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
+                ]);
 
-                lastUnstakeTime =
-                    Number(await (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress)) * 1000;
+                staking.isUnstaking = isUnstaking;
+                staking.lastUnstakeTime = Number(lastUnstakeTime) * 1000;
+                staking.thalesStaked = ethers.utils.formatEther(thalesStaked);
+                staking.unstakingAmount = ethers.utils.formatEther(unstakingAmount);
+                staking.rewards = bigNumberFormatter(rewards);
+            } catch {}
 
-                thalesStaked = ethers.utils.formatEther(
-                    await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress)
-                );
-
-                unstakingAmount = ethers.utils.formatEther(
-                    await (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress)
-                );
-
-                rewards = bigNumberFormatter(
-                    await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress)
-                );
-            } catch (e) {
-                console.error(e);
-            }
-            return { thalesStaked, rewards, lastUnstakeTime, isUnstaking, unstakingAmount };
+            return staking;
         },
         {
             refetchInterval: 5000,
