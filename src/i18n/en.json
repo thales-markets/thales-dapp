@@ -308,7 +308,7 @@
                 "staking-rewards": {
                     "title": "Staking Rewards",
                     "amount-to-claim-snx": "As SNX staker",
-                    "amount-to-claim-thales": "As Thales staker",
+                    "amount-to-claim-thales": "As THALES staker",
                     "claim": "Claim",
                     "claiming": "Claiming",
                     "claimed-message": "You have already claimed the rewards for this week. Please come next week.",
