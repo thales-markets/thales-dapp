@@ -264,7 +264,8 @@
                     "title": "Retro Airdrop",
                     "claimed-message": "You have already claimed the airdrop.",
                     "not-eligible-message": "You are not eligible for this airdrop.",
-                    "complete-quiz-to-claim": "Complete quiz to claim."
+                    "complete-quiz-to-claim": "Complete quiz to claim.",
+                    "completed-quiz": "Quiz completed! You can claim the airdrop now."
                 },
                 "retro-rewards": {
                     "title": "Retro unlock",
@@ -394,7 +395,7 @@
             "discord-tip": "Ask our Discord community for help",
             "docs-link": "Docs",
             "docs-tip": "Find answer in our docs",
-            "discord-button": "Ask Discord",
+            "discord-button": "Ask in our Discord",
             "submit-answers": "Submit answers",
             "next-page": "Next page",
             "question": {

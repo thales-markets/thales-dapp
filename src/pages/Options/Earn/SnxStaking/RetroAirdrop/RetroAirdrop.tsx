@@ -139,19 +139,27 @@ const RetroAirdrop: React.FC = () => {
     };
 
     const getClaimButton = () => {
-        if (quizCompleted || !isClaimAvailable) {
+        if (quizCompleted) {
             return (
                 <Button
                     onClick={handleClaimRetroAirdrop}
                     disabled={!isClaimAvailable || isClaiming}
                     className="primary"
                 >
-                    {isClaiming ? t('options.earn.snx-stakers.claiming') : t('options.earn.snx-stakers.claim')}
+                    {isClaiming
+                        ? t('options.earn.snx-stakers.claiming')
+                        : t('options.earn.snx-stakers.claim') +
+                          ` ${formatCurrencyWithKey(
+                              THALES_CURRENCY,
+                              retroAirdrop?.accountInfo?.balance || 0,
+                              0,
+                              true
+                          )}`}
                 </Button>
             );
         } else {
             return (
-                <Button onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
+                <Button onClick={startQuiz} className="primary">
                     {t('options.earn.snx-stakers.start-quiz')}
                 </Button>
             );
@@ -183,6 +191,11 @@ const RetroAirdrop: React.FC = () => {
                             {quizCompleted || !isClaimAvailable
                                 ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
                                 : t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')}
+                        </ClaimMessage>
+                    )}
+                    {retroAirdrop && retroAirdrop.hasClaimRights && (
+                        <ClaimMessage invisible={retroAirdrop.claimed || quizCompleted}>
+                            {t('options.earn.snx-stakers.retro-airdrop.completed-quiz')}
                         </ClaimMessage>
                     )}
                 </ButtonContainerBottom>

@@ -162,15 +162,17 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     handleRadioChange={handleRadioChange}
                                     answeredQuestionsPerPage={answeredQuestionsPerPage}
                                 ></QuizQuestionForm>
-                            ) : pageNumber >= 1 && index >= 6 * pageNumber && index < 6 * (pageNumber + 1) ? (
-                                <QuizQuestionForm
-                                    key={index}
-                                    question={quizQuestion}
-                                    handleRadioChange={handleRadioChange}
-                                    answeredQuestionsPerPage={answeredQuestionsPerPage}
-                                ></QuizQuestionForm>
                             ) : (
-                                ''
+                                pageNumber >= 1 &&
+                                index >= 6 * pageNumber &&
+                                index < 6 * (pageNumber + 1) && (
+                                    <QuizQuestionForm
+                                        key={index}
+                                        question={quizQuestion}
+                                        handleRadioChange={handleRadioChange}
+                                        answeredQuestionsPerPage={answeredQuestionsPerPage}
+                                    ></QuizQuestionForm>
+                                )
                             );
                         })}
                         <ButtonContainer
@@ -195,16 +197,13 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     style={{ color: 'white', verticalAlign: 'top' }}
                                 >
                                     {t('options.quiz.discord-button')}
-                                    {/* <img src={discord} style={{ verticalAlign: 'middle', marginLeft: '10px' }} /> */}
                                 </LinkImage>
                             </Button>
                         </ButtonContainer>
-                        {quizData.length > 6 ? (
+                        {quizData.length > 6 && (
                             <div className="pale-grey quiz__modal-dialog__content__page-number">
                                 {pageNumber + 1 + ' of ' + numberOfPages()}
                             </div>
-                        ) : (
-                            ''
                         )}
                         <ButtonContainer
                             style={{

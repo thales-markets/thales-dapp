@@ -105,21 +105,25 @@ export const QuizQuestionForm: React.FC<QuizQuestionProps> = ({
                             style={{ marginTop: '-45px' }}
                         ></img>
                     </MessageOverlay>
-                ) : selectedAnswer === answerIndex && !isAnswerCorrect && showOverlay ? (
-                    <MessageOverlay
-                        onClick={onClick}
-                        className={`quiz__modal-dialog__content__radio-form__group__overlay quiz__modal-dialog__content__radio-form__group__overlay--false ${
-                            showOverlay ? 'alert-shown' : 'alert-hidden'
-                        }`}
-                    >
-                        <span>{t('options.quiz.question.wrong-answer')}</span>
-                        <img
-                            className="quiz__modal-dialog__content__radio-form__group__overlay__image"
-                            src={thales}
-                            style={{ height: '180px', marginTop: '-85px' }}
-                        ></img>
-                    </MessageOverlay>
-                ) : null}
+                ) : (
+                    selectedAnswer === answerIndex &&
+                    !isAnswerCorrect &&
+                    showOverlay && (
+                        <MessageOverlay
+                            onClick={onClick}
+                            className={`quiz__modal-dialog__content__radio-form__group__overlay quiz__modal-dialog__content__radio-form__group__overlay--false ${
+                                showOverlay ? 'alert-shown' : 'alert-hidden'
+                            }`}
+                        >
+                            <span>{t('options.quiz.question.wrong-answer')}</span>
+                            <img
+                                className="quiz__modal-dialog__content__radio-form__group__overlay__image"
+                                src={thales}
+                                style={{ height: '180px', marginTop: '-85px' }}
+                            ></img>
+                        </MessageOverlay>
+                    )
+                )}
             </div>
         </>
     );
