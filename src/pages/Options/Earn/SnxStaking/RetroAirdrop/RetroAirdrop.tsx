@@ -194,7 +194,7 @@ const RetroAirdrop: React.FC = () => {
                                 ? t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')
                                 : quizCompleted && !isClaimAvailable
                                 ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
-                                : ''}
+                                : t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}
                         </ClaimMessage>
                     )}
                 </ButtonContainerBottom>
