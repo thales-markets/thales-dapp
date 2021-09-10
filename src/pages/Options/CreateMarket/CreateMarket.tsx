@@ -802,7 +802,7 @@ export const CreateMarket: React.FC = () => {
                                                 },
                                             }}
                                         />
-                                        <InputLabel>
+                                        <InputLabel style={{ wordBreak: 'break-all' }}>
                                             {t('options.create-market.details.market-maturity-time-label')}
                                         </InputLabel>
                                     </ShortInputContainer>
