@@ -5,7 +5,7 @@ export const ongoingAirdrop = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: '0x86CB67a6D87DA9C1bBe7C2bB92E60cDBF83798eb',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xE3F45271A87F409569890412C99f560002839d0e',
+        [NetworkId.Kovan]: '0xd9112fC9396d38D024D1369e72f039d542000f80',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
@@ -188,6 +188,27 @@ export const ongoingAirdrop = {
                     internalType: 'address',
                     name: '',
                     type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'index',
+                    type: 'uint256',
+                },
+            ],
+            name: 'canClaim',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
                 },
             ],
             payable: false,

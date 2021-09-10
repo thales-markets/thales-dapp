@@ -5,7 +5,7 @@ export const stakingThales = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: '0x4fd72E058E7EbB293993E6aF419e7fD85e609595',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x9C7CC98D31713e43b46cfa10B3b5C3eF66Bc043D',
+        [NetworkId.Kovan]: '0x8d178B3Dd7B29dfB38f55FdFE6518cabe6B31059',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
