@@ -81,7 +81,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
         if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
             setBalance(thalesBalanceQuery.data.balance);
         }
-    }, [thalesBalanceQuery.isSuccess]);
+    }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
 
     useEffect(() => {
         const { thalesTokenContract, stakingThalesContract } = snxJSConnector as any;

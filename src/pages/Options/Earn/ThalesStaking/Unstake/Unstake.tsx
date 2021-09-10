@@ -25,6 +25,8 @@ import { ethers } from 'ethers';
 import NumericInput from '../../../Market/components/NumericInput';
 import { InputLabel } from '../../../Market/components';
 import ComingSoon from 'components/ComingSoon';
+import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
+import { THALES_CURRENCY } from '../../../../../constants/currency';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -76,10 +78,7 @@ const Unstake: React.FC<Properties> = ({
     const [unstakeEndTime, setUnstakeEndTime] = useState<Date>(addWeek(new Date()));
     const [amountToUnstake, setAmountToUnstake] = useState<string>('0');
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
-
-    const unstakingEnded = useMemo(() => {
-        return isUnstakingInContract && new Date() > unstakeEndTime;
-    }, [isUnstakingInContract, unstakeEndTime]);
+    const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
 
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -93,7 +92,7 @@ const Unstake: React.FC<Properties> = ({
                 setUnstakeEndTime(addWeek(new Date(lastUnstakeTime)));
             }
         }
-    }, [stakingThalesQuery.isSuccess]);
+    }, [stakingThalesQuery.isSuccess, stakingThalesQuery.data]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
@@ -135,10 +134,12 @@ const Unstake: React.FC<Properties> = ({
                 if (txResult && txResult.events) {
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
+                        const newThalesStaked = ethers.utils.parseEther(thalesStaked).sub(amount);
                         refetchUserTokenTransactions(walletAddress, networkId);
                         setIsUnstaking(false);
                         setIsUnstakingInContract(true);
-                        setUnstakingAmount(amountToUnstake);
+                        setThalesStaked(ethers.utils.formatEther(newThalesStaked));
+                        setUnstakingAmount(ethers.utils.formatEther(amount));
                     }
                 }
             } catch (e) {
@@ -167,15 +168,13 @@ const Unstake: React.FC<Properties> = ({
                         const newThalesBalance = ethers.utils
                             .parseEther(thalesBalance)
                             .add(ethers.utils.parseEther(unstakingAmount));
-                        const newThalesStaked = ethers.utils
-                            .parseEther(thalesStaked)
-                            .sub(ethers.utils.parseEther(unstakingAmount.toString()));
                         setIsUnstaking(false);
                         setIsUnstakingInContract(false);
                         setThalesBalance(ethers.utils.formatEther(newThalesBalance));
-                        setThalesStaked(ethers.utils.formatEther(newThalesStaked));
                         setUnstakingAmount('0');
                         setAmountToUnstake('0');
+                        setUnstakeEndTime(addWeek(new Date()));
+                        setUnstakingEnded(false);
                     }
                 }
             } catch (e) {
@@ -220,22 +219,33 @@ const Unstake: React.FC<Properties> = ({
                     <FlexDivColumn>
                         <UnstakingTitleText>
                             {isUnstakingInContract
-                                ? t('options.earn.thales-staking.unstake.cooldown-started-text')
+                                ? unstakingEnded
+                                    ? t('options.earn.thales-staking.unstake.cooldown-ended-text', {
+                                          amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
+                                      })
+                                    : t('options.earn.thales-staking.unstake.cooldown-started-text', {
+                                          amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
+                                      })
                                 : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
-                            :
                         </UnstakingTitleText>
                         <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
-                            <GradientText
-                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                                fontSize={25}
-                                fontWeight={600}
-                            >
-                                {!isUnstakingInContract ? (
-                                    '7 days'
-                                ) : (
-                                    <TimeRemaining end={unstakeEndTime} fontSize={25} />
-                                )}
-                            </GradientText>
+                            {!unstakingEnded && (
+                                <GradientText
+                                    gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                    fontSize={25}
+                                    fontWeight={600}
+                                >
+                                    {!isUnstakingInContract ? (
+                                        '7 days'
+                                    ) : (
+                                        <TimeRemaining
+                                            onEnded={() => setUnstakingEnded(true)}
+                                            end={unstakeEndTime}
+                                            fontSize={25}
+                                        />
+                                    )}
+                                </GradientText>
+                            )}
                         </FlexDivCentered>
                     </FlexDivColumn>
                     <FlexDiv style={{ paddingBottom: '15px' }}>
@@ -277,6 +287,7 @@ const Unstake: React.FC<Properties> = ({
 };
 
 const UnstakingTitleText = styled.span`
+    text-align: center;
     font-size: 16px;
     line-height: 24px;
 `;

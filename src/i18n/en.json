@@ -300,8 +300,9 @@
                 },
                 "unstake": {
                     "unstake": "Unstake",
-                    "unlock-cooldown-text": "Start unlocking cooldown during which you will not be eligible for rewards",
-                    "cooldown-started-text": "You can unstake your THALES in",
+                    "unlock-cooldown-text": "Start unlocking cooldown during which you will not be eligible for rewards for",
+                    "cooldown-started-text": "You can unstake {{amount}}",
+                    "cooldown-ended-text": "You can now unstake {{amount}}",
                     "start-unstaking": "Start unstaking",
                     "unstaking": "Unstaking...",
                     "amount-to-unstake": "Amount to unstake"
@@ -334,7 +335,7 @@
                 },
                 "info": {
                     "title": "Vest your THALES staking rewards in escrow",
-                    "text": "If you have staked your THALES and minted sUSD, you are eligible to receive THALES staking rewards, which will be escrowed here which you can vest in 12 months from the claim date."
+                    "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
                 },
                 "lp-staking": {
                     "title": "You can provide liquidity for THALES/ETH pair  and earn double rewards THALES + DODO",

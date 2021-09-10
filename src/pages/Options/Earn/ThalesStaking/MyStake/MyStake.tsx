@@ -10,7 +10,6 @@ import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
-import { ethers } from 'ethers';
 import ComingSoon from 'components/ComingSoon';
 
 type Properties = {
@@ -38,14 +37,13 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { thalesStaked, unstakingAmount } = stakingThalesQuery.data;
-            const newThalesStaked = ethers.utils.parseEther(thalesStaked).add(ethers.utils.parseEther(unstakingAmount));
-            setThalesStaked(ethers.utils.formatEther(newThalesStaked));
+            const { thalesStaked } = stakingThalesQuery.data;
+            setThalesStaked(thalesStaked);
         }
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
         }
-    }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess]);
+    }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
 
     const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
 
@@ -84,7 +82,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
                             fontSize={25}
                             fontWeight={600}
                         >
-                            {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
+                            {formatCurrencyWithKey(THALES_CURRENCY, Number(escrowedBalance) + Number(thalesStaked))}
                         </GradientText>
                     </FlexDivColumnCentered>
                 </SectionContent>

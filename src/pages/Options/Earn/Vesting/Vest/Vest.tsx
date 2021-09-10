@@ -39,7 +39,7 @@ const Vest: React.FC = () => {
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
     const [isClaiming, setIsClaiming] = useState(false);
-    const [claimable, setClaimable] = useState(0);
+    const [claimable, setClaimable] = useState('0');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
@@ -77,7 +77,7 @@ const Vest: React.FC = () => {
                 setGasLimit(null);
             }
         };
-        if (!isWalletConnected || !claimable) return;
+        if (!isWalletConnected || !+claimable) return;
         fetchGasLimit();
     }, [isWalletConnected, walletAddress, claimable]);
 
@@ -90,10 +90,7 @@ const Vest: React.FC = () => {
                 setIsClaiming(true);
                 const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
                 const toVest = ethers.utils.parseEther(claimable.toString());
-                console.log(toVest, {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                });
+
                 const tx = (await escrowThalesContractWithSigner.vest(toVest, {
                     gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
@@ -101,7 +98,7 @@ const Vest: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
-                    setClaimable(0);
+                    setClaimable('0');
                     setIsClaiming(false);
                 }
             } catch (e) {
@@ -114,7 +111,7 @@ const Vest: React.FC = () => {
 
     const getVestButton = () => {
         return (
-            <Button onClick={handleVest} disabled={isClaiming || !claimable} className="primary">
+            <Button onClick={handleVest} disabled={isClaiming || !+claimable} className="primary">
                 {!isClaiming
                     ? t('options.earn.vesting.vest.vest') + ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}`
                     : t('options.earn.vesting.vest.vesting') +
