@@ -29,10 +29,9 @@ const useRetroAirdropQuery = (walletAddress: string, networkId: NetworkId, optio
                     index: retroAirdropHash.index,
                     proof: retroAirdropHash.proof,
                 };
-                try {
-                    await (snxJSConnector as any).retroAirdropContract.claimed(retroAirdropHash.index);
-                    airdrop.claimed = false;
-                } catch {}
+                airdrop.claimed = !(await (snxJSConnector as any).retroAirdropContract.canClaim(
+                    retroAirdropHash.index
+                ));
             }
             return airdrop;
         },

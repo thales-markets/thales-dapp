@@ -48,10 +48,9 @@ const useOngoingAirdropQuery = (
                     index: ongoingAirdropHash.index,
                     proof: ongoingAirdropHash.proof,
                 };
-                try {
-                    await (snxJSConnector as any).ongoingAirdropContract.claimed(ongoingAirdropHash.index);
-                    airdrop.claimed = false;
-                } catch {}
+                airdrop.claimed = !(await (snxJSConnector as any).ongoingAirdropContract.canClaim(
+                    ongoingAirdropHash.index
+                ));
             }
 
             return airdrop;
