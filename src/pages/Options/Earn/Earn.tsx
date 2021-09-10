@@ -16,23 +16,28 @@ const EarnPage: React.FC = () => {
     const optionsTabContent: Array<{
         id: string;
         name: string;
+        disabled: boolean;
     }> = useMemo(
         () => [
             {
                 id: 'snx-stakers',
                 name: t('options.earn.snx-stakers.tab-title'),
+                disabled: false,
             },
             {
                 id: 'thales-staking',
                 name: t('options.earn.thales-staking.tab-title'),
+                disabled: false,
             },
             {
                 id: 'vesting',
                 name: t('options.earn.vesting.tab-title'),
+                disabled: false,
             },
             {
                 id: 'lp-staking',
                 name: t('options.earn.lp-staking.tab-title'),
+                disabled: false,
             },
         ],
         [t]
@@ -55,10 +60,12 @@ const EarnPage: React.FC = () => {
                                     isActive={tab.id === selectedTab}
                                     key={index}
                                     index={index}
-                                    onClick={() => setSelectedTab(tab.id)}
-                                    className={tab.id === selectedTab ? 'selected' : ''}
+                                    onClick={() => (tab.disabled ? {} : setSelectedTab(tab.id))}
+                                    className={`${tab.id === selectedTab ? 'selected' : ''} ${
+                                        tab.disabled ? 'disabled' : ''
+                                    }`}
                                 >
-                                    {tab.name}
+                                    {`${tab.name} ${tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''}`}
                                 </OptionsTab>
                             ))}
                         </OptionsTabContainer>
@@ -120,12 +127,12 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     line-height: 40px;
     text-align: center;
     letter-spacing: 0.15px;
-    color: #748bc6;
+    color: rgb(116, 139, 198);
     border-left: 1px solid rgba(116, 139, 198, 0.5);
     border-right: 1px solid rgba(116, 139, 198, 0.5);
     border-top: 1px solid rgba(116, 139, 198, 0.5);
     user-select: none;
-    &.selected {
+    &.selected:not(.disabled) {
         background: #121776;
         transition: 0.2s;
         color: #f6f6fe;
@@ -134,13 +141,20 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
         border-left: 1px solid rgba(202, 145, 220, 0.2);
         border-right: 1px solid rgba(202, 145, 220, 0.2);
     }
-    &:hover:not(.selected) {
+    &:hover:not(.selected):not(.disabled) {
         cursor: pointer;
         color: #00f9ff;
     }
     img {
         margin-left: 10px;
         margin-bottom: 5px;
+    }
+    &.disabled {
+        color: rgb(116, 139, 198, 0.4);
+        border-left: 1px solid rgba(116, 139, 198, 0.1);
+        border-right: 1px solid rgba(116, 139, 198, 0.1);
+        border-top: 1px solid rgba(116, 139, 198, 0.1);
+        background: linear-gradient(90deg, #141874, #10126c);
     }
 `;
 
