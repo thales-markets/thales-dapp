@@ -36,7 +36,10 @@ const useRetroAirdropQuery = (walletAddress: string, networkId: NetworkId, optio
             }
             return airdrop;
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

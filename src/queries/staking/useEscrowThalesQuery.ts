@@ -30,7 +30,10 @@ const useEscrowThalesQuery = (
 
             return { escrowedBalance, claimable };
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 
