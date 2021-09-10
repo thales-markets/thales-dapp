@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const airdrop = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0x2F7bceFfBe76020908563F320F51a98B02f3382F',
+        [NetworkId.Ropsten]: '0x131f611470D831F56e2fcaA72250a5D768056dfE',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x2DDd1328824f0920fEfC9e9cD8ee07A35A3a89B9',
         // added to resolve error with typings
