@@ -36,6 +36,7 @@ import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQu
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import ComingSoon from 'components/ComingSoon';
+import { dispatchMarketNotification } from 'utils/options';
 
 type Properties = {
     thalesStaked: string;
@@ -172,6 +173,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
+                    dispatchMarketNotification(t('options.earn.thales-staking.stake.confirmation-message'));
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
                         const netThalesBalance = ethers.utils

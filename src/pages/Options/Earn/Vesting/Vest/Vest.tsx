@@ -28,6 +28,7 @@ import snxJSConnector from '../../../../../utils/snxJSConnector';
 import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
 import { ethers } from 'ethers';
 import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
+import { dispatchMarketNotification } from 'utils/options';
 
 const Vest: React.FC = () => {
     const { t } = useTranslation();
@@ -98,6 +99,7 @@ const Vest: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
+                    dispatchMarketNotification(t('options.earn.vesting.vest.confirmation-message'));
                     setClaimable('0');
                     setIsClaiming(false);
                 }

@@ -34,6 +34,7 @@ import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Quiz } from 'components/Quiz/Quiz';
 import { QuizQuestion } from 'components/Quiz/QuizQuestion';
 import { airdropClaimQuizQuestions } from 'i18n/quizQuestions';
+import { dispatchMarketNotification } from 'utils/options';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -116,6 +117,7 @@ const RetroAirdrop: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
+                    dispatchMarketNotification(t('options.earn.snx-stakers.confirmation-message'));
                     refetchRetroAirdrop(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setRetroAirdrop({

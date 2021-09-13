@@ -27,6 +27,7 @@ import { InputLabel } from '../../../Market/components';
 import ComingSoon from 'components/ComingSoon';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
+import { dispatchMarketNotification } from 'utils/options';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -132,6 +133,7 @@ const Unstake: React.FC<Properties> = ({
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
+                    dispatchMarketNotification(t('options.earn.thales-staking.unstake.cooldown-confirmation-message'));
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
                         const newThalesStaked = ethers.utils.parseEther(thalesStaked).sub(amount);
@@ -163,6 +165,7 @@ const Unstake: React.FC<Properties> = ({
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.events) {
+                    dispatchMarketNotification(t('options.earn.thales-staking.unstake.unstake-confirmation-message'));
                     const rawData = txResult.events[txResult.events?.length - 1];
                     if (rawData && rawData.decode) {
                         const newThalesBalance = ethers.utils

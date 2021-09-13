@@ -36,6 +36,7 @@ import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
+import { dispatchMarketNotification } from 'utils/options';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -112,6 +113,7 @@ const RetroRewards: React.FC = () => {
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
+                    dispatchMarketNotification(t('options.earn.snx-stakers.confirmation-message'));
                     refetchVestingBalance(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setVestingInfo({

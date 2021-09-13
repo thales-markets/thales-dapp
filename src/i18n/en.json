@@ -285,7 +285,8 @@
                 "start-time": "Start time",
                 "end-time": "End time",
                 "initial-locked": "Initially Locked",
-                "start-quiz": "Start Quiz"
+                "start-quiz": "Start Quiz",
+                "confirmation-message": "Tokens successfully claimed"
             },
             "thales-staking": {
                 "tab-title": "Staking",
@@ -293,7 +294,8 @@
                     "stake": "Stake",
                     "staking": "Staking...",
                     "available-to-stake": "Available to stake",
-                    "amount-to-stake": "Amount to stake"
+                    "amount-to-stake": "Amount to stake",
+                    "confirmation-message": "Tokens successfully staked"
                 },
                 "my-stake": {
                     "my-stake": "My Staking Balance",
@@ -308,7 +310,9 @@
                     "cooldown-ended-text": "You can now unstake {{amount}}",
                     "start-unstaking": "Start unstaking",
                     "unstaking": "Unstaking...",
-                    "amount-to-unstake": "Amount to unstake"
+                    "amount-to-unstake": "Amount to unstake",
+                    "cooldown-confirmation-message": "Unstaking successfully stated",
+                    "unstake-confirmation-message": "Tokens successfully unstaked"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -318,7 +322,8 @@
                     "claiming": "Claiming",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
                     "not-eligible-message": "You are not eligible for these rewards.",
-                    "paused-message": "Claiming is paused, please try later."
+                    "paused-message": "Claiming is paused, please try later.",
+                    "confirmation-message": "Tokens successfully claimed"
                 }
             },
             "vesting": {
@@ -334,7 +339,8 @@
                 "vest": {
                     "available-to-vest": "Available to vest",
                     "vest": "Vest",
-                    "vesting": "Vesting"
+                    "vesting": "Vesting",
+                    "confirmation-message": "Tokens successfully vested"
                 },
                 "info": {
                     "title": "Vest your THALES staking rewards in escrow",
