@@ -166,7 +166,8 @@
             "quick-trading-label": "Quick trading",
             "earn-label": "Earn"
         },
-        "coming-soon": "Coming soon..."
+        "coming-soon": "Coming soon...",
+        "period": "Period"
     },
     "modals": {
         "gwei": {

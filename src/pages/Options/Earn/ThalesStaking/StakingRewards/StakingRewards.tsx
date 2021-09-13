@@ -38,6 +38,8 @@ import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 
+const MAX_STAKING_PERIOD = 144;
+
 type Properties = {
     escrowedBalance: number;
     setEscrowedBalance: (escrowed: number) => void;
@@ -175,7 +177,12 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
 
     return (
         <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
-            <SectionHeader>{t('options.earn.thales-staking.staking-rewards.title')}</SectionHeader>
+            <SectionHeader>
+                <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
+                <div>{`${t('common.period')}: ${
+                    ongoingAirdrop ? ongoingAirdrop.period : '-'
+                }/${MAX_STAKING_PERIOD}`}</div>
+            </SectionHeader>
             <SectionContentContainer>
                 <PieChartContainer style={{ alignItems: 'flex-end', marginBottom: '77px' }}>
                     <FlexDivColumnCentered style={{ marginRight: '30px', alignSelf: 'center' }}>

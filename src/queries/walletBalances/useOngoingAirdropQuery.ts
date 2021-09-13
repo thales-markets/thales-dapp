@@ -35,6 +35,7 @@ const useOngoingAirdropQuery = (
                 isClaimPaused: paused || !isHashFileAvailable,
                 hasClaimRights: ongoingAirdropHash !== undefined,
                 claimed: true,
+                period: period,
             };
             if (ongoingAirdropHash) {
                 airdrop.reward = {
