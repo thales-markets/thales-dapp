@@ -164,7 +164,7 @@
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
-            "earn-label": "Earn"
+            "earn-label": "THALES"
         },
         "coming-soon": "Coming soon...",
         "period": "Period"
@@ -259,6 +259,7 @@
             }
         },
         "earn": {
+            "title": "THALES",
             "snx-stakers": {
                 "tab-title": "Retro rewards",
                 "retro-airdrop": {

@@ -47,12 +47,12 @@ const EarnPage: React.FC = () => {
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
             <Container>
                 <FlexDivColumn className="earn">
-                    <MarketHeader route={ROUTES.Options.Earn} />
+                    <MarketHeader route={ROUTES.Options.Token} />
                 </FlexDivColumn>
             </Container>
             <Container>
                 <MainContent>
-                    <EarnTitle className="pale-grey">Earn</EarnTitle>
+                    <EarnTitle className="pale-grey">{t('options.earn.title')}</EarnTitle>
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (

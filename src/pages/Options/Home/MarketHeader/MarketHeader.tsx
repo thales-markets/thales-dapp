@@ -199,16 +199,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.Earn}>
-                        <SidebarItem
-                            imgSrc={earnDefaultIcon}
-                            imgSrcHoverSelected={earnSelectedIcon}
-                            className={route === ROUTES.Options.Earn ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={ROUTES.Options.QuickTrading}>
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
@@ -241,6 +231,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
+                    <DisplayContentsAnchor href={ROUTES.Options.Token}>
+                        <SidebarItem
+                            imgSrc={earnDefaultIcon}
+                            imgSrcHoverSelected={earnSelectedIcon}
+                            className={route === ROUTES.Options.Token ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
