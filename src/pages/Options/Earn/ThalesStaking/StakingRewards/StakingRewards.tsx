@@ -37,6 +37,7 @@ import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
+import { dispatchMarketNotification } from 'utils/options';
 
 const MAX_STAKING_PERIOD = 144;
 
@@ -129,6 +130,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
+                    dispatchMarketNotification(t('options.earn.thales-staking.staking-rewards.confirmation-message'));
                     refetchOngoingAirdrop(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
                     setOngoingAirdrop({
