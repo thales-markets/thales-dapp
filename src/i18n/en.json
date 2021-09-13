@@ -576,6 +576,17 @@
             "no-orders-found": "No orders found",
             "view-all-orders": "View all orders"
         },
+        "leaderboard": {
+            "trading-competition": {
+                "tab-title": "Trading competition"
+            },
+            "board": {
+                "tab-title": "Leaderboard"
+            },
+            "profile": {
+                "tab-title": "Profile"
+            }
+        },
         "common": {
             "time-remaining": {
                 "ended": "ended"
