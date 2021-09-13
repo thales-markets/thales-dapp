@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Background, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
+import TradingCompetition from './TradingCompetition';
 
 const LeaderboardPage: React.FC = () => {
     const { t } = useTranslation();
@@ -63,7 +64,7 @@ const LeaderboardPage: React.FC = () => {
                             ))}
                         </OptionsTabContainer>
                         <WidgetsContainer>
-                            {/* {selectedTab === 'trading-competition' && <TradingCompetition />} */}
+                            {selectedTab === 'trading-competition' && <TradingCompetition />}
                             {selectedTab === 'leaderboard' && <LeaderboardTable />}
                             {/* {selectedTab === 'profile' && <Profile />} */}
                         </WidgetsContainer>
