@@ -77,6 +77,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     const [hasStakeAllowance, setStakeAllowance] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const { stakingThalesContract } = snxJSConnector as any;
 
     useEffect(() => {
         if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
@@ -85,40 +86,41 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
 
     useEffect(() => {
-        const { thalesTokenContract, stakingThalesContract } = snxJSConnector as any;
-        const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
-        const addressToApprove = stakingThalesContract.address;
-        const getAllowance = async () => {
-            try {
-                const allowance = await thalesTokenContractWithSigner.allowance(walletAddress, addressToApprove);
-                setStakeAllowance(!!bigNumberFormatter(allowance));
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
-        const registerAllowanceListener = () => {
-            thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setStakeAllowance(true);
-                    setIsAllowingStake(false);
+        if (!!stakingThalesContract) {
+            const { thalesTokenContract } = snxJSConnector as any;
+            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
+            const addressToApprove = stakingThalesContract.address;
+            const getAllowance = async () => {
+                try {
+                    const allowance = await thalesTokenContractWithSigner.allowance(walletAddress, addressToApprove);
+                    setStakeAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
                 }
-            });
-        };
-        if (isWalletConnected) {
-            getAllowance();
-            registerAllowanceListener();
+            };
+
+            const registerAllowanceListener = () => {
+                thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                        setStakeAllowance(true);
+                        setIsAllowingStake(false);
+                    }
+                });
+            };
+            if (isWalletConnected) {
+                getAllowance();
+                registerAllowanceListener();
+            }
+            return () => {
+                thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+            };
         }
-        return () => {
-            thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
-    }, [walletAddress, isWalletConnected, hasStakeAllowance]);
+    }, [walletAddress, isWalletConnected, hasStakeAllowance, stakingThalesContract]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
             const amount = ethers.utils.parseEther(amountToStake.toString());
             try {
-                const { stakingThalesContract } = snxJSConnector as any;
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await stakingThalesContractWithSigner.estimateGas.stake(amount);
                 setGasLimit(normalizeGasLimit(Number(gasEstimate)));
@@ -127,7 +129,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 setGasLimit(null);
             }
         };
-        if (!amountToStake || isStaking) return;
+        if (!amountToStake || isStaking || !!stakingThalesContract) return;
         fetchGasLimit();
     }, [amountToStake, isStaking, hasStakeAllowance, walletAddress]);
 
@@ -158,8 +160,6 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     };
 
     const handleStakeThales = async () => {
-        const { stakingThalesContract } = snxJSConnector as any;
-
         if (gasPrice !== null) {
             try {
                 setTxErrorMessage(null);
@@ -197,7 +197,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     };
 
     const handleAllowance = async () => {
-        const { thalesTokenContract, stakingThalesContract } = snxJSConnector as any;
+        const { thalesTokenContract } = snxJSConnector as any;
         const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
 
         const addressToApprove = stakingThalesContract.address;

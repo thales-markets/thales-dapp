@@ -43,9 +43,10 @@ const Vest: React.FC = () => {
     const [claimable, setClaimable] = useState('0');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const { escrowThalesContract } = snxJSConnector as any;
 
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!escrowThalesContract,
     });
 
     const ethGasPriceQuery = useEthGasPriceQuery();
@@ -67,7 +68,6 @@ const Vest: React.FC = () => {
 
     useEffect(() => {
         const fetchGasLimit = async () => {
-            const { escrowThalesContract } = snxJSConnector as any;
             try {
                 const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
                 const toVest = ethers.utils.parseEther(claimable.toString());
@@ -78,14 +78,12 @@ const Vest: React.FC = () => {
                 setGasLimit(null);
             }
         };
-        if (!isWalletConnected || !+claimable) return;
+        if (!isWalletConnected || !+claimable || !escrowThalesContract) return;
         fetchGasLimit();
-    }, [isWalletConnected, walletAddress, claimable]);
+    }, [isWalletConnected, walletAddress, claimable, escrowThalesContract]);
 
     const handleVest = async () => {
         if (gasPrice !== null) {
-            const { escrowThalesContract } = snxJSConnector as any;
-
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);

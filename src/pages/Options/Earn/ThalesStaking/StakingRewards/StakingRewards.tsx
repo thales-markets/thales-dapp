@@ -58,6 +58,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const { ongoingAirdropContract } = snxJSConnector as any;
 
     const isClaimAvailable =
         ongoingAirdrop &&
@@ -67,7 +68,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         !ongoingAirdrop.isClaimPaused;
 
     const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
     });
 
     const ethGasPriceQuery = useEthGasPriceQuery();
@@ -90,7 +91,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     useEffect(() => {
         const fetchGasLimit = async () => {
             if (ongoingAirdrop && ongoingAirdrop.reward) {
-                const { ongoingAirdropContract } = snxJSConnector as any;
                 try {
                     const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect(
                         (snxJSConnector as any).signer
@@ -107,13 +107,12 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                 }
             }
         };
-        if (!isWalletConnected || !isClaimAvailable) return;
+        if (!isWalletConnected || !isClaimAvailable || !ongoingAirdropContract) return;
         fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable]);
+    }, [isWalletConnected, isClaimAvailable, ongoingAirdropContract]);
 
     const handleClaimOngoingAirdrop = async () => {
         if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward && gasPrice !== null) {
-            const { ongoingAirdropContract } = snxJSConnector as any;
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);

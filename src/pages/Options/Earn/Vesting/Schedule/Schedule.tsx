@@ -9,6 +9,7 @@ import { EarnSection, SectionHeader } from '../../components';
 import ScheduleTable from './ScheduleTable';
 import useVestingScheduleQuery from 'queries/token/useVestingScheduleQuery';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import snxJSConnector from 'utils/snxJSConnector';
 
 const Schedule: React.FC = () => {
     const { t } = useTranslation();
@@ -16,9 +17,10 @@ const Schedule: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const { escrowThalesContract, stakingThalesContract } = snxJSConnector as any;
 
     const vestingScheduleQuery = useVestingScheduleQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!escrowThalesContract && !!stakingThalesContract,
     });
 
     const vestingSchedule = useMemo(

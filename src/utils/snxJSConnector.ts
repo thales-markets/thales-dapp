@@ -25,10 +25,10 @@ type SnxJSConnector = {
     binaryOptionsMarketManagerContract: ethers.Contract;
     retroAirdropContract: ethers.Contract;
     vestingEscrowContract: ethers.Contract;
-    ongoingAirdropContract: ethers.Contract;
-    stakingThalesContract: ethers.Contract;
-    thalesTokenContract: ethers.Contract;
-    escrowThalesContract: ethers.Contract;
+    ongoingAirdropContract?: ethers.Contract;
+    stakingThalesContract?: ethers.Contract;
+    thalesTokenContract?: ethers.Contract;
+    escrowThalesContract?: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
 };
 
@@ -51,15 +51,20 @@ const snxJSConnector: SnxJSConnector = {
         );
         this.retroAirdropContract = initializeContract(airdrop, contractSettings);
         this.vestingEscrowContract = initializeContract(vestingEscrow, contractSettings);
-        this.ongoingAirdropContract = initializeContract(ongoingAirdrop, contractSettings);
-        this.stakingThalesContract = initializeContract(stakingThales, contractSettings);
-        this.thalesTokenContract = initializeContract(thalesContract, contractSettings);
-        this.escrowThalesContract = initializeContract(escrowThales, contractSettings);
+        this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
+        this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
+        this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);
+        this.escrowThalesContract = conditionalInitializeContract(escrowThales, contractSettings);
     },
 };
 
 const initializeContract = (contract: any, contractSettings: ContractSettings) =>
     new ethers.Contract(contract.addresses[contractSettings.networkId], contract.abi, snxJSConnector.provider);
+
+const conditionalInitializeContract = (contract: any, contractSettings: ContractSettings) =>
+    contract.addresses[contractSettings.networkId] !== 'TBD'
+        ? new ethers.Contract(contract.addresses[contractSettings.networkId], contract.abi, snxJSConnector.provider)
+        : undefined;
 
 export const getSynthName = (currencyKey: string) => {
     switch (currencyKey) {
