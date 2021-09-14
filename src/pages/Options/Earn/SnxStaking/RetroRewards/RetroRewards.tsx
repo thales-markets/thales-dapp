@@ -230,9 +230,9 @@ const RetroRewards: React.FC = () => {
                     <LearnMore style={{ fontSize: '13px' }}>
                         <StyledMaterialTooltip
                             arrow={true}
-                            title="Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards."
+                            title={t('options.earn.snx-stakers.retro-rewards.learn-more-text')}
                         >
-                            <span>Learn more</span>
+                            <span>{t('options.earn.snx-stakers.retro-rewards.learn-more')}</span>
                         </StyledMaterialTooltip>
                     </LearnMore>
                 </PieChartContainer>

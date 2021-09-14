@@ -11,11 +11,9 @@ import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
 import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
 import trendingMarketsDefaultIcon from 'assets/images/sidebar/trending-default.svg';
-import olympicsMarketsDefaultIcon from 'assets/images/sidebar/olympics-default.svg';
 import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
 import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
-import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
@@ -155,28 +153,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ userFilter2: ['Olympics'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={ROUTES.Options.Olympics}
-                    >
-                        <SidebarItem
-                            imgSrc={olympicsMarketsDefaultIcon}
-                            imgSrcHoverSelected={olympicsMarketsSelectedIcon}
-                            className={route === ROUTES.Options.Olympics ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.olympics-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>

@@ -16,6 +16,7 @@ export const EarnSection = styled.section`
     margin-bottom: 15px;
     border: solid 1px transparent;
     padding: 10px;
+    max-width: 100%;
     &:before {
         content: '';
         position: absolute;
@@ -161,6 +162,7 @@ export const MaxButtonContainer = styled(FlexDiv)`
     justify-content: flex-end;
     flex: 1;
     margin-left: 10px;
+    max-width: 40%; ;
 `;
 
 export const MaxButton = styled.button`

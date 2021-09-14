@@ -271,7 +271,9 @@
                 },
                 "retro-rewards": {
                     "title": "Retro unlock",
-                    "not-eligible-message": "You are not eligible for this distribution."
+                    "not-eligible-message": "You are not eligible for this distribution.",
+                    "learn-more-text": "Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards.",
+                    "learn-more": "Learn more"
                 },
                 "airdropped-amount": "Airdropped amount",
                 "claim": "Claim",
@@ -302,7 +304,7 @@
                     "staked-in-contract": "Staked directly",
                     "locked-in-escrow": "Escrowed balance",
                     "total-staked": "Total staked balance",
-                    "not-eligible-message": "You are not eligible for staking rewards unless you stake THALES directly",
+                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
                     "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
                 },
                 "unstake": {
@@ -314,7 +316,8 @@
                     "cooldown-confirmation-message": "Unstaking successfully started",
                     "unstake-confirmation-message": "Tokens successfully unstaked",
                     "unstaking": "Unstaking",
-                    "amount-to-unstake": "Amount to unstake"
+                    "amount-to-unstake": "Amount to unstake",
+                    "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more thales."
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -329,7 +332,9 @@
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
                     "not-eligible-message": "You are not eligible for these rewards.",
                     "paused-message": "Claiming is paused, please try later.",
-                    "confirmation-message": "Tokens successfully claimed"
+                    "confirmation-message": "Tokens successfully claimed",
+                    "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
+                    "learn-more": "Learn more"
                 }
             },
             "vesting": {

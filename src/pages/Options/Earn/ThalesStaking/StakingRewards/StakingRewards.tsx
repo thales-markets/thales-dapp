@@ -307,9 +307,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     <LearnMore>
                         <StyledMaterialTooltip
                             arrow={true}
-                            title="Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards."
+                            title={t('options.earn.thales-staking.staking-rewards.learn-more-text')}
                         >
-                            <span>Learn more</span>
+                            <span>{t('options.earn.thales-staking.staking-rewards.learn-more')}</span>
                         </StyledMaterialTooltip>
                     </LearnMore>
                 </PieChartContainer>

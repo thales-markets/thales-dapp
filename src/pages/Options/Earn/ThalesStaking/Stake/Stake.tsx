@@ -252,7 +252,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                     </ClaimItem>
                     <FlexDiv style={{ paddingBottom: '15px' }}>
                         <NumericInput
-                            style={{ flex: 1, padding: '15px 0px 0 20px' }}
+                            style={{ flex: 1, padding: '15px 0px 0 20px', maxWidth: '60%' }}
                             value={amountToStake}
                             onChange={(_, value) => {
                                 if (+value <= +balance) {

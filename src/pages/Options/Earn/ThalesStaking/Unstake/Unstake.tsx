@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { EarnSection, MaxButton, MaxButtonContainer, SectionContentContainer, SectionHeader } from '../../components';
+import {
+    EarnSection,
+    MaxButton,
+    MaxButtonContainer,
+    SectionContentContainer,
+    SectionHeader,
+    StyledMaterialTooltip,
+} from '../../components';
 import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
@@ -207,21 +214,28 @@ const Unstake: React.FC<Properties> = ({
         }
 
         return (
-            <Button
-                className="primary"
-                onClick={handleStartUnstakingThales}
-                disabled={isUnstaking || !+amountToUnstake}
+            <StyledMaterialTooltip
+                disableHoverListener={isUnstaking || !+amountToUnstake}
+                disableTouchListener={isUnstaking || !+amountToUnstake}
+                arrow={true}
+                title={t('options.earn.thales-staking.unstake.start-unstaking-tooltip')}
             >
-                {!isUnstaking
-                    ? `${t('options.earn.thales-staking.unstake.start-unstaking')} ${formatCurrencyWithKey(
-                          THALES_CURRENCY,
-                          amountToUnstake
-                      )}`
-                    : `${t('options.earn.thales-staking.unstake.unstaking')} ${formatCurrencyWithKey(
-                          THALES_CURRENCY,
-                          amountToUnstake
-                      )}...`}
-            </Button>
+                <Button
+                    className="primary"
+                    onClick={handleStartUnstakingThales}
+                    disabled={isUnstaking || !+amountToUnstake}
+                >
+                    {!isUnstaking
+                        ? `${t('options.earn.thales-staking.unstake.start-unstaking')} ${formatCurrencyWithKey(
+                              THALES_CURRENCY,
+                              amountToUnstake
+                          )}`
+                        : `${t('options.earn.thales-staking.unstake.unstaking')} ${formatCurrencyWithKey(
+                              THALES_CURRENCY,
+                              amountToUnstake
+                          )}...`}
+                </Button>
+            </StyledMaterialTooltip>
         );
     };
 
@@ -267,7 +281,7 @@ const Unstake: React.FC<Properties> = ({
                     </FlexDivColumn>
                     <FlexDiv style={{ paddingBottom: '15px' }}>
                         <NumericInput
-                            style={{ flex: 1, padding: '15px 0px 0 20px' }}
+                            style={{ flex: 1, padding: '15px 0px 0 20px', maxWidth: '60%' }}
                             value={amountToUnstake}
                             onChange={(_, value) => {
                                 if (+value <= +thalesStaked) {
