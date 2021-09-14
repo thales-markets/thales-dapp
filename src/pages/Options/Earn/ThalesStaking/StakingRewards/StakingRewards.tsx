@@ -307,7 +307,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     <LearnMore>
                         <StyledMaterialTooltip
                             arrow={true}
-                            title={t('options.earn.thales-staking.staking-rewards.learn-more-text')}
+                            title={t('options.earn.thales-staking.staking-rewards.learn-more-text') as string}
                         >
                             <span>{t('options.earn.thales-staking.staking-rewards.learn-more')}</span>
                         </StyledMaterialTooltip>
