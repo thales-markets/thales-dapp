@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
+import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -39,7 +39,10 @@ import styled from 'styled-components';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
 
-const MAX_STAKING_PERIOD = 144;
+const MAX_SNX_STAKING_PERIOD = 144;
+const MAX_THALES_STAKING_PERIOD = 150;
+const WEEKLY_REWARDS_SNX = 150000;
+const WEEKLY_REWARDS_THALES = 100000;
 
 type Properties = {
     escrowedBalance: number;
@@ -180,13 +183,10 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
             <SectionHeader>
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
-                <div>{`${t('common.period')}: ${
-                    ongoingAirdrop ? ongoingAirdrop.period : '-'
-                }/${MAX_STAKING_PERIOD}`}</div>
             </SectionHeader>
             <SectionContentContainer>
                 <PieChartContainer style={{ alignItems: 'flex-end', marginBottom: '77px' }}>
-                    <FlexDivColumnCentered style={{ marginRight: '30px', alignSelf: 'center' }}>
+                    <FlexDivColumn style={{ marginRight: '30px', alignSelf: 'center' }}>
                         <StakingRewardsAmountContainer
                             style={{ marginRight: '30px' }}
                             gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
@@ -204,7 +204,23 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 </GradientText>
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
-                    </FlexDivColumnCentered>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>
+                                {t('options.earn.thales-staking.staking-rewards.period')}:
+                            </StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_THALES_STAKING_PERIOD}` : '-'}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>
+                                {t('options.earn.thales-staking.staking-rewards.weekly-rewards')}:
+                            </StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {formatCurrencyWithKey(THALES_CURRENCY, WEEKLY_REWARDS_THALES, 0, true)}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                    </FlexDivColumn>
                     <PieChart height={300} width={300}>
                         <defs>
                             <linearGradient
@@ -230,7 +246,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             ))}
                         </Pie>
                     </PieChart>
-                    <FlexDivColumnCentered style={{ marginLeft: '30px', alignSelf: 'center' }}>
+                    <FlexDivColumn style={{ marginLeft: '30px', alignSelf: 'center' }}>
                         <StakingRewardsAmountContainer style={{ marginLeft: '30px' }} gradient="#00D1FF">
                             <StakingRewardsAmount>
                                 <StakingRewardsTitle>
@@ -245,10 +261,28 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 </GradientText>
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
-                    </FlexDivColumnCentered>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>
+                                {t('options.earn.thales-staking.staking-rewards.period')}:
+                            </StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_SNX_STAKING_PERIOD}` : '-'}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                        <FlexDivSpaceBetween>
+                            <StakingRewardsInfoTitle>
+                                {t('options.earn.thales-staking.staking-rewards.weekly-rewards')}:
+                            </StakingRewardsInfoTitle>
+                            <StakingRewardsInfoContent>
+                                {formatCurrencyWithKey(THALES_CURRENCY, WEEKLY_REWARDS_SNX, 0, true)}
+                            </StakingRewardsInfoContent>
+                        </FlexDivSpaceBetween>
+                    </FlexDivColumn>
                     <PieChartCenterDiv>
                         <FlexDivColumnCentered>
-                            <PieChartCenterText>Total</PieChartCenterText>
+                            <PieChartCenterText>
+                                {t('options.earn.thales-staking.staking-rewards.total')}
+                            </PieChartCenterText>
                             <GradientText
                                 gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
                                 fontSize={20}
@@ -258,7 +292,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             </GradientText>
                         </FlexDivColumnCentered>
                         <FlexDivColumnCentered style={{ marginTop: 30, marginBottom: 30 }}>
-                            <PieChartCenterText>From previous period</PieChartCenterText>
+                            <PieChartCenterText>
+                                {t('options.earn.thales-staking.staking-rewards.previous-period')}
+                            </PieChartCenterText>
                             <GradientText
                                 gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
                                 fontSize={20}
@@ -338,6 +374,23 @@ const StakingRewardsTitle = styled.span`
     font-size: 16px;
     line-height: 24px;
     padding-bottom: 10px;
+`;
+
+const StakingRewardsInfoTitle = styled.div`
+    padding-top: 15px;
+    font-size: 16px;
+    line-height: 24px;
+    flex: 1;
+    width: 65%;
+`;
+
+const StakingRewardsInfoContent = styled.div`
+    padding-top: 15px;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    width: 35%;
+    text-align: end;
 `;
 
 export default StakingRewards;
