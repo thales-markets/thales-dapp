@@ -44,15 +44,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
         setOpenQuiz(false);
     };
 
-    const numberOfPages = () => {
-        const numberOfPages = quizData.length / 6;
-        const decimalLeftover = numberOfPages % 2;
-        return decimalLeftover === 0
-            ? numberOfPages
-            : decimalLeftover < 0.5
-            ? Math.round(numberOfPages) + 1
-            : Math.round(numberOfPages);
-    };
+    const numberOfPages = () => Math.ceil(quizData.length / 6) || 1;
 
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>, question: QuizQuestion) => {
         const selectedAnswer = Number((event.target as HTMLInputElement).value);
