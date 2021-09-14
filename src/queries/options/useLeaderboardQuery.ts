@@ -25,6 +25,15 @@ export interface Leaderboard {
             unclaimed: [];
         }
     >;
+    competition: [
+        {
+            trades: number;
+            volume: number;
+            netProfit: number;
+            investment: number;
+            gain: number;
+        }
+    ];
 }
 
 const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Leaderboard>) => {
@@ -39,14 +48,25 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Lea
                 profiles.set(record[0].toString().toLowerCase().trim(), record[1].profile);
                 return {
                     walletAddress: record[0],
-                    volume: record[1].volume,
-                    trades: record[1].trades,
-                    netProfit: record[1].netProfit,
-                    investment: record[1].investment,
-                    gain: record[1].gain,
+                    volume: record[1].leaderboard.volume,
+                    trades: record[1].leaderboard.trades,
+                    netProfit: record[1].leaderboard.netProfit,
+                    investment: record[1].leaderboard.investment,
+                    gain: record[1].leaderboard.gain,
                 };
             });
-            return { leaderboard, profiles };
+            const competition = result.data.map((record: any) => {
+                return {
+                    walletAddress: record[0],
+                    volume: record[1].competition.volume,
+                    trades: record[1].competition.trades,
+                    netProfit: record[1].competition.netProfit,
+                    investment: record[1].competition.investment,
+                    gain: record[1].competition.gain,
+                };
+            });
+
+            return { leaderboard, profiles, competition };
         },
         options
     );

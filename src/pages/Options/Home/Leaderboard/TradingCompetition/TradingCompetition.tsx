@@ -54,8 +54,8 @@ const TradingCompetition: React.FC<any> = () => {
     const leaderboardQuery = useLeaderboardQuery(networkId, {
         enabled: isAppReady,
     });
-    const leaderboard = leaderboardQuery.data?.leaderboard
-        ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
+    const competition = leaderboardQuery.data?.competition
+        ? leaderboardQuery.data.competition.sort((a, b) => b.volume - a.volume)
         : [];
 
     const profiles = leaderboardQuery.data?.profiles;
@@ -70,7 +70,7 @@ const TradingCompetition: React.FC<any> = () => {
         setPage(newPage);
     };
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
-    const numberOfPages = Math.ceil(leaderboard.length / rowsPerPage) || 1;
+    const numberOfPages = Math.ceil(competition.length / rowsPerPage) || 1;
 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -122,7 +122,7 @@ const TradingCompetition: React.FC<any> = () => {
     ]);
 
     const leaderboardData = useMemo(() => {
-        const sortedData = leaderboard.sort((a, b) => {
+        const sortedData = competition.sort((a, b) => {
             if (orderBy === 5) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.trades - a.trades;
@@ -190,7 +190,7 @@ const TradingCompetition: React.FC<any> = () => {
                 return false;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
+    }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, competition]);
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
@@ -300,13 +300,13 @@ const TradingCompetition: React.FC<any> = () => {
                             );
                         })}
                     </TableBody>
-                    {leaderboard.length !== 0 && (
+                    {competition.length !== 0 && (
                         <TableFooter>
                             <TableRow>
                                 <PaginationWrapper
                                     rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
-                                    count={leaderboard.length}
+                                    count={competition.length}
                                     rowsPerPage={rowsPerPage}
                                     page={memoizedPage}
                                     onPageChange={handleChangePage}
