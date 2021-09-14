@@ -230,7 +230,7 @@ const RetroRewards: React.FC = () => {
                     <LearnMore style={{ fontSize: '13px' }}>
                         <StyledMaterialTooltip
                             arrow={true}
-                            title={t('options.earn.snx-stakers.retro-rewards.learn-more-text')}
+                            title={t('options.earn.snx-stakers.retro-rewards.learn-more-text') as string}
                         >
                             <span>{t('options.earn.snx-stakers.retro-rewards.learn-more')}</span>
                         </StyledMaterialTooltip>

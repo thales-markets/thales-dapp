@@ -218,7 +218,7 @@ const Unstake: React.FC<Properties> = ({
                 disableHoverListener={isUnstaking || !+amountToUnstake}
                 disableTouchListener={isUnstaking || !+amountToUnstake}
                 arrow={true}
-                title={t('options.earn.thales-staking.unstake.start-unstaking-tooltip')}
+                title={t('options.earn.thales-staking.unstake.start-unstaking-tooltip') as string}
             >
                 <Button
                     className="primary"
