@@ -8,40 +8,50 @@ import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
 import Vesting from './Vesting';
 import LPStaking from './LPStaking';
+import { useLocation } from 'react-router-dom';
+import { history } from 'utils/routes';
+import queryString from 'query-string';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
-    const [selectedTab, setSelectedTab] = useState('snx-stakers');
+    const tabs = [
+        {
+            id: 'retro-rewards',
+            name: t('options.earn.snx-stakers.tab-title'),
+            disabled: false,
+        },
+        {
+            id: 'staking',
+            name: t('options.earn.thales-staking.tab-title'),
+            disabled: false,
+        },
+        {
+            id: 'vesting',
+            name: t('options.earn.vesting.tab-title'),
+            disabled: false,
+        },
+        {
+            id: 'lp-staking',
+            name: t('options.earn.lp-staking.tab-title'),
+            disabled: false,
+        },
+    ];
+    const tabIds = tabs.map((tab) => tab.id);
+    const isTabEnabled = (tabId: string) => {
+        const tab = tabs.find((tab) => tab.id === tabId);
+        return tab ? !tab.disabled : false;
+    };
+
+    const location = useLocation();
+    const paramTab = queryString.parse(location.search).tab;
+    const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
+    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramTab : 'retro-rewards');
 
     const optionsTabContent: Array<{
         id: string;
         name: string;
         disabled: boolean;
-    }> = useMemo(
-        () => [
-            {
-                id: 'snx-stakers',
-                name: t('options.earn.snx-stakers.tab-title'),
-                disabled: false,
-            },
-            {
-                id: 'thales-staking',
-                name: t('options.earn.thales-staking.tab-title'),
-                disabled: false,
-            },
-            {
-                id: 'vesting',
-                name: t('options.earn.vesting.tab-title'),
-                disabled: false,
-            },
-            {
-                id: 'lp-staking',
-                name: t('options.earn.lp-staking.tab-title'),
-                disabled: false,
-            },
-        ],
-        [t]
-    );
+    }> = useMemo(() => tabs, [t]);
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
@@ -60,7 +70,16 @@ const EarnPage: React.FC = () => {
                                     isActive={tab.id === selectedTab}
                                     key={index}
                                     index={index}
-                                    onClick={() => (tab.disabled ? {} : setSelectedTab(tab.id))}
+                                    onClick={() => {
+                                        if (tab.disabled) return;
+                                        history.push({
+                                            pathname: location.pathname,
+                                            search: queryString.stringify({
+                                                tab: tab.id,
+                                            }),
+                                        });
+                                        setSelectedTab(tab.id);
+                                    }}
                                     className={`${tab.id === selectedTab ? 'selected' : ''} ${
                                         tab.disabled ? 'disabled' : ''
                                     }`}
@@ -70,8 +89,8 @@ const EarnPage: React.FC = () => {
                             ))}
                         </OptionsTabContainer>
                         <WidgetsContainer>
-                            {selectedTab === 'snx-stakers' && <SnxStaking />}
-                            {selectedTab === 'thales-staking' && <ThalesStaking />}
+                            {selectedTab === 'retro-rewards' && <SnxStaking />}
+                            {selectedTab === 'staking' && <ThalesStaking />}
                             {selectedTab === 'vesting' && <Vesting />}
                             {selectedTab === 'lp-staking' && <LPStaking />}
                         </WidgetsContainer>
