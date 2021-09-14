@@ -21,8 +21,8 @@ import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg'
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
 import burger from 'assets/images/burger.svg';
-import earnDefaultIcon from 'assets/images/sidebar/earn-default.svg';
-import earnSelectedIcon from 'assets/images/sidebar/earn-selected.svg';
+import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
+import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
