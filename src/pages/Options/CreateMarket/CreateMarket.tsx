@@ -111,6 +111,7 @@ export const CreateMarket: React.FC = () => {
     const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
     const [isCurrencyKeyValid, setIsCurrencyKeyValid] = useState(true);
+    const [isFocused, setIsFocused] = useState(true);
     const [strikePrice, setStrikePrice] = useState<number | string>('');
     const [isStrikePriceValid, setIsStrikePriceValid] = useState(true);
     const [maturityDate, setMaturityDate] = useState<Date>(
@@ -624,11 +625,15 @@ export const CreateMarket: React.FC = () => {
                                             );
                                         }}
                                         onBlur={() => {
+                                            setIsFocused(false);
                                             !isCurrencySelected
                                                 ? currencyKey
                                                     ? setIsCurrencyKeyValid(true)
                                                     : setIsCurrencyKeyValid(false)
                                                 : '';
+                                        }}
+                                        onFocus={() => {
+                                            setIsFocused(true);
                                         }}
                                         options={assetsOptions}
                                         placeholder={t('common.eg-val', { val: CRYPTO_CURRENCY_MAP.BTC })}
@@ -643,7 +648,10 @@ export const CreateMarket: React.FC = () => {
                                     <InputLabel style={{ zIndex: 100 }}>
                                         {t('options.create-market.details.select-asset-label')}
                                     </InputLabel>
-                                    <ErrorMessage show={!isCurrencyKeyValid} text="Please select asset." />
+                                    <ErrorMessage
+                                        show={!isCurrencyKeyValid && !isFocused}
+                                        text="Please select asset."
+                                    />
                                 </ShortInputContainer>
                                 <ShortInputContainer
                                     className="create-market-content__parameters__field"
@@ -730,13 +738,26 @@ export const CreateMarket: React.FC = () => {
                                             startDate={Today}
                                             selected={maturityDate}
                                             endDate={maturityDate}
-                                            onFocus={(e) =>
+                                            onFocus={(e) => {
                                                 document.body.clientWidth < 600
-                                                    ? (e.target.readOnly = true)
-                                                    : (e.target.readOnly = false)
-                                            }
+                                                    ? ((e.target.readOnly = true),
+                                                      e.target.scrollIntoView({ behavior: 'smooth' }))
+                                                    : (e.target.readOnly = false);
+                                            }}
                                             onChange={(d: Date) => setMaturityDate(d)}
                                             readOnly={isCreatingMarket || isMarketCreated}
+                                            popperPlacement="bottom-start"
+                                            popperModifiers={{
+                                                flip: {
+                                                    behavior: ['bottom'],
+                                                },
+                                                preventOverflow: {
+                                                    enabled: false,
+                                                },
+                                                hide: {
+                                                    enabled: false,
+                                                },
+                                            }}
                                         />
                                         <InputLabel>
                                             {t('options.create-market.details.market-maturity-date-label')}
@@ -756,16 +777,31 @@ export const CreateMarket: React.FC = () => {
                                             dateFormat="h:mm aa"
                                             showTimeSelectOnly={true}
                                             showTimeSelect={true}
-                                            onFocus={(e) =>
+                                            onFocus={(e) => {
                                                 document.body.clientWidth < 600
-                                                    ? (e.target.readOnly = true)
-                                                    : (e.target.readOnly = false)
-                                            }
+                                                    ? ((e.target.readOnly = true),
+                                                      e.target.scrollIntoView({ behavior: 'smooth' }))
+                                                    : (e.target.readOnly = false);
+                                            }}
                                             selected={convertUTCToLocalDate(maturityDate)}
                                             onChange={(d: Date) => setMaturityDate(convertLocalToUTCDate(d))}
                                             readOnly={isCreatingMarket || isMarketCreated}
+                                            popperPlacement={
+                                                document.body.clientWidth < 600 ? 'bottom-end' : 'bottom-start'
+                                            }
+                                            popperModifiers={{
+                                                flip: {
+                                                    behavior: ['bottom'],
+                                                },
+                                                preventOverflow: {
+                                                    enabled: false,
+                                                },
+                                                hide: {
+                                                    enabled: false,
+                                                },
+                                            }}
                                         />
-                                        <InputLabel>
+                                        <InputLabel style={{ wordBreak: 'break-all' }}>
                                             {t('options.create-market.details.market-maturity-time-label')}
                                         </InputLabel>
                                     </ShortInputContainer>
@@ -892,7 +928,15 @@ export const CreateMarket: React.FC = () => {
                                         className={isLongPriceValid ? '' : 'error'}
                                         step="0.01"
                                     />
-                                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                                    {window.innerWidth < 900 ? (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.price-label-mobile')}
+                                        </InputLabel>
+                                    ) : (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.price-label')}
+                                        </InputLabel>
+                                    )}
                                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
                                         {SYNTHS_MAP.sUSD}
                                     </CurrencyLabel>
@@ -913,11 +957,17 @@ export const CreateMarket: React.FC = () => {
                                         disabled={!sellLong || isLongSubmitting || isLongSubmitted}
                                         className={isLongAmountValid ? '' : 'error'}
                                     />
-                                    <InputLabel>
-                                        {t('options.market.trade-options.place-order.amount-label', {
-                                            orderSide: 'sell',
-                                        })}
-                                    </InputLabel>
+                                    {window.innerWidth < 900 ? (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.amount-label-mobile')}
+                                        </InputLabel>
+                                    ) : (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.amount-label', {
+                                                orderSide: 'sell',
+                                            })}
+                                        </InputLabel>
+                                    )}
                                     <CurrencyLabel className={!sellLong ? 'disabled' : ''}>
                                         {SYNTHS_MAP.sLONG}
                                     </CurrencyLabel>
@@ -982,7 +1032,15 @@ export const CreateMarket: React.FC = () => {
                                         className={isShortPriceValid ? '' : 'error'}
                                         step="0.01"
                                     />
-                                    <InputLabel>{t('options.market.trade-options.place-order.price-label')}</InputLabel>
+                                    {window.innerWidth < 900 ? (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.price-label-mobile')}
+                                        </InputLabel>
+                                    ) : (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.price-label')}
+                                        </InputLabel>
+                                    )}
                                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
                                         {SYNTHS_MAP.sUSD}
                                     </CurrencyLabel>
@@ -1003,11 +1061,17 @@ export const CreateMarket: React.FC = () => {
                                         disabled={!sellShort || isShortSubmitting || isShortSubmitted}
                                         className={isShortAmountValid ? '' : 'error'}
                                     />
-                                    <InputLabel>
-                                        {t('options.market.trade-options.place-order.amount-label', {
-                                            orderSide: 'sell',
-                                        })}
-                                    </InputLabel>
+                                    {window.innerWidth < 900 ? (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.amount-label-mobile')}
+                                        </InputLabel>
+                                    ) : (
+                                        <InputLabel>
+                                            {t('options.market.trade-options.place-order.amount-label', {
+                                                orderSide: 'sell',
+                                            })}
+                                        </InputLabel>
+                                    )}
                                     <CurrencyLabel className={!sellShort ? 'disabled' : ''}>
                                         {SYNTHS_MAP.sSHORT}
                                     </CurrencyLabel>
