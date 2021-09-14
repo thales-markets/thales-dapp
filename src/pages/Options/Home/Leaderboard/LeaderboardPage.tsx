@@ -3,14 +3,20 @@ import ROUTES from 'constants/routes';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
+import { Background, Button, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import TradingCompetition from './TradingCompetition';
+import twitter from 'assets/images/twitter.svg';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getWalletAddress } from 'redux/modules/wallet';
 
 const LeaderboardPage: React.FC = () => {
     const { t } = useTranslation();
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedTab, setSelectedTab] = useState('trading-competition');
+    const [accVerified, setAccVerified] = useState(false);
 
     const optionsTabContent: Array<{
         id: string;
@@ -37,15 +43,66 @@ const LeaderboardPage: React.FC = () => {
         [t]
     );
 
+    const tweetUrl = useMemo(() => {
+        if (walletAddress) {
+            const url = 'http://localhost:3002/auth/' + walletAddress;
+            fetch(url).then(async (result) => {
+                if ((await result.text()) === 'true') {
+                    console.log('verify');
+                    setAccVerified(true);
+                }
+            });
+
+            return 'https://twitter.com/intent/tweet?text=' + TWEET_TEXT + walletAddress;
+        } else {
+            return '';
+        }
+    }, [walletAddress]);
+
+    const checkAddress = async () => {
+        window.open(tweetUrl, '_blank');
+        let attempt = 0;
+        const intervalId = setInterval(async () => {
+            attempt = attempt + 1;
+            if (attempt > 5) {
+                console.log('clear');
+                clearInterval(intervalId);
+            }
+            const baseUrl = 'http://localhost:3002/twitter/' + walletAddress;
+            const response = await fetch(baseUrl);
+            const result = JSON.parse(await response.text());
+            console.log(result);
+            if (result) {
+                console.log('clear');
+                setAccVerified(true);
+                clearInterval(intervalId);
+            }
+        }, 5000);
+    };
+
     return (
-        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
-            <Container>
+        <Background style={{ minHeight: '100vh' }}>
+            <Wrapper>
                 <FlexDivColumn className="leaderboard">
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
+                    {walletAddress && !accVerified && (
+                        <Button
+                            className="primary"
+                            style={{
+                                alignSelf: 'center',
+                                margin: '40px auto',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                            onClick={checkAddress}
+                        >
+                            <Image src={twitter} style={{ height: 32, width: 32, marginRight: 8 }}></Image>
+                            <Text className="text-m pale-grey bold">Verify Account</Text>
+                        </Button>
+                    )}
                 </FlexDivColumn>
-            </Container>
-            <Container>
-                <MainContent>
+
+                <FlexDivColumn>
                     <LeaderboardTitle className="pale-grey">Leaderboards</LeaderboardTitle>
                     <MainContentContainer>
                         <OptionsTabContainer>
@@ -69,27 +126,13 @@ const LeaderboardPage: React.FC = () => {
                             {/* {selectedTab === 'profile' && <Profile />} */}
                         </WidgetsContainer>
                     </MainContentContainer>
-                </MainContent>
-            </Container>
+                </FlexDivColumn>
+            </Wrapper>
         </Background>
     );
 };
 
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: min(100%, 1440px);
-    margin: auto;
-    @media (max-width: 768px) {
-        flex-direction: column;
-        width: 100%;
-    }
-`;
-
-const MainContent = styled(FlexDivColumn)`
-    padding: 20px 108px;
-`;
+const TWEET_TEXT = 'Please let me join the Thales trading competition with address ';
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
