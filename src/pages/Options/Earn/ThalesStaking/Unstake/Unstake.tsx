@@ -38,9 +38,8 @@ type Properties = {
     setThalesBalance: (staked: string) => void;
 };
 
-// week 7 * 24 * 60 * 60 * 1000
-const addWeek = (date: Date) => {
-    return new Date(date.getTime() + 60 * 1000);
+const addDurationPeriod = (date: Date, unstakeDurationPeriod: number) => {
+    return new Date(date.getTime() + unstakeDurationPeriod);
 };
 
 const Unstake: React.FC<Properties> = ({
@@ -74,9 +73,9 @@ const Unstake: React.FC<Properties> = ({
                 : null,
         [customGasPrice, ethGasPriceQuery.data, gasSpeed]
     );
-
+    const [unstakeDurationPeriod, setUnstakeDurationPeriod] = useState<number>(7 * 24 * 60 * 60);
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
-    const [unstakeEndTime, setUnstakeEndTime] = useState<Date>(addWeek(new Date()));
+    const [unstakeEndTime, setUnstakeEndTime] = useState<Date>(addDurationPeriod(new Date(), unstakeDurationPeriod));
     const [amountToUnstake, setAmountToUnstake] = useState<string>('0');
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
     const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
@@ -86,11 +85,13 @@ const Unstake: React.FC<Properties> = ({
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { isUnstaking, unstakingAmount, lastUnstakeTime } = stakingThalesQuery.data;
+            const { isUnstaking, unstakingAmount, lastUnstakeTime, unstakeDurationPeriod } = stakingThalesQuery.data;
             setIsUnstakingInContract(isUnstaking);
             setUnstakingAmount(unstakingAmount);
+            setUnstakeDurationPeriod(unstakeDurationPeriod);
+
             if (isUnstaking) {
-                setUnstakeEndTime(addWeek(new Date(lastUnstakeTime)));
+                setUnstakeEndTime(addDurationPeriod(new Date(lastUnstakeTime), unstakeDurationPeriod));
             }
         }
     }, [stakingThalesQuery.isSuccess, stakingThalesQuery.data]);
@@ -156,6 +157,7 @@ const Unstake: React.FC<Properties> = ({
 
         if (gasPrice !== null) {
             try {
+                setTxErrorMessage(null);
                 setIsUnstaking(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const tx = await stakingThalesContractWithSigner.unstake({
@@ -176,7 +178,7 @@ const Unstake: React.FC<Properties> = ({
                         setThalesBalance(ethers.utils.formatEther(newThalesBalance));
                         setUnstakingAmount('0');
                         setAmountToUnstake('0');
-                        setUnstakeEndTime(addWeek(new Date()));
+                        setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
                         setUnstakingEnded(false);
                     }
                 }
@@ -192,8 +194,14 @@ const Unstake: React.FC<Properties> = ({
             return (
                 <Button className="primary" onClick={handleUnstakeThales} disabled={!unstakingEnded || isUnstaking}>
                     {!isUnstaking
-                        ? t('options.earn.thales-staking.unstake.unstake')
-                        : t('options.earn.thales-staking.unstake.unstaking')}
+                        ? `${t('options.earn.thales-staking.unstake.unstake')} ${formatCurrencyWithKey(
+                              THALES_CURRENCY,
+                              unstakingAmount
+                          )}`
+                        : `${t('options.earn.thales-staking.unstake.unstaking')} ${formatCurrencyWithKey(
+                              THALES_CURRENCY,
+                              unstakingAmount
+                          )}`}
                 </Button>
             );
         }
@@ -205,8 +213,14 @@ const Unstake: React.FC<Properties> = ({
                 disabled={isUnstaking || !+amountToUnstake}
             >
                 {!isUnstaking
-                    ? t('options.earn.thales-staking.unstake.start-unstaking')
-                    : t('options.earn.thales-staking.unstake.unstaking')}
+                    ? `${t('options.earn.thales-staking.unstake.start-unstaking')} ${formatCurrencyWithKey(
+                          THALES_CURRENCY,
+                          amountToUnstake
+                      )}`
+                    : `${t('options.earn.thales-staking.unstake.unstaking')} ${formatCurrencyWithKey(
+                          THALES_CURRENCY,
+                          amountToUnstake
+                      )}...`}
             </Button>
         );
     };

@@ -64,7 +64,7 @@ const Vest: React.FC = () => {
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setClaimable(escrowThalesQuery.data.claimable);
         }
-    }, [escrowThalesQuery.isSuccess]);
+    }, [escrowThalesQuery.isSuccess, escrowThalesQuery.data]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {

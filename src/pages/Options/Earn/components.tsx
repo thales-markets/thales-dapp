@@ -79,11 +79,11 @@ export const ButtonContainerBottom = styled(ButtonContainer)`
     justify-content: flex-end;
 `;
 
-export const ClaimMessage = styled.div<{ invisible?: boolean }>`
+export const ClaimMessage = styled.div<{ invisible?: boolean; color?: string }>`
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.25px;
-    color: #ffcc00;
+    color: ${(props) => (props.color ? props.color : '#ffcc00')};
     margin-top: 10px;
     visibility: ${(props) => (props.invisible ? 'hidden' : 'visible')};
 `;

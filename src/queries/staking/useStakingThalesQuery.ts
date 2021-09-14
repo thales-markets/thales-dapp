@@ -11,6 +11,7 @@ type StakingThalesQueryResponse = {
     lastUnstakeTime: number;
     isUnstaking: boolean;
     unstakingAmount: string;
+    unstakeDurationPeriod: number;
 };
 
 const useStakingThalesQuery = (
@@ -27,15 +28,24 @@ const useStakingThalesQuery = (
                 unstakingAmount: '0',
                 lastUnstakeTime: Date.now(),
                 isUnstaking: false,
+                unstakeDurationPeriod: 7 * 24 * 60 * 60, // one week
             };
 
             try {
-                const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([
+                const [
+                    isUnstaking,
+                    lastUnstakeTime,
+                    thalesStaked,
+                    unstakingAmount,
+                    rewards,
+                    unstakeDurationPeriod,
+                ] = await Promise.all([
                     await (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
+                    await (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
                 ]);
 
                 staking.isUnstaking = isUnstaking;
@@ -43,6 +53,7 @@ const useStakingThalesQuery = (
                 staking.thalesStaked = ethers.utils.formatEther(thalesStaked);
                 staking.unstakingAmount = ethers.utils.formatEther(unstakingAmount);
                 staking.rewards = bigNumberFormatter(rewards);
+                staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
             } catch {}
 
             return staking;

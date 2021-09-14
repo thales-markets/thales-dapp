@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { ClaimTitle, EarnSection, EarnSymbol, SectionContent, SectionHeader } from '../../components';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ClaimMessage, ClaimTitle, EarnSection, EarnSymbol, SectionContent, SectionHeader } from '../../components';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
@@ -11,6 +11,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../.
 import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
 import ComingSoon from 'components/ComingSoon';
+import styled from 'styled-components';
 
 type Properties = {
     thalesStaked: string;
@@ -34,11 +35,13 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+    const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { thalesStaked } = stakingThalesQuery.data;
+            const { thalesStaked, unstakingAmount } = stakingThalesQuery.data;
             setThalesStaked(thalesStaked);
+            setUnstakingAmount(unstakingAmount);
         }
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
@@ -47,48 +50,105 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
 
     const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
 
+    const notEligibleForStakingRewards = useMemo(() => {
+        return !+thalesStaked && !!+escrowedBalance;
+    }, [thalesStaked, escrowedBalance]);
+
     return (
         <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}>
             <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
-                <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
-                    <FlexDivColumnCentered>
-                        <ClaimTitle>{t('options.earn.thales-staking.my-stake.staked-in-contract')}:</ClaimTitle>
-                        <GradientText
-                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                            fontSize={25}
-                            fontWeight={600}
-                        >
-                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                        </GradientText>
-                    </FlexDivColumnCentered>
-                    <EarnSymbol>+</EarnSymbol>
-                    <FlexDivColumnCentered>
-                        <ClaimTitle>{t('options.earn.thales-staking.my-stake.locked-in-escrow')}:</ClaimTitle>
-                        <GradientText
-                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                            fontSize={25}
-                            fontWeight={600}
-                        >
-                            {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
-                        </GradientText>
-                    </FlexDivColumnCentered>
-                    <EarnSymbol>=</EarnSymbol>
-                    <FlexDivColumnCentered>
-                        <ClaimTitle>{t('options.earn.thales-staking.my-stake.total-staked')}:</ClaimTitle>
-                        <GradientText
-                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                            fontSize={25}
-                            fontWeight={600}
-                        >
-                            {formatCurrencyWithKey(THALES_CURRENCY, Number(escrowedBalance) + Number(thalesStaked))}
-                        </GradientText>
-                    </FlexDivColumnCentered>
-                </SectionContent>
+                <>
+                    <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
+                        <FlexDivColumnCentered>
+                            <StyledClaimTitle>
+                                {t('options.earn.thales-staking.my-stake.staked-in-contract')}:
+                                {!!+unstakingAmount && (
+                                    <UnstakingDiv>
+                                        <UnstakingTitle>{`${t(
+                                            'options.earn.thales-staking.unstake.unstaking'
+                                        )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}</UnstakingTitle>
+                                    </UnstakingDiv>
+                                )}
+                            </StyledClaimTitle>
+                            <GradientText
+                                gradient={
+                                    notEligibleForStakingRewards
+                                        ? '#ffcc00'
+                                        : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                }
+                                fontSize={25}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                            </GradientText>
+                        </FlexDivColumnCentered>
+                        <EarnSymbol>+</EarnSymbol>
+                        <FlexDivColumnCentered>
+                            <StyledClaimTitle>
+                                {t('options.earn.thales-staking.my-stake.locked-in-escrow')}:
+                            </StyledClaimTitle>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={25}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}
+                            </GradientText>
+                        </FlexDivColumnCentered>
+                        <EarnSymbol>=</EarnSymbol>
+                        <FlexDivColumnCentered>
+                            <StyledClaimTitle>
+                                {t('options.earn.thales-staking.my-stake.total-staked')}:
+                            </StyledClaimTitle>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={25}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, Number(escrowedBalance) + Number(thalesStaked))}
+                            </GradientText>
+                        </FlexDivColumnCentered>
+                    </SectionContent>
+                    {notEligibleForStakingRewards && (
+                        <ClaimMessage style={{ marginTop: 0 }}>
+                            {t('options.earn.thales-staking.my-stake.not-eligible-message')}
+                        </ClaimMessage>
+                    )}
+                </>
             )}
         </EarnSection>
     );
 };
+
+const UnstakingDiv = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -118%);
+    display: flex;
+    justify-content: center;
+`;
+
+const UnstakingTitle = styled.div`
+    position: absolute;
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    border-radius: 5px;
+    padding: 0 5px;
+    border: 1px solid #00d1ff;
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 0.4px;
+    color: #f6f6fe;
+    top: 0;
+`;
+
+const StyledClaimTitle = styled(ClaimTitle)`
+    position: relative;
+    padding-bottom: 10px;
+`;
 
 export default MyStake;

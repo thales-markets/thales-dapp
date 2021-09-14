@@ -292,7 +292,7 @@
                 "tab-title": "Staking",
                 "stake": {
                     "stake": "Stake",
-                    "staking": "Staking...",
+                    "staking": "Staking",
                     "available-to-stake": "Available to stake",
                     "amount-to-stake": "Amount to stake",
                     "confirmation-message": "Tokens successfully staked"
@@ -301,18 +301,20 @@
                     "my-stake": "My Staking Balance",
                     "staked-in-contract": "Staked directly",
                     "locked-in-escrow": "Escrowed balance",
-                    "total-staked": "Total staked balance"
+                    "total-staked": "Total staked balance",
+                    "not-eligible-message": "You are not eligible for staking rewards unless you stake THALES directly",
+                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
                 },
                 "unstake": {
                     "unstake": "Unstake",
-                    "unlock-cooldown-text": "Start unlocking cooldown during which you will not be eligible for rewards for",
+                    "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance",
                     "cooldown-started-text": "You can unstake {{amount}}",
                     "cooldown-ended-text": "You can now unstake {{amount}}",
                     "start-unstaking": "Start unstaking",
-                    "unstaking": "Unstaking...",
-                    "amount-to-unstake": "Amount to unstake",
-                    "cooldown-confirmation-message": "Unstaking successfully stated",
-                    "unstake-confirmation-message": "Tokens successfully unstaked"
+                    "cooldown-confirmation-message": "Unstaking successfully started",
+                    "unstake-confirmation-message": "Tokens successfully unstaked",
+                    "unstaking": "Unstaking",
+                    "amount-to-unstake": "Amount to unstake"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -347,7 +349,7 @@
                     "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
                 },
                 "lp-staking": {
-                    "title": "You can provide liquidity for THALES/ETH pair  and earn double rewards THALES + DODO",
+                    "title": "You can provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",
                     "button-text": "Click here to earn double rewards"
                 }
             },

@@ -153,8 +153,14 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 className="primary"
             >
                 {!isStaking
-                    ? t('options.earn.thales-staking.stake.stake')
-                    : t('options.earn.thales-staking.stake.staking')}
+                    ? `${t('options.earn.thales-staking.stake.stake')} ${formatCurrencyWithKey(
+                          THALES_CURRENCY,
+                          amountToStake
+                      )}`
+                    : `${t('options.earn.thales-staking.stake.staking')} ${formatCurrencyWithKey(
+                          THALES_CURRENCY,
+                          amountToStake
+                      )}...`}
             </Button>
         );
     };
