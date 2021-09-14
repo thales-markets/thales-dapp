@@ -75,7 +75,6 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
             ? '>'
             : '<';
 
-    console.log(orders);
     return (
         <Wrapper>
             {orders.map((order: ExtendedOrderItem, index) => {
