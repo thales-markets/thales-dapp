@@ -30,12 +30,12 @@ const Profile: React.FC<any> = () => {
     // const extractMintsProfileData = () => {
     //     const mintsMap = new Map();
     //     profile?.mints.map((mint: any) => {
-    //         if (mintsMap.get(JSON.stringify(mint.market))) {
-    //             const txsPerMarket = mintsMap.get(JSON.stringify(mint.market));
+    //         if (mintsMap.get(mint.market.address)) {
+    //             const txsPerMarket = mintsMap.get(mint.market.address);
     //             txsPerMarket.push(mint.tx);
-    //             mintsMap.set(JSON.stringify(mint.market), txsPerMarket);
+    //             mintsMap.set(mint.market.address, txsPerMarket);
     //         } else {
-    //             mintsMap.set(JSON.stringify(mint.market), [mint.tx]);
+    //             mintsMap.set(mint.market.address, [mint.tx]);
     //         }
     //     });
     //     return mintsMap;
@@ -44,12 +44,12 @@ const Profile: React.FC<any> = () => {
     // const extractTradesProfileData = () => {
     //     const tradesMap = new Map();
     //     profile?.trades.map((trade: any) => {
-    //         if (tradesMap.get(JSON.stringify(trade.market))) {
-    //             const tradesPerMarket = tradesMap.get(JSON.stringify(trade.market));
+    //         if (tradesMap.get(trade.market.address)) {
+    //             const tradesPerMarket = tradesMap.get(trade.market.address);
     //             tradesPerMarket.push(trade.trade);
-    //             tradesMap.set(JSON.stringify(trade.market), tradesPerMarket);
+    //             tradesMap.set(trade.market.address, tradesPerMarket);
     //         } else {
-    //             tradesMap.set(JSON.stringify(trade.market), [trade.trade]);
+    //             tradesMap.set(trade.market.address, [trade.trade]);
     //         }
     //     });
     //     return tradesMap;
@@ -58,15 +58,29 @@ const Profile: React.FC<any> = () => {
     // const extractExcercisesProfileData = () => {
     //     const excercisesMap = new Map();
     //     profile?.excercises.map((excercise: any) => {
-    //         if (excercisesMap.get(JSON.stringify(excercise.market))) {
-    //             const txsPerMarket = excercisesMap.get(JSON.stringify(excercise.market));
+    //         if (excercisesMap.get(excercise.market.address)) {
+    //             const txsPerMarket = excercisesMap.get(excercise.market.address);
     //             txsPerMarket.push(excercise.tx);
-    //             excercisesMap.set(JSON.stringify(excercise.market), txsPerMarket);
+    //             excercisesMap.set(excercise.market.address, txsPerMarket);
     //         } else {
-    //             excercisesMap.set(JSON.stringify(excercise.market), [excercise.tx]);
+    //             excercisesMap.set(excercise.market.address, [excercise.tx]);
     //         }
     //     });
     //     return excercisesMap;
+    // };
+
+    // const extractUnclaimedProfileData = () => {
+    //     const unclaimedMap = new Map();
+    //     profile?.excercises.map((unclaimed: any) => {
+    //         if (unclaimedMap.get(unclaimed.market.address)) {
+    //             const txsPerMarket = unclaimedMap.get(unclaimed.market.address);
+    //             txsPerMarket.push(unclaimed.tx);
+    //             unclaimedMap.set(unclaimed.market.address, txsPerMarket);
+    //         } else {
+    //             unclaimedMap.set(unclaimed.market.address, [unclaimed.tx]);
+    //         }
+    //     });
+    //     return unclaimedMap;
     // };
 
     return <FlexDivColumnCentered className="leaderboard__wrapper"></FlexDivColumnCentered>;
