@@ -339,7 +339,7 @@ const StyledMaterialTooltip = withStyles(() => ({
         background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
         borderRadius: '23px',
         border: '1px solid #7119e1',
-        padding: '16px',
+        padding: '15px',
         fontSize: '14px',
         lineHeight: '24px',
         letterSpacing: '0.4px',

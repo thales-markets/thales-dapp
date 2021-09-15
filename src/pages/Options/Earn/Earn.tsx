@@ -61,7 +61,7 @@ const EarnPage: React.FC = () => {
                 </FlexDivColumn>
             </Container>
             <Container>
-                <MainContent>
+                <FlexDivColumn>
                     <EarnTitle className="pale-grey">{t('options.earn.title')}</EarnTitle>
                     <MainContentContainer>
                         <OptionsTabContainer>
@@ -95,7 +95,7 @@ const EarnPage: React.FC = () => {
                             {selectedTab === 'lp-staking' && <LPStaking />}
                         </WidgetsContainer>
                     </MainContentContainer>
-                </MainContent>
+                </FlexDivColumn>
             </Container>
         </Background>
     );
@@ -111,10 +111,8 @@ const Container = styled.div`
         flex-direction: column;
         width: 100%;
     }
-`;
-
-const MainContent = styled(FlexDivColumn)`
-    padding: 20px 108px;
+    padding-left: 120px;
+    padding-right: 30px;
 `;
 
 const MainContentContainer = styled.div`
