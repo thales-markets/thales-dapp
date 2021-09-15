@@ -1,12 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-    EarnSection,
-    MaxButton,
-    MaxButtonContainer,
-    SectionContentContainer,
-    SectionHeader,
-    StyledMaterialTooltip,
-} from '../../components';
+import { EarnSection, MaxButton, MaxButtonContainer, SectionContentContainer, SectionHeader } from '../../components';
 import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
@@ -35,6 +28,8 @@ import ComingSoon from 'components/ComingSoon';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
+import { withStyles } from '@material-ui/core';
+import MaterialTooltip from '@material-ui/core/Tooltip';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -86,6 +81,7 @@ const Unstake: React.FC<Properties> = ({
     const [amountToUnstake, setAmountToUnstake] = useState<string>('0');
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
     const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
+    const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -127,6 +123,7 @@ const Unstake: React.FC<Properties> = ({
 
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
+        setShowTooltip(false);
 
         if (gasPrice !== null) {
             try {
@@ -146,6 +143,8 @@ const Unstake: React.FC<Properties> = ({
                     if (rawData && rawData.decode) {
                         const newThalesStaked = ethers.utils.parseEther(thalesStaked).sub(amount);
                         refetchUserTokenTransactions(walletAddress, networkId);
+                        setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
+                        setUnstakingEnded(false);
                         setIsUnstaking(false);
                         setIsUnstakingInContract(true);
                         setThalesStaked(ethers.utils.formatEther(newThalesStaked));
@@ -185,8 +184,7 @@ const Unstake: React.FC<Properties> = ({
                         setThalesBalance(ethers.utils.formatEther(newThalesBalance));
                         setUnstakingAmount('0');
                         setAmountToUnstake('0');
-                        setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
-                        setUnstakingEnded(false);
+                        setUnstakingEnded(true);
                     }
                 }
             } catch (e) {
@@ -215,12 +213,20 @@ const Unstake: React.FC<Properties> = ({
 
         return (
             <StyledMaterialTooltip
+                arrow={true}
+                open={showTooltip}
                 disableHoverListener={isUnstaking || !+amountToUnstake}
                 disableTouchListener={isUnstaking || !+amountToUnstake}
-                arrow={true}
                 title={t('options.earn.thales-staking.unstake.start-unstaking-tooltip') as string}
+                placement="top"
             >
                 <Button
+                    onMouseOver={() => {
+                        setShowTooltip(true);
+                    }}
+                    onMouseOut={() => {
+                        setShowTooltip(false);
+                    }}
                     className="primary"
                     onClick={handleStartUnstakingThales}
                     disabled={isUnstaking || !+amountToUnstake}
@@ -318,9 +324,28 @@ const Unstake: React.FC<Properties> = ({
 };
 
 const UnstakingTitleText = styled.span`
-    text-align: center;
     font-size: 16px;
     line-height: 24px;
 `;
+
+const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #7119e1',
+        },
+        color: '#04045A',
+    },
+    tooltip: {
+        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
+        borderRadius: '23px',
+        border: '1px solid #7119e1',
+        padding: '16px',
+        fontSize: '14px',
+        lineHeight: '24px',
+        letterSpacing: '0.4px',
+        color: '#F6F6FE',
+        maxWidth: 330,
+    },
+}))(MaterialTooltip);
 
 export default Unstake;
