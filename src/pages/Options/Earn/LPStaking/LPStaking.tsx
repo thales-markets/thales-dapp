@@ -10,9 +10,11 @@ const LPStaking: React.FC = () => {
         <LPStakingSection style={{ gridColumn: 'span 10' }}>
             <LPStakingTitle>{t('options.earn.vesting.lp-staking.title')}</LPStakingTitle>
             <FlexDivCentered>
-                <Button className="secondary" onClick={() => {}}>
-                    {t('options.earn.vesting.lp-staking.button-text')}
-                </Button>
+                <a target="_blank" rel="noreferrer" href="#">
+                    <Button className="secondary" onClick={() => {}}>
+                        {t('options.earn.vesting.lp-staking.button-text')}
+                    </Button>
+                </a>
             </FlexDivCentered>
         </LPStakingSection>
     );
@@ -35,7 +37,7 @@ const LPStakingTitle = styled(FlexDivCentered)`
     font-weight: 600;
     font-size: 30px;
     line-height: 72px;
-    padding: 10px 65px 60px 65px;
+    padding: 10px 85px 60px 85px;
     text-align: center;
 `;
 
