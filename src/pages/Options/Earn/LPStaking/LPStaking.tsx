@@ -10,7 +10,11 @@ const LPStaking: React.FC = () => {
         <LPStakingSection style={{ gridColumn: 'span 10' }}>
             <LPStakingTitle>{t('options.earn.vesting.lp-staking.title')}</LPStakingTitle>
             <FlexDivCentered>
-                <a target="_blank" rel="noreferrer" href="#">
+                <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://app.dodoex.io/pool/list/0x031816fd297228e4fd537c1789d51509247d0b43?network=mainnet"
+                >
                     <Button className="secondary" onClick={() => {}}>
                         {t('options.earn.vesting.lp-staking.button-text')}
                     </Button>
