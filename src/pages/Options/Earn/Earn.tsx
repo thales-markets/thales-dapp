@@ -11,6 +11,7 @@ import LPStaking from './LPStaking';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
+import TokenOverview from './components/TokenOverview';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -63,6 +64,7 @@ const EarnPage: React.FC = () => {
             <Container>
                 <FlexDivColumn>
                     <EarnTitle className="pale-grey">{t('options.earn.title')}</EarnTitle>
+                    <TokenOverview />
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (

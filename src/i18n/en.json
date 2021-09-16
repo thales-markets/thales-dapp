@@ -406,6 +406,12 @@
                     "addToEscrow": "Add to escrow",
                     "vest": "Vest"
                 }
+            },
+            "overview": {
+                "price-label": "Price",
+                "price-tooltip": "View DODO pool",
+                "circulating-supply-label": "Circulating supply",
+                "total-supply-label": "Total supply"
             }
         },
         "quiz": {
