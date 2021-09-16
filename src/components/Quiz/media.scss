@@ -25,13 +25,13 @@
         }
         &__content {
             &__page-number {
-                display: block;
-                float: left;
-                margin: 0% 19.5%;
-                margin-top: 45px;
                 font-size: 16px;
                 line-height: 32px;
+                display: flex;
                 letter-spacing: 0.35px;
+                width: 100%;
+                text-align: center;
+                justify-content: center;
             }
             &__radio-form {
                 display: block !important;
@@ -157,4 +157,32 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+@media screen and (max-width: 767px) {
+    .quiz {
+        &__modal-dialog {
+            &__content {
+                overflow-y: hidden;
+                &__radio-form {
+                    width: 100%;
+                    margin: 15px 0px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .quiz {
+        &__modal-dialog {
+            &__content {
+                overflow-y: hidden;
+                &__radio-form {
+                    width: 100%;
+                    margin: 15px 0px;
+                }
+            }
+        }
+    }
 }

@@ -171,8 +171,8 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                             style={{
                                 display: 'block',
                                 float: 'left',
-                                marginBottom: '30px',
-                                marginLeft: '20px',
+                                marginBottom: '10px',
+                                marginLeft: window.innerWidth > 767 ? '20px' : '0px',
                             }}
                         >
                             <Button
@@ -182,27 +182,27 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     height: '40px',
                                 }}
                             >
-                                <LinkImage
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    href="https://discord.gg/cFGv5zyVEj"
-                                    style={{ color: 'white', verticalAlign: 'top' }}
-                                >
-                                    {t('options.quiz.discord-button')}
-                                </LinkImage>
+                                {window.innerWidth > 767 ? (
+                                    <LinkImage
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://discord.gg/cFGv5zyVEj"
+                                        style={{ color: 'white', verticalAlign: 'top' }}
+                                    >
+                                        {t('options.quiz.discord-button')}
+                                    </LinkImage>
+                                ) : (
+                                    'Discord'
+                                )}
                             </Button>
                         </ButtonContainer>
-                        {quizData.length > 6 && (
-                            <div className="pale-grey quiz__modal-dialog__content__page-number">
-                                {pageNumber + 1 + ' of ' + numberOfPages()}
-                            </div>
-                        )}
+
                         <ButtonContainer
                             style={{
                                 display: 'block',
                                 float: 'right',
-                                marginBottom: '30px',
-                                marginRight: '25px',
+                                marginBottom: '10px',
+                                marginRight: window.innerWidth > 767 ? '25px' : '0px',
                             }}
                         >
                             {quizData.length === answeredQuestionsTotal.length || pageNumber + 1 === numberOfPages() ? (
@@ -213,7 +213,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                         background: '#3936C7',
                                     }}
                                 >
-                                    {t('options.quiz.submit-answers')}
+                                    {window.innerWidth > 900 ? t('options.quiz.submit-answers') : 'Submit'}
                                 </Button>
                             ) : (
                                 <Button
@@ -227,6 +227,11 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                 </Button>
                             )}
                         </ButtonContainer>
+                        {quizData.length > 6 && (
+                            <div className="pale-grey quiz__modal-dialog__content__page-number">
+                                {pageNumber + 1 + ' of ' + numberOfPages()}
+                            </div>
+                        )}
                     </form>
                 </DialogContent>
             </Dialog>
