@@ -182,18 +182,14 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     height: '40px',
                                 }}
                             >
-                                {window.innerWidth > 767 ? (
-                                    <LinkImage
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href="https://discord.gg/cFGv5zyVEj"
-                                        style={{ color: 'white', verticalAlign: 'top' }}
-                                    >
-                                        {t('options.quiz.discord-button')}
-                                    </LinkImage>
-                                ) : (
-                                    'Discord'
-                                )}
+                                <LinkImage
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href="https://discord.gg/cFGv5zyVEj"
+                                    style={{ color: 'white', verticalAlign: 'top' }}
+                                >
+                                    {window.innerWidth > 767 ? t('options.quiz.discord-button') : 'Discord'}
+                                </LinkImage>
                             </Button>
                         </ButtonContainer>
 
