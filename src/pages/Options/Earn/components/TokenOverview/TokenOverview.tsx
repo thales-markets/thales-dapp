@@ -140,7 +140,7 @@ const StyledLink = styled.a`
 const ArrowIcon = styled(ArrowHyperlinkIcon)``;
 
 const CustomIcon = styled(Image)`
-    margin-right: 6px;
+    margin-right: 10px;
     width: 40px;
     height: 40px;
 `;
