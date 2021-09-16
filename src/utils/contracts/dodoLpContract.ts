@@ -1,4 +1,5 @@
 export const dodoLpContract = {
+    address: '0x031816fd297228e4fd537c1789d51509247d0b43',
     abi: [
         {
             anonymous: false,

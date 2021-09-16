@@ -80,5 +80,5 @@ export type StakingReward = {
 export type TokenInfo = {
     totalSupply: number;
     circulatingSupply: number;
-    price: number;
+    price?: number;
 };

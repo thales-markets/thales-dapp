@@ -16,13 +16,15 @@ import { LightTooltip } from 'pages/Options/Market/components';
 import { LINKS } from 'constants/links';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
+import { getNetworkId } from 'redux/modules/wallet';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [tokenInfo, setTokenInfo] = useState<TokenInfo | undefined>(undefined);
 
-    const tokenInfoQuery = useTokenInfoQuery({
+    const tokenInfoQuery = useTokenInfoQuery(networkId, {
         enabled: isAppReady,
     });
 
@@ -48,14 +50,16 @@ export const TokentOverview: React.FC = () => {
                 <ItemContainer>
                     <Title>{t('options.earn.overview.price-label')}</Title>
                     <Content>
-                        <LightTooltip title={t('options.earn.overview.price-tooltip')}>
-                            <StyledLink href={LINKS.Token.DodoPool} target="_blank" rel="noreferrer">
-                                {tokenInfo && ethRate !== null
-                                    ? formatCurrencyWithSign(USD_SIGN, tokenInfo.price * ethRate)
-                                    : EMPTY_VALUE}
-                                <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
-                            </StyledLink>
-                        </LightTooltip>
+                        {tokenInfo && tokenInfo.price && ethRate !== null ? (
+                            <LightTooltip title={t('options.earn.overview.price-tooltip')}>
+                                <StyledLink href={LINKS.Token.DodoPool} target="_blank" rel="noreferrer">
+                                    {formatCurrencyWithSign(USD_SIGN, tokenInfo.price * ethRate)}
+                                    <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                                </StyledLink>
+                            </LightTooltip>
+                        ) : (
+                            <>{EMPTY_VALUE}</>
+                        )}
                     </Content>
                 </ItemContainer>
                 <ItemContainer>
