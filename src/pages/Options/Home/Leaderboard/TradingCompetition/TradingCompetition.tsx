@@ -82,7 +82,6 @@ const TradingCompetition: React.FC<any> = () => {
 
     const profile = useMemo(() => {
         if (profiles && walletAddress) {
-            console.log(profiles, walletAddress);
             return profiles.get(walletAddress.trim().toLowerCase());
         }
     }, [profiles, walletAddress]);

@@ -1,16 +1,16 @@
-import React from 'react';
+import twitter from 'assets/images/twitter.svg';
 import ROUTES from 'constants/routes';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Button, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
+import Profile from './Profile';
 import TradingCompetition from './TradingCompetition';
-import twitter from 'assets/images/twitter.svg';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
 
 const LeaderboardPage: React.FC = () => {
     const { t } = useTranslation();
@@ -123,7 +123,7 @@ const LeaderboardPage: React.FC = () => {
                         <WidgetsContainer>
                             {selectedTab === 'trading-competition' && <TradingCompetition />}
                             {selectedTab === 'leaderboard' && <LeaderboardTable />}
-                            {/* {selectedTab === 'profile' && <Profile />} */}
+                            {selectedTab === 'profile' && <Profile />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </FlexDivColumn>
