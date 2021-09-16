@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -22,6 +22,9 @@ import {
     EarnSection,
     SectionContentContainer,
     SectionHeader,
+    StyledMaterialTooltip,
+    TooltipLink,
+    StyledInfoIcon,
 } from '../../components';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { refetchRetroAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
@@ -35,6 +38,7 @@ import { Quiz } from 'components/Quiz/Quiz';
 import { QuizQuestion } from 'components/Quiz/QuizQuestion';
 import { airdropClaimQuizQuestions } from 'i18n/quizQuestions';
 import { dispatchMarketNotification } from 'utils/options';
+import { LINKS } from 'constants/links';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -170,9 +174,25 @@ const RetroAirdrop: React.FC = () => {
 
     return (
         <EarnSection style={{ gridColumn: 'span 4' }}>
-            <SectionHeader>{t('options.earn.snx-stakers.retro-airdrop.title')}</SectionHeader>
+            <SectionHeader>
+                <div>
+                    {t('options.earn.snx-stakers.retro-airdrop.title')}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey="options.earn.snx-stakers.retro-airdrop.info-tooltip"
+                                components={[<div key="1" />, <span key="3" />, <EligibilityLink key="2" />]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </div>
+            </SectionHeader>
             <SectionContentContainer>
-                <ClaimItem>
+                <ClaimItem style={{ marginBottom: 0, marginTop: 30 }}>
                     <ClaimTitle>{t('options.earn.snx-stakers.airdropped-amount')}:</ClaimTitle>
                     <GradientText
                         gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
@@ -181,6 +201,11 @@ const RetroAirdrop: React.FC = () => {
                     >
                         {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0, 0, true)}
                     </GradientText>
+                </ClaimItem>
+                <ClaimItem style={{ marginBottom: 0 }}>
+                    <ClaimTitle style={{ paddingBottom: 0 }}>
+                        {t('options.earn.snx-stakers.retro-airdrop.claim-end-label')}
+                    </ClaimTitle>
                 </ClaimItem>
                 {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
                 <ButtonContainerBottom>
@@ -210,5 +235,11 @@ const RetroAirdrop: React.FC = () => {
         </EarnSection>
     );
 };
+
+const EligibilityLink: React.FC = () => (
+    <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroAirdropEligibilitySheet}>
+        sheet
+    </TooltipLink>
+);
 
 export default RetroAirdrop;

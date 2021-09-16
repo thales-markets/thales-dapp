@@ -95,6 +95,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        Info: (networkId: NetworkId) => ['token', 'info', networkId],
     },
 };
 

@@ -76,3 +76,10 @@ export type StakingReward = {
     claimed: boolean;
     reward?: Reward;
 };
+
+export type TokenInfo = {
+    totalSupply: number;
+    circulatingSupply: number;
+    price?: number;
+    marketCap?: number;
+};

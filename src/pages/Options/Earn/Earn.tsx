@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, FlexDivColumn, Text } from '../../../theme/common';
+import { Background, FlexDivCentered, FlexDivColumn } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
@@ -11,6 +11,7 @@ import LPStaking from './LPStaking';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
+import TokenOverview from './components/TokenOverview';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -62,7 +63,7 @@ const EarnPage: React.FC = () => {
             </Container>
             <Container>
                 <FlexDivColumn>
-                    <EarnTitle className="pale-grey">{t('options.earn.title')}</EarnTitle>
+                    <TokenOverview />
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (
@@ -186,12 +187,6 @@ const WidgetsContainer = styled.div`
     border-radius: 15px;
     background: #121776;
     z-index: 0;
-`;
-
-const EarnTitle = styled(Text)`
-    font-size: 39px;
-    padding: 30px;
-    font-weight: 600;
 `;
 
 export default EarnPage;
