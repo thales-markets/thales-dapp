@@ -163,8 +163,11 @@
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
-            "quick-trading-label": "Quick trading"
-        }
+            "quick-trading-label": "Quick trading",
+            "earn-label": "THALES"
+        },
+        "coming-soon": "Coming soon...",
+        "period": "Period"
     },
     "modals": {
         "gwei": {
@@ -189,8 +192,14 @@
             "expiry": "expired"
         },
         "trading-mode": {
-            "buy": "BUY",
-            "sell": "SELL"
+            "buy": "Buy",
+            "sell": "Sell"
+        },
+        "filters-labels": {
+            "category": "Category",
+            "discover": "Discover",
+            "sort-by": "Sort by",
+            "option": "Option"
         },
         "home": {
             "market-card": {
@@ -249,6 +258,170 @@
                 "actions": "actions"
             }
         },
+        "earn": {
+            "title": "THALES",
+            "snx-stakers": {
+                "tab-title": "Retro rewards",
+                "retro-airdrop": {
+                    "title": "Retro Airdrop",
+                    "claimed-message": "You have already claimed the airdrop.",
+                    "not-eligible-message": "You are not eligible for this airdrop.",
+                    "complete-quiz-to-claim": "Complete quiz to claim this airdrop.",
+                    "completed-quiz": "Quiz completed! You can claim the airdrop now."
+                },
+                "retro-rewards": {
+                    "title": "Retro unlock",
+                    "not-eligible-message": "You are not eligible for this distribution.",
+                    "learn-more-text": "Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards.",
+                    "learn-more": "Learn more"
+                },
+                "airdropped-amount": "Airdropped amount",
+                "claim": "Claim",
+                "claiming": "Claiming...",
+                "claimed": "Claimed",
+                "claim-unlocked": "Claim Unlocked",
+                "claiming-unlocked": "Claiming",
+                "unlocked": "Unlocked",
+                "locked": "Locked",
+                "total": "Total",
+                "start-time": "Start time",
+                "end-time": "End time",
+                "initial-locked": "Initially Locked",
+                "start-quiz": "Start Quiz",
+                "confirmation-message": "Tokens successfully claimed"
+            },
+            "thales-staking": {
+                "tab-title": "Staking",
+                "stake": {
+                    "stake": "Stake",
+                    "staking": "Staking",
+                    "available-to-stake": "Available to stake",
+                    "amount-to-stake": "Amount to stake",
+                    "confirmation-message": "Tokens successfully staked"
+                },
+                "my-stake": {
+                    "my-stake": "My Staking Balance",
+                    "staked-in-contract": "Staked directly",
+                    "locked-in-escrow": "Escrowed balance",
+                    "total-staked": "Total staked balance",
+                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
+                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
+                },
+                "unstake": {
+                    "unstake": "Unstake",
+                    "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance",
+                    "cooldown-started-text": "You can unstake {{amount}} in",
+                    "cooldown-ended-text": "You can now unstake {{amount}}",
+                    "start-unstaking": "Start unstaking",
+                    "cooldown-confirmation-message": "Unstaking successfully started",
+                    "unstake-confirmation-message": "Tokens successfully unstaked",
+                    "unstaking": "Unstaking",
+                    "amount-to-unstake": "Amount to unstake",
+                    "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES."
+                },
+                "staking-rewards": {
+                    "title": "Staking Rewards",
+                    "amount-to-claim-snx": "As SNX staker",
+                    "amount-to-claim-thales": "As THALES staker",
+                    "period": "Period",
+                    "weekly-rewards": "Weekly rewards",
+                    "total": "Total",
+                    "previous-period": "From previous period",
+                    "claim": "Claim",
+                    "claiming": "Claiming",
+                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                    "not-eligible-message": "You are not eligible for these rewards.",
+                    "paused-message": "Claiming is paused, please try later.",
+                    "confirmation-message": "Tokens successfully claimed",
+                    "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
+                    "learn-more": "Learn more"
+                }
+            },
+            "vesting": {
+                "tab-title": "Vesting",
+                "schedule": {
+                    "title": "Vesting schedule",
+                    "table": {
+                        "date-time-col": "vesting date | time",
+                        "amount-col": "amount",
+                        "no-results": "No vesting schedule found."
+                    }
+                },
+                "vest": {
+                    "available-to-vest": "Available to vest",
+                    "vest": "Vest",
+                    "vesting": "Vesting",
+                    "confirmation-message": "Tokens successfully vested"
+                },
+                "info": {
+                    "title": "Vest your THALES staking rewards in escrow",
+                    "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
+                },
+                "lp-staking": {
+                    "title": "You can provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",
+                    "button-text": "Click here to earn double rewards"
+                }
+            },
+            "lp-staking": {
+                "tab-title": "LP staking"
+            },
+            "thales-airdrop": {
+                "tab-title": "Thales users airdrop"
+            },
+            "table": {
+                "title": "Your activity",
+                "date-time-col": "date | time",
+                "type-col": "type",
+                "amount-col": "amount",
+                "tx-status-col": "tx status",
+                "no-results": {
+                    "all": "No transactions associated with this wallet.",
+                    "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
+                    "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
+                    "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
+                    "stake": "No stake transactions associated with this wallet.",
+                    "startUnstake": "No start unstake transactions associated with this wallet.",
+                    "unstake": "No unstake transactions associated with this wallet.",
+                    "addToEscrow": "No add to escrow transactions associated with this wallet.",
+                    "vest": "No vest transactions associated with this wallet."
+                },
+                "types": {
+                    "claimRetroAirdrop": "Claim retro airdrop",
+                    "claimRetroUnlocked": "Claim retro unlock",
+                    "claimStakingRewards": "Claim staking rewards",
+                    "stake": "Stake",
+                    "startUnstake": "Start unstaking",
+                    "unstake": "Unstake",
+                    "addToEscrow": "Add to escrow",
+                    "vest": "Vest"
+                },
+                "filter": {
+                    "all": "All",
+                    "claimRetroAirdrop": "Retro airdrop",
+                    "claimRetroUnlocked": "Retro unlock",
+                    "claimStakingRewards": "Staking rewards",
+                    "stake": "Stake",
+                    "startUnstake": "Start unstaking",
+                    "unstake": "Unstake",
+                    "addToEscrow": "Add to escrow",
+                    "vest": "Vest"
+                }
+            }
+        },
+        "quiz": {
+            "title": "Quiz",
+            "discord-link": "Discord",
+            "discord-tip": "Ask our Discord community for help",
+            "docs-link": "Docs",
+            "docs-tip": "Find answer in our docs",
+            "discord-button": "Ask in our Discord",
+            "submit-answers": "Submit answers",
+            "next-page": "Next page",
+            "question": {
+                "correct-answer": "Your answer is correct!",
+                "wrong-answer": "Ooops! Wrong answer!"
+            }
+        },
         "create-market": {
             "back-to-markets": "back to markets",
             "title": "Create a new Binary Options market",
@@ -275,6 +448,7 @@
                 "difference": "Difference between strike and current price",
                 "dates": {
                     "maturity-date": "Maturity date",
+                    "maturity-date-mobile": "Maturity",
                     "time-to-exercise": "Time to exercise"
                 },
                 "fees": {
@@ -415,6 +589,8 @@
             "trade-options": {
                 "trade-long-options-tab-title": "Trade Long options",
                 "trade-short-options-tab-title": "Trade Short options",
+                "trade-long-options-tab-title-mobile": "Long options",
+                "trade-short-options-tab-title-mobile": "Short options",
                 "market-tab-title": "Market",
                 "limit-tab-title": "Limit",
                 "mint-tab-title": "Mint",
@@ -461,7 +637,9 @@
                     },
                     "order-type-label": "Order type",
                     "amount-label": "Amount to {{orderSide}}",
+                    "amount-label-mobile": "Amount:",
                     "price-label": "Price per {{currencyKey}}",
+                    "price-label-mobile": "Price per:",
                     "expiration-label": "Expires in",
                     "total-label": "Total (sUSD)",
                     "total-max-label": "Maximum sent (sUSD)",
@@ -556,9 +734,10 @@
         },
         "quick-trading": {
             "title": "Quick Trading",
-            "mode-label": "I WANT TO",
+            "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
             "counter-offer-button-label": "Counter",
+            "cancel-button-label": "Cancel",
             "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",

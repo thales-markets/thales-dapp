@@ -331,7 +331,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                 resetForm();
                 onPlaceOrder && onPlaceOrder();
             } catch (err) {
-                console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsSubmitting(false);
             }
@@ -441,10 +440,10 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     }, [amount, price, isBuy, sUSDBalance, tokenBalance]);
 
     return (
-        <Container>
+        <Container className="limitTab">
             {!defaultOrderSide && (
                 <FlexDivRow>
-                    <ShortInputContainer>
+                    <ShortInputContainer className="limitTab__select">
                         <ReactSelect
                             formatOptionLabel={(option: any) => option.label}
                             options={orderSideOptions}
@@ -460,7 +459,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                     <ShortInputContainer></ShortInputContainer>
                 </FlexDivRow>
             )}
-            <FlexDiv>
+            <FlexDiv className="limitTab__slider">
                 <BuySellSliderContainer>
                     {isBuy ? (
                         <BuySlider
@@ -515,7 +514,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                     />
                 </ShortInputContainer>
             </FlexDiv>
-            <FlexDiv>
+            <FlexDiv className="limitTab__slider">
                 <ShortInputContainer>
                     <NumericInput
                         value={amount}
@@ -548,7 +547,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
                     <FieldValidationMessage
                         showValidation={!isExpirationEntered}
-                        message={t(`common.errors.insufficient-balance-wallet1`)}
+                        message={t(`common.errors.insufficient-balance-wallet`)}
                     />
                 </ShortInputContainer>
             </FlexDiv>
@@ -563,9 +562,11 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                     </AmountButton>
                 ))}
             </AmountButtonContainer>
-            <SummaryContainer>
+            <SummaryContainer className="marketTab__summary">
                 <SummaryItem>
-                    <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
+                    <SummaryLabel style={{ minWidth: 80 }}>
+                        {t('options.market.trade-options.place-order.total-label')}
+                    </SummaryLabel>
                     <SummaryContent>
                         {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
                     </SummaryContent>

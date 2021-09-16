@@ -108,3 +108,9 @@
     border-radius: 20px !important;
     color: #f6f6fe !important;
 }
+
+@media (max-width: 512px) {
+    .MuiDialog-paper {
+        margin: 10px !important;
+    }
+}

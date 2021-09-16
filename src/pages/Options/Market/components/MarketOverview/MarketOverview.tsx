@@ -33,7 +33,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
         <>
             {optionsMarket.customMarket ? (
                 <Container>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <FlexDivCentered>
                             <ReactCountryFlag
                                 countryCode={countryToCountryCode(optionsMarket.country as any)}
@@ -57,17 +57,17 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             </FlexDivColumnCentered>
                         </FlexDivCentered>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>Event Name</Title>
                         <Content fontSize={16}>
                             <FlexDivCentered>{optionsMarket.eventName}</FlexDivCentered>
                         </Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>{optionsMarket.eventName === 'XYZ airdrop claims' ? 'Strike price' : 'Rank'}</Title>
                         <Content fontSize={16}>{optionsMarket.outcome}</Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>
                             {t('options.market.overview.deposited-currency-label', {
                                 currencyKey: SYNTHS_MAP.sUSD,
@@ -75,7 +75,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Title>
                         <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>{t('options.market.overview.time-remaining-label')}</Title>
                         <Content>
                             {optionsMarket.isResolved ? (
@@ -85,7 +85,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             )}
                         </Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>
                             {optionsMarket.isResolved
                                 ? t('options.market.overview.final-result-label')
@@ -94,18 +94,22 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         <StyledLink
                             target="_blank"
                             rel="noreferrer"
-                            href="https://www.espn.com/olympics/summer/2020/medals/_/view/overall"
+                            href={
+                                optionsMarket.eventName?.toLowerCase().indexOf('us open') !== -1
+                                    ? 'http://www.espn.com/tennis/dailyResults'
+                                    : 'https://www.espn.com/olympics/summer/2020/medals/_/view/overall'
+                            }
                         >
                             ESPN
                         </StyledLink>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
                     </ItemContainer>
                 </Container>
             ) : (
                 <Container>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <FlexDivCentered>
                             <CurrencyIcon
                                 currencyKey={optionsMarket.currencyKey}
@@ -126,7 +130,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             </FlexDivColumnCentered>
                         </FlexDivCentered>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>{t(`options.market.overview.strike-price-label`)}</Title>
                         <Content fontSize={optionsMarket.strikePrice < 0.01 ? 14 : 16}>
                             <FlexDiv>
@@ -134,7 +138,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                 {!optionsMarket.isResolved && (
                                     <LightTooltip title={t('options.market.overview.difference-text-tooltip')}>
                                         {optionsMarket.currentPrice > optionsMarket.strikePrice ? (
-                                            <RedText>
+                                            <RedText className="market__overview__difference">
                                                 (<PriceArrow src={arrowDown} />
                                                 {getPercentageDifference(
                                                     optionsMarket.currentPrice,
@@ -143,7 +147,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                                 %)
                                             </RedText>
                                         ) : (
-                                            <GreenText>
+                                            <GreenText className="market__overview__difference">
                                                 (<PriceArrow src={arrowUp} />
                                                 {getPercentageDifference(
                                                     optionsMarket.currentPrice,
@@ -157,7 +161,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             </FlexDiv>
                         </Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>
                             {optionsMarket.isResolved
                                 ? t('options.market.overview.final-price-label', {
@@ -181,7 +185,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             )}
                         </Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>
                             {t('options.market.overview.deposited-currency-label', {
                                 currencyKey: SYNTHS_MAP.sUSD,
@@ -189,7 +193,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Title>
                         <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>{t('options.market.overview.time-remaining-label')}</Title>
                         <Content>
                             {optionsMarket.isResolved ? (
@@ -199,7 +203,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                             )}
                         </Content>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Title>
                             {optionsMarket.isResolved
                                 ? t('options.market.overview.final-result-label')
@@ -207,7 +211,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Title>
                         <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
                     </ItemContainer>
-                    <ItemContainer>
+                    <ItemContainer className="market__overview__cell">
                         <Phase className={optionsMarket.phase}>{t(`options.phases.${optionsMarket.phase}`)}</Phase>
                     </ItemContainer>
                 </Container>
@@ -216,8 +220,8 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
     );
 };
 
-const ItemContainer: React.FC = (props) => (
-    <InnerItemContainer>
+const ItemContainer: React.FC<{ className: string }> = (props) => (
+    <InnerItemContainer className={props.className}>
         <Item>{props.children}</Item>
     </InnerItemContainer>
 );
@@ -241,7 +245,7 @@ const Item = styled(FlexDivColumnCentered)`
     flex: initial;
 `;
 
-const Title = styled.p`
+export const Title = styled.p`
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -249,7 +253,7 @@ const Title = styled.p`
     color: #b8c6e5;
 `;
 
-const Content = styled.div<{ fontSize?: number }>`
+export const Content = styled.div<{ fontSize?: number }>`
     font-style: normal;
     font-weight: bold;
     font-size: ${(props) => props.fontSize || 16}px;
@@ -300,20 +304,22 @@ export const StyledLink = styled.a`
 
 export const ArrowIcon = styled(ArrowHyperlinkIcon)``;
 
-const PriceArrow = styled(Image)`
+export const PriceArrow = styled(Image)`
     width: 16px;
     height: 16px;
     margin-bottom: -2px;
 `;
 
-const GreenText = styled.span`
+export const GreenText = styled.span`
     color: #01b977;
     padding-left: 5px;
+    white-space: pre;
 `;
 
-const RedText = styled.span`
+export const RedText = styled.span`
     color: #be2727;
     padding-left: 5px;
+    white-space: pre;
 `;
 
 export const CustomIcon = styled(Image)`

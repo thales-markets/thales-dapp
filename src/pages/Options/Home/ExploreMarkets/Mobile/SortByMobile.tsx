@@ -4,7 +4,7 @@ import { FlexDiv } from 'theme/common';
 
 import arrowDown from 'assets/images/filters/arrow-down.svg';
 
-export const SearchWrapper = styled(FlexDiv)`
+const SortWrapper = styled(FlexDiv)`
     width: 100%;
     align-items: center;
     position: relative;
@@ -18,7 +18,7 @@ export const SearchWrapper = styled(FlexDiv)`
     }
 `;
 
-export const TextWrapper = styled.p`
+const TextWrapper = styled.p`
     height: 40px;
     width: 100%;
     border-radius: 23px;
@@ -32,7 +32,6 @@ export const TextWrapper = styled.p`
     color: #f6f6fe;
     padding-left: 20px;
     margin: 2px;
-    text-transform: capitalize;
     &::placeholder {
         font-size: 16px;
         color: #f6f6f6;
@@ -47,9 +46,9 @@ type SortyByMobileProps = {
 
 export const SortyByMobile: React.FC<SortyByMobileProps> = ({ filter, onClick, children }) => (
     <>
-        <SearchWrapper onClick={onClick}>
-            <TextWrapper>Sort by: {filter}</TextWrapper>
+        <SortWrapper className="markets-mobile__sortWrapper" onClick={onClick}>
+            <TextWrapper>Sort by (always latest): {filter}</TextWrapper>
             {children}
-        </SearchWrapper>
+        </SortWrapper>
     </>
 );

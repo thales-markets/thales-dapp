@@ -23,6 +23,7 @@ export const MarketWidgetHeader: React.FC<MarketWidgetHeaderProps> = ({ widgetKe
             <FlexDivRowCentered>
                 {children}
                 <CloseIconContainer
+                    className="xBtn"
                     onClick={() => dispatch(setMarketWidgetVisibility({ marketWidget: widgetKey, isVisible: false }))}
                 />
             </FlexDivRowCentered>

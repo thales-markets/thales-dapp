@@ -14,6 +14,11 @@ export const FlexDivCentered = styled(FlexDiv)`
     justify-content: center;
 `;
 
+export const FlexDivSpaceBetween = styled(FlexDiv)`
+    align-items: center;
+    justify-content: space-between;
+`;
+
 export const FlexDivEnd = styled(FlexDiv)`
     justify-content: end;
 `;
@@ -68,7 +73,7 @@ export const Background = styled.section`
 
     &#landing-hero {
         min-height: 900px;
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             min-height: 600px;
         }
         position: relative;
@@ -112,7 +117,7 @@ export const Background = styled.section`
     }
 
     &:nth-child(even) {
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             & > div {
                 flex-flow: column-reverse;
             }
@@ -126,9 +131,29 @@ export const MainWrapper = styled.div`
     align-items: center;
     width: min(100%, 1440px);
     margin: auto;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         flex-direction: column;
         width: 100%;
+    }
+`;
+
+export const Wrapper = styled(FlexDivColumn)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1440px;
+    min-height: 100vh;
+    flex-direction: column;
+    margin: auto;
+    padding-left: 120px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    @media (max-width: 1024px) {
+        padding-left: 30px;
+    }
+    @media (max-width: 512px) {
+        padding: 0 10px !important;
     }
 `;
 
@@ -145,7 +170,7 @@ export const Section: React.FC<SectionProps> = (props) => (
 export const Side = styled(FlexDivColumnCentered)`
     flex: 1;
     padding: 120px 100px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         padding: 40px !important;
         width: 100%;
     }
@@ -339,4 +364,13 @@ export const SyntetixLogo = styled.img`
         top: 4px;
         margin-left: 6px;
     }
+`;
+export const GradientText = styled.span<{ gradient: string; fontSize: number; fontWeight: number }>`
+    font-size: ${(props) => props.fontSize}px;
+    font-weight: ${(props) => props.fontWeight};
+    background: ${(props) => props.gradient};
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
 `;

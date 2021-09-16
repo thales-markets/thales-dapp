@@ -4,23 +4,24 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDiv, Logo } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
 import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
 import trendingMarketsDefaultIcon from 'assets/images/sidebar/trending-default.svg';
-import olympicsMarketsDefaultIcon from 'assets/images/sidebar/olympics-default.svg';
 import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
 import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
-import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
 import burger from 'assets/images/burger.svg';
+import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
+import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
+
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -36,6 +37,7 @@ type MarketHeaderProps = {
     phase?: string;
     isCustomMarket?: boolean;
     route: string;
+    className?: string;
 };
 
 enum BurgerState {
@@ -44,7 +46,13 @@ enum BurgerState {
     Hide,
 }
 
-const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase, route, isCustomMarket }) => {
+const MarketHeader: React.FC<MarketHeaderProps> = ({
+    showCustomizeLayout,
+    phase,
+    route,
+    isCustomMarket,
+    className,
+}) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
 
@@ -63,8 +71,12 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
     }, [showBurgerMenu]);
 
     return (
-        <>
-            <MarketHeaderWrapper id="dapp-header" className="dapp-header" showCustomizeLayout={showCustomizeLayout}>
+        <FlexDivColumn style={{ width: '100%', flex: 'unset' }}>
+            <MarketHeaderWrapper
+                id="dapp-header"
+                className={`dapp-header ${className}`}
+                showCustomizeLayout={showCustomizeLayout}
+            >
                 <FlexDiv className="dapp-header__logoWrapper">
                     <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
                     <BurdgerIcon
@@ -143,28 +155,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ userFilter2: ['Olympics'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={ROUTES.Options.Olympics}
-                    >
-                        <SidebarItem
-                            imgSrc={olympicsMarketsDefaultIcon}
-                            imgSrcHoverSelected={olympicsMarketsSelectedIcon}
-                            className={route === ROUTES.Options.Olympics ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.olympics-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
@@ -217,6 +207,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
+                    <DisplayContentsAnchor href={ROUTES.Options.Token}>
+                        <SidebarItem
+                            imgSrc={earnDefaultIcon}
+                            imgSrcHoverSelected={earnSelectedIcon}
+                            className={route === ROUTES.Options.Token ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
@@ -225,15 +225,14 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({ showCustomizeLayout, phase,
                 }}
                 className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
             ></Overlay>
-        </>
+        </FlexDivColumn>
     );
 };
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
-    padding: 0 75px;
     width: 100%;
-    display: flex;
     height: 100px;
+    display: flex;
     align-items: center;
     justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
 `;
@@ -243,7 +242,7 @@ const Sidebar = styled.nav`
     top: 0;
     left: 0;
     width: 88px;
-    height: 100vh;
+    min-height: 100vh;
     z-index: 100;
     background: #748bc6;
     padding: 35px 19px;
@@ -264,7 +263,7 @@ const Sidebar = styled.nav`
     -o-user-select: none;
     user-select: none;
     .logo {
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 1024px) {
             background: url(${logoIcon}) center no-repeat;
         }
         background: url(${logoSmallIcon}) center no-repeat;

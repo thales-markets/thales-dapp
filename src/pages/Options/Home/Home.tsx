@@ -9,7 +9,7 @@ import Loader from 'components/Loader';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
-import { Background, FlexDivColumn, MainWrapper } from 'theme/common';
+import { Background, Wrapper } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
 import ROUTES from 'constants/routes';
@@ -73,27 +73,25 @@ export const Home: React.FC = () => {
         <>
             {marketsQuery.isSuccess ? (
                 <Background style={{ minHeight: '100vh' }}>
-                    <MainWrapper style={{ flexDirection: 'column' }}>
-                        <FlexDivColumn style={{ width: '100%' }}>
-                            <MarketHeader
-                                route={
-                                    location.search === '?anchor=overview'
-                                        ? ROUTES.Options.Overview
-                                        : location.search === '?anchor=hot-markets'
-                                        ? ROUTES.Options.Home
-                                        : location.search === '?userFilter2=Olympics'
-                                        ? ROUTES.Options.Olympics
-                                        : ROUTES.Options.Overview
-                                }
-                            />
-                        </FlexDivColumn>
+                    <Wrapper>
+                        <MarketHeader
+                            route={
+                                location.search === '?anchor=overview'
+                                    ? ROUTES.Options.Overview
+                                    : location.search === '?anchor=hot-markets'
+                                    ? ROUTES.Options.Home
+                                    : location.search === '?userFilter2=Olympics'
+                                    ? ROUTES.Options.Olympics
+                                    : ROUTES.Options.Overview
+                            }
+                        />
 
                         {hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />}
 
                         <MarketCreation />
 
                         <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
-                    </MainWrapper>
+                    </Wrapper>
                 </Background>
             ) : (
                 <Loader />

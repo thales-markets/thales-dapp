@@ -136,7 +136,7 @@ const HeaderWrapper = styled.div`
     display: flex;
     height: 100px;
     align-items: center;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         padding: 20px;
     }
 `;
@@ -149,13 +149,13 @@ const Links = styled.div`
     .burger-logo {
         display: none;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         flex-direction: column;
         position: fixed;
         top: 0;
         left: 102vw;
         width: 300px;
-        height: 100vh;
+        min-height: 100vh;
         background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         justify-content: flex-start;
         z-index: 2;
@@ -206,7 +206,7 @@ const NavLink = styled(Link)`
     &:hover {
         color: #44e1e2;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         border-top: 1px solid #748bc6;
         width: 100%;
         text-align: center;
@@ -233,7 +233,7 @@ const CommunityLink = styled.a`
     &:hover {
         color: #44e1e2;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         border-top: 1px solid #748bc6;
         width: 100%;
         text-align: center;
@@ -290,14 +290,14 @@ const BurdgerIcon = styled.img`
     right: 30px;
     top: 32px;
     padding: 10px;
-    @media (min-width: 769px) {
+    @media (min-width: 768px) {
         display: none;
     }
 `;
 
 export const Overlay = styled.div`
     position: fixed;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     top: 0;
     left: 0;

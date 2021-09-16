@@ -41,7 +41,6 @@ export const initOnboard = (networkId: NetworkId, subscriptions: Subscriptions) 
                     preferred: true,
                 },
                 { walletName: 'trust', rpcUrl: infuraRpc },
-                { walletName: 'dapper' },
                 { walletName: 'walletLink', rpcUrl: infuraRpc },
                 { walletName: 'torus' },
                 { walletName: 'status' },

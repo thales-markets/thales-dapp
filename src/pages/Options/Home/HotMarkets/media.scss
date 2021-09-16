@@ -1,7 +1,6 @@
 .hot-markets {
     &__title {
         font-size: 39px;
-        padding-left: 65px;
     }
     &__cards {
         z-index: 0;
@@ -22,14 +21,14 @@
         }
     }
 }
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1350px) {
     .hot-markets {
         &__desktop > div {
             max-width: 752px;
         }
     }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1024px) {
     .hot-markets {
         padding: 50px 0 0;
         width: 100%;
@@ -53,7 +52,7 @@
 
         &__title {
             font-size: 31px;
-            padding-left: 50px;
+            padding-left: 37px;
         }
 
         &__card:first-child > div {
@@ -72,13 +71,8 @@
         }
     }
 }
-@media screen and (max-width: 600px) {
-    .hot-markets__title {
-        padding-left: 30px;
-    }
-}
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
     .hot-markets {
         &__desktop > div {
             max-width: 352px;
@@ -103,8 +97,8 @@
 @media screen and (max-width: 420px) {
     .hot-markets {
         &__desktop > div {
-            max-width: 80%;
-            min-width: 80%;
+            max-width: 300px;
+            min-width: 300px;
         }
         &__cards {
             &.animate {

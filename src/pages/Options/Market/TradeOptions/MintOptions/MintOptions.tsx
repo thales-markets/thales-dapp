@@ -575,7 +575,6 @@ const MintOptions: React.FC = () => {
                 refetchOrderbook(makerToken);
                 dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
             } catch (err) {
-                console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             }
@@ -637,7 +636,7 @@ const MintOptions: React.FC = () => {
     };
 
     return (
-        <Container>
+        <Container className="mintTab">
             <GridContainer>
                 <InputContainer>
                     <NumericInput
@@ -659,7 +658,7 @@ const MintOptions: React.FC = () => {
                     />
                 </InputContainer>
             </GridContainer>
-            <SummaryContainer>
+            <SummaryContainer className="mintTab__summary">
                 <MintingSummaryItem>
                     <SummaryLabel>{t('options.market.trade-options.mint.minting-label')}</SummaryLabel>
                 </MintingSummaryItem>
@@ -680,8 +679,8 @@ const MintOptions: React.FC = () => {
             </SummaryContainer>
             <Divider />
             <PlaceInOrderbook>{t('options.market.trade-options.mint.sell-options-title')}</PlaceInOrderbook>
-            <FlexDiv>
-                <CheckboxContainer>
+            <FlexDiv className="mintTab__slider">
+                <CheckboxContainer className="mintTab__slider--firstRow">
                     <Checkbox
                         disabled={actionInProgress}
                         checked={sellLong}
@@ -689,7 +688,7 @@ const MintOptions: React.FC = () => {
                         onChange={(e: any) => setSellLong(e.target.checked || false)}
                     />
                 </CheckboxContainer>
-                <SliderContainer>
+                <SliderContainer className="mintTab__slider--firstRow">
                     <LongSlider
                         value={Number(longPrice)}
                         step={0.01}
@@ -703,7 +702,7 @@ const MintOptions: React.FC = () => {
                         <SliderRange color={COLORS.LONG}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
                 </SliderContainer>
-                <DoubleShortInputContainer>
+                <DoubleShortInputContainer className="mintTab__slider--secondRow">
                     <NumericInput
                         value={longPrice}
                         onChange={(_, value) => setLongPrice(value)}
@@ -725,7 +724,7 @@ const MintOptions: React.FC = () => {
                         )}
                     />
                 </DoubleShortInputContainer>
-                <DoubleShortInputContainer>
+                <DoubleShortInputContainer className="mintTab__slider--secondRow">
                     <NumericInput
                         value={longAmount}
                         onChange={(_, value) => setLongAmount(value)}
@@ -749,8 +748,8 @@ const MintOptions: React.FC = () => {
                     />
                 </DoubleShortInputContainer>
             </FlexDiv>
-            <FlexDiv>
-                <CheckboxContainer>
+            <FlexDiv className="mintTab__slider">
+                <CheckboxContainer className="mintTab__slider--firstRow">
                     <Checkbox
                         disabled={actionInProgress}
                         checked={sellShort}
@@ -758,7 +757,7 @@ const MintOptions: React.FC = () => {
                         onChange={(e: any) => setSellShort(e.target.checked || false)}
                     />
                 </CheckboxContainer>
-                <SliderContainer>
+                <SliderContainer className="mintTab__slider--firstRow">
                     <ShortSlider
                         value={Number(shortPrice)}
                         step={0.01}
@@ -772,7 +771,7 @@ const MintOptions: React.FC = () => {
                         <SliderRange color={COLORS.SHORT}>{`${USD_SIGN}1`}</SliderRange>
                     </FlexDivRow>
                 </SliderContainer>
-                <DoubleShortInputContainer>
+                <DoubleShortInputContainer className="mintTab__slider--secondRow">
                     <NumericInput
                         value={shortPrice}
                         onChange={(_, value) => setShortPrice(value)}
@@ -794,7 +793,7 @@ const MintOptions: React.FC = () => {
                         )}
                     />
                 </DoubleShortInputContainer>
-                <DoubleShortInputContainer>
+                <DoubleShortInputContainer className="mintTab__slider--secondRow">
                     <NumericInput
                         value={shortAmount}
                         onChange={(_, value) => setShortAmount(value)}
@@ -823,7 +822,7 @@ const MintOptions: React.FC = () => {
 
             <Divider style={{ marginTop: 4 }} />
 
-            <FeeSummaryContainer>
+            <FeeSummaryContainer className="mintTab__summary">
                 <MintingSummaryItem>
                     <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
                     <ProtocolFeeContent>{`${formatPercentage(

@@ -42,6 +42,9 @@ const SubTitle = styled(Title)`
     letter-spacing: 0.15px;
     margin-top: 20px;
     margin-bottom: 30px;
+    @media (max-width: 512px) {
+        font-size: 16px;
+    }
 `;
 
 const OptionResults = styled(FlexDivRow)<{ result?: OptionSide; exercised?: boolean }>`
@@ -63,6 +66,10 @@ const OptionResults = styled(FlexDivRow)<{ result?: OptionSide; exercised?: bool
                 opacity: 0.5;
             }
         `}
+        @media (max-width: 512px) {
+        flex-direction: column;
+        align-items: center;
+    }
 `;
 
 export default ResultCard;

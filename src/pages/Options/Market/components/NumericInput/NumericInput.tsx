@@ -1,5 +1,5 @@
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, CSSProperties } from 'react';
 import styled from 'styled-components';
 import { Input } from '../../components';
 
@@ -11,6 +11,7 @@ type NumericInputProps = {
     disabled?: boolean;
     step?: string;
     max?: string;
+    style?: CSSProperties;
 };
 
 const INVALID_CHARS = ['-', '+', 'e'];

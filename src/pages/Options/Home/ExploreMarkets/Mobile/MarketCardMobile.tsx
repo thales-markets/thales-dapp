@@ -16,6 +16,11 @@ import arrowDown from 'assets/images/arrow-down.svg';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { countryToCountryCode } from '../../MarketsTable/MarketsTable';
 import ReactCountryFlag from 'react-country-flag';
+import basketball from 'assets/images/basketball.svg';
+import volleyball from 'assets/images/volleyball.svg';
+import medals from 'assets/images/medals.png';
+import tennis from 'assets/images/tennis.svg';
+import xyz from 'assets/images/xyz.png';
 
 type MarketCardMobileProps = {
     optionsMarkets: HistoricalOptionsMarketInfo[];
@@ -42,11 +47,16 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                         <Container>
                             <FlexDivRow style={{ marginBottom: 16 }}>
                                 {market.customMarket ? (
-                                    <ReactCountryFlag
-                                        countryCode={countryToCountryCode(market.country as any)}
-                                        style={{ width: 32, height: 32, marginRight: 10 }}
-                                        svg
-                                    />
+                                    <div style={{ textAlign: 'left' }}>
+                                        <ReactCountryFlag
+                                            countryCode={countryToCountryCode(market.country as any)}
+                                            style={{ width: 32, height: 32, marginRight: 10 }}
+                                            svg
+                                        />
+                                        {!countryToCountryCode(market.country as any) && (
+                                            <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                                        )}
+                                    </div>
                                 ) : (
                                     <CurrencyIcon
                                         currencyKey={market.currencyKey}
@@ -125,9 +135,19 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
                                         {t('options.market.overview.current-result-label')}
                                     </Text>
-                                    <Result isLong={currentAssetPrice > market.strikePrice}>
-                                        {currentAssetPrice < market.strikePrice ? 'SHORT' : 'LONG'}
-                                    </Result>
+                                    {market.customMarket === false ? (
+                                        <Result isLong={currentAssetPrice > market.strikePrice}>
+                                            {currentAssetPrice < market.strikePrice ? 'SHORT' : 'LONG'}
+                                        </Result>
+                                    ) : (
+                                        <StyledLink
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            href="http://www.espn.com/tennis/dailyResults"
+                                        >
+                                            ESPN
+                                        </StyledLink>
+                                    )}
                                 </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
@@ -152,7 +172,7 @@ const Wrapper = styled.div`
     .cardWrapper:nth-child(even) {
         justify-self: end;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         grid-template-columns: repeat(1, 1fr);
         .cardWrapper {
             justify-self: center !important;
@@ -168,9 +188,12 @@ const CardWrapper = styled(FlexDiv)`
     height: 192px;
     padding: 1px;
     border-radius: 23px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         max-width: 400px;
         height: 100%;
+        @supports (-webkit-touch-callout: none) {
+            height: 51vmin;
+        }
     }
 `;
 
@@ -210,3 +233,43 @@ const DifferenceWrapper = styled(FlexDivCentered)`
     justify-content: flex-end;
     top: 14px;
 `;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 6px;
+    margin-top: 6px;
+    width: 24px;
+    height: 24px;
+`;
+
+export const StyledLink = styled.a`
+    color: #f6f6fe;
+    &path {
+        fill: #f6f6fe;
+    }
+    &:hover {
+        color: #00f9ff;
+        & path {
+            fill: #00f9ff;
+        }
+    }
+`;
+
+export const eventToIcon = (event: string) => {
+    if (event) {
+        if (event.toLowerCase().indexOf('basketball') !== -1) {
+            return basketball;
+        }
+        if (event.toLowerCase().indexOf('volleyball') !== -1) {
+            return volleyball;
+        }
+        if (event.toLowerCase().indexOf('medals') !== -1) {
+            return medals;
+        }
+        if (event.toLowerCase().indexOf('tennis') !== -1 || event.toLowerCase().indexOf('us open') !== -1) {
+            return tennis;
+        }
+        if (event.toLowerCase().indexOf('xyz') !== -1) {
+            return xyz;
+        }
+    }
+};

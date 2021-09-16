@@ -47,6 +47,7 @@ export const DropDownWrapper = styled.div`
     top: 60px;
     background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
     width: 354px;
+    max-width: 100%;
     padding: 2px;
     z-index: 100;
     border-radius: 15px;
