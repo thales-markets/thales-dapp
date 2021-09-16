@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
 export const EarnSection = styled.section`
     height: 100%;
@@ -178,4 +179,18 @@ export const MaxButton = styled.button`
         opacity: 0.4;
         cursor: default;
     }
+`;
+
+export const TooltipLink = styled.a`
+    color: #00f9ff;
+    &:hover {
+        color: rgb(116, 139, 198);
+    }
+`;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 20px;
+    min-height: 20px;
+    margin-left: 10px;
+    margin-bottom: -2px;
 `;

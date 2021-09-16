@@ -17,6 +17,9 @@ import { LINKS } from 'constants/links';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { getNetworkId } from 'redux/modules/wallet';
+import thalesContract from 'utils/contracts/thalesContract';
+import { getEtherscanTokenLink } from 'utils/etherscan';
+import { ReactComponent as InfoIcon } from 'assets/images/question-mark-circle.svg';
 
 export const TokentOverview: React.FC = () => {
     const { t } = useTranslation();
@@ -44,7 +47,16 @@ export const TokentOverview: React.FC = () => {
                 <ItemContainer>
                     <FlexDivCentered>
                         <CustomIcon src={thalesTokenIcon}></CustomIcon>
-                        <CryptoName>{THALES_CURRENCY}</CryptoName>
+                        <LightTooltip title={t('options.earn.overview.token-tooltip')}>
+                            <StyledLink
+                                href={getEtherscanTokenLink(networkId, thalesContract.addresses[networkId])}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <CryptoName>{THALES_CURRENCY}</CryptoName>
+                                <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                            </StyledLink>
+                        </LightTooltip>
                     </FlexDivCentered>
                 </ItemContainer>
                 <ItemContainer>
@@ -63,6 +75,14 @@ export const TokentOverview: React.FC = () => {
                     </Content>
                 </ItemContainer>
                 <ItemContainer>
+                    <Title>{t('options.earn.overview.market-cap-label')}</Title>
+                    <Content>
+                        {tokenInfo && tokenInfo.marketCap && ethRate !== null
+                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap * ethRate)
+                            : EMPTY_VALUE}
+                    </Content>
+                </ItemContainer>
+                <ItemContainer>
                     <Title>{t('options.earn.overview.circulating-supply-label')}</Title>
                     <Content>
                         {tokenInfo
@@ -77,6 +97,29 @@ export const TokentOverview: React.FC = () => {
                             ? formatCurrencyWithKey(THALES_CURRENCY, tokenInfo.totalSupply, 0, true)
                             : EMPTY_VALUE}
                     </Content>
+                </ItemContainer>
+                <ItemContainer>
+                    <FlexDivCentered>
+                        <LightTooltip title={t('options.earn.overview.earn-tooltip')}>
+                            <StyledLink
+                                href="https://app.dodoex.io/liquidity?poolAddress=0x031816fd297228e4fd537c1789d51509247d0b43"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <CryptoName>{t('options.earn.overview.earn-label')}</CryptoName>
+                                <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
+                            </StyledLink>
+                        </LightTooltip>
+                        <LightTooltip title={t('options.earn.overview.earn-info-tooltip')}>
+                            <StyledLink
+                                href="https://docs.thales.market/using-thales/thales+dodo-lp-rewards-guide"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <StyledInfoIcon />
+                            </StyledLink>
+                        </LightTooltip>
+                    </FlexDivCentered>
                 </ItemContainer>
             </Container>
         </>
@@ -154,7 +197,12 @@ const CryptoName = styled.span`
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
-    color: #f6f6fe;
+`;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 18px;
+    min-height: 18px;
+    margin-bottom: -2px;
 `;
 
 export default TokentOverview;

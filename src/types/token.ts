@@ -81,4 +81,5 @@ export type TokenInfo = {
     totalSupply: number;
     circulatingSupply: number;
     price?: number;
+    marketCap?: number;
 };

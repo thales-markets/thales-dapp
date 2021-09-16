@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
@@ -29,6 +29,8 @@ import {
     LearnMore,
     StyledMaterialTooltip,
     ClaimMessage,
+    StyledInfoIcon,
+    TooltipLink,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
@@ -37,6 +39,7 @@ import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
+import { LINKS } from 'constants/links';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -161,7 +164,23 @@ const RetroRewards: React.FC = () => {
 
     return (
         <EarnSection style={{ gridColumn: 'span 6' }}>
-            <SectionHeader>{t('options.earn.snx-stakers.retro-rewards.title')}</SectionHeader>
+            <SectionHeader>
+                <div>
+                    {t('options.earn.snx-stakers.retro-rewards.title')}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey="options.earn.snx-stakers.retro-rewards.info-tooltip"
+                                components={[<div key="1" />, <span key="3" />, <EligibilityLink key="2" />]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </div>
+            </SectionHeader>
             <SectionContentContainer>
                 <PieChartContainer>
                     <InfoDiv>
@@ -335,5 +354,11 @@ const TooltipTitle = styled.span<{ color: string }>`
     color: ${(props) => props.color};
     margin-bottom: 10px;
 `;
+
+const EligibilityLink: React.FC = () => (
+    <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroUnlockEligibilitySheet}>
+        here
+    </TooltipLink>
+);
 
 export default RetroRewards;

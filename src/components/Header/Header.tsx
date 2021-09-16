@@ -63,6 +63,13 @@ const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
                     {t('header.links.docs')}
                 </CommunityLink>
                 <CommunityLink
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://thalesmarket.medium.com/thales-tokenomics-introducing-thales-token-3aab321174e7"
+                >
+                    {t('header.links.tokenomics')}
+                </CommunityLink>
+                <CommunityLink
                     onClick={() => {
                         document.getElementById('partners')?.scrollIntoView({ behavior: 'smooth' });
                     }}

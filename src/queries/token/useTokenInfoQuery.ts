@@ -31,6 +31,7 @@ const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<Token
                     );
                     const price = await dodoLpContractInstance.getMidPrice();
                     tokenInfo.price = bigNumberFormatter(price);
+                    tokenInfo.marketCap = tokenInfo.price * tokenInfo.circulatingSupply;
                 }
 
                 return tokenInfo;
