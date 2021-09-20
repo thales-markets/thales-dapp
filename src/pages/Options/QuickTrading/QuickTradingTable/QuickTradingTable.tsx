@@ -189,7 +189,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
         { id: 1, label: '', sortable: false },
         { id: 2, label: t('options.quick-trading.table.condition-col'), sortable: true },
         { id: 3, label: t('options.quick-trading.table.when-col'), sortable: true },
-        { id: 4, label: t('options.quick-trading.table.depostit-amount-col'), sortable: true },
+        { id: 4, label: t('options.quick-trading.table.deposit-amount-col'), sortable: true },
         { id: 5, label: t('options.quick-trading.table.return-col'), sortable: true },
         { id: 6, label: t('options.quick-trading.table.actions-col'), sortable: false },
     ];

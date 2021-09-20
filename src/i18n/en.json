@@ -106,6 +106,7 @@
         "select-date": "select date",
         "select": "select",
         "or": "or",
+        "of": "of",
         "enable-wallet-access": {
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}..."
@@ -656,12 +657,23 @@
             "table": {
                 "condition-col": "Condition",
                 "when-col": "When",
-                "depostit-amount-col": "Amount to deposit",
+                "deposit-amount-col": "Amount to deposit",
                 "return-col": "Return if win",
                 "receive-amount-col": "Amount to receive",
                 "options-to-sell-col": "Options to sell",
                 "options-in-wallet-col": "Options in wallet",
                 "actions-col": "Actions"
+            }
+        },
+        "leaderboard": {
+            "search-placeholder": "Quick Trading",
+            "table": {
+                "rank-col": "Rank",
+                "display-name-col": "Display Name",
+                "trades-col": "Trades",
+                "volume-col": "Volume",
+                "netprofit-col": "Netprofit",
+                "netprofit-col-tooltip": "Profit is only calculated on the matured markets"
             }
         },
         "common": {

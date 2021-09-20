@@ -192,7 +192,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                 <FlexDivColumnCentered style={{ textAlign: isBuyMode ? 'center' : 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
                                         {isBuyMode
-                                            ? t('options.quick-trading.table.depostit-amount-col')
+                                            ? t('options.quick-trading.table.deposit-amount-col')
                                             : t('options.quick-trading.table.receive-amount-col')}
                                     </Text>
                                     <Text className="text-ms pale-grey">

@@ -39,7 +39,7 @@ type QuickTradingMobileProps = {
 export enum SortByBuyEnum {
     Condition = 'condition-col',
     When = 'when-col',
-    AmountToDeposit = 'depostit-amount-col',
+    AmountToDeposit = 'deposit-amount-col',
     ReturnIfWin = 'return-col',
 }
 

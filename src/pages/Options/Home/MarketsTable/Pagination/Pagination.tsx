@@ -47,6 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         fontWeight: 'bold',
                         textAlign: 'center',
                         color: '#F6F6FE',
+                        marginRight: 4,
                     }}
                 >
                     {t(`common.pagination.page`)}
@@ -89,7 +90,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         whiteSpace: 'pre',
                     }}
                 >
-                    {'of  ' + numberOfPages}
+                    {`${t(`common.of`)}  ${numberOfPages}`}
                 </p>
             </FlexDivCentered>
         </>

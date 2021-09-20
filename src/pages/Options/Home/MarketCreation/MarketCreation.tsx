@@ -29,7 +29,7 @@ const MarketCreation: React.FC = () => {
                     {isWalletConnected && (
                         <>
                             <Text className="text-m pale-grey  market-creation__orTxt" style={{ margin: '0 135px' }}>
-                                or
+                                {t(`common.or`)}
                             </Text>
                             {
                                 <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
