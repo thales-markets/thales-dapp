@@ -37,18 +37,18 @@ type QuickTradingMobileProps = {
 };
 
 export enum SortByBuyEnum {
-    Condition = 'Condition',
-    When = 'When',
-    AmountToDeposit = 'Amount to deposit',
-    ReturnIfWin = 'Return if win',
+    Condition = 'condition-col',
+    When = 'when-col',
+    AmountToDeposit = 'depostit-amount-col',
+    ReturnIfWin = 'return-col',
 }
 
 export enum SortBySellEnum {
-    Condition = 'Condition',
-    When = 'When',
-    AmountToReceive = 'Amount to receive',
-    OptionsToSell = 'Options to sell',
-    OptionsInWallet = 'Options in wallet',
+    Condition = 'condition-col',
+    When = 'when-col',
+    AmountToReceive = 'receive-amount-col',
+    OptionsToSell = 'options-to-sell-col',
+    OptionsInWallet = 'options-in-wallet-col',
 }
 
 const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
@@ -84,17 +84,23 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
             optionFilter === OptionFilterEnum.All &&
             orderFilter === OrderFilterEnum.All
         ) {
-            return orderFilter;
+            return t(`options.filters-labels.${orderFilter}`);
         }
         let categoryFilter = '';
         if (orderFilter !== OrderFilterEnum.All) {
-            categoryFilter = `${categoryFilter}, ${orderFilter}`;
+            categoryFilter = `${t(`options.filters-labels.${categoryFilter}`)}, ${t(
+                `options.filters-labels.${orderFilter}`
+            )}`;
         }
         if (coinFilter !== CoinFilterEnum.All) {
-            categoryFilter = `${categoryFilter}, ${coinFilter}`;
+            categoryFilter = `${t(`options.filters-labels.${categoryFilter}`)}, ${t(
+                `options.filters-labels.${coinFilter}`
+            )}`;
         }
         if (optionFilter !== OptionFilterEnum.All) {
-            categoryFilter = `${categoryFilter}, ${optionFilter}`;
+            categoryFilter = `${t(`options.filters-labels.${categoryFilter}`)}, ${t(
+                `options.filters-labels.${optionFilter}`
+            )}`;
         }
         return categoryFilter.substring(1);
     };
@@ -137,7 +143,7 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                                             } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
                                             style={{ marginLeft: 20 }}
                                         >
-                                            {filterItem}
+                                            {t(`options.filters-labels.${filterItem}`)}
                                         </Text>
                                     );
                                 })}
@@ -161,7 +167,7 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                                             } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
                                             style={{ marginLeft: 20 }}
                                         >
-                                            {filterItem}
+                                            {t(`options.filters-labels.${filterItem}`)}
                                         </Text>
                                     );
                                 })}
@@ -187,7 +193,7 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                                             } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
                                             style={{ marginLeft: 20 }}
                                         >
-                                            {filterItem}
+                                            {t(`options.filters-labels.${filterItem}`)}
                                         </Text>
                                     );
                                 })}
@@ -222,7 +228,11 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
             {!isSingleMode && (
                 <SortyByMobile
                     onClick={setShowDropdownSort.bind(this, !showDropdownSort)}
-                    filter={isBuyMode ? mapOrderByToBuyEnum(orderBy) : mapOrderByToSellEnum(orderBy)}
+                    filter={t(
+                        `options.quick-trading.table.${
+                            isBuyMode ? mapOrderByToBuyEnum(orderBy) : mapOrderByToSellEnum(orderBy)
+                        }`
+                    )}
                 >
                     <DropDownWrapper className="quick-trading-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                         <DropDown>
@@ -238,7 +248,7 @@ const QuickTradingMobile: React.FC<QuickTradingMobileProps> = ({
                                     onClick={() => setOrderBy(index + 2)}
                                     key={filterItem}
                                 >
-                                    {filterItem}
+                                    {t(`options.quick-trading.table.${filterItem}`)}
                                 </Text>
                             ))}
                         </DropDown>

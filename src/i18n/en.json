@@ -169,7 +169,9 @@
             "recently-added": "Recently Added",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
-            "olympics": "Olympics"
+            "olympics": "Olympics",
+            "long": "Long",
+            "short": "Short"
         },
         "home": {
             "market-card": {
@@ -650,7 +652,17 @@
             "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",
-            "view-all-orders": "View all orders"
+            "view-all-orders": "View all orders",
+            "table": {
+                "condition-col": "Condition",
+                "when-col": "When",
+                "depostit-amount-col": "Amount to deposit",
+                "return-col": "Return if win",
+                "receive-amount-col": "Amount to receive",
+                "options-to-sell-col": "Options to sell",
+                "options-in-wallet-col": "Options in wallet",
+                "actions-col": "Actions"
+            }
         },
         "common": {
             "time-remaining": {

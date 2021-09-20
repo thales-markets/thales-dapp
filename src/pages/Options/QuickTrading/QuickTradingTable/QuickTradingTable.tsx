@@ -54,25 +54,6 @@ interface HeadCell {
     sortable: boolean;
 }
 
-const buyHeadCells: HeadCell[] = [
-    { id: 1, label: '', sortable: false },
-    { id: 2, label: 'Condition', sortable: true },
-    { id: 3, label: 'When', sortable: true },
-    { id: 4, label: 'Amount to deposit', sortable: true },
-    { id: 5, label: 'Return if win', sortable: true },
-    { id: 6, label: 'Actions', sortable: false },
-];
-
-const sellHeadCells: HeadCell[] = [
-    { id: 1, label: '', sortable: false },
-    { id: 2, label: 'Condition', sortable: true },
-    { id: 3, label: 'When', sortable: true },
-    { id: 4, label: 'Amount to receive', sortable: true },
-    { id: 5, label: 'Options to sell', sortable: true },
-    { id: 6, label: 'Options in wallet', sortable: true },
-    { id: 7, label: 'Actions', sortable: false },
-];
-
 const DEFAULT_ORDER_BY = 3; // market expiration time
 
 enum OrderDirection {
@@ -203,6 +184,25 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                   optionsMarket.strikePrice
               )}`;
     };
+
+    const buyHeadCells: HeadCell[] = [
+        { id: 1, label: '', sortable: false },
+        { id: 2, label: t('options.quick-trading.table.condition-col'), sortable: true },
+        { id: 3, label: t('options.quick-trading.table.when-col'), sortable: true },
+        { id: 4, label: t('options.quick-trading.table.depostit-amount-col'), sortable: true },
+        { id: 5, label: t('options.quick-trading.table.return-col'), sortable: true },
+        { id: 6, label: t('options.quick-trading.table.actions-col'), sortable: false },
+    ];
+
+    const sellHeadCells: HeadCell[] = [
+        { id: 1, label: '', sortable: false },
+        { id: 2, label: t('options.quick-trading.table.condition-col'), sortable: true },
+        { id: 3, label: t('options.quick-trading.table.when-col'), sortable: true },
+        { id: 4, label: t('options.quick-trading.table.receive-amount-col'), sortable: true },
+        { id: 5, label: t('options.quick-trading.table.options-to-sell-col'), sortable: true },
+        { id: 6, label: t('options.quick-trading.table.options-in-wallet-col'), sortable: true },
+        { id: 7, label: t('options.quick-trading.table.actions-col'), sortable: false },
+    ];
 
     const headCells = isBuyMode ? buyHeadCells : sellHeadCells;
 
@@ -424,6 +424,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                     <PaginationWrapper
                                         rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
+                                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                         count={sortedMarkets.length}
                                         rowsPerPage={rowsPerPage}
                                         page={memoizedPage}
