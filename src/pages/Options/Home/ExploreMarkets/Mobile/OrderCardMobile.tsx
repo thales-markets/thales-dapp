@@ -140,7 +140,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                                     {formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
                                                 </Price>
                                                 <LightTooltip
-                                                    title={t('options.market.overview.difference-text-tooltip')}
+                                                    title={t('options.quick-trading.difference-text-tooltip')}
                                                 >
                                                     {currentAssetPrice > order.market.strikePrice ? (
                                                         <RedText

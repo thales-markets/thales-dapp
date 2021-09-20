@@ -277,7 +277,7 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                         <StyledTableCell style={{ textAlign: 'left', paddingRight: 0, paddingLeft: 0 }}>
                                             <FlexDiv>
                                                 <LightTooltip
-                                                    title={t('options.market.overview.difference-text-tooltip')}
+                                                    title={t('options.quick-trading.difference-text-tooltip')}
                                                 >
                                                     {currentAssetPrice > order.market.strikePrice ? (
                                                         <RedText

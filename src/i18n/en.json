@@ -627,6 +627,7 @@
             "title": "Quick Trading",
             "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
+            "difference-text-tooltip": "Difference between current and strike price",
             "counter-offer-button-label": "Counter",
             "cancel-button-label": "Cancel",
             "counter-offer-button-tooltip": "Make counter offer",
