@@ -131,7 +131,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                                     </span>
                                 </MarketInfo>
                             </GradientBorderWrapper>
-                            <ViewMarket className="view-market">View Market</ViewMarket>
+                            <ViewMarket className="view-market">{t('options.home.market-card.view-market')}</ViewMarket>
                         </Footer>
                     </Card>
                 </DisplayContentsAnchor>

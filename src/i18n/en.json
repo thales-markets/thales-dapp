@@ -121,7 +121,11 @@
             "quick-trading-label": "Quick trading",
             "earn-label": "THALES"
         },
-        "coming-soon": "Coming soon..."
+        "coming-soon": "Coming soon...",
+        "pagination": {
+            "page": "Page",
+            "rows-per-page": "Rows per page"
+        }
     },
     "modals": {
         "gwei": {
@@ -148,10 +152,24 @@
             "sell": "Sell"
         },
         "filters-labels": {
+            "all": "All",
             "category": "Category",
             "discover": "Discover",
-            "sort-by": "Sort by",
-            "option": "Option"
+            "show": "Show",
+            "sort-by": "Sort by (always latest)",
+            "search-placeholder": "Try ETH",
+            "option": "Option",
+            "trading": "Trading",
+            "maturity": "Maturity",
+            "expiry": "Expiry",
+            "my-markets": "My Markets",
+            "my-orders": "My Orders",
+            "my-assets": "My Assets",
+            "watchlist": "Watchlist",
+            "recently-added": "Recently Added",
+            "bitcoin": "Bitcoin",
+            "ethereum": "Ethereum",
+            "olympics": "Olympics"
         },
         "home": {
             "market-card": {
@@ -162,7 +180,8 @@
                 "open-orders": "Open orders",
                 "difference-text": "Difference between current and strike price",
                 "time-remaining": "Time remaining",
-                "result": "Current result"
+                "result": "Current result",
+                "view-market": "View Market"
             },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets",
@@ -176,15 +195,13 @@
                 }
             },
             "markets-table": {
-                "asset-col": "asset",
-                "strike-price-col": "strike price ({{currencyKey}})",
-                "maturity-date-col": "maturity date",
-                "long-short-col": "long / short",
-                "phase-col": "phase",
-                "pool-size-col": "pool size (<0>{{currencyKey}}</0>)",
-                "time-remaining-col": "time remaining",
-                "openorders": "open orders",
-                "actions": "actions"
+                "asset-col": "Asset",
+                "asset-price-col": "Asset price",
+                "strike-price-col": "Strike price",
+                "market-size-col": "Market size",
+                "time-remaining-col": "Time remaining",
+                "open-orders-col": "Open orders",
+                "phase-col": "Phase"
             }
         },
         "earn": {

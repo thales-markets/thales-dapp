@@ -54,19 +54,19 @@ export enum PhaseFilterEnum {
 }
 
 export enum PrimaryFilters {
-    All = 'All',
-    MyMarkets = 'My Markets',
-    MyOrders = 'My Orders',
-    MyAssets = 'My Assets',
-    MyWatchlist = 'Watchlist',
-    Recent = 'Recently Added',
+    all = 'all',
+    MyMarkets = 'my-markets',
+    MyOrders = 'my-orders',
+    MyAssets = 'my-assets',
+    MyWatchlist = 'watchlist',
+    Recent = 'recently-added',
 }
 
 export enum SecondaryFilters {
-    All = 'All',
-    Bitcoin = 'Bitcoin',
-    Ethereum = 'Ethereum',
-    Olympics = 'Olympics',
+    all = 'all',
+    Bitcoin = 'bitcoin',
+    Ethereum = 'ethereum',
+    Olympics = 'olympics',
 }
 
 const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
@@ -93,8 +93,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const { t } = useTranslation();
     const [phaseFilter, setPhaseFilter] = useState<PhaseFilterEnum>(PhaseFilterEnum.trading);
-    const [userFilter, setUserFilter] = useState<PrimaryFilters>(PrimaryFilters.All);
-    const [secondLevelUserFilter, setSecondLevelUserFilter] = useState<SecondaryFilters>(SecondaryFilters.All);
+    const [userFilter, setUserFilter] = useState<PrimaryFilters>(PrimaryFilters.all);
+    const [secondLevelUserFilter, setSecondLevelUserFilter] = useState<SecondaryFilters>(SecondaryFilters.all);
     const [assetSearch, setAssetSearch] = useState<string>('');
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -175,16 +175,16 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         const userFilterParamValue = queryString.parse(searchFilter.search).userFilter;
         const secondLevelUserFilterParamValue = queryString.parse(searchFilter.search).userFilter2;
 
-        if (userFilterParamValue && userFilter === PrimaryFilters.All) {
+        if (userFilterParamValue && userFilter === PrimaryFilters.all) {
             Object.keys(PrimaryFilters).forEach((key) => {
                 if (PrimaryFilters[key as keyof typeof PrimaryFilters] === userFilterParamValue)
                     setUserFilter(userFilterParamValue);
             });
         }
 
-        if (!secondLevelUserFilterParamValue && secondLevelUserFilter !== SecondaryFilters.All) {
-            setSecondLevelUserFilter(SecondaryFilters.All);
-        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.All) {
+        if (!secondLevelUserFilterParamValue && secondLevelUserFilter !== SecondaryFilters.all) {
+            setSecondLevelUserFilter(SecondaryFilters.all);
+        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.all) {
             Object.keys(SecondaryFilters).forEach((key) => {
                 if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue)
                     setSecondLevelUserFilter(secondLevelUserFilterParamValue);
@@ -253,8 +253,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     const searchFilteredOptionsMarkets = useDebouncedMemo(
         () => {
-            if (assetSearch && userFilter !== PrimaryFilters.All) {
-                if (secondLevelUserFilter === SecondaryFilters.All) {
+            if (assetSearch && userFilter !== PrimaryFilters.all) {
+                if (secondLevelUserFilter === SecondaryFilters.all) {
                     return filteredOptionsMarkets.filter(({ asset, currencyKey, country, eventName }) => {
                         return (
                             asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
@@ -273,8 +273,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                         );
                     });
                 }
-            } else if (assetSearch && userFilter === PrimaryFilters.All) {
-                if (secondLevelUserFilter === SecondaryFilters.All) {
+            } else if (assetSearch && userFilter === PrimaryFilters.all) {
+                if (secondLevelUserFilter === SecondaryFilters.all) {
                     return filteredOptionsMarkets.filter(({ asset, currencyKey, country, eventName }) => {
                         return (
                             asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
@@ -309,19 +309,19 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({ userFilter: [filter] }),
             });
-        } else if (userFilterValue === filter && userFilter !== PrimaryFilters.All) {
+        } else if (userFilterValue === filter && userFilter !== PrimaryFilters.all) {
             history.push({
                 pathname: searchFilter.pathname,
                 search: '',
             });
         }
 
-        if (!isDisabled && secondLevelUserFilter !== SecondaryFilters.All && filter !== PrimaryFilters.All) {
-            setSecondLevelUserFilter(SecondaryFilters.All);
+        if (!isDisabled && secondLevelUserFilter !== SecondaryFilters.all && filter !== PrimaryFilters.all) {
+            setSecondLevelUserFilter(SecondaryFilters.all);
         }
 
         if (!isDisabled) {
-            setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
+            setUserFilter(userFilter === filter ? PrimaryFilters.all : filter);
         }
 
         document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
@@ -341,7 +341,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     userFilter2: [filter],
                 }),
             });
-        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.All) {
+        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.all) {
             history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
@@ -358,7 +358,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         }
 
         if (!isDisabled) {
-            setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.All : filter);
+            setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.all : filter);
         }
 
         document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
@@ -388,8 +388,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     const resetFilters = () => {
         setPhaseFilter(PhaseFilterEnum.all);
-        setUserFilter(PrimaryFilters.All);
-        setSecondLevelUserFilter(SecondaryFilters.All);
+        setUserFilter(PrimaryFilters.all);
+        setSecondLevelUserFilter(SecondaryFilters.all);
     };
 
     return (
@@ -415,26 +415,21 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                         .filter(
                             (key) =>
                                 isNaN(Number(PrimaryFilters[key as keyof typeof PrimaryFilters])) &&
-                                key !== PrimaryFilters.All
+                                key !== PrimaryFilters.all
                         )
                         .map((key, index) => {
                             const isDisabled = !isWalletConnected && index < 4;
+                            const castedKey = key as keyof typeof PrimaryFilters;
                             return (
                                 <UserFilter
                                     className={`${
-                                        !isDisabled && userFilter === PrimaryFilters[key as keyof typeof PrimaryFilters]
-                                            ? 'selected'
-                                            : ''
+                                        !isDisabled && userFilter === PrimaryFilters[castedKey] ? 'selected' : ''
                                     }`}
                                     disabled={isDisabled}
-                                    onClick={onClickUserFilter.bind(
-                                        this,
-                                        PrimaryFilters[key as keyof typeof PrimaryFilters],
-                                        isDisabled
-                                    )}
+                                    onClick={onClickUserFilter.bind(this, PrimaryFilters[castedKey], isDisabled)}
                                     key={key}
-                                    img={getImage(PrimaryFilters[key as keyof typeof PrimaryFilters])}
-                                    text={PrimaryFilters[key as keyof typeof PrimaryFilters]}
+                                    img={getImage(PrimaryFilters[castedKey])}
+                                    text={t(`options.filters-labels.${PrimaryFilters[castedKey]}`)}
                                 />
                             );
                         })}
@@ -445,7 +440,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                         .filter(
                             (key) =>
                                 isNaN(Number(SecondaryFilters[key as keyof typeof SecondaryFilters])) &&
-                                key !== SecondaryFilters.All
+                                key !== SecondaryFilters.all
                         )
                         .map((key) => {
                             const isCustomMarketsEmpty =
@@ -493,23 +488,24 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                     break;
                             }
                             isDisabled = isDisabled || assetSearchNoBtc || assetSearchNoEth;
+                            const castedKey = key as keyof typeof SecondaryFilters;
+
                             return (
                                 <UserFilter
                                     className={`${
-                                        !isDisabled &&
-                                        secondLevelUserFilter === SecondaryFilters[key as keyof typeof SecondaryFilters]
+                                        !isDisabled && secondLevelUserFilter === SecondaryFilters[castedKey]
                                             ? 'selected'
                                             : ''
                                     }`}
                                     disabled={isDisabled}
                                     onClick={onClickSecondLevelUserFilter.bind(
                                         this,
-                                        SecondaryFilters[key as keyof typeof SecondaryFilters],
+                                        SecondaryFilters[castedKey],
                                         isDisabled
                                     )}
                                     key={key}
-                                    img={getImage(SecondaryFilters[key as keyof typeof SecondaryFilters])}
-                                    text={SecondaryFilters[key as keyof typeof SecondaryFilters]}
+                                    img={getImage(SecondaryFilters[castedKey])}
+                                    text={t(`options.filters-labels.${SecondaryFilters[castedKey]}`)}
                                 />
                             );
                         })}

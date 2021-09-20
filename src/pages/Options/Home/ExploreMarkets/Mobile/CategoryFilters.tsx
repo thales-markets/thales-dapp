@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import filters from 'assets/images/filters/filters.svg';
 import checkmark from 'assets/images/checkmark.svg';
+import { useTranslation } from 'react-i18next';
 
 export const SearchWrapper = styled(FlexDiv)`
     width: 100%;
@@ -100,11 +101,17 @@ type CategoryFiltersProps = {
     onClick: () => void;
 };
 
-export const CategoryFilters: React.FC<CategoryFiltersProps> = ({ filter, onClick, children }) => (
-    <>
-        <SearchWrapper onClick={onClick}>
-            <TextWrapper>Category: {filter}</TextWrapper>
-            {children}
-        </SearchWrapper>
-    </>
-);
+export const CategoryFilters: React.FC<CategoryFiltersProps> = ({ filter, onClick, children }) => {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <SearchWrapper onClick={onClick}>
+                <TextWrapper>
+                    {t(`options.filters-labels.category`)}: {filter}
+                </TextWrapper>
+                {children}
+            </SearchWrapper>
+        </>
+    );
+};

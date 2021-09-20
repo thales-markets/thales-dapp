@@ -3,6 +3,7 @@ import backArrow from 'assets/images/arrow-previous.svg';
 import nextArrow from 'assets/images/arrow-next.svg';
 import React from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 
 type PaginationProps = {
     page: number;
@@ -24,6 +25,8 @@ const Arrow = styled(Image)`
 `;
 
 const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage }) => {
+    const { t } = useTranslation();
+
     const NextPage = () => {
         if (page === numberOfPages - 1) return;
         setPage(page + 1);
@@ -46,7 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({ page, numberOfPages, setPage })
                         color: '#F6F6FE',
                     }}
                 >
-                    Page
+                    {t(`common.pagination.page`)}
                 </p>
                 <FlexDivCentered
                     style={{
