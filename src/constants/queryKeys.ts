@@ -1,5 +1,4 @@
 import { NetworkId } from 'utils/network';
-import { CurrencyKey } from './currency';
 
 export const QUERY_KEYS = {
     WalletBalances: {
@@ -27,7 +26,6 @@ export const QUERY_KEYS = {
         ],
     },
     Rates: {
-        HistoricalRates: (currencyKey: CurrencyKey) => ['rates', 'historicalRates', currencyKey],
         ExchangeRates: ['rates', 'exchangeRates'],
     },
     Synths: {

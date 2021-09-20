@@ -133,7 +133,7 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: 'center' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                        {t('options.market.overview.current-result-label')}
+                                        {t('options.home.market-card.result')}
                                     </Text>
                                     {market.customMarket === false ? (
                                         <Result isLong={currentAssetPrice > market.strikePrice}>
