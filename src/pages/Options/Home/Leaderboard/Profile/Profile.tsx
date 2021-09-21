@@ -4,7 +4,7 @@ import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Image } from 'theme/common';
@@ -24,11 +24,10 @@ export enum Filters {
 
 const Profile: React.FC<any> = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const walletAddress = '0x4d03ef005e5f559fc9294a8e1cebba09284b1f82';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [searchString, setSearchString] = useState<string>('');
-    const [filter, setFilter] = useState<string>('');
+    const [userFilter, setUserFilter] = useState<string>('');
+    const [filter, setFilter] = useState<string>(Filters.Mints);
 
     const leaderboardQuery = useLeaderboardQuery(networkId, {
         enabled: isAppReady,
@@ -38,9 +37,18 @@ const Profile: React.FC<any> = () => {
 
     const profile = useMemo(() => {
         if (profiles && walletAddress) {
+            if (userFilter) {
+                const filteredAdresses = Array.from(profiles.keys()).filter((key) =>
+                    key.toLowerCase().includes(userFilter.toLowerCase())
+                );
+                const address = filteredAdresses.length === 1 ? filteredAdresses[0] : '';
+                if (address) {
+                    return profiles.get(address.trim().toLowerCase());
+                }
+            }
             return profiles.get(walletAddress.trim().toLowerCase());
         }
-    }, [profiles, walletAddress]);
+    }, [profiles, walletAddress, userFilter]);
 
     const extractMintsProfileData = useMemo(() => {
         const mintsMap = new Map();
@@ -54,7 +62,7 @@ const Profile: React.FC<any> = () => {
             }
         });
         return mintsMap;
-    }, [searchString]);
+    }, [userFilter]);
 
     const extractTradesProfileData = useMemo(() => {
         const tradesMap = new Map();
@@ -68,7 +76,7 @@ const Profile: React.FC<any> = () => {
             }
         });
         return tradesMap;
-    }, [searchString]);
+    }, [userFilter]);
 
     const extractExercisesProfileData = useMemo(() => {
         const exercisesMap = new Map();
@@ -83,7 +91,7 @@ const Profile: React.FC<any> = () => {
         });
 
         return exercisesMap;
-    }, [searchString]);
+    }, [userFilter]);
 
     const extractUnclaimedProfileData = useMemo(() => {
         const unclaimedMap = new Map();
@@ -97,22 +105,18 @@ const Profile: React.FC<any> = () => {
             }
         });
 
-        console.log(unclaimedMap);
-
         return unclaimedMap;
-    }, [searchString]);
-
-    console.log(extractUnclaimedProfileData);
+    }, [userFilter]);
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ marginTop: 50 }}>
+            <FlexDivRow style={{ marginTop: 50, minWidth: 1100 }}>
                 <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600, margin: '22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
-                        onChange={(e) => setSearchString(e.target.value)}
-                        value={searchString}
+                        onChange={(e) => setUserFilter(e.target.value)}
+                        value={userFilter}
                         placeholder="Display Name"
                     ></SearchInput>
                 </SearchWrapper>

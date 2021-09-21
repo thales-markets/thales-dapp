@@ -15,8 +15,8 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
     console.log(usersUnclaimed);
     return (
         <FlexDivColumn>
-            <Row>
-                <Text className="bold" style={{ flex: 2 }}>
+            <Row style={{ backgroundColor: '#748bc6' }}>
+                <Text className="bold" style={{ flex: 1 }}>
                     Asset
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
@@ -28,6 +28,9 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                 <Text className="bold" style={{ flex: 1 }}>
                     Pool Size
                 </Text>
+                <Text className="bold" style={{ flex: 1 }}>
+                    Result
+                </Text>
             </Row>
             <MarketRow
                 className="text-xs"
@@ -38,7 +41,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                 //     }
                 // }}
             >
-                <div style={{ flex: 2 }}>
+                <div style={{ flex: 1 }}>
                     <Currency.Name
                         currencyKey={market.currencyKey}
                         showIcon={true}
@@ -52,8 +55,8 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                 <Text style={{ flex: 1 }}>{market.result}</Text>
             </MarketRow>
             <FlexDivColumn>
-                <Row>
-                    <Text className="bold" style={{ flex: 2 }}>
+                <Row style={{ backgroundColor: '#748bc6' }}>
+                    <Text className="bold" style={{ flex: 1 }}>
                         Long
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>

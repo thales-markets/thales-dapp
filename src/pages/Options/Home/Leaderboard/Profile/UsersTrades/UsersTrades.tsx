@@ -14,8 +14,8 @@ type UsersTradesProps = {
 const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
     return (
         <FlexDivColumn>
-            <Row>
-                <Text className="bold" style={{ flex: 2 }}>
+            <Row style={{ backgroundColor: '#748bc6' }}>
+                <Text className="bold" style={{ flex: 1 }}>
                     Asset
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
@@ -37,7 +37,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 //     }
                 // }}
             >
-                <div style={{ flex: 2 }}>
+                <div style={{ flex: 1 }}>
                     <Currency.Name
                         currencyKey={market.currencyKey}
                         showIcon={true}
@@ -50,8 +50,8 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
             </MarketRow>
             <FlexDivColumn>
-                <Row>
-                    <Text className="bold" style={{ flex: 2 }}>
+                <Row style={{ backgroundColor: '#748bc6' }}>
+                    <Text className="bold" style={{ flex: 1 }}>
                         Maker amount
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
