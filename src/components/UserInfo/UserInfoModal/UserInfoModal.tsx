@@ -19,6 +19,7 @@ import { FilterButton, Input, InputLabel, ShortInputContainer } from 'pages/Opti
 import axios from 'axios';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -42,6 +43,7 @@ const ethEnabled = () => {
 };
 
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, walletAddress, network }) => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
         enabled: open,
@@ -130,7 +132,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                                 onboardConnector.onboard.walletSelect();
                             }}
                         >
-                            Switch Wallet
+                            {t(`user-info.wallet.switch-wallet`)}
                         </Button>
                         <Button
                             className="primary text-xs"
@@ -140,13 +142,13 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                                 handleClose(false);
                             }}
                         >
-                            Disconnect Wallet
+                            {t(`user-info.wallet.disconnect-wallet`)}
                         </Button>
                     </FlexDivColumn>
                 </WalletWrapper>
                 <FlexDivCentered style={{ justifyContent: 'space-between', margin: 25 }}>
                     <ShortInputContainer style={{ margin: 0 }}>
-                        <InputLabel>Display Name</InputLabel>
+                        <InputLabel>{t(`user-info.wallet.display-name`)}</InputLabel>
                         <Input
                             onChange={(event) => {
                                 setName(event.target.value);
@@ -160,7 +162,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         }}
                         className="primary"
                     >
-                        Change Display Name
+                        {t(`user-info.wallet.change-display-name`)}
                     </Button>
                 </FlexDivCentered>
 
@@ -170,21 +172,21 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         className={filter === Filters.MARKETS ? 'selected' : ''}
                         onClick={() => setFilter(Filters.MARKETS)}
                     >
-                        My Markets
+                        {t(`user-info.tabs.my-markets`)}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
                         className={filter === Filters.ORDERS ? 'selected' : ''}
                         onClick={() => setFilter(Filters.ORDERS)}
                     >
-                        My Open Orders
+                        {t(`user-info.tabs.my-open-orders`)}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
                         className={filter === Filters.ASSETS ? 'selected' : ''}
                         onClick={() => setFilter(Filters.ASSETS)}
                     >
-                        My Assets
+                        {t(`user-info.tabs.my-assets`)}
                     </FilterButton>
                 </FilterWrapper>
                 <DataWrapper>

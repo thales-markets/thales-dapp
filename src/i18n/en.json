@@ -9,6 +9,34 @@
             "tokenomics": "Tokenomics"
         }
     },
+    "user-info": {
+        "tabs": {
+            "my-markets": "My Markets",
+            "my-open-orders": "My Open Orders",
+            "my-assets": "My Assets"
+        },
+        "table": {
+            "asset-col": "Asset",
+            "strike-price-col": "Strike price",
+            "maturity-date-col": "Maturity date",
+            "short-col": "sLONG",
+            "long-col": "sSHORT",
+            "pool-size-col": "Pool size",
+            "amount-col": "Amount",
+            "price-col": "Price",
+            "filled-col": "Filled",
+            "expires-col": "Expires in"
+        },
+        "wallet": {
+            "switch-wallet": "Switch Wallet",
+            "disconnect-wallet": "Disconnect Wallet",
+            "display-name": "Display Name",
+            "change-display-name": "Change Display Name",
+            "in-wallet": "In wallet",
+            "total-staked": "Total staked",
+            "total-escrowed": "Total escrowed"
+        }
+    },
     "landing-page": {
         "title": "Binary Options Trading,\nRe-Imagined",
         "description": "Create, trade, and exercise binary options on Ethereum",
@@ -125,7 +153,7 @@
         "coming-soon": "Coming soon...",
         "pagination": {
             "page": "Page",
-            "rows-per-page": "Rows per page"
+            "rows-per-page": "Rows per page:"
         }
     },
     "modals": {
@@ -666,7 +694,7 @@
             }
         },
         "leaderboard": {
-            "search-placeholder": "Quick Trading",
+            "search-placeholder": "Display Name",
             "table": {
                 "rank-col": "Rank",
                 "display-name-col": "Display Name",

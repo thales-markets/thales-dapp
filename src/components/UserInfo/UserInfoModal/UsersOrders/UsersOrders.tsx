@@ -22,6 +22,7 @@ import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { fetchOrders, openOrdersMapCache } from '../../../../queries/options/fetchMarketOrders';
 import ReactCountryFlag from 'react-country-flag';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { useTranslation } from 'react-i18next';
 
 let fetchOrdersInterval: NodeJS.Timeout;
 
@@ -33,6 +34,7 @@ type UsersOrdersProps = {
 };
 
 const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress, networkId, onClose }) => {
+    const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const {
@@ -96,25 +98,25 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
         <>
             <Row>
                 <Text className="bold" style={{ flex: 3 }}>
-                    Asset
+                    {t(`user-info.table.asset-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2 }}>
-                    Strike Price
+                    {t(`user-info.table.strike-price-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 3, textAlign: 'center' }}>
-                    Maturity Date
+                    {t(`user-info.table.maturity-date-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2, textAlign: 'right' }}>
-                    Amount
+                    {t(`user-info.table.amount-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2, paddingRight: 8, textAlign: 'center' }}>
-                    Price
+                    {t(`user-info.table.price-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2 }}>
-                    Filled
+                    {t(`user-info.table.filled-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2 }}>
-                    Expires in
+                    {t(`user-info.table.expires-col`)}
                 </Text>
             </Row>
             {filteredOrders?.map((order: any, index) => (
