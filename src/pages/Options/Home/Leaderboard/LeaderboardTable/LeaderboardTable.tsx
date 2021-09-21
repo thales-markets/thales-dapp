@@ -25,18 +25,7 @@ import { PaginationWrapper, StyledTableRow } from '../../MarketsTable/MarketsTab
 import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
-
-const headCells: HeadCell[] = [
-    { id: 1, label: '', sortable: false },
-    { id: 2, label: '', sortable: false },
-    { id: 3, label: 'Rank', sortable: false },
-    { id: 4, label: 'Display Name', sortable: false },
-    { id: 5, label: 'Trades', sortable: true },
-    { id: 6, label: 'Volume', sortable: true },
-    { id: 7, label: 'NetProfit', sortable: true },
-    { id: 8, label: 'Investment', sortable: true },
-    { id: 9, label: 'Gain', sortable: true },
-];
+import { useTranslation } from 'react-i18next';
 
 enum OrderDirection {
     NONE,
@@ -47,6 +36,7 @@ enum OrderDirection {
 const defaultOrderBy = 6; // Volume
 
 const LeaderboardPage: React.FC<any> = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -192,6 +182,16 @@ const LeaderboardPage: React.FC<any> = () => {
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
 
+    const headCells: HeadCell[] = [
+        { id: 1, label: '', sortable: false },
+        { id: 2, label: '', sortable: false },
+        { id: 3, label: t('options.leaderboard.table.rank-col'), sortable: false },
+        { id: 4, label: t('options.leaderboard.table.display-name-col'), sortable: false },
+        { id: 5, label: t('options.leaderboard.table.trades-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.table.volume-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
+    ];
+
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ marginTop: 50, minWidth: '1100px' }}>
@@ -201,7 +201,7 @@ const LeaderboardPage: React.FC<any> = () => {
                         className="leaderboard__search"
                         onChange={(e) => setSearchString(e.target.value)}
                         value={searchString}
-                        placeholder="Display Name"
+                        placeholder={t('options.leaderboard.search-placeholder')}
                     ></SearchInput>
                 </SearchWrapper>
                 <Image className="leaderboard__icon" style={{ width: 100, height: 100 }} src={leaderboardIcon}></Image>
@@ -230,7 +230,9 @@ const LeaderboardPage: React.FC<any> = () => {
                                             }`}
                                         >
                                             {cell.id === 7 && (
-                                                <TooltipIcon title="Profit is only calculated on the matured markets"></TooltipIcon>
+                                                <TooltipIcon
+                                                    title={t('options.leaderboard.table.netprofit-col-tooltip')}
+                                                ></TooltipIcon>
                                             )}
                                             {cell.label}
                                         </TableHeaderLabel>
@@ -306,6 +308,7 @@ const LeaderboardPage: React.FC<any> = () => {
                                 <PaginationWrapper
                                     rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                     count={leaderboard.length}
                                     rowsPerPage={rowsPerPage}
                                     page={memoizedPage}
