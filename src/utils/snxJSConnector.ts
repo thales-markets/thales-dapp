@@ -2,6 +2,12 @@ import { ethers, Signer } from 'ethers';
 import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
+import vestingEscrow from './contracts/vestingEscrow';
+import airdrop from './contracts/airdrop';
+import ongoingAirdrop from './contracts/ongoingAirdrop';
+import stakingThales from './contracts/stakingThales';
+import thalesContract from './contracts/thalesContract';
+import escrowThales from './contracts/escrowThales';
 import keyBy from 'lodash/keyBy';
 import initSynthetixJS, { Synth } from '@synthetixio/contracts-interface';
 import { SynthsMap, ContractSettings } from 'types/synthetix';
@@ -17,6 +23,12 @@ type SnxJSConnector = {
     synthSummaryUtilContract: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     binaryOptionsMarketManagerContract: ethers.Contract;
+    retroAirdropContract: ethers.Contract;
+    vestingEscrowContract: ethers.Contract;
+    ongoingAirdropContract?: ethers.Contract;
+    stakingThalesContract?: ethers.Contract;
+    thalesTokenContract?: ethers.Contract;
+    escrowThalesContract?: ethers.Contract;
     setContractSettings: (contractSettings: ContractSettings) => void;
 };
 
@@ -31,23 +43,28 @@ const snxJSConnector: SnxJSConnector = {
         this.synthsMap = keyBy(this.synths, 'name');
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
-        this.synthSummaryUtilContract = new ethers.Contract(
-            synthSummaryUtilContract.addresses[contractSettings.networkId],
-            synthSummaryUtilContract.abi,
-            this.provider
+        this.synthSummaryUtilContract = initializeContract(synthSummaryUtilContract, contractSettings);
+        this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);
+        this.binaryOptionsMarketManagerContract = initializeContract(
+            binaryOptionsMarketManagerContract,
+            contractSettings
         );
-        this.binaryOptionsMarketDataContract = new ethers.Contract(
-            binaryOptionsMarketDataContract.addresses[contractSettings.networkId],
-            binaryOptionsMarketDataContract.abi,
-            this.provider
-        );
-        this.binaryOptionsMarketManagerContract = new ethers.Contract(
-            binaryOptionsMarketManagerContract.addresses[contractSettings.networkId],
-            binaryOptionsMarketManagerContract.abi,
-            this.provider
-        );
+        this.retroAirdropContract = initializeContract(airdrop, contractSettings);
+        this.vestingEscrowContract = initializeContract(vestingEscrow, contractSettings);
+        this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
+        this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
+        this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);
+        this.escrowThalesContract = conditionalInitializeContract(escrowThales, contractSettings);
     },
 };
+
+const initializeContract = (contract: any, contractSettings: ContractSettings) =>
+    new ethers.Contract(contract.addresses[contractSettings.networkId], contract.abi, snxJSConnector.provider);
+
+const conditionalInitializeContract = (contract: any, contractSettings: ContractSettings) =>
+    contract.addresses[contractSettings.networkId] !== 'TBD'
+        ? new ethers.Contract(contract.addresses[contractSettings.networkId], contract.abi, snxJSConnector.provider)
+        : undefined;
 
 export const getSynthName = (currencyKey: string) => {
     switch (currencyKey) {

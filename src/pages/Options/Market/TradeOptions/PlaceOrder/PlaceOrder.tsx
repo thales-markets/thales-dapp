@@ -331,7 +331,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                 resetForm();
                 onPlaceOrder && onPlaceOrder();
             } catch (err) {
-                console.error(JSON.stringify(err.response.data));
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsSubmitting(false);
             }

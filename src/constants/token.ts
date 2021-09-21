@@ -1,0 +1,2 @@
+export const DAO_TREASURY_AMOUNT = 18000000;
+export const TOTAL_SUPPLY = 100000000;

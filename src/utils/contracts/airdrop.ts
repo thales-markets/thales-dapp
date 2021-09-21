@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const airdrop = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0xF56Ab113AbE72d75ddfA2f37a8C2986Eb3a0dC54 ',
+        [NetworkId.Mainnet]: '0x0f33af99f3C124189B8dA7C7BE6Dc08C77a9ddc7',
+        [NetworkId.Ropsten]: '0xfa4dc7179f27a545C954aC40f2Ea610D11C9C88D',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: 'TBD',
+        [NetworkId.Kovan]: '0x2DDd1328824f0920fEfC9e9cD8ee07A35A3a89B9',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
@@ -150,6 +150,27 @@ export const airdrop = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'index',
+                    type: 'uint256',
+                },
+            ],
+            name: 'canClaim',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -172,32 +193,6 @@ export const airdrop = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'index',
-                    type: 'uint256',
-                },
-            ],
-            name: 'claimed',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'claimedBlock',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'claimedMask',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
             type: 'function',
         },
         {

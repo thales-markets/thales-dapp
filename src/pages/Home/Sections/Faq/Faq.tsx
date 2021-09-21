@@ -58,7 +58,7 @@ const Faq: React.FC = () => {
                 }}
             >
                 <Image src={discord} style={{ height: 37, width: 32, marginRight: 8 }}></Image>
-                <Text className="text-l pale-grey bold">Join Discord</Text>
+                <Text className="text-l pale-grey bold">{t('landing-page.discord')}</Text>
             </Button>
         </FlexDivColumn>
     );

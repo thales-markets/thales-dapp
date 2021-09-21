@@ -11,16 +11,17 @@ import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
 import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
 import trendingMarketsDefaultIcon from 'assets/images/sidebar/trending-default.svg';
-import olympicsMarketsDefaultIcon from 'assets/images/sidebar/olympics-default.svg';
 import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
 import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
-import olympicsMarketsSelectedIcon from 'assets/images/sidebar/olympics-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
 import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
 import burger from 'assets/images/burger.svg';
+import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
+import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
+
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -154,28 +155,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ userFilter2: ['Olympics'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={ROUTES.Options.Olympics}
-                    >
-                        <SidebarItem
-                            imgSrc={olympicsMarketsDefaultIcon}
-                            imgSrcHoverSelected={olympicsMarketsSelectedIcon}
-                            className={route === ROUTES.Options.Olympics ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.olympics-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
@@ -228,6 +207,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
+                    <DisplayContentsAnchor href={ROUTES.Options.Token}>
+                        <SidebarItem
+                            imgSrc={earnDefaultIcon}
+                            imgSrcHoverSelected={earnSelectedIcon}
+                            className={route === ROUTES.Options.Token ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay

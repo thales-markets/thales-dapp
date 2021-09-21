@@ -25,7 +25,7 @@ const getPrecision = (amount: NumericValue) => {
 };
 
 // TODO - refactor format methods to use only one with options as parameters
-export const formatCurrency = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS) => {
+export const formatCurrency = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS, trimDecimals = false) => {
     if (!value || !Number(value)) {
         return 0;
     }
@@ -33,7 +33,7 @@ export const formatCurrency = (value: NumericValue, decimals = DEFAULT_CURRENCY_
     return numbro(value).format({
         thousandSeparated: true,
         // trimMantissa: decimals > DEFAULT_FIAT_DECIMALS ? true : false,
-        trimMantissa: false,
+        trimMantissa: trimDecimals,
         mantissa: decimals,
     });
 };
@@ -53,8 +53,12 @@ export const formatPercentageWithSign = (value: NumericValue, decimals = DEFAULT
 export const formatCurrencyWithSign = (sign: string | null | undefined, value: NumericValue, decimals?: number) =>
     `${sign}${formatCurrency(value, decimals || getPrecision(value))}`;
 
-export const formatCurrencyWithKey = (currencyKey: CurrencyKey, value: NumericValue, decimals?: number) =>
-    `${formatCurrency(value, decimals || getPrecision(value))} ${currencyKey}`;
+export const formatCurrencyWithKey = (
+    currencyKey: CurrencyKey,
+    value: NumericValue,
+    decimals?: number,
+    trimDecimals?: boolean
+) => `${formatCurrency(value, decimals || getPrecision(value), trimDecimals)} ${currencyKey}`;
 
 export const getPercentageDifference = (firstNumber: number, secondNumber: number): number =>
     Math.abs(((firstNumber - secondNumber) / firstNumber) * 100);

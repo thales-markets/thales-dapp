@@ -41,6 +41,7 @@ Then, open `.env.local` and add the missing environment variables:
 -   `REACT_APP_PORTIS_APP_ID` - Portis app id (get it from [portis.io](https://www.portis.io/)).
 -   `REACT_APP_MAINTENANCE_MODE` - Is dApp in maintenance mode. Set to `false`.
 -   `REACT_APP_THALES_API_URL` - The Thales API URL. Set to `https://api.thales.market`.
+-   `REACT_APP_TOKEN_STAKING_DISABLED` - Enable/disable THALES token staking. Set to `false`.
 
 ### Run
 

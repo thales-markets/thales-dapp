@@ -73,17 +73,6 @@ interface HeadCell {
     sortable: boolean;
 }
 
-const headCells: HeadCell[] = [
-    { id: 1, label: '', sortable: false },
-    { id: 2, label: 'Asset', sortable: true },
-    { id: 3, label: 'Asset Price', sortable: true },
-    { id: 4, label: 'Strike Price', sortable: true },
-    { id: 5, label: 'Market Size', sortable: true },
-    { id: 6, label: 'Time Remaining', sortable: true },
-    { id: 7, label: 'Open Orders', sortable: true },
-    { id: 8, label: 'Phase', sortable: false },
-];
-
 const defaultOrderBy = 5; // time remaining
 
 const MarketsTable: React.FC<MarketsTableProps> = memo(
@@ -162,6 +151,18 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         }, [optionsMarkets, orderBy, orderDirection, memoizedPage, exchangeRates, rowsPerPage]);
 
         const { t } = useTranslation();
+
+        const headCells: HeadCell[] = [
+            { id: 1, label: '', sortable: false },
+            { id: 2, label: t(`options.home.markets-table.asset-col`), sortable: true },
+            { id: 3, label: t(`options.home.markets-table.asset-price-col`), sortable: true },
+            { id: 4, label: t(`options.home.markets-table.strike-price-col`), sortable: true },
+            { id: 5, label: t(`options.home.markets-table.pool-size-col`), sortable: true },
+            { id: 6, label: t(`options.home.markets-table.time-remaining-col`), sortable: true },
+            { id: 7, label: t(`options.home.markets-table.open-orders-col`), sortable: true },
+            { id: 8, label: t(`options.home.markets-table.phase-col`), sortable: false },
+        ];
+
         return (
             <>
                 <TableContainer
@@ -379,6 +380,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         rowsPerPage={rowsPerPage}
                                         page={memoizedPage}
                                         onPageChange={handleChangePage}
+                                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                         ActionsComponent={() => (
                                             <Pagination
                                                 page={memoizedPage}

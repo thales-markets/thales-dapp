@@ -1,16 +1,41 @@
 {
     "header": {
         "links": {
-            "home": "Thales",
-            "options": "Options",
             "faq": "FAQ",
             "partners": "Integrations",
             "community": "Community",
             "blog": "Blog",
-            "docs": "Docs"
+            "docs": "Docs",
+            "tokenomics": "Tokenomics"
+        }
+    },
+    "user-info": {
+        "tabs": {
+            "my-markets": "My Markets",
+            "my-open-orders": "My Open Orders",
+            "my-assets": "My Assets"
         },
-        "connect-wallet": "Connect wallet",
-        "disconnect-wallet": "Disconnect wallet"
+        "table": {
+            "asset-col": "Asset",
+            "strike-price-col": "Strike price",
+            "maturity-date-col": "Maturity date",
+            "short-col": "sLONG",
+            "long-col": "sSHORT",
+            "pool-size-col": "Pool size",
+            "amount-col": "Amount",
+            "price-col": "Price",
+            "filled-col": "Filled",
+            "expires-col": "Expires in"
+        },
+        "wallet": {
+            "switch-wallet": "Switch Wallet",
+            "disconnect-wallet": "Disconnect Wallet",
+            "display-name": "Display Name",
+            "change-display-name": "Change Display Name",
+            "in-wallet": "In wallet",
+            "total-staked": "Total staked",
+            "total-escrowed": "Total escrowed"
+        }
     },
     "landing-page": {
         "title": "Binary Options Trading,\nRe-Imagined",
@@ -21,7 +46,6 @@
         "thales-is1": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena but was taunted by others with the uselessness of philosophy because of his poverty.",
         "thales-is2": "One year, Thales discerned the olive harvest will be bountiful next season by his study of the heavenly bodies. Armed with his knowledge he bets on this with a small sum of money by paying deposits for the whole of the olive presses in Miletus, which he hired at a very low price as nobody else was bidding.",
         "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms when demand grew, becoming the <strong>first known person to exercise an options contract.</strong>",
-
         "markets": {
             "title": "Binary Markets",
             "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
@@ -53,16 +77,16 @@
             "secondQ": "What markets are supported?",
             "secondA": "More than 60 market types are secured by Chainlink price feeds, including cryptocurrencies, equities, commodities, FX, and index products.",
             "thirdQ": "Which asset do users need to mint or buy options on Thales?",
-            "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now.",
-            "hub": "Knowledge hub"
-        }
+            "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now."
+        },
+        "discord": "Join Discord"
     },
     "maintenance-page": {
-        "title": "Stay tuned, coming soon..."
+        "title": "Stay tuned, coming soon...",
+        "powered-by": "Powered by"
     },
     "common": {
         "max": "max",
-        "gas-limit": "gas limit",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
         "gwei": "gwei",
@@ -71,13 +95,6 @@
         },
         "contracts": {
             "view": "View contract"
-        },
-        "actions": {
-            "submit": "submit",
-            "close": "close",
-            "edit": "edit",
-            "confirm": "confirm",
-            "view": "view"
         },
         "tx-status": {
             "waiting": "Waiting",
@@ -93,16 +110,9 @@
             "failed": "failed"
         },
         "wallet": {
-            "your-wallet": "YOUR WALLET",
-            "currency-balance": "{{currencyKey}} BALANCE",
-            "eth-value": "ETH PRICE (USD)",
-            "balance-currency": "Balance: {{balance}}",
-            "no-wallet-connected": "No wallet currently connected",
-            "connect-currency-wallet": "connect {{currencyKey}} wallet to start",
             "connect-your-wallet": "Connect wallet"
         },
         "errors": {
-            "gas-exceeds-limit": "Max input is {{gasPrice}}",
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
             "unknown-error-try-again-general": "An unknown error occurred. Please try again.",
             "insufficient-balance": "Insufficient balance",
@@ -112,46 +122,21 @@
             "invalid-order-amount-max": "The sLONG amount must be less than or equal to the {{max}}",
             "enter-amount": "Enter amount",
             "enter-price": "Enter price",
-            "enter-expiration": "Enter expiration",
             "enter-valid-slippage": "Enter a valid slippage percentage",
             "invalid-price": "Invalid price",
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
-            "invalid-options-price": "The price must be higher than ${{min}} and less than or equal to the ${{max}}",
-            "invalid-options-amount": "The amount must be higher than {{min}} and less than or equal to the {{max}}",
             "invalid-slippage": "Invalid slippage"
         },
         "search": "search",
-        "chart": {
-            "no-data-available": "No data available"
-        },
-        "filters": {
-            "all": "all"
-        },
         "buy": "buy",
         "sell": "sell",
-        "chart-periods": {
-            "1H": "1H",
-            "4H": "4H",
-            "1D": "1D",
-            "1W": "1W",
-            "1M": "1M"
-        },
-        "by-date": "by {{date}}",
-        "val-in-cents": "{{val}}c",
         "eg-val": "e.g. {{val}}",
         "select-date": "select date",
         "select": "select",
-        "beta": "beta",
         "or": "or",
-        "toggle": {
-            "on": "on",
-            "off": "off"
-        },
         "enable-wallet-access": {
-            "label": "Enable wallet access",
-            "progress-label": "Enabling wallet access...",
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}..."
         },
@@ -163,21 +148,33 @@
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
-            "quick-trading-label": "Quick trading"
+            "quick-trading-label": "Quick trading",
+            "earn-label": "THALES"
+        },
+        "coming-soon": "Coming soon...",
+        "of": "of",
+        "here": "here",
+        "sheet": "sheet",
+        "pagination": {
+            "page": "Page",
+            "rows-per-page": "Rows per page:"
+        },
+        "unsupported-network": {
+            "title": "Oops! You are on wrong network!",
+            "description": "You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to continue.",
+            "button": "Switch to Mainnet"
         }
     },
     "modals": {
         "gwei": {
             "placeholder": "Custom",
             "table": {
-                "speed-allowed": "Speed (allowed)",
                 "slow": "Slow",
                 "safe": "Safe",
                 "standard": "Standard",
                 "average": "Average",
                 "fast": "Fast",
-                "fastest": "Fastest",
-                "price": "price"
+                "fastest": "Fastest"
             }
         }
     },
@@ -195,8 +192,24 @@
         "filters-labels": {
             "category": "Category",
             "discover": "Discover",
-            "sort-by": "Sort by",
-            "option": "Option"
+            "sort-by": "Sort by (always latest)",
+            "option": "Option",
+            "show": "Show",
+            "search-placeholder": "Try ETH",
+            "all": "All",
+            "trading": "Trading",
+            "maturity": "Maturity",
+            "expiry": "Expiry",
+            "my-markets": "My Markets",
+            "my-orders": "My Orders",
+            "my-assets": "My Assets",
+            "watchlist": "Watchlist",
+            "recently-added": "Recently Added",
+            "bitcoin": "Bitcoin",
+            "ethereum": "Ethereum",
+            "olympics": "Olympics",
+            "long": "Long",
+            "short": "Short"
         },
         "home": {
             "market-card": {
@@ -207,56 +220,206 @@
                 "open-orders": "Open orders",
                 "difference-text": "Difference between current and strike price",
                 "time-remaining": "Time remaining",
-                "result": "Current result"
+                "result": "Current result",
+                "view-market": "View Market"
             },
             "market-creation": {
-                "not-connected": {
-                    "title": "Connect a wallet to create a market or place a bid"
-                },
-                "no-markets": {
-                    "title": "Create a market, mint new options, or find a market you want to trade to get started"
-                },
                 "explore-markets-button-label": "Explore markets",
                 "create-market-button-label": "Create market"
             },
             "explore-markets": {
-                "title": "Bid on open markets:",
                 "trending": "Trending Markets",
                 "table": {
-                    "filters": {
-                        "markets": {
-                            "no-results": "No markets found, please try again."
-                        },
-                        "creator": {
-                            "tooltip-connected": "Markets you’ve created. Connect a wallet to start.",
-                            "tooltip-not-connected": "Markets you’ve created. Click on the row to enter.",
-                            "no-results": "You haven't created any markets yet."
-                        },
-                        "user-bids": {
-                            "tooltip-connected": "Markets you’ve bid on. Connect a wallet to start.",
-                            "tooltip-not-connected": "Markets you’ve bid on. Click on the row to enter.",
-                            "no-results": "You haven't placed any bids yet."
-                        }
-                    },
                     "view-all-markets": "View all markets",
-                    "view-all-open-markets": "View all open markets",
+                    "no-markets-created": "You haven’t created any market yet.",
                     "no-markets-found": "No markets found."
                 }
             },
             "markets-table": {
-                "asset-col": "asset",
-                "strike-price-col": "strike price ({{currencyKey}})",
-                "maturity-date-col": "maturity date",
-                "long-short-col": "long / short",
-                "phase-col": "phase",
-                "pool-size-col": "pool size (<0>{{currencyKey}}</0>)",
-                "time-remaining-col": "time remaining",
-                "openorders": "open orders",
-                "actions": "actions"
+                "asset-col": "Asset",
+                "strike-price-col": "Strike price",
+                "asset-price-col": "Asset price",
+                "open-orders-col": "Open orders",
+                "phase-col": "Phase",
+                "pool-size-col": "Market size",
+                "time-remaining-col": "Time remaining"
+            }
+        },
+        "earn": {
+            "snx-stakers": {
+                "tab-title": "Retro rewards",
+                "retro-airdrop": {
+                    "title": "Retro Airdrop",
+                    "claimed-message": "You have already claimed the airdrop.",
+                    "not-eligible-message": "You are not eligible for this airdrop.",
+                    "complete-quiz-to-claim": "Complete quiz to claim this airdrop.",
+                    "completed-quiz": "Quiz completed! You can claim the airdrop now.",
+                    "claim-end-label": "Claimable until Sep 12, 2022.",
+                    "info-tooltip": "<0>The airdrop of 137 THALES was allocated to anyone who ever staked and claimed rewards using</0><0>- SNX staking on L1</0><0>- SNX staking on L2</0> <0>- xSNX</0> <0>- yearn SNX vault</0><0>since beginning of SNX staking until Sep 06, 2021 10:00 AM UTC.</0> <1>You can check if you were eligible in this </1><2 />."
+                },
+                "retro-rewards": {
+                    "title": "Retro unlock",
+                    "not-eligible-message": "You are not eligible for this distribution.",
+                    "learn-more-text": "Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards.",
+                    "learn-more": "Learn more",
+                    "info-tooltip": "<0>15 million THALES has been allocated on pro rata basis to all SNX stakers since staking started until Sep 06, 2021 10:00 AM UTC.</0><0>There was a minimum of 24 THALES allocated through this algorithim to be eligible.</0> <1>You can check if you met the threshold </1><2 />."
+                },
+                "airdropped-amount": "Airdropped amount",
+                "claim": "Claim",
+                "claiming": "Claiming...",
+                "claimed": "Claimed",
+                "claim-unlocked": "Claim Unlocked",
+                "claiming-unlocked": "Claiming",
+                "unlocked": "Unlocked",
+                "locked": "Locked",
+                "total": "Total",
+                "start-time": "Start time",
+                "end-time": "End time",
+                "initial-locked": "Initially Locked",
+                "start-quiz": "Start Quiz",
+                "confirmation-message": "Tokens successfully claimed"
+            },
+            "thales-staking": {
+                "tab-title": "Staking",
+                "stake": {
+                    "stake": "Stake",
+                    "staking": "Staking",
+                    "available-to-stake": "Available to stake",
+                    "amount-to-stake": "Amount to stake",
+                    "confirmation-message": "Tokens successfully staked"
+                },
+                "my-stake": {
+                    "my-stake": "My Staking Balance",
+                    "staked-in-contract": "Staked directly",
+                    "locked-in-escrow": "Escrowed balance",
+                    "total-staked": "Total staked balance",
+                    "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
+                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
+                },
+                "unstake": {
+                    "unstake": "Unstake",
+                    "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance",
+                    "cooldown-started-text": "You can unstake {{amount}} in",
+                    "cooldown-ended-text": "You can now unstake {{amount}}",
+                    "start-unstaking": "Start unstaking",
+                    "cooldown-confirmation-message": "Unstaking successfully started",
+                    "unstake-confirmation-message": "Tokens successfully unstaked",
+                    "unstaking": "Unstaking",
+                    "amount-to-unstake": "Amount to unstake",
+                    "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES."
+                },
+                "staking-rewards": {
+                    "title": "Staking Rewards",
+                    "amount-to-claim-snx": "As SNX staker",
+                    "amount-to-claim-thales": "As THALES staker",
+                    "period": "Period",
+                    "weekly-rewards": "Weekly rewards",
+                    "total": "Total",
+                    "previous-period": "From previous period",
+                    "claim": "Claim",
+                    "claiming": "Claiming",
+                    "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
+                    "not-eligible-message": "You are not eligible for these rewards.",
+                    "paused-message": "Claiming is paused, please try later.",
+                    "confirmation-message": "Tokens successfully claimed",
+                    "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
+                    "learn-more": "Learn more"
+                }
+            },
+            "vesting": {
+                "tab-title": "Vesting",
+                "schedule": {
+                    "title": "Vesting schedule",
+                    "table": {
+                        "date-time-col": "vesting date | time",
+                        "amount-col": "amount",
+                        "no-results": "No vesting schedule found."
+                    }
+                },
+                "vest": {
+                    "available-to-vest": "Available to vest",
+                    "vest": "Vest",
+                    "vesting": "Vesting",
+                    "confirmation-message": "Tokens successfully vested"
+                },
+                "info": {
+                    "title": "Vest your THALES staking rewards in escrow",
+                    "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
+                },
+                "lp-staking": {
+                    "title": "You can provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",
+                    "button-text": "Click here to earn double rewards"
+                }
+            },
+            "lp-staking": {
+                "tab-title": "LP staking"
+            },
+            "table": {
+                "title": "Your activity",
+                "date-time-col": "date | time",
+                "type-col": "type",
+                "amount-col": "amount",
+                "tx-status-col": "tx status",
+                "no-results": {
+                    "all": "No transactions associated with this wallet.",
+                    "claimRetroAirdrop": "No retro airdrop transactions associated with this wallet.",
+                    "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
+                    "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
+                    "stake": "No stake transactions associated with this wallet.",
+                    "startUnstake": "No start unstake transactions associated with this wallet.",
+                    "unstake": "No unstake transactions associated with this wallet.",
+                    "addToEscrow": "No add to escrow transactions associated with this wallet.",
+                    "vest": "No vest transactions associated with this wallet."
+                },
+                "types": {
+                    "claimRetroAirdrop": "Claim retro airdrop",
+                    "claimRetroUnlocked": "Claim retro unlock",
+                    "claimStakingRewards": "Claim staking rewards",
+                    "stake": "Stake",
+                    "startUnstake": "Start unstaking",
+                    "unstake": "Unstake",
+                    "addToEscrow": "Add to escrow",
+                    "vest": "Vest"
+                },
+                "filter": {
+                    "all": "All",
+                    "claimRetroAirdrop": "Retro airdrop",
+                    "claimRetroUnlocked": "Retro unlock",
+                    "claimStakingRewards": "Staking rewards",
+                    "stake": "Stake",
+                    "startUnstake": "Start unstaking",
+                    "unstake": "Unstake",
+                    "addToEscrow": "Add to escrow",
+                    "vest": "Vest"
+                }
+            },
+            "overview": {
+                "token-tooltip": "View THALES contract",
+                "price-label": "Price",
+                "price-tooltip": "View DODO pool",
+                "market-cap-label": "Market cap",
+                "earn-label": "Earn LP rewards",
+                "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",
+                "earn-info-tooltip": "View guide on how to provide liquidity",
+                "circulating-supply-label": "Circulating supply",
+                "total-supply-label": "Total supply"
+            }
+        },
+        "quiz": {
+            "title": "Quiz",
+            "discord-link": "Discord",
+            "discord-tip": "Ask our Discord community for help",
+            "docs-link": "Docs",
+            "docs-tip": "Find answer in our docs",
+            "discord-button": "Ask in our Discord",
+            "submit-answers": "Submit answers",
+            "next-page": "Next page",
+            "question": {
+                "correct-answer": "Your answer is correct!",
+                "wrong-answer": "Ooops! Wrong answer!"
             }
         },
         "create-market": {
-            "back-to-markets": "back to markets",
             "title": "Create a new Binary Options market",
             "subtitle": "To create a new binary options market select an asset, a strike price, and the market expiry date. You'll also have to select how many options tokens you will mint",
             "note": "* Note: The amount of sUSD deposited will dictate how many long and short options tokens will be minted. For example, depositing 1,000 sUSD mints 1,000 sLONG and 1,000 sSHORT options tokens for this market.",
@@ -274,8 +437,6 @@
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
             "sellOptions": "Sell minted LONG/SHORT options",
             "summary": {
-                "title": "new market summary:",
-                "subtitle": "You will not pay any fee for creating a market.",
                 "strikePrice": "Strike price",
                 "current": "Current market price",
                 "difference": "Difference between strike and current price",
@@ -289,10 +450,6 @@
                     "creator": "You will earn",
                     "pool": "Fee pool earns"
                 },
-                "withdrawals": {
-                    "tooltip": "Here you can choose to allow withdrawals, which can affect the pay-out and odds dramatically, particularly late in the Bidding phase."
-                },
-                "wallet-access": "Before you can create a new market, enable wallet access:",
                 "create-market-button-label": "Create market",
                 "creating-market-button-label": "Creating market...",
                 "approve-manager-button-label": "Approve",
@@ -301,7 +458,17 @@
                 "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.",
                 "note2": "Pay zero Thales protocol fees for minting options tokens.",
                 "note3": "Pay Ethereum network fees (gas) when approving the market creation."
-            }
+            },
+            "select-asset": "Please select asset.",
+            "enter-strike-price": "Please enter strike price.",
+            "difference-warning": "Difference is greater than 100 times.",
+            "progress-tracker": {
+                "approving": "Approving {{currencyKey}}",
+                "submitting": "Submitting {{currencyKey}}",
+                "creating-market": "Creating market",
+                "finished": "Finished"
+            },
+            "go-to-market": "Go to market"
         },
         "market": {
             "overview": {
@@ -315,29 +482,8 @@
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
-                "deposited-currency-label": "Deposited {{currencyKey}}"
-            },
-            "heading": {
-                "all-markets": "all markets",
-                "market-details": "market details",
-                "market-sentiment": "market sentiment:",
-                "options-to-claim-tooltip": "You have options to claim",
-                "options-to-exercise-tooltip": "You have options to exercise"
-            },
-            "info-modal": {
-                "title": "Market information",
-                "table": {
-                    "currency-col": "Currency",
-                    "strike-price-col": "Strike price",
-                    "phase-col": "Phase",
-                    "maturity-col": "Maturity",
-                    "expiry-col": "Expiry",
-                    "deposited-currency-col": "Deposited {{currencyKey}}",
-                    "final-price-col": "Final {{currencyKey}} price",
-                    "current-price-col": "Current {{currencyKey}} price",
-                    "current-result-col": "Current result",
-                    "final-result-col": "Final result"
-                }
+                "deposited-currency-label": "Deposited {{currencyKey}}",
+                "event-name-label": "Event Name"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
@@ -356,17 +502,9 @@
                 }
             },
             "chart-card": {
-                "chart-types": {
-                    "price": "price",
-                    "options": "options",
-                    "trading-view": "trading view"
-                },
                 "no-chart-data": "No chart data"
             },
             "transactions-card": {
-                "recent-market-tab-title": "recent market activity",
-                "your-activity-tab-title": "your activity",
-                "pending-transactions-tab-title": "pending transactions",
                 "table": {
                     "date-time-col": "date | time",
                     "type-col": "type",
@@ -403,9 +541,6 @@
                 }
             },
             "trade-card": {
-                "shared": {
-                    "price-shift": "If a bid is too large for the current size of the market, it will cause slippage."
-                },
                 "maturity": {
                     "card-title": "Market has been closed",
                     "card-subtitle": "Options available:",
@@ -445,6 +580,11 @@
                             "sell": {
                                 "no-results": "You haven't created any sell order yet."
                             }
+                        },
+                        "tooltips": {
+                            "all": "View all orders. Click on the row to fill order.",
+                            "buy": "View buy orders. Click on the row to fill order.",
+                            "sell": "View sell orders. Click on the row to fill order."
                         }
                     },
                     "table": {
@@ -537,14 +677,6 @@
                         "progress-label": "Filling order in progress..."
                     }
                 },
-                "my-orders": {
-                    "long": {
-                        "title": "My active Long orders"
-                    },
-                    "short": {
-                        "title": "My active Short order"
-                    }
-                },
                 "cancel-order": {
                     "title": "Cancel order?",
                     "confirm-button": {
@@ -574,7 +706,29 @@
             "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",
-            "view-all-orders": "View all orders"
+            "view-all-orders": "View all orders",
+            "difference-text-tooltip": "Difference between current and strike price",
+            "table": {
+                "condition-col": "Condition",
+                "when-col": "When",
+                "deposit-amount-col": "Amount to deposit",
+                "return-col": "Return if win",
+                "receive-amount-col": "Amount to receive",
+                "options-to-sell-col": "Options to sell",
+                "options-in-wallet-col": "Options in wallet",
+                "actions-col": "Actions"
+            }
+        },
+        "leaderboard": {
+            "search-placeholder": "Display Name",
+            "table": {
+                "rank-col": "Rank",
+                "display-name-col": "Display Name",
+                "trades-col": "Trades",
+                "volume-col": "Volume",
+                "netprofit-col": "Netprofit",
+                "netprofit-col-tooltip": "Profit is only calculated on the matured markets"
+            }
         },
         "leaderboard": {
             "trading-competition": {
@@ -589,19 +743,31 @@
         },
         "common": {
             "time-remaining": {
-                "ended": "ended"
+                "ended": "ended",
+                "years": "years",
+                "year": "year",
+                "months": "months",
+                "month": "month",
+                "weeks": "weeks",
+                "week": "week",
+                "days": "days",
+                "day": "day",
+                "hours": "hours",
+                "hour": "hour",
+                "minutes": "minutes",
+                "minute": "minute",
+                "seconds": "seconds",
+                "second": "second",
+                "minutes-short": "m",
+                "seconds-short": "s"
             },
             "long": "long",
             "short": "short",
-            "price": "price",
             "amount-long": "{{amount}} long",
             "amount-short": "{{amount}} short",
-            "final-price": "final price:",
-            "claimable-amount": "claimable: {{amount}}",
             "long-price": "Long price",
             "short-price": "Short price",
             "new-to-binary-options": "New to Binary Options on Synthetix? Make sure to read how it works first!",
-            "withdrawals": "withdrawals",
             "order-periods": {
                 "10M": "10 minutes",
                 "1H": "1 hour",

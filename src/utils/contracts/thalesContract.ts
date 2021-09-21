@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const thalesContract = {
     addresses: {
-        [NetworkId.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
-        [NetworkId.Ropsten]: '0xaF05693d2c336b40055F6531556aB6D0Ebf003D8',
+        [NetworkId.Mainnet]: '0x03E173Ad8d1581A4802d3B532AcE27a62c5B81dc',
+        [NetworkId.Ropsten]: '0x39Ed4A44C5a390415F1b1dDE2C77a61168aAdFbf',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x6Ffa6BEda785710EA4089B5AB93Eb381da335EF4',
+        [NetworkId.Kovan]: '0x9e7769409E3e5A6821eeDcF33371FCA929fE6A48',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement

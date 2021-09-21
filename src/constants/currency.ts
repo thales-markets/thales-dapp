@@ -170,6 +170,7 @@ export const OPTIONS_CURRENCY_MAP = {
     long: 'sLONG',
     short: 'sSHORT',
 };
+export const THALES_CURRENCY = 'THALES';
 
 export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.SNX]: SNXIcon,

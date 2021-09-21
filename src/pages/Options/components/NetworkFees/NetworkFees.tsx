@@ -80,6 +80,7 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
 const NetworkFeeSummaryContent = styled(SummaryContent)`
     font-size: 13px;
     line-height: 24px;
+    flex: 1;
     @media screen and (max-width: 1024px) {
         font-style: normal;
         font-weight: normal;

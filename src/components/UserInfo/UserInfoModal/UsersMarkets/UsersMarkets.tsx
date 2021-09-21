@@ -7,6 +7,7 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { MarketRow, Row } from '../UserInfoModal';
+import { useTranslation } from 'react-i18next';
 
 type UsersMarketsProps = {
     usersMarkets: OptionsMarkets;
@@ -14,20 +15,21 @@ type UsersMarketsProps = {
 };
 
 const UsersMarkets: React.FC<UsersMarketsProps> = ({ usersMarkets, onClose }) => {
+    const { t } = useTranslation();
     return (
         <>
             <Row>
                 <Text className="bold" style={{ flex: 2 }}>
-                    Asset
+                    {t(`user-info.table.asset-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
-                    Strike Price
+                    {t(`user-info.table.strike-price-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
-                    Maturity Date
+                    {t(`user-info.table.maturity-date-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
-                    Pool Size
+                    {t(`user-info.table.pool-size-col`)}
                 </Text>
             </Row>
             {usersMarkets?.map((market, index) => (

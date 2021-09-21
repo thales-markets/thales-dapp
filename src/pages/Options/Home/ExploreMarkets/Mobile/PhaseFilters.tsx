@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import arrowDown from 'assets/images/filters/arrow-down.svg';
+import { useTranslation } from 'react-i18next';
 
 export const SearchWrapper = styled(FlexDiv)`
     width: 100%;
@@ -46,9 +47,15 @@ type CategoryFiltersProps = {
     onClick: () => void;
 };
 
-export const PhaseFilters: React.FC<CategoryFiltersProps> = ({ filter, children, onClick }) => (
-    <SearchWrapper onClick={onClick}>
-        <TextWrapper>Show: {filter}</TextWrapper>
-        {children}
-    </SearchWrapper>
-);
+export const PhaseFilters: React.FC<CategoryFiltersProps> = ({ filter, children, onClick }) => {
+    const { t } = useTranslation();
+
+    return (
+        <SearchWrapper onClick={onClick}>
+            <TextWrapper>
+                {t(`options.filters-labels.show`)}: {filter}
+            </TextWrapper>
+            {children}
+        </SearchWrapper>
+    );
+};

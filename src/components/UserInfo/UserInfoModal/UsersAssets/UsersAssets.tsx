@@ -16,6 +16,8 @@ import { MarketRow, Row } from '../UserInfoModal';
 import ReactCountryFlag from 'react-country-flag';
 import { LightTooltip } from '../../../../pages/Options/Market/components';
 import exerciseOptionIcon from '../../../../assets/images/exercise-option.svg';
+import { useTranslation } from 'react-i18next';
+
 type UsersAssetsProps = {
     optionsMarkets: OptionsMarkets;
     walletAddress: string;
@@ -23,6 +25,7 @@ type UsersAssetsProps = {
 };
 
 const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress, onClose }) => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -39,19 +42,19 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
         <>
             <Row>
                 <Text className="bold" style={{ flex: 2 }}>
-                    Asset
+                    {t(`user-info.table.asset-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2, textAlign: 'center', paddingLeft: 14 }}>
-                    Strike Price
+                    {t(`user-info.table.strike-price-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 2, paddingLeft: 20 }}>
-                    Maturity Date
+                    {t(`user-info.table.maturity-date-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 1, textAlign: 'center', paddingRight: 18 }}>
-                    sLong
+                    {t(`user-info.table.long-col`)}
                 </Text>
                 <Text className="bold" style={{ flex: 1 }}>
-                    sShort
+                    {t(`user-info.table.short-col`)}
                 </Text>
             </Row>
             {assets.map((asset, index) => {

@@ -29,6 +29,25 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, font
     const [duration, setDuration] = useState<Duration>(intervalToDuration({ start: now, end }));
     const { t } = useTranslation();
 
+    const dateTimeTranslationMap = {
+        years: t('options.common.time-remaining.years'),
+        year: t('options.common.time-remaining.year'),
+        months: t('options.common.time-remaining.months'),
+        month: t('options.common.time-remaining.month'),
+        weeks: t('options.common.time-remaining.weeks'),
+        week: t('options.common.time-remaining.week'),
+        days: t('options.common.time-remaining.days'),
+        day: t('options.common.time-remaining.day'),
+        hours: t('options.common.time-remaining.hours'),
+        hour: t('options.common.time-remaining.hour'),
+        minutes: t('options.common.time-remaining.minutes'),
+        minute: t('options.common.time-remaining.minute'),
+        seconds: t('options.common.time-remaining.seconds'),
+        second: t('options.common.time-remaining.second'),
+        'minutes-short': t('options.common.time-remaining.minutes-short'),
+        'seconds-short': t('options.common.time-remaining.seconds-short'),
+    };
+
     useEffect(() => {
         if (onEnded && timeElapsed) {
             onEnded();
@@ -58,8 +77,8 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, font
             {timeElapsed
                 ? t('options.common.time-remaining.ended')
                 : showRemainingInWeeks
-                ? `${weeksDiff} weeks`
-                : formattedDuration(duration)}
+                ? `${weeksDiff} ${t('options.common.time-remaining.weeks')}`
+                : formattedDuration(duration, dateTimeTranslationMap)}
         </Container>
     );
 };

@@ -14,6 +14,11 @@ export const FlexDivCentered = styled(FlexDiv)`
     justify-content: center;
 `;
 
+export const FlexDivSpaceBetween = styled(FlexDiv)`
+    align-items: center;
+    justify-content: space-between;
+`;
+
 export const FlexDivEnd = styled(FlexDiv)`
     justify-content: end;
 `;
@@ -316,7 +321,7 @@ export const ProgressBar = styled.div`
 `;
 
 export const FilterButton = styled(Button)`
-    width: 110px;
+    min-width: 110px;
     height: 40px;
     margin: 24px 10px;
     background: transparent;
@@ -359,4 +364,13 @@ export const SyntetixLogo = styled.img`
         top: 4px;
         margin-left: 6px;
     }
+`;
+export const GradientText = styled.span<{ gradient: string; fontSize: number; fontWeight: number }>`
+    font-size: ${(props) => props.fontSize}px;
+    font-weight: ${(props) => props.fontWeight};
+    background: ${(props) => props.gradient};
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
 `;

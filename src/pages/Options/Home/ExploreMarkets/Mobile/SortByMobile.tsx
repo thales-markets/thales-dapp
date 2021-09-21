@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 
 import arrowDown from 'assets/images/filters/arrow-down.svg';
+import { useTranslation } from 'react-i18next';
 
 const SortWrapper = styled(FlexDiv)`
     width: 100%;
@@ -44,11 +45,16 @@ type SortyByMobileProps = {
     onClick: () => void;
 };
 
-export const SortyByMobile: React.FC<SortyByMobileProps> = ({ filter, onClick, children }) => (
-    <>
-        <SortWrapper className="markets-mobile__sortWrapper" onClick={onClick}>
-            <TextWrapper>Sort by (always latest): {filter}</TextWrapper>
-            {children}
-        </SortWrapper>
-    </>
-);
+export const SortyByMobile: React.FC<SortyByMobileProps> = ({ filter, onClick, children }) => {
+    const { t } = useTranslation();
+    return (
+        <>
+            <SortWrapper className="markets-mobile__sortWrapper" onClick={onClick}>
+                <TextWrapper>
+                    {t(`options.filters-labels.sort-by`)}: {filter}
+                </TextWrapper>
+                {children}
+            </SortWrapper>
+        </>
+    );
+};

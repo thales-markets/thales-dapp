@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv } from 'theme/common';
 import searchIcon from 'assets/images/search-icon.svg';
+import { useTranslation } from 'react-i18next';
 
 export const SearchWrapper = styled(FlexDiv)`
     align-items: center;
@@ -45,19 +46,23 @@ type SearchMarketProp = {
     className?: string;
 };
 
-const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch, className }) => (
-    <SearchWrapper className={className ? className : ''}>
-        <SearchInput
-            onChange={(e) => setAssetSearch(e.target.value)}
-            onFocus={() =>
-                document.body.clientWidth < 600
-                    ? document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' })
-                    : ''
-            }
-            value={assetSearch}
-            placeholder="Try ETH"
-        />
-    </SearchWrapper>
-);
+const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch, className }) => {
+    const { t } = useTranslation();
+
+    return (
+        <SearchWrapper className={className ? className : ''}>
+            <SearchInput
+                onChange={(e) => setAssetSearch(e.target.value)}
+                onFocus={() =>
+                    document.body.clientWidth < 600
+                        ? document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' })
+                        : ''
+                }
+                value={assetSearch}
+                placeholder={t(`options.filters-labels.search-placeholder`)}
+            />
+        </SearchWrapper>
+    );
+};
 
 export default SearchMarket;

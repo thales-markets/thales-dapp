@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SYNTHS_MAP } from 'constants/currency';
+import { SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -12,6 +12,10 @@ import { truncateAddress } from 'utils/formatters/string';
 import avatar from 'assets/images/avatar.svg';
 import UserInfoModal from './UserInfoModal';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { ReactComponent as InfoIcon } from '../../assets/images/info.svg';
+import ThalesBalanceTooltip from './ThalesBalanceTooltip';
+import { withStyles } from '@material-ui/core';
+import MaterialTooltip from '@material-ui/core/Tooltip';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -19,49 +23,61 @@ const UserInfo: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
     const [open, setOpen] = useState(false);
+    const [thalesTotalBalance, setThalesTotalBalance] = useState(0);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+
     const walletBalancesMap =
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+    const iconSize = thalesTotalBalance ? '20' : '15';
 
     return (
         <>
             <UserInfoWrapper className="dapp-header__userInfo" onClick={setOpen.bind(this, true)}>
-                <EthBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</EthBalance>
+                <SUSDBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SUSDBalance>
                 <NetworkWrapper>
                     <AddressWrapper>
                         <p>{truncateAddress(walletAddress)}</p>
                         <p>{network.networkName}</p>
                     </AddressWrapper>
-                    <Image style={{ width: '18px', height: '18px', marginRight: '20px' }} src={avatar}></Image>
+                    <Image style={{ width: '18px', height: '18px', marginRight: '20px' }} src={avatar} />
                 </NetworkWrapper>
+                <ThalesBalance>
+                    <StyledMaterialTooltip
+                        PopperProps={{ keepMounted: true }}
+                        title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
+                    >
+                        <StyledInfoIcon width={iconSize} height={iconSize} />
+                    </StyledMaterialTooltip>
+                    {formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}
+                </ThalesBalance>
             </UserInfoWrapper>
             <UserInfoModal
                 walletAddress={walletAddress}
                 network={network.networkName}
                 open={open}
                 handleClose={setOpen.bind(this, false)}
-            ></UserInfoModal>
+            />
         </>
     );
 };
 
 const UserInfoWrapper = styled(FlexDiv)`
     height: 40px;
-    width: 260px;
+    width: 320px;
     background: #0a2e66;
     border-radius: 30px;
     align-items: center;
     cursor: pointer;
 `;
 
-const EthBalance = styled.p`
-    margin: 14px 10px 14px 20px !important;
+const SUSDBalance = styled.p`
+    padding: 14px 10px 14px 20px !important;
     flex: 3;
     background: #0a2e66;
     border-radius: 30px;
@@ -71,6 +87,25 @@ const EthBalance = styled.p`
     text-align: center;
     letter-spacing: 0.4px;
     color: #f6f6fe;
+    height: 100%;
+    display: flex;
+    align-items: center;
+`;
+
+const ThalesBalance = styled.p`
+    padding: 14px 20px 14px 0 !important;
+    flex: 3;
+    background: #0a2e66;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 14px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    color: #f6f6fe;
+    height: 100%;
+    display: flex;
+    align-items: center;
 `;
 
 const NetworkWrapper = styled(FlexDiv)`
@@ -104,5 +139,30 @@ const AddressWrapper = styled(FlexDivColumnCentered)`
         color: #f6f6fe;
     }
 `;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    margin-left: 10px;
+    margin-right: 5px;
+`;
+
+const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #00D1FF',
+        },
+        color: '#04045A',
+    },
+    tooltip: {
+        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
+        borderRadius: '23px',
+        border: '1px solid #0a2e66',
+        padding: '15px',
+        fontSize: '16px',
+        lineHeight: '24px',
+        letterSpacing: '0.4px',
+        color: '#F6F6FE',
+        maxWidth: 700,
+    },
+}))(MaterialTooltip);
 
 export default UserInfo;

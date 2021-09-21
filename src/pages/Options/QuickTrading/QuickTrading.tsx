@@ -46,20 +46,20 @@ export enum TradingModeFilterEnum {
 }
 
 export enum OrderFilterEnum {
-    All = 'All',
-    MyOrders = 'My Orders',
+    All = 'all',
+    MyOrders = 'my-orders',
 }
 
 export enum CoinFilterEnum {
-    All = 'All',
-    Bitcoin = 'Bitcoin',
-    Ethereum = 'Ethereum',
+    All = 'all',
+    Bitcoin = 'bitcoin',
+    Ethereum = 'ethereum',
 }
 
 export enum OptionFilterEnum {
-    All = 'All',
-    Long = 'Long',
-    Short = 'Short',
+    All = 'all',
+    Long = 'long',
+    Short = 'short',
 }
 
 enum OrderDirection {
@@ -329,7 +329,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                     }
                                     key={filterItem}
                                     img={getOrderImage(filterItem)}
-                                    text={filterItem}
+                                    text={t(`options.filters-labels.${filterItem}`)}
                                 />
                             );
                         })}
@@ -343,7 +343,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                     }
                                     key={filterItem}
                                     img={getCoinImage(filterItem)}
-                                    text={filterItem}
+                                    text={t(`options.filters-labels.${filterItem}`)}
                                 />
                             );
                         })}
@@ -357,7 +357,7 @@ const QuickTradingPage: React.FC<any> = () => {
                                     }
                                     key={filterItem}
                                     img={getOptionImage(filterItem)}
-                                    text={filterItem}
+                                    text={t(`options.filters-labels.${filterItem}`)}
                                 />
                             );
                         })}

@@ -1,14 +1,31 @@
 import { NetworkId } from 'utils/network';
-import { CurrencyKey } from './currency';
 
 export const QUERY_KEYS = {
     WalletBalances: {
+        RetroAirdrop: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'retroAirdrop',
+            walletAddress,
+            networkId,
+        ],
+        OngoingAirdrop: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'ongoingAirdrop',
+            walletAddress,
+            networkId,
+        ],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
+        Thales: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'thales', walletAddress, networkId],
+        Vesting: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'vesting',
+            walletAddress,
+            networkId,
+        ],
     },
     Rates: {
-        HistoricalRates: (currencyKey: CurrencyKey) => ['rates', 'historicalRates', currencyKey],
         ExchangeRates: ['rates', 'exchangeRates'],
     },
     Synths: {
@@ -57,6 +74,26 @@ export const QUERY_KEYS = {
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
+    },
+    Staking: {
+        Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],
+        Escrow: (walletAddress: string, networkId: NetworkId) => ['staking', 'escrow', walletAddress, networkId],
+    },
+    Token: {
+        Transactions: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'transactions',
+            walletAddress,
+            networkId,
+        ],
+        VestingSchedule: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'vesting',
+            'schedule',
+            walletAddress,
+            networkId,
+        ],
+        Info: (networkId: NetworkId) => ['token', 'info', networkId],
     },
 };
 
