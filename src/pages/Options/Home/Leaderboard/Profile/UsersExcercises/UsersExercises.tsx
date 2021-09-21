@@ -6,13 +6,12 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import React from 'react';
 import Currency from 'components/Currency';
 
-type UsersTradesProps = {
-    usersTrades: any[];
+type UsersExercisesProps = {
+    usersExercises: any[];
     market: any;
 };
 
-const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
-    console.log(usersTrades);
+const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market }) => {
     return (
         <FlexDivColumn>
             <Row>
@@ -53,20 +52,20 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
             <FlexDivColumn>
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Maker amount
+                        Amount
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Taker amount
+                        Side
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
                         Timestamp
                     </Text>
                 </Row>
-                {usersTrades?.map((trade, index) => (
+                {usersExercises?.map((exercise, index) => (
                     <Row className="text-xs" key={index}>
-                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, trade.makerAmount)}</Text>
-                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, trade.takerAmount)}</Text>
-                        <Text style={{ flex: 1 }}>{formatShortDate(new Date(trade.timestamp))}</Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
+                        <Text style={{ flex: 1 }}>{exercise.side}</Text>
+                        <Text style={{ flex: 1 }}>{formatShortDate(new Date(exercise.timestamp))}</Text>
                     </Row>
                 ))}
             </FlexDivColumn>
@@ -74,4 +73,4 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
     );
 };
 
-export default UsersTrades;
+export default UsersExercises;

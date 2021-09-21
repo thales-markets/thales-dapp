@@ -5,12 +5,14 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import React from 'react';
 import Currency from 'components/Currency';
-type UsersMintsProps = {
-    usersMints: any[];
+
+type UsersUnclaimedProps = {
+    usersUnclaimed: any[];
     market: any;
 };
 
-const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
+const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market }) => {
+    console.log(usersUnclaimed);
     return (
         <FlexDivColumn>
             <Row>
@@ -47,24 +49,21 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                 <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                 <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
+                <Text style={{ flex: 1 }}>{market.result}</Text>
             </MarketRow>
             <FlexDivColumn>
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Amount
+                        Long
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Side
-                    </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        Timestamp
+                        Short
                     </Text>
                 </Row>
-                {usersMints?.map((mint, index) => (
+                {usersUnclaimed?.map((unclaimed, index) => (
                     <Row className="text-xs" key={index}>
-                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, mint.amount)}</Text>
-                        <Text style={{ flex: 1 }}>{mint.side}</Text>
-                        <Text style={{ flex: 1 }}>{formatShortDate(new Date(mint.timestamp))}</Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.long)}</Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.short)}</Text>
                     </Row>
                 ))}
             </FlexDivColumn>
@@ -72,4 +71,4 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
     );
 };
 
-export default UsersMints;
+export default UsersUnclaimed;

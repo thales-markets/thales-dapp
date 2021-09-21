@@ -10,8 +10,10 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Image } from 'theme/common';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
+import UsersExercises from './UsersExcercises';
 import UsersMints from './UsersMints';
-import UsersTrades from './UsersTrades/UsersMints';
+import UsersTrades from './UsersTrades';
+import UsersUnclaimed from './UsersUnclaimed';
 
 export enum Filters {
     Mints = 'mints',
@@ -23,7 +25,7 @@ export enum Filters {
 const Profile: React.FC<any> = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const walletAddress = '0x20f9ddfa193d0fe2f73d8b7d749b1355ef019887';
+    const walletAddress = '0x4d03ef005e5f559fc9294a8e1cebba09284b1f82';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [searchString, setSearchString] = useState<string>('');
     const [filter, setFilter] = useState<string>('');
@@ -65,37 +67,42 @@ const Profile: React.FC<any> = () => {
                 tradesMap.set(trade.market.address, [trade.trade]);
             }
         });
-        console.log(tradesMap);
         return tradesMap;
     }, [searchString]);
 
-    // const extractExcercisesProfileData = useMemo(() => {
-    //     const excercisesMap = new Map();
-    //     profile?.excercises.map((excercise: any) => {
-    //         if (excercisesMap.get(excercise.market.address)) {
-    //             const txsPerMarket = excercisesMap.get(excercise.market.address);
-    //             txsPerMarket.push(excercise.tx);
-    //             excercisesMap.set(excercise.market.address, txsPerMarket);
-    //         } else {
-    //             excercisesMap.set(excercise.market.address, [excercise.tx]);
-    //         }
-    //     });
-    //     return excercisesMap;
-    // }, [searchString]);
+    const extractExercisesProfileData = useMemo(() => {
+        const exercisesMap = new Map();
+        profile?.excercises.map((exercise: any) => {
+            if (exercisesMap.get(exercise.market.address)) {
+                const txsPerMarket = exercisesMap.get(exercise.market.address);
+                txsPerMarket.push(exercise.tx);
+                exercisesMap.set(exercise.market.address, txsPerMarket);
+            } else {
+                exercisesMap.set(exercise.market.address, [exercise.tx]);
+            }
+        });
 
-    // const extractUnclaimedProfileData = useMemo(() => {
-    //     const unclaimedMap = new Map();
-    //     profile?.excercises.map((unclaimed: any) => {
-    //         if (unclaimedMap.get(unclaimed.market.address)) {
-    //             const txsPerMarket = unclaimedMap.get(unclaimed.market.address);
-    //             txsPerMarket.push(unclaimed.tx);
-    //             unclaimedMap.set(unclaimed.market.address, txsPerMarket);
-    //         } else {
-    //             unclaimedMap.set(unclaimed.market.address, [unclaimed.tx]);
-    //         }
-    //     });
-    //     return unclaimedMap;
-    // }, [searchString]);
+        return exercisesMap;
+    }, [searchString]);
+
+    const extractUnclaimedProfileData = useMemo(() => {
+        const unclaimedMap = new Map();
+        profile?.unclaimed.map((unclaimed: any) => {
+            if (unclaimedMap.get(unclaimed.market.address)) {
+                const txsPerMarket = unclaimedMap.get(unclaimed.market.address);
+                txsPerMarket.push(unclaimed);
+                unclaimedMap.set(unclaimed.market.address, txsPerMarket);
+            } else {
+                unclaimedMap.set(unclaimed.market.address, [unclaimed]);
+            }
+        });
+
+        console.log(unclaimedMap);
+
+        return unclaimedMap;
+    }, [searchString]);
+
+    console.log(extractUnclaimedProfileData);
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
@@ -164,29 +171,43 @@ const Profile: React.FC<any> = () => {
                                 key={index}
                                 market={
                                     profile?.trades
-                                        .filter((mint: any) => mint.market.address === key)
-                                        .map((mint: any) => mint.market)[0]
+                                        .filter((trade: any) => trade.market.address === key)
+                                        .map((trade: any) => trade.market)[0]
                                 }
                                 usersTrades={extractTradesProfileData.get(key)}
                             />
                         );
                     })}
 
-                {/* {filter === Filters.TRADES && (
-                        Object.keys(extractTradesProfileData).map((key) => {
-                            return <UsersTrades market={key} usersMarkets={extractTradesProfileData.get(key)} />
-                        })
-                    )}
-                    {filter === Filters.EXCERCISES && (
-                        Object.keys(extractExcercisesProfileData).map((key) => {
-                            return <UsersExcercises market={key} usersMarkets={extractExcercisesProfileData.get(key)}  />
-                        })
-                    )}
-                    {filter === Filters.UNCLAIMED && (
-                        Object.keys(extractUnclaimedProfileData).map((key) => {
-                            return <UsersUnclaimed market={key} usersMarkets={extractUnclaimedProfileData.get(key)}  />
-                        })
-                    )} */}
+                {filter === Filters.Excercises &&
+                    Array.from(extractExercisesProfileData.keys()).map((key, index) => {
+                        return (
+                            <UsersExercises
+                                key={index}
+                                market={
+                                    profile?.excercises
+                                        .filter((excercise: any) => excercise.market.address === key)
+                                        .map((excercise: any) => excercise.market)[0]
+                                }
+                                usersExercises={extractExercisesProfileData.get(key)}
+                            />
+                        );
+                    })}
+
+                {filter === Filters.Unclaimed &&
+                    Array.from(extractUnclaimedProfileData.keys()).map((key, index) => {
+                        return (
+                            <UsersUnclaimed
+                                key={index}
+                                market={
+                                    profile?.unclaimed
+                                        .filter((unclaimed: any) => unclaimed.market.address === key)
+                                        .map((unclaimed: any) => unclaimed.market)[0]
+                                }
+                                usersUnclaimed={extractUnclaimedProfileData.get(key)}
+                            />
+                        );
+                    })}
             </DataWrapper>
         </FlexDivColumnCentered>
     );

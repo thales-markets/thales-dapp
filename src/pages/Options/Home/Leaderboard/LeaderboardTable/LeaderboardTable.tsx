@@ -194,7 +194,7 @@ const LeaderboardPage: React.FC<any> = () => {
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ marginTop: 50 }}>
+            <FlexDivRow style={{ marginTop: 50, minWidth: '1100px' }}>
                 <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600, margin: '22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
