@@ -136,9 +136,6 @@
         "select-date": "select date",
         "select": "select",
         "or": "or",
-        "of": "of",
-        "here": "here",
-        "sheet": "sheet",
         "enable-wallet-access": {
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}..."
@@ -155,6 +152,9 @@
             "earn-label": "THALES"
         },
         "coming-soon": "Coming soon...",
+        "of": "of",
+        "here": "here",
+        "sheet": "sheet",
         "pagination": {
             "page": "Page",
             "rows-per-page": "Rows per page:"
@@ -190,13 +190,13 @@
             "sell": "Sell"
         },
         "filters-labels": {
-            "all": "All",
             "category": "Category",
             "discover": "Discover",
-            "show": "Show",
             "sort-by": "Sort by (always latest)",
-            "search-placeholder": "Try ETH",
             "option": "Option",
+            "show": "Show",
+            "search-placeholder": "Try ETH",
+            "all": "All",
             "trading": "Trading",
             "maturity": "Maturity",
             "expiry": "Expiry",
@@ -231,18 +231,18 @@
                 "trending": "Trending Markets",
                 "table": {
                     "view-all-markets": "View all markets",
-                    "no-markets-found": "No markets found.",
-                    "no-markets-created": "You haven’t created any market yet."
+                    "no-markets-created": "You haven’t created any market yet.",
+                    "no-markets-found": "No markets found."
                 }
             },
             "markets-table": {
                 "asset-col": "Asset",
-                "asset-price-col": "Asset price",
                 "strike-price-col": "Strike price",
-                "market-size-col": "Market size",
-                "time-remaining-col": "Time remaining",
+                "asset-price-col": "Asset price",
                 "open-orders-col": "Open orders",
-                "phase-col": "Phase"
+                "phase-col": "Phase",
+                "pool-size-col": "Market size",
+                "time-remaining-col": "Time remaining"
             }
         },
         "earn": {
@@ -433,9 +433,6 @@
                     "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
                 }
             },
-            "select-asset": "Please select asset.",
-            "enter-strike-price": "Please enter strike price.",
-            "difference-warning": "Difference is greater than 100 times.",
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
             "sellOptions": "Sell minted LONG/SHORT options",
@@ -462,6 +459,9 @@
                 "note2": "Pay zero Thales protocol fees for minting options tokens.",
                 "note3": "Pay Ethereum network fees (gas) when approving the market creation."
             },
+            "select-asset": "Please select asset.",
+            "enter-strike-price": "Please enter strike price.",
+            "difference-warning": "Difference is greater than 100 times.",
             "progress-tracker": {
                 "approving": "Approving {{currencyKey}}",
                 "submitting": "Submitting {{currencyKey}}",
@@ -701,13 +701,13 @@
             "title": "Quick Trading",
             "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
-            "difference-text-tooltip": "Difference between current and strike price",
             "counter-offer-button-label": "Counter",
             "cancel-button-label": "Cancel",
             "counter-offer-button-tooltip": "Make counter offer",
             "view-market-tooltip": "View market",
             "no-orders-found": "No orders found",
             "view-all-orders": "View all orders",
+            "difference-text-tooltip": "Difference between current and strike price",
             "table": {
                 "condition-col": "Condition",
                 "when-col": "When",

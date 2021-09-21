@@ -157,7 +157,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
             { id: 2, label: t(`options.home.markets-table.asset-col`), sortable: true },
             { id: 3, label: t(`options.home.markets-table.asset-price-col`), sortable: true },
             { id: 4, label: t(`options.home.markets-table.strike-price-col`), sortable: true },
-            { id: 5, label: t(`options.home.markets-table.market-size-col`), sortable: true },
+            { id: 5, label: t(`options.home.markets-table.pool-size-col`), sortable: true },
             { id: 6, label: t(`options.home.markets-table.time-remaining-col`), sortable: true },
             { id: 7, label: t(`options.home.markets-table.open-orders-col`), sortable: true },
             { id: 8, label: t(`options.home.markets-table.phase-col`), sortable: false },

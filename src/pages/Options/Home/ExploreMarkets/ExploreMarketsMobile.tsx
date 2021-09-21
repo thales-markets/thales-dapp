@@ -42,7 +42,7 @@ export enum SortByEnum {
     Asset = 'asset-col',
     Asset_Price = 'asset-price-co',
     Strike_Price = 'strike-price-col',
-    Pool_Size = 'market-size-col',
+    Pool_Size = 'pool-size-col',
     Time_Remaining = 'time-remaining-col',
     Open_Orders = 'open-orders-col',
 }
