@@ -17,28 +17,39 @@ export const secondsToTime = (seconds: number) => {
 
 // date-fns formatDuration does not let us customize the actual string, so we need to write this custom formatter.
 // TODO: support translations
-export const formattedDuration = (duration: Duration, delimiter = ' ', firstTwo = false) => {
+export const formattedDuration = (
+    duration: Duration,
+    dateTimeTranslationMap: any,
+    delimiter = ' ',
+    firstTwo = false
+) => {
     const formatted = [];
     if (duration.years) {
-        return `${duration.years} ${duration.years > 1 ? 'years' : 'year'}`;
+        return `${duration.years} ${
+            duration.years > 1 ? dateTimeTranslationMap['years'] : dateTimeTranslationMap['year']
+        }`;
     }
     if (duration.months) {
-        return `${duration.months} ${duration.months > 1 ? 'months' : 'month'}`;
+        return `${duration.months} ${
+            duration.months > 1 ? dateTimeTranslationMap['months'] : dateTimeTranslationMap['month']
+        }`;
     }
     if (duration.days) {
-        return `${duration.days} ${duration.days > 1 ? 'days' : 'day'}`;
+        return `${duration.days} ${duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']}`;
     }
     if (duration.hours) {
-        return `${duration.hours} ${duration.hours > 1 ? 'hours' : 'hour'}`;
+        return `${duration.hours} ${
+            duration.hours > 1 ? dateTimeTranslationMap['hours'] : dateTimeTranslationMap['hour']
+        }`;
     }
     if (duration.minutes) {
         if (duration.minutes > 9) {
-            return `${duration.minutes} minutes`;
+            return `${duration.minutes} ${dateTimeTranslationMap['minutes']}`;
         }
-        formatted.push(`${duration.minutes}m`);
+        formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
     }
     if (duration.seconds != null) {
-        formatted.push(`${duration.seconds}s`);
+        formatted.push(`${duration.seconds}${dateTimeTranslationMap['seconds-short']}`);
     }
     return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
 };

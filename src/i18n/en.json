@@ -732,7 +732,23 @@
         },
         "common": {
             "time-remaining": {
-                "ended": "ended"
+                "ended": "ended",
+                "years": "years",
+                "year": "year",
+                "months": "months",
+                "month": "month",
+                "weeks": "weeks",
+                "week": "week",
+                "days": "days",
+                "day": "day",
+                "hours": "hours",
+                "hour": "hour",
+                "minutes": "minutes",
+                "minute": "minute",
+                "seconds": "seconds",
+                "second": "second",
+                "minutes-short": "m",
+                "seconds-short": "s"
             },
             "long": "long",
             "short": "short",
