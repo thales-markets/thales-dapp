@@ -271,7 +271,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                                     setAmountToStake(balance);
                                 }}
                             >
-                                MAX
+                                {t('common.max')}
                             </MaxButton>
                         </MaxButtonContainer>
                     </FlexDiv>

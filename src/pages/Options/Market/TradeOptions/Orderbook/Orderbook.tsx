@@ -39,12 +39,6 @@ const orderbookFilterIconMap = {
     [OrderbookFilterEnum.SELL]: <OrderbookSellIcon />,
 };
 
-const orderbookFilterLabelMap = {
-    [OrderbookFilterEnum.ALL]: 'View all orders. Click on the row to fill order.',
-    [OrderbookFilterEnum.BUY]: 'View buy orders. Click on the row to fill order.',
-    [OrderbookFilterEnum.SELL]: 'View sell orders. Click on the row to fill order.',
-};
-
 const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
@@ -161,7 +155,10 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
             <MarketWidgetHeader widgetKey={MarketWidgetKey.ORDERBOOK}>
                 <FilterContainer>
                     {Object.values(OrderbookFilterEnum).map((filterItem) => (
-                        <LightTooltip key={filterItem} title={orderbookFilterLabelMap[filterItem]}>
+                        <LightTooltip
+                            key={filterItem}
+                            title={t(`options.market.trade-options.orderbook.filter.tooltips.${filterItem}`)}
+                        >
                             <OrderbookFilterButton
                                 className={` ${filter === filterItem ? 'selected' : ''} market__orderbook__headerBtn`}
                                 onClick={() => setFilter(filterItem)}

@@ -570,7 +570,9 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                         )}
                         {userFilter === PrimaryFilters.MyMarkets && (
                             <>
-                                <Text className="text-l bold pale-grey">You haven’t created any market yet.</Text>
+                                <Text className="text-l bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-created')}
+                                </Text>
                                 <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
                                     <Button
                                         className="secondary"
@@ -590,7 +592,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                             margin: 'auto 60px',
                                         }}
                                     >
-                                        or
+                                        {t('common.wallet.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}

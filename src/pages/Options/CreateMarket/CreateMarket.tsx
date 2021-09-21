@@ -650,7 +650,7 @@ export const CreateMarket: React.FC = () => {
                                     </InputLabel>
                                     <ErrorMessage
                                         show={!isCurrencyKeyValid && !isFocused}
-                                        text="Please select asset."
+                                        text={t('options.create-market.select-asset')}
                                     />
                                 </ShortInputContainer>
                                 <ShortInputContainer
@@ -707,12 +707,12 @@ export const CreateMarket: React.FC = () => {
                                     <CurrencyLabel>{USD_SIGN}</CurrencyLabel>
                                     <ErrorMessage
                                         show={!isStrikePriceValid}
-                                        text="Please enter strike price."
+                                        text={t('options.create-market.enter-strike-price')}
                                     ></ErrorMessage>
 
                                     {showWarning && (
                                         <Error className="text-xxxs warning">
-                                            Difference is greater than 100 times.
+                                            {t('options.create-market.difference-warning')}
                                         </Error>
                                     )}
                                 </ShortInputContainer>
@@ -1138,13 +1138,13 @@ export const CreateMarket: React.FC = () => {
                                     className="pale-grey text-s"
                                     style={{ margin: '0 70px', display: sellLong || sellShort ? 'block' : 'none' }}
                                 >
-                                    or
+                                    {t('common.or')}
                                 </Text>
                                 <Button
                                     className="tertiary progress-tracker-controls__button-div-responsive__bottom"
                                     onClick={() => navigateToOptionsMarket(market)}
                                 >
-                                    Go to market
+                                    {t('options.create-market.go-to-market')}
                                 </Button>
                             </>
                         ) : (

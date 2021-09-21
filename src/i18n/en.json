@@ -78,10 +78,12 @@
             "secondA": "More than 60 market types are secured by Chainlink price feeds, including cryptocurrencies, equities, commodities, FX, and index products.",
             "thirdQ": "Which asset do users need to mint or buy options on Thales?",
             "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now."
-        }
+        },
+        "discord": "Join Discord"
     },
     "maintenance-page": {
-        "title": "Stay tuned, coming soon..."
+        "title": "Stay tuned, coming soon...",
+        "powered-by": "Powered by"
     },
     "common": {
         "max": "max",
@@ -135,6 +137,8 @@
         "select": "select",
         "or": "or",
         "of": "of",
+        "here": "here",
+        "sheet": "sheet",
         "enable-wallet-access": {
             "approve-label": "Approve {{currencyKey}}",
             "approve-progress-label": "Approving {{currencyKey}}..."
@@ -154,6 +158,11 @@
         "pagination": {
             "page": "Page",
             "rows-per-page": "Rows per page:"
+        },
+        "unsupported-network": {
+            "title": "Oops! You are on wrong network!",
+            "description": "You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to continue.",
+            "button": "Switch to Mainnet"
         }
     },
     "modals": {
@@ -222,7 +231,8 @@
                 "trending": "Trending Markets",
                 "table": {
                     "view-all-markets": "View all markets",
-                    "no-markets-found": "No markets found."
+                    "no-markets-found": "No markets found.",
+                    "no-markets-created": "You haven’t created any market yet."
                 }
             },
             "markets-table": {
@@ -423,6 +433,9 @@
                     "desc": "Note: your sUSD will be locked up in this contract until the market maturity date"
                 }
             },
+            "select-asset": "Please select asset.",
+            "enter-strike-price": "Please enter strike price.",
+            "difference-warning": "Difference is greater than 100 times.",
             "min-amount": "Please enter funding amount. Min {{ minimum }} sUSD is required.",
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
             "sellOptions": "Sell minted LONG/SHORT options",
@@ -448,7 +461,14 @@
                 "note1": "Earn 0.5% in sUSD of the total market size at maturity date, less the size of your initial deposit.",
                 "note2": "Pay zero Thales protocol fees for minting options tokens.",
                 "note3": "Pay Ethereum network fees (gas) when approving the market creation."
-            }
+            },
+            "progress-tracker": {
+                "approving": "Approving {{currencyKey}}",
+                "submitting": "Submitting {{currencyKey}}",
+                "creating-market": "Creating market",
+                "finished": "Finished"
+            },
+            "go-to-market": "Go to market"
         },
         "market": {
             "overview": {
@@ -462,7 +482,8 @@
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
-                "deposited-currency-label": "Deposited {{currencyKey}}"
+                "deposited-currency-label": "Deposited {{currencyKey}}",
+                "event-name-label": "Event Name"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
@@ -559,6 +580,11 @@
                             "sell": {
                                 "no-results": "You haven't created any sell order yet."
                             }
+                        },
+                        "tooltips": {
+                            "all": "View all orders. Click on the row to fill order.",
+                            "buy": "View buy orders. Click on the row to fill order.",
+                            "sell": "View sell orders. Click on the row to fill order."
                         }
                     },
                     "table": {

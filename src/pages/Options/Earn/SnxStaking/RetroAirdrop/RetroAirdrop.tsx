@@ -236,10 +236,13 @@ const RetroAirdrop: React.FC = () => {
     );
 };
 
-const EligibilityLink: React.FC = () => (
-    <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroAirdropEligibilitySheet}>
-        sheet
-    </TooltipLink>
-);
+const EligibilityLink: React.FC = () => {
+    const { t } = useTranslation();
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroAirdropEligibilitySheet}>
+            {t('common.sheet')}
+        </TooltipLink>
+    );
+};
 
 export default RetroAirdrop;

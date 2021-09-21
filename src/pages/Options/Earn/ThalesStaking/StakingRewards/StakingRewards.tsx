@@ -156,7 +156,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         }
         return [
             {
-                name: 'Thales',
+                name: 'THALES',
                 value:
                     isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward
                         ? ongoingAirdrop.reward.stakingBalance

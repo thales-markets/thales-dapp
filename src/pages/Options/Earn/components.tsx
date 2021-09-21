@@ -175,6 +175,7 @@ export const MaxButton = styled.button`
     cursor: pointer;
     font-size: 16px;
     padding: 12px 32px 12px 32px;
+    text-transform: uppercase;
     &:disabled {
         opacity: 0.4;
         cursor: default;

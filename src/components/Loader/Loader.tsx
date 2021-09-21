@@ -9,8 +9,10 @@ import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { isNetworkSupported } from 'utils/network';
+import { useTranslation } from 'react-i18next';
 
 const Loader: React.FC = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     useEffect(() => {
@@ -23,18 +25,17 @@ const Loader: React.FC = () => {
             {networkId && !isNetworkSupported(networkId) ? (
                 <WrongNetworkWrapper>
                     <Image style={{ width: 200, height: 200, margin: 'auto' }} src={angry}></Image>
-                    <Text className="pale-grey text-l ls25">Oops! You are on wrong network!</Text>
+                    <Text className="pale-grey text-l ls25">{t(`common.unsupported-network.title`)}</Text>
 
                     <Text style={{ marginTop: 45 }} className="pale-grey text-s lh32 ls35">
-                        You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to
-                        continue.
+                        {t(`common.unsupported-network.descirption`)}
                     </Text>
                     <Button
                         style={{ alignSelf: 'flex-end', margin: '80px 0' }}
                         className="primary"
                         onClick={switchNetwork}
                     >
-                        Switch to Mainnet
+                        {t(`common.unsupported-network.button`)}
                     </Button>
                 </WrongNetworkWrapper>
             ) : history.location.pathname === '/' ? (

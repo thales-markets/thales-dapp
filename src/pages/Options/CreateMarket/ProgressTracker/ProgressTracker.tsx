@@ -5,6 +5,8 @@ import stateCurrent from 'assets/images/state-current.svg';
 import stateEmpty from 'assets/images/state-empty.svg';
 import styled from 'styled-components';
 import './media.scss';
+import { useTranslation } from 'react-i18next';
+import { SYNTHS_MAP } from 'constants/currency';
 
 type ProgressTrackerProps = {
     isWalletAccessEnabled?: boolean;
@@ -24,6 +26,8 @@ type ProgressTrackerProps = {
 };
 
 const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
+    const { t } = useTranslation();
+
     return (
         <Wrapper>
             <FlexDiv
@@ -36,7 +40,9 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 ></Image>
                 <Line className={props.isWalletAccessEnabled ? 'fill' : ''}></Line>
                 <Label className="text-s pale-grey" style={{ left: -36 }}>
-                    Approving sUSD
+                    {t('options.create-market.progress-tracker.approving', {
+                        currencyKey: SYNTHS_MAP.sUSD,
+                    })}
                 </Label>
             </FlexDiv>
 
@@ -48,7 +54,9 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     }
                 ></Image>
                 <Line className={props.isMarketCreated ? 'fill' : ''}></Line>
-                <Label className="text-s pale-grey">Creating market</Label>
+                <Label className="text-s pale-grey">
+                    {t('options.create-market.progress-tracker.creating-market')}
+                </Label>
             </FlexDiv>
             {!props.showLongProcess && !props.showShortProcess && (
                 <FlexDiv
@@ -57,7 +65,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 >
                     <Image src={!props.isMarketCreated ? stateEmpty : stateComplete}></Image>
                     <Label className="text-s pale-grey" style={{ left: -20 }}>
-                        Finished
+                        {t('options.create-market.progress-tracker.finished')}
                     </Label>
                 </FlexDiv>
             )}
@@ -79,7 +87,11 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                             (props.isLongApproved ? 'fill' : '')
                         }
                     ></Line>
-                    <Label className="text-s pale-grey">Approving sLong</Label>
+                    <Label className="text-s pale-grey">
+                        {t('options.create-market.progress-tracker.approving', {
+                            currencyKey: SYNTHS_MAP.sLONG,
+                        })}
+                    </Label>
                 </FlexDiv>
             )}
 
@@ -105,7 +117,11 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                             (props.isShortApproved ? 'fill' : '')
                         }
                     ></Line>
-                    <Label className="text-s pale-grey">Approving sShort</Label>
+                    <Label className="text-s pale-grey">
+                        {t('options.create-market.progress-tracker.approving', {
+                            currencyKey: SYNTHS_MAP.sSHORT,
+                        })}
+                    </Label>
                 </FlexDiv>
             )}
 
@@ -125,7 +141,11 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                         }
                     ></Image>
                     {props.showShortProcess && <Line className={props.isLongSubmitted ? 'fill' : ''}></Line>}
-                    <Label className="text-s pale-grey">Submitting sLong</Label>
+                    <Label className="text-s pale-grey">
+                        {t('options.create-market.progress-tracker.submitting', {
+                            currencyKey: SYNTHS_MAP.sLONG,
+                        })}
+                    </Label>
                 </FlexDiv>
             )}
 
@@ -144,7 +164,11 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                                 : stateCurrent
                         }
                     ></Image>
-                    <Label className="text-s pale-grey">Submitting sShort</Label>
+                    <Label className="text-s pale-grey">
+                        {t('options.create-market.progress-tracker.submitting', {
+                            currencyKey: SYNTHS_MAP.sSHORT,
+                        })}
+                    </Label>
                 </FlexDiv>
             )}
         </Wrapper>

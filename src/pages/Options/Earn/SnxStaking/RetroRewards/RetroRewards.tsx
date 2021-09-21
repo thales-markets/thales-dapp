@@ -355,10 +355,13 @@ const TooltipTitle = styled.span<{ color: string }>`
     margin-bottom: 10px;
 `;
 
-const EligibilityLink: React.FC = () => (
-    <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroUnlockEligibilitySheet}>
-        here
-    </TooltipLink>
-);
+const EligibilityLink: React.FC = () => {
+    const { t } = useTranslation();
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.RetroUnlockEligibilitySheet}>
+            {t('common.here')}
+        </TooltipLink>
+    );
+};
 
 export default RetroRewards;

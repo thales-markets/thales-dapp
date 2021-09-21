@@ -58,7 +58,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </FlexDivCentered>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>Event Name</Title>
+                        <Title>{t('options.market.overview.event-name-label')}</Title>
                         <Content fontSize={16}>
                             <FlexDivCentered>{optionsMarket.eventName}</FlexDivCentered>
                         </Content>

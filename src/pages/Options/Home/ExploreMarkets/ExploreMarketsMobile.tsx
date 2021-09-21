@@ -39,12 +39,12 @@ type ExploreMarketsMobileProps = {
 };
 
 export enum SortByEnum {
-    Asset = 'Asset',
-    Asset_Price = 'Asset Price',
-    Strike_Price = 'Strike Price',
-    Pool_Size = 'Pool Size',
-    Time_Remaining = 'Time Remaining',
-    Open_Orders = 'Open Orders',
+    Asset = 'asset-col',
+    Asset_Price = 'asset-price-co',
+    Strike_Price = 'strike-price-col',
+    Pool_Size = 'market-size-col',
+    Time_Remaining = 'time-remaining-col',
+    Open_Orders = 'open-orders-col',
 }
 
 export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
@@ -333,7 +333,9 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                         )}
                         {userFilter === PrimaryFilters.MyMarkets && (
                             <>
-                                <Text className="text-m bold pale-grey">You haven’t created any market yet.</Text>
+                                <Text className="text-m bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-created')}
+                                </Text>
                                 <FlexDiv
                                     style={{
                                         justifyContent: 'space-around',
@@ -359,7 +361,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                             margin: '24px',
                                         }}
                                     >
-                                        or
+                                        {t('common.wallet.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}
