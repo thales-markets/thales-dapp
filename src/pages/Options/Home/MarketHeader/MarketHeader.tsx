@@ -91,20 +91,21 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         src={burger}
                     />
                 </FlexDiv>
-
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                {!isWalletConnected ? (
-                    <Button
-                        className="primary dapp-header__connectWallet"
-                        style={{ fontSize: '16px', alignSelf: 'center' }}
-                        onClick={() => onboardConnector.connectWallet()}
-                    >
-                        {t('common.wallet.connect-your-wallet')}
-                    </Button>
-                ) : (
-                    <UserInfo />
-                )}
-                <LanguageSelector />
+                <FlexDiv>
+                    <LanguageSelector />
+                    {!isWalletConnected ? (
+                        <Button
+                            className="primary dapp-header__connectWallet"
+                            style={{ fontSize: '16px', alignSelf: 'center' }}
+                            onClick={() => onboardConnector.connectWallet()}
+                        >
+                            {t('common.wallet.connect-your-wallet')}
+                        </Button>
+                    ) : (
+                        <UserInfo />
+                    )}
+                </FlexDiv>
             </MarketHeaderWrapper>
             <Sidebar
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}

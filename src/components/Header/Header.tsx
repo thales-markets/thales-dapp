@@ -9,6 +9,7 @@ import { ReactComponent as PlayIcon } from 'assets/images/play.svg';
 import { ReactComponent as PauseIcon } from 'assets/images/pause.svg';
 import Cookies from 'universal-cookie';
 import { LightTooltip } from 'pages/Options/Market/components';
+import LanguageSelector from 'components/LanguageSelector';
 
 enum BurgerState {
     Init,
@@ -91,6 +92,7 @@ const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
+                <LanguageSelector />
                 {isAnimationAvailable && (
                     <LightTooltip title="Toogle animation">
                         <>
