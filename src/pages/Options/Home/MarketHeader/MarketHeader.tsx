@@ -31,6 +31,7 @@ import './media.scss';
 import { history } from 'utils/routes';
 import { Overlay } from 'components/Header/Header';
 import queryString from 'query-string';
+import LanguageSelector from 'components/LanguageSelector';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -103,6 +104,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 ) : (
                     <UserInfo />
                 )}
+                <LanguageSelector />
             </MarketHeaderWrapper>
             <Sidebar
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
