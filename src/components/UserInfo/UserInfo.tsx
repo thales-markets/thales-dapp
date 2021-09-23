@@ -106,6 +106,9 @@ const ThalesBalance = styled.p`
     height: 100%;
     display: flex;
     align-items: center;
+    @media (max-width: 767px) {
+        padding-left: 10px !important;
+    }
 `;
 
 const NetworkWrapper = styled(FlexDiv)`
@@ -143,6 +146,9 @@ const AddressWrapper = styled(FlexDivColumnCentered)`
 const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 10px;
     margin-right: 5px;
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
 const StyledMaterialTooltip = withStyles(() => ({

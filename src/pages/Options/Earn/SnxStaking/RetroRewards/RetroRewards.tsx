@@ -189,7 +189,7 @@ const RetroRewards: React.FC = () => {
                             {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
                         </InfoContent>
                     </InfoDiv>
-                    <PieChart height={200} width={200}>
+                    <PieChart style={{ margin: 'auto' }} height={200} width={200}>
                         <Pie
                             isAnimationActive={false}
                             blendStroke={true}
@@ -328,6 +328,20 @@ const Dot = styled.span<{ backgroundColor: string }>`
 const AmountsContainer = styled(FlexDiv)`
     padding: 20px 0 30px 0;
     justify-content: space-between;
+    @media (max-width: 1024px) {
+        > * {
+            text-align: center;
+            margin-right: 10px;
+        }
+    }
+    @media (max-width: 767px) {
+        padding-top: 25px;
+        padding-bottom: 25px;
+        > * {
+            padding: 15px;
+        }
+        flex-direction: column;
+    }
 `;
 
 const TooltipContainer = styled(FlexDivColumnCentered)<{ borderColor: string }>`
