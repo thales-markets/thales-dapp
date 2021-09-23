@@ -1,10 +1,16 @@
-import { Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@material-ui/core';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow,
+    withStyles,
+} from '@material-ui/core';
 import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
-import bronze from 'assets/images/medals/bronze.png';
-import gold from 'assets/images/medals/gold.png';
-import leaderboardIcon from 'assets/images/medals/leaderboard.svg';
-import silver from 'assets/images/medals/silver.png';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
@@ -13,19 +19,19 @@ import { StyledLink } from 'pages/Options/Market/components/MarketOverview/Marke
 import useLeaderboardQuery, { Leaderboard } from 'queries/options/useLeaderboardQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumnCentered, FlexDivRow, Image } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../../MarketsTable/components';
-import { PaginationWrapper, StyledTableRow } from '../../MarketsTable/MarketsTable';
+import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
+import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
-import { useTranslation } from 'react-i18next';
 
 enum OrderDirection {
     NONE,
@@ -72,7 +78,6 @@ const LeaderboardPage: React.FC<any> = () => {
 
     const profile = useMemo(() => {
         if (profiles && walletAddress) {
-            console.log(profiles, walletAddress);
             return profiles.get(walletAddress.trim().toLowerCase());
         }
     }, [profiles, walletAddress]);
@@ -184,18 +189,20 @@ const LeaderboardPage: React.FC<any> = () => {
 
     const headCells: HeadCell[] = [
         { id: 1, label: '', sortable: false },
-        { id: 2, label: '', sortable: false },
-        { id: 3, label: t('options.leaderboard.table.rank-col'), sortable: false },
+        { id: 2, label: t('options.leaderboard.table.rank-col'), sortable: false },
+        { id: 3, label: t('options.leaderboard.table.position-col'), sortable: false },
         { id: 4, label: t('options.leaderboard.table.display-name-col'), sortable: false },
         { id: 5, label: t('options.leaderboard.table.trades-col'), sortable: true },
         { id: 6, label: t('options.leaderboard.table.volume-col'), sortable: true },
         { id: 7, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
+        { id: 8, label: t('options.leaderboard.table.investment-col'), sortable: true },
+        { id: 9, label: t('options.leaderboard.table.gain-col'), sortable: true },
     ];
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ marginTop: 50, minWidth: '1100px' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600, margin: '22px 0' }}>
+            <FlexDivRow style={{ marginTop: 50, flexDirection: 'row-reverse' }}>
+                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -204,15 +211,25 @@ const LeaderboardPage: React.FC<any> = () => {
                         placeholder={t('options.leaderboard.search-placeholder')}
                     ></SearchInput>
                 </SearchWrapper>
-                <Image className="leaderboard__icon" style={{ width: 100, height: 100 }} src={leaderboardIcon}></Image>
             </FlexDivRow>
 
-            <TableContainer style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }} component={Paper}>
-                <Table className="leaderboard__table" aria-label="customized table">
-                    <TableHead
-                        className="leaderboard__columns"
-                        style={{ textTransform: 'uppercase', background: '#04045a' }}
-                    >
+            <TableContainer
+                style={{
+                    background: 'transparent',
+                    boxShadow: 'none',
+                    borderRadius: 0,
+                }}
+                component={Paper}
+            >
+                <Table
+                    className="leaderboard__table"
+                    aria-label="customized table"
+                    style={{
+                        borderCollapse: 'separate',
+                        borderSpacing: '0px 8px',
+                    }}
+                >
+                    <TableHead className="leaderboard__columns" style={{ textTransform: 'uppercase' }}>
                         <TableRow>
                             {headCells.map((cell: HeadCell, index) => {
                                 return (
@@ -260,16 +277,49 @@ const LeaderboardPage: React.FC<any> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
+                        {leaderboardData
+                            .filter((leader) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
+                            .map((leader: any, index: any) => {
+                                return (
+                                    <StyledTableRow
+                                        key={index}
+                                        style={{
+                                            background:
+                                                'linear-gradient(90deg, #3936C7 -10.96%, #2D83D2 46.31%, #23A5DD 103.01%, #35DADB 127.72%)',
+                                        }}
+                                    >
+                                        <StyledTableCell></StyledTableCell>
+                                        <StyledTableCell>{(leader as any).rank}</StyledTableCell>
+                                        <StyledTableCell>{'position'}</StyledTableCell>
+                                        <StyledTableCell>{'Your current rank'}</StyledTableCell>
+                                        <StyledTableCell>{leader.trades}</StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
+                                        </StyledTableCell>
+                                        <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                            {formatCurrencyWithSign(
+                                                USD_SIGN,
+                                                leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
+                                                2
+                                            )}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                        </StyledTableCell>
+                                        <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                            {Math.abs(leader.gain).toFixed(1)}%
+                                        </StyledTableCell>
+                                    </StyledTableRow>
+                                );
+                            })}
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell></StyledTableCell>
-                                    <StyledTableCell>
-                                        {(leader as any).rank <= 3 && (
-                                            <Image src={getMedal(leader)} style={{ width: 40, height: 40 }}></Image>
-                                        )}
+                                    <StyledTableCell style={{ height: getHeight(leader) }}>
+                                        {(leader as any).rank}
                                     </StyledTableCell>
-                                    <StyledTableCell>{(leader as any).rank}</StyledTableCell>
+                                    <StyledTableCell>{'position'}</StyledTableCell>
                                     <StyledTableCell>
                                         <StyledLink
                                             href={getEtherscanAddressLink(networkId, leader.walletAddress)}
@@ -336,17 +386,75 @@ interface HeadCell {
     sortable: boolean;
 }
 
+export const StyledTableRow = withStyles(() => ({
+    root: {
+        background: '#04045a',
+        '&:last-child': {
+            borderBottomLeftRadius: '23px',
+            borderBottomRightRadius: '23px',
+        },
+        '&:last-child > td:first-child': {
+            borderBottomLeftRadius: '23px',
+            borderTopLeftRadius: '23px !important',
+        },
+        '&:last-child a:last-child td': {
+            borderBottomRightRadius: '23px',
+            borderTopRightRadius: '23px !important',
+        },
+        '&.clickable': {
+            cursor: 'pointer',
+            '&:hover': {
+                background: '#0a0b52',
+            },
+        },
+    },
+}))(TableRow);
+
+export const StyledTableCell = withStyles(() => ({
+    head: {
+        position: 'relative',
+        border: 'none',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        lineHeight: '16px',
+        letterSpacing: ' 0.5px',
+        color: '#b8c6e5',
+    },
+    body: {
+        borderTop: '1px solid #CA91DC',
+        borderBottom: '1px solid #6AC1D5',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        lineHeight: '24px',
+        letterSpacing: ' 0.25px',
+        color: '#F6F6FE',
+        '&:last-child': {
+            borderBottomRightRadius: '23px',
+            borderTopRightRadius: '23px !important',
+            borderRight: '1px solid #6AC1D5',
+        },
+        '&:first-child': {
+            borderBottomLeftRadius: '23px',
+            borderTopLeftRadius: '23px',
+            borderLeft: '1px solid #CA91DC',
+        },
+    },
+}))(TableCell);
+
 export default LeaderboardPage;
 
-const getMedal = (leader: any) => {
+const getHeight = (leader: any) => {
+    console.log();
     switch (leader.rank) {
         case 1:
-            return gold;
+            return 160;
         case 2:
-            return silver;
+            return 130;
         case 3:
-            return bronze;
+            return 100;
         default:
-            return '';
+            return 75;
     }
 };

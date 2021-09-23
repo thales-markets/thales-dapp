@@ -723,14 +723,15 @@
             "search-placeholder": "Display Name",
             "table": {
                 "rank-col": "Rank",
+                "position-col": "Position",
                 "display-name-col": "Display Name",
                 "trades-col": "Trades",
                 "volume-col": "Volume",
                 "netprofit-col": "Netprofit",
-                "netprofit-col-tooltip": "Profit is only calculated on the matured markets"
-            }
-        },
-        "leaderboard": {
+                "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
+                "investment-col": "Investment",
+                "gain-col": "Gain"
+            },
             "trading-competition": {
                 "tab-title": "Trading competition"
             },

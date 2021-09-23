@@ -1,6 +1,7 @@
 import leaderboardIcon from 'assets/images/medals/leaderboard.svg';
 import { FilterButton } from 'pages/Options/Market/components';
 import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
+import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -33,11 +34,30 @@ const Profile: React.FC<any> = () => {
         enabled: isAppReady,
     });
 
+    const displayNamesQuery = useUsersDisplayNamesQuery({
+        enabled: isAppReady,
+    });
+
+    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
+        displayNamesQuery,
+    ]);
+
     const profiles = leaderboardQuery.data?.profiles;
 
     const profile = useMemo(() => {
         if (profiles && walletAddress) {
             if (userFilter) {
+                let filteredAddressByDisplayName;
+
+                for (const [key, value] of displayNamesMap.entries()) {
+                    if (value.toLowerCase().includes(userFilter.toLowerCase()))
+                        filteredAddressByDisplayName = key.trim().toLowerCase();
+                }
+
+                if (filteredAddressByDisplayName) {
+                    return profiles.get(filteredAddressByDisplayName);
+                }
+
                 const filteredAdresses = Array.from(profiles.keys()).filter((key) =>
                     key.toLowerCase().includes(userFilter.toLowerCase())
                 );

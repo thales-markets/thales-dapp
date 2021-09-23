@@ -32,9 +32,15 @@
     }
 
     &__tableBody {
+        & > tr:first-child {
+            margin-bottom: 30px;
+            td {
+                border: none !important;
+            }
+        }
         & > tr:last-child {
             td {
-                border-radius: 0 !important;
+                // border-radius: 0 !important;
             }
             td:first-child {
                 border-bottom-left-radius: 23px !important;
