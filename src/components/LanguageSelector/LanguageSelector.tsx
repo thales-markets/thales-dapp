@@ -6,18 +6,7 @@ import ReactCountryFlag from 'react-country-flag';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { ReactComponent as CheckmarkIcon } from 'assets/images/checkmark-white.svg';
-
-enum SupportedLanguages {
-    ENGLISH = 'en',
-    RUSSIAN = 'ru',
-    CHINESE = 'cn',
-}
-
-const LanguageNameMap = {
-    [SupportedLanguages.ENGLISH]: 'English',
-    [SupportedLanguages.RUSSIAN]: 'Pусский',
-    [SupportedLanguages.CHINESE]: '中文',
-};
+import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
 
 export const LanguageSelector: React.FC = () => {
     const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState(false);
@@ -28,7 +17,9 @@ export const LanguageSelector: React.FC = () => {
         setLanguageDropdownIsOpen(isOpen);
     };
 
-    const selectedLanguage = i18n.language;
+    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+        ? i18n.language
+        : DEFAULT_LANGUAGE;
 
     return (
         <>
