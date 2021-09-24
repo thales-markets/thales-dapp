@@ -733,7 +733,8 @@
                 "gain-col": "Gain"
             },
             "trading-competition": {
-                "tab-title": "Trading competition"
+                "tab-title": "Trading competition",
+                "competition-period": "Selected period"
             },
             "board": {
                 "tab-title": "Leaderboard"

@@ -54,8 +54,6 @@ const TradingCompetition: React.FC<any> = () => {
         ? leaderboardQuery.data.competition.sort((a, b) => b.volume - a.volume)
         : [];
 
-    const profiles = leaderboardQuery.data?.profiles;
-
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
     });
@@ -75,14 +73,6 @@ const TradingCompetition: React.FC<any> = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-    const profile = useMemo(() => {
-        if (profiles && walletAddress) {
-            return profiles.get(walletAddress.trim().toLowerCase());
-        }
-    }, [profiles, walletAddress]);
-
-    console.log(profile);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -201,8 +191,8 @@ const TradingCompetition: React.FC<any> = () => {
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ marginTop: 50, flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600, margin: '22px 0' }}>
+            <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
+                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -211,6 +201,9 @@ const TradingCompetition: React.FC<any> = () => {
                         placeholder={t('options.leaderboard.search-placeholder')}
                     ></SearchInput>
                 </SearchWrapper>
+                <span className="leaderboard__label">
+                    {t('options.leaderboard.trading-competition.competition-period')}
+                </span>
             </FlexDivRow>
 
             <TableContainer style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }} component={Paper}>
@@ -222,10 +215,7 @@ const TradingCompetition: React.FC<any> = () => {
                         borderSpacing: '0px 8px',
                     }}
                 >
-                    <TableHead
-                        className="leaderboard__columns"
-                        style={{ textTransform: 'uppercase', background: '#04045a' }}
-                    >
+                    <TableHead className="leaderboard__columns" style={{ textTransform: 'uppercase' }}>
                         <TableRow>
                             {headCells.map((cell: HeadCell, index) => {
                                 return (
@@ -415,6 +405,7 @@ export const StyledTableCell = withStyles(() => ({
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#b8c6e5',
+        padding: '13px',
     },
     body: {
         borderTop: '1px solid #CA91DC',

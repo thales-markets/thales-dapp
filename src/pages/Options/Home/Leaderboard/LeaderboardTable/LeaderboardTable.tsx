@@ -54,8 +54,6 @@ const LeaderboardPage: React.FC<any> = () => {
         ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
         : [];
 
-    const profiles = leaderboardQuery.data?.profiles;
-
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
     });
@@ -75,14 +73,6 @@ const LeaderboardPage: React.FC<any> = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-    const profile = useMemo(() => {
-        if (profiles && walletAddress) {
-            return profiles.get(walletAddress.trim().toLowerCase());
-        }
-    }, [profiles, walletAddress]);
-
-    console.log(profile);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -201,7 +191,7 @@ const LeaderboardPage: React.FC<any> = () => {
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ marginTop: 50, flexDirection: 'row-reverse' }}>
+            <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
                 <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
@@ -420,6 +410,7 @@ export const StyledTableCell = withStyles(() => ({
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#b8c6e5',
+        padding: '13px',
     },
     body: {
         borderTop: '1px solid #CA91DC',
@@ -446,7 +437,6 @@ export const StyledTableCell = withStyles(() => ({
 export default LeaderboardPage;
 
 const getHeight = (leader: any) => {
-    console.log();
     switch (leader.rank) {
         case 1:
             return 160;

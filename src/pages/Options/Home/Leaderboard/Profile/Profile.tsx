@@ -1,14 +1,12 @@
-import leaderboardIcon from 'assets/images/medals/leaderboard.svg';
-import { FilterButton } from 'pages/Options/Market/components';
 import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Image } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
 import UsersExercises from './UsersExcercises';
@@ -25,7 +23,8 @@ export enum Filters {
 
 const Profile: React.FC<any> = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const walletAddress = '0x20f9ddfa193d0fe2f73d8b7d749b1355ef019887';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.Mints);
@@ -130,8 +129,8 @@ const Profile: React.FC<any> = () => {
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ marginTop: 50, minWidth: 1100 }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 600, margin: '22px 0' }}>
+            <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
+                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -140,38 +139,37 @@ const Profile: React.FC<any> = () => {
                         placeholder="Display Name"
                     ></SearchInput>
                 </SearchWrapper>
-                <Image className="leaderboard__icon" style={{ width: 100, height: 100 }} src={leaderboardIcon}></Image>
+                <FilterWrapper>
+                    <FilterButton
+                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
+                        className={filter === Filters.Mints ? 'selected' : ''}
+                        onClick={() => setFilter(Filters.Mints)}
+                    >
+                        Mints
+                    </FilterButton>
+                    <FilterButton
+                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
+                        className={filter === Filters.Trades ? 'selected' : ''}
+                        onClick={() => setFilter(Filters.Trades)}
+                    >
+                        Trades
+                    </FilterButton>
+                    <FilterButton
+                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
+                        className={filter === Filters.Excercises ? 'selected' : ''}
+                        onClick={() => setFilter(Filters.Excercises)}
+                    >
+                        Excercises
+                    </FilterButton>
+                    <FilterButton
+                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
+                        className={filter === Filters.Unclaimed ? 'selected' : ''}
+                        onClick={() => setFilter(Filters.Unclaimed)}
+                    >
+                        Unclaimed
+                    </FilterButton>
+                </FilterWrapper>
             </FlexDivRow>
-            <FilterWrapper>
-                <FilterButton
-                    style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                    className={filter === Filters.Mints ? 'selected' : ''}
-                    onClick={() => setFilter(Filters.Mints)}
-                >
-                    Mints
-                </FilterButton>
-                <FilterButton
-                    style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                    className={filter === Filters.Trades ? 'selected' : ''}
-                    onClick={() => setFilter(Filters.Trades)}
-                >
-                    Trades
-                </FilterButton>
-                <FilterButton
-                    style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                    className={filter === Filters.Excercises ? 'selected' : ''}
-                    onClick={() => setFilter(Filters.Excercises)}
-                >
-                    Excercises
-                </FilterButton>
-                <FilterButton
-                    style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                    className={filter === Filters.Unclaimed ? 'selected' : ''}
-                    onClick={() => setFilter(Filters.Unclaimed)}
-                >
-                    Unclaimed
-                </FilterButton>
-            </FilterWrapper>
             <DataWrapper>
                 {filter === Filters.Mints &&
                     Array.from(extractMintsProfileData.keys()).map((key, index) => {
@@ -248,7 +246,42 @@ const FilterWrapper = styled(FlexDiv)`
         left: 0px;
         height: 1px;
         width: 100%;
-        background: linear-gradient(90deg, #3936c7 4.67%, #2d83d2 42.58%, #23a5dd 77.66%, #35dadb 95.67%);
+    }
+`;
+
+export const FilterButton = styled.button`
+    border: 1px solid #0a2e66;
+    border-radius: 20px;
+    max-height: 48px;
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 32px;
+    text-align: center;
+    letter-spacing: 0.35px;
+    color: #f6f6fe;
+    margin: 0 9px;
+    padding: 6px 16px;
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+    &:hover:not(:disabled) {
+        background: rgba(1, 38, 81, 0.8);
+        border: 1px solid #0a2e66;
+        color: #b8c6e5;
+    }
+    &.selected {
+        background: #0a2e66;
+        border: 1px solid #00f9ff;
+        color: #00f9ff;
+    }
+    &.selected:hover {
+        background: rgba(1, 38, 81, 0.8);
+        border: 1px solid #00f9ff;
+        color: #b8c6e5;
     }
 `;
 
