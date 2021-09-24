@@ -39,6 +39,7 @@ import { QuizQuestion } from 'components/Quiz/QuizQuestion';
 import { airdropClaimQuizQuestions } from 'i18n/quizQuestions';
 import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
+import styled from 'styled-components';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -202,11 +203,11 @@ const RetroAirdrop: React.FC = () => {
                         {formatCurrencyWithKey(THALES_CURRENCY, retroAirdrop?.accountInfo?.balance || 0, 0, true)}
                     </GradientText>
                 </ClaimItem>
-                <ClaimItem style={{ marginBottom: 0 }}>
+                <ClaimableUntilTitle style={{ marginBottom: 0 }}>
                     <ClaimTitle style={{ paddingBottom: 0 }}>
                         {t('options.earn.snx-stakers.retro-airdrop.claim-end-label')}
                     </ClaimTitle>
-                </ClaimItem>
+                </ClaimableUntilTitle>
                 {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
                 <ButtonContainerBottom>
                     {getClaimButton()}
@@ -244,5 +245,11 @@ const EligibilityLink: React.FC = () => {
         </TooltipLink>
     );
 };
+
+const ClaimableUntilTitle = styled(ClaimItem)`
+    @media (max-width: 767px) {
+        padding: 20px 0 20px 0;
+    }
+`;
 
 export default RetroAirdrop;

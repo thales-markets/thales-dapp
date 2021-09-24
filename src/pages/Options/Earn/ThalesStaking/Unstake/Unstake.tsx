@@ -248,7 +248,12 @@ const Unstake: React.FC<Properties> = ({
     const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
 
     return (
-        <EarnSection style={{ gridColumn: 'span 3', gridRow: 'span 2' }}>
+        <EarnSection
+            spanOnTablet={5}
+            orderOnMobile={2}
+            orderOnTablet={2}
+            style={{ gridColumn: 'span 3', gridRow: 'span 2' }}
+        >
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
