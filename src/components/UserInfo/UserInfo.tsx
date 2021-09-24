@@ -35,17 +35,30 @@ const UserInfo: React.FC = () => {
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
     const iconSize = thalesTotalBalance ? '20' : '15';
+    const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
+    const hideAddress = window.innerWidth < 320;
 
     return (
         <>
             <UserInfoWrapper className="dapp-header__userInfo" onClick={setOpen.bind(this, true)}>
                 <SUSDBalance>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</SUSDBalance>
                 <NetworkWrapper>
-                    <AddressWrapper>
-                        <p>{truncateAddress(walletAddress)}</p>
-                        <p>{network.networkName}</p>
-                    </AddressWrapper>
-                    <Image style={{ width: '18px', height: '18px', marginRight: '20px' }} src={avatar} />
+                    {!hideAddress && (
+                        <AddressWrapper>
+                            <p>
+                                {truncateAddress(
+                                    walletAddress,
+                                    truncateAddressNumberOfCharacters,
+                                    truncateAddressNumberOfCharacters
+                                )}
+                            </p>
+                            <p>{network.networkName}</p>
+                        </AddressWrapper>
+                    )}
+                    <Image
+                        style={{ width: '18px', height: '18px', marginRight: hideAddress ? '0' : '20px' }}
+                        src={avatar}
+                    />
                 </NetworkWrapper>
                 <ThalesBalance>
                     <StyledMaterialTooltip
@@ -74,6 +87,7 @@ const UserInfoWrapper = styled(FlexDiv)`
     border-radius: 30px;
     align-items: center;
     cursor: pointer;
+    max-width: 100%;
 `;
 
 const SUSDBalance = styled.p`

@@ -20,9 +20,16 @@ import lpActiveIcon from '../../../assets/images/lp-active.svg';
 import lpIcon from '../../../assets/images/lp.svg';
 import vestingActiveIcon from '../../../assets/images/vesting-active.svg';
 import vestingIcon from '../../../assets/images/vesting.svg';
+import Loader from '../../../components/Loader';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { getNetworkId } from '../../../redux/modules/wallet';
+import { isNetworkSupported } from '../../../utils/network';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const tabs = [
         {
             id: 'retro-rewards',
@@ -64,106 +71,114 @@ const EarnPage: React.FC = () => {
 
     return (
         <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%', overflowX: 'hidden' }}>
-            <Container>
-                <FlexDivColumn className="earn">
-                    <MarketHeader route={ROUTES.Options.Token} />
-                </FlexDivColumn>
-            </Container>
-            <Container>
-                <FlexDivColumn>
-                    <TokenOverview />
-                    <MainContentContainer>
-                        <OptionsTabContainer>
-                            {optionsTabContent.map((tab, index) => (
-                                <OptionsTab
-                                    isActive={tab.id === selectedTab}
-                                    key={index}
-                                    index={index}
-                                    onClick={() => {
-                                        if (tab.disabled) return;
-                                        history.push({
-                                            pathname: location.pathname,
-                                            search: queryString.stringify({
-                                                tab: tab.id,
-                                            }),
-                                        });
-                                        setSelectedTab(tab.id);
-                                    }}
-                                    className={`${tab.id === selectedTab ? 'selected' : ''} ${
-                                        tab.disabled ? 'disabled' : ''
-                                    }`}
-                                >
-                                    {`${tab.name} ${tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''}`}
-                                </OptionsTab>
-                            ))}
-                        </OptionsTabContainer>
-                        <WidgetsContainer>
-                            {selectedTab === 'retro-rewards' && <SnxStaking />}
-                            {selectedTab === 'staking' && <ThalesStaking />}
-                            {selectedTab === 'vesting' && <Vesting />}
-                            {selectedTab === 'lp-staking' && <LPStaking />}
-                        </WidgetsContainer>
-                    </MainContentContainer>
-                </FlexDivColumn>
-            </Container>
-            <NavFooter>
-                <Icon
-                    width={50}
-                    height={50}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'retro-rewards',
-                            }),
-                        });
-                        setSelectedTab('retro-rewards');
-                    }}
-                    src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
-                />
-                <Icon
-                    width={30}
-                    height={30}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'staking',
-                            }),
-                        });
-                        setSelectedTab('staking');
-                    }}
-                    src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
-                />
-                <Icon
-                    width={30}
-                    height={30}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'vesting',
-                            }),
-                        });
-                        setSelectedTab('vesting');
-                    }}
-                    src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
-                />
-                <Icon
-                    width={50}
-                    height={30}
-                    onClick={() => {
-                        history.push({
-                            pathname: location.pathname,
-                            search: queryString.stringify({
-                                tab: 'lp-staking',
-                            }),
-                        });
-                        setSelectedTab('lp-staking');
-                    }}
-                    src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
-                />
-            </NavFooter>
+            {networkId && isNetworkSupported(networkId) ? (
+                <>
+                    <Container>
+                        <FlexDivColumn style={{ width: '100%' }} className="earn">
+                            <MarketHeader route={ROUTES.Options.Token} />
+                        </FlexDivColumn>
+                    </Container>
+                    <Container>
+                        <FlexDivColumn>
+                            <TokenOverview />
+                            <MainContentContainer>
+                                <OptionsTabContainer>
+                                    {optionsTabContent.map((tab, index) => (
+                                        <OptionsTab
+                                            isActive={tab.id === selectedTab}
+                                            key={index}
+                                            index={index}
+                                            onClick={() => {
+                                                if (tab.disabled) return;
+                                                history.push({
+                                                    pathname: location.pathname,
+                                                    search: queryString.stringify({
+                                                        tab: tab.id,
+                                                    }),
+                                                });
+                                                setSelectedTab(tab.id);
+                                            }}
+                                            className={`${tab.id === selectedTab ? 'selected' : ''} ${
+                                                tab.disabled ? 'disabled' : ''
+                                            }`}
+                                        >
+                                            {`${tab.name} ${
+                                                tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
+                                            }`}
+                                        </OptionsTab>
+                                    ))}
+                                </OptionsTabContainer>
+                                <WidgetsContainer>
+                                    {selectedTab === 'retro-rewards' && <SnxStaking />}
+                                    {selectedTab === 'staking' && <ThalesStaking />}
+                                    {selectedTab === 'vesting' && <Vesting />}
+                                    {selectedTab === 'lp-staking' && <LPStaking />}
+                                </WidgetsContainer>
+                            </MainContentContainer>
+                        </FlexDivColumn>
+                    </Container>
+                    <NavFooter>
+                        <Icon
+                            width={50}
+                            height={50}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'retro-rewards',
+                                    }),
+                                });
+                                setSelectedTab('retro-rewards');
+                            }}
+                            src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
+                        />
+                        <Icon
+                            width={30}
+                            height={30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'staking',
+                                    }),
+                                });
+                                setSelectedTab('staking');
+                            }}
+                            src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
+                        />
+                        <Icon
+                            width={30}
+                            height={30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'vesting',
+                                    }),
+                                });
+                                setSelectedTab('vesting');
+                            }}
+                            src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
+                        />
+                        <Icon
+                            width={50}
+                            height={30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'lp-staking',
+                                    }),
+                                });
+                                setSelectedTab('lp-staking');
+                            }}
+                            src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
+                        />
+                    </NavFooter>
+                </>
+            ) : (
+                <Loader />
+            )}
         </Background>
     );
 };
@@ -179,8 +194,8 @@ const Container = styled.div`
     @media (max-width: 1024px) {
         flex-direction: column;
         width: 100%;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 `;
 
@@ -279,7 +294,7 @@ const NavFooter = styled(FlexDivRowCentered)`
     border-radius: 20px 20px 0 0;
     border-top: 1px solid #ca91dc;
     width: 100%;
-    padding: 0 65px;
+    padding: 0 40px;
     z-index: 1000;
 `;
 
