@@ -80,6 +80,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
             >
                 <FlexDiv className="dapp-header__logoWrapper">
                     <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
+                    <MobileLanguageSelectorContainer>
+                        <LanguageSelector />
+                    </MobileLanguageSelectorContainer>
                     <BurdgerIcon
                         className="dapp-header__logoWrapper__burger"
                         onClick={() =>
@@ -93,7 +96,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 <FlexDiv>
-                    <LanguageSelector />
+                    <DesktopLanguageSelectorContainer>
+                        <LanguageSelector />
+                    </DesktopLanguageSelectorContainer>
                     {!isWalletConnected ? (
                         <Button
                             className="primary dapp-header__connectWallet"
@@ -231,6 +236,20 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
         </FlexDivColumn>
     );
 };
+
+const DesktopLanguageSelectorContainer = styled.div`
+    display: block;
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
+`;
+
+const MobileLanguageSelectorContainer = styled.div`
+    display: none;
+    @media screen and (max-width: 767px) {
+        display: block;
+    }
+`;
 
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     width: 100%;

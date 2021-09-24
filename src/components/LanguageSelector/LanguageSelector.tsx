@@ -8,7 +8,11 @@ import styled from 'styled-components';
 import { ReactComponent as CheckmarkIcon } from 'assets/images/checkmark-white.svg';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
 
-export const LanguageSelector: React.FC = () => {
+type LanguageSelectorProps = {
+    isLandingPage?: boolean;
+};
+
+export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ isLandingPage }) => {
     const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState(false);
     const setDropdownIsOpen = (isOpen: boolean) => {
         if (!isOpen && !languageDropdownIsOpen) {
@@ -24,7 +28,7 @@ export const LanguageSelector: React.FC = () => {
     return (
         <>
             <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
-                <Container>
+                <Container isLandingPage={isLandingPage}>
                     <LanguageButton
                         onClick={() => {
                             setDropdownIsOpen(!languageDropdownIsOpen);
@@ -64,8 +68,13 @@ export const LanguageSelector: React.FC = () => {
     );
 };
 
-const Container = styled(FlexDivColumnCentered)`
-    width: 78px;
+const Container = styled(FlexDivColumnCentered)<{ isLandingPage?: boolean }>`
+    width: 74px;
+    @media (max-width: 767px) {
+        position: absolute;
+        right: ${(props) => (props.isLandingPage ? 60 : 40)}px;
+        top: ${(props) => (props.isLandingPage ? 30 : 40)}px;
+    }
 `;
 
 const LanguageButton = styled.button<{ isActive: boolean }>`
@@ -74,10 +83,9 @@ const LanguageButton = styled.button<{ isActive: boolean }>`
     height: 40px;
     border: none;
     position: relative;
-    z-index: 1000;
     cursor: pointer;
     background: transparent;
-    margin-right: 20px;
+    margin-right: 10px;
     &:hover {
         background: rgba(196, 196, 196, 0.1);
         border-radius: 5px;
@@ -120,6 +128,10 @@ const LanguageName = styled.div`
     letter-spacing: 0.25px;
     color: #f6f6fe;
     margin-left: 10px;
+    display: block;
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
 `;
 
 type LanguageFlagProps = {
