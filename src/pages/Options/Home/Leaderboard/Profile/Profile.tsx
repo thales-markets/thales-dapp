@@ -286,7 +286,6 @@ export const FilterButton = styled.button`
 `;
 
 const DataWrapper = styled(FlexDivColumn)`
-    background: #04045a;
     padding-bottom: 20px;
     border-bottom-right-radius: 23px;
     border-bottom-left-radius: 23px;
