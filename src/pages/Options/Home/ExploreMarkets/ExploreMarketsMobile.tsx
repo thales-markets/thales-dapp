@@ -40,7 +40,7 @@ type ExploreMarketsMobileProps = {
 
 export enum SortByEnum {
     Asset = 'asset-col',
-    Asset_Price = 'asset-price-co',
+    Asset_Price = 'asset-price-col',
     Strike_Price = 'strike-price-col',
     Pool_Size = 'pool-size-col',
     Time_Remaining = 'time-remaining-col',
@@ -293,7 +293,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 
             <SortyByMobile
                 onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
-                filter={mapOrderByToEnum(orderBy)}
+                filter={t(`options.home.markets-table.${mapOrderByToEnum(orderBy)}`)}
             >
                 <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
@@ -309,7 +309,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                     onClick={() => setOrderBy(index + 2)}
                                     key={key}
                                 >
-                                    {SortByEnum[key as keyof typeof SortByEnum]}
+                                    {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
                                 </Text>
                             ))}
                     </DropDown>

@@ -42,6 +42,8 @@ const ethEnabled = () => {
     return false;
 };
 
+const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
+
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, walletAddress, network }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -80,6 +82,10 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
         [optionsMarkets, filter]
     );
+
+    const isNameValid = useMemo(() => {
+        return DISPLAY_NAME_REGEX.test(displayName);
+    }, [displayName]);
 
     const setDisplayName = async (walletAddress: string, displayName: string) => {
         if (!ethEnabled()) {
@@ -160,6 +166,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         onClick={() => {
                             setDisplayName(walletAddress, displayName);
                         }}
+                        disabled={!isNameValid}
                         className="primary"
                     >
                         {t(`user-info.wallet.change-display-name`)}

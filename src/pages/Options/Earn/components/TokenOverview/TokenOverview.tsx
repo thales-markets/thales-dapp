@@ -137,9 +137,15 @@ const Container = styled(FlexDiv)`
     border-radius: 16px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    @media (max-width: 1024px) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
     @media (max-width: 767px) {
         border-radius: 23px;
         margin-top: 20px;
+        padding-left: 0;
+        padding-right: 0;
         > * {
             padding: 10px;
             border: none !important;
