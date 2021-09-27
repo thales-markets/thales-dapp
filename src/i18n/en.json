@@ -306,7 +306,10 @@
                     "unstake-confirmation-message": "Tokens successfully unstaked",
                     "unstaking": "Unstaking",
                     "amount-to-unstake": "Amount to unstake",
-                    "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES."
+                    "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES.",
+                    "cancel": "Cancel unstaking",
+                    "canceling": "Canceling unstaking",
+                    "cancel-confirmation-message": "Unstaking successfully canceled"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
