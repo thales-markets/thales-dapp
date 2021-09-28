@@ -39,12 +39,12 @@ const EarnPage: React.FC = () => {
         {
             id: 'staking',
             name: t('options.earn.thales-staking.tab-title'),
-            disabled: true,
+            disabled: false,
         },
         {
             id: 'vesting',
             name: t('options.earn.vesting.tab-title'),
-            disabled: true,
+            disabled: false,
         },
         {
             id: 'lp-staking',

@@ -7,6 +7,7 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
 import { TokenTransaction, TokenTransactions } from 'types/token';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import { EMPTY_VALUE } from 'constants/placeholder';
 
 type TransactionsTableProps = {
     transactions: TokenTransactions;
@@ -43,7 +44,11 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         sortType: 'basic',
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
-                            <p>{formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)}</p>
+                            <p>
+                                {cellProps.cell.row.original.type !== 'cancelUnstake'
+                                    ? formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)
+                                    : EMPTY_VALUE}
+                            </p>
                         ),
                         width: 150,
                         sortable: true,

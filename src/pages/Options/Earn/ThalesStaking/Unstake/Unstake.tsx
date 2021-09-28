@@ -77,6 +77,7 @@ const Unstake: React.FC<Properties> = ({
     );
     const [unstakeDurationPeriod, setUnstakeDurationPeriod] = useState<number>(7 * 24 * 60 * 60);
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
+    const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [unstakeEndTime, setUnstakeEndTime] = useState<Date>(addDurationPeriod(new Date(), unstakeDurationPeriod));
     const [amountToUnstake, setAmountToUnstake] = useState<string>('0');
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
@@ -105,8 +106,12 @@ const Unstake: React.FC<Properties> = ({
                 const { stakingThalesContract } = snxJSConnector as any;
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 let gasEstimate = null;
-                if (unstakingEnded) {
-                    gasEstimate = await stakingThalesContractWithSigner.estimateGas.unstake();
+                if (isUnstakingInContract) {
+                    if (unstakingEnded) {
+                        gasEstimate = await stakingThalesContractWithSigner.estimateGas.unstake();
+                    } else {
+                        gasEstimate = await stakingThalesContractWithSigner.estimateGas.cancelUnstake();
+                    }
                 } else {
                     const amount = ethers.utils.parseEther(amountToUnstake);
                     gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
@@ -117,9 +122,9 @@ const Unstake: React.FC<Properties> = ({
                 setGasLimit(null);
             }
         };
-        if (isUnstaking || Number(amountToUnstake) <= 0) return;
+        if (isUnstaking || isCanceling || (!isUnstakingInContract && Number(amountToUnstake) <= 0)) return;
         fetchGasLimit();
-    }, [isUnstaking, walletAddress, unstakingEnded, amountToUnstake]);
+    }, [isUnstaking, walletAddress, unstakingEnded, amountToUnstake, isUnstakingInContract, isCanceling]);
 
     const handleStartUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
@@ -194,10 +199,62 @@ const Unstake: React.FC<Properties> = ({
         }
     };
 
+    const handleCancelUnstakingThales = async () => {
+        const { stakingThalesContract } = snxJSConnector as any;
+
+        if (gasPrice !== null) {
+            try {
+                setTxErrorMessage(null);
+                setIsCanceling(true);
+                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+                const tx = await stakingThalesContractWithSigner.cancelUnstake({
+                    gasPrice: gasPriceInWei(gasPrice),
+                    gasLimit,
+                });
+                const txResult = await tx.wait();
+
+                if (txResult && txResult.events) {
+                    dispatchMarketNotification(t('options.earn.thales-staking.unstake.cancel-confirmation-message'));
+                    const rawData = txResult.events[txResult.events?.length - 1];
+                    if (rawData && rawData.decode) {
+                        // const newThalesStaked = ethers.utils.parseEther(thalesStaked).add(unstakingAmount);
+                        // setThalesStaked(ethers.utils.formatEther(newThalesStaked));
+                        refetchUserTokenTransactions(walletAddress, networkId);
+                        setIsUnstaking(false);
+                        setIsUnstakingInContract(false);
+                        setUnstakingAmount('0');
+                        setAmountToUnstake('0');
+                        setUnstakingEnded(true);
+                        setIsCanceling(false);
+                    }
+                }
+            } catch (e) {
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsCanceling(false);
+            }
+        }
+    };
+
     const getSubmitButton = () => {
         if (isUnstakingInContract) {
+            if (!unstakingEnded) {
+                return (
+                    <Button className="primary" onClick={handleCancelUnstakingThales} disabled={isCanceling}>
+                        {!isCanceling
+                            ? `${t('options.earn.thales-staking.unstake.cancel')} ${formatCurrencyWithKey(
+                                  THALES_CURRENCY,
+                                  unstakingAmount
+                              )}`
+                            : `${t('options.earn.thales-staking.unstake.canceling')} ${formatCurrencyWithKey(
+                                  THALES_CURRENCY,
+                                  unstakingAmount
+                              )}`}
+                    </Button>
+                );
+            }
+
             return (
-                <Button className="primary" onClick={handleUnstakeThales} disabled={!unstakingEnded || isUnstaking}>
+                <Button className="primary" onClick={handleUnstakeThales} disabled={isUnstaking}>
                     {!isUnstaking
                         ? `${t('options.earn.thales-staking.unstake.unstake')} ${formatCurrencyWithKey(
                               THALES_CURRENCY,
