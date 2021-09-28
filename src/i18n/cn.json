@@ -11,30 +11,30 @@
     },
     "user-info": {
         "tabs": {
-            "my-markets": "My Markets",
-            "my-open-orders": "My Open Orders",
-            "my-assets": "My Assets"
+            "my-markets": "参与的市场",
+            "my-open-orders": "我的未结订单",
+            "my-assets": "我的资产"
         },
         "table": {
-            "asset-col": "Asset",
-            "strike-price-col": "Strike price",
-            "maturity-date-col": "Maturity date",
+            "asset-col": "资产",
+            "strike-price-col": "执行价",
+            "maturity-date-col": "到期日",
             "short-col": "sLONG",
             "long-col": "sSHORT",
-            "pool-size-col": "Pool size",
-            "amount-col": "Amount",
-            "price-col": "Price",
-            "filled-col": "Filled",
-            "expires-col": "Expires in"
+            "pool-size-col": "交易池容量",
+            "amount-col": "数量",
+            "price-col": "价格",
+            "filled-col": "已成交",
+            "expires-col": "过期于"
         },
         "wallet": {
-            "switch-wallet": "Switch Wallet",
-            "disconnect-wallet": "Disconnect Wallet",
-            "display-name": "Display Name",
-            "change-display-name": "Change Display Name",
-            "in-wallet": "In wallet",
-            "total-staked": "Total staked",
-            "total-escrowed": "Total escrowed"
+            "switch-wallet": "更换钱包",
+            "disconnect-wallet": "断开钱包链接",
+            "display-name": "显示名称",
+            "change-display-name": "变更显示名称",
+            "in-wallet": "钱包内",
+            "total-staked": "所有质押",
+            "total-escrowed": "所有锁仓"
         }
     },
     "landing-page": {
@@ -42,15 +42,15 @@
         "description": "在以太坊上创建、交易和行使二进制选项",
         "use-app": "使用dApp",
         "launch": "发布应用程序",
-        "who-is-thales": "谁是泰雷兹 Thales？",
+        "who-is-thales": "谁是泰雷兹？",
         "thales-is1": "thales泰雷兹是一位出生于古希腊的思想家，他喜欢收集数据和研究自然现象，但由于贫穷而被其他人嘲笑哲学无用。",
-        "thales-is2": "有一年，泰雷兹Thales通过对天体的研究，发现下一季橄榄收获将是丰收的。凭借他的知识，他用一小笔钱押注于此，为米利都的整个橄榄压榨机支付押金，他以非常低的价格租用了这些压榨机，因为没有其他人出价。",
+        "thales-is2": "有一年，泰雷兹通过对天体的研究，发现下一季橄榄收获将是丰收的。凭借他的知识，他用一小笔钱押注于此，为米利都的整个橄榄压榨机支付押金，他以非常低的价格租用了这些压榨机，因为没有其他人出价。",
         "thales-is3": "当收获到来时，当需求增长时，他按照自己的条件出租压榨机，赚了一大笔钱，成为<strong>第一个行使期权合同的人。</strong>",
         "markets": {
             "title": "二元市场",
-            "option1": "世界上任何人都可以根据支持资产的价格创建二元期权市场。",
+            "option1": "世界上任何人都可以根据资产的价格创建二元期权市场。",
             "option2": "做市商不支付任何费用，但随着流动性的增加而盈利。",
-            "option3": "无许可、自保管和不受限。",
+            "option3": "无许可、自托管和不受限。",
             "view-markets": "查看市场"
         },
         "options": {
@@ -66,18 +66,18 @@
         },
         "get-started": {
             "title": "要开始，您需要",
-            "first": "Web3钱包，像Metamask",
+            "first": "Web3钱包，比如说Metamask",
             "second": "以太支付网络费用（也称为gas）",
-            "third": "Synth USD（sUSD），可在上获得"
+            "third": "Synth USD（sUSD），可获得于"
         },
         "faq": {
             "title": "常见问题",
             "firstQ": "什么是二元期权？",
-            "firstA": "二元期权是一种简单直观的衍生工具，在有限的风险环境中为多种市场提供固定收益，使风险管理更加精确。",
+            "firstA": "二元期权是一种简单直观的衍生品工具，在有限的风险环境中为多种市场提供收益，使风险管理更加精确。",
             "secondQ": "支持哪些市场？",
             "secondA": "超过60种市场类型由Chainlink喂价担保，包括加密货币、股票、商品、外汇和指数产品。",
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
-            "thirdA": "合成美元，或sUSD，是泰雷兹Thales目前唯一支持铸造或交换期权的资产。"
+            "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
         "discord": "Join Discord"
     },
@@ -146,23 +146,23 @@
             "olympics-label": "奥运市场",
             "create-market-label": "创建市场",
             "trade-label": "交易期权",
-            "maturity-label": "行使期权",
+            "maturity-label": "期权到期",
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
-            "earn-label": "泰雷兹 Thales"
+            "earn-label": "泰雷兹"
         },
         "coming-soon": "即将到来…",
-        "of": "of",
-        "here": "here",
+        "of": "之",
+        "here": "这里",
         "sheet": "sheet",
         "pagination": {
-            "page": "Page",
-            "rows-per-page": "Rows per page:"
+            "page": "页",
+            "rows-per-page": "每页行数:"
         },
         "unsupported-network": {
-            "title": "Oops! You are on wrong network!",
-            "description": "You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to continue.",
-            "button": "Switch to Mainnet"
+            "title": "哎呀！你在错的网络上！",
+            "description": "您在钱包中选择了错误的网络。请从wallet切换到以太坊网络以继续。",
+            "button": "切换到主网"
         }
     },
     "modals": {
@@ -192,24 +192,24 @@
         "filters-labels": {
             "category": "类别",
             "discover": "发现",
-            "sort-by": "Sort by (always latest)",
-            "option": "Option",
-            "show": "Show",
-            "search-placeholder": "Try ETH",
-            "all": "All",
-            "trading": "Trading",
-            "maturity": "Maturity",
-            "expiry": "Expiry",
-            "my-markets": "My Markets",
-            "my-orders": "My Orders",
-            "my-assets": "My Assets",
-            "watchlist": "Watchlist",
-            "recently-added": "Recently Added",
+            "sort-by": "排序 (最近)",
+            "option": "期权",
+            "show": "显示",
+            "search-placeholder": "试试 ETH",
+            "all": "全部l",
+            "trading": "交易",
+            "maturity": "到期",
+            "expiry": "到期",
+            "my-markets": "我参与的市场",
+            "my-orders": "我的订单",
+            "my-assets": "我的资产",
+            "watchlist": "观察名单",
+            "recently-added": "最近添加",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
             "olympics": "Olympics",
-            "long": "Long",
-            "short": "Short"
+            "long": "多头",
+            "short": "空头"
         },
         "home": {
             "market-card": {
@@ -221,7 +221,7 @@
                 "difference-text": "当前价格与执行价格之间的差异",
                 "time-remaining": "剩余时间",
                 "result": "当前结果",
-                "view-market": "View Market"
+                "view-market": "查看市场"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场",
@@ -231,18 +231,18 @@
                 "trending": "趋势市场",
                 "table": {
                     "view-all-markets": "查看所有市场",
-                    "no-markets-created": "You haven’t created any market yet.",
+                    "no-markets-created": "你还没有创造任何市场。",
                     "no-markets-found": "未找到市场。"
                 }
             },
             "markets-table": {
-                "asset-col": "Asset",
-                "strike-price-col": "Strike price",
-                "asset-price-col": "Asset price",
-                "open-orders-col": "Open orders",
-                "phase-col": "Phase",
-                "pool-size-col": "Market size",
-                "time-remaining-col": "Time remaining"
+                "asset-col": "资产",
+                "strike-price-col": "执行价",
+                "asset-price-col": "资产价格",
+                "open-orders-col": "未结订单",
+                "phase-col": "阶段",
+                "pool-size-col": "市场大小",
+                "time-remaining-col": "剩余时间"
             }
         },
         "earn": {
@@ -255,7 +255,7 @@
                     "complete-quiz-to-claim": "认领此空投完整测验。",
                     "completed-quiz": "测验已完成！您现在可以申请空投。",
                     "claim-end-label": "可领取至2022年9月12日。",
-                    "info-tooltip": "<0>自SNX质押开始至2021年9月6日上午10:00 UTC之前，137名泰雷兹Thales空投被分配给任何使用</0><0>-SNX质押L1</0><0>-SNX质押L2</0><0>-xSNX</0><0>质押和领取奖励的人。</0><1>您可以检查自己是否有资格参加此项活动 </1><2 />。"
+                    "info-tooltip": "<0>自SNX质押开始至2021年9月6日上午10:00 UTC之前，137Thales币被空投</0><0>-SNX质押L1</0><0>-SNX质押L2</0><0>-xSNX</0><0>质押和领取奖励的人。</0><1>您可以检查自己是否有资格参加此项活动 </1><2 />。"
                 },
                 "retro-rewards": {
                     "title": "追溯解锁",
@@ -268,9 +268,9 @@
                 "claim": "领取",
                 "claiming": "领取…",
                 "claimed": "领取",
-                "claim-unlocked": "可领取已解锁",
-                "claiming-unlocked": "声明",
-                "unlocked": "解锁",
+                "claim-unlocked": "可领取已解锁代币",
+                "claiming-unlocked": "领取已解锁代币",
+                "unlocked": "已解锁",
                 "locked": "锁定",
                 "total": "总计",
                 "start-time": "开始时间",
@@ -289,10 +289,10 @@
                     "confirmation-message": "代币已成功质押"
                 },
                 "my-stake": {
-                    "my-stake": "我的赌注余额",
+                    "my-stake": "我的质押",
                     "staked-in-contract": "直接质押",
                     "locked-in-escrow": "托管余额",
-                    "total-staked": "总质押余额",
+                    "total-staked": "总质押",
                     "not-eligible-message": "除非您的直接质押余额大于0，否则您没有资格获得质押奖励",
                     "eligible-message": "您质押的{{amount}}有资格获得质押奖励"
                 },
@@ -306,11 +306,14 @@
                     "unstake-confirmation-message": "代币成功取消质押",
                     "unstaking": "取消质押",
                     "amount-to-unstake": "未兑现金额",
-                    "start-unstaking-tooltip": "在7天解锁冷却时间内，您将无法锁定或质押更多泰雷兹。"
+                    "start-unstaking-tooltip": "在7天解锁冷却时间内，您将无法锁定或质押更多泰雷兹。",
+                    "cancel": "取消抵押",
+                    "canceling": "取消抵押",
+                    "cancel-confirmation-message": "取消抵押成功取消"
                 },
                 "staking-rewards": {
-                    "title": "赌注奖励",
-                    "amount-to-claim-snx": "作为snx标的人",
+                    "title": "质押奖励",
+                    "amount-to-claim-snx": "作为snx质押用户",
                     "amount-to-claim-thales": "作为",
                     "period": "期间",
                     "weekly-rewards": "每周奖励",
@@ -320,35 +323,35 @@
                     "claiming": "领取",
                     "claimed-message": "您已经声明了本周的奖励，请下周再来。",
                     "not-eligible-message": "您没有资格获得这些奖励。",
-                    "paused-message": "声明已暂停，请稍后再试。",
+                    "paused-message": "已暂停，请稍后再试。",
                     "confirmation-message": "代币成功认领",
-                    "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的授予期。在授予期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
+                    "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
                     "learn-more": "了解更多"
                 }
             },
             "vesting": {
                 "tab-title": "归属",
                 "schedule": {
-                    "title": "归属时间表",
+                    "title": "时间表",
                     "table": {
-                        "date-time-col": "授予日期-时间",
+                        "date-time-col": "解锁日期-时间",
                         "amount-col": "金额",
-                        "no-results": "未找到归属计划。"
+                        "no-results": "未找到。"
                     }
                 },
                 "vest": {
-                    "available-to-vest": "可授予",
+                    "available-to-vest": "可解锁",
                     "vest": "vest",
-                    "vesting": "授予",
-                    "confirmation-message": "代币已成功授予"
+                    "vesting": "正在解锁",
+                    "confirmation-message": "代币已成功解锁"
                 },
                 "info": {
-                    "title": "将您的泰雷兹Thales赌注奖励授予托管",
-                    "text": "泰雷兹Thales持续奖励以10周授予为准。托管泰雷兹在您的泰雷兹余额中计算。"
+                    "title": "将您的泰雷兹奖励托管",
+                    "text": "泰雷兹持续奖励以10周解锁为准。托管泰雷兹在您的泰雷兹余额中计算。"
                 },
                 "lp-staking": {
                     "title": "您可以为泰雷兹Thales/ETH配对提供流动性，并获得泰雷兹Thales+DODO双倍奖励",
-                    "button-text": "单击此处可获得双倍奖励"
+                    "button-text": "单击此处可获得双重奖励"
                 }
             },
             "lp-staking": {
@@ -364,9 +367,10 @@
                     "all": "没有与此钱包相关的交易。",
                     "claimRetroAirdrop": "没有与此钱包相关的追溯空投交易。",
                     "claimRetroUnlocked": "没有与此钱包相关的追溯解锁交易。",
-                    "claimStakingRewards": "没有与此钱包相关的赌注奖励交易。",
+                    "claimStakingRewards": "没有与此钱包相关的质押奖励交易。",
                     "stake": "没有与此钱包相关的质押交易。",
                     "startUnstake": "没有与此钱包相关的开始取消交易。",
+                    "cancelUnstake": "没有取消与此钱包相关的取消抵押交易。",
                     "unstake": "没有与此钱包相关的取消质押交易。",
                     "addToEscrow": "不添加与此钱包相关的托管交易。",
                     "vest": "没有与此钱包相关的vest交易。"
@@ -374,9 +378,10 @@
                 "types": {
                     "claimRetroAirdrop": "领取追溯空投",
                     "claimRetroUnlocked": "领取追溯解锁",
-                    "claimStakingRewards": "领取赌注奖励",
+                    "claimStakingRewards": "领取质押奖励",
                     "stake": "桩",
                     "startUnstake": "开始分离",
+                    "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
                     "vest": "vest"
@@ -384,10 +389,11 @@
                 "filter": {
                     "all": "全部",
                     "claimRetroAirdrop": "追溯空投",
-                    "claimRetroUnlocked": "Retro Unlocked",
-                    "claimStakingRewards": "赌注奖励",
+                    "claimRetroUnlocked": "复古解锁",
+                    "claimStakingRewards": "质押奖励",
                     "stake": "桩",
                     "startUnstake": "开始分离",
+                    "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
                     "vest": "vest"
@@ -401,7 +407,7 @@
                 "earn-label": "赢取LP奖励",
                 "earn-tooltip": "为泰雷兹/ETH对提供流动性，赚取泰雷兹+DODO双倍奖励",
                 "earn-info-tooltip": "如何提供流动性的查看指南",
-                "circulating-supply-label": "循环供应",
+                "circulating-supply-label": "市场供应",
                 "total-supply-label": "总供应"
             }
         },
@@ -422,7 +428,7 @@
         "create-market": {
             "title": "创建新的二元期权市场",
             "subtitle": "要创建新的二元期权市场，请选择资产、执行价格和市场到期日。您还必须选择您将铸造多少期权代币",
-            "note": "*注：sUSD的存款金额将决定将铸造多少多头和短头期权代币。例如，为该市场存入1000枚sUSD代币、1000枚sLONG代币和1000枚sSHORT期权代币。",
+            "note": "*注：sUSD的存款金额将决定将铸造多少多头和空头期权代币。例如，为该市场存入1000枚sUSD代币、1000枚sLONG代币和1000枚sSHORT期权代币。",
             "details": {
                 "select-asset-label": "选择资产：",
                 "strike-price-label": "执行价格：",
@@ -459,16 +465,16 @@
                 "note2": "为铸造期权代币支付零泰利斯协议费。",
                 "note3": "批准市场创建时，支付以太坊网络费（gas）。"
             },
-            "select-asset": "Please select asset.",
-            "enter-strike-price": "Please enter strike price.",
-            "difference-warning": "Difference is greater than 100 times.",
+            "select-asset": "请选择资产.",
+            "enter-strike-price": "请输入履约价格",
+            "difference-warning": "差异大于100倍",
             "progress-tracker": {
-                "approving": "Approving {{currencyKey}}",
-                "submitting": "Submitting {{currencyKey}}",
-                "creating-market": "Creating market",
-                "finished": "Finished"
+                "approving": "批准 {{currencyKey}}",
+                "submitting": "提交 {{currencyKey}}",
+                "creating-market": "创建市场",
+                "finished": "已完成"
             },
-            "go-to-market": "Go to market"
+            "go-to-market": "进入市场"
         },
         "market": {
             "overview": {
@@ -483,7 +489,7 @@
                 "current-result-label": "当前结果",
                 "final-result-label": "最终结果",
                 "deposited-currency-label": "存款{{currencyKey}}",
-                "event-name-label": "Event Name"
+                "event-name-label": "事件名称"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -582,9 +588,9 @@
                             }
                         },
                         "tooltips": {
-                            "all": "View all orders. Click on the row to fill order.",
-                            "buy": "View buy orders. Click on the row to fill order.",
-                            "sell": "View sell orders. Click on the row to fill order."
+                            "all": "查看所有订单。单击该行以填写订单",
+                            "buy": "查看购买订单。单击该行填写订单",
+                            "sell": "查看销售订单。单击该行以填写订单"
                         }
                     },
                     "table": {
@@ -644,8 +650,8 @@
                 "mint": {
                     "amount-label": "金额",
                     "minting-label": "你要铸造",
-                    "long-label": "长选项",
-                    "short-label": "短选项",
+                    "long-label": "多选项",
+                    "short-label": "空选项",
                     "sell-options-title": "卖出做多/做空期权",
                     "fees": {
                         "minting": "铸造费",
@@ -655,8 +661,8 @@
                     "confirm-button": {
                         "label": "铸造",
                         "progress-label": "正在铸造…",
-                        "submit-long-progress-label": "正在提交长期订单…",
-                        "submit-short-progress-label": "正在提交短期订单…",
+                        "submit-long-progress-label": "正在提交做多订单…",
+                        "submit-short-progress-label": "正在提交做空订单…",
                         "confirmation-message": "已成功生成选项"
                     }
                 },
@@ -707,54 +713,54 @@
             "view-market-tooltip": "查看市场",
             "no-orders-found": "未找到订单",
             "view-all-orders": "查看所有订单",
-            "difference-text-tooltip": "Difference between current and strike price",
+            "difference-text-tooltip": "当前价格与执行价格之间的差额",
             "table": {
-                "condition-col": "Condition",
+                "condition-col": "条件",
                 "when-col": "When",
-                "deposit-amount-col": "Amount to deposit",
-                "return-col": "Return if win",
-                "receive-amount-col": "Amount to receive",
-                "options-to-sell-col": "Options to sell",
-                "options-in-wallet-col": "Options in wallet",
-                "actions-col": "Actions"
+                "deposit-amount-col": "存款金额",
+                "return-col": "赢了就返回",
+                "receive-amount-col": "接收金额",
+                "options-to-sell-col": "出售期权",
+                "options-in-wallet-col": "已有期权",
+                "actions-col": "操作"
             }
         },
         "leaderboard": {
-            "search-placeholder": "Display Name",
+            "search-placeholder": "显示名字",
             "table": {
-                "rank-col": "Rank",
-                "display-name-col": "Display Name",
-                "trades-col": "Trades",
-                "volume-col": "Volume",
-                "netprofit-col": "Netprofit",
-                "netprofit-col-tooltip": "Profit is only calculated on the matured markets"
+                "rank-col": "排名",
+                "display-name-col": "显示名字",
+                "trades-col": "交易",
+                "volume-col": "交易量",
+                "netprofit-col": "净利润",
+                "netprofit-col-tooltip": "利润仅在成熟市场上计算"
             }
         },
         "common": {
             "time-remaining": {
                 "ended": "结束",
-                "years": "years",
-                "year": "year",
-                "months": "months",
-                "month": "month",
-                "weeks": "weeks",
-                "week": "week",
-                "days": "days",
-                "day": "day",
-                "hours": "hours",
-                "hour": "hour",
-                "minutes": "minutes",
-                "minute": "minute",
-                "seconds": "seconds",
-                "second": "second",
+                "years": "年",
+                "year": "年",
+                "months": "月",
+                "month": "月",
+                "weeks": "周",
+                "week": "周",
+                "days": "日",
+                "day": "日",
+                "hours": "小时",
+                "hour": "小时",
+                "minutes": "分钟",
+                "minute": "分钟",
+                "seconds": "秒钟",
+                "second": "秒钟",
                 "minutes-short": "m",
                 "seconds-short": "s"
             },
-            "long": "长",
-            "short": "短",
-            "amount-long": "{{amount}}long",
-            "amount-short": "{{amount}}short",
-            "long-price": "长期价格",
+            "long": "多",
+            "short": "空",
+            "amount-long": "{{amount}}多",
+            "amount-short": "{{amount}}空",
+            "long-price": "多头价格",
             "short-price": "空头价格",
             "new-to-binary-options": "Synthetix上的二进制选项新手？请确保先阅读它的工作原理！",
             "order-periods": {
