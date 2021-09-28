@@ -25,6 +25,7 @@ export type TokenTransactionType =
     | 'claimRetroUnlocked'
     | 'claimStakingRewards'
     | 'stake'
+    | 'cancelUnstake'
     | 'startUnstaking'
     | 'unstake'
     | 'addToEscrow'
@@ -45,6 +46,7 @@ export enum TransactionFilterEnum {
     CLAIM_STAKING_REWARDS = 'claimStakingRewards',
     STAKE = 'stake',
     START_UNSTAKE = 'startUnstake',
+    CANCEL_UNSTAKE = 'cancelUnstake',
     UNSTAKE = 'unstake',
     ADD_TO_ESCROW = 'addToEscrow',
     VEST = 'vest',

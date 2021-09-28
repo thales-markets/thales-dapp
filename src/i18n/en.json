@@ -369,7 +369,8 @@
                     "claimRetroUnlocked": "No retro unlocked transactions associated with this wallet.",
                     "claimStakingRewards": "No staking rewards transactions associated with this wallet.",
                     "stake": "No stake transactions associated with this wallet.",
-                    "startUnstake": "No start unstake transactions associated with this wallet.",
+                    "startUnstake": "No start unstaking transactions associated with this wallet.",
+                    "cancelUnstake": "No cancel unstaking transactions associated with this wallet.",
                     "unstake": "No unstake transactions associated with this wallet.",
                     "addToEscrow": "No add to escrow transactions associated with this wallet.",
                     "vest": "No vest transactions associated with this wallet."
@@ -380,6 +381,7 @@
                     "claimStakingRewards": "Claim staking rewards",
                     "stake": "Stake",
                     "startUnstake": "Start unstaking",
+                    "cancelUnstake": "Cancel unstaking",
                     "unstake": "Unstake",
                     "addToEscrow": "Add to escrow",
                     "vest": "Vest"
@@ -391,6 +393,7 @@
                     "claimStakingRewards": "Staking rewards",
                     "stake": "Stake",
                     "startUnstake": "Start unstaking",
+                    "cancelUnstake": "Cancel unstaking",
                     "unstake": "Unstake",
                     "addToEscrow": "Add to escrow",
                     "vest": "Vest"
