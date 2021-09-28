@@ -596,7 +596,7 @@
                     "table": {
                         "type-col": "类型",
                         "price-col": "价格（sUSD）",
-                        "amount-col": "金额（{currencyKey}}）",
+                        "amount-col": "金额（{{currencyKey}}）",
                         "filled-col": "填充（%）",
                         "return-col": "返回",
                         "return-col-tooltip": "如果此选项获胜，则可能返回",

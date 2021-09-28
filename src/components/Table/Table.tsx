@@ -6,6 +6,7 @@ import { ReactComponent as SortIcon } from 'assets/images/sort.svg';
 import SimpleLoader from 'components/SimpleLoader';
 import { FlexDiv, FlexDivCentered } from 'theme/common';
 import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
 
 type ColumnWithSorting<D extends Record<string, unknown>> = Column<D> & {
     sortType?: string;
@@ -31,7 +32,8 @@ const Table: React.FC<TableProps> = ({
     onTableRowClick = undefined,
     isLoading = false,
 }) => {
-    const memoizedColumns = useMemo(() => columns, columnsDeps);
+    const { t } = useTranslation();
+    const memoizedColumns = useMemo(() => columns, [...columnsDeps, t]);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns: memoizedColumns,
