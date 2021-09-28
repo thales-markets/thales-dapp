@@ -137,8 +137,8 @@ table {
 }
 
 @font-face {
-    font-family: 'Titillium Web';
-    src: local('Titillium Web'), url(../assets/fonts/TitilliumWeb/Roboto-Regular.ttf) format('truetype');
+    font-family: 'Roboto';
+    src: local('Roboto'), url(../assets/fonts/Roboto/Roboto-Regular.ttf) format('truetype');
 }
 
 @font-face {
@@ -153,7 +153,7 @@ table {
 
 * {
     box-sizing: border-box;
-    font-family: 'Titillium Web' !important;
+    font-family: 'Roboto' !important;
     font-style: normal;
     -webkit-tap-highlight-color: transparent;
     scrollbar-color: #355dff #04045a;

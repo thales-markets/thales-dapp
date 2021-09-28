@@ -238,7 +238,6 @@ const ViewMarket = styled.div`
 `;
 
 export const CryptoName = styled.p`
-    font-family: Titillium Web;
     font-weight: 600;
     font-size: 20px;
     line-height: 20px;
