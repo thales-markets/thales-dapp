@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const stakingThales = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: '0xE167fe2b784Ec29708639C98c4740850CDF68F54',
+        [NetworkId.Ropsten]: '0x9c27B789D645bf7bB02e71590df627b3DE8249fA',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x8d178B3Dd7B29dfB38f55FdFE6518cabe6B31059',
         // added to resolve error with typings
@@ -48,6 +48,19 @@ export const stakingThales = {
             payable: false,
             stateMutability: 'nonpayable',
             type: 'constructor',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
+            name: 'CancelUnstake',
+            type: 'event',
         },
         {
             anonymous: false,
@@ -315,6 +328,15 @@ export const stakingThales = {
             constant: false,
             inputs: [],
             name: 'acceptOwnership',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [],
+            name: 'cancelUnstake',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

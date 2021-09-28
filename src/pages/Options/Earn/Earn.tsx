@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, FlexDivColumn } from '../../../theme/common';
+import { Background, FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
@@ -12,9 +12,24 @@ import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
 import TokenOverview from './components/TokenOverview';
+import snxStakingActiveIcon from '../../../assets/images/snx-staking-active.png';
+import snxStakingIcon from '../../../assets/images/snx-staking.png';
+import stakingActiveIcon from '../../../assets/images/staking-active.svg';
+import stakingIcon from '../../../assets/images/staking.svg';
+import lpActiveIcon from '../../../assets/images/lp-active.svg';
+import lpIcon from '../../../assets/images/lp.svg';
+import vestingActiveIcon from '../../../assets/images/vesting-active.svg';
+import vestingIcon from '../../../assets/images/vesting.svg';
+import Loader from '../../../components/Loader';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/rootReducer';
+import { getNetworkId } from '../../../redux/modules/wallet';
+import { isNetworkSupported } from '../../../utils/network';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+
     const tabs = [
         {
             id: 'retro-rewards',
@@ -24,12 +39,12 @@ const EarnPage: React.FC = () => {
         {
             id: 'staking',
             name: t('options.earn.thales-staking.tab-title'),
-            disabled: true,
+            disabled: false,
         },
         {
             id: 'vesting',
             name: t('options.earn.vesting.tab-title'),
-            disabled: true,
+            disabled: false,
         },
         {
             id: 'lp-staking',
@@ -55,49 +70,115 @@ const EarnPage: React.FC = () => {
     }> = useMemo(() => tabs, [t]);
 
     return (
-        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%' }}>
-            <Container>
-                <FlexDivColumn className="earn">
-                    <MarketHeader route={ROUTES.Options.Token} />
-                </FlexDivColumn>
-            </Container>
-            <Container>
-                <FlexDivColumn>
-                    <TokenOverview />
-                    <MainContentContainer>
-                        <OptionsTabContainer>
-                            {optionsTabContent.map((tab, index) => (
-                                <OptionsTab
-                                    isActive={tab.id === selectedTab}
-                                    key={index}
-                                    index={index}
-                                    onClick={() => {
-                                        if (tab.disabled) return;
-                                        history.push({
-                                            pathname: location.pathname,
-                                            search: queryString.stringify({
-                                                tab: tab.id,
-                                            }),
-                                        });
-                                        setSelectedTab(tab.id);
-                                    }}
-                                    className={`${tab.id === selectedTab ? 'selected' : ''} ${
-                                        tab.disabled ? 'disabled' : ''
-                                    }`}
-                                >
-                                    {`${tab.name} ${tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''}`}
-                                </OptionsTab>
-                            ))}
-                        </OptionsTabContainer>
-                        <WidgetsContainer>
-                            {selectedTab === 'retro-rewards' && <SnxStaking />}
-                            {selectedTab === 'staking' && <ThalesStaking />}
-                            {selectedTab === 'vesting' && <Vesting />}
-                            {selectedTab === 'lp-staking' && <LPStaking />}
-                        </WidgetsContainer>
-                    </MainContentContainer>
-                </FlexDivColumn>
-            </Container>
+        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%', overflowX: 'hidden' }}>
+            {networkId && isNetworkSupported(networkId) ? (
+                <>
+                    <Container>
+                        <FlexDivColumn style={{ width: '100%' }} className="earn">
+                            <MarketHeader route={ROUTES.Options.Token} />
+                        </FlexDivColumn>
+                    </Container>
+                    <Container>
+                        <FlexDivColumn>
+                            <TokenOverview />
+                            <MainContentContainer>
+                                <OptionsTabContainer>
+                                    {optionsTabContent.map((tab, index) => (
+                                        <OptionsTab
+                                            isActive={tab.id === selectedTab}
+                                            key={index}
+                                            index={index}
+                                            onClick={() => {
+                                                if (tab.disabled) return;
+                                                history.push({
+                                                    pathname: location.pathname,
+                                                    search: queryString.stringify({
+                                                        tab: tab.id,
+                                                    }),
+                                                });
+                                                setSelectedTab(tab.id);
+                                            }}
+                                            className={`${tab.id === selectedTab ? 'selected' : ''} ${
+                                                tab.disabled ? 'disabled' : ''
+                                            }`}
+                                        >
+                                            {`${tab.name} ${
+                                                tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
+                                            }`}
+                                        </OptionsTab>
+                                    ))}
+                                </OptionsTabContainer>
+                                <WidgetsContainer>
+                                    {selectedTab === 'retro-rewards' && <SnxStaking />}
+                                    {selectedTab === 'staking' && <ThalesStaking />}
+                                    {selectedTab === 'vesting' && <Vesting />}
+                                    {selectedTab === 'lp-staking' && <LPStaking />}
+                                </WidgetsContainer>
+                            </MainContentContainer>
+                        </FlexDivColumn>
+                    </Container>
+                    <NavFooter>
+                        <Icon
+                            width={50}
+                            height={50}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'retro-rewards',
+                                    }),
+                                });
+                                setSelectedTab('retro-rewards');
+                            }}
+                            src={selectedTab === 'retro-rewards' ? snxStakingActiveIcon : snxStakingIcon}
+                        />
+                        <Icon
+                            width={30}
+                            height={30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'staking',
+                                    }),
+                                });
+                                setSelectedTab('staking');
+                            }}
+                            src={selectedTab === 'staking' ? stakingActiveIcon : stakingIcon}
+                        />
+                        <Icon
+                            width={30}
+                            height={30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'vesting',
+                                    }),
+                                });
+                                setSelectedTab('vesting');
+                            }}
+                            src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
+                        />
+                        <Icon
+                            width={50}
+                            height={30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'lp-staking',
+                                    }),
+                                });
+                                setSelectedTab('lp-staking');
+                            }}
+                            src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
+                        />
+                    </NavFooter>
+                </>
+            ) : (
+                <Loader />
+            )}
         </Background>
     );
 };
@@ -108,17 +189,22 @@ const Container = styled.div`
     align-items: center;
     width: min(100%, 1440px);
     margin: auto;
-    @media (max-width: 768px) {
-        flex-direction: column;
-        width: 100%;
-    }
     padding-left: 120px;
     padding-right: 30px;
+    @media (max-width: 1024px) {
+        flex-direction: column;
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 `;
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
     overflow: hidden;
+    @media (max-width: 767px) {
+        padding-bottom: 88px;
+    }
 `;
 
 const OptionsTabContainer = styled.div`
@@ -126,6 +212,9 @@ const OptionsTabContainer = styled.div`
     position: relative;
     width: 95%;
     margin: auto;
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
@@ -187,6 +276,31 @@ const WidgetsContainer = styled.div`
     border-radius: 15px;
     background: #121776;
     z-index: 0;
+    @media (max-width: 767px) {
+        border: none;
+        padding: 5px;
+    }
+`;
+
+const NavFooter = styled(FlexDivRowCentered)`
+    @media (min-width: 767px) {
+        display: none;
+    }
+    height: 88px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: #04045a;
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid #ca91dc;
+    width: 100%;
+    padding: 0 40px;
+    z-index: 1000;
+`;
+
+const Icon = styled(Image)<{ width: number; height: number }>`
+    width: ${(props) => props.width}px;
+    height: ${(props) => props.height}px;
 `;
 
 export default EarnPage;

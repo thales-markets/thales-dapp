@@ -9,6 +9,7 @@ const filters = [
     TransactionFilterEnum.CLAIM_STAKING_REWARDS,
     TransactionFilterEnum.STAKE,
     TransactionFilterEnum.START_UNSTAKE,
+    TransactionFilterEnum.CANCEL_UNSTAKE,
     TransactionFilterEnum.UNSTAKE,
 ];
 

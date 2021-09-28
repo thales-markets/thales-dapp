@@ -136,6 +136,57 @@ const Container = styled(FlexDiv)`
     background: #04045a;
     border-radius: 16px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    @media (max-width: 1024px) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    @media (max-width: 767px) {
+        border-radius: 23px;
+        margin-top: 20px;
+        padding-left: 0;
+        padding-right: 0;
+        > * {
+            padding: 10px;
+            border: none !important;
+            &:nth-child(1) {
+                flex-basis: 100%;
+                order: 1;
+                border-bottom: 1px solid rgba(1, 38, 81, 0.8) !important;
+            }
+            &:nth-child(2) {
+                flex-basis: 40%;
+                order: 2;
+                justify-content: flex-start;
+            }
+            &:nth-child(3) {
+                flex-basis: 40%;
+                order: 4;
+                justify-content: flex-start;
+            }
+            &:nth-child(4) {
+                flex-basis: 60%;
+                order: 3;
+                justify-content: flex-end;
+                text-align: right;
+            }
+            &:nth-child(5) {
+                flex-basis: 60%;
+                order: 5;
+                justify-content: flex-end;
+                text-align: right;
+            }
+            &:nth-child(6) {
+                flex-basis: 100%;
+                order: 6;
+                border-top: 1px solid rgba(1, 38, 81, 0.8) !important;
+            }
+            &:nth-child(6) span {
+                font-size: 14px;
+                line-height: 16px;
+            }
+        }
+    }
 `;
 
 const InnerItemContainer = styled(FlexDivCentered)`
@@ -145,6 +196,9 @@ const InnerItemContainer = styled(FlexDivCentered)`
         border-right: 2px solid rgba(1, 38, 81, 0.5);
     }
     color: #b8c6e5;
+    @media (max-width: 767px) {
+        min-height: 50px;
+    }
 `;
 
 const Item = styled(FlexDivColumnCentered)`
@@ -157,6 +211,10 @@ const Title = styled.p`
     font-size: 13px;
     line-height: 18px;
     color: #b8c6e5;
+    @media (max-width: 767px) {
+        font-size: 12px;
+        line-height: 16px;
+    }
 `;
 
 const Content = styled.div<{ fontSize?: number }>`
@@ -169,6 +227,11 @@ const Content = styled.div<{ fontSize?: number }>`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    @media (max-width: 767px) {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+    }
 `;
 
 const StyledLink = styled.a`
@@ -203,6 +266,9 @@ export const StyledInfoIcon = styled(InfoIcon)`
     min-width: 18px;
     min-height: 18px;
     margin-bottom: -2px;
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
 export default TokentOverview;

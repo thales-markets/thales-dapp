@@ -64,15 +64,15 @@ const ThalesBalanceTooltip: React.FC<Properties> = ({ setThalesTotalBalance }) =
     return (
         <>
             <FlexDivSpaceBetween>
-                <BalanceTitle>{t(`user-info.wallet.in-wallet`)}:</BalanceTitle>
+                <BalanceTitle>{t('user-info.wallet.in-wallet')}:</BalanceTitle>
                 <BalanceValue>{formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}</BalanceValue>
             </FlexDivSpaceBetween>
             <FlexDivSpaceBetween>
-                <BalanceTitle>{t(`user-info.wallet.total-staked`)}:</BalanceTitle>
+                <BalanceTitle>{t('user-info.wallet.total-staked')}:</BalanceTitle>
                 <BalanceValue>{formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}</BalanceValue>
             </FlexDivSpaceBetween>
             <FlexDivSpaceBetween>
-                <BalanceTitle>{t(`user-info.wallet.total-escrowed`)}:</BalanceTitle>
+                <BalanceTitle>{t('user-info.wallet.total-escrowed')}:</BalanceTitle>
                 <BalanceValue>{formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}</BalanceValue>
             </FlexDivSpaceBetween>
         </>

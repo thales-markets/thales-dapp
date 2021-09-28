@@ -121,7 +121,7 @@ const Vest: React.FC = () => {
     };
 
     return (
-        <EarnSection>
+        <EarnSection orderOnTablet={1} spanOnTablet={5} paddingOnMobile={25}>
             <SectionContentContainer>
                 <ClaimItem>
                     <ClaimTitle>{t('options.earn.vesting.vest.available-to-vest')}:</ClaimTitle>

@@ -55,12 +55,16 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     }, [thalesStaked, escrowedBalance]);
 
     return (
-        <EarnSection style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}>
+        <EarnSection
+            orderOnMobile={3}
+            orderOnTablet={3}
+            style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}
+        >
             <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
                 <>
-                    <SectionContent style={{ paddingTop: '15px', height: '100%' }}>
+                    <MyStakeContent>
                         <FlexDivColumnCentered>
                             <StyledClaimTitle>
                                 {t('options.earn.thales-staking.my-stake.staked-in-contract')}:
@@ -110,7 +114,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
                                 {formatCurrencyWithKey(THALES_CURRENCY, Number(escrowedBalance) + Number(thalesStaked))}
                             </GradientText>
                         </FlexDivColumnCentered>
-                    </SectionContent>
+                    </MyStakeContent>
                     {notEligibleForStakingRewards && (
                         <ClaimMessage style={{ marginTop: 0 }}>
                             {t('options.earn.thales-staking.my-stake.not-eligible-message')}
@@ -121,6 +125,15 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         </EarnSection>
     );
 };
+
+const MyStakeContent = styled(SectionContent)`
+    padding-top: 15px;
+    height: 100%;
+    @media (max-width: 767px) {
+        flex-direction: column;
+        padding-top: 20px;
+    }
+`;
 
 const UnstakingDiv = styled.div`
     position: absolute;

@@ -61,6 +61,9 @@
         &__card:last-child > div {
             margin: 20px 20px 20px 10px !important;
         }
+        &__card:only-child > div {
+            margin: 20px 10px 20px 10px !important;
+        }
         &__card > div {
             margin: 20px 10px 20px 10px !important;
         }
