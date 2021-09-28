@@ -16,7 +16,6 @@ type UsersTradesProps = {
 const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
     const [showAll, setShowAll] = useState<boolean>(false);
 
-    console.log(market.asset);
     return (
         <FlexDiv
             style={{
@@ -72,7 +71,8 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 <Row
                     className="text-ms"
                     style={{
-                        borderBottom: '1px solid #748bc6',
+                        borderBottom: '1px solid',
+                        borderImage: 'linear-gradient(to right, #748BC6 95%, #04045A 5%) 100% 1',
                         marginTop: 36,
                     }}
                 >
@@ -93,14 +93,16 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                         <Text style={{ flex: 1 }}>{formatShortDate(new Date(usersTrades[0].timestamp))}</Text>
                     </Row>
                 )}
-                {showAll &&
-                    usersTrades?.map((trade, index) => (
-                        <Row className="text-m" key={index}>
-                            <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, trade.makerAmount)}</Text>
-                            <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, trade.takerAmount)}</Text>
-                            <Text style={{ flex: 1 }}>{formatShortDate(new Date(trade.timestamp))}</Text>
-                        </Row>
-                    ))}
+                <RowScrollable>
+                    {showAll &&
+                        usersTrades?.map((trade, index) => (
+                            <Row className="text-m" key={index} style={{ width: '106.5%' }}>
+                                <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, trade.makerAmount)}</Text>
+                                <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, trade.takerAmount)}</Text>
+                                <Text style={{ flex: 1 }}>{formatShortDate(new Date(trade.timestamp))}</Text>
+                            </Row>
+                        ))}
+                </RowScrollable>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
                     <FlexDivColumnCentered
@@ -115,7 +117,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             style={{ background: 'transparent', padding: '24px 35px' }}
                             onClick={() => setShowAll(!showAll)}
                         >
-                            View all
+                            {showAll ? 'View Less' : 'View All'}
                         </Button>
                     </FlexDivColumnCentered>
 
@@ -141,6 +143,13 @@ export const Row = styled(FlexDiv)`
     padding: 5px;
     justify-content: space-between;
     align-items: center;
+`;
+
+export const RowScrollable = styled(FlexDiv)`
+    flex-direction: column;
+    overflow-x: hidden;
+    max-height: 150px;
+    max-width: 95%;
 `;
 
 export default UsersTrades;

@@ -1,3 +1,13 @@
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow,
+    withStyles,
+} from '@material-ui/core';
 import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
@@ -7,7 +17,11 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { TableHeaderLabel } from '../../MarketsTable/components';
+import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
+import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
+import { StyledTableCell } from '../LeaderboardTable/LeaderboardTable';
 import './media.scss';
 import UsersExercises from './UsersExcercises';
 import UsersMints from './UsersMints';
@@ -127,6 +141,103 @@ const Profile: React.FC<any> = () => {
         return unclaimedMap;
     }, [userFilter]);
 
+    const [pageMints, setPageMints] = useState(0);
+    const [pageTrades, setPageTrades] = useState(0);
+    const [pageExercises, setPageExercises] = useState(0);
+    const [pageUnclaimed, setPageUnclaimed] = useState(0);
+
+    const handleChangePageMints = (_event: unknown, newPage: number) => {
+        setPageMints(newPage);
+    };
+    const handleChangePageTrades = (_event: unknown, newPage: number) => {
+        console.log(newPage);
+        setPageTrades(newPage);
+    };
+    const handleChangePageExercises = (_event: unknown, newPage: number) => {
+        setPageExercises(newPage);
+    };
+    const handleChangePageUnclaimed = (_event: unknown, newPage: number) => {
+        setPageUnclaimed(newPage);
+    };
+
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    const numberOfPages = useMemo(() => {
+        let numberOfPages;
+        console.log(Math.ceil(Array.from(extractTradesProfileData.keys()).length));
+        switch (filter) {
+            case Filters.Mints:
+                numberOfPages = Math.ceil(Array.from(extractMintsProfileData.keys()).length / rowsPerPage) || 1;
+                break;
+            case Filters.Trades:
+                numberOfPages = Math.ceil(Array.from(extractTradesProfileData.keys()).length / rowsPerPage) || 1;
+                break;
+            case Filters.Excercises:
+                numberOfPages = Math.ceil(Array.from(extractExercisesProfileData.keys()).length / rowsPerPage) || 1;
+                break;
+            case Filters.Unclaimed:
+                numberOfPages = Math.ceil(Array.from(extractUnclaimedProfileData.keys()).length / rowsPerPage) || 1;
+                break;
+            default:
+                numberOfPages = 0;
+        }
+
+        console.log(numberOfPages);
+        return numberOfPages;
+    }, [filter]);
+
+    const handleChangeRowsPerPageMints = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageMints(0);
+    };
+
+    const handleChangeRowsPerPageTrades = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(event.target.value);
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageTrades(0);
+    };
+
+    const handleChangeRowsPerPageExercises = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageExercises(0);
+    };
+
+    const handleChangeRowsPerPageUnclaimed = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPageUnclaimed(0);
+    };
+
+    const memoizedPageMints = useMemo(() => {
+        if (pageMints > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return pageMints;
+    }, [pageMints, numberOfPages, filter]);
+
+    const memoizedPageTrades = useMemo(() => {
+        console.log(pageTrades);
+        if (pageTrades > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return pageTrades;
+    }, [pageTrades, numberOfPages, filter]);
+
+    const memoizedPageExercises = useMemo(() => {
+        if (pageExercises > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return pageExercises;
+    }, [pageExercises, numberOfPages, filter]);
+
+    const memoizedPageUnclaimed = useMemo(() => {
+        if (pageUnclaimed > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return pageUnclaimed;
+    }, [pageUnclaimed, numberOfPages, filter]);
+
+    const headCells: HeadCell[] = [{ id: 1, label: '', sortable: false }];
+
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
@@ -159,7 +270,7 @@ const Profile: React.FC<any> = () => {
                         className={filter === Filters.Excercises ? 'selected' : ''}
                         onClick={() => setFilter(Filters.Excercises)}
                     >
-                        Excercises
+                        Exercises
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
@@ -171,69 +282,210 @@ const Profile: React.FC<any> = () => {
                 </FilterWrapper>
             </FlexDivRow>
             <DataWrapper>
-                {filter === Filters.Mints &&
-                    Array.from(extractMintsProfileData.keys()).map((key, index) => {
-                        return (
-                            <UsersMints
-                                key={index}
-                                market={
-                                    profile?.mints
-                                        .filter((mint: any) => mint.market.address === key)
-                                        .map((mint: any) => mint.market)[0]
-                                }
-                                usersMints={extractMintsProfileData.get(key)}
-                            />
-                        );
-                    })}
+                <TableContainer
+                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
+                    component={Paper}
+                >
+                    <Table aria-label="customized table">
+                        <TableHead>
+                            <TableRow>
+                                {headCells.map((cell: HeadCell, index) => {
+                                    return (
+                                        <StyledTableCell key={index}>
+                                            <TableHeaderLabel>{cell.label}</TableHeaderLabel>
+                                        </StyledTableCell>
+                                    );
+                                })}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filter === Filters.Mints &&
+                                Array.from(extractMintsProfileData.keys()).map((key, index) => {
+                                    return (
+                                        <StyledTableRow key={index}>
+                                            <UsersMints
+                                                key={index}
+                                                market={
+                                                    profile?.mints
+                                                        .filter((mint: any) => mint.market.address === key)
+                                                        .map((mint: any) => mint.market)[0]
+                                                }
+                                                usersMints={extractMintsProfileData.get(key)}
+                                            />
+                                        </StyledTableRow>
+                                    );
+                                })}
+                            {filter === Filters.Trades &&
+                                Array.from(extractTradesProfileData.keys()).map((key, index) => {
+                                    return (
+                                        <StyledTableRow key={index}>
+                                            <UsersTrades
+                                                key={index}
+                                                market={
+                                                    profile?.trades
+                                                        .filter((trade: any) => trade.market.address === key)
+                                                        .map((trade: any) => trade.market)[0]
+                                                }
+                                                usersTrades={extractTradesProfileData.get(key)}
+                                            />
+                                        </StyledTableRow>
+                                    );
+                                })}
 
-                {filter === Filters.Trades &&
-                    Array.from(extractTradesProfileData.keys()).map((key, index) => {
-                        return (
-                            <UsersTrades
-                                key={index}
-                                market={
-                                    profile?.trades
-                                        .filter((trade: any) => trade.market.address === key)
-                                        .map((trade: any) => trade.market)[0]
-                                }
-                                usersTrades={extractTradesProfileData.get(key)}
-                            />
-                        );
-                    })}
+                            {filter === Filters.Excercises &&
+                                Array.from(extractExercisesProfileData.keys()).map((key, index) => {
+                                    return (
+                                        <StyledTableRow key={index}>
+                                            <UsersExercises
+                                                key={index}
+                                                market={
+                                                    profile?.excercises
+                                                        .filter((excercise: any) => excercise.market.address === key)
+                                                        .map((excercise: any) => excercise.market)[0]
+                                                }
+                                                usersExercises={extractExercisesProfileData.get(key)}
+                                            />
+                                        </StyledTableRow>
+                                    );
+                                })}
 
-                {filter === Filters.Excercises &&
-                    Array.from(extractExercisesProfileData.keys()).map((key, index) => {
-                        return (
-                            <UsersExercises
-                                key={index}
-                                market={
-                                    profile?.excercises
-                                        .filter((excercise: any) => excercise.market.address === key)
-                                        .map((excercise: any) => excercise.market)[0]
-                                }
-                                usersExercises={extractExercisesProfileData.get(key)}
-                            />
-                        );
-                    })}
-
-                {filter === Filters.Unclaimed &&
-                    Array.from(extractUnclaimedProfileData.keys()).map((key, index) => {
-                        return (
-                            <UsersUnclaimed
-                                key={index}
-                                market={
-                                    profile?.unclaimed
-                                        .filter((unclaimed: any) => unclaimed.market.address === key)
-                                        .map((unclaimed: any) => unclaimed.market)[0]
-                                }
-                                usersUnclaimed={extractUnclaimedProfileData.get(key)}
-                            />
-                        );
-                    })}
+                            {filter === Filters.Unclaimed &&
+                                Array.from(extractUnclaimedProfileData.keys()).map((key, index) => {
+                                    return (
+                                        <StyledTableRow key={index}>
+                                            <UsersUnclaimed
+                                                key={index}
+                                                market={
+                                                    profile?.unclaimed
+                                                        .filter((unclaimed: any) => unclaimed.market.address === key)
+                                                        .map((unclaimed: any) => unclaimed.market)[0]
+                                                }
+                                                usersUnclaimed={extractUnclaimedProfileData.get(key)}
+                                            />
+                                        </StyledTableRow>
+                                    );
+                                })}
+                        </TableBody>
+                        {filter === Filters.Mints && Array.from(extractMintsProfileData.keys()).length !== 0 && (
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationWrapper
+                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                        onRowsPerPageChange={handleChangeRowsPerPageMints}
+                                        count={Array.from(extractMintsProfileData.keys()).length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={memoizedPageMints}
+                                        onPageChange={handleChangePageMints}
+                                        ActionsComponent={() => (
+                                            <Pagination
+                                                page={memoizedPageMints}
+                                                numberOfPages={numberOfPages}
+                                                setPage={setPageMints}
+                                            />
+                                        )}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                        {filter === Filters.Trades && Array.from(extractTradesProfileData.keys()).length !== 0 && (
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationWrapper
+                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                        onRowsPerPageChange={handleChangeRowsPerPageTrades}
+                                        count={Array.from(extractTradesProfileData.keys()).length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={memoizedPageTrades}
+                                        onPageChange={handleChangePageTrades}
+                                        ActionsComponent={() => (
+                                            <Pagination
+                                                page={memoizedPageTrades}
+                                                numberOfPages={numberOfPages}
+                                                setPage={setPageTrades}
+                                            />
+                                        )}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                        {filter === Filters.Excercises && Array.from(extractExercisesProfileData.keys()).length !== 0 && (
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationWrapper
+                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                        onRowsPerPageChange={handleChangeRowsPerPageExercises}
+                                        count={Array.from(extractExercisesProfileData.keys()).length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={memoizedPageExercises}
+                                        onPageChange={handleChangePageExercises}
+                                        ActionsComponent={() => (
+                                            <Pagination
+                                                page={memoizedPageExercises}
+                                                numberOfPages={numberOfPages}
+                                                setPage={setPageExercises}
+                                            />
+                                        )}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                        {filter === Filters.Unclaimed && Array.from(extractUnclaimedProfileData.keys()).length !== 0 && (
+                            <TableFooter>
+                                <TableRow>
+                                    <PaginationWrapper
+                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                        onRowsPerPageChange={handleChangeRowsPerPageUnclaimed}
+                                        count={Array.from(extractUnclaimedProfileData.keys()).length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={memoizedPageUnclaimed}
+                                        onPageChange={handleChangePageUnclaimed}
+                                        ActionsComponent={() => (
+                                            <Pagination
+                                                page={memoizedPageUnclaimed}
+                                                numberOfPages={numberOfPages}
+                                                setPage={setPageUnclaimed}
+                                            />
+                                        )}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                    </Table>
+                </TableContainer>
             </DataWrapper>
         </FlexDivColumnCentered>
     );
 };
+
+interface HeadCell {
+    id: number;
+    label: string;
+    sortable: boolean;
+}
+
+export const StyledTableRow = withStyles(() => ({
+    root: {
+        background: 'transparent',
+        '&:last-child': {
+            borderBottomLeftRadius: '23px',
+            borderBottomRightRadius: '23px',
+        },
+        '&:last-child > td:first-child': {
+            borderBottomLeftRadius: '23px',
+            borderTopLeftRadius: '23px !important',
+        },
+        '&:last-child a:last-child td': {
+            borderBottomRightRadius: '23px',
+            borderTopRightRadius: '23px !important',
+        },
+        '&.clickable': {
+            cursor: 'pointer',
+            '&:hover': {
+                background: '#0a0b52',
+            },
+        },
+    },
+}))(TableRow);
 
 const FilterWrapper = styled(FlexDiv)`
     padding: 0 25px;

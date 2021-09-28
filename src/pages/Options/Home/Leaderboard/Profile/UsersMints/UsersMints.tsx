@@ -70,7 +70,8 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 <Row
                     className="text-ms"
                     style={{
-                        borderBottom: '1px solid #748bc6',
+                        borderBottom: '1px solid',
+                        borderImage: 'linear-gradient(to right, #748BC6 95%, #04045A 5%) 100% 1',
                         marginTop: 36,
                     }}
                 >
@@ -91,14 +92,17 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                         <Text style={{ flex: 1 }}>{formatShortDate(new Date(usersMints[0].timestamp))}</Text>
                     </Row>
                 )}
-                {showAll &&
-                    usersMints?.map((mint, index) => (
-                        <Row className="text-m" key={index}>
-                            <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, mint.amount)}</Text>
-                            <Text style={{ flex: 1 }}>{mint.side}</Text>
-                            <Text style={{ flex: 1 }}>{formatShortDate(new Date(mint.timestamp))}</Text>
-                        </Row>
-                    ))}
+                <RowScrollable>
+                    {showAll &&
+                        usersMints?.map((mint, index) => (
+                            <Row className="text-m" key={index} style={{ width: '106.5%' }}>
+                                <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, mint.amount)}</Text>
+                                <Text style={{ flex: 2 }}>{mint.side}</Text>
+                                <Text style={{ flex: 1 }}>{formatShortDate(new Date(mint.timestamp))}</Text>
+                            </Row>
+                        ))}
+                </RowScrollable>
+
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
                     <FlexDivColumnCentered
@@ -113,7 +117,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                             style={{ background: 'transparent', padding: '24px 35px' }}
                             onClick={() => setShowAll(!showAll)}
                         >
-                            View all
+                            {showAll ? 'View Less' : 'View All'}
                         </Button>
                     </FlexDivColumnCentered>
 
@@ -139,6 +143,13 @@ export const Row = styled(FlexDiv)`
     padding: 5px;
     justify-content: space-between;
     align-items: center;
+`;
+
+export const RowScrollable = styled(FlexDiv)`
+    flex-direction: column;
+    overflow-x: hidden;
+    max-height: 150px;
+    max-width: 95%;
 `;
 
 export default UsersMints;

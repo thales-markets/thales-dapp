@@ -76,7 +76,8 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                 <Row
                     className="text-ms"
                     style={{
-                        borderBottom: '1px solid #748bc6',
+                        borderBottom: '1px solid',
+                        borderImage: 'linear-gradient(to right, #748BC6 80%, #04045A 20%) 100% 1',
                         marginTop: 36,
                     }}
                 >
@@ -93,13 +94,15 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                         <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].short)}</Text>
                     </Row>
                 )}
-                {showAll &&
-                    usersUnclaimed?.map((unclaimed, index) => (
-                        <Row className="text-m" key={index}>
-                            <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.long)}</Text>
-                            <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.short)}</Text>
-                        </Row>
-                    ))}
+                <RowScrollable>
+                    {showAll &&
+                        usersUnclaimed?.map((unclaimed, index) => (
+                            <Row className="text-m" key={index} style={{ width: '106.5%' }}>
+                                <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.long)}</Text>
+                                <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.short)}</Text>
+                            </Row>
+                        ))}
+                </RowScrollable>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
                     <FlexDivColumnCentered
@@ -114,7 +117,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             style={{ background: 'transparent', padding: '24px 35px' }}
                             onClick={() => setShowAll(!showAll)}
                         >
-                            View all
+                            {showAll ? 'View Less' : 'View All'}
                         </Button>
                     </FlexDivColumnCentered>
 
@@ -140,6 +143,13 @@ export const Row = styled(FlexDiv)`
     padding: 5px;
     justify-content: space-between;
     align-items: center;
+`;
+
+export const RowScrollable = styled(FlexDiv)`
+    flex-direction: column;
+    overflow-x: hidden;
+    max-height: 150px;
+    max-width: 95%;
 `;
 
 export default UsersUnclaimed;

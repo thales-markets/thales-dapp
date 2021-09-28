@@ -51,7 +51,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     borderTopRightRadius: 23,
                 }}
             >
-                <Row style={{ backgroundColor: '#748bc6' }}>
+                <Row>
                     <Text className="bold" style={{ flex: 2 }}>
                         Strike Price
                     </Text>
@@ -70,7 +70,8 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                 <Row
                     className="text-ms"
                     style={{
-                        borderBottom: '1px solid #748bc6',
+                        borderBottom: '1px solid',
+                        borderImage: 'linear-gradient(to right, #748BC6 95%, #04045A 5%) 100% 1',
                         marginTop: 36,
                     }}
                 >
@@ -91,14 +92,16 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                         <Text style={{ flex: 1 }}>{formatShortDate(new Date(usersExercises[0].timestamp))}</Text>
                     </Row>
                 )}
-                {showAll &&
-                    usersExercises?.map((exercise, index) => (
-                        <Row className="text-m" key={index}>
-                            <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
-                            <Text style={{ flex: 1 }}>{exercise.side}</Text>
-                            <Text style={{ flex: 1 }}>{formatShortDate(new Date(exercise.timestamp))}</Text>
-                        </Row>
-                    ))}
+                <RowScrollable>
+                    {showAll &&
+                        usersExercises?.map((exercise, index) => (
+                            <Row className="text-m" key={index} style={{ width: '127.5%' }}>
+                                <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
+                                <Text style={{ flex: 1 }}>{exercise.side}</Text>
+                                <Text style={{ flex: 1 }}>{formatShortDate(new Date(exercise.timestamp))}</Text>
+                            </Row>
+                        ))}
+                </RowScrollable>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
                     <FlexDivColumnCentered
@@ -113,7 +116,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             style={{ background: 'transparent', padding: '24px 35px' }}
                             onClick={() => setShowAll(!showAll)}
                         >
-                            View all
+                            {showAll ? 'View Less' : 'View All'}
                         </Button>
                     </FlexDivColumnCentered>
 
@@ -139,6 +142,13 @@ export const Row = styled(FlexDiv)`
     padding: 5px;
     justify-content: space-between;
     align-items: center;
+`;
+
+export const RowScrollable = styled(FlexDiv)`
+    flex-direction: column;
+    overflow-x: hidden;
+    max-height: 150px;
+    max-width: 95%;
 `;
 
 export default UsersExercises;
