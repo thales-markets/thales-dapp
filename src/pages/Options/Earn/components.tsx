@@ -4,7 +4,12 @@ import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 
-export const EarnSection = styled.section`
+export const EarnSection = styled.section<{
+    orderOnMobile?: number;
+    orderOnTablet?: number;
+    paddingOnMobile?: number;
+    spanOnTablet?: number;
+}>`
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -29,6 +34,15 @@ export const EarnSection = styled.section`
         margin: -3px;
         border-radius: inherit;
         background: linear-gradient(rgba(202, 145, 220, 0.6), rgba(106, 193, 213, 0.6));
+    }
+    @media screen and (max-width: 1024px) {
+        grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
+        order: ${(props) => props.orderOnTablet ?? 10};
+    }
+    @media (max-width: 767px) {
+        grid-column: span 10 !important;
+        order: ${(props) => props.orderOnMobile ?? 10};
+        padding: ${(props) => props.paddingOnMobile ?? 15}px;
     }
 `;
 
@@ -65,6 +79,9 @@ export const ClaimContent = styled.span`
 
 export const SectionContentContainer = styled(FlexDivColumn)`
     padding: 20px 20px 0 20px;
+    @media (max-width: 767px) {
+        padding: 0 5px 0 5px;
+    }
 `;
 
 export const ClaimItem = styled(FlexDivColumnCentered)`
@@ -109,6 +126,9 @@ export const PieChartContainer = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
 `;
 
 export const PieChartCenterDiv = styled.div`
@@ -137,6 +157,9 @@ export const LearnMore = styled.span`
     font-size: 16px;
     line-height: 24px;
     cursor: pointer;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;
 
 export const StyledMaterialTooltip = withStyles(() => ({
@@ -163,7 +186,7 @@ export const MaxButtonContainer = styled(FlexDiv)`
     justify-content: flex-end;
     flex: 1;
     margin-left: 10px;
-    max-width: 40%; ;
+    max-width: 40%;
 `;
 
 export const MaxButton = styled.button`
@@ -175,6 +198,7 @@ export const MaxButton = styled.button`
     cursor: pointer;
     font-size: 16px;
     padding: 12px 32px 12px 32px;
+    text-transform: uppercase;
     &:disabled {
         opacity: 0.4;
         cursor: default;
@@ -193,4 +217,7 @@ export const StyledInfoIcon = styled(InfoIcon)`
     min-height: 20px;
     margin-left: 10px;
     margin-bottom: -2px;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;

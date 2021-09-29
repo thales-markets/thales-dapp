@@ -321,7 +321,7 @@ export const ProgressBar = styled.div`
 `;
 
 export const FilterButton = styled(Button)`
-    width: 110px;
+    min-width: 110px;
     height: 40px;
     margin: 24px 10px;
     background: transparent;

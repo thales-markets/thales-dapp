@@ -49,7 +49,7 @@ const MaintenancePage: React.FC = () => {
                 </FlexDivColumn>
                 <VerticalWrapper style={{ position: 'fixed', bottom: 0 }}>
                     <PoweredBy>
-                        Powered by
+                        {t('maintenance-page.powered-by')}
                         <SyntetixLogo src={synthetix}></SyntetixLogo>
                     </PoweredBy>
                 </VerticalWrapper>

@@ -235,12 +235,17 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
 
     return (
-        <EarnSection style={{ gridColumn: 'span 3', gridRow: 'span 2' }}>
+        <EarnSection
+            spanOnTablet={5}
+            orderOnMobile={1}
+            orderOnTablet={1}
+            style={{ gridColumn: 'span 3', gridRow: 'span 2' }}
+        >
             <SectionHeader>{t('options.earn.thales-staking.stake.stake')}</SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
                 <SectionContentContainer style={{ height: '100%' }}>
-                    <ClaimItem>
+                    <StyledClaimItem>
                         <BalanceTitle>{t('options.earn.thales-staking.stake.available-to-stake')}:</BalanceTitle>
                         <GradientText
                             gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
@@ -249,7 +254,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                         >
                             {formatCurrencyWithKey(THALES_CURRENCY, balance)}
                         </GradientText>
-                    </ClaimItem>
+                    </StyledClaimItem>
                     <FlexDiv style={{ paddingBottom: '15px' }}>
                         <NumericInput
                             style={{ flex: 1, padding: '15px 0px 0 20px', maxWidth: '60%' }}
@@ -271,12 +276,12 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                                     setAmountToStake(balance);
                                 }}
                             >
-                                MAX
+                                {t('common.max')}
                             </MaxButton>
                         </MaxButtonContainer>
                     </FlexDiv>
                     <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
-                    <FlexDivCentered style={{ paddingTop: '40px' }}>{getStakeButton()}</FlexDivCentered>
+                    <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
                     <FullRow>
                         <ValidationMessage
                             showValidation={txErrorMessage !== null}
@@ -293,6 +298,24 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
 const BalanceTitle = styled.span`
     font-size: 16px;
     padding-bottom: 8px;
+`;
+
+const StakeButtonDiv = styled(FlexDivCentered)`
+    padding-top: 40px;
+    @media (max-width: 1024px) {
+        padding-top: 15px;
+    }
+`;
+
+const StyledClaimItem = styled(ClaimItem)`
+    @media (max-width: 1024px) {
+        padding-top: 15px;
+        padding-bottom: 67px;
+    }
+    @media (max-width: 767px) {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
 `;
 
 export default Stake;

@@ -39,12 +39,12 @@ type ExploreMarketsMobileProps = {
 };
 
 export enum SortByEnum {
-    Asset = 'Asset',
-    Asset_Price = 'Asset Price',
-    Strike_Price = 'Strike Price',
-    Pool_Size = 'Pool Size',
-    Time_Remaining = 'Time Remaining',
-    Open_Orders = 'Open Orders',
+    Asset = 'asset-col',
+    Asset_Price = 'asset-price-col',
+    Strike_Price = 'strike-price-col',
+    Pool_Size = 'pool-size-col',
+    Time_Remaining = 'time-remaining-col',
+    Open_Orders = 'open-orders-col',
 }
 
 export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
@@ -77,19 +77,19 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({ userFilter: [filter] }),
             });
-        } else if (userFilterValue === filter && userFilter !== PrimaryFilters.All) {
+        } else if (userFilterValue === filter && userFilter !== PrimaryFilters.all) {
             history.replace({
                 pathname: searchFilter.pathname,
                 search: '',
             });
         }
 
-        if (!isDisabled && secondLevelUserFilter !== SecondaryFilters.All && filter !== PrimaryFilters.All) {
-            setSecondLevelUserFilter(SecondaryFilters.All);
+        if (!isDisabled && secondLevelUserFilter !== SecondaryFilters.all && filter !== PrimaryFilters.all) {
+            setSecondLevelUserFilter(SecondaryFilters.all);
         }
 
         if (!isDisabled) {
-            setUserFilter(userFilter === filter ? PrimaryFilters.All : filter);
+            setUserFilter(userFilter === filter ? PrimaryFilters.all : filter);
         }
 
         document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
@@ -108,7 +108,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                     userFilter2: [filter],
                 }),
             });
-        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.All) {
+        } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.all) {
             history.replace({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
@@ -125,7 +125,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
         }
 
         if (!isDisabled) {
-            setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.All : filter);
+            setSecondLevelUserFilter(secondLevelUserFilter === filter ? SecondaryFilters.all : filter);
         }
 
         document.getElementsByClassName('markets-mobile')[0]?.scrollIntoView({ behavior: 'smooth' });
@@ -134,8 +134,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 
     const resetFilters = () => {
         setPhaseFilter(PhaseFilterEnum.all);
-        setUserFilter(PrimaryFilters.All);
-        setSecondLevelUserFilter(SecondaryFilters.All);
+        setUserFilter(PrimaryFilters.all);
+        setSecondLevelUserFilter(SecondaryFilters.all);
     };
 
     return (
@@ -148,12 +148,12 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
             <FlexDiv className="markets-mobile__filters">
                 <CategoryFilters
                     onClick={setShowDropwodnUserFilters.bind(this, !showDropdownUserFilters)}
-                    filter={userFilter}
+                    filter={t(`options.filters-labels.${userFilter}`)}
                 >
                     <DropDownWrapper hidden={!showDropdownUserFilters}>
                         <DropDown>
                             <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                Category
+                                {t(`options.filters-labels.category`)}
                             </Text>
                             {Object.keys(PrimaryFilters)
                                 .filter(
@@ -164,34 +164,34 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                 )
                                 .map((key, index) => {
                                     const isDisabled = !isWalletConnected && index < 4;
+                                    const castedKey = key as keyof typeof PrimaryFilters;
                                     return (
                                         <Text
                                             key={key}
                                             onClick={onClickUserFilter.bind(
                                                 this,
-                                                PrimaryFilters[key as keyof typeof PrimaryFilters],
+                                                PrimaryFilters[castedKey],
                                                 isDisabled
                                             )}
                                             className={`${
-                                                !isDisabled &&
-                                                userFilter === PrimaryFilters[key as keyof typeof PrimaryFilters]
+                                                !isDisabled && userFilter === PrimaryFilters[castedKey]
                                                     ? 'selected'
                                                     : ''
                                             } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
                                             style={{ marginLeft: 20 }}
                                         >
-                                            {PrimaryFilters[key as keyof typeof PrimaryFilters]}
+                                            {t(`options.filters-labels.${PrimaryFilters[castedKey]}`)}
                                         </Text>
                                     );
                                 })}
                             <Text style={{ marginLeft: -20 }} className="text-m pale-grey">
-                                Discover
+                                {t(`options.filters-labels.discover`)}
                             </Text>
                             {Object.keys(SecondaryFilters)
                                 .filter(
                                     (key) =>
                                         isNaN(Number(SecondaryFilters[key as keyof typeof SecondaryFilters])) &&
-                                        SecondaryFilters[key as keyof typeof SecondaryFilters] !== SecondaryFilters.All
+                                        SecondaryFilters[key as keyof typeof SecondaryFilters] !== SecondaryFilters.all
                                 )
                                 .map((key) => {
                                     const isCustomMarketsEmpty =
@@ -240,31 +240,33 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                             break;
                                     }
                                     isDisabled = isDisabled || assetSearchNoBtc || assetSearchNoEth;
+                                    const castedKey = key as keyof typeof SecondaryFilters;
                                     return (
                                         <Text
                                             key={key}
                                             onClick={onClickSecondLevelUserFilter.bind(
                                                 this,
-                                                SecondaryFilters[key as keyof typeof SecondaryFilters],
+                                                SecondaryFilters[castedKey],
                                                 isDisabled
                                             )}
                                             className={`${
-                                                !isDisabled &&
-                                                secondLevelUserFilter ===
-                                                    SecondaryFilters[key as keyof typeof SecondaryFilters]
+                                                !isDisabled && secondLevelUserFilter === SecondaryFilters[castedKey]
                                                     ? 'selected'
                                                     : ''
                                             } text-s lh32 pale-grey ${isDisabled ? 'greyed-out' : ''}`}
                                             style={{ marginLeft: 20 }}
                                         >
-                                            {SecondaryFilters[key as keyof typeof SecondaryFilters]}
+                                            {t(`options.filters-labels.${SecondaryFilters[castedKey]}`)}
                                         </Text>
                                     );
                                 })}
                         </DropDown>
                     </DropDownWrapper>
                 </CategoryFilters>
-                <PhaseFilters onClick={setShowDropwodnPhase.bind(this, !showDropdownPhase)} filter={phaseFilter}>
+                <PhaseFilters
+                    onClick={setShowDropwodnPhase.bind(this, !showDropdownPhase)}
+                    filter={t(`options.filters-labels.${phaseFilter}`)}
+                >
                     <DropDownWrapper hidden={!showDropdownPhase}>
                         <DropDown>
                             {Object.keys(PhaseFilterEnum)
@@ -291,7 +293,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 
             <SortyByMobile
                 onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
-                filter={mapOrderByToEnum(orderBy)}
+                filter={t(`options.home.markets-table.${mapOrderByToEnum(orderBy)}`)}
             >
                 <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
@@ -307,7 +309,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                     onClick={() => setOrderBy(index + 2)}
                                     key={key}
                                 >
-                                    {SortByEnum[key as keyof typeof SortByEnum]}
+                                    {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
                                 </Text>
                             ))}
                     </DropDown>
@@ -331,7 +333,9 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                         )}
                         {userFilter === PrimaryFilters.MyMarkets && (
                             <>
-                                <Text className="text-m bold pale-grey">You haven’t created any market yet.</Text>
+                                <Text className="text-m bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-created')}
+                                </Text>
                                 <FlexDiv
                                     style={{
                                         justifyContent: 'space-around',
@@ -357,7 +361,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                             margin: '24px',
                                         }}
                                     >
-                                        or
+                                        {t('common.wallet.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}

@@ -4,7 +4,7 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { SYNTHS_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
+import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { TokenInfo } from 'types/token';
@@ -14,8 +14,6 @@ import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import thalesTokenIcon from 'assets/images/sidebar/thales-token-white.svg';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { LINKS } from 'constants/links';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { get } from 'lodash';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
@@ -36,10 +34,6 @@ export const TokentOverview: React.FC = () => {
             setTokenInfo(tokenInfoQuery.data);
         }
     }, [tokenInfoQuery.isSuccess, tokenInfoQuery.data]);
-
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     return (
         <>
@@ -62,10 +56,10 @@ export const TokentOverview: React.FC = () => {
                 <ItemContainer>
                     <Title>{t('options.earn.overview.price-label')}</Title>
                     <Content>
-                        {tokenInfo && tokenInfo.price && ethRate !== null ? (
+                        {tokenInfo && tokenInfo.price ? (
                             <LightTooltip title={t('options.earn.overview.price-tooltip')}>
                                 <StyledLink href={LINKS.Token.DodoPool} target="_blank" rel="noreferrer">
-                                    {formatCurrencyWithSign(USD_SIGN, tokenInfo.price * ethRate)}
+                                    {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                     <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                                 </StyledLink>
                             </LightTooltip>
@@ -77,8 +71,8 @@ export const TokentOverview: React.FC = () => {
                 <ItemContainer>
                     <Title>{t('options.earn.overview.market-cap-label')}</Title>
                     <Content>
-                        {tokenInfo && tokenInfo.marketCap && ethRate !== null
-                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap * ethRate)
+                        {tokenInfo && tokenInfo.marketCap
+                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap)
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>
@@ -136,6 +130,57 @@ const Container = styled(FlexDiv)`
     background: #04045a;
     border-radius: 16px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    @media (max-width: 1024px) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    @media (max-width: 767px) {
+        border-radius: 23px;
+        margin-top: 20px;
+        padding-left: 0;
+        padding-right: 0;
+        > * {
+            padding: 10px;
+            border: none !important;
+            &:nth-child(1) {
+                flex-basis: 100%;
+                order: 1;
+                border-bottom: 1px solid rgba(1, 38, 81, 0.8) !important;
+            }
+            &:nth-child(2) {
+                flex-basis: 40%;
+                order: 2;
+                justify-content: flex-start;
+            }
+            &:nth-child(3) {
+                flex-basis: 40%;
+                order: 4;
+                justify-content: flex-start;
+            }
+            &:nth-child(4) {
+                flex-basis: 60%;
+                order: 3;
+                justify-content: flex-end;
+                text-align: right;
+            }
+            &:nth-child(5) {
+                flex-basis: 60%;
+                order: 5;
+                justify-content: flex-end;
+                text-align: right;
+            }
+            &:nth-child(6) {
+                flex-basis: 100%;
+                order: 6;
+                border-top: 1px solid rgba(1, 38, 81, 0.8) !important;
+            }
+            &:nth-child(6) span {
+                font-size: 14px;
+                line-height: 16px;
+            }
+        }
+    }
 `;
 
 const InnerItemContainer = styled(FlexDivCentered)`
@@ -145,6 +190,9 @@ const InnerItemContainer = styled(FlexDivCentered)`
         border-right: 2px solid rgba(1, 38, 81, 0.5);
     }
     color: #b8c6e5;
+    @media (max-width: 767px) {
+        min-height: 50px;
+    }
 `;
 
 const Item = styled(FlexDivColumnCentered)`
@@ -157,6 +205,10 @@ const Title = styled.p`
     font-size: 13px;
     line-height: 18px;
     color: #b8c6e5;
+    @media (max-width: 767px) {
+        font-size: 12px;
+        line-height: 16px;
+    }
 `;
 
 const Content = styled.div<{ fontSize?: number }>`
@@ -169,6 +221,11 @@ const Content = styled.div<{ fontSize?: number }>`
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    @media (max-width: 767px) {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 16px;
+    }
 `;
 
 const StyledLink = styled.a`
@@ -203,6 +260,9 @@ export const StyledInfoIcon = styled(InfoIcon)`
     min-width: 18px;
     min-height: 18px;
     margin-bottom: -2px;
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
 export default TokentOverview;

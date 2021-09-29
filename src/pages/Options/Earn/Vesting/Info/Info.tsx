@@ -24,6 +24,14 @@ const InfoSection = styled.section`
     grid-row: span 3;
     margin-bottom: 15px;
     padding: 30px 20px 10px 40px;
+    @media (max-width: 1024px) {
+        order: 2;
+    }
+    @media (max-width: 767px) {
+        grid-column: span 10 !important;
+        padding: 10px;
+        order: 9;
+    }
 `;
 
 const InfoTitle = styled.div`
@@ -32,6 +40,12 @@ const InfoTitle = styled.div`
     line-height: 48px;
     color: #ffffff;
     padding-bottom: 30px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        line-height: 24px;
+        text-align: center;
+        padding-bottom: 20px;
+    }
 `;
 const InfoText = styled.div`
     font-size: 18px;
@@ -39,6 +53,11 @@ const InfoText = styled.div`
     letter-spacing: 0.2px;
     color: #ffffff;
     font-weight: normal;
+    @media (max-width: 767px) {
+        font-size: 14px;
+        line-height: 24px;
+        text-align: center;
+    }
 `;
 
 export default Info;

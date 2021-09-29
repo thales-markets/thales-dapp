@@ -32,6 +32,9 @@ const LPStakingSection = styled.section`
     grid-row: span 3;
     margin-bottom: 15px;
     padding: 30px 20px 10px 40px;
+    @media (max-width: 767px) {
+        padding: 5px;
+    }
 `;
 
 const LPStakingTitle = styled(FlexDivCentered)`
@@ -40,6 +43,11 @@ const LPStakingTitle = styled(FlexDivCentered)`
     line-height: 72px;
     padding: 10px 85px 60px 85px;
     text-align: center;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        line-height: 18px;
+        padding: 0 0 30px 0;
+    }
 `;
 
 export default LPStaking;

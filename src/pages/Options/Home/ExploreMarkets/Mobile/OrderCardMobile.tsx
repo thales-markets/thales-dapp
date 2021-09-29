@@ -140,7 +140,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                                     {formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)}
                                                 </Price>
                                                 <LightTooltip
-                                                    title={t('options.market.overview.difference-text-tooltip')}
+                                                    title={t('options.quick-trading.difference-text-tooltip')}
                                                 >
                                                     {currentAssetPrice > order.market.strikePrice ? (
                                                         <RedText
@@ -183,7 +183,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                             <FlexDivRow style={{ marginBottom: 8, alignItems: 'flex-start' }}>
                                 <FlexDivColumnCentered>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                        {'When'}
+                                        {t('options.quick-trading.table.when-col')}
                                     </Text>
                                     <Text className="text-ms pale-grey">
                                         {formatShortDateWithTime(order.market.maturityDate)}
@@ -191,7 +191,9 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                 </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: isBuyMode ? 'center' : 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                        {isBuyMode ? 'Amount to deposit' : 'Amount to receive'}
+                                        {isBuyMode
+                                            ? t('options.quick-trading.table.deposit-amount-col')
+                                            : t('options.quick-trading.table.receive-amount-col')}
                                     </Text>
                                     <Text className="text-ms pale-grey">
                                         {formatCurrencyWithSign(
@@ -204,7 +206,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                 {isBuyMode && (
                                     <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {'Return if win'}
+                                            {t('options.quick-trading.table.return-col')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
                                             {isBuyMode
@@ -227,7 +229,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                 <FlexDivRow style={{ marginBottom: 8, alignItems: 'flex-start' }}>
                                     <FlexDivColumnCentered>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {'Options to sell'}
+                                            {t('options.quick-trading.table.options-to-sell-col')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
                                             {formatCurrency(
@@ -238,7 +240,7 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
                                     </FlexDivColumnCentered>
                                     <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {'Options in wallet'}
+                                            {t('options.quick-trading.table.options-in-wallet-col')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
                                             {isWalletConnected
