@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Background, Button, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
+import { Background, Button, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
@@ -101,9 +101,62 @@ const LeaderboardPage: React.FC = () => {
                         </Button>
                     )}
                 </FlexDivColumn>
-
                 <FlexDivColumn>
                     <LeaderboardTitle className="pale-grey">Leaderboards</LeaderboardTitle>
+                    <InfoContainer>
+                        <FlexDiv
+                            style={{
+                                background: 'linear-gradient(#ca91dc, #6ac1d5)',
+                                border: '1px solid transparent',
+                                borderRadius: 23,
+                                marginBottom: 16,
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <Row style={{ borderTopLeftRadius: 23, borderTopRightRadius: 23 }}>
+                                <Text className="bold" style={{ flex: 1 }}>
+                                    My Info
+                                </Text>
+                            </Row>
+                            <Row>
+                                <Text className="bold" style={{ flex: 1 }}>
+                                    Display name
+                                </Text>
+                                <Text className="bold" style={{ flex: 3 }}>
+                                    Display name
+                                </Text>
+                            </Row>
+                            <Row style={{ borderBottomLeftRadius: 23, borderBottomRightRadius: 23 }}>
+                                <Text className="bold" style={{ flex: 1 }}>
+                                    Address
+                                </Text>
+                                <Text className="bold" style={{ flex: 3 }}>
+                                    Address
+                                </Text>
+                            </Row>
+                        </FlexDiv>
+                        <FlexDiv
+                            style={{
+                                background: 'linear-gradient(#ca91dc, #6ac1d5)',
+                                border: '1px solid transparent',
+                                borderRadius: 23,
+                                marginBottom: 16,
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <Row style={{ borderTopLeftRadius: 23, borderTopRightRadius: 23 }}>
+                                <Text className="bold" style={{ flex: 1 }}>
+                                    My Twitter account
+                                </Text>
+                            </Row>
+                            <Row style={{ borderBottomLeftRadius: 23, borderBottomRightRadius: 23 }}>
+                                <Text className="bold" style={{ flex: 1 }}>
+                                    twitter image and name
+                                </Text>
+                                <Button className="primary">{'verify account'}</Button>
+                            </Row>
+                        </FlexDiv>
+                    </InfoContainer>
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (
@@ -207,10 +260,27 @@ const WidgetsContainer = styled.div`
     z-index: 0;
 `;
 
+const InfoContainer = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+`;
+
 const LeaderboardTitle = styled(Text)`
     font-size: 39px;
     padding: 30px;
     font-weight: 600;
+`;
+
+export const Row = styled(FlexDiv)`
+    color: #f6f6fe;
+    line-height: 16px;
+    font-weight: 600;
+    padding: 5px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #04045a;
+    padding-left: 20px;
 `;
 
 export default LeaderboardPage;

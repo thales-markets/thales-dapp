@@ -39,7 +39,7 @@ enum OrderDirection {
     DESC,
 }
 
-const defaultOrderBy = 6; // Volume
+const defaultOrderBy = 7; // Netprofit
 
 const TradingCompetition: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -180,13 +180,12 @@ const TradingCompetition: React.FC<any> = () => {
     const headCells: HeadCell[] = [
         { id: 1, label: '', sortable: false },
         { id: 2, label: t('options.leaderboard.table.rank-col'), sortable: false },
-        { id: 3, label: t('options.leaderboard.table.position-col'), sortable: false },
-        { id: 4, label: t('options.leaderboard.table.display-name-col'), sortable: false },
-        { id: 5, label: t('options.leaderboard.table.trades-col'), sortable: true },
-        { id: 6, label: t('options.leaderboard.table.volume-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.table.display-name-col'), sortable: false },
+        { id: 4, label: t('options.leaderboard.table.trades-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.table.volume-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.table.investment-col'), sortable: true },
         { id: 7, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
-        { id: 8, label: t('options.leaderboard.table.investment-col'), sortable: true },
-        { id: 9, label: t('options.leaderboard.table.gain-col'), sortable: true },
+        { id: 8, label: t('options.leaderboard.table.gain-col'), sortable: true },
     ];
 
     return (
@@ -201,9 +200,6 @@ const TradingCompetition: React.FC<any> = () => {
                         placeholder={t('options.leaderboard.search-placeholder')}
                     ></SearchInput>
                 </SearchWrapper>
-                <span className="leaderboard__label">
-                    {t('options.leaderboard.trading-competition.competition-period')}
-                </span>
             </FlexDivRow>
 
             <TableContainer style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }} component={Paper}>
@@ -276,11 +272,13 @@ const TradingCompetition: React.FC<any> = () => {
                                     >
                                         <StyledTableCell></StyledTableCell>
                                         <StyledTableCell>{(leader as any).rank}</StyledTableCell>
-                                        <StyledTableCell>{'position'}</StyledTableCell>
                                         <StyledTableCell>{'Your current rank'}</StyledTableCell>
                                         <StyledTableCell>{leader.trades}</StyledTableCell>
                                         <StyledTableCell>
                                             {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, leader.investment)}
                                         </StyledTableCell>
                                         <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                             {formatCurrencyWithSign(
@@ -288,9 +286,6 @@ const TradingCompetition: React.FC<any> = () => {
                                                 leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
                                                 2
                                             )}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {formatCurrencyWithSign(USD_SIGN, leader.investment)}
                                         </StyledTableCell>
                                         <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                             {Math.abs(leader.gain).toFixed(1)}%
@@ -305,7 +300,6 @@ const TradingCompetition: React.FC<any> = () => {
                                     <StyledTableCell style={{ height: getHeight(leader) }}>
                                         {(leader as any).rank}
                                     </StyledTableCell>
-                                    <StyledTableCell>{'position'}</StyledTableCell>
                                     <StyledTableCell>
                                         <StyledLink
                                             href={getEtherscanAddressLink(networkId, leader.walletAddress)}
@@ -321,15 +315,15 @@ const TradingCompetition: React.FC<any> = () => {
                                     <StyledTableCell>
                                         {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
                                     </StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                    </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                         {formatCurrencyWithSign(
                                             USD_SIGN,
                                             leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
                                             2
                                         )}
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {formatCurrencyWithSign(USD_SIGN, leader.investment)}
                                     </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                         {Math.abs(leader.gain).toFixed(1)}%
