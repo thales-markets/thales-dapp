@@ -330,7 +330,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                 <ButtonContainer>
                     <StyledMaterialTooltip
                         arrow={true}
-                        title={t('options.earn.thales-staking.staking-rewards.button-tooltip')}
+                        title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
                     >
                         <Button
                             onClick={handleClaimOngoingAirdrop}
