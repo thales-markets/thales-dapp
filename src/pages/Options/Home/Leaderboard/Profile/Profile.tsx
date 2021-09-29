@@ -141,100 +141,70 @@ const Profile: React.FC<any> = () => {
         return unclaimedMap;
     }, [userFilter]);
 
-    const [pageMints, setPageMints] = useState(0);
-    const [pageTrades, setPageTrades] = useState(0);
-    const [pageExercises, setPageExercises] = useState(0);
-    const [pageUnclaimed, setPageUnclaimed] = useState(0);
+    const [page, setPage] = useState(0);
 
-    const handleChangePageMints = (_event: unknown, newPage: number) => {
-        setPageMints(newPage);
-    };
-    const handleChangePageTrades = (_event: unknown, newPage: number) => {
-        console.log(newPage);
-        setPageTrades(newPage);
-    };
-    const handleChangePageExercises = (_event: unknown, newPage: number) => {
-        setPageExercises(newPage);
-    };
-    const handleChangePageUnclaimed = (_event: unknown, newPage: number) => {
-        setPageUnclaimed(newPage);
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
     };
 
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const numberOfPages = useMemo(() => {
-        let numberOfPages;
-        console.log(Math.ceil(Array.from(extractTradesProfileData.keys()).length));
+        let pages;
         switch (filter) {
             case Filters.Mints:
-                numberOfPages = Math.ceil(Array.from(extractMintsProfileData.keys()).length / rowsPerPage) || 1;
+                pages = Math.ceil(Array.from(extractMintsProfileData.keys()).length / rowsPerPage) || 1;
                 break;
             case Filters.Trades:
-                numberOfPages = Math.ceil(Array.from(extractTradesProfileData.keys()).length / rowsPerPage) || 1;
+                pages = Math.ceil(Array.from(extractTradesProfileData.keys()).length / rowsPerPage) || 1;
                 break;
             case Filters.Excercises:
-                numberOfPages = Math.ceil(Array.from(extractExercisesProfileData.keys()).length / rowsPerPage) || 1;
+                pages = Math.ceil(Array.from(extractExercisesProfileData.keys()).length / rowsPerPage) || 1;
                 break;
             case Filters.Unclaimed:
-                numberOfPages = Math.ceil(Array.from(extractUnclaimedProfileData.keys()).length / rowsPerPage) || 1;
+                pages = Math.ceil(Array.from(extractUnclaimedProfileData.keys()).length / rowsPerPage) || 1;
                 break;
             default:
-                numberOfPages = 0;
+                pages = 0;
         }
+        return pages;
+    }, [filter, rowsPerPage]);
 
-        console.log(numberOfPages);
-        return numberOfPages;
-    }, [filter]);
-
-    const handleChangeRowsPerPageMints = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPageMints(0);
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value));
+        setPage(0);
     };
 
-    const handleChangeRowsPerPageTrades = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value);
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPageTrades(0);
-    };
-
-    const handleChangeRowsPerPageExercises = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPageExercises(0);
-    };
-
-    const handleChangeRowsPerPageUnclaimed = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPageUnclaimed(0);
-    };
-
-    const memoizedPageMints = useMemo(() => {
-        if (pageMints > numberOfPages - 1) {
+    const memoizedPage = useMemo(() => {
+        if (page > numberOfPages - 1) {
+            console.log(page);
+            console.log(numberOfPages);
             return numberOfPages - 1;
         }
-        return pageMints;
-    }, [pageMints, numberOfPages, filter]);
+        console.log(page);
+        return page;
+    }, [page, numberOfPages, filter, userFilter]);
 
-    const memoizedPageTrades = useMemo(() => {
-        console.log(pageTrades);
-        if (pageTrades > numberOfPages - 1) {
-            return numberOfPages - 1;
+    const profileData = useMemo(() => {
+        let data;
+        switch (filter) {
+            case Filters.Mints:
+                data = Array.from(extractMintsProfileData.keys());
+                break;
+            case Filters.Trades:
+                data = Array.from(extractTradesProfileData.keys());
+                break;
+            case Filters.Excercises:
+                data = Array.from(extractExercisesProfileData.keys());
+                break;
+            case Filters.Unclaimed:
+                data = Array.from(extractUnclaimedProfileData.keys());
+                break;
+            default:
+                data = [];
         }
-        return pageTrades;
-    }, [pageTrades, numberOfPages, filter]);
-
-    const memoizedPageExercises = useMemo(() => {
-        if (pageExercises > numberOfPages - 1) {
-            return numberOfPages - 1;
-        }
-        return pageExercises;
-    }, [pageExercises, numberOfPages, filter]);
-
-    const memoizedPageUnclaimed = useMemo(() => {
-        if (pageUnclaimed > numberOfPages - 1) {
-            return numberOfPages - 1;
-        }
-        return pageUnclaimed;
-    }, [pageUnclaimed, numberOfPages, filter]);
+        return data.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+    }, [rowsPerPage, memoizedPage, userFilter, filter, profiles]);
 
     const headCells: HeadCell[] = [{ id: 1, label: '', sortable: false }];
 
@@ -300,7 +270,7 @@ const Profile: React.FC<any> = () => {
                         </TableHead>
                         <TableBody>
                             {filter === Filters.Mints &&
-                                Array.from(extractMintsProfileData.keys()).map((key, index) => {
+                                profileData.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersMints
@@ -316,7 +286,7 @@ const Profile: React.FC<any> = () => {
                                     );
                                 })}
                             {filter === Filters.Trades &&
-                                Array.from(extractTradesProfileData.keys()).map((key, index) => {
+                                profileData.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersTrades
@@ -333,7 +303,7 @@ const Profile: React.FC<any> = () => {
                                 })}
 
                             {filter === Filters.Excercises &&
-                                Array.from(extractExercisesProfileData.keys()).map((key, index) => {
+                                profileData.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersExercises
@@ -350,7 +320,7 @@ const Profile: React.FC<any> = () => {
                                 })}
 
                             {filter === Filters.Unclaimed &&
-                                Array.from(extractUnclaimedProfileData.keys()).map((key, index) => {
+                                profileData.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersUnclaimed
@@ -366,84 +336,21 @@ const Profile: React.FC<any> = () => {
                                     );
                                 })}
                         </TableBody>
-                        {filter === Filters.Mints && Array.from(extractMintsProfileData.keys()).length !== 0 && (
+                        {profileData.length !== 0 && (
                             <TableFooter>
                                 <TableRow>
                                     <PaginationWrapper
                                         rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                        onRowsPerPageChange={handleChangeRowsPerPageMints}
-                                        count={Array.from(extractMintsProfileData.keys()).length}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        count={profileData.length}
                                         rowsPerPage={rowsPerPage}
-                                        page={memoizedPageMints}
-                                        onPageChange={handleChangePageMints}
+                                        page={memoizedPage}
+                                        onPageChange={handleChangePage}
                                         ActionsComponent={() => (
                                             <Pagination
-                                                page={memoizedPageMints}
+                                                page={memoizedPage}
                                                 numberOfPages={numberOfPages}
-                                                setPage={setPageMints}
-                                            />
-                                        )}
-                                    />
-                                </TableRow>
-                            </TableFooter>
-                        )}
-                        {filter === Filters.Trades && Array.from(extractTradesProfileData.keys()).length !== 0 && (
-                            <TableFooter>
-                                <TableRow>
-                                    <PaginationWrapper
-                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                        onRowsPerPageChange={handleChangeRowsPerPageTrades}
-                                        count={Array.from(extractTradesProfileData.keys()).length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={memoizedPageTrades}
-                                        onPageChange={handleChangePageTrades}
-                                        ActionsComponent={() => (
-                                            <Pagination
-                                                page={memoizedPageTrades}
-                                                numberOfPages={numberOfPages}
-                                                setPage={setPageTrades}
-                                            />
-                                        )}
-                                    />
-                                </TableRow>
-                            </TableFooter>
-                        )}
-                        {filter === Filters.Excercises && Array.from(extractExercisesProfileData.keys()).length !== 0 && (
-                            <TableFooter>
-                                <TableRow>
-                                    <PaginationWrapper
-                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                        onRowsPerPageChange={handleChangeRowsPerPageExercises}
-                                        count={Array.from(extractExercisesProfileData.keys()).length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={memoizedPageExercises}
-                                        onPageChange={handleChangePageExercises}
-                                        ActionsComponent={() => (
-                                            <Pagination
-                                                page={memoizedPageExercises}
-                                                numberOfPages={numberOfPages}
-                                                setPage={setPageExercises}
-                                            />
-                                        )}
-                                    />
-                                </TableRow>
-                            </TableFooter>
-                        )}
-                        {filter === Filters.Unclaimed && Array.from(extractUnclaimedProfileData.keys()).length !== 0 && (
-                            <TableFooter>
-                                <TableRow>
-                                    <PaginationWrapper
-                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                        onRowsPerPageChange={handleChangeRowsPerPageUnclaimed}
-                                        count={Array.from(extractUnclaimedProfileData.keys()).length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={memoizedPageUnclaimed}
-                                        onPageChange={handleChangePageUnclaimed}
-                                        ActionsComponent={() => (
-                                            <Pagination
-                                                page={memoizedPageUnclaimed}
-                                                numberOfPages={numberOfPages}
-                                                setPage={setPageUnclaimed}
+                                                setPage={setPage}
                                             />
                                         )}
                                     />
