@@ -42,7 +42,7 @@ import ComingSoon from 'components/ComingSoon';
 
 const MAX_SNX_STAKING_PERIOD = 144;
 const MAX_THALES_STAKING_PERIOD = 150;
-const WEEKLY_REWARDS_SNX = 150000;
+const WEEKLY_REWARDS_SNX = 125000;
 const WEEKLY_REWARDS_THALES = 100000;
 
 type Properties = {
