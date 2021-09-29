@@ -328,17 +328,22 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                 </StyledPieChartContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
                 <ButtonContainer>
-                    <Button
-                        onClick={handleClaimOngoingAirdrop}
-                        disabled={!isClaimAvailable || isClaiming}
-                        className="primary"
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={t('options.earn.thales-staking.staking-rewards.button-tooltip')}
                     >
-                        {isClaiming
-                            ? t('options.earn.thales-staking.staking-rewards.claiming') +
-                              ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
-                            : t('options.earn.thales-staking.staking-rewards.claim') +
-                              ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
-                    </Button>
+                        <Button
+                            onClick={handleClaimOngoingAirdrop}
+                            disabled={!isClaimAvailable || isClaiming}
+                            className="primary"
+                        >
+                            {isClaiming
+                                ? t('options.earn.thales-staking.staking-rewards.claiming') +
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
+                                : t('options.earn.thales-staking.staking-rewards.claim') +
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
+                        </Button>
+                    </StyledMaterialTooltip>
                     {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
                         <ClaimMessage>{t('options.earn.thales-staking.staking-rewards.paused-message')}</ClaimMessage>
                     )}
