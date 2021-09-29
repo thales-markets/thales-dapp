@@ -38,6 +38,7 @@ import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
+import ComingSoon from 'components/ComingSoon';
 
 const MAX_SNX_STAKING_PERIOD = 144;
 const MAX_THALES_STAKING_PERIOD = 150;
@@ -61,6 +62,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const layoutOptions = useMemo(() => {
         if (window.innerWidth < 768) {
             return { pieWidth: 200, pieHeight: 200, pieOuterRadius: 100, pieInnerRadius: 75, gradientFontSize: 19 };
@@ -123,6 +125,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     }, [isWalletConnected, isClaimAvailable, ongoingAirdropContract]);
 
     const handleClaimOngoingAirdrop = async () => {
+        setShowTooltip(false);
         if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward && gasPrice !== null) {
             try {
                 setTxErrorMessage(null);
@@ -157,6 +160,8 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
             }
         }
     };
+
+    const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
 
     const pieData = useMemo(() => {
         if (!isClaimAvailable) {
@@ -208,31 +213,50 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 <StakingRewardsTitle>
                                     {t('options.earn.thales-staking.staking-rewards.amount-to-claim-thales')}
                                 </StakingRewardsTitle>
-                                <GradientText
-                                    gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                                    fontSize={layoutOptions.gradientFontSize}
-                                    fontWeight={600}
-                                >
-                                    {formatCurrencyWithKey(THALES_CURRENCY, stakingBalance)}
-                                </GradientText>
+                                {tokenStakingDisabled ? (
+                                    <GradientText
+                                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                        fontSize={18}
+                                        fontWeight={600}
+                                        style={{ lineHeight: '22px' }}
+                                    >
+                                        {t('common.coming-soon')}
+                                    </GradientText>
+                                ) : (
+                                    <GradientText
+                                        gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                        fontSize={layoutOptions.gradientFontSize}
+                                        fontWeight={600}
+                                    >
+                                        {formatCurrencyWithKey(THALES_CURRENCY, stakingBalance)}
+                                    </GradientText>
+                                )}
                             </StakingRewardsAmount>
                         </StakingRewardsAmountContainer>
-                        <PeriodInfo>
-                            <StakingRewardsInfoTitle>
-                                {t('options.earn.thales-staking.staking-rewards.period')}:
-                            </StakingRewardsInfoTitle>
-                            <StakingRewardsInfoContent>
-                                {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_THALES_STAKING_PERIOD}` : '-'}
-                            </StakingRewardsInfoContent>
-                        </PeriodInfo>
-                        <PeriodInfo>
-                            <StakingRewardsInfoTitle>
-                                {t('options.earn.thales-staking.staking-rewards.weekly-rewards')}:
-                            </StakingRewardsInfoTitle>
-                            <StakingRewardsInfoContent>
-                                {formatCurrencyWithKey(THALES_CURRENCY, WEEKLY_REWARDS_THALES, 0, true)}
-                            </StakingRewardsInfoContent>
-                        </PeriodInfo>
+                        {tokenStakingDisabled ? (
+                            <div style={{ marginRight: '20px', marginTop: '50px' }}>
+                                <ComingSoon />
+                            </div>
+                        ) : (
+                            <>
+                                <PeriodInfo>
+                                    <StakingRewardsInfoTitle>
+                                        {t('options.earn.thales-staking.staking-rewards.period')}:
+                                    </StakingRewardsInfoTitle>
+                                    <StakingRewardsInfoContent>
+                                        {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_THALES_STAKING_PERIOD}` : '-'}
+                                    </StakingRewardsInfoContent>
+                                </PeriodInfo>
+                                <PeriodInfo>
+                                    <StakingRewardsInfoTitle>
+                                        {t('options.earn.thales-staking.staking-rewards.weekly-rewards')}:
+                                    </StakingRewardsInfoTitle>
+                                    <StakingRewardsInfoContent>
+                                        {formatCurrencyWithKey(THALES_CURRENCY, WEEKLY_REWARDS_THALES, 0, true)}
+                                    </StakingRewardsInfoContent>
+                                </PeriodInfo>
+                            </>
+                        )}
                     </ThalesStakedDiv>
                     <StyledPieChart height={layoutOptions.pieHeight} width={layoutOptions.pieWidth}>
                         <defs>
@@ -331,8 +355,15 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     <StyledMaterialTooltip
                         arrow={true}
                         title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
+                        open={showTooltip}
                     >
                         <Button
+                            onMouseOver={() => {
+                                setShowTooltip(true);
+                            }}
+                            onMouseOut={() => {
+                                setShowTooltip(false);
+                            }}
                             onClick={handleClaimOngoingAirdrop}
                             disabled={!isClaimAvailable || isClaiming}
                             className="primary"
