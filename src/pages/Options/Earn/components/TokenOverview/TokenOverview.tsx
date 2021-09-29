@@ -4,7 +4,7 @@ import { RootState } from 'redux/rootReducer';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, Image } from 'theme/common';
 import styled from 'styled-components';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { SYNTHS_MAP, THALES_CURRENCY, USD_SIGN } from 'constants/currency';
+import { THALES_CURRENCY, USD_SIGN } from 'constants/currency';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { TokenInfo } from 'types/token';
@@ -14,8 +14,6 @@ import useTokenInfoQuery from 'queries/token/useTokenInfoQuery';
 import thalesTokenIcon from 'assets/images/sidebar/thales-token-white.svg';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { LINKS } from 'constants/links';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { get } from 'lodash';
 import { getNetworkId } from 'redux/modules/wallet';
 import thalesContract from 'utils/contracts/thalesContract';
 import { getEtherscanTokenLink } from 'utils/etherscan';
@@ -36,10 +34,6 @@ export const TokentOverview: React.FC = () => {
             setTokenInfo(tokenInfoQuery.data);
         }
     }, [tokenInfoQuery.isSuccess, tokenInfoQuery.data]);
-
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     return (
         <>
@@ -62,10 +56,10 @@ export const TokentOverview: React.FC = () => {
                 <ItemContainer>
                     <Title>{t('options.earn.overview.price-label')}</Title>
                     <Content>
-                        {tokenInfo && tokenInfo.price && ethRate !== null ? (
+                        {tokenInfo && tokenInfo.price ? (
                             <LightTooltip title={t('options.earn.overview.price-tooltip')}>
                                 <StyledLink href={LINKS.Token.DodoPool} target="_blank" rel="noreferrer">
-                                    {formatCurrencyWithSign(USD_SIGN, tokenInfo.price * ethRate)}
+                                    {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                     <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                                 </StyledLink>
                             </LightTooltip>
@@ -77,8 +71,8 @@ export const TokentOverview: React.FC = () => {
                 <ItemContainer>
                     <Title>{t('options.earn.overview.market-cap-label')}</Title>
                     <Content>
-                        {tokenInfo && tokenInfo.marketCap && ethRate !== null
-                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap * ethRate)
+                        {tokenInfo && tokenInfo.marketCap
+                            ? formatCurrencyWithSign(USD_SIGN, tokenInfo.marketCap)
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>

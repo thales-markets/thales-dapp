@@ -1,38 +1,26 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { TokenInfo } from 'types/token';
-import snxJSConnector from '../../utils/snxJSConnector';
-import circulatingSupplyList from 'utils/json/circulating-supply.json';
-import { DAO_TREASURY_AMOUNT, TOTAL_SUPPLY } from 'constants/token';
-import dodoLpContract from 'utils/contracts/dodoLpContract';
-import { ethers } from 'ethers';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { TOTAL_SUPPLY } from 'constants/token';
 import { NetworkId } from 'utils/network';
 
 const useTokenInfoQuery = (networkId: NetworkId, options?: UseQueryOptions<TokenInfo | undefined>) => {
-    const { ongoingAirdropContract } = snxJSConnector;
     return useQuery<TokenInfo | undefined>(
         QUERY_KEYS.Token.Info(networkId),
         async () => {
             try {
-                const period = ongoingAirdropContract ? await ongoingAirdropContract.period() : 1;
+                const [price, circulatingSupply, marketCap] = await Promise.all([
+                    await fetch('https://api.thales.market/token/price'),
+                    await fetch('https://api.thales.market/token/circulatingsupply'),
+                    await fetch('https://api.thales.market/token/marketcap'),
+                ]);
 
-                const circulatingSupply = (circulatingSupplyList as any)[period] - DAO_TREASURY_AMOUNT;
                 const tokenInfo: TokenInfo = {
-                    circulatingSupply,
+                    price: Number(await price.text()),
+                    circulatingSupply: Number(await circulatingSupply.text()),
+                    marketCap: Number(await marketCap.text()),
                     totalSupply: TOTAL_SUPPLY,
                 };
-
-                if (networkId === 1) {
-                    const dodoLpContractInstance = new ethers.Contract(
-                        dodoLpContract.address,
-                        dodoLpContract.abi,
-                        (snxJSConnector as any).provider
-                    );
-                    const price = await dodoLpContractInstance.getMidPrice();
-                    tokenInfo.price = bigNumberFormatter(price);
-                    tokenInfo.marketCap = tokenInfo.price * tokenInfo.circulatingSupply;
-                }
 
                 return tokenInfo;
             } catch (e) {
