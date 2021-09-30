@@ -1,8 +1,11 @@
 import twitter from 'assets/images/twitter.svg';
+import twitterBlue from 'assets/images/twitter-blue-logo.svg';
 import ROUTES from 'constants/routes';
+import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -15,8 +18,17 @@ import TradingCompetition from './TradingCompetition';
 const LeaderboardPage: React.FC = () => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [selectedTab, setSelectedTab] = useState('trading-competition');
     const [accVerified, setAccVerified] = useState(false);
+
+    const displayNamesQuery = useUsersDisplayNamesQuery({
+        enabled: isAppReady,
+    });
+
+    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
+        displayNamesQuery,
+    ]);
 
     const optionsTabContent: Array<{
         id: string;
@@ -97,12 +109,14 @@ const LeaderboardPage: React.FC = () => {
                             onClick={checkAddress}
                         >
                             <Image src={twitter} style={{ height: 32, width: 32, marginRight: 8 }}></Image>
-                            <Text className="text-m pale-grey bold">Verify Account</Text>
+                            <Text className="text-m pale-grey bold">
+                                {t('options.leaderboard.verify-twitter-account')}:
+                            </Text>
                         </Button>
                     )}
                 </FlexDivColumn>
                 <FlexDivColumn>
-                    <LeaderboardTitle className="pale-grey">Leaderboards</LeaderboardTitle>
+                    <LeaderboardTitle className="pale-grey">{t('options.leaderboard.page-title')}:</LeaderboardTitle>
                     <InfoContainer>
                         <FlexDiv
                             style={{
@@ -111,27 +125,57 @@ const LeaderboardPage: React.FC = () => {
                                 borderRadius: 23,
                                 marginBottom: 16,
                                 flexDirection: 'column',
+                                height: 148,
                             }}
                         >
-                            <Row style={{ borderTopLeftRadius: 23, borderTopRightRadius: 23 }}>
+                            <Row
+                                style={{
+                                    borderTopLeftRadius: 23,
+                                    borderTopRightRadius: 23,
+                                    height: 50,
+                                    paddingLeft: 36,
+                                    lineHeight: 40,
+                                    letterSpacing: 0.15,
+                                    fontSize: 20,
+                                    paddingTop: 18,
+                                }}
+                            >
                                 <Text className="bold" style={{ flex: 1 }}>
-                                    My Info
+                                    {t('options.leaderboard.my-info')}:
                                 </Text>
                             </Row>
-                            <Row>
+                            <Row
+                                style={{
+                                    height: 48,
+                                    paddingLeft: 36,
+                                    lineHeight: 32,
+                                    letterSpacing: 0.35,
+                                    paddingTop: 26,
+                                }}
+                            >
                                 <Text className="bold" style={{ flex: 1 }}>
-                                    Display name
+                                    {t('options.leaderboard.display-name')}:
                                 </Text>
-                                <Text className="bold" style={{ flex: 3 }}>
-                                    Display name
+                                <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 167 }}>
+                                    {displayNamesMap.get(walletAddress)}
                                 </Text>
                             </Row>
-                            <Row style={{ borderBottomLeftRadius: 23, borderBottomRightRadius: 23 }}>
+                            <Row
+                                style={{
+                                    borderBottomLeftRadius: 23,
+                                    borderBottomRightRadius: 23,
+                                    height: 48,
+                                    paddingLeft: 36,
+                                    lineHeight: 32,
+                                    letterSpacing: 0.35,
+                                    paddingTop: 4,
+                                }}
+                            >
                                 <Text className="bold" style={{ flex: 1 }}>
-                                    Address
+                                    {t('options.leaderboard.address')}:
                                 </Text>
-                                <Text className="bold" style={{ flex: 3 }}>
-                                    Address
+                                <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 65 }}>
+                                    {walletAddress}
                                 </Text>
                             </Row>
                         </FlexDiv>
@@ -142,18 +186,45 @@ const LeaderboardPage: React.FC = () => {
                                 borderRadius: 23,
                                 marginBottom: 16,
                                 flexDirection: 'column',
+                                height: 148,
                             }}
                         >
-                            <Row style={{ borderTopLeftRadius: 23, borderTopRightRadius: 23 }}>
+                            <Row
+                                style={{
+                                    borderTopLeftRadius: 23,
+                                    borderTopRightRadius: 23,
+                                    height: 50,
+                                    paddingLeft: 36,
+                                    lineHeight: 40,
+                                    letterSpacing: 0.15,
+                                    fontSize: 20,
+                                    paddingTop: 18,
+                                }}
+                            >
                                 <Text className="bold" style={{ flex: 1 }}>
-                                    My Twitter account
+                                    {t('options.leaderboard.twitter-account')}
                                 </Text>
                             </Row>
-                            <Row style={{ borderBottomLeftRadius: 23, borderBottomRightRadius: 23 }}>
-                                <Text className="bold" style={{ flex: 1 }}>
+                            <Row
+                                style={{
+                                    borderBottomLeftRadius: 23,
+                                    borderBottomRightRadius: 23,
+                                    paddingLeft: 36,
+                                    paddingRight: 43,
+                                    height: 96,
+                                }}
+                            >
+                                <Text className="text-m" style={{ flex: 1 }}>
+                                    {walletAddress && !accVerified && (
+                                        <Image src={twitterBlue} style={{ height: 50, width: 50 }}></Image>
+                                    )}
                                     twitter image and name
                                 </Text>
-                                <Button className="primary">{'verify account'}</Button>
+                                {walletAddress && !accVerified && (
+                                    <Button className="primary" style={{ width: 202 }}>
+                                        {'Verify'}
+                                    </Button>
+                                )}
                             </Row>
                         </FlexDiv>
                     </InfoContainer>

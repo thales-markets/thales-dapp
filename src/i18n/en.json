@@ -726,10 +726,14 @@
             }
         },
         "leaderboard": {
-            "search-placeholder": "Display Name",
+            "page-title": "Leaderboards",
+            "verify-twitter-account": "Verify account",
+            "display-name": "Display Name",
+            "address": "Address",
+            "twitter-account": "My twitter account",
+            "my-info": "My info",
             "table": {
                 "rank-col": "Rank",
-                "position-col": "Position",
                 "display-name-col": "Display Name",
                 "trades-col": "Trades",
                 "volume-col": "Volume",
@@ -746,7 +750,37 @@
                 "tab-title": "Leaderboard"
             },
             "profile": {
-                "tab-title": "Profile"
+                "tab-title": "Profile",
+                "search-placeholder": "Search other profiles by typing display name",
+                "filters": {
+                    "mints": "Mints",
+                    "trades": "Trades",
+                    "exercises": "Exercises",
+                    "redeem": "Redeem"
+                },
+                "markets": {
+                    "strike-price": "Strike price",
+                    "pool-size": "Pool size",
+                    "maturity-date": "Maturity date",
+                    "result": "Result"
+                },
+                "common": {
+                    "amount": "Amount",
+                    "timestamp": "Date | Time",
+                    "view-less": "View less",
+                    "view-all": "View all"
+                },
+                "exercises": {
+                    "side": "Side"
+                },
+                "trades": {
+                    "price": "Price",
+                    "type": "Type"
+                },
+                "unclaimed": {
+                    "short": "Short",
+                    "long": "Long"
+                }
             }
         },
         "common": {

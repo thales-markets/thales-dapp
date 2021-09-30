@@ -2,6 +2,7 @@ import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumnCentered, Text } from 'theme/common';
 import { formatShortDate } from 'utils/formatters/date';
@@ -14,6 +15,7 @@ type UsersUnclaimedProps = {
 };
 
 const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market }) => {
+    const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
 
     return (
@@ -54,16 +56,16 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
             >
                 <Row>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Strike Price
+                        {t('options.leaderboard.profile.markets.strike-price')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Pool Size
+                        {t('options.leaderboard.profile.markets.pool-size')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Maturity Date
+                        {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Result
+                        {t('options.leaderboard.profile.markets.result')}
                     </Text>
                 </Row>
                 <Row className="text-m">
@@ -82,10 +84,10 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     }}
                 >
                     <Text className="bold" style={{ flex: 2 }}>
-                        Long
+                        {t('options.leaderboard.profile.unclaimed.long')}
                     </Text>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Short
+                        {t('options.leaderboard.profile.unclaimed.short')}
                     </Text>
                 </Row>
                 {!showAll && (
@@ -110,15 +112,20 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             flexGrow: 1,
                             alignItems: 'center',
                             flex: 0,
+                            height: 72,
                         }}
                     >
-                        <Button
-                            className="primary"
-                            style={{ background: 'transparent', padding: '24px 35px' }}
-                            onClick={() => setShowAll(!showAll)}
-                        >
-                            {showAll ? 'View Less' : 'View All'}
-                        </Button>
+                        {usersUnclaimed.length > 1 && (
+                            <Button
+                                className="primary"
+                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                onClick={() => setShowAll(!showAll)}
+                            >
+                                {showAll
+                                    ? t('options.leaderboard.profile.common.view-less')
+                                    : t('options.leaderboard.profile.common.view-all')}
+                            </Button>
+                        )}
                     </FlexDivColumnCentered>
 
                     <Text style={{ flex: 4 }}></Text>

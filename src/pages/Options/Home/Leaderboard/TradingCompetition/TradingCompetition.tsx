@@ -197,7 +197,7 @@ const TradingCompetition: React.FC<any> = () => {
                         className="leaderboard__search"
                         onChange={(e) => setSearchString(e.target.value)}
                         value={searchString}
-                        placeholder={t('options.leaderboard.search-placeholder')}
+                        placeholder={t('options.leaderboard.display-name')}
                     ></SearchInput>
                 </SearchWrapper>
             </FlexDivRow>
