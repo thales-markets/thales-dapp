@@ -19,8 +19,8 @@
             "asset-col": "资产",
             "strike-price-col": "执行价",
             "maturity-date-col": "到期日",
-            "short-col": "sLONG",
-            "long-col": "sSHORT",
+            "long-col": "sLONG",
+            "short-col": "sSHORT",
             "pool-size-col": "交易池容量",
             "amount-col": "数量",
             "price-col": "价格",
@@ -262,7 +262,8 @@
                     "not-eligible-message": "您不符合此分发的条件。",
                     "learn-more-text": "奖励在2年内线性解锁。申请当前解锁的奖励不会受到处罚。",
                     "learn-more": "了解更多",
-                    "info-tooltip": "<0>自质押开始至2021年9月6日10:00 UTC，已按比例向所有SNX质押者分配了1500万泰雷兹。</0><0>通过此算法分配的泰雷兹Thales至少有24个符合条件。</0><1>您可以检查是否满足阈值要求 </1><2 />。"
+                    "info-tooltip": "<0>自质押开始至2021年9月6日10:00 UTC，已按比例向所有SNX质押者分配了1500万泰雷兹。</0><0>通过此算法分配的泰雷兹Thales至少有24个符合条件。</0><1>您可以检查是否满足阈值要求 </1><2 />。",
+                    "button-tooltip": "收到的奖励有 10 周的归属期。"
                 },
                 "airdropped-amount": "空投金额",
                 "claim": "领取",
