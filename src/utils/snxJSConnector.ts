@@ -20,11 +20,11 @@ type SnxJSConnector = {
     synthsMap: SynthsMap;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
-    synthSummaryUtilContract: ethers.Contract;
+    synthSummaryUtilContract?: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     binaryOptionsMarketManagerContract: ethers.Contract;
-    retroAirdropContract: ethers.Contract;
-    vestingEscrowContract: ethers.Contract;
+    retroAirdropContract?: ethers.Contract;
+    vestingEscrowContract?: ethers.Contract;
     ongoingAirdropContract?: ethers.Contract;
     stakingThalesContract?: ethers.Contract;
     thalesTokenContract?: ethers.Contract;
@@ -43,14 +43,14 @@ const snxJSConnector: SnxJSConnector = {
         this.synthsMap = keyBy(this.synths, 'name');
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
-        this.synthSummaryUtilContract = initializeContract(synthSummaryUtilContract, contractSettings);
+        this.synthSummaryUtilContract = conditionalInitializeContract(synthSummaryUtilContract, contractSettings);
         this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);
         this.binaryOptionsMarketManagerContract = initializeContract(
             binaryOptionsMarketManagerContract,
             contractSettings
         );
-        this.retroAirdropContract = initializeContract(airdrop, contractSettings);
-        this.vestingEscrowContract = initializeContract(vestingEscrow, contractSettings);
+        this.retroAirdropContract = conditionalInitializeContract(airdrop, contractSettings);
+        this.vestingEscrowContract = conditionalInitializeContract(vestingEscrow, contractSettings);
         this.ongoingAirdropContract = conditionalInitializeContract(ongoingAirdrop, contractSettings);
         this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
         this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);

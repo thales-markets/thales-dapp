@@ -2,7 +2,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
 
-export type NetworkId = 1 | 3 | 42;
+export type NetworkId = 1 | 3 | 42 | 69;
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -13,6 +13,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
+    69: 'OPTIMISM-KOVAN',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -26,8 +27,10 @@ export async function getEthereumNetwork() {
     try {
         if (hasEthereumInjected()) {
             const provider = (await detectEthereumProvider()) as EthereumProvider;
+            console.log(provider);
             if (provider && provider.networkVersion != null) {
                 const networkId = Number(provider.networkVersion) as NetworkId;
+                console.log(provider.networkVersion, networkId);
                 return { name: SUPPORTED_NETWORKS[networkId], networkId };
             }
         }
@@ -64,6 +67,8 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
         case 3:
             return true;
         case 42:
+            return true;
+        case 69:
             return true;
         default:
             return false;

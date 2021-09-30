@@ -55,7 +55,7 @@ import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+// import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import { toBigNumber } from 'utils/formatters/number';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
@@ -102,7 +102,7 @@ export const CreateMarket: React.FC = () => {
     const [shortAmount, setShortAmount] = useState<number | string>('');
     const [sellLong, setSellLong] = useState<boolean>(false);
     const [sellShort, setSellShort] = useState<boolean>(false);
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    // const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
 
     const { t } = useTranslation();
     const { synthsMap: synths } = snxJSConnector;
@@ -148,7 +148,7 @@ export const CreateMarket: React.FC = () => {
 
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const addressToApprove = 'aaaaa';
     let isCurrencySelected = false;
 
     const marketQuery = useBinaryOptionsMarketQuery(market, {
@@ -198,6 +198,9 @@ export const CreateMarket: React.FC = () => {
         strikePrice === '' ||
         maturityDate === null ||
         initialFundingAmount === '';
+
+    console.log('isButtonDisabled', isButtonDisabled);
+    console.log('gasLimit', gasLimit);
 
     const formatCreateMarketArguments = () => {
         const initialMint = ethers.utils.parseEther(initialFundingAmount.toString());
@@ -249,11 +252,7 @@ export const CreateMarket: React.FC = () => {
                     maturity,
                     initialMint,
                     false,
-                    ZERO_ADDRESS,
-                    {
-                        gasPrice: gasPriceInWei(gasPrice),
-                        gasLimit,
-                    }
+                    ZERO_ADDRESS
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
@@ -279,6 +278,7 @@ export const CreateMarket: React.FC = () => {
     };
 
     useEffect(() => {
+        console.log('hasAllowance', hasAllowance);
         if (!hasAllowance) return;
         const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
         try {
@@ -291,9 +291,10 @@ export const CreateMarket: React.FC = () => {
                     setUserHasEnoughFunds(true);
                 })
                 .catch((e: any) => {
-                    if (e.data?.originalError.code === 3) {
-                        setUserHasEnoughFunds(false);
-                    }
+                    // if (e.data?.originalError.code === 3) {
+                    //     setUserHasEnoughFunds(false);
+                    // }
+                    console.log(e);
                     setGasLimit(null);
                 });
         } catch (e) {}
@@ -328,8 +329,8 @@ export const CreateMarket: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256,
                     {
-                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                        gasPrice: gasPriceInWei(gasPrice),
+                        gasLimit: Number(gasEstimate),
+                        gasPrice: 15000000,
                     }
                 )) as ethers.ContractTransaction;
                 await tx.wait();
@@ -408,7 +409,7 @@ export const CreateMarket: React.FC = () => {
                 <Button
                     style={{ padding: '8px 24px' }}
                     className="primary"
-                    disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
+                    disabled={isButtonDisabled || isCreatingMarket}
                     onClick={handleMarketCreation}
                 >
                     {isCreatingMarket
