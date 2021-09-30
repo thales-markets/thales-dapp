@@ -36,7 +36,7 @@ import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import { useEffect } from 'react';
 import useUserAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import { useLocation } from 'react-router-dom';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
+import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import QuickTradingMobile from './QuickTradingMobile';
 import './media.scss';
 
@@ -114,8 +114,10 @@ const QuickTradingPage: React.FC<any> = () => {
         enabled: isAppReady && isWalletConnected && optionsMarkets.length > 0 && !isBuyMode,
     });
 
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
+    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
+        enabled: isAppReady && optionsMarkets.length > 0,
+    });
+    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
     const trimOrders = useMemo(() => {
         let trimOrders = orderFilter === OrderFilterEnum.MyOrders ? myOrders : orders;
