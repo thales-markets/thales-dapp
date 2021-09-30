@@ -1,4 +1,4 @@
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,18 +15,12 @@ import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide, ZeroExErrorResponse } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import {
-    formatCurrencyWithKey,
-    formatCurrencyWithSign,
-    formatPercentageWithSign,
-    toBigNumber,
-    truncToDecimals,
-} from 'utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalize0xGasLimit, normalizeGasLimit } from 'utils/network';
+import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorCode } from 'constants/options';
@@ -51,9 +45,6 @@ import {
     SummaryContainer,
     ShortInputContainer,
     Divider,
-    ProtocolFeeContainer,
-    ProtocolFeeLabel,
-    ProtocolFeeItem,
     StyledQuestionMarkIcon,
     LightTooltip,
 } from 'pages/Options/Market/components';
@@ -72,7 +63,6 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
-import WarningMessage from 'components/WarningMessage';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -95,7 +85,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [amount, setAmount] = useState<number | string>('');
     const [price, setPrice] = useState<number | string>('');
     const [total, setTotal] = useState<number | string>('');
-    const [protocolFee, setProtocolFee] = useState<number | string>('');
     const [minimumReceived, setMinimumReceived] = useState<number | string>('');
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -258,8 +247,10 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 const quote = {
                     ...swapQuote,
                     from: walletAddress,
-                    protocolFee: normalize0xGasLimit(swapQuote.protocolFee).toString(),
                 };
+                delete quote.protocolFee;
+                delete quote.minimumProtocolFee;
+                delete quote.value;
                 await window.web3.eth.sendTransaction(quote);
                 refetchOrderbook(baseToken);
                 refetchTrades(optionsMarket.address);
@@ -290,7 +281,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         setTotal('');
         setMinimumReceived('');
         setSwapQuote(undefined);
-        setProtocolFee('');
         setGasLimit(null);
         setPriceImpactPercentage('0');
     };
@@ -313,9 +303,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         setTotal(Number(amount) * Number(quote.price));
                         setMinimumReceived(Number(amount) * Number(quote.guaranteedPrice));
                         setSwapQuote(quote);
-                        if (ethRate !== null) {
-                            setProtocolFee((normalize0xGasLimit(quote.protocolFee) * ethRate) / GWEI_UNIT / GWEI_UNIT);
-                        }
                         setGasLimit(quote.gas);
                         if (isBuy) {
                             setPriceImpactPercentage(bestBuyPrice ? (quote.price - bestBuyPrice) / bestBuyPrice : 0);
@@ -597,17 +584,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, minimumReceived)}</SummaryContent>
                 </SummaryItem>
                 <Divider />
-                <ProtocolFeeContainer>
-                    <ProtocolFeeLabel>
-                        {t('options.market.trade-options.place-order.protocol-fee-label')}
-                        <LightTooltip title={t('options.market.trade-options.place-order.protocol-fee-tooltip')}>
-                            <StyledQuestionMarkIcon />
-                        </LightTooltip>
-                    </ProtocolFeeLabel>
-                    <ProtocolFeeItem>{formatCurrencyWithSign(USD_SIGN, protocolFee)}</ProtocolFeeItem>
-                </ProtocolFeeContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
-                <WarningMessage message={t('options.common.warning.gas-price-change')} />
             </SummaryContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage
