@@ -4,11 +4,15 @@ import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { Button, FlexDiv, FlexDivColumnCentered, Text } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
 import { OptionSide } from 'types/options';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getSynthName } from 'utils/snxJSConnector';
+import ReactCountryFlag from 'react-country-flag';
+import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 type UsersTradesProps = {
     usersTrades: UserTrade[];
@@ -38,12 +42,35 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     borderTopLeftRadius: 23,
                 }}
             >
-                <CurrencyIcon
-                    currencyKey={market.currencyKey}
-                    synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
-                />
-                <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
-                <CryptoKey>{market.asset}</CryptoKey>
+                <DisplayContentsAnchor
+                    style={{
+                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                    }}
+                    href={buildOptionsMarketLink(market.address)}
+                >
+                    {market.customMarket ? (
+                        <>
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(market.country as any)}
+                                style={{ width: 100, height: 100, marginRight: 0 }}
+                                svg
+                            />
+                            {!countryToCountryCode(market.country as any) && (
+                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                            )}
+                            {market.country}
+                        </>
+                    ) : (
+                        <>
+                            <CurrencyIcon
+                                currencyKey={market.currencyKey}
+                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                            />
+                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoKey>{market.asset}</CryptoKey>
+                        </>
+                    )}
+                </DisplayContentsAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered
                 className="text-ms"
@@ -165,8 +192,14 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 150px;
+    max-height: 210px;
     max-width: 95%;
+`;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 0px;
+    width: 100px;
+    height: 100px;
 `;
 
 interface UserTrade {

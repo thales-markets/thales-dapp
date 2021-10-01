@@ -110,13 +110,13 @@ const LeaderboardPage: React.FC = () => {
                         >
                             <Image src={twitter} style={{ height: 32, width: 32, marginRight: 8 }}></Image>
                             <Text className="text-m pale-grey bold">
-                                {t('options.leaderboard.verify-twitter-account')}:
+                                {t('options.leaderboard.verify-twitter-account')}
                             </Text>
                         </Button>
                     )}
                 </FlexDivColumn>
                 <FlexDivColumn>
-                    <LeaderboardTitle className="pale-grey">{t('options.leaderboard.page-title')}:</LeaderboardTitle>
+                    <LeaderboardTitle className="pale-grey">{t('options.leaderboard.page-title')}</LeaderboardTitle>
                     <InfoContainer>
                         <FlexDiv
                             style={{
