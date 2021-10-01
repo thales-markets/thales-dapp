@@ -50,6 +50,7 @@ const LeaderboardPage: React.FC<any> = () => {
     const leaderboardQuery = useLeaderboardQuery(networkId, {
         enabled: isAppReady,
     });
+
     const leaderboard = leaderboardQuery.data?.leaderboard
         ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
         : [];

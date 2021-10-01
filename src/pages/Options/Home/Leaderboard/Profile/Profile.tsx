@@ -9,7 +9,7 @@ import {
     withStyles,
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
+import useProfilesQuery from 'queries/options/useProfilesQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -46,7 +46,7 @@ const Profile: React.FC<any> = () => {
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.Mints);
 
-    const leaderboardQuery = useLeaderboardQuery(networkId, {
+    const profilesQuery = useProfilesQuery(networkId, {
         enabled: isAppReady,
     });
 
@@ -58,7 +58,7 @@ const Profile: React.FC<any> = () => {
         displayNamesQuery,
     ]);
 
-    const profiles = leaderboardQuery.data?.profiles;
+    const profiles = profilesQuery.data ? profilesQuery.data.profiles : new Map();
 
     const displayNamesAndAdressesOptions = useMemo(() => {
         const options: any[] = [];

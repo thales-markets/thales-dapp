@@ -16,7 +16,7 @@ import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
-import useLeaderboardQuery, { Leaderboard } from 'queries/options/useLeaderboardQuery';
+import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,11 +47,11 @@ const TradingCompetition: React.FC<any> = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
 
-    const leaderboardQuery = useLeaderboardQuery(networkId, {
+    const competitionQuery = useCompetitionQuery(networkId, {
         enabled: isAppReady,
     });
-    const competition = leaderboardQuery.data?.competition
-        ? leaderboardQuery.data.competition.sort((a, b) => b.volume - a.volume)
+    const competition = competitionQuery.data
+        ? competitionQuery.data.competition.sort((a, b) => b.volume - a.volume)
         : [];
 
     const displayNamesQuery = useUsersDisplayNamesQuery({
@@ -360,7 +360,7 @@ const TradingCompetition: React.FC<any> = () => {
 };
 
 interface HeadCell {
-    id: keyof Leaderboard[];
+    id: keyof Competition[];
     label: string;
     sortable: boolean;
 }
