@@ -67,6 +67,7 @@ export const QUERY_KEYS = {
         ],
         Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
+        OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
