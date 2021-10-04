@@ -21,7 +21,7 @@ const useCompetitionQuery = (networkId: NetworkId, options?: UseQueryOptions<Com
     return useQuery<Competition>(
         QUERY_KEYS.BinaryOptions.Competition(networkId),
         async () => {
-            const baseUrl = 'http://localhost:3002/competition/' + networkId;
+            const baseUrl = 'https://api.thales.market/competition/' + networkId;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const competition = result.map((record: any) => {

@@ -11,7 +11,7 @@ export const fetchAllMarketOrders = (network: NetworkId, options?: UseQueryOptio
     return useQuery<OpenOrdersMap>(
         QUERY_KEYS.BinaryOptions.OrdersCount(network),
         async () => {
-            const baseUrl = 'http://localhost:3002/orders/' + network;
+            const baseUrl = 'https://api.thales.market/orders/' + network;
             const response = await fetch(baseUrl);
             const json = await response.json();
             const openOrdersMap = new Map(json);

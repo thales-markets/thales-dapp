@@ -31,7 +31,7 @@ const LeaderboardPage: React.FC = () => {
 
     useEffect(() => {
         if (walletAddress) {
-            const url = 'http://localhost:3002/twitter/' + walletAddress.toLowerCase();
+            const url = 'https://api.thales.market/twitter/' + walletAddress.toLowerCase();
             fetch(url).then(async (response) => {
                 const result = JSON.parse(await response.text());
                 if (result) {
@@ -72,7 +72,7 @@ const LeaderboardPage: React.FC = () => {
 
     const tweetUrl = useMemo(() => {
         if (walletAddress) {
-            const url = 'http://localhost:3002/auth/' + walletAddress;
+            const url = 'https://api.thales.market/auth/' + walletAddress;
             fetch(url).then(async (result) => {
                 if ((await result.text()) === 'true') {
                     console.log('verify');
@@ -95,7 +95,7 @@ const LeaderboardPage: React.FC = () => {
                 console.log('clear');
                 clearInterval(intervalId);
             }
-            const baseUrl = 'http://localhost:3002/twitter/' + walletAddress;
+            const baseUrl = 'https://api.thales.market/twitter/' + walletAddress;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             console.log(result);

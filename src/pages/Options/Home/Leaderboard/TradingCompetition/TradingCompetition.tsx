@@ -49,7 +49,7 @@ const TradingCompetition: React.FC<any> = () => {
     const [twitterAccountsData, setTwitterAccountsData] = useState([] as any);
 
     useEffect(() => {
-        const url = 'http://localhost:3002/twitter/';
+        const url = 'https://api.thales.market/twitter/';
         fetch(url).then(async (response) => {
             const result = JSON.parse(await response.text());
             setTwitterAccountsData(result);
@@ -508,12 +508,8 @@ const getHeight = (leader: any) => {
     switch (leader.rank) {
         case 1:
             return 160;
-        case 2:
-            return 130;
-        case 3:
-            return 100;
         default:
-            return 75;
+            return 80;
     }
 };
 

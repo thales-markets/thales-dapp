@@ -21,7 +21,7 @@ const userProfilesQuery = (networkId: NetworkId, options?: UseQueryOptions<Profi
     return useQuery<Profiles>(
         QUERY_KEYS.BinaryOptions.Profiles(networkId),
         async () => {
-            const baseUrl = 'http://localhost:3002/profiles/' + networkId;
+            const baseUrl = 'https://api.thales.market/profiles/' + networkId;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const profiles = new Map();

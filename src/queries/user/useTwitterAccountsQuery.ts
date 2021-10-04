@@ -8,7 +8,7 @@ const useTwitterAccountQuery = (options?: UseQueryOptions<TwitterAccounts>) => {
     return useQuery<TwitterAccounts>(
         QUERY_KEYS.User.TwitterAccounts(),
         async () => {
-            const baseUrl = 'http://localhost:3002/twitter/';
+            const baseUrl = 'https://api.thales.market/twitter/';
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             console.log(result);

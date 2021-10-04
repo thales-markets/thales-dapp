@@ -22,7 +22,7 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Lea
     return useQuery<Leaderboard>(
         QUERY_KEYS.BinaryOptions.Leaderboard(networkId),
         async () => {
-            const baseUrl = 'http://localhost:3002/leaderboard/' + networkId;
+            const baseUrl = 'https://api.thales.market/leaderboard/' + networkId;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const leaderboard = result.map((record: any) => {

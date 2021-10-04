@@ -759,7 +759,7 @@
                     "mints": "Mints",
                     "trades": "Trades",
                     "exercises": "Exercises",
-                    "redeem": "Redeem"
+                    "redeem": "Redeemable"
                 },
                 "markets": {
                     "strike-price": "Strike price",
@@ -782,7 +782,8 @@
                 },
                 "unclaimed": {
                     "short": "Short",
-                    "long": "Long"
+                    "long": "Long",
+                    "go-to-market": "Go to market"
                 }
             }
         },

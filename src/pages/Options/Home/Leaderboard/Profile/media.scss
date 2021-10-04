@@ -5,5 +5,35 @@
         width: 100%;
         min-width: 1300px;
         grid-column: 1/-1;
+
+        &__filter {
+            width: 'auto';
+            margin: '24px 10px 10px 0px';
+        }
+
+        &__rowBorder {
+            flex: 1;
+            background: 'linear-gradient(#ca91dc, #6ac1d5) !important';
+            border: '1px solid transparent !important';
+            border-radius: 23;
+            margin-bottom: 16;
+        }
+
+        &__rowBackground {
+            flex-grow: 1;
+            align-items: 'center';
+            background: '#04045A !important';
+            &--left {
+                border-bottom-left-radius: 23px;
+                border-top-left-radius: 23px;
+            }
+            &--right {
+                flex-grow: 8;
+                padding-top: 36;
+                background: '#04045A';
+                border-bottom-right-radius: 23px;
+                border-top-right-radius: 23px;
+            }
+        }
     }
 }

@@ -29,6 +29,7 @@ import UsersExercises from './UsersExcercises';
 import UsersMints from './UsersMints';
 import UsersTrades from './UsersTrades';
 import UsersUnclaimed from './UsersUnclaimed';
+import './media.scss';
 
 export enum Filters {
     Mints = 'mints',
@@ -235,10 +236,10 @@ const Profile: React.FC<any> = () => {
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ flexDirection: 'row' }}>
                 <FlexDiv style={{ paddingLeft: 42 }}>
-                    <Text className="bold" style={{ color: '#F6F6FE', alignSelf: 'center' }}>
+                    <Text className="bold white" style={{ alignSelf: 'center' }}>
                         {t('options.leaderboard.profile.transaction-details')}
                     </Text>
-                    <Text className="bold" style={{ color: '#F6F6FE', alignSelf: 'center', paddingLeft: 15 }}>
+                    <Text className="bold white" style={{ alignSelf: 'center', paddingLeft: 15 }}>
                         {displayAddress}
                     </Text>
                 </FlexDiv>
@@ -322,19 +323,30 @@ const Profile: React.FC<any> = () => {
                         </TableHead>
                         <TableBody>
                             {profileData.length === 0 && (
-                                <StyledTableRow style={{ overflow: 'hidden' }}>
-                                    <Text
-                                        className="bold"
+                                <FlexDiv
+                                    className="leaderboard__wrapper__rowBorder"
+                                    style={{
+                                        height: 269,
+                                    }}
+                                >
+                                    <FlexDivColumnCentered
+                                        className="leaderboard__wrapper__rowBackground"
                                         style={{
-                                            color: '#F6F6FE',
-                                            alignSelf: 'center',
-                                            paddingLeft: 15,
-                                            fontSize: 31,
+                                            borderRadius: 23,
                                         }}
                                     >
-                                        {t('options.leaderboard.profile.no-transactions')}
-                                    </Text>
-                                </StyledTableRow>
+                                        <Text
+                                            className="bold white"
+                                            style={{
+                                                alignSelf: 'center',
+                                                paddingLeft: 15,
+                                                fontSize: 31,
+                                            }}
+                                        >
+                                            {t('options.leaderboard.profile.no-transactions')}
+                                        </Text>
+                                    </FlexDivColumnCentered>
+                                </FlexDiv>
                             )}
                             {filter === Filters.Mints &&
                                 profileData.map((key, index) => {

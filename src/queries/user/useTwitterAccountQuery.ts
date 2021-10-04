@@ -11,7 +11,7 @@ const useTwitterAccountQuery = (walletAddress: string, options?: UseQueryOptions
     return useQuery<TwitterAccount>(
         QUERY_KEYS.User.TwitterAccount(walletAddress),
         async () => {
-            const baseUrl = 'http://localhost:3002/twitter/' + walletAddress.toLowerCase();
+            const baseUrl = 'https://api.thales.market/twitter/' + walletAddress.toLowerCase();
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             console.log(result);
