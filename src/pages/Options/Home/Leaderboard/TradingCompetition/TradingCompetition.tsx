@@ -39,7 +39,7 @@ enum OrderDirection {
     DESC,
 }
 
-const defaultOrderBy = 7; // Netprofit
+const defaultOrderBy = 4; // Netprofit
 
 const TradingCompetition: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -108,7 +108,7 @@ const TradingCompetition: React.FC<any> = () => {
 
     const leaderboardData = useMemo(() => {
         const sortedData = competition.sort((a, b) => {
-            if (orderBy === 5) {
+            if (orderBy === 3) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.trades - a.trades;
                 }
@@ -116,7 +116,7 @@ const TradingCompetition: React.FC<any> = () => {
                     return a.trades - b.trades;
                 }
             }
-            if (orderBy === 6) {
+            if (orderBy === 4) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.volume - a.volume;
                 }
@@ -125,7 +125,7 @@ const TradingCompetition: React.FC<any> = () => {
                 }
             }
 
-            if (orderBy === 7) {
+            if (orderBy === 5) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.netProfit - a.netProfit;
                 }
@@ -134,7 +134,7 @@ const TradingCompetition: React.FC<any> = () => {
                 }
             }
 
-            if (orderBy === 8) {
+            if (orderBy === 6) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.investment - a.investment;
                 }
@@ -143,7 +143,7 @@ const TradingCompetition: React.FC<any> = () => {
                 }
             }
 
-            if (orderBy === 9) {
+            if (orderBy === 7) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.gain - a.gain;
                 }
@@ -178,14 +178,13 @@ const TradingCompetition: React.FC<any> = () => {
     }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, competition]);
 
     const headCells: HeadCell[] = [
-        { id: 1, label: '', sortable: false },
-        { id: 2, label: t('options.leaderboard.table.rank-col'), sortable: false },
-        { id: 3, label: t('options.leaderboard.table.display-name-col'), sortable: false },
-        { id: 4, label: t('options.leaderboard.table.trades-col'), sortable: true },
-        { id: 5, label: t('options.leaderboard.table.volume-col'), sortable: true },
-        { id: 6, label: t('options.leaderboard.table.investment-col'), sortable: true },
-        { id: 7, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
-        { id: 8, label: t('options.leaderboard.table.gain-col'), sortable: true },
+        { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
+        { id: 2, label: t('options.leaderboard.table.display-name-col'), sortable: false },
+        { id: 3, label: t('options.leaderboard.table.trades-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.table.volume-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.table.investment-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.table.gain-col'), sortable: true },
     ];
 
     return (
@@ -270,7 +269,6 @@ const TradingCompetition: React.FC<any> = () => {
                                                 'linear-gradient(90deg, #3936C7 -10.96%, #2D83D2 46.31%, #23A5DD 103.01%, #35DADB 127.72%)',
                                         }}
                                     >
-                                        <StyledTableCell></StyledTableCell>
                                         <StyledTableCell>{(leader as any).rank}</StyledTableCell>
                                         <StyledTableCell>{'Your current rank'}</StyledTableCell>
                                         <StyledTableCell>{leader.trades}</StyledTableCell>
@@ -296,8 +294,9 @@ const TradingCompetition: React.FC<any> = () => {
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
-                                    <StyledTableCell></StyledTableCell>
-                                    <StyledTableCell style={{ height: getHeight(leader) }}>
+                                    <StyledTableCell
+                                        style={{ height: getHeight(leader), fontSize: getFontSizeByRank(leader.rank) }}
+                                    >
                                         {(leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell>
@@ -436,4 +435,8 @@ const getHeight = (leader: any) => {
         default:
             return 75;
     }
+};
+
+const getFontSizeByRank = (rank: number) => {
+    return rank === 1 ? 96 : 48;
 };

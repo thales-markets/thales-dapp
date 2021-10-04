@@ -39,7 +39,7 @@ enum OrderDirection {
     DESC,
 }
 
-const defaultOrderBy = 5; // Volume
+const defaultOrderBy = 4; // Volume
 
 const LeaderboardPage: React.FC<any> = () => {
     const { t } = useTranslation();
@@ -109,7 +109,7 @@ const LeaderboardPage: React.FC<any> = () => {
 
     const leaderboardData = useMemo(() => {
         const sortedData = leaderboard.sort((a, b) => {
-            if (orderBy === 5) {
+            if (orderBy === 3) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.trades - a.trades;
                 }
@@ -117,7 +117,7 @@ const LeaderboardPage: React.FC<any> = () => {
                     return a.trades - b.trades;
                 }
             }
-            if (orderBy === 6) {
+            if (orderBy === 4) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.volume - a.volume;
                 }
@@ -126,7 +126,7 @@ const LeaderboardPage: React.FC<any> = () => {
                 }
             }
 
-            if (orderBy === 7) {
+            if (orderBy === 5) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.netProfit - a.netProfit;
                 }
@@ -135,7 +135,7 @@ const LeaderboardPage: React.FC<any> = () => {
                 }
             }
 
-            if (orderBy === 8) {
+            if (orderBy === 6) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.investment - a.investment;
                 }
@@ -144,7 +144,7 @@ const LeaderboardPage: React.FC<any> = () => {
                 }
             }
 
-            if (orderBy === 9) {
+            if (orderBy === 7) {
                 if (orderDirection === OrderDirection.DESC) {
                     return b.gain - a.gain;
                 }
@@ -156,8 +156,6 @@ const LeaderboardPage: React.FC<any> = () => {
         });
         const data = sortedData.map((leader: any, index: number) => {
             if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-            else {
-            }
             return { rank: sortedData.length - index, ...leader };
         });
         return data
@@ -179,14 +177,13 @@ const LeaderboardPage: React.FC<any> = () => {
     }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, leaderboard]);
 
     const headCells: HeadCell[] = [
-        { id: 1, label: '', sortable: false },
-        { id: 2, label: t('options.leaderboard.table.rank-col'), sortable: false },
-        { id: 3, label: t('options.leaderboard.table.display-name-col'), sortable: false },
-        { id: 4, label: t('options.leaderboard.table.trades-col'), sortable: true },
-        { id: 5, label: t('options.leaderboard.table.volume-col'), sortable: true },
-        { id: 6, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
-        { id: 7, label: t('options.leaderboard.table.investment-col'), sortable: true },
-        { id: 8, label: t('options.leaderboard.table.gain-col'), sortable: true },
+        { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
+        { id: 2, label: t('options.leaderboard.table.display-name-col'), sortable: false },
+        { id: 3, label: t('options.leaderboard.table.trades-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.table.volume-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.table.investment-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.table.gain-col'), sortable: true },
     ];
 
     return (
@@ -233,10 +230,10 @@ const LeaderboardPage: React.FC<any> = () => {
                                                             ${
                                                                 cell.sortable && orderBy === cell.id ? 'selected' : ''
                                                             }  ${
-                                                cell.id === 7 ? 'leaderboard__columns__net-profit' : ''
+                                                cell.id === 6 ? 'leaderboard__columns__net-profit' : ''
                                             }`}
                                         >
-                                            {cell.id === 7 && (
+                                            {cell.id === 6 && (
                                                 <TooltipIcon
                                                     title={t('options.leaderboard.table.netprofit-col-tooltip')}
                                                 ></TooltipIcon>
@@ -278,7 +275,6 @@ const LeaderboardPage: React.FC<any> = () => {
                                                 'linear-gradient(90deg, #3936C7 -10.96%, #2D83D2 46.31%, #23A5DD 103.01%, #35DADB 127.72%)',
                                         }}
                                     >
-                                        <StyledTableCell></StyledTableCell>
                                         <StyledTableCell>{(leader as any).rank}</StyledTableCell>
                                         <StyledTableCell>{'Your current rank'}</StyledTableCell>
                                         <StyledTableCell>{leader.trades}</StyledTableCell>
@@ -304,8 +300,9 @@ const LeaderboardPage: React.FC<any> = () => {
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
-                                    <StyledTableCell></StyledTableCell>
-                                    <StyledTableCell style={{ height: getHeight(leader) }}>
+                                    <StyledTableCell
+                                        style={{ height: getHeight(leader), fontSize: getFontSizeByRank(leader.rank) }}
+                                    >
                                         {(leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell>
@@ -433,6 +430,10 @@ export const StyledTableCell = withStyles(() => ({
 }))(TableCell);
 
 export default LeaderboardPage;
+
+const getFontSizeByRank = (rank: number) => {
+    return rank === 1 ? 96 : 48;
+};
 
 const getHeight = (leader: any) => {
     switch (leader.rank) {
