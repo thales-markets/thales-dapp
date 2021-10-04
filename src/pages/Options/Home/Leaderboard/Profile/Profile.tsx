@@ -326,13 +326,24 @@ const Profile: React.FC<any> = () => {
                                 <FlexDiv
                                     className="leaderboard__wrapper__rowBorder"
                                     style={{
+                                        flex: 1,
+                                        background: 'linear-gradient(#ca91dc, #6ac1d5)',
+                                        border: '1px solid transparent',
+                                        borderRadius: 23,
+                                        marginBottom: 16,
                                         height: 269,
                                     }}
                                 >
                                     <FlexDivColumnCentered
-                                        className="leaderboard__wrapper__rowBackground"
+                                        className="white"
                                         style={{
+                                            flexGrow: 1,
+                                            alignSelf: 'center',
+                                            paddingLeft: 15,
+                                            background: '#04045A',
+                                            fontSize: 31,
                                             borderRadius: 23,
+                                            height: '100%',
                                         }}
                                     >
                                         <Text
