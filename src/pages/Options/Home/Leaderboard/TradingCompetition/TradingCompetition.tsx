@@ -115,61 +115,63 @@ const TradingCompetition: React.FC<any> = () => {
         displayNamesQuery,
     ]);
 
+    const sortedData: any = useMemo(() => {
+        return competition
+            .sort((a, b) => {
+                if (orderBy === 4) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.trades - a.trades;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.trades - b.trades;
+                    }
+                }
+                if (orderBy === 5) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.volume - a.volume;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.volume - b.volume;
+                    }
+                }
+
+                if (orderBy === 6) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.investment - a.investment;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.investment - b.investment;
+                    }
+                }
+
+                if (orderBy === 7) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.netProfit - a.netProfit;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.netProfit - b.netProfit;
+                    }
+                }
+
+                if (orderBy === 8) {
+                    if (orderDirection === OrderDirection.DESC) {
+                        return b.gain - a.gain;
+                    }
+                    if (orderDirection === OrderDirection.ASC) {
+                        return a.gain - b.gain;
+                    }
+                }
+                return 0;
+            })
+            .map((leader: any, index: number) => {
+                if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+                return { rank: competition.length - index, ...leader };
+            });
+    }, [orderBy, orderDirection, competition]);
+
     const leaderboardData = useMemo(() => {
-        const sortedData = competition.sort((a, b) => {
-            if (orderBy === 4) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.trades - a.trades;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.trades - b.trades;
-                }
-            }
-            if (orderBy === 5) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.volume - a.volume;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.volume - b.volume;
-                }
-            }
-
-            if (orderBy === 6) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.netProfit - a.netProfit;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.netProfit - b.netProfit;
-                }
-            }
-
-            if (orderBy === 7) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.investment - a.investment;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.investment - b.investment;
-                }
-            }
-
-            if (orderBy === 8) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.gain - a.gain;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.gain - b.gain;
-                }
-            }
-            return 0;
-        });
-        const data = sortedData.map((leader: any, index: number) => {
-            if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-            else {
-            }
-            return { rank: sortedData.length - index, ...leader };
-        });
-        return data
-            .filter((leader) => {
+        return sortedData
+            .filter((leader: any) => {
                 if (searchString === '') return true;
                 if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
                     return true;
@@ -184,7 +186,7 @@ const TradingCompetition: React.FC<any> = () => {
                 return false;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, searchString, orderBy, orderDirection, competition]);
+    }, [rowsPerPage, memoizedPage, searchString, sortedData]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
@@ -268,8 +270,8 @@ const TradingCompetition: React.FC<any> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {leaderboardData
-                            .filter((leader) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
+                        {sortedData
+                            .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
                             .map((leader: any, index: any) => {
                                 return (
                                     <StyledTableRow
