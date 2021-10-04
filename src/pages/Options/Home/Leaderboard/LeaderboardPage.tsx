@@ -1,8 +1,10 @@
-import twitter from 'assets/images/twitter.svg';
 import twitterBlue from 'assets/images/twitter-blue-logo.svg';
+import twitter from 'assets/images/twitter.svg';
 import ROUTES from 'constants/routes';
+import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
+// import useTwitterAccountsQuery from 'queries/user/useTwitterAccountsQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -21,10 +23,23 @@ const LeaderboardPage: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [selectedTab, setSelectedTab] = useState('trading-competition');
     const [accVerified, setAccVerified] = useState(false);
+    const [twitterAccountData, setTwitterAccountData] = useState({} as any);
 
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
     });
+
+    useEffect(() => {
+        if (walletAddress) {
+            const url = 'http://localhost:3002/twitter/' + walletAddress.toLowerCase();
+            fetch(url).then(async (response) => {
+                const result = JSON.parse(await response.text());
+                if (result) {
+                    setTwitterAccountData(result);
+                }
+            });
+        }
+    }, [walletAddress]);
 
     const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
         displayNamesQuery,
@@ -85,6 +100,7 @@ const LeaderboardPage: React.FC = () => {
             const result = JSON.parse(await response.text());
             console.log(result);
             if (result) {
+                setTwitterAccountData(result);
                 console.log('clear');
                 setAccVerified(true);
                 clearInterval(intervalId);
@@ -214,14 +230,27 @@ const LeaderboardPage: React.FC = () => {
                                     height: 96,
                                 }}
                             >
-                                <Text className="text-m" style={{ flex: 1 }}>
-                                    {walletAddress && !accVerified && (
-                                        <Image src={twitterBlue} style={{ height: 50, width: 50 }}></Image>
-                                    )}
-                                    twitter image and name
-                                </Text>
                                 {walletAddress && !accVerified && (
-                                    <Button className="primary" style={{ width: 202 }}>
+                                    <Image src={twitterBlue} style={{ height: 50, width: 50 }}></Image>
+                                )}
+                                {walletAddress && accVerified && (
+                                    <>
+                                        <Image
+                                            src={twitterAccountData.avatar}
+                                            style={{ height: 50, width: 50, borderRadius: '50%' }}
+                                        ></Image>
+                                        <StyledLink
+                                            href={twitterAccountData.twitter}
+                                            target="_blank"
+                                            className="text-m"
+                                            style={{ flex: 1, marginLeft: 15 }}
+                                        >
+                                            {twitterAccountData.name}
+                                        </StyledLink>
+                                    </>
+                                )}
+                                {walletAddress && !accVerified && (
+                                    <Button className="primary" style={{ width: 202 }} onClick={checkAddress}>
                                         {'Verify'}
                                     </Button>
                                 )}

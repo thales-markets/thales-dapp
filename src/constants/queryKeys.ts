@@ -77,6 +77,8 @@ export const QUERY_KEYS = {
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
+        TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],
+        TwitterAccounts: () => ['user', 'twitterAccounts'],
     },
     Staking: {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],

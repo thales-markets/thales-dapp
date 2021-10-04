@@ -1,0 +1,25 @@
+import { useQuery, UseQueryOptions } from 'react-query';
+import QUERY_KEYS from 'constants/queryKeys';
+export interface TwitterAccount {
+    createdAt: string;
+    avatar: string;
+    name: string;
+    twitter: string;
+}
+
+const useTwitterAccountQuery = (walletAddress: string, options?: UseQueryOptions<TwitterAccount>) => {
+    return useQuery<TwitterAccount>(
+        QUERY_KEYS.User.TwitterAccount(walletAddress),
+        async () => {
+            const baseUrl = 'http://localhost:3002/twitter/' + walletAddress.toLowerCase();
+            const response = await fetch(baseUrl);
+            const result = JSON.parse(await response.text());
+            console.log(result);
+
+            return result;
+        },
+        options
+    );
+};
+
+export default useTwitterAccountQuery;

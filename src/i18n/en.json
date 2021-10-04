@@ -740,7 +740,8 @@
                 "netprofit-col": "Netprofit",
                 "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
                 "investment-col": "Investment",
-                "gain-col": "Gain"
+                "gain-col": "Gain",
+                "twitter-col": "Twitter"
             },
             "trading-competition": {
                 "tab-title": "Trading competition",
