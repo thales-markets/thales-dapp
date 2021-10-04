@@ -15,10 +15,10 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
@@ -40,11 +40,11 @@ export enum Filters {
 const Profile: React.FC<any> = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const walletAddress = '0x20f9ddfa193d0fe2f73d8b7d749b1355ef019887';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.Mints);
+    const [displayAddress, setDisplayAddress] = useState<string>(walletAddress);
 
     const profilesQuery = useProfilesQuery(networkId, {
         enabled: isAppReady,
@@ -87,6 +87,7 @@ const Profile: React.FC<any> = () => {
 
                 if (displayName) {
                     const address = invertedDisplayNamesMap.get(displayName).trim().toLowerCase();
+                    setDisplayAddress(address);
                     return profiles.get(address);
                 }
 
@@ -95,8 +96,12 @@ const Profile: React.FC<any> = () => {
                 );
                 const address = filteredAdresses.length === 1 ? filteredAdresses[0] : '';
                 if (address) {
+                    setDisplayAddress(address);
                     return profiles.get(address.trim().toLowerCase());
                 }
+            }
+            if (displayAddress && displayAddress !== walletAddress) {
+                setDisplayAddress(walletAddress);
             }
             return profiles.get(walletAddress.trim().toLowerCase());
         }
@@ -228,7 +233,15 @@ const Profile: React.FC<any> = () => {
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
-            <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
+            <FlexDivRow style={{ flexDirection: 'row' }}>
+                <FlexDiv style={{ paddingLeft: 42 }}>
+                    <Text className="bold" style={{ color: '#F6F6FE', alignSelf: 'center' }}>
+                        {t('options.leaderboard.profile.transaction-details')}
+                    </Text>
+                    <Text className="bold" style={{ color: '#F6F6FE', alignSelf: 'center', paddingLeft: 15 }}>
+                        {displayAddress}
+                    </Text>
+                </FlexDiv>
                 <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 450, margin: '22px 0' }}>
                     <SearchAutoCompleteInput
                         style={{ width: '100%' }}
@@ -257,6 +270,8 @@ const Profile: React.FC<any> = () => {
                         )}
                     ></SearchAutoCompleteInput>
                 </SearchWrapper>
+            </FlexDivRow>
+            <FlexDivRow style={{ flexDirection: 'row' }}>
                 <FilterWrapper>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
@@ -306,6 +321,21 @@ const Profile: React.FC<any> = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                            {profileData.length === 0 && (
+                                <StyledTableRow style={{ overflow: 'hidden' }}>
+                                    <Text
+                                        className="bold"
+                                        style={{
+                                            color: '#F6F6FE',
+                                            alignSelf: 'center',
+                                            paddingLeft: 15,
+                                            fontSize: 31,
+                                        }}
+                                    >
+                                        {t('options.leaderboard.profile.no-transactions')}
+                                    </Text>
+                                </StyledTableRow>
+                            )}
                             {filter === Filters.Mints &&
                                 profileData.map((key, index) => {
                                     return (

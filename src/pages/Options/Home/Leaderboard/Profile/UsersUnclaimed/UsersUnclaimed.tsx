@@ -106,32 +106,33 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     className="text-ms"
                     style={{
                         borderBottom: '1px solid',
-                        borderImage: 'linear-gradient(to right, #748BC6 80%, #04045A 20%) 100% 1',
+                        borderImage: 'linear-gradient(to right, #748BC6 1%, #04045A 20%) 100% 1',
                         marginTop: 36,
                     }}
                 >
                     <Text className="bold" style={{ flex: 2 }}>
-                        {t('options.leaderboard.profile.unclaimed.long')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 2 }}>
-                        {t('options.leaderboard.profile.unclaimed.short')}
+                        {market.result === 'long'
+                            ? t('options.leaderboard.profile.unclaimed.long')
+                            : t('options.leaderboard.profile.unclaimed.short')}
                     </Text>
                 </Row>
-                {!showAll && (
-                    <Row className="text-m">
-                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].long)}</Text>
-                        <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].short)}</Text>
-                    </Row>
-                )}
-                <RowScrollable>
-                    {showAll &&
-                        usersUnclaimed?.map((unclaimed, index) => (
-                            <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.long)}</Text>
-                                <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, unclaimed.short)}</Text>
-                            </Row>
-                        ))}
-                </RowScrollable>
+                <Row className="text-m">
+                    <Text style={{ flex: 8 }}>
+                        {market.result === 'long'
+                            ? formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].long)
+                            : formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].short)}
+                    </Text>
+                    <Button className="primary" style={{ flex: 1, marginRight: 740 }}>
+                        <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={buildOptionsMarketLink(market.address)}
+                            style={{ color: 'white', verticalAlign: 'top' }}
+                        >
+                            {t('options.leaderboard.profile.filters.redeem')}
+                        </a>
+                    </Button>
+                </Row>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
                     <FlexDivColumnCentered
@@ -182,7 +183,7 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 210px;
+    max-height: 245px;
     max-width: 95%;
 `;
 

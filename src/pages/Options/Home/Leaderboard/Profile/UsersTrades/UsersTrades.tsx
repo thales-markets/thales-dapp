@@ -192,7 +192,7 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 210px;
+    max-height: 245px;
     max-width: 95%;
 `;
 
