@@ -19,13 +19,14 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<[Le
             const baseUrl = 'https://api.thales.market/leaderboard/' + networkId;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            return result.data.map((record: any) => {
+            console.log(result);
+            return result.map((record: any) => {
                 console.log(record);
                 return {
                     walletAddress: record[0],
-                    volume: record[1].leaderboard.volume,
-                    trades: record[1].leaderboard.trades,
-                    netProfit: record[1].leaderboard.netProfit,
+                    volume: record[1].volume,
+                    trades: record[1].trades,
+                    netProfit: record[1].netProfit,
                 };
             });
         },
