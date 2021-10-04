@@ -28,7 +28,7 @@ import ROUTES from 'constants/routes';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
 import { useState } from 'react';
 import './media.scss';
-import { history } from 'utils/routes';
+import { buildHref, history } from 'utils/routes';
 import { Overlay } from 'components/Header/Header';
 import queryString from 'query-string';
 
@@ -108,11 +108,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
             >
                 <ItemsContainer>
-                    <DisplayContentsAnchor href={ROUTES.Home}>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor
-                        href={ROUTES.Options.HotMarkets}
+                        href={buildHref(ROUTES.Options.HotMarkets)}
                         onClick={(event) => {
                             if (history.location.pathname === ROUTES.Options.Home) {
                                 event.preventDefault();
@@ -144,7 +144,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                                 return false;
                             }
                         }}
-                        href={ROUTES.Options.Overview}
+                        href={buildHref(ROUTES.Options.Overview)}
                     >
                         <SidebarItem
                             imgSrc={marketOverviewDefaultIcon}
@@ -155,7 +155,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
                             imgSrcHoverSelected={createMarketSelectedIcon}
@@ -165,7 +165,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.Leaderboard}>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
                         <SidebarItem
                             imgSrc={leaderboardDefaultIcon}
                             imgSrcHoverSelected={leaderboardSelectedIcon}
@@ -175,7 +175,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={ROUTES.Options.QuickTrading}>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
                             imgSrcHoverSelected={tradeExerciseSelectedIcon}
@@ -207,7 +207,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
-                    <DisplayContentsAnchor href={ROUTES.Options.Token}>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Token)}>
                         <SidebarItem
                             imgSrc={earnDefaultIcon}
                             imgSrcHoverSelected={earnSelectedIcon}
