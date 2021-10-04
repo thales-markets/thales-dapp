@@ -1,21 +1,28 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
-import { USD_SIGN } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Text } from 'theme/common';
-import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { useTranslation } from 'react-i18next';
+import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
+import { OptionSide } from 'types/options';
+import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { getSynthName } from 'utils/snxJSConnector';
+import ReactCountryFlag from 'react-country-flag';
+import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 type UsersTradesProps = {
-    usersTrades: any[];
+    usersTrades: UserTrade[];
     market: any;
 };
 
 const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
+    const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
-
+    console.log(usersTrades);
     return (
         <FlexDiv
             style={{
@@ -35,12 +42,35 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     borderTopLeftRadius: 23,
                 }}
             >
-                <CurrencyIcon
-                    currencyKey={market.currencyKey}
-                    synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
-                />
-                <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
-                <CryptoKey>{market.asset}</CryptoKey>
+                <DisplayContentsAnchor
+                    style={{
+                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                    }}
+                    href={buildOptionsMarketLink(market.address)}
+                >
+                    {market.customMarket ? (
+                        <>
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(market.country as any)}
+                                style={{ width: 100, height: 100, marginRight: 0 }}
+                                svg
+                            />
+                            {!countryToCountryCode(market.country as any) && (
+                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                            )}
+                            {market.country}
+                        </>
+                    ) : (
+                        <>
+                            <CurrencyIcon
+                                currencyKey={market.currencyKey}
+                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                            />
+                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoKey>{market.asset}</CryptoKey>
+                        </>
+                    )}
+                </DisplayContentsAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered
                 className="text-ms"
@@ -54,13 +84,13 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
             >
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Strike Price
+                        {t('options.leaderboard.profile.markets.strike-price')}
                     </Text>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Pool Size
+                        {t('options.leaderboard.profile.markets.pool-size')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Maturity Date
+                        {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                 </Row>
                 <Row className="text-m">
@@ -76,30 +106,39 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                         marginTop: 36,
                     }}
                 >
-                    <Text className="bold" style={{ flex: 2 }}>
-                        Maker amount
-                    </Text>
-                    <Text className="bold" style={{ flex: 2 }}>
-                        Taker amount
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.trades.type')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Timestamp
+                        {t('options.leaderboard.profile.common.amount')}
+                    </Text>
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.trades.price')}
+                    </Text>
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.common.timestamp')}
                     </Text>
                 </Row>
                 {!showAll && (
                     <Row className="text-m">
-                        <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersTrades[0].makerAmount)}</Text>
-                        <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersTrades[0].takerAmount)}</Text>
-                        <Text style={{ flex: 1 }}>{formatShortDate(new Date(usersTrades[0].timestamp))}</Text>
+                        <Text style={{ flex: 1 }}>{usersTrades[0].type}</Text>
+                        <Text style={{ flex: 1 }}>
+                            {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[usersTrades[0].side], usersTrades[0].amount)}
+                        </Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, usersTrades[0].price)}</Text>
+                        <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersTrades[0].timestamp))}</Text>
                     </Row>
                 )}
                 <RowScrollable>
                     {showAll &&
                         usersTrades?.map((trade, index) => (
                             <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, trade.makerAmount)}</Text>
-                                <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, trade.takerAmount)}</Text>
-                                <Text style={{ flex: 1 }}>{formatShortDate(new Date(trade.timestamp))}</Text>
+                                <Text style={{ flex: 1 }}>{trade.type}</Text>
+                                <Text style={{ flex: 1 }}>
+                                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[trade.side], trade.amount)}
+                                </Text>
+                                <Text style={{ flex: 1 }}>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, trade.price)}</Text>
+                                <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(trade.timestamp))}</Text>
                             </Row>
                         ))}
                 </RowScrollable>
@@ -110,15 +149,20 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             flexGrow: 1,
                             alignItems: 'center',
                             flex: 0,
+                            height: 72,
                         }}
                     >
-                        <Button
-                            className="primary"
-                            style={{ background: 'transparent', padding: '24px 35px' }}
-                            onClick={() => setShowAll(!showAll)}
-                        >
-                            {showAll ? 'View Less' : 'View All'}
-                        </Button>
+                        {usersTrades.length > 1 && (
+                            <Button
+                                className="primary"
+                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                onClick={() => setShowAll(!showAll)}
+                            >
+                                {showAll
+                                    ? t('options.leaderboard.profile.common.view-less')
+                                    : t('options.leaderboard.profile.common.view-all')}
+                            </Button>
+                        )}
                     </FlexDivColumnCentered>
 
                     <Text style={{ flex: 4 }}></Text>
@@ -148,8 +192,23 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 150px;
+    max-height: 210px;
     max-width: 95%;
 `;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 0px;
+    width: 100px;
+    height: 100px;
+`;
+
+interface UserTrade {
+    amount: number;
+    hash: string;
+    price: number;
+    side: OptionSide;
+    timestamp: string;
+    type: string;
+}
 
 export default UsersTrades;

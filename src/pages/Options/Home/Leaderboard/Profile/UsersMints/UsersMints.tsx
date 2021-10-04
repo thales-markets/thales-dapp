@@ -1,18 +1,25 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
+import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Text } from 'theme/common';
-import { formatShortDate } from 'utils/formatters/date';
+import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
+import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
+import ReactCountryFlag from 'react-country-flag';
+
 type UsersMintsProps = {
     usersMints: any[];
     market: any;
 };
 
 const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
+    const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
 
     return (
@@ -34,12 +41,35 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     borderTopLeftRadius: 23,
                 }}
             >
-                <CurrencyIcon
-                    currencyKey={market.currencyKey}
-                    synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
-                />
-                <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
-                <CryptoKey>{market.asset}</CryptoKey>
+                <DisplayContentsAnchor
+                    style={{
+                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                    }}
+                    href={buildOptionsMarketLink(market.address)}
+                >
+                    {market.customMarket ? (
+                        <>
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(market.country as any)}
+                                style={{ width: 100, height: 100, marginRight: 0 }}
+                                svg
+                            />
+                            {!countryToCountryCode(market.country as any) && (
+                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                            )}
+                            {market.country}
+                        </>
+                    ) : (
+                        <>
+                            <CurrencyIcon
+                                currencyKey={market.currencyKey}
+                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                            />
+                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoKey>{market.asset}</CryptoKey>
+                        </>
+                    )}
+                </DisplayContentsAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered
                 className="text-ms"
@@ -53,13 +83,13 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
             >
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Strike Price
+                        {t('options.leaderboard.profile.markets.strike-price')}
                     </Text>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Pool Size
+                        {t('options.leaderboard.profile.markets.pool-size')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Maturity Date
+                        {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                 </Row>
                 <Row className="text-m">
@@ -75,30 +105,25 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                         marginTop: 36,
                     }}
                 >
-                    <Text className="bold" style={{ flex: 2 }}>
-                        Amount
-                    </Text>
-                    <Text className="bold" style={{ flex: 2 }}>
-                        Side
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.common.amount')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Timestamp
+                        {t('options.leaderboard.profile.common.timestamp')}
                     </Text>
                 </Row>
                 {!showAll && (
                     <Row className="text-m">
-                        <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersMints[0].amount)}</Text>
-                        <Text style={{ flex: 2 }}>{usersMints[0].side}</Text>
-                        <Text style={{ flex: 1 }}>{formatShortDate(new Date(usersMints[0].timestamp))}</Text>
+                        <Text style={{ flex: 1 }}>{usersMints[0].amount}</Text>
+                        <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersMints[0].timestamp))}</Text>
                     </Row>
                 )}
                 <RowScrollable>
                     {showAll &&
                         usersMints?.map((mint, index) => (
                             <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, mint.amount)}</Text>
-                                <Text style={{ flex: 2 }}>{mint.side}</Text>
-                                <Text style={{ flex: 1 }}>{formatShortDate(new Date(mint.timestamp))}</Text>
+                                <Text style={{ flex: 1 }}>{mint.amount}</Text>
+                                <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(mint.timestamp))}</Text>
                             </Row>
                         ))}
                 </RowScrollable>
@@ -110,15 +135,20 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                             flexGrow: 1,
                             alignItems: 'center',
                             flex: 0,
+                            height: 72,
                         }}
                     >
-                        <Button
-                            className="primary"
-                            style={{ background: 'transparent', padding: '24px 35px' }}
-                            onClick={() => setShowAll(!showAll)}
-                        >
-                            {showAll ? 'View Less' : 'View All'}
-                        </Button>
+                        {usersMints.length > 1 && (
+                            <Button
+                                className="primary"
+                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                onClick={() => setShowAll(!showAll)}
+                            >
+                                {showAll
+                                    ? t('options.leaderboard.profile.common.view-less')
+                                    : t('options.leaderboard.profile.common.view-all')}
+                            </Button>
+                        )}
                     </FlexDivColumnCentered>
 
                     <Text style={{ flex: 4 }}></Text>
@@ -148,8 +178,14 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 150px;
+    max-height: 210px;
     max-width: 95%;
+`;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 0px;
+    width: 100px;
+    height: 100px;
 `;
 
 export default UsersMints;

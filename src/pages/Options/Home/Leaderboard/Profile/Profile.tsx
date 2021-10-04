@@ -9,9 +9,10 @@ import {
     withStyles,
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import useLeaderboardQuery from 'queries/options/useLeaderboardQuery';
+import useProfilesQuery from 'queries/options/useProfilesQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -37,6 +38,7 @@ export enum Filters {
 }
 
 const Profile: React.FC<any> = () => {
+    const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const walletAddress = '0x20f9ddfa193d0fe2f73d8b7d749b1355ef019887';
@@ -44,7 +46,7 @@ const Profile: React.FC<any> = () => {
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.Mints);
 
-    const leaderboardQuery = useLeaderboardQuery(networkId, {
+    const profilesQuery = useProfilesQuery(networkId, {
         enabled: isAppReady,
     });
 
@@ -56,7 +58,7 @@ const Profile: React.FC<any> = () => {
         displayNamesQuery,
     ]);
 
-    const profiles = leaderboardQuery.data?.profiles;
+    const profiles = profilesQuery.data ? profilesQuery.data.profiles : new Map();
 
     const displayNamesAndAdressesOptions = useMemo(() => {
         const options: any[] = [];
@@ -105,8 +107,10 @@ const Profile: React.FC<any> = () => {
         profile?.mints.map((mint: any) => {
             if (mintsMap.get(mint.market.address)) {
                 const txsPerMarket = mintsMap.get(mint.market.address);
-                txsPerMarket.push(mint.tx);
-                mintsMap.set(mint.market.address, txsPerMarket);
+                if (txsPerMarket.filter((tx: any) => tx.hash === mint.tx.hash).lenght === 0) {
+                    txsPerMarket.push(mint.tx);
+                    mintsMap.set(mint.market.address, txsPerMarket);
+                }
             } else {
                 mintsMap.set(mint.market.address, [mint.tx]);
             }
@@ -238,7 +242,7 @@ const Profile: React.FC<any> = () => {
                         renderInput={(params) => (
                             <div ref={params.InputProps.ref}>
                                 <SearchInput
-                                    placeholder="Search other profiles by typing display name"
+                                    placeholder={t('options.leaderboard.profile.search-placeholder')}
                                     className="leaderboard__search"
                                     style={{
                                         width: '100%',
@@ -259,28 +263,28 @@ const Profile: React.FC<any> = () => {
                         className={filter === Filters.Mints ? 'selected' : ''}
                         onClick={() => setFilter(Filters.Mints)}
                     >
-                        Mints
+                        {t('options.leaderboard.profile.filters.mints')}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
                         className={filter === Filters.Trades ? 'selected' : ''}
                         onClick={() => setFilter(Filters.Trades)}
                     >
-                        Trades
+                        {t('options.leaderboard.profile.filters.trades')}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
                         className={filter === Filters.Excercises ? 'selected' : ''}
                         onClick={() => setFilter(Filters.Excercises)}
                     >
-                        Exercises
+                        {t('options.leaderboard.profile.filters.exercises')}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
                         className={filter === Filters.Unclaimed ? 'selected' : ''}
                         onClick={() => setFilter(Filters.Unclaimed)}
                     >
-                        Unclaimed
+                        {t('options.leaderboard.profile.filters.redeem')}
                     </FilterButton>
                 </FilterWrapper>
             </FlexDivRow>

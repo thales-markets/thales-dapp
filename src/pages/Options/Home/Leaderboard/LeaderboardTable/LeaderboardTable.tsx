@@ -50,6 +50,7 @@ const LeaderboardPage: React.FC<any> = () => {
     const leaderboardQuery = useLeaderboardQuery(networkId, {
         enabled: isAppReady,
     });
+
     const leaderboard = leaderboardQuery.data?.leaderboard
         ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
         : [];
@@ -197,7 +198,7 @@ const LeaderboardPage: React.FC<any> = () => {
                         className="leaderboard__search"
                         onChange={(e) => setSearchString(e.target.value)}
                         value={searchString}
-                        placeholder={t('options.leaderboard.search-placeholder')}
+                        placeholder={t('options.leaderboard.display-name')}
                     ></SearchInput>
                 </SearchWrapper>
             </FlexDivRow>

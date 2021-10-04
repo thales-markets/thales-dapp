@@ -5,10 +5,9 @@ import { NetworkId } from 'utils/network';
 
 dotenv.config();
 
-export interface Leaderboard {
-    leaderboard: [
+export interface Competition {
+    competition: [
         {
-            walletAddress: string;
             trades: number;
             volume: number;
             netProfit: number;
@@ -18,14 +17,14 @@ export interface Leaderboard {
     ];
 }
 
-const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Leaderboard>) => {
-    return useQuery<Leaderboard>(
-        QUERY_KEYS.BinaryOptions.Leaderboard(networkId),
+const useCompetitionQuery = (networkId: NetworkId, options?: UseQueryOptions<Competition>) => {
+    return useQuery<Competition>(
+        QUERY_KEYS.BinaryOptions.Competition(networkId),
         async () => {
-            const baseUrl = 'http://localhost:3002/leaderboard/' + networkId;
+            const baseUrl = 'http://localhost:3002/competition/' + networkId;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            const leaderboard = result.map((record: any) => {
+            const competition = result.map((record: any) => {
                 return {
                     walletAddress: record[0],
                     volume: record[1].volume,
@@ -36,9 +35,9 @@ const useLeaderboardQuery = (networkId: NetworkId, options?: UseQueryOptions<Lea
                 };
             });
 
-            return { leaderboard };
+            return { competition };
         },
         options
     );
 };
-export default useLeaderboardQuery;
+export default useCompetitionQuery;

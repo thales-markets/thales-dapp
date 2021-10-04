@@ -2,11 +2,16 @@ import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Text } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getSynthName } from 'utils/snxJSConnector';
+import ReactCountryFlag from 'react-country-flag';
+import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { buildOptionsMarketLink } from 'utils/routes';
 
 type UsersUnclaimedProps = {
     usersUnclaimed: any[];
@@ -14,6 +19,7 @@ type UsersUnclaimedProps = {
 };
 
 const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market }) => {
+    const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
 
     return (
@@ -35,12 +41,35 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     borderTopLeftRadius: 23,
                 }}
             >
-                <CurrencyIcon
-                    currencyKey={market.currencyKey}
-                    synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
-                />
-                <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
-                <CryptoKey>{market.asset}</CryptoKey>
+                <DisplayContentsAnchor
+                    style={{
+                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                    }}
+                    href={buildOptionsMarketLink(market.address)}
+                >
+                    {market.customMarket ? (
+                        <>
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(market.country as any)}
+                                style={{ width: 100, height: 100, marginRight: 0 }}
+                                svg
+                            />
+                            {!countryToCountryCode(market.country as any) && (
+                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                            )}
+                            {market.country}
+                        </>
+                    ) : (
+                        <>
+                            <CurrencyIcon
+                                currencyKey={market.currencyKey}
+                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                            />
+                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoKey>{market.asset}</CryptoKey>
+                        </>
+                    )}
+                </DisplayContentsAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered
                 className="text-ms"
@@ -54,16 +83,16 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
             >
                 <Row>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Strike Price
+                        {t('options.leaderboard.profile.markets.strike-price')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Pool Size
+                        {t('options.leaderboard.profile.markets.pool-size')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Maturity Date
+                        {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Result
+                        {t('options.leaderboard.profile.markets.result')}
                     </Text>
                 </Row>
                 <Row className="text-m">
@@ -82,10 +111,10 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     }}
                 >
                     <Text className="bold" style={{ flex: 2 }}>
-                        Long
+                        {t('options.leaderboard.profile.unclaimed.long')}
                     </Text>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Short
+                        {t('options.leaderboard.profile.unclaimed.short')}
                     </Text>
                 </Row>
                 {!showAll && (
@@ -110,15 +139,20 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             flexGrow: 1,
                             alignItems: 'center',
                             flex: 0,
+                            height: 72,
                         }}
                     >
-                        <Button
-                            className="primary"
-                            style={{ background: 'transparent', padding: '24px 35px' }}
-                            onClick={() => setShowAll(!showAll)}
-                        >
-                            {showAll ? 'View Less' : 'View All'}
-                        </Button>
+                        {usersUnclaimed.length > 1 && (
+                            <Button
+                                className="primary"
+                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                onClick={() => setShowAll(!showAll)}
+                            >
+                                {showAll
+                                    ? t('options.leaderboard.profile.common.view-less')
+                                    : t('options.leaderboard.profile.common.view-all')}
+                            </Button>
+                        )}
                     </FlexDivColumnCentered>
 
                     <Text style={{ flex: 4 }}></Text>
@@ -148,8 +182,14 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 150px;
+    max-height: 210px;
     max-width: 95%;
+`;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 0px;
+    width: 100px;
+    height: 100px;
 `;
 
 export default UsersUnclaimed;

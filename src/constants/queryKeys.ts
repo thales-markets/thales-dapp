@@ -66,6 +66,8 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
+        Profiles: (networkId: NetworkId) => ['binaryOptions', 'profiles', networkId],
+        Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
     },

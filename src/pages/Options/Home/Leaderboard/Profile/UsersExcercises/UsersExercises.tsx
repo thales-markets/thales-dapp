@@ -1,12 +1,17 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
+import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
+import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Text } from 'theme/common';
-import { formatShortDate } from 'utils/formatters/date';
+import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
+import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
+import ReactCountryFlag from 'react-country-flag';
 
 type UsersExercisesProps = {
     usersExercises: any[];
@@ -14,6 +19,7 @@ type UsersExercisesProps = {
 };
 
 const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market }) => {
+    const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
     return (
         <FlexDiv
@@ -34,12 +40,35 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     borderTopLeftRadius: 23,
                 }}
             >
-                <CurrencyIcon
-                    currencyKey={market.currencyKey}
-                    synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
-                />
-                <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
-                <CryptoKey>{market.asset}</CryptoKey>
+                <DisplayContentsAnchor
+                    style={{
+                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
+                    }}
+                    href={buildOptionsMarketLink(market.address)}
+                >
+                    {market.customMarket ? (
+                        <>
+                            <ReactCountryFlag
+                                countryCode={countryToCountryCode(market.country as any)}
+                                style={{ width: 100, height: 100, marginRight: 0 }}
+                                svg
+                            />
+                            {!countryToCountryCode(market.country as any) && (
+                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                            )}
+                            {market.country}
+                        </>
+                    ) : (
+                        <>
+                            <CurrencyIcon
+                                currencyKey={market.currencyKey}
+                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                            />
+                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoKey>{market.asset}</CryptoKey>
+                        </>
+                    )}
+                </DisplayContentsAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered
                 className="text-ms"
@@ -53,19 +82,19 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
             >
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Strike Price
-                    </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        Pool Size
+                        {t('options.leaderboard.profile.markets.strike-price')}
                     </Text>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Maturity Date
+                        {t('options.leaderboard.profile.markets.pool-size')}
+                    </Text>
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                 </Row>
                 <Row className="text-m">
                     <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
-                    <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
-                    <Text style={{ flex: 2 }}> {formatShortDate(market.maturityDate)}</Text>
+                    <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
+                    <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                 </Row>
                 <Row
                     className="text-ms"
@@ -76,20 +105,20 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     }}
                 >
                     <Text className="bold" style={{ flex: 2 }}>
-                        Amount
+                        {t('options.leaderboard.profile.common.amount')}
                     </Text>
                     <Text className="bold" style={{ flex: 2 }}>
-                        Side
+                        {t('options.leaderboard.profile.exercises.side')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
-                        Timestamp
+                        {t('options.leaderboard.profile.common.timestamp')}
                     </Text>
                 </Row>
                 {!showAll && (
                     <Row className="text-m">
                         <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersExercises[0].amount)}</Text>
                         <Text style={{ flex: 2 }}>{usersExercises[0].side}</Text>
-                        <Text style={{ flex: 1 }}>{formatShortDate(new Date(usersExercises[0].timestamp))}</Text>
+                        <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersExercises[0].timestamp))}</Text>
                     </Row>
                 )}
                 <RowScrollable>
@@ -98,7 +127,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             <Row className="text-m" key={index} style={{ width: '127.5%' }}>
                                 <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
                                 <Text style={{ flex: 1 }}>{exercise.side}</Text>
-                                <Text style={{ flex: 1 }}>{formatShortDate(new Date(exercise.timestamp))}</Text>
+                                <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(exercise.timestamp))}</Text>
                             </Row>
                         ))}
                 </RowScrollable>
@@ -109,15 +138,20 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             flexGrow: 1,
                             alignItems: 'center',
                             flex: 0,
+                            height: 72,
                         }}
                     >
-                        <Button
-                            className="primary"
-                            style={{ background: 'transparent', padding: '24px 35px' }}
-                            onClick={() => setShowAll(!showAll)}
-                        >
-                            {showAll ? 'View Less' : 'View All'}
-                        </Button>
+                        {usersExercises.length > 1 && (
+                            <Button
+                                className="primary"
+                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                onClick={() => setShowAll(!showAll)}
+                            >
+                                {showAll
+                                    ? t('options.leaderboard.profile.common.view-less')
+                                    : t('options.leaderboard.profile.common.view-all')}
+                            </Button>
+                        )}
                     </FlexDivColumnCentered>
 
                     <Text style={{ flex: 4 }}></Text>
@@ -147,8 +181,14 @@ export const Row = styled(FlexDiv)`
 export const RowScrollable = styled(FlexDiv)`
     flex-direction: column;
     overflow-x: hidden;
-    max-height: 150px;
+    max-height: 210px;
     max-width: 95%;
+`;
+
+export const CustomIcon = styled(Image)`
+    margin-right: 0px;
+    width: 100px;
+    height: 100px;
 `;
 
 export default UsersExercises;
