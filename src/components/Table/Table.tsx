@@ -1,4 +1,4 @@
-import React, { useMemo, DependencyList } from 'react';
+import React, { useMemo, DependencyList, CSSProperties } from 'react';
 import { useTable, useSortBy, Column, Row } from 'react-table';
 import { ReactComponent as SortDownIcon } from 'assets/images/sort-down.svg';
 import { ReactComponent as SortUpIcon } from 'assets/images/sort-up.svg';
@@ -20,6 +20,8 @@ type TableProps = {
     onTableRowClick?: (row: Row<any>) => void;
     isLoading?: boolean;
     noResultsMessage?: React.ReactNode;
+    tableHeadCellStyles?: CSSProperties;
+    tableRowCellStyles?: CSSProperties;
 };
 
 const Table: React.FC<TableProps> = ({
@@ -30,6 +32,8 @@ const Table: React.FC<TableProps> = ({
     noResultsMessage = null,
     onTableRowClick = undefined,
     isLoading = false,
+    tableHeadCellStyles = {},
+    tableRowCellStyles = {},
 }) => {
     const memoizedColumns = useMemo(() => columns, columnsDeps);
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -49,7 +53,7 @@ const Table: React.FC<TableProps> = ({
                         <TableCellHead
                             {...column.getHeaderProps(column.sortable ? column.getSortByToggleProps() : undefined)}
                             key={headerIndex}
-                            style={column.sortable ? { cursor: 'pointer' } : {}}
+                            style={column.sortable ? { cursor: 'pointer', ...tableHeadCellStyles } : {}}
                         >
                             {column.render('Header')}
                             {column.sortable && (
@@ -86,7 +90,7 @@ const Table: React.FC<TableProps> = ({
                                     key={rowIndex}
                                 >
                                     {row.cells.map((cell, cellIndex: any) => (
-                                        <TableCell {...cell.getCellProps()} key={cellIndex}>
+                                        <TableCell style={tableRowCellStyles} {...cell.getCellProps()} key={cellIndex}>
                                             {cell.render('Cell')}
                                         </TableCell>
                                     ))}
