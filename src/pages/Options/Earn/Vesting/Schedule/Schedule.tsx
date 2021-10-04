@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivColumn } from 'theme/common';
@@ -23,19 +23,10 @@ const Schedule: React.FC = () => {
         enabled: isAppReady && isWalletConnected && !!escrowThalesContract && !!stakingThalesContract,
     });
 
-    const vestingSchedule = [
-        { date: 1501515151515, amount: 200 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-        { date: 1501515151515, amount: 100 },
-    ]; // TODO remove
+    const vestingSchedule = useMemo(
+        () => (vestingScheduleQuery.isSuccess && vestingScheduleQuery.data ? vestingScheduleQuery.data : []),
+        [vestingScheduleQuery.data]
+    );
 
     const noResults = vestingSchedule.length === 0;
     const isMobileOrTablet = window.innerWidth < 1025;
