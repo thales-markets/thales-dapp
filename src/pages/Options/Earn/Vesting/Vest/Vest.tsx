@@ -5,6 +5,7 @@ import {
     ClaimTitle,
     EarnSection,
     SectionContentContainer,
+    SectionHeader,
 } from '../../components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +30,7 @@ import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
 import { ethers } from 'ethers';
 import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
 import { dispatchMarketNotification } from 'utils/options';
+import styled from 'styled-components';
 
 const Vest: React.FC = () => {
     const { t } = useTranslation();
@@ -121,9 +123,10 @@ const Vest: React.FC = () => {
     };
 
     return (
-        <EarnSection orderOnTablet={1} spanOnTablet={5} paddingOnMobile={25}>
+        <EarnSection orderOnTablet={1} spanOnTablet={5}>
+            <StyledSectionHeader>{t('options.earn.vesting.vest.vesting')}</StyledSectionHeader>
             <SectionContentContainer>
-                <ClaimItem>
+                <StyledClaimItem>
                     <ClaimTitle>{t('options.earn.vesting.vest.available-to-vest')}:</ClaimTitle>
                     <GradientText
                         gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
@@ -132,7 +135,7 @@ const Vest: React.FC = () => {
                     >
                         {formatCurrencyWithKey(THALES_CURRENCY, claimable, 0, true)}
                     </GradientText>
-                </ClaimItem>
+                </StyledClaimItem>
                 {<NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
                 <ButtonContainer>{getVestButton()}</ButtonContainer>
                 <ValidationMessage
@@ -144,5 +147,18 @@ const Vest: React.FC = () => {
         </EarnSection>
     );
 };
+
+const StyledClaimItem = styled(ClaimItem)`
+    @media (max-width: 767px) {
+        padding-bottom: 15px;
+    }
+`;
+
+const StyledSectionHeader = styled(SectionHeader)`
+    padding-bottom: 25px;
+    @media (min-width: 768px) {
+        display: none;
+    }
+`;
 
 export default Vest;

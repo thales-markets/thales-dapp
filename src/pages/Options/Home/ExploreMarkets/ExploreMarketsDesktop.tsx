@@ -408,7 +408,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 filteredMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
-            ></ExploreMarketsMobile>
+            />
             <div id="explore-markets" className="markets-desktop" style={{ width: '100%' }}>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.keys(PrimaryFilters)
