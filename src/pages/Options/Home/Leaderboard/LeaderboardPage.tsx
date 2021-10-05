@@ -80,7 +80,7 @@ const LeaderboardPage: React.FC = () => {
                 }
             });
 
-            return 'https://twitter.com/intent/tweet?text=' + TWEET_TEXT + walletAddress;
+            return 'https://twitter.com/intent/tweet?text=' + TWEET_TEXT + walletAddress + TWEET_SUFFIX;
         } else {
             return '';
         }
@@ -173,7 +173,7 @@ const LeaderboardPage: React.FC = () => {
                                     {t('options.leaderboard.display-name')}:
                                 </Text>
                                 <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 167 }}>
-                                    {displayNamesMap.get(walletAddress)}
+                                    {displayNamesMap.get(walletAddress.toLowerCase().trim())}
                                 </Text>
                             </Row>
                             <Row
@@ -285,7 +285,8 @@ const LeaderboardPage: React.FC = () => {
     );
 };
 
-const TWEET_TEXT = 'Please let me join the Thales trading competition with address ';
+const TWEET_TEXT = "I'm joining the @Thalesmarket trading competition with address ";
+const TWEET_SUFFIX = '. Let the games begin!';
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
