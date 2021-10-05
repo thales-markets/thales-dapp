@@ -193,12 +193,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
 
     return (
-        <EarnSection
-            paddingOnMobile={5}
-            orderOnMobile={4}
-            orderOnTablet={4}
-            style={{ gridColumn: 'span 7', gridRow: 'span 3' }}
-        >
+        <EarnSection orderOnMobile={4} orderOnTablet={4} style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
             <SectionHeader>
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
             </SectionHeader>
@@ -341,8 +336,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             </GradientText>
                         </FlexDivColumnCentered>
                     </StyledPieChartCenterDiv>
-                    <LearnMore>
+                    <LearnMore top="30%">
                         <StyledMaterialTooltip
+                            enterTouchDelay={1}
                             arrow={true}
                             title={t('options.earn.thales-staking.staking-rewards.learn-more-text') as string}
                         >

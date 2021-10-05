@@ -74,6 +74,7 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     }
     @media screen and (max-width: 767px) {
         width: 50%;
+        font-size: 14px;
     }
 `;
 
@@ -90,6 +91,7 @@ const NetworkFeeSummaryContent = styled(SummaryContent)`
     }
     @media screen and (max-width: 767px) {
         text-align: right;
+        font-size: 14px;
     }
 `;
 

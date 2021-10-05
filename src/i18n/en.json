@@ -544,7 +544,8 @@
                     "all": "All",
                     "mint": "Mint",
                     "trade": "Trades",
-                    "exercise": "Exercise"
+                    "exercise": "Exercise",
+                    "filter": "Filter"
                 }
             },
             "trade-card": {

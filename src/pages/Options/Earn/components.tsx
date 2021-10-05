@@ -53,6 +53,11 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     color: #f6f6fe;
     min-height: 50px;
     padding: 0px 20px 0 20px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        padding: 0px 5px 0 5px;
+        min-height: 25px;
+    }
 `;
 
 export const SectionContent = styled(FlexDiv)`
@@ -71,6 +76,9 @@ export const ClaimTitle = styled.span`
     font-weight: 600;
     letter-spacing: 0.15px;
     padding-bottom: 20px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+    }
 `;
 
 export const ClaimContent = styled.span`
@@ -148,7 +156,7 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     color: ${(props) => (props.disabled ? '#B8C6E5' : 'white')};
 `;
 
-export const LearnMore = styled.span`
+export const LearnMore = styled.span<{ top: string }>`
     position: absolute;
     bottom: 18%;
     left: 50%;
@@ -157,8 +165,8 @@ export const LearnMore = styled.span`
     font-size: 16px;
     line-height: 24px;
     cursor: pointer;
-    @media (max-width: 1024px) {
-        display: none;
+    @media (max-width: 767px) {
+        top: ${(props) => props.top};
     }
 `;
 
