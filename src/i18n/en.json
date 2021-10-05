@@ -19,8 +19,8 @@
             "asset-col": "Asset",
             "strike-price-col": "Strike price",
             "maturity-date-col": "Maturity date",
-            "short-col": "sLONG",
-            "long-col": "sSHORT",
+            "long-col": "sLONG",
+            "short-col": "sSHORT",
             "pool-size-col": "Pool size",
             "amount-col": "Amount",
             "price-col": "Price",
@@ -326,7 +326,8 @@
                     "paused-message": "Claiming is paused, please try later.",
                     "confirmation-message": "Tokens successfully claimed",
                     "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
-                    "learn-more": "Learn more"
+                    "learn-more": "Learn more",
+                    "button-tooltip": "Claimed rewards are subject to a 10 weeks vesting period."
                 }
             },
             "vesting": {

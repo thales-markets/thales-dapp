@@ -22,20 +22,13 @@ import { getIs0xReady, getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import {
-    formatCurrency,
-    formatCurrencyWithKey,
-    formatCurrencyWithSign,
-    toBigNumber,
-    truncToDecimals,
-} from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import { calculate0xProtocolFee } from 'utils/0x';
 import { refetchOrderbook, refetchOrders, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
@@ -63,10 +56,6 @@ import {
     SummaryContent,
     Divider,
     LightTooltip,
-    ProtocolFeeContainer,
-    ProtocolFeeLabel,
-    ProtocolFeeItem,
-    StyledQuestionMarkIcon,
 } from 'pages/Options/Market/components';
 import onboardConnector from 'utils/onboardConnector';
 import { FlexDivCentered, FlexDivRow, FlexDiv } from 'theme/common';
@@ -74,10 +63,6 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet-light.svg';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import styled from 'styled-components';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { get } from 'lodash';
-import { GWEI_UNIT } from 'constants/network';
-import WarningMessage from 'components/WarningMessage';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -108,7 +93,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
-    const [protocolFee, setProtocolFee] = useState<number | string>('');
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -160,10 +144,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const takeTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
     const addressToApprove: string = contractAddresses0x.exchangeProxy;
-
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -220,9 +200,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                 const targetOrder = order.rawOrder;
                 const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
 
-                const newProtocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
-                setProtocolFee(Number(newProtocolFee));
-
                 try {
                     const gasEstimate = await exchangeProxy
                         .fillLimitOrder(
@@ -230,7 +207,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                             order.signature,
                             Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
                         )
-                        .estimateGasAsync({ from: walletAddress, value: newProtocolFee });
+                        .estimateGasAsync({ from: walletAddress });
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                 } catch (e) {
                     console.log(e);
@@ -275,8 +252,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
             const targetOrder = order.rawOrder;
             const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
-            const newProtocolFee = calculate0xProtocolFee([targetOrder], gasPriceInWei(gasPrice));
-            setProtocolFee(Number(newProtocolFee));
 
             try {
                 await exchangeProxy
@@ -289,7 +264,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         from: walletAddress,
                         gas: gasLimit !== null ? gasLimit : undefined,
                         gasPrice: gasPriceInWei(gasPrice),
-                        value: newProtocolFee,
                     });
             } catch (e) {
                 console.log(e);
@@ -428,22 +402,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         </SummaryContent>
                     </SummaryItem>
                     <Divider />
-                    <ProtocolFeeContainer>
-                        <ProtocolFeeLabel>
-                            {t('options.market.trade-options.fill-order.protocol-fee-label')}
-                            <LightTooltip title={t('options.market.trade-options.fill-order.protocol-fee-tooltip')}>
-                                <StyledQuestionMarkIcon />
-                            </LightTooltip>
-                        </ProtocolFeeLabel>
-                        <ProtocolFeeItem>
-                            {formatCurrencyWithSign(
-                                USD_SIGN,
-                                ethRate !== null ? (Number(protocolFee) * ethRate) / GWEI_UNIT / GWEI_UNIT : 0
-                            )}
-                        </ProtocolFeeItem>
-                    </ProtocolFeeContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
-                    <WarningMessage message={t('options.common.warning.gas-price-change')} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage
