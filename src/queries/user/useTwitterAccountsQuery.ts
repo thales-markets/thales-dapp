@@ -11,7 +11,6 @@ const useTwitterAccountQuery = (options?: UseQueryOptions<TwitterAccounts>) => {
             const baseUrl = 'https://api.thales.market/twitter/';
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            console.log(result);
 
             return result;
         },

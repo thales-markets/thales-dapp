@@ -80,6 +80,7 @@ export const QUERY_KEYS = {
         DisplayNames: () => ['user', 'displayNames'],
         TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],
         TwitterAccounts: () => ['user', 'twitterAccounts'],
+        VerifiedTwitterAccounts: () => ['user', 'verifiedTwitterAccounts'],
     },
     Staking: {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],

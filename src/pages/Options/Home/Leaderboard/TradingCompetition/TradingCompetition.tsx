@@ -18,6 +18,7 @@ import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
+import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -59,6 +60,16 @@ const TradingCompetition: React.FC<any> = () => {
     const competitionQuery = useCompetitionQuery(networkId, {
         enabled: isAppReady,
     });
+
+    const verifiedTwitterAccountsQuery = useVerifiedTwitterAccountsQuery({
+        enabled: isAppReady,
+    });
+
+    const verifiedTwitterAccounts: any = useMemo(
+        () => (verifiedTwitterAccountsQuery.isSuccess ? verifiedTwitterAccountsQuery.data : new Set()),
+        [verifiedTwitterAccountsQuery]
+    );
+
     const competition = competitionQuery.data
         ? competitionQuery.data.competition.sort((a, b) => b.volume - a.volume)
         : [];
@@ -116,77 +127,82 @@ const TradingCompetition: React.FC<any> = () => {
     ]);
 
     const sortedData: any = useMemo(() => {
-        return competition
-            .sort((a, b) => {
-                if (orderBy === 4) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.trades - a.trades;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.trades - b.trades;
-                    }
+        return competition.sort((a, b) => {
+            if (orderBy === 4) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.trades - a.trades;
                 }
-                if (orderBy === 5) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.volume - a.volume;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.volume - b.volume;
-                    }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.trades - b.trades;
                 }
+            }
+            if (orderBy === 5) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.volume - a.volume;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.volume - b.volume;
+                }
+            }
 
-                if (orderBy === 6) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.investment - a.investment;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.investment - b.investment;
-                    }
+            if (orderBy === 6) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.investment - a.investment;
                 }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.investment - b.investment;
+                }
+            }
 
-                if (orderBy === 7) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.netProfit - a.netProfit;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.netProfit - b.netProfit;
-                    }
+            if (orderBy === 7) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.netProfit - a.netProfit;
                 }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.netProfit - b.netProfit;
+                }
+            }
 
-                if (orderBy === 8) {
-                    if (orderDirection === OrderDirection.DESC) {
-                        return b.gain - a.gain;
-                    }
-                    if (orderDirection === OrderDirection.ASC) {
-                        return a.gain - b.gain;
-                    }
+            if (orderBy === 8) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.gain - a.gain;
                 }
-                return 0;
-            })
-            .map((leader: any, index: number) => {
-                if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-                return { rank: competition.length - index, ...leader };
-            });
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.gain - b.gain;
+                }
+            }
+            return 0;
+        });
     }, [orderBy, orderDirection, competition]);
 
     const leaderboardData = useMemo(() => {
-        return sortedData
-            .filter((leader: any) => {
-                if (searchString === '') return true;
-                if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
-                    return true;
-                }
+        if (verifiedTwitterAccountsQuery.isSuccess) {
+            return sortedData
+                .filter((leader: any) => {
+                    if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
+                        if (searchString === '') return true;
+                        if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                            return true;
+                        }
 
-                const disp = displayNamesMap.get(leader.walletAddress);
+                        const disp = displayNamesMap.get(leader.walletAddress);
 
-                if (disp) {
-                    return disp.toLowerCase().includes(searchString.toLowerCase());
-                }
+                        if (disp) {
+                            return disp.toLowerCase().includes(searchString.toLowerCase());
+                        }
 
-                return false;
-            })
-            .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, searchString, sortedData]);
+                        return false;
+                    } else return false;
+                })
+                .map((leader: any, index: number, self: any) => {
+                    if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+                    return { rank: self.length - index, ...leader };
+                })
+                .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+        } else {
+            return [];
+        }
+    }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
@@ -335,7 +351,10 @@ const TradingCompetition: React.FC<any> = () => {
                             return (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell
-                                        style={{ height: getHeight(leader), fontSize: getFontSizeByRank(leader.rank) }}
+                                        style={{
+                                            height: getHeight(leader),
+                                            fontSize: getFontSizeByRank(leader.rank),
+                                        }}
                                     >
                                         {(leader as any).rank}
                                     </StyledTableCell>
