@@ -8,6 +8,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { DisplayContentsAnchor } from '../MarketsTable/components';
 import './media.scss';
+import { buildHref } from 'utils/routes';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
@@ -32,7 +33,7 @@ const MarketCreation: React.FC = () => {
                                 {t(`common.or`)}
                             </Text>
                             {
-                                <DisplayContentsAnchor href={ROUTES.Options.CreateMarket}>
+                                <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                                     <Button
                                         className="primary market-creation__createBtn"
                                         style={{ padding: '13px 24px', fontSize: 20 }}

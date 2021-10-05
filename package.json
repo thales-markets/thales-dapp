@@ -122,5 +122,6 @@
         "hooks": {
             "pre-commit": "lint-staged"
         }
-    }
+    },
+    "homepage": "."
 }
