@@ -111,7 +111,7 @@ const LeaderboardPage: React.FC = () => {
     return (
         <Background style={{ minHeight: '100vh' }}>
             <Wrapper>
-                <FlexDivColumn className="leaderboard">
+                <FlexDivColumn className="leaderboard" style={{ zIndex: 10 }}>
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
                     {walletAddress && !accVerified && (
                         <Button
