@@ -771,7 +771,11 @@
                     "amount": "Amount",
                     "timestamp": "Date | Time",
                     "view-less": "View less",
-                    "view-all": "View all"
+                    "view-more": "View more",
+                    "long": "Long",
+                    "short": "Short",
+                    "buy": "Buy",
+                    "sell": "Sell"
                 },
                 "exercises": {
                     "side": "Side"
@@ -781,9 +785,6 @@
                     "type": "Type"
                 },
                 "unclaimed": {
-                    "short": "Short",
-                    "long": "Long",
-                    "go-to-market": "Go to market",
                     "redeem": "Redeem"
                 }
             }

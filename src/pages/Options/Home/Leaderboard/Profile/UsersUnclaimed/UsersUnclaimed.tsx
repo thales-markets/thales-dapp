@@ -79,45 +79,42 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.markets.result')}
-                    </Text>
                 </Row>
                 <Row className="text-m">
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                     <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
-                    <Text style={{ flex: 1, color: getCellColor(market.result) }}>{market.result}</Text>
                 </Row>
 
-                <Row
-                    className="text-ms leaderboard__profile__rowBackground__columns"
-                    style={{
-                        borderImage: 'linear-gradient(to right, #748BC6 1%, #04045A 20%) 100% 1',
-                    }}
-                >
+                <Row className="text-ms leaderboard__profile__rowBackground__columns" style={{ borderBottom: 'none' }}>
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.markets.result')}
+                    </Text>
                     <Text className="bold" style={{ flex: 2 }}>
                         {market.result === 'long'
-                            ? t('options.leaderboard.profile.unclaimed.long')
-                            : t('options.leaderboard.profile.unclaimed.short')}
+                            ? t('options.leaderboard.profile.common.long')
+                            : t('options.leaderboard.profile.common.short')}
                     </Text>
                 </Row>
                 <Row className="text-m">
-                    <Text style={{ flex: 8 }}>
+                    <Text style={{ flex: 1, color: getCellColor(market.result) }}>{market.result.toUpperCase()}</Text>
+                    <Text style={{ flex: 1, paddingLeft: 16 }}>
                         {market.result === 'long'
                             ? formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].long)
                             : formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].short)}
                     </Text>
-                    <Button className="primary" style={{ flex: 1, marginRight: 740 }}>
-                        <a
-                            target="_blank"
-                            rel="noreferrer"
-                            href={buildOptionsMarketLink(market.address)}
-                            style={{ color: 'white', verticalAlign: 'top' }}
-                        >
-                            {t('options.leaderboard.profile.unclaimed.redeem')}
-                        </a>
-                    </Button>
+                    <FlexDivColumnCentered style={{ flex: 1, alignItems: 'baseline', paddingRight: 35 }}>
+                        <Button className="primary">
+                            <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href={buildOptionsMarketLink(market.address)}
+                                style={{ color: 'white', verticalAlign: 'top' }}
+                            >
+                                {t('options.leaderboard.profile.unclaimed.redeem')}
+                            </a>
+                        </Button>
+                    </FlexDivColumnCentered>
                 </Row>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>

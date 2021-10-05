@@ -103,7 +103,9 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 </Row>
                 {!showAll && (
                     <Row className="text-m">
-                        <Text style={{ flex: 1, color: getCellColor(usersTrades[0].type) }}>{usersTrades[0].type}</Text>
+                        <Text style={{ flex: 1, color: getCellColor(usersTrades[0].type) }}>
+                            {t(`options.leaderboard.profile.common.${usersTrades[0].type}`)}
+                        </Text>
                         <Text style={{ flex: 1 }}>
                             {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[usersTrades[0].side], usersTrades[0].amount)}
                         </Text>
@@ -115,7 +117,9 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     {showAll &&
                         usersTrades?.map((trade, index) => (
                             <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 1, color: getCellColor(trade.type) }}>{trade.type}</Text>
+                                <Text style={{ flex: 1, color: getCellColor(trade.type) }}>
+                                    {t(`options.leaderboard.profile.common.${trade.type}`)}
+                                </Text>
                                 <Text style={{ flex: 1 }}>
                                     {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[trade.side], trade.amount)}
                                 </Text>
@@ -135,7 +139,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             >
                                 {showAll
                                     ? t('options.leaderboard.profile.common.view-less')
-                                    : t('options.leaderboard.profile.common.view-all')}
+                                    : t('options.leaderboard.profile.common.view-more')}
                             </Button>
                         )}
                     </FlexDivColumnCentered>

@@ -306,7 +306,7 @@ const TradingCompetition: React.FC<any> = () => {
                                                             )[0][1].avatar
                                                         }
                                                     ></img>
-                                                    <ArrowIcon width="8" height="8" style={{ marginBottom: 12 }} />
+                                                    <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                                 </StyledLink>
                                             )}
                                         </StyledTableCell>
@@ -363,7 +363,7 @@ const TradingCompetition: React.FC<any> = () => {
                                                         )[0][1].avatar
                                                     }
                                                 ></img>
-                                                <ArrowIcon width="8" height="8" style={{ marginBottom: 12 }} />
+                                                <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                             </StyledLink>
                                         )}
                                     </StyledTableCell>

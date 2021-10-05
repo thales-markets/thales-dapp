@@ -110,7 +110,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                             >
                                 {showAll
                                     ? t('options.leaderboard.profile.common.view-less')
-                                    : t('options.leaderboard.profile.common.view-all')}
+                                    : t('options.leaderboard.profile.common.view-more')}
                             </Button>
                         )}
                     </FlexDivColumnCentered>
