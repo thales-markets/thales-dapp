@@ -1,46 +1,41 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
-import { formatShortDate } from 'utils/formatters/date';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
-import { getSynthName } from 'utils/snxJSConnector';
-import ReactCountryFlag from 'react-country-flag';
 import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import React from 'react';
+import ReactCountryFlag from 'react-country-flag';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import { Button, FlexDiv, FlexDivColumnCentered, Image, Text } from 'theme/common';
+import { formatShortDate } from 'utils/formatters/date';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
+import { getSynthName } from 'utils/snxJSConnector';
+import { COLORS } from 'constants/ui';
 
 type UsersUnclaimedProps = {
     usersUnclaimed: any[];
     market: any;
 };
 
+const getCellColor = (type: string) => {
+    switch (type) {
+        case 'long':
+            return COLORS.LONG;
+        case 'short':
+            return COLORS.SHORT;
+        default:
+            return COLORS.WHITE;
+    }
+};
+
 const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market }) => {
     const { t } = useTranslation();
-    const [showAll, setShowAll] = useState<boolean>(false);
 
     return (
-        <FlexDiv
-            style={{
-                flex: 1,
-                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                border: '1px solid transparent',
-                borderRadius: 23,
-                marginBottom: 16,
-            }}
-        >
-            <FlexDivColumnCentered
-                style={{
-                    flexGrow: 1,
-                    alignItems: 'center',
-                    background: '#04045A',
-                    borderBottomLeftRadius: 23,
-                    borderTopLeftRadius: 23,
-                }}
-            >
+        <FlexDiv className="leaderboard__profile__rowBorder">
+            <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
                 <DisplayContentsAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
@@ -49,11 +44,13 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                 >
                     {market.customMarket ? (
                         <>
-                            <ReactCountryFlag
-                                countryCode={countryToCountryCode(market.country as any)}
-                                style={{ width: 100, height: 100, marginRight: 0 }}
-                                svg
-                            />
+                            {countryToCountryCode(market.country as any) && (
+                                <ReactCountryFlag
+                                    countryCode={countryToCountryCode(market.country as any)}
+                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    svg
+                                />
+                            )}
                             {!countryToCountryCode(market.country as any) && (
                                 <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
                             )}
@@ -71,16 +68,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     )}
                 </DisplayContentsAnchor>
             </FlexDivColumnCentered>
-            <FlexDivColumnCentered
-                className="text-ms"
-                style={{
-                    flexGrow: 8,
-                    paddingTop: 36,
-                    background: '#04045A',
-                    borderBottomRightRadius: 23,
-                    borderTopRightRadius: 23,
-                }}
-            >
+            <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>
                     <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.markets.strike-price')}
@@ -99,15 +87,13 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                     <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
-                    <Text style={{ flex: 1 }}>{market.result}</Text>
+                    <Text style={{ flex: 1, color: getCellColor(market.result) }}>{market.result}</Text>
                 </Row>
 
                 <Row
-                    className="text-ms"
+                    className="text-ms leaderboard__profile__rowBackground__columns"
                     style={{
-                        borderBottom: '1px solid',
                         borderImage: 'linear-gradient(to right, #748BC6 1%, #04045A 20%) 100% 1',
-                        marginTop: 36,
                     }}
                 >
                     <Text className="bold" style={{ flex: 2 }}>
@@ -129,32 +115,13 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             href={buildOptionsMarketLink(market.address)}
                             style={{ color: 'white', verticalAlign: 'top' }}
                         >
-                            {t('options.leaderboard.profile.filters.redeem')}
+                            {t('options.leaderboard.profile.unclaimed.redeem')}
                         </a>
                     </Button>
                 </Row>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered
-                        style={{
-                            flexGrow: 1,
-                            alignItems: 'center',
-                            flex: 0,
-                            height: 72,
-                        }}
-                    >
-                        {usersUnclaimed.length > 1 && (
-                            <Button
-                                className="primary"
-                                style={{ background: 'transparent', padding: '24px 35px' }}
-                                onClick={() => setShowAll(!showAll)}
-                            >
-                                {showAll
-                                    ? t('options.leaderboard.profile.common.view-less')
-                                    : t('options.leaderboard.profile.common.view-all')}
-                            </Button>
-                        )}
-                    </FlexDivColumnCentered>
+                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer"></FlexDivColumnCentered>
 
                     <Text style={{ flex: 4 }}></Text>
                 </Row>

@@ -15,7 +15,7 @@ import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
-import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
+import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -283,39 +283,32 @@ const TradingCompetition: React.FC<any> = () => {
                                     >
                                         <StyledTableCell>{(leader as any).rank}</StyledTableCell>
                                         <StyledTableCell>
-                                            <StyledLink
-                                                style={{ verticalAlign: 'text-top' }}
-                                                href={
-                                                    twitterAccountsData.filter(
-                                                        (account: any) =>
-                                                            account[0] === leader.walletAddress.toLowerCase()
-                                                    ).length === 1
-                                                        ? twitterAccountsData.filter(
-                                                              (account: any) =>
-                                                                  account[0] === leader.walletAddress.toLowerCase()
-                                                          )[0][1].twitter
-                                                        : ''
-                                                }
-                                                target="_blank"
-                                                rel="noreferrer"
-                                            >
-                                                {twitterAccountsData.filter(
-                                                    (account: any) => account[0] === leader.walletAddress.toLowerCase()
-                                                ).length === 1 && (
-                                                    <>
-                                                        <img
-                                                            style={{ width: 35, height: 35, borderRadius: '50%' }}
-                                                            src={
-                                                                twitterAccountsData.filter(
-                                                                    (account: any) =>
-                                                                        account[0] ===
-                                                                        leader.walletAddress.toLowerCase()
-                                                                )[0][1].avatar
-                                                            }
-                                                        ></img>
-                                                    </>
-                                                )}
-                                            </StyledLink>
+                                            {twitterAccountsData.filter(
+                                                (account: any) => account[0] === leader.walletAddress.toLowerCase()
+                                            ).length === 1 && (
+                                                <StyledLink
+                                                    style={{ verticalAlign: 'text-top' }}
+                                                    href={
+                                                        twitterAccountsData.filter(
+                                                            (account: any) =>
+                                                                account[0] === leader.walletAddress.toLowerCase()
+                                                        )[0][1].twitter
+                                                    }
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    <img
+                                                        style={{ width: 35, height: 35, borderRadius: '50%' }}
+                                                        src={
+                                                            twitterAccountsData.filter(
+                                                                (account: any) =>
+                                                                    account[0] === leader.walletAddress.toLowerCase()
+                                                            )[0][1].avatar
+                                                        }
+                                                    ></img>
+                                                    <ArrowIcon width="8" height="8" style={{ marginBottom: 12 }} />
+                                                </StyledLink>
+                                            )}
                                         </StyledTableCell>
                                         <StyledTableCell>{'Your current rank'}</StyledTableCell>
                                         <StyledTableCell>{leader.trades}</StyledTableCell>
@@ -347,37 +340,32 @@ const TradingCompetition: React.FC<any> = () => {
                                         {(leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        <StyledLink
-                                            style={{ verticalAlign: 'text-top' }}
-                                            href={
-                                                twitterAccountsData.filter(
-                                                    (account: any) => account[0] === leader.walletAddress.toLowerCase()
-                                                ).length === 1
-                                                    ? twitterAccountsData.filter(
-                                                          (account: any) =>
-                                                              account[0] === leader.walletAddress.toLowerCase()
-                                                      )[0][1].twitter
-                                                    : ''
-                                            }
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            {twitterAccountsData.filter(
-                                                (account: any) => account[0] === leader.walletAddress.toLowerCase()
-                                            ).length === 1 && (
-                                                <>
-                                                    <img
-                                                        style={{ width: 35, height: 35, borderRadius: '50%' }}
-                                                        src={
-                                                            twitterAccountsData.filter(
-                                                                (account: any) =>
-                                                                    account[0] === leader.walletAddress.toLowerCase()
-                                                            )[0][1].avatar
-                                                        }
-                                                    ></img>
-                                                </>
-                                            )}
-                                        </StyledLink>
+                                        {twitterAccountsData.filter(
+                                            (account: any) => account[0] === leader.walletAddress.toLowerCase()
+                                        ).length === 1 && (
+                                            <StyledLink
+                                                style={{ verticalAlign: 'text-top' }}
+                                                href={
+                                                    twitterAccountsData.filter(
+                                                        (account: any) =>
+                                                            account[0] === leader.walletAddress.toLowerCase()
+                                                    )[0][1].twitter
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                <img
+                                                    style={{ width: 35, height: 35, borderRadius: '50%' }}
+                                                    src={
+                                                        twitterAccountsData.filter(
+                                                            (account: any) =>
+                                                                account[0] === leader.walletAddress.toLowerCase()
+                                                        )[0][1].avatar
+                                                    }
+                                                ></img>
+                                                <ArrowIcon width="8" height="8" style={{ marginBottom: 12 }} />
+                                            </StyledLink>
+                                        )}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <StyledLink

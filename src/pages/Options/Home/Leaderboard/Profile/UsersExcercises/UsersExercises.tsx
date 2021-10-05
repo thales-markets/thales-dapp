@@ -12,34 +12,30 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import ReactCountryFlag from 'react-country-flag';
+import { COLORS } from 'constants/ui';
 
 type UsersExercisesProps = {
     usersExercises: any[];
     market: any;
 };
 
+const getCellColor = (type: string) => {
+    switch (type) {
+        case 'long':
+            return COLORS.LONG;
+        case 'short':
+            return COLORS.SHORT;
+        default:
+            return COLORS.WHITE;
+    }
+};
+
 const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market }) => {
     const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
     return (
-        <FlexDiv
-            style={{
-                flex: 1,
-                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                border: '1px solid transparent',
-                borderRadius: 23,
-                marginBottom: 16,
-            }}
-        >
-            <FlexDivColumnCentered
-                style={{
-                    flexGrow: 1,
-                    alignItems: 'center',
-                    background: '#04045A',
-                    borderBottomLeftRadius: 23,
-                    borderTopLeftRadius: 23,
-                }}
-            >
+        <FlexDiv className="leaderboard__profile__rowBorder">
+            <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
                 <DisplayContentsAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
@@ -48,11 +44,13 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                 >
                     {market.customMarket ? (
                         <>
-                            <ReactCountryFlag
-                                countryCode={countryToCountryCode(market.country as any)}
-                                style={{ width: 100, height: 100, marginRight: 0 }}
-                                svg
-                            />
+                            {countryToCountryCode(market.country as any) && (
+                                <ReactCountryFlag
+                                    countryCode={countryToCountryCode(market.country as any)}
+                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    svg
+                                />
+                            )}
                             {!countryToCountryCode(market.country as any) && (
                                 <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
                             )}
@@ -70,16 +68,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     )}
                 </DisplayContentsAnchor>
             </FlexDivColumnCentered>
-            <FlexDivColumnCentered
-                className="text-ms"
-                style={{
-                    flexGrow: 8,
-                    paddingTop: 36,
-                    background: '#04045A',
-                    borderBottomRightRadius: 23,
-                    borderTopRightRadius: 23,
-                }}
-            >
+            <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
                         {t('options.leaderboard.profile.markets.strike-price')}
@@ -96,14 +85,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                     <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                 </Row>
-                <Row
-                    className="text-ms"
-                    style={{
-                        borderBottom: '1px solid',
-                        borderImage: 'linear-gradient(to right, #748BC6 95%, #04045A 5%) 100% 1',
-                        marginTop: 36,
-                    }}
-                >
+                <Row className="text-ms leaderboard__profile__rowBackground__columns">
                     <Text className="bold" style={{ flex: 2 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
@@ -117,7 +99,9 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                 {!showAll && (
                     <Row className="text-m">
                         <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersExercises[0].amount)}</Text>
-                        <Text style={{ flex: 2 }}>{usersExercises[0].side}</Text>
+                        <Text style={{ flex: 2, color: getCellColor(usersExercises[0].side) }}>
+                            {usersExercises[0].side}
+                        </Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersExercises[0].timestamp))}</Text>
                     </Row>
                 )}
@@ -126,21 +110,14 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                         usersExercises?.map((exercise, index) => (
                             <Row className="text-m" key={index} style={{ width: '127.5%' }}>
                                 <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
-                                <Text style={{ flex: 1 }}>{exercise.side}</Text>
+                                <Text style={{ flex: 1, color: getCellColor(exercise.side) }}>{exercise.side}</Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(exercise.timestamp))}</Text>
                             </Row>
                         ))}
                 </RowScrollable>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered
-                        style={{
-                            flexGrow: 1,
-                            alignItems: 'center',
-                            flex: 0,
-                            height: 72,
-                        }}
-                    >
+                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                         {usersExercises.length > 1 && (
                             <Button
                                 className="primary"

@@ -753,13 +753,13 @@
             "profile": {
                 "tab-title": "Profile",
                 "search-placeholder": "Search other profiles by typing display name",
-                "transaction-details": "Transaction details for: ",
+                "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
                 "filters": {
                     "mints": "Mints",
                     "trades": "Trades",
                     "exercises": "Exercises",
-                    "redeem": "Redeemable"
+                    "redeemable": "Redeemable"
                 },
                 "markets": {
                     "strike-price": "Strike price",
@@ -783,7 +783,8 @@
                 "unclaimed": {
                     "short": "Short",
                     "long": "Long",
-                    "go-to-market": "Go to market"
+                    "go-to-market": "Go to market",
+                    "redeem": "Redeem"
                 }
             }
         },

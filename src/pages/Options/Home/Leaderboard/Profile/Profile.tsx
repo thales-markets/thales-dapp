@@ -29,7 +29,6 @@ import UsersExercises from './UsersExcercises';
 import UsersMints from './UsersMints';
 import UsersTrades from './UsersTrades';
 import UsersUnclaimed from './UsersUnclaimed';
-import './media.scss';
 
 export enum Filters {
     Mints = 'mints',
@@ -233,7 +232,7 @@ const Profile: React.FC<any> = () => {
     const headCells: HeadCell[] = [{ id: 1, label: '', sortable: false }];
 
     return (
-        <FlexDivColumnCentered className="leaderboard__wrapper">
+        <FlexDivColumnCentered className="leaderboard__profile">
             <FlexDivRow style={{ flexDirection: 'row' }}>
                 <FlexDiv style={{ paddingLeft: 42 }}>
                     <Text className="bold white" style={{ alignSelf: 'center' }}>
@@ -275,32 +274,28 @@ const Profile: React.FC<any> = () => {
             <FlexDivRow style={{ flexDirection: 'row' }}>
                 <FilterWrapper>
                     <FilterButton
-                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.Mints ? 'selected' : ''}
+                        className={'leaderboard__profile__filter ' + (filter === Filters.Mints ? 'selected' : '')}
                         onClick={() => setFilter(Filters.Mints)}
                     >
                         {t('options.leaderboard.profile.filters.mints')}
                     </FilterButton>
                     <FilterButton
-                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.Trades ? 'selected' : ''}
+                        className={'leaderboard__profile__filter ' + (filter === Filters.Trades ? 'selected' : '')}
                         onClick={() => setFilter(Filters.Trades)}
                     >
                         {t('options.leaderboard.profile.filters.trades')}
                     </FilterButton>
                     <FilterButton
-                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.Excercises ? 'selected' : ''}
+                        className={'leaderboard__profile__filter ' + (filter === Filters.Excercises ? 'selected' : '')}
                         onClick={() => setFilter(Filters.Excercises)}
                     >
                         {t('options.leaderboard.profile.filters.exercises')}
                     </FilterButton>
                     <FilterButton
-                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.Unclaimed ? 'selected' : ''}
+                        className={'leaderboard__profile__filter ' + (filter === Filters.Unclaimed ? 'selected' : '')}
                         onClick={() => setFilter(Filters.Unclaimed)}
                     >
-                        {t('options.leaderboard.profile.filters.redeem')}
+                        {t('options.leaderboard.profile.filters.redeemable')}
                     </FilterButton>
                 </FilterWrapper>
             </FlexDivRow>
@@ -324,23 +319,15 @@ const Profile: React.FC<any> = () => {
                         <TableBody>
                             {profileData.length === 0 && (
                                 <FlexDiv
-                                    className="leaderboard__wrapper__rowBorder"
+                                    className="leaderboard__profile__rowBorder"
                                     style={{
-                                        flex: 1,
-                                        background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                                        border: '1px solid transparent',
-                                        borderRadius: 23,
-                                        marginBottom: 16,
                                         height: 269,
                                     }}
                                 >
                                     <FlexDivColumnCentered
-                                        className="white"
+                                        className="white leaderboard__profile__rowBackground"
                                         style={{
-                                            flexGrow: 1,
-                                            alignSelf: 'center',
                                             paddingLeft: 15,
-                                            background: '#04045A',
                                             fontSize: 31,
                                             borderRadius: 23,
                                             height: '100%',
@@ -351,7 +338,6 @@ const Profile: React.FC<any> = () => {
                                             style={{
                                                 alignSelf: 'center',
                                                 paddingLeft: 15,
-                                                fontSize: 31,
                                             }}
                                         >
                                             {t('options.leaderboard.profile.no-transactions')}

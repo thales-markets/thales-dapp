@@ -13,35 +13,31 @@ import ReactCountryFlag from 'react-country-flag';
 import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import { buildOptionsMarketLink } from 'utils/routes';
+import { COLORS } from 'constants/ui';
 
 type UsersTradesProps = {
     usersTrades: UserTrade[];
     market: any;
 };
 
+const getCellColor = (type: string) => {
+    switch (type) {
+        case 'buy':
+            return COLORS.BUY;
+        case 'sell':
+            return COLORS.SELL;
+        default:
+            return COLORS.WHITE;
+    }
+};
+
 const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
     const { t } = useTranslation();
     const [showAll, setShowAll] = useState<boolean>(false);
-    console.log(usersTrades);
+
     return (
-        <FlexDiv
-            style={{
-                flex: 1,
-                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                border: '1px solid transparent',
-                borderRadius: 23,
-                marginBottom: 16,
-            }}
-        >
-            <FlexDivColumnCentered
-                style={{
-                    flexGrow: 1,
-                    alignItems: 'center',
-                    background: '#04045A',
-                    borderBottomLeftRadius: 23,
-                    borderTopLeftRadius: 23,
-                }}
-            >
+        <FlexDiv className="leaderboard__profile__rowBorder">
+            <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
                 <DisplayContentsAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
@@ -50,11 +46,13 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 >
                     {market.customMarket ? (
                         <>
-                            <ReactCountryFlag
-                                countryCode={countryToCountryCode(market.country as any)}
-                                style={{ width: 100, height: 100, marginRight: 0 }}
-                                svg
-                            />
+                            {countryToCountryCode(market.country as any) && (
+                                <ReactCountryFlag
+                                    countryCode={countryToCountryCode(market.country as any)}
+                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    svg
+                                />
+                            )}
                             {!countryToCountryCode(market.country as any) && (
                                 <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
                             )}
@@ -72,16 +70,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     )}
                 </DisplayContentsAnchor>
             </FlexDivColumnCentered>
-            <FlexDivColumnCentered
-                className="text-ms"
-                style={{
-                    flexGrow: 8,
-                    paddingTop: 36,
-                    background: '#04045A',
-                    borderBottomRightRadius: 23,
-                    borderTopRightRadius: 23,
-                }}
-            >
+            <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
                         {t('options.leaderboard.profile.markets.strike-price')}
@@ -98,14 +87,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
                 </Row>
-                <Row
-                    className="text-ms"
-                    style={{
-                        borderBottom: '1px solid',
-                        borderImage: 'linear-gradient(to right, #748BC6 95%, #04045A 5%) 100% 1',
-                        marginTop: 36,
-                    }}
-                >
+                <Row className="text-ms leaderboard__profile__rowBackground__columns">
                     <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.trades.type')}
                     </Text>
@@ -121,7 +103,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 </Row>
                 {!showAll && (
                     <Row className="text-m">
-                        <Text style={{ flex: 1 }}>{usersTrades[0].type}</Text>
+                        <Text style={{ flex: 1, color: getCellColor(usersTrades[0].type) }}>{usersTrades[0].type}</Text>
                         <Text style={{ flex: 1 }}>
                             {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[usersTrades[0].side], usersTrades[0].amount)}
                         </Text>
@@ -133,7 +115,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     {showAll &&
                         usersTrades?.map((trade, index) => (
                             <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 1 }}>{trade.type}</Text>
+                                <Text style={{ flex: 1, color: getCellColor(trade.type) }}>{trade.type}</Text>
                                 <Text style={{ flex: 1 }}>
                                     {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[trade.side], trade.amount)}
                                 </Text>
@@ -144,14 +126,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 </RowScrollable>
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered
-                        style={{
-                            flexGrow: 1,
-                            alignItems: 'center',
-                            flex: 0,
-                            height: 72,
-                        }}
-                    >
+                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                         {usersTrades.length > 1 && (
                             <Button
                                 className="primary"

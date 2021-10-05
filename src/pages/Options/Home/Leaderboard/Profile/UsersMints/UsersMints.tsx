@@ -12,6 +12,7 @@ import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import ReactCountryFlag from 'react-country-flag';
+import '../media.scss';
 
 type UsersMintsProps = {
     usersMints: any[];
@@ -23,24 +24,8 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
     const [showAll, setShowAll] = useState<boolean>(false);
 
     return (
-        <FlexDiv
-            style={{
-                flex: 1,
-                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                border: '1px solid transparent',
-                borderRadius: 23,
-                marginBottom: 16,
-            }}
-        >
-            <FlexDivColumnCentered
-                style={{
-                    flexGrow: 1,
-                    alignItems: 'center',
-                    background: '#04045A',
-                    borderBottomLeftRadius: 23,
-                    borderTopLeftRadius: 23,
-                }}
-            >
+        <FlexDiv className="leaderboard__profile__rowBorder">
+            <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
                 <DisplayContentsAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
@@ -49,11 +34,13 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 >
                     {market.customMarket ? (
                         <>
-                            <ReactCountryFlag
-                                countryCode={countryToCountryCode(market.country as any)}
-                                style={{ width: 100, height: 100, marginRight: 0 }}
-                                svg
-                            />
+                            {countryToCountryCode(market.country as any) && (
+                                <ReactCountryFlag
+                                    countryCode={countryToCountryCode(market.country as any)}
+                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    svg
+                                />
+                            )}
                             {!countryToCountryCode(market.country as any) && (
                                 <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
                             )}
@@ -71,16 +58,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     )}
                 </DisplayContentsAnchor>
             </FlexDivColumnCentered>
-            <FlexDivColumnCentered
-                className="text-ms"
-                style={{
-                    flexGrow: 8,
-                    paddingTop: 36,
-                    background: '#04045A',
-                    borderBottomRightRadius: 23,
-                    borderTopRightRadius: 23,
-                }}
-            >
+            <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>
                     <Text className="bold" style={{ flex: 2 }}>
                         {t('options.leaderboard.profile.markets.strike-price')}
@@ -97,14 +75,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
                 </Row>
-                <Row
-                    className="text-ms"
-                    style={{
-                        borderBottom: '1px solid',
-                        borderImage: 'linear-gradient(to right, #748BC6 95%, #04045A 5%) 100% 1',
-                        marginTop: 36,
-                    }}
-                >
+                <Row className="text-ms leaderboard__profile__rowBackground__columns">
                     <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
@@ -130,14 +101,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
 
                 <Row>
                     <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered
-                        style={{
-                            flexGrow: 1,
-                            alignItems: 'center',
-                            flex: 0,
-                            height: 72,
-                        }}
-                    >
+                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                         {usersMints.length > 1 && (
                             <Button
                                 className="primary"

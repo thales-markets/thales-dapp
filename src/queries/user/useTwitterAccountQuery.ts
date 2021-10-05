@@ -14,7 +14,6 @@ const useTwitterAccountQuery = (walletAddress: string, options?: UseQueryOptions
             const baseUrl = 'https://api.thales.market/twitter/' + walletAddress.toLowerCase();
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            console.log(result);
 
             return result;
         },
