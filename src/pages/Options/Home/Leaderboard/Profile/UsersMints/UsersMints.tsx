@@ -3,16 +3,23 @@ import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { getSynthName } from 'utils/snxJSConnector';
+import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import ReactCountryFlag from 'react-country-flag';
 import '../media.scss';
+import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { ethers } from 'ethers';
+import { RootState } from 'redux/rootReducer';
+import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import { OptionsMarketInfo } from 'types/options';
 
 type UsersMintsProps = {
     usersMints: any[];
@@ -21,7 +28,34 @@ type UsersMintsProps = {
 
 const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
     const { t } = useTranslation();
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [showAll, setShowAll] = useState<boolean>(false);
+    const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
+
+    const marketQuery = useBinaryOptionsMarketQuery(market.address, {
+        enabled: isAppReady,
+    });
+
+    useEffect(() => {
+        if (marketQuery.isSuccess && marketQuery.data) {
+            if (marketQuery.data.customMarket) {
+                const sportFeedContract = new ethers.Contract(
+                    marketQuery.data.oracleAdress,
+                    sportFeedOracleContract.abi,
+                    (snxJSConnector as any).provider
+                );
+                Promise.all([
+                    sportFeedContract.targetName(),
+                    sportFeedContract.eventName(),
+                    sportFeedContract.targetOutcome(),
+                ]).then((data) => {
+                    setOptionsMarket({ ...marketQuery.data, country: data[0], eventName: data[1], outcome: data[2] });
+                });
+            } else {
+                setOptionsMarket(marketQuery.data);
+            }
+        }
+    }, [marketQuery.isSuccess]);
 
     return (
         <FlexDiv className="leaderboard__profile__rowBorder">
@@ -34,15 +68,15 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 >
                     {market.customMarket ? (
                         <>
-                            {countryToCountryCode(market.country as any) && (
+                            {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
-                                    countryCode={countryToCountryCode(market.country as any)}
+                                    countryCode={countryToCountryCode(optionsMarket?.country as string)}
                                     style={{ width: 100, height: 100, marginRight: 0 }}
                                     svg
                                 />
                             )}
-                            {!countryToCountryCode(market.country as any) && (
-                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                            {!countryToCountryCode(optionsMarket?.country as string) && (
+                                <CustomIcon src={eventToIcon(optionsMarket?.eventName as string)}></CustomIcon>
                             )}
                             {market.country}
                         </>
