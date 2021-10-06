@@ -283,11 +283,18 @@ const LeaderboardPage: React.FC<any> = () => {
                                             style={{
                                                 height: getHeight(leader, true),
                                                 fontSize: getFontSizeByRank(leader.rank),
+                                                fontWeight: 'bold',
                                             }}
                                         >
                                             {(leader as any).rank}
                                         </StyledTableCell>
-                                        <StyledTableCell>{'Your current rank'}</StyledTableCell>
+                                        <StyledTableCell
+                                            style={{
+                                                fontWeight: 'bold',
+                                            }}
+                                        >
+                                            {'Your current rank'}
+                                        </StyledTableCell>
                                         <StyledTableCell>{leader.trades}</StyledTableCell>
                                         <StyledTableCell>
                                             {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
@@ -412,7 +419,7 @@ export const StyledTableCell = withStyles(() => ({
         border: 'none',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: '14px',
+        fontSize: '20px',
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#b8c6e5',
@@ -422,8 +429,8 @@ export const StyledTableCell = withStyles(() => ({
         borderTop: '1px solid #CA91DC',
         borderBottom: '1px solid #6AC1D5',
         textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: '14px',
+        fontWeight: 'normal',
+        fontSize: '20px',
         lineHeight: '24px',
         letterSpacing: ' 0.25px',
         color: '#F6F6FE',
@@ -448,12 +455,12 @@ const getFontSizeByRank = (rank: number) => {
 
 const getHeight = (leader: any, yourRank?: boolean) => {
     if (yourRank) {
-        return 80;
+        return 60;
     }
     switch (leader.rank) {
         case 1:
-            return 160;
+            return 120;
         default:
-            return 80;
+            return 60;
     }
 };

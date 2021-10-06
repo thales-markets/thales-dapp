@@ -121,13 +121,13 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
                 </Row>
                 <Row className="text-ms leaderboard__profile__rowBackground__columns">
-                    <Text className="bold" style={{ flex: 1 }}>
+                    <Text className="bold" style={{ flex: 1.33 }}>
                         {t('options.leaderboard.profile.trades.type')}
                     </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
+                    <Text className="bold" style={{ flex: 1.33 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
+                    <Text className="bold" style={{ flex: 1.33 }}>
                         {t('options.leaderboard.profile.trades.price')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
@@ -136,13 +136,15 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 </Row>
                 {!showAll && (
                     <Row className="text-m" style={usersTrades.length === 1 ? { paddingBottom: 16 } : {}}>
-                        <Text style={{ flex: 1, color: getCellColor(usersTrades[0].type) }}>
+                        <Text style={{ flex: 1.33, color: getCellColor(usersTrades[0].type) }}>
                             {t(`options.leaderboard.profile.common.${usersTrades[0].type}`)}
                         </Text>
-                        <Text style={{ flex: 1 }}>
+                        <Text style={{ flex: 1.33 }}>
                             {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[usersTrades[0].side], usersTrades[0].amount)}
                         </Text>
-                        <Text style={{ flex: 1 }}>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, usersTrades[0].price)}</Text>
+                        <Text style={{ flex: 1.33 }}>
+                            {formatCurrencyWithKey(SYNTHS_MAP.sUSD, usersTrades[0].price)}
+                        </Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersTrades[0].timestamp))}</Text>
                     </Row>
                 )}
@@ -150,13 +152,15 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     {showAll &&
                         usersTrades?.map((trade, index) => (
                             <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 1, color: getCellColor(trade.type) }}>
+                                <Text style={{ flex: 1.33, color: getCellColor(trade.type) }}>
                                     {t(`options.leaderboard.profile.common.${trade.type}`)}
                                 </Text>
-                                <Text style={{ flex: 1 }}>
+                                <Text style={{ flex: 1.33 }}>
                                     {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[trade.side], trade.amount)}
                                 </Text>
-                                <Text style={{ flex: 1 }}>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, trade.price)}</Text>
+                                <Text style={{ flex: 1.33 }}>
+                                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, trade.price)}
+                                </Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(trade.timestamp))}</Text>
                             </Row>
                         ))}

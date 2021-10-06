@@ -110,7 +110,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
                 </Row>
                 <Row className="text-ms leaderboard__profile__rowBackground__columns">
-                    <Text className="bold" style={{ flex: 1 }}>
+                    <Text className="bold" style={{ flex: 4 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
@@ -119,7 +119,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 </Row>
                 {!showAll && (
                     <Row className="text-m" style={usersMints.length === 1 ? { paddingBottom: 16 } : {}}>
-                        <Text style={{ flex: 1 }}>{usersMints[0].amount}</Text>
+                        <Text style={{ flex: 4 }}>{usersMints[0].amount}</Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersMints[0].timestamp))}</Text>
                     </Row>
                 )}
@@ -127,7 +127,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     {showAll &&
                         usersMints?.map((mint, index) => (
                             <Row className="text-m" key={index} style={{ width: '106.5%' }}>
-                                <Text style={{ flex: 1 }}>{mint.amount}</Text>
+                                <Text style={{ flex: 4 }}>{mint.amount}</Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(mint.timestamp))}</Text>
                             </Row>
                         ))}
