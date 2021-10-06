@@ -13,7 +13,7 @@ import { Background, Wrapper } from 'theme/common';
 import MarketHeader from './MarketHeader';
 import { PHASE } from 'constants/options';
 import ROUTES from 'constants/routes';
-import useExchangeRatesMarketDataQuery from '../../../queries/rates/useExchangeRatesMarketDataQuery';
+import useExchangeRatesQuery from '../../../queries/rates/useExchangeRatesQuery';
 import { getIsAppReady } from '../../../redux/modules/app';
 import { fetchOrders, openOrdersMapCache } from '../../../queries/options/fetchMarketOrders';
 import { useLocation } from 'react-router-dom';
@@ -26,6 +26,8 @@ export const Home: React.FC = () => {
     const location = useLocation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
+    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const { synthsMap } = snxJSConnector;
     const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
     const optionsMarkets = useMemo(() => {
@@ -37,11 +39,6 @@ export const Home: React.FC = () => {
         }
         return [];
     }, [marketsQuery, synthsMap, openOrdersMap]);
-
-    const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
-        enabled: isAppReady && optionsMarkets.length > 0,
-    });
-    const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
     const hotMarkets = useMemo(
         () =>

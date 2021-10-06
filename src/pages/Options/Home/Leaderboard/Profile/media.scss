@@ -1,0 +1,51 @@
+.leaderboard {
+    width: 100%;
+    &__profile {
+        margin: 0 auto;
+        width: 100%;
+        min-width: 1300px;
+        grid-column: 1/-1;
+
+        &__filter {
+            width: auto;
+            margin: 24px 10px 10px 0px !important;
+        }
+
+        &__rowBorder {
+            flex: 1 1 0%;
+            background: linear-gradient(#ca91dc, #6ac1d5);
+            border: 1px solid transparent;
+            border-radius: 23px;
+            margin-bottom: 16px;
+        }
+
+        &__rowBackground {
+            flex-grow: 1;
+            background: #04045a !important;
+            &--left {
+                border-bottom-left-radius: 23px;
+                border-top-left-radius: 23px;
+                align-items: center;
+            }
+            &--right {
+                flex-grow: 8 !important;
+                padding-top: 36px;
+                border-bottom-right-radius: 23px;
+                border-top-right-radius: 23px;
+            }
+
+            &__columns {
+                border-bottom: 1px solid;
+                border-image: linear-gradient(to right, #748bc6 95%, #04045a 5%) 100% 1;
+                margin-top: 36px;
+            }
+
+            &__buttonContainer {
+                flex-grow: 1;
+                align-items: center;
+                flex: 0;
+                height: 72px;
+            }
+        }
+    }
+}
