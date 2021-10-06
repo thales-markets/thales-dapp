@@ -220,7 +220,7 @@ const LeaderboardPage: React.FC<any> = () => {
                         borderSpacing: '0px 8px',
                     }}
                 >
-                    <TableHead className="leaderboard__columns" style={{ textTransform: 'uppercase' }}>
+                    <TableHead className="leaderboard__columns" style={{ textTransform: 'uppercase', fontSize: 14 }}>
                         <TableRow>
                             {headCells.map((cell: HeadCell, index) => {
                                 return (
@@ -419,7 +419,7 @@ export const StyledTableCell = withStyles(() => ({
         border: 'none',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: '20px',
+        fontSize: '14px',
         lineHeight: '16px',
         letterSpacing: ' 0.5px',
         color: '#b8c6e5',
