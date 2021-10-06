@@ -58,7 +58,7 @@ const Profile: React.FC<any> = () => {
         displayNamesQuery,
     ]);
 
-    const profiles = profilesQuery.data ? profilesQuery.data.profiles : new Map();
+    const profiles = useMemo(() => (profilesQuery.data ? profilesQuery.data.profiles : new Map()), [profilesQuery]);
 
     const displayNamesAndAdressesOptions = useMemo(() => {
         const options: any[] = [];
@@ -112,7 +112,8 @@ const Profile: React.FC<any> = () => {
         profile?.mints.map((mint: any) => {
             if (mintsMap.get(mint.market.address)) {
                 const txsPerMarket = mintsMap.get(mint.market.address);
-                if (txsPerMarket.filter((tx: any) => tx.hash === mint.tx.hash).lenght === 0) {
+                const txHashes = txsPerMarket.map((tx: any) => tx.hash);
+                if (txHashes.filter((hash: string) => hash === mint.tx.hash).length === 0) {
                     txsPerMarket.push(mint.tx);
                     mintsMap.set(mint.market.address, txsPerMarket);
                 }
@@ -121,7 +122,7 @@ const Profile: React.FC<any> = () => {
             }
         });
         return mintsMap;
-    }, [userFilter]);
+    }, [userFilter, profilesQuery]);
 
     const extractTradesProfileData = useMemo(() => {
         const tradesMap = new Map();
@@ -135,7 +136,7 @@ const Profile: React.FC<any> = () => {
             }
         });
         return tradesMap;
-    }, [userFilter]);
+    }, [userFilter, profilesQuery]);
 
     const extractExercisesProfileData = useMemo(() => {
         const exercisesMap = new Map();
@@ -150,7 +151,7 @@ const Profile: React.FC<any> = () => {
         });
 
         return exercisesMap;
-    }, [userFilter]);
+    }, [userFilter, profilesQuery]);
 
     const extractUnclaimedProfileData = useMemo(() => {
         const unclaimedMap = new Map();
@@ -165,7 +166,7 @@ const Profile: React.FC<any> = () => {
         });
 
         return unclaimedMap;
-    }, [userFilter]);
+    }, [userFilter, profilesQuery]);
 
     const [page, setPage] = useState(0);
 
@@ -226,6 +227,7 @@ const Profile: React.FC<any> = () => {
             default:
                 data = [];
         }
+
         return data.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [rowsPerPage, memoizedPage, userFilter, filter, profiles]);
 
@@ -318,32 +320,34 @@ const Profile: React.FC<any> = () => {
                         </TableHead>
                         <TableBody>
                             {profileData.length === 0 && (
-                                <FlexDiv
-                                    className="leaderboard__profile__rowBorder"
-                                    style={{
-                                        height: 269,
-                                    }}
-                                >
-                                    <FlexDivColumnCentered
-                                        className="white leaderboard__profile__rowBackground"
+                                <StyledTableRow>
+                                    <FlexDiv
+                                        className="leaderboard__profile__rowBorder"
                                         style={{
-                                            paddingLeft: 15,
-                                            fontSize: 31,
-                                            borderRadius: 23,
-                                            height: '100%',
+                                            height: 269,
                                         }}
                                     >
-                                        <Text
-                                            className="bold white"
+                                        <FlexDivColumnCentered
+                                            className="white leaderboard__profile__rowBackground"
                                             style={{
-                                                alignSelf: 'center',
                                                 paddingLeft: 15,
+                                                fontSize: 31,
+                                                borderRadius: 23,
+                                                height: '100%',
                                             }}
                                         >
-                                            {t('options.leaderboard.profile.no-transactions')}
-                                        </Text>
-                                    </FlexDivColumnCentered>
-                                </FlexDiv>
+                                            <Text
+                                                className="bold white"
+                                                style={{
+                                                    alignSelf: 'center',
+                                                    paddingLeft: 15,
+                                                }}
+                                            >
+                                                {t('options.leaderboard.profile.no-transactions')}
+                                            </Text>
+                                        </FlexDivColumnCentered>
+                                    </FlexDiv>
+                                </StyledTableRow>
                             )}
                             {filter === Filters.Mints &&
                                 profileData.map((key, index) => {

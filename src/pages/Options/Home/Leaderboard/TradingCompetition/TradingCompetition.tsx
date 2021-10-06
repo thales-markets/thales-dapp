@@ -286,7 +286,7 @@ const TradingCompetition: React.FC<any> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {sortedData
+                        {leaderboardData
                             .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
                             .map((leader: any, index: any) => {
                                 return (
@@ -297,7 +297,13 @@ const TradingCompetition: React.FC<any> = () => {
                                                 'linear-gradient(90deg, #3936C7 -10.96%, #2D83D2 46.31%, #23A5DD 103.01%, #35DADB 127.72%)',
                                         }}
                                     >
-                                        <StyledTableCell>{(leader as any).rank}</StyledTableCell>
+                                        <StyledTableCell
+                                            style={{
+                                                fontSize: getFontSizeByRank(2),
+                                            }}
+                                        >
+                                            {(leader as any).rank}
+                                        </StyledTableCell>
                                         <StyledTableCell>
                                             {twitterAccountsData.filter(
                                                 (account: any) => account[0] === leader.walletAddress.toLowerCase()
