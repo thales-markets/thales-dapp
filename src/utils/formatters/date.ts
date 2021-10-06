@@ -54,6 +54,19 @@ export const formattedDuration = (
     return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
 };
 
+export const formattedDurationFull = (
+    duration: Duration,
+    dateTimeTranslationMap: any,
+    delimiter = ' ',
+    firstTwo = false
+) => {
+    const formatted = [];
+    formatted.push(`${duration.days}${dateTimeTranslationMap['days-short']}`);
+    formatted.push(`${duration.hours}${dateTimeTranslationMap['hours-short']}`);
+    formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
+    return (firstTwo ? formatted.slice(0, 2) : formatted).join(delimiter);
+};
+
 export const convertUTCToLocalDate = (date: Date) => {
     return new Date(
         date.getUTCFullYear(),
