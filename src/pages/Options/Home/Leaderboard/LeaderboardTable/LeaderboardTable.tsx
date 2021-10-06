@@ -281,7 +281,8 @@ const LeaderboardPage: React.FC<any> = () => {
                                     >
                                         <StyledTableCell
                                             style={{
-                                                fontSize: getFontSizeByRank(2),
+                                                height: getHeight(leader, true),
+                                                fontSize: getFontSizeByRank(leader.rank),
                                             }}
                                         >
                                             {(leader as any).rank}
@@ -445,15 +446,14 @@ const getFontSizeByRank = (rank: number) => {
     return rank === 1 ? 96 : 48;
 };
 
-const getHeight = (leader: any) => {
+const getHeight = (leader: any, yourRank?: boolean) => {
+    if (yourRank) {
+        return 80;
+    }
     switch (leader.rank) {
         case 1:
             return 160;
-        case 2:
-            return 130;
-        case 3:
-            return 100;
         default:
-            return 75;
+            return 80;
     }
 };

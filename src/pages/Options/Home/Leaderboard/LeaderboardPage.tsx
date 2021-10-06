@@ -131,7 +131,7 @@ const LeaderboardPage: React.FC = () => {
                         </Button>
                     )}
                 </FlexDivColumn>
-                <FlexDivColumn>
+                <FlexDivColumn style={{ width: '100%' }}>
                     <LeaderboardTitle className="pale-grey">{t('options.leaderboard.page-title')}</LeaderboardTitle>
                     <InfoContainer>
                         <FlexDiv

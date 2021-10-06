@@ -299,7 +299,8 @@ const TradingCompetition: React.FC<any> = () => {
                                     >
                                         <StyledTableCell
                                             style={{
-                                                fontSize: getFontSizeByRank(2),
+                                                height: getHeight(leader, true),
+                                                fontSize: getFontSizeByRank(leader.rank),
                                             }}
                                         >
                                             {(leader as any).rank}
@@ -517,7 +518,10 @@ export const StyledTableCell = withStyles(() => ({
 
 export default TradingCompetition;
 
-const getHeight = (leader: any) => {
+const getHeight = (leader: any, yourRank?: boolean) => {
+    if (yourRank) {
+        return 80;
+    }
     switch (leader.rank) {
         case 1:
             return 160;
