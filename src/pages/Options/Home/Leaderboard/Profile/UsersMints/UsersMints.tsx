@@ -71,7 +71,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                             {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
                                     countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    style={{ width: 50, height: 50, marginRight: 0 }}
                                     svg
                                 />
                             )}
@@ -84,9 +84,9 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                         <>
                             <CurrencyIcon
                                 currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                                synthIconStyle={{ width: 50, height: 50, marginRight: 0 }}
                             />
-                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoName style={{ marginTop: 8 }}>{getSynthName(market.currencyKey)}</CryptoName>
                             <CryptoKey>{market.asset}</CryptoKey>
                         </>
                     )}
@@ -118,7 +118,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     </Text>
                 </Row>
                 {!showAll && (
-                    <Row className="text-m">
+                    <Row className="text-m" style={usersMints.length === 1 ? { paddingBottom: 16 } : {}}>
                         <Text style={{ flex: 1 }}>{usersMints[0].amount}</Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersMints[0].timestamp))}</Text>
                     </Row>
@@ -133,10 +133,10 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                         ))}
                 </RowScrollable>
 
-                <Row>
-                    <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
-                        {usersMints.length > 1 && (
+                {usersMints.length > 1 && (
+                    <Row>
+                        <Text style={{ flex: 3 }}></Text>
+                        <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                             <Button
                                 className="primary"
                                 style={{ background: 'transparent', padding: '24px 35px' }}
@@ -146,11 +146,11 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                                     ? t('options.leaderboard.profile.common.view-less')
                                     : t('options.leaderboard.profile.common.view-more')}
                             </Button>
-                        )}
-                    </FlexDivColumnCentered>
+                        </FlexDivColumnCentered>
 
-                    <Text style={{ flex: 4 }}></Text>
-                </Row>
+                        <Text style={{ flex: 4 }}></Text>
+                    </Row>
+                )}
             </FlexDivColumnCentered>
         </FlexDiv>
     );

@@ -81,7 +81,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
                                     countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    style={{ width: 50, height: 50, marginRight: 0 }}
                                     svg
                                 />
                             )}
@@ -94,9 +94,9 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                         <>
                             <CurrencyIcon
                                 currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                                synthIconStyle={{ width: 50, height: 50, marginRight: 0 }}
                             />
-                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoName style={{ marginTop: 8 }}>{getSynthName(market.currencyKey)}</CryptoName>
                             <CryptoKey>{market.asset}</CryptoKey>
                         </>
                     )}
@@ -130,7 +130,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             : t('options.leaderboard.profile.common.short')}
                     </Text>
                 </Row>
-                <Row className="text-m">
+                <Row className="text-m" style={{ paddingBottom: 16 }}>
                     <Text style={{ flex: 1, color: getCellColor(market.result) }}>{market.result.toUpperCase()}</Text>
                     <Text style={{ flex: 1, paddingLeft: 16 }}>
                         {market.result === 'long'
@@ -149,12 +149,6 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             </a>
                         </Button>
                     </FlexDivColumnCentered>
-                </Row>
-                <Row>
-                    <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer"></FlexDivColumnCentered>
-
-                    <Text style={{ flex: 4 }}></Text>
                 </Row>
             </FlexDivColumnCentered>
         </FlexDiv>

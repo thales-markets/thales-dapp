@@ -82,7 +82,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
                                     countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    style={{ width: 50, height: 50, marginRight: 0 }}
                                     svg
                                 />
                             )}
@@ -95,9 +95,9 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                         <>
                             <CurrencyIcon
                                 currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                                synthIconStyle={{ width: 50, height: 50, marginRight: 0 }}
                             />
-                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoName style={{ marginTop: 8 }}>{getSynthName(market.currencyKey)}</CryptoName>
                             <CryptoKey>{market.asset}</CryptoKey>
                         </>
                     )}
@@ -135,7 +135,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     </Text>
                 </Row>
                 {!showAll && (
-                    <Row className="text-m">
+                    <Row className="text-m" style={usersTrades.length === 1 ? { paddingBottom: 16 } : {}}>
                         <Text style={{ flex: 1, color: getCellColor(usersTrades[0].type) }}>
                             {t(`options.leaderboard.profile.common.${usersTrades[0].type}`)}
                         </Text>
@@ -161,10 +161,10 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             </Row>
                         ))}
                 </RowScrollable>
-                <Row>
-                    <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
-                        {usersTrades.length > 1 && (
+                {usersTrades.length > 1 && (
+                    <Row>
+                        <Text style={{ flex: 3 }}></Text>
+                        <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                             <Button
                                 className="primary"
                                 style={{ background: 'transparent', padding: '24px 35px' }}
@@ -174,11 +174,11 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                                     ? t('options.leaderboard.profile.common.view-less')
                                     : t('options.leaderboard.profile.common.view-more')}
                             </Button>
-                        )}
-                    </FlexDivColumnCentered>
+                        </FlexDivColumnCentered>
 
-                    <Text style={{ flex: 4 }}></Text>
-                </Row>
+                        <Text style={{ flex: 4 }}></Text>
+                    </Row>
+                )}
             </FlexDivColumnCentered>
         </FlexDiv>
     );

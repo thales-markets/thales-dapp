@@ -81,7 +81,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
                                     countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 100, height: 100, marginRight: 0 }}
+                                    style={{ width: 50, height: 50, marginRight: 0 }}
                                     svg
                                 />
                             )}
@@ -94,9 +94,9 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                         <>
                             <CurrencyIcon
                                 currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 100, height: 100, marginRight: 0 }}
+                                synthIconStyle={{ width: 50, height: 50, marginRight: 0 }}
                             />
-                            <CryptoName>{getSynthName(market.currencyKey)}</CryptoName>
+                            <CryptoName style={{ marginTop: 8 }}>{getSynthName(market.currencyKey)}</CryptoName>
                             <CryptoKey>{market.asset}</CryptoKey>
                         </>
                     )}
@@ -131,7 +131,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     </Text>
                 </Row>
                 {!showAll && (
-                    <Row className="text-m">
+                    <Row className="text-m" style={usersExercises.length === 1 ? { paddingBottom: 16 } : {}}>
                         <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersExercises[0].amount)}</Text>
                         <Text style={{ flex: 2, color: getCellColor(usersExercises[0].side) }}>
                             {usersExercises[0].side.toUpperCase()}
@@ -151,10 +151,10 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             </Row>
                         ))}
                 </RowScrollable>
-                <Row>
-                    <Text style={{ flex: 3 }}></Text>
-                    <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
-                        {usersExercises.length > 1 && (
+                {usersExercises.length > 1 && (
+                    <Row>
+                        <Text style={{ flex: 3 }}></Text>
+                        <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                             <Button
                                 className="primary"
                                 style={{ background: 'transparent', padding: '24px 35px' }}
@@ -164,11 +164,11 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                                     ? t('options.leaderboard.profile.common.view-less')
                                     : t('options.leaderboard.profile.common.view-more')}
                             </Button>
-                        )}
-                    </FlexDivColumnCentered>
+                        </FlexDivColumnCentered>
 
-                    <Text style={{ flex: 4 }}></Text>
-                </Row>
+                        <Text style={{ flex: 4 }}></Text>
+                    </Row>
+                )}
             </FlexDivColumnCentered>
         </FlexDiv>
     );

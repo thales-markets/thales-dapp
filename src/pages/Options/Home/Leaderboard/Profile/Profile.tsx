@@ -307,7 +307,7 @@ const Profile: React.FC<any> = () => {
                     component={Paper}
                 >
                     <Table aria-label="customized table">
-                        <TableHead>
+                        <TableHead style={{ display: 'none' }}>
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (
@@ -525,7 +525,6 @@ export const FilterButton = styled.button`
 `;
 
 const DataWrapper = styled(FlexDivColumn)`
-    padding-bottom: 20px;
     border-bottom-right-radius: 23px;
     border-bottom-left-radius: 23px;
 `;
