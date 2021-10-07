@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useProfilesQuery from 'queries/options/useProfilesQuery';
-import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -37,7 +36,11 @@ export enum Filters {
     Unclaimed = 'unclaimed',
 }
 
-const Profile: React.FC<any> = () => {
+type ProfileProps = {
+    displayNamesMap: Map<string, string>;
+};
+
+const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -49,14 +52,6 @@ const Profile: React.FC<any> = () => {
     const profilesQuery = useProfilesQuery(networkId, {
         enabled: isAppReady,
     });
-
-    const displayNamesQuery = useUsersDisplayNamesQuery({
-        enabled: isAppReady,
-    });
-
-    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
-        displayNamesQuery,
-    ]);
 
     const profiles = useMemo(() => (profilesQuery.data ? profilesQuery.data.profiles : new Map()), [profilesQuery]);
 
@@ -70,7 +65,7 @@ const Profile: React.FC<any> = () => {
 
     const invertedDisplayNamesMap = useMemo(() => {
         const invertedMap = new Map();
-        for (const [key, value] of displayNamesMap.entries()) {
+        for (const [key, value] of (displayNamesMap as any).entries()) {
             invertedMap.set(value, key);
         }
         return invertedMap;
@@ -153,9 +148,19 @@ const Profile: React.FC<any> = () => {
         return exercisesMap;
     }, [userFilter, profilesQuery]);
 
+    const filterUnclaimedData = (unclaimed: any) => {
+        const result = unclaimed.market.result;
+        switch (result) {
+            case 'long':
+                return parseFloat(unclaimed.long) !== 0;
+            case 'short':
+                return parseFloat(unclaimed.short) !== 0;
+        }
+    };
+
     const extractUnclaimedProfileData = useMemo(() => {
         const unclaimedMap = new Map();
-        profile?.unclaimed.map((unclaimed: any) => {
+        profile?.unclaimed.filter(filterUnclaimedData).map((unclaimed: any) => {
             if (unclaimedMap.get(unclaimed.market.address)) {
                 const txsPerMarket = unclaimedMap.get(unclaimed.market.address);
                 txsPerMarket.push(unclaimed);
@@ -209,7 +214,7 @@ const Profile: React.FC<any> = () => {
         return page;
     }, [page, numberOfPages, filter, userFilter]);
 
-    const profileData = useMemo(() => {
+    const profileDataMarketKeys = useMemo(() => {
         let data;
         switch (filter) {
             case Filters.Mints:
@@ -319,7 +324,7 @@ const Profile: React.FC<any> = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {profileData.length === 0 && (
+                            {profileDataMarketKeys.length === 0 && (
                                 <StyledTableRow>
                                     <FlexDiv
                                         className="leaderboard__profile__rowBorder"
@@ -333,7 +338,8 @@ const Profile: React.FC<any> = () => {
                                                 paddingLeft: 15,
                                                 fontSize: 31,
                                                 borderRadius: 23,
-                                                height: '100%',
+                                                height: '99.3%',
+                                                margin: 1,
                                             }}
                                         >
                                             <Text
@@ -350,7 +356,7 @@ const Profile: React.FC<any> = () => {
                                 </StyledTableRow>
                             )}
                             {filter === Filters.Mints &&
-                                profileData.map((key, index) => {
+                                profileDataMarketKeys.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersMints
@@ -366,7 +372,7 @@ const Profile: React.FC<any> = () => {
                                     );
                                 })}
                             {filter === Filters.Trades &&
-                                profileData.map((key, index) => {
+                                profileDataMarketKeys.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersTrades
@@ -383,7 +389,7 @@ const Profile: React.FC<any> = () => {
                                 })}
 
                             {filter === Filters.Excercises &&
-                                profileData.map((key, index) => {
+                                profileDataMarketKeys.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersExercises
@@ -400,7 +406,7 @@ const Profile: React.FC<any> = () => {
                                 })}
 
                             {filter === Filters.Unclaimed &&
-                                profileData.map((key, index) => {
+                                profileDataMarketKeys.map((key, index) => {
                                     return (
                                         <StyledTableRow key={index}>
                                             <UsersUnclaimed
@@ -411,18 +417,19 @@ const Profile: React.FC<any> = () => {
                                                         .map((unclaimed: any) => unclaimed.market)[0]
                                                 }
                                                 usersUnclaimed={extractUnclaimedProfileData.get(key)}
+                                                userDisplay={walletAddress.toLowerCase() === displayAddress}
                                             />
                                         </StyledTableRow>
                                     );
                                 })}
                         </TableBody>
-                        {profileData.length !== 0 && (
+                        {profileDataMarketKeys.length !== 0 && (
                             <TableFooter>
                                 <TableRow>
                                     <PaginationWrapper
                                         rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
-                                        count={profileData.length}
+                                        count={profileDataMarketKeys.length}
                                         rowsPerPage={rowsPerPage}
                                         page={memoizedPage}
                                         onPageChange={handleChangePage}

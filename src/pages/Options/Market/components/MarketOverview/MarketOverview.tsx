@@ -64,7 +64,12 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>{optionsMarket.eventName === 'XYZ airdrop claims' ? 'Strike price' : 'Rank'}</Title>
+                        <Title>
+                            {optionsMarket.eventName === 'XYZ airdrop claims' ||
+                            optionsMarket.eventName === 'ETH burned count'
+                                ? 'Strike price'
+                                : 'Rank'}
+                        </Title>
                         <Content fontSize={16}>{optionsMarket.outcome}</Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">

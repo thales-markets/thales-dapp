@@ -17,7 +17,6 @@ import { USD_SIGN } from 'constants/currency';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useLeaderboardQuery, { Leaderboard } from 'queries/options/useLeaderboardQuery';
-import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -39,9 +38,13 @@ enum OrderDirection {
     DESC,
 }
 
+type LeaderboardTableProps = {
+    displayNamesMap: Map<string, string>;
+};
+
 const defaultOrderBy = 4; // Volume
 
-const LeaderboardPage: React.FC<any> = () => {
+const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -54,10 +57,6 @@ const LeaderboardPage: React.FC<any> = () => {
     const leaderboard = leaderboardQuery.data?.leaderboard
         ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
         : [];
-
-    const displayNamesQuery = useUsersDisplayNamesQuery({
-        enabled: isAppReady,
-    });
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
@@ -102,10 +101,6 @@ const LeaderboardPage: React.FC<any> = () => {
         }
         return page;
     }, [page, numberOfPages]);
-
-    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
-        displayNamesQuery,
-    ]);
 
     const sortedData: any = useMemo(() => {
         return leaderboard
@@ -426,8 +421,8 @@ export const StyledTableCell = withStyles(() => ({
         padding: '13px',
     },
     body: {
-        borderTop: '1px solid #CA91DC',
-        borderBottom: '1px solid #6AC1D5',
+        borderTop: '1px solid rgba(140, 114, 184, 0.6)',
+        borderBottom: '1px solid rgba(106, 193, 213, 0.6)',
         textAlign: 'center',
         fontWeight: 'normal',
         fontSize: '20px',
@@ -437,17 +432,29 @@ export const StyledTableCell = withStyles(() => ({
         '&:last-child': {
             borderBottomRightRadius: '23px',
             borderTopRightRadius: '23px !important',
-            borderRight: '1px solid #6AC1D5',
+            borderRight: '1px solid transparent',
+            borderTop: '1px solid transparent',
+            borderBottom: '1px solid transparent',
+            backgroundImage:
+                'linear-gradient(#04045a, #04045a), linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
         },
         '&:first-child': {
             borderBottomLeftRadius: '23px',
             borderTopLeftRadius: '23px',
-            borderLeft: '1px solid #CA91DC',
+            borderLeft: '1px solid transparent',
+            borderTop: '1px solid transparent',
+            borderBottom: '1px solid transparent',
+            backgroundImage:
+                'linear-gradient(#04045a, #04045a), linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
         },
     },
 }))(TableCell);
 
-export default LeaderboardPage;
+export default LeaderboardTable;
 
 const getFontSizeByRank = (rank: number) => {
     return rank === 1 ? 96 : 48;

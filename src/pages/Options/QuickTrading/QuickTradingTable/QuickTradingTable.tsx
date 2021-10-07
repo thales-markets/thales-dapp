@@ -167,10 +167,10 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     const marketHeading = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
         const orderbookSign = optionsMarket.customMarket
             ? optionSide === 'long'
-                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                ? optionsMarket.eventName === 'XYZ airdrop claims' || optionsMarket.eventName === 'ETH burned count'
                     ? '>='
                     : '=='
-                : optionsMarket.eventName === 'XYZ airdrop claims'
+                : optionsMarket.eventName === 'XYZ airdrop claims' || optionsMarket.eventName === 'ETH burned count'
                 ? '<'
                 : '!='
             : optionSide === 'long'

@@ -75,7 +75,6 @@ const LeaderboardPage: React.FC = () => {
             const url = 'https://api.thales.market/auth/' + walletAddress;
             fetch(url).then(async (result) => {
                 if ((await result.text()) === 'true') {
-                    console.log('verify');
                     setAccVerified(true);
                 }
             });
@@ -92,16 +91,13 @@ const LeaderboardPage: React.FC = () => {
         const intervalId = setInterval(async () => {
             attempt = attempt + 1;
             if (attempt > 5) {
-                console.log('clear');
                 clearInterval(intervalId);
             }
             const baseUrl = 'https://api.thales.market/twitter/' + walletAddress;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            console.log(result);
             if (result) {
                 setTwitterAccountData(result);
-                console.log('clear');
                 setAccVerified(true);
                 clearInterval(intervalId);
             }
@@ -132,12 +128,43 @@ const LeaderboardPage: React.FC = () => {
                     )}
                 </FlexDivColumn>
                 <FlexDivColumn style={{ width: '100%' }}>
-                    <LeaderboardTitle className="pale-grey">{t('options.leaderboard.page-title')}</LeaderboardTitle>
+                    {selectedTab === 'leaderboard' && (
+                        <LeaderboardTitle className="pale-grey">
+                            {t('options.leaderboard.leaderboard-title')}
+                        </LeaderboardTitle>
+                    )}
+                    {selectedTab === 'leaderboard' && (
+                        <Text className="text-s ls25 lh24 pale-grey">
+                            {t('options.leaderboard.leaderboard-subtitle')}
+                        </Text>
+                    )}
+                    {selectedTab === 'trading-competition' && (
+                        <LeaderboardTitle className="pale-grey">
+                            {t('options.leaderboard.trading-comp-title')}
+                        </LeaderboardTitle>
+                    )}
+                    {selectedTab === 'trading-competition' && (
+                        <Text className="text-s ls25 lh24 pale-grey">
+                            {t('options.leaderboard.trading-comp-subtitle')}
+                            <StyledLink
+                                href="https://thalesmarket.medium.com/921d0d058f73"
+                                rel="noreferrer"
+                                target="_blank"
+                            >
+                                https://thalesmarket.medium.com/921d0d058f73
+                            </StyledLink>
+                        </Text>
+                    )}
+                    {selectedTab === 'profile' && (
+                        <LeaderboardTitle className="pale-grey">
+                            {t('options.leaderboard.profile-title')}
+                        </LeaderboardTitle>
+                    )}
+
                     <InfoContainer>
                         <FlexDiv
                             style={{
-                                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                                border: '1px solid transparent',
+                                background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
                                 borderRadius: 23,
                                 marginBottom: 16,
                                 flexDirection: 'column',
@@ -149,6 +176,7 @@ const LeaderboardPage: React.FC = () => {
                                     borderTopLeftRadius: 23,
                                     borderTopRightRadius: 23,
                                     height: 50,
+                                    margin: '1px 1px 0 1px',
                                     paddingLeft: 36,
                                     lineHeight: 40,
                                     letterSpacing: 0.15,
@@ -156,7 +184,7 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 18,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
+                                <Text className="bold lh24" style={{ flex: 1 }}>
                                     {t('options.leaderboard.my-info')}:
                                 </Text>
                             </Row>
@@ -165,14 +193,13 @@ const LeaderboardPage: React.FC = () => {
                                     height: 48,
                                     paddingLeft: 36,
                                     lineHeight: 32,
+                                    margin: '0 1px 0 1px',
                                     letterSpacing: 0.35,
                                     paddingTop: 26,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
-                                    {t('options.leaderboard.display-name')}:
-                                </Text>
-                                <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 167 }}>
+                                <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                    {t('options.leaderboard.display-name')}:{' '}
                                     {displayNamesMap.get(walletAddress.toLowerCase().trim())}
                                 </Text>
                             </Row>
@@ -182,23 +209,20 @@ const LeaderboardPage: React.FC = () => {
                                     borderBottomRightRadius: 23,
                                     height: 48,
                                     paddingLeft: 36,
+                                    margin: '0 1px 0 1px',
                                     lineHeight: 32,
                                     letterSpacing: 0.35,
                                     paddingTop: 4,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
-                                    {t('options.leaderboard.address')}:
-                                </Text>
-                                <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 65 }}>
-                                    {walletAddress}
+                                <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                    {t('options.leaderboard.address')}: {walletAddress}
                                 </Text>
                             </Row>
                         </FlexDiv>
                         <FlexDiv
                             style={{
-                                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                                border: '1px solid transparent',
+                                background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
                                 borderRadius: 23,
                                 marginBottom: 16,
                                 flexDirection: 'column',
@@ -211,13 +235,14 @@ const LeaderboardPage: React.FC = () => {
                                     borderTopRightRadius: 23,
                                     height: 50,
                                     paddingLeft: 36,
+                                    margin: '1px 1px 0 1px',
                                     lineHeight: 40,
                                     letterSpacing: 0.15,
                                     fontSize: 20,
                                     paddingTop: 18,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
+                                <Text className="bold lh24" style={{ flex: 1 }}>
                                     {t('options.leaderboard.twitter-account')}
                                 </Text>
                             </Row>
@@ -226,6 +251,7 @@ const LeaderboardPage: React.FC = () => {
                                     borderBottomLeftRadius: 23,
                                     borderBottomRightRadius: 23,
                                     paddingLeft: 36,
+                                    margin: '0 1px 0 1px',
                                     paddingRight: 43,
                                     height: 96,
                                 }}
@@ -274,9 +300,11 @@ const LeaderboardPage: React.FC = () => {
                             ))}
                         </OptionsTabContainer>
                         <WidgetsContainer>
-                            {selectedTab === 'trading-competition' && <TradingCompetition />}
-                            {selectedTab === 'leaderboard' && <LeaderboardTable />}
-                            {selectedTab === 'profile' && <Profile />}
+                            {selectedTab === 'trading-competition' && (
+                                <TradingCompetition displayNamesMap={displayNamesMap} />
+                            )}
+                            {selectedTab === 'leaderboard' && <LeaderboardTable displayNamesMap={displayNamesMap} />}
+                            {selectedTab === 'profile' && <Profile displayNamesMap={displayNamesMap} />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </FlexDivColumn>
@@ -286,7 +314,7 @@ const LeaderboardPage: React.FC = () => {
 };
 
 const TWEET_TEXT = "I'm joining the @Thalesmarket trading competition with address ";
-const TWEET_SUFFIX = '. Let the games begin!';
+const TWEET_SUFFIX = '.%0AWanna jump in? https://thales.market/markets/leaderboard%0ALet the games begin!';
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
@@ -303,7 +331,7 @@ const OptionsTabContainer = styled.div`
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     position: absolute;
     top: 0;
-    left: ${(props) => props.index * 33.3 + '% '};
+    left: ${(props) => props.index * 33 + '% '};
     background: linear-gradient(90deg, #141874, #04045a);
     width: 33.3%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
@@ -365,11 +393,12 @@ const InfoContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
+    margin-top: 24px;
 `;
 
 const LeaderboardTitle = styled(Text)`
     font-size: 39px;
-    padding: 30px;
+    line-height: 72px;
     font-weight: 600;
 `;
 

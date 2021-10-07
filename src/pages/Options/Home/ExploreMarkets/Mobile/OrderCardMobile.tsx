@@ -65,10 +65,10 @@ const OrderCardMobile: React.FC<OrderCardMobileProps> = ({ orders, exchangeRates
     const orderbookSign = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) =>
         optionsMarket.customMarket
             ? optionSide === 'long'
-                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                ? optionsMarket.eventName === 'XYZ airdrop claims' || optionsMarket.eventName === 'ETH burned count'
                     ? '>='
                     : '=='
-                : optionsMarket.eventName === 'XYZ airdrop claims'
+                : optionsMarket.eventName === 'XYZ airdrop claims' || optionsMarket.eventName === 'ETH burned count'
                 ? '<'
                 : '!='
             : optionSide === 'long'
