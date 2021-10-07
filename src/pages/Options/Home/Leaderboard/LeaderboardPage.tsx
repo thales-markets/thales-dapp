@@ -169,10 +169,8 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 26,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
-                                    {t('options.leaderboard.display-name')}:
-                                </Text>
-                                <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 167 }}>
+                                <Text className="bold" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                    {t('options.leaderboard.display-name')}:{' '}
                                     {displayNamesMap.get(walletAddress.toLowerCase().trim())}
                                 </Text>
                             </Row>
@@ -187,11 +185,8 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 4,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
-                                    {t('options.leaderboard.address')}:
-                                </Text>
-                                <Text className="text-m" style={{ flex: 3, letterSpacing: 0.5, paddingRight: 65 }}>
-                                    {walletAddress}
+                                <Text className="bold" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                    {t('options.leaderboard.address')}: {walletAddress}
                                 </Text>
                             </Row>
                         </FlexDiv>
