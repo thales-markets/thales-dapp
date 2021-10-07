@@ -85,7 +85,8 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                     </Text>
                                     <Text className="text-ms pale-grey">
                                         {market.customMarket
-                                            ? market.eventName === 'XYZ airdrop claims'
+                                            ? market.eventName === 'XYZ airdrop claims' ||
+                                              market.eventName === 'ETH burned count'
                                                 ? formatCurrency(market.outcome || 0, 0)
                                                 : market.eventName
                                             : formatCurrencyWithSign(USD_SIGN, market.strikePrice)}

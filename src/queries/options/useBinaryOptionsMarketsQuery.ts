@@ -19,7 +19,6 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
             return Promise.all(
                 optionsMarkets.map(async (currentMarket) => {
                     if (currentMarket.customMarket) {
-                        console.log('I break here');
                         try {
                             const sportFeedContract = new ethers.Contract(
                                 currentMarket.customOracle,
@@ -36,7 +35,6 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                             currentMarket.outcome = data[2];
                             return currentMarket;
                         } catch (e) {
-                            console.log('I got here');
                             const sportFeedContract = new ethers.Contract(
                                 currentMarket.customOracle,
                                 ethBurnedOracleInstance.abi,

@@ -246,8 +246,9 @@ const RetroRewards: React.FC = () => {
                             </GradientText>
                         </FlexDivColumnCentered>
                     </PieChartCenterDiv>
-                    <LearnMore style={{ fontSize: '13px' }}>
+                    <LearnMore top="61%" style={{ fontSize: '13px' }}>
                         <StyledMaterialTooltip
+                            enterTouchDelay={1}
                             arrow={true}
                             title={t('options.earn.snx-stakers.retro-rewards.learn-more-text') as string}
                         >
@@ -308,6 +309,9 @@ const InfoLabel = styled.div`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
+    @media (max-width: 767px) {
+        padding-top: 15px;
+    }
 `;
 
 const InfoContent = styled.div`

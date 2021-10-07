@@ -14,8 +14,13 @@ import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { SummaryContent, SummaryItem, SummaryLabel } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 
+export type GasLimit = {
+    gasLimit: number;
+    label: string;
+};
+
 type NetworkFeesProps = {
-    gasLimit: number | null;
+    gasLimit: number | GasLimit[] | null;
     disabled?: boolean;
 };
 
@@ -41,15 +46,40 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, disabled }) => {
 
     return (
         <>
-            <NetworkFeeSummaryItem>
-                <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
-                <NetworkFeeSummaryContent>
-                    {formatCurrencyWithSign(USD_SIGN, getTransactionPrice(gasPrice, gasLimit, ethRate))}
-                </NetworkFeeSummaryContent>
-            </NetworkFeeSummaryItem>
-            <NetworkFeeSummaryItem>
-                <NetworkFeeSummaryLabel>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
-                <SelectGasMenu gasPrice={gasPrice} disabled={disabled} />
+            {Array.isArray(gasLimit) ? (
+                <>
+                    {gasLimit.map((gas) => (
+                        <div key={gas.label}>
+                            <NetworkFeeSummaryItem key={gas.label}>
+                                <NetworkFeeSummaryLabel>{`${t('common.network-fee-gas')} - ${
+                                    gas.label
+                                }`}</NetworkFeeSummaryLabel>
+                                <NetworkFeeSummaryContent>
+                                    {formatCurrencyWithSign(
+                                        USD_SIGN,
+                                        getTransactionPrice(gasPrice, gas.gasLimit, ethRate)
+                                    )}
+                                </NetworkFeeSummaryContent>
+                            </NetworkFeeSummaryItem>
+                        </div>
+                    ))}
+                </>
+            ) : (
+                <>
+                    <NetworkFeeSummaryItem>
+                        <NetworkFeeSummaryLabel>{t('common.network-fee-gas')}</NetworkFeeSummaryLabel>
+                        <NetworkFeeSummaryContent>
+                            {formatCurrencyWithSign(
+                                USD_SIGN,
+                                getTransactionPrice(gasPrice, gasLimit as number, ethRate)
+                            )}
+                        </NetworkFeeSummaryContent>
+                    </NetworkFeeSummaryItem>
+                </>
+            )}
+            <NetworkFeeSummaryItem key="Gas Price">
+                <NetworkFeeSummaryLabel key={0}>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
+                <SelectGasMenu key={1} gasPrice={gasPrice} disabled={disabled} />
             </NetworkFeeSummaryItem>
         </>
     );
@@ -57,9 +87,6 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, disabled }) => {
 
 const NetworkFeeSummaryItem = styled(SummaryItem)`
     margin-bottom: 10px;
-    &:last-child {
-        margin-top: 10px;
-    }
 `;
 
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`
@@ -74,6 +101,7 @@ const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     }
     @media screen and (max-width: 767px) {
         width: 50%;
+        font-size: 14px;
     }
 `;
 
@@ -90,6 +118,7 @@ const NetworkFeeSummaryContent = styled(SummaryContent)`
     }
     @media screen and (max-width: 767px) {
         text-align: right;
+        font-size: 14px;
     }
 `;
 

@@ -208,6 +208,7 @@
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
             "olympics": "Olympics",
+            "competition": "Trading Competition",
             "long": "Long",
             "short": "Short"
         },
@@ -232,7 +233,8 @@
                 "table": {
                     "view-all-markets": "View all markets",
                     "no-markets-created": "You haven’t created any market yet.",
-                    "no-markets-found": "No markets found."
+                    "no-markets-found": "No markets found.",
+                    "trading-comp": "No markets available at the moment.\n Trading competition will start on Monday, October 11th at 10:00AM UTC.\n For more information click here: "
                 }
             },
             "markets-table": {
@@ -309,7 +311,9 @@
                     "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",
-                    "cancel-confirmation-message": "Unstaking successfully canceled"
+                    "cancel-confirmation-message": "Unstaking successfully canceled",
+                    "network-fee-cancel": "Cancel",
+                    "network-fee-unstake": "Unstake"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -544,7 +548,8 @@
                     "all": "All",
                     "mint": "Mint",
                     "trade": "Trades",
-                    "exercise": "Exercise"
+                    "exercise": "Exercise",
+                    "filter": "Filter"
                 }
             },
             "trade-card": {
@@ -727,14 +732,75 @@
             }
         },
         "leaderboard": {
-            "search-placeholder": "Display Name",
+            "leaderboard-title": "Leaderboard",
+            "leaderboard-subtitle": "This is Thales' overall leaderboard.",
+            "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
+            "trading-comp-title": "Trading Competition",
+            "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
+            "trading-comp-subtitle-2": "Please note that this competition hasn't started yet, but registrations are open.",
+            "trading-comp-subtitle-3": "You'll need to connect your wallet (top right corner) and then verify it, associating it with a Twitter account (that's older than 3 months).",
+            "trading-comp-subtitle-4": "You can read all the details regarding this trading competition here: ",
+            "profile-title": "Profile",
+            "verify-twitter-account": "Verify account",
+            "display-name": "Display Name",
+            "address": "Address",
+            "twitter-account": "My twitter account",
+            "my-info": "My info",
             "table": {
                 "rank-col": "Rank",
                 "display-name-col": "Display Name",
                 "trades-col": "Trades",
                 "volume-col": "Volume",
                 "netprofit-col": "Netprofit",
-                "netprofit-col-tooltip": "Profit is only calculated on the matured markets"
+                "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
+                "investment-col": "Investment",
+                "gain-col": "Gain",
+                "twitter-col": "Twitter"
+            },
+            "trading-competition": {
+                "tab-title": "Trading competition",
+                "competition-period": "Selected period"
+            },
+            "board": {
+                "tab-title": "Leaderboard"
+            },
+            "profile": {
+                "tab-title": "Profile",
+                "search-placeholder": "Search other profiles by typing display name",
+                "transaction-details": "Transaction details for user:",
+                "no-transactions": "No transactions available",
+                "filters": {
+                    "mints": "Mints",
+                    "trades": "Trades",
+                    "exercises": "Exercises",
+                    "redeemable": "Redeemable"
+                },
+                "markets": {
+                    "strike-price": "Strike price",
+                    "pool-size": "Pool size",
+                    "maturity-date": "Maturity date",
+                    "result": "Result"
+                },
+                "common": {
+                    "amount": "Amount",
+                    "timestamp": "Date | Time",
+                    "view-less": "View less",
+                    "view-more": "View more",
+                    "long": "Long",
+                    "short": "Short",
+                    "buy": "Buy",
+                    "sell": "Sell"
+                },
+                "exercises": {
+                    "side": "Side"
+                },
+                "trades": {
+                    "price": "Price",
+                    "type": "Type"
+                },
+                "unclaimed": {
+                    "redeem": "Redeem"
+                }
             }
         },
         "common": {
@@ -754,6 +820,8 @@
                 "minute": "minute",
                 "seconds": "seconds",
                 "second": "second",
+                "days-short": "d",
+                "hours-short": "h",
                 "minutes-short": "m",
                 "seconds-short": "s"
             },

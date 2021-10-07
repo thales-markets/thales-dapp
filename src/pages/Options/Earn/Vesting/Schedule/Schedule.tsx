@@ -29,32 +29,53 @@ const Schedule: React.FC = () => {
     );
 
     const noResults = vestingSchedule.length === 0;
+    const isMobileOrTablet = window.innerWidth < 1025;
 
     return (
         <SectionContainer>
-            <SectionHeader>{t('options.earn.vesting.schedule.title')}</SectionHeader>
-            <SectionContent>
+            <StyledSectionHeader>{t('options.earn.vesting.schedule.title')}</StyledSectionHeader>
+            <SectionContent isMobileOrTablet={isMobileOrTablet}>
                 <ScheduleTable
                     schedule={vestingSchedule}
                     isLoading={vestingScheduleQuery.isLoading}
                     noResultsMessage={
                         noResults ? <span>{t(`options.earn.vesting.schedule.table.no-results`)}</span> : undefined
                     }
+                    tableHeadCellStyles={
+                        isMobileOrTablet
+                            ? {
+                                  fontSize: '16px',
+                                  color: '#b8c6e5',
+                                  backgroundColor: '#04045a',
+                                  marginTop: '-1px',
+                              }
+                            : {}
+                    }
+                    tableRowCellStyles={isMobileOrTablet ? { fontSize: '16px', color: '#F6F6FE' } : {}}
                 />
             </SectionContent>
         </SectionContainer>
     );
 };
 
+const StyledSectionHeader = styled(SectionHeader)`
+    @media (max-width: 1025px) {
+        display: none;
+    }
+`;
+
 const SectionContainer = styled(EarnSection)`
     grid-column: span 10;
     grid-row: span 3;
     height: 400px;
     margin-bottom: 0;
+    @media (max-width: 767px) {
+        padding: 10px 0 10px 0;
+    }
 `;
 
-const SectionContent = styled(FlexDivColumn)`
-    height: 100%;
+const SectionContent = styled(FlexDivColumn)<{ isMobileOrTablet: boolean }>`
+    height: ${(props) => (props.isMobileOrTablet ? '100%' : 'calc(100% - 50px)')};
 `;
 
 export default Schedule;

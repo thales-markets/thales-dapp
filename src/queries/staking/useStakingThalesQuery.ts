@@ -12,6 +12,8 @@ type StakingThalesQueryResponse = {
     isUnstaking: boolean;
     unstakingAmount: string;
     unstakeDurationPeriod: number;
+    fixedPeriodReward: string;
+    totalStakedAmount: string;
 };
 
 const useStakingThalesQuery = (
@@ -29,6 +31,8 @@ const useStakingThalesQuery = (
                 lastUnstakeTime: Date.now(),
                 isUnstaking: false,
                 unstakeDurationPeriod: 7 * 24 * 60 * 60, // one week
+                fixedPeriodReward: '0',
+                totalStakedAmount: '0',
             };
 
             try {
@@ -39,6 +43,8 @@ const useStakingThalesQuery = (
                     unstakingAmount,
                     rewards,
                     unstakeDurationPeriod,
+                    fixedPeriodReward,
+                    totalStakedAmount,
                 ] = await Promise.all([
                     await (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
@@ -46,6 +52,8 @@ const useStakingThalesQuery = (
                     await (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
                     await (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
+                    await (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
+                    await (snxJSConnector as any).stakingThalesContract.totalStakedAmount(),
                 ]);
 
                 staking.isUnstaking = isUnstaking;
@@ -54,6 +62,8 @@ const useStakingThalesQuery = (
                 staking.unstakingAmount = ethers.utils.formatEther(unstakingAmount);
                 staking.rewards = bigNumberFormatter(rewards);
                 staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
+                staking.fixedPeriodReward = ethers.utils.formatEther(fixedPeriodReward);
+                staking.totalStakedAmount = ethers.utils.formatEther(totalStakedAmount);
             } catch {}
 
             return staking;

@@ -23,12 +23,12 @@ import {
     ButtonContainer,
     ClaimMessage,
     EarnSection,
+    LearnMore,
     PieChartCenterDiv,
     PieChartCenterText,
     PieChartContainer,
     SectionContentContainer,
     SectionHeader,
-    LearnMore,
     StyledMaterialTooltip,
 } from '../../components';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
@@ -39,11 +39,13 @@ import styled from 'styled-components';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import ComingSoon from 'components/ComingSoon';
-
-const MAX_SNX_STAKING_PERIOD = 144;
-const MAX_THALES_STAKING_PERIOD = 150;
-const WEEKLY_REWARDS_SNX = 125000;
-const WEEKLY_REWARDS_THALES = 100000;
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import {
+    MAX_SNX_STAKING_PERIOD,
+    MAX_THALES_STAKING_PERIOD,
+    WEEKLY_REWARDS_SNX,
+    WEEKLY_REWARDS_THALES,
+} from '../../../../../constants/token';
 
 type Properties = {
     escrowedBalance: number;
@@ -193,14 +195,17 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
 
     return (
-        <EarnSection
-            paddingOnMobile={5}
-            orderOnMobile={4}
-            orderOnTablet={4}
-            style={{ gridColumn: 'span 7', gridRow: 'span 3' }}
-        >
+        <EarnSection orderOnMobile={4} orderOnTablet={4} style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
             <SectionHeader>
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
+                <div>
+                    {t('options.earn.thales-staking.staking-rewards.period')}:{' '}
+                    {ongoingAirdrop ? (
+                        <TimeRemaining end={ongoingAirdrop.closingDate} fontSize={20} showFullCounter />
+                    ) : (
+                        '-'
+                    )}
+                </div>
             </SectionHeader>
             <SectionContentContainer>
                 <StyledPieChartContainer>
@@ -341,8 +346,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             </GradientText>
                         </FlexDivColumnCentered>
                     </StyledPieChartCenterDiv>
-                    <LearnMore>
+                    <LearnMore top="30%">
                         <StyledMaterialTooltip
+                            enterTouchDelay={1}
                             arrow={true}
                             title={t('options.earn.thales-staking.staking-rewards.learn-more-text') as string}
                         >
