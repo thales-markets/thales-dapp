@@ -426,8 +426,8 @@ export const StyledTableCell = withStyles(() => ({
         padding: '13px',
     },
     body: {
-        borderTop: '1px solid #CA91DC',
-        borderBottom: '1px solid #6AC1D5',
+        borderTop: '1px solid rgba(140, 114, 184, 0.6)',
+        borderBottom: '1px solid rgba(106, 193, 213, 0.6)',
         textAlign: 'center',
         fontWeight: 'normal',
         fontSize: '20px',
@@ -437,12 +437,24 @@ export const StyledTableCell = withStyles(() => ({
         '&:last-child': {
             borderBottomRightRadius: '23px',
             borderTopRightRadius: '23px !important',
-            borderRight: '1px solid #6AC1D5',
+            borderRight: '1px solid transparent',
+            borderTop: '1px solid transparent',
+            borderBottom: '1px solid transparent',
+            backgroundImage:
+                'linear-gradient(#04045a, #04045a), linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
         },
         '&:first-child': {
             borderBottomLeftRadius: '23px',
             borderTopLeftRadius: '23px',
-            borderLeft: '1px solid #CA91DC',
+            borderLeft: '1px solid transparent',
+            borderTop: '1px solid transparent',
+            borderBottom: '1px solid transparent',
+            backgroundImage:
+                'linear-gradient(#04045a, #04045a), linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
+            backgroundOrigin: 'border-box',
+            backgroundClip: 'padding-box, border-box',
         },
     },
 }))(TableCell);
