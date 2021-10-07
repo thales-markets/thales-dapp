@@ -1,5 +1,4 @@
 import twitterBlue from 'assets/images/twitter-blue-logo.svg';
-import twitter from 'assets/images/twitter.svg';
 import ROUTES from 'constants/routes';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 // import useTwitterAccountsQuery from 'queries/user/useTwitterAccountsQuery';
@@ -109,23 +108,6 @@ const LeaderboardPage: React.FC = () => {
             <Wrapper>
                 <FlexDivColumn className="leaderboard" style={{ zIndex: 10 }}>
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
-                    {walletAddress && !accVerified && (
-                        <Button
-                            className="primary"
-                            style={{
-                                alignSelf: 'center',
-                                margin: '40px auto',
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                            onClick={checkAddress}
-                        >
-                            <Image src={twitter} style={{ height: 32, width: 32, marginRight: 8 }}></Image>
-                            <Text className="text-m pale-grey bold">
-                                {t('options.leaderboard.verify-twitter-account')}
-                            </Text>
-                        </Button>
-                    )}
                 </FlexDivColumn>
                 <FlexDivColumn style={{ width: '100%' }}>
                     {selectedTab === 'leaderboard' && (
@@ -292,7 +274,11 @@ const LeaderboardPage: React.FC = () => {
                                     </>
                                 )}
                                 {walletAddress && !accVerified && (
-                                    <Button className="primary" style={{ width: 202 }} onClick={checkAddress}>
+                                    <Button
+                                        className="primary"
+                                        style={{ width: 202, fontSize: 20 }}
+                                        onClick={checkAddress}
+                                    >
                                         {'Verify'}
                                     </Button>
                                 )}
