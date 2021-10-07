@@ -244,7 +244,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
                 break;
             case SecondaryFilters.Competition:
-                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter((market) => console.log(market));
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(() => false);
                 break;
         }
 
