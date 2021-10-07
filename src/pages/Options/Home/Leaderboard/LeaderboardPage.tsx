@@ -144,11 +144,11 @@ const LeaderboardPage: React.FC = () => {
                             <Text className="text-s ls25 lh24 pale-grey">
                                 {t('options.leaderboard.trading-comp-subtitle-4')}
                                 <StyledLink
-                                    href="https://thalesmarket.medium.com/921d0d058f73"
+                                    href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
                                     rel="noreferrer"
                                     target="_blank"
                                 >
-                                    https://thalesmarket.medium.com/921d0d058f73
+                                    https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
                                 </StyledLink>
                             </Text>
                         </>

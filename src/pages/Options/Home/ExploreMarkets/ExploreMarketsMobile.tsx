@@ -330,11 +330,11 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                 >
                                     {t('options.home.explore-markets.table.trading-comp')}
                                     <StyledLink
-                                        href="https://thalesmarket.medium.com/921d0d058f73"
+                                        href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
                                         rel="noreferrer"
                                         target="_blank"
                                     >
-                                        https://thalesmarket.medium.com/921d0d058f73
+                                        https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
                                     </StyledLink>
                                 </Text>
                             </>
