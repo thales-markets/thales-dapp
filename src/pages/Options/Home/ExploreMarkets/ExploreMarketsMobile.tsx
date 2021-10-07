@@ -235,7 +235,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         case SecondaryFilters.Ethereum:
                                             isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
-                                        case SecondaryFilters.Olympics:
+                                        case SecondaryFilters.CustomMarkets:
                                             isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
                                     }

@@ -144,6 +144,7 @@
             "trending-label": "Trending markets",
             "overview-label": "Markets overview",
             "olympics-label": "Olympics markets",
+            "custom-markets-label": "Custom markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
@@ -208,6 +209,7 @@
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
             "olympics": "Olympics",
+            "custom": "Custom Markets",
             "long": "Long",
             "short": "Short"
         },

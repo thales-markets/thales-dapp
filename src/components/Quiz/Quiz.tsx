@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import close from 'assets/images/close.svg';
-import { ButtonContainer } from 'pages/Options/Earn/components';
 import { LightTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import { QuizQuestion } from './QuizQuestion';
 import { QuizQuestionForm } from './QuizQuestionForm';
 import discord from 'assets/images/discord.svg';
 import styled from 'styled-components';
+import { ButtonContainer } from 'pages/Options/Earn/components';
 
 type QuizProps = {
     quizData: QuizQuestion[];

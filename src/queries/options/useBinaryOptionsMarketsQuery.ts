@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import snxJSConnector from 'utils/snxJSConnector';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOptions<OptionsMarkets>) => {
     return useQuery<OptionsMarkets>(
@@ -19,7 +20,6 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
             return Promise.all(
                 optionsMarkets.map(async (currentMarket) => {
                     if (currentMarket.customMarket) {
-                        console.log('I break here');
                         try {
                             const sportFeedContract = new ethers.Contract(
                                 currentMarket.customOracle,
@@ -36,7 +36,6 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                             currentMarket.outcome = data[2];
                             return currentMarket;
                         } catch (e) {
-                            console.log('I got here');
                             const sportFeedContract = new ethers.Contract(
                                 currentMarket.customOracle,
                                 ethBurnedOracleInstance.abi,
@@ -49,7 +48,10 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                             ]);
                             currentMarket.country = data[0];
                             currentMarket.eventName = data[1];
-                            currentMarket.outcome = data[2];
+                            currentMarket.outcome =
+                                currentMarket.eventName === 'Flippening Markets'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString();
                             return currentMarket;
                         }
                     } else {

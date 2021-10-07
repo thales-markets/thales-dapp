@@ -64,7 +64,7 @@ export const Home: React.FC = () => {
     useEffect(() => {
         if (location.search === '?anchor=overview') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
-        } else if (location.search === '?userFilter2=Olympics') {
+        } else if (location.search === '?userFilter2=custom') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
         } else if (location.search === '?anchor=hot-markets') {
             document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
@@ -83,8 +83,8 @@ export const Home: React.FC = () => {
                                     ? ROUTES.Options.Overview
                                     : location.search === '?anchor=hot-markets'
                                     ? ROUTES.Options.Home
-                                    : location.search === '?userFilter2=Olympics'
-                                    ? ROUTES.Options.Olympics
+                                    : location.search === '?userFilter2=custom'
+                                    ? ROUTES.Options.CustomMarkets
                                     : ROUTES.Options.Overview
                             }
                         />
