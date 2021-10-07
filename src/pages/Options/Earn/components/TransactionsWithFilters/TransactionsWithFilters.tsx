@@ -113,7 +113,7 @@ const SectionContainer = styled(EarnSection)`
 `;
 
 const SectionContent = styled(FlexDivColumn)`
-    height: 100%;
+    height: calc(100% - 50px);
 `;
 
 const FilterContainer = styled.div`

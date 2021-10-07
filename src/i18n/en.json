@@ -309,7 +309,9 @@
                     "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",
-                    "cancel-confirmation-message": "Unstaking successfully canceled"
+                    "cancel-confirmation-message": "Unstaking successfully canceled",
+                    "network-fee-cancel": "Cancel",
+                    "network-fee-unstake": "Unstake"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
