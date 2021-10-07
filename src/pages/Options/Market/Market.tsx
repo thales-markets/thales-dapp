@@ -70,7 +70,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     useEffect(() => {
         if (marketQuery.isSuccess && marketQuery.data) {
             if (marketQuery.data.customMarket) {
-                console.log('I break here1');
                 try {
                     const sportFeedContract = new ethers.Contract(
                         marketQuery.data.oracleAdress,
@@ -90,7 +89,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         });
                     });
                 } catch (e) {
-                    console.log('I got here1');
                     const sportFeedContract = new ethers.Contract(
                         marketQuery.data.oracleAdress,
                         ethBurnedOracleInstance.abi,
