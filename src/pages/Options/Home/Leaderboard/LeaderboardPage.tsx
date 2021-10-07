@@ -134,9 +134,14 @@ const LeaderboardPage: React.FC = () => {
                         </LeaderboardTitle>
                     )}
                     {selectedTab === 'leaderboard' && (
-                        <Text className="text-s ls25 lh24 pale-grey">
-                            {t('options.leaderboard.leaderboard-subtitle')}
-                        </Text>
+                        <>
+                            <Text className="text-s ls25 lh24 pale-grey">
+                                {t('options.leaderboard.leaderboard-subtitle')}
+                            </Text>
+                            <Text className="text-s ls25 lh24 pale-grey">
+                                {t('options.leaderboard.leaderboard-subtitle-2')}
+                            </Text>
+                        </>
                     )}
                     {selectedTab === 'trading-competition' && (
                         <LeaderboardTitle className="pale-grey">
@@ -144,16 +149,27 @@ const LeaderboardPage: React.FC = () => {
                         </LeaderboardTitle>
                     )}
                     {selectedTab === 'trading-competition' && (
-                        <Text className="text-s ls25 lh24 pale-grey">
-                            {t('options.leaderboard.trading-comp-subtitle')}
-                            <StyledLink
-                                href="https://thalesmarket.medium.com/921d0d058f73"
-                                rel="noreferrer"
-                                target="_blank"
-                            >
-                                https://thalesmarket.medium.com/921d0d058f73
-                            </StyledLink>
-                        </Text>
+                        <>
+                            <Text className="text-s ls25 lh24 pale-grey">
+                                {t('options.leaderboard.trading-comp-subtitle')}
+                            </Text>
+                            <Text className="text-s ls25 lh24 pale-grey">
+                                {t('options.leaderboard.trading-comp-subtitle-2')}
+                            </Text>
+                            <Text className="text-s ls25 lh24 pale-grey">
+                                {t('options.leaderboard.trading-comp-subtitle-3')}
+                            </Text>
+                            <Text className="text-s ls25 lh24 pale-grey">
+                                {t('options.leaderboard.trading-comp-subtitle-4')}
+                                <StyledLink
+                                    href="https://thalesmarket.medium.com/921d0d058f73"
+                                    rel="noreferrer"
+                                    target="_blank"
+                                >
+                                    https://thalesmarket.medium.com/921d0d058f73
+                                </StyledLink>
+                            </Text>
+                        </>
                     )}
                     {selectedTab === 'profile' && (
                         <LeaderboardTitle className="pale-grey">
