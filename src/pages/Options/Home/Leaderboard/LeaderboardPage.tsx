@@ -132,7 +132,39 @@ const LeaderboardPage: React.FC = () => {
                     )}
                 </FlexDivColumn>
                 <FlexDivColumn style={{ width: '100%' }}>
-                    <LeaderboardTitle className="pale-grey">{t('options.leaderboard.page-title')}</LeaderboardTitle>
+                    {selectedTab === 'leaderboard' && (
+                        <LeaderboardTitle className="pale-grey">
+                            {t('options.leaderboard.leaderboard-title')}
+                        </LeaderboardTitle>
+                    )}
+                    {selectedTab === 'leaderboard' && (
+                        <Text className="text-s ls25 lh24 pale-grey">
+                            {t('options.leaderboard.leaderboard-subtitle')}
+                        </Text>
+                    )}
+                    {selectedTab === 'trading-competition' && (
+                        <LeaderboardTitle className="pale-grey">
+                            {t('options.leaderboard.trading-comp-title')}
+                        </LeaderboardTitle>
+                    )}
+                    {selectedTab === 'trading-competition' && (
+                        <Text className="text-s ls25 lh24 pale-grey">
+                            {t('options.leaderboard.trading-comp-subtitle')}
+                            <StyledLink
+                                href="https://thalesmarket.medium.com/921d0d058f73"
+                                rel="noreferrer"
+                                target="_blank"
+                            >
+                                https://thalesmarket.medium.com/921d0d058f73
+                            </StyledLink>
+                        </Text>
+                    )}
+                    {selectedTab === 'profile' && (
+                        <LeaderboardTitle className="pale-grey">
+                            {t('options.leaderboard.profile-title')}
+                        </LeaderboardTitle>
+                    )}
+
                     <InfoContainer>
                         <FlexDiv
                             style={{
@@ -156,7 +188,7 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 18,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
+                                <Text className="bold lh24" style={{ flex: 1 }}>
                                     {t('options.leaderboard.my-info')}:
                                 </Text>
                             </Row>
@@ -217,7 +249,7 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 18,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1 }}>
+                                <Text className="bold lh24" style={{ flex: 1 }}>
                                     {t('options.leaderboard.twitter-account')}
                                 </Text>
                             </Row>
@@ -365,11 +397,12 @@ const InfoContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
+    margin-top: 24px;
 `;
 
 const LeaderboardTitle = styled(Text)`
     font-size: 39px;
-    padding: 30px;
+    line-height: 72px;
     font-weight: 600;
 `;
 

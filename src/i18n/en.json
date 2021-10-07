@@ -728,7 +728,11 @@
             }
         },
         "leaderboard": {
-            "page-title": "Leaderboards",
+            "leaderboard-title": "Leaderboard",
+            "leaderboard-subtitle": "takes into account all trades made within Thales platform. This is Thales' overall leaderboard.",
+            "trading-comp-title": "Trading Competition",
+            "trading-comp-subtitle": "is the leaderboard for Thales' first trading competition. Please note that this competition hasn't started yet, but registrations are open. In order to participate you'll need to connect your wallet (top right corner) and then verify it by associating it with a Twitter account that is older than 3 months. You can read all the details regarding this trading competition here: ",
+            "profile-title": "Profile",
             "verify-twitter-account": "Verify account",
             "display-name": "Display Name",
             "address": "Address",
