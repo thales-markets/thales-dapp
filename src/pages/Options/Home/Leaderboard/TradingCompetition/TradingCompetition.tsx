@@ -83,7 +83,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         setPage(newPage);
     };
     const [rowsPerPage, setRowsPerPage] = React.useState(15);
-    const numberOfPages = Math.ceil(competition.length / rowsPerPage) || 1;
+    const numberOfPages = Math.ceil(twitterAccountsData.length / rowsPerPage) || 1;
 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -120,6 +120,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         }
         return page;
     }, [page, numberOfPages]);
+
+    const filteredTwitterData = useMemo(() => {
+        return twitterAccountsData.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+    }, [rowsPerPage, memoizedPage, twitterAccountsData]);
 
     // const sortedData: any = useMemo(() => {
     //     return competition.sort((a, b) => {
@@ -281,14 +285,14 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {twitterAccountsData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
+                        {filteredTwitterData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
                             .length === 0 && ( // will be changed upon start of trading competition when everything is uncommented
                             <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
                         )}
-                        {twitterAccountsData.map((data: any, index: any) => {
+                        {filteredTwitterData.map((data: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
-                                    <StyledTableCell>{index + 1}</StyledTableCell>
+                                    <StyledTableCell>{page * rowsPerPage + index + 1}</StyledTableCell>
                                     <StyledTableCell>
                                         <StyledLink
                                             style={{ verticalAlign: 'text-top' }}
@@ -478,7 +482,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                 <PaginationWrapper
                                     rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
-                                    count={competition.length}
+                                    count={filteredTwitterData.length}
                                     rowsPerPage={rowsPerPage}
                                     page={memoizedPage}
                                     onPageChange={handleChangePage}
