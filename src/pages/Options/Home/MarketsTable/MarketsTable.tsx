@@ -51,6 +51,8 @@ import tennis from 'assets/images/tennis.svg';
 import xyz from 'assets/images/xyz.png';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
+import flippening from 'assets/images/flippening.png';
+import burn from 'assets/images/burn.png';
 
 dotenv.config();
 
@@ -284,7 +286,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <StyledAnchoredTableCell>
                                                 {market.customMarket ? (
                                                     market.eventName === 'XYZ airdrop claims' ||
-                                                    market.eventName === 'ETH burned count' ? (
+                                                    market.eventName === 'ETH burned count' ||
+                                                    market.eventName === 'Flippening Markets' ? (
                                                         formatCurrency(market.outcome || 0, 0)
                                                     ) : (
                                                         market.eventName
@@ -514,6 +517,12 @@ export const eventToIcon = (event: string) => {
         }
         if (event.toLowerCase().indexOf('xyz') !== -1) {
             return xyz;
+        }
+        if (event.toLowerCase().indexOf('flippening markets') !== -1) {
+            return flippening;
+        }
+        if (event.toLowerCase().indexOf('eth burned count') !== -1) {
+            return burn;
         }
     }
 };

@@ -38,6 +38,8 @@ export const QUERY_KEYS = {
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
+        MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
+        EthBurnedCount: () => ['binaryOptions', 'ethBurnedCount'],
         AccountMarketInfo: (marketAddress: string, accountAddress: string) => [
             'binaryOptions',
             'markets',

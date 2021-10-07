@@ -52,10 +52,14 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const orderbookSign = optionsMarket.customMarket
         ? optionSide === 'long'
-            ? optionsMarket.eventName === 'XYZ airdrop claims' || optionsMarket.eventName === 'ETH burned count'
+            ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets'
                 ? '>='
                 : '=='
-            : optionsMarket.eventName === 'XYZ airdrop claims' || optionsMarket.eventName === 'ETH burned count'
+            : optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets'
             ? '<'
             : '!='
         : optionSide === 'long'
