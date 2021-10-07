@@ -24,6 +24,7 @@ import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 type UsersUnclaimedProps = {
     usersUnclaimed: any[];
     market: any;
+    userDisplay: boolean;
 };
 
 const getCellColor = (type: string) => {
@@ -37,10 +38,12 @@ const getCellColor = (type: string) => {
     }
 };
 
-const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market }) => {
+const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market, userDisplay }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
+
+    console.log(usersUnclaimed);
 
     const marketQuery = useBinaryOptionsMarketQuery(market.address, {
         enabled: isAppReady,
@@ -116,8 +119,8 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                 </Row>
                 <Row className="text-m">
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
-                    <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
+                    <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                 </Row>
 
                 <Row className="text-ms leaderboard__profile__rowBackground__columns" style={{ borderBottom: 'none' }}>
@@ -138,7 +141,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market 
                             : formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].short)}
                     </Text>
                     <FlexDivColumnCentered style={{ flex: 1, alignItems: 'baseline', paddingRight: 35 }}>
-                        <Button className="primary">
+                        <Button className="primary" style={{ display: !userDisplay ? 'none' : '' }}>
                             <a
                                 target="_blank"
                                 rel="noreferrer"
