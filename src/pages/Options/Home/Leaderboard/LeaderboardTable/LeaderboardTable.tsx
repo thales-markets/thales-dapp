@@ -267,13 +267,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                             .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
                             .map((leader: any, index: any) => {
                                 return (
-                                    <StyledTableRow
-                                        key={index}
-                                        style={{
-                                            background:
-                                                'linear-gradient(90deg, #3936C7 -10.96%, #2D83D2 46.31%, #23A5DD 103.01%, #35DADB 127.72%)',
-                                        }}
-                                    >
+                                    <StyledTableRow key={index} className="leaderboard__tableBody__firstRow">
                                         <StyledTableCell
                                             style={{
                                                 height: getHeight(leader, true),

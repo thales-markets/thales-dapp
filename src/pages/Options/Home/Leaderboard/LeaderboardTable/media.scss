@@ -31,10 +31,20 @@
     }
 
     &__tableBody {
+        &__firstRow {
+            background: linear-gradient(
+                90deg,
+                #3936c7 -10.96%,
+                #2d83d2 46.31%,
+                #23a5dd 103.01%,
+                #35dadb 127.72%
+            ) !important;
+        }
         & > tr:first-child {
             margin-bottom: 30px;
             td {
                 border: none !important;
+                background: transparent !important;
             }
         }
         & > tr:last-child {
