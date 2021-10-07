@@ -68,51 +68,52 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     });
 
     useEffect(() => {
-        if (marketQuery.isSuccess && marketQuery.data) {
-            if (marketQuery.data.customMarket) {
-                console.log('I break here1');
-                try {
-                    const sportFeedContract = new ethers.Contract(
-                        marketQuery.data.oracleAdress,
-                        sportFeedOracleContract.abi,
-                        (snxJSConnector as any).provider
-                    );
-                    Promise.all([
-                        sportFeedContract.targetName(),
-                        sportFeedContract.eventName(),
-                        sportFeedContract.targetOutcome(),
-                    ]).then((data) => {
+        const fetchMarketData = async () => {
+            if (marketQuery.isSuccess && marketQuery.data) {
+                if (marketQuery.data.customMarket) {
+                    console.log('I break here1');
+                    try {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            sportFeedOracleContract.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
                         setOptionsMarket({
                             ...marketQuery.data,
                             country: data[0],
                             eventName: data[1],
                             outcome: data[2],
                         });
-                    });
-                } catch (e) {
-                    console.log('I got here1');
-                    const sportFeedContract = new ethers.Contract(
-                        marketQuery.data.oracleAdress,
-                        ethBurnedOracleInstance.abi,
-                        (snxJSConnector as any).provider
-                    );
-                    Promise.all([
-                        sportFeedContract.targetName(),
-                        sportFeedContract.eventName(),
-                        sportFeedContract.targetOutcome(),
-                    ]).then((data) => {
+                    } catch (e) {
+                        console.log('I got here1');
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            ethBurnedOracleInstance.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
                         setOptionsMarket({
                             ...marketQuery.data,
                             country: data[0],
                             eventName: data[1],
-                            outcome: data[2],
+                            outcome: Number(data[2]).toString(),
                         });
-                    });
+                    }
+                } else {
+                    setOptionsMarket(marketQuery.data);
                 }
-            } else {
-                setOptionsMarket(marketQuery.data);
             }
-        }
+        };
+        fetchMarketData();
     }, [marketQuery.isSuccess]);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {
