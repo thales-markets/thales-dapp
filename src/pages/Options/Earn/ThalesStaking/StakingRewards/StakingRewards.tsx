@@ -23,12 +23,12 @@ import {
     ButtonContainer,
     ClaimMessage,
     EarnSection,
+    LearnMore,
     PieChartCenterDiv,
     PieChartCenterText,
     PieChartContainer,
     SectionContentContainer,
     SectionHeader,
-    LearnMore,
     StyledMaterialTooltip,
 } from '../../components';
 import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
@@ -40,11 +40,12 @@ import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import ComingSoon from 'components/ComingSoon';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-
-const MAX_SNX_STAKING_PERIOD = 144;
-const MAX_THALES_STAKING_PERIOD = 150;
-const WEEKLY_REWARDS_SNX = 125000;
-const WEEKLY_REWARDS_THALES = 100000;
+import {
+    MAX_SNX_STAKING_PERIOD,
+    MAX_THALES_STAKING_PERIOD,
+    WEEKLY_REWARDS_SNX,
+    WEEKLY_REWARDS_THALES,
+} from '../../../../../constants/token';
 
 type Properties = {
     escrowedBalance: number;

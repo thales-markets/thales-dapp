@@ -305,6 +305,7 @@ const Unstake: React.FC<Properties> = ({
                 placement="top"
             >
                 <Button
+                    className="primary"
                     onMouseOver={() => {
                         setShowTooltip(true);
                     }}
@@ -452,10 +453,10 @@ const GradientButtonContainer = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-    background: #04045a !important;
+    background: #04045a;
     margin: 2px;
     &:hover {
-        background: #7119e1 !important;
+        background: #7119e1;
     }
 `;
 

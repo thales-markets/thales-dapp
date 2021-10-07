@@ -20,6 +20,8 @@ type Properties = {
     setEscrowedBalance: (escrowed: number) => void;
 };
 
+const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 / frequency) ** frequency - 1) * 100;
+
 const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowedBalance, setEscrowedBalance }) => {
     const { t } = useTranslation();
 
@@ -36,15 +38,37 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         enabled: isAppReady && isWalletConnected,
     });
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
+    const [fixedPeriodReward, setFixedPeriodReward] = useState<string>('0');
+    const [totalStakedAmount, setTotalStakedAmount] = useState<string>('0');
+    const [totalEscrowedRewards, setTotalEscrowedRewards] = useState<string>('0');
+    const [totalEscrowBalanceNotIncludedInStaking, setTotalEscrowBalanceNotIncludedInStaking] = useState<string>('0');
+
+    const APR = useMemo(
+        () =>
+            (Number(fixedPeriodReward) * 52 * 100) /
+            (Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking)),
+        [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+    );
+
+    const APY = useMemo(() => aprToApy(APR, 52), [APR]);
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { thalesStaked, unstakingAmount } = stakingThalesQuery.data;
+            const { thalesStaked, unstakingAmount, fixedPeriodReward, totalStakedAmount } = stakingThalesQuery.data;
             setThalesStaked(thalesStaked);
             setUnstakingAmount(unstakingAmount);
+            setFixedPeriodReward(fixedPeriodReward);
+            setTotalStakedAmount(totalStakedAmount);
         }
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
-            setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
+            const {
+                escrowedBalance,
+                totalEscrowedRewards,
+                totalEscrowBalanceNotIncludedInStaking,
+            } = escrowThalesQuery.data;
+            setEscrowedBalance(escrowedBalance);
+            setTotalEscrowedRewards(totalEscrowedRewards);
+            setTotalEscrowBalanceNotIncludedInStaking(totalEscrowBalanceNotIncludedInStaking);
         }
     }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
 
@@ -60,7 +84,12 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
             orderOnTablet={3}
             style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}
         >
-            <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
+            <SectionHeader>
+                {t('options.earn.thales-staking.my-stake.my-stake')}
+                <RewardsInfo>
+                    <span>APR: {APR.toFixed(2)}%</span> <span>APY: {APY.toFixed(2)}%</span>
+                </RewardsInfo>
+            </SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
                 <>
@@ -162,6 +191,16 @@ const UnstakingTitle = styled.div`
 const StyledClaimTitle = styled(ClaimTitle)`
     position: relative;
     padding-bottom: 10px;
+`;
+
+const RewardsInfo = styled.span`
+    font-weight: normal;
+    font-size: 18px;
+    > * {
+        &:nth-child(2) {
+            padding-left: 35px;
+        }
+    }
 `;
 
 export default MyStake;
