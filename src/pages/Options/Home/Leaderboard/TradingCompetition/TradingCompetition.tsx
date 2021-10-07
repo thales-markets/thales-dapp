@@ -13,21 +13,21 @@ import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
-import { USD_SIGN } from 'constants/currency';
+// import { USD_SIGN } from 'constants/currency';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
-import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
+// import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+// import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
@@ -45,7 +45,7 @@ const defaultOrderBy = 7; // Netprofit
 const TradingCompetition: React.FC<any> = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [twitterAccountsData, setTwitterAccountsData] = useState([] as any);
 
@@ -61,14 +61,14 @@ const TradingCompetition: React.FC<any> = () => {
         enabled: isAppReady,
     });
 
-    const verifiedTwitterAccountsQuery = useVerifiedTwitterAccountsQuery({
-        enabled: isAppReady,
-    });
+    // const verifiedTwitterAccountsQuery = useVerifiedTwitterAccountsQuery({
+    //     enabled: isAppReady,
+    // });
 
-    const verifiedTwitterAccounts: any = useMemo(
-        () => (verifiedTwitterAccountsQuery.isSuccess ? verifiedTwitterAccountsQuery.data : new Set()),
-        [verifiedTwitterAccountsQuery]
-    );
+    // const verifiedTwitterAccounts: any = useMemo(
+    //     () => (verifiedTwitterAccountsQuery.isSuccess ? verifiedTwitterAccountsQuery.data : new Set()),
+    //     [verifiedTwitterAccountsQuery]
+    // );
 
     const competition = competitionQuery.data
         ? competitionQuery.data.competition.sort((a, b) => b.volume - a.volume)
@@ -77,6 +77,10 @@ const TradingCompetition: React.FC<any> = () => {
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
     });
+
+    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
+        displayNamesQuery,
+    ]);
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
@@ -122,87 +126,83 @@ const TradingCompetition: React.FC<any> = () => {
         return page;
     }, [page, numberOfPages]);
 
-    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
-        displayNamesQuery,
-    ]);
+    // const sortedData: any = useMemo(() => {
+    //     return competition.sort((a, b) => {
+    //         if (orderBy === 4) {
+    //             if (orderDirection === OrderDirection.DESC) {
+    //                 return b.trades - a.trades;
+    //             }
+    //             if (orderDirection === OrderDirection.ASC) {
+    //                 return a.trades - b.trades;
+    //             }
+    //         }
+    //         if (orderBy === 5) {
+    //             if (orderDirection === OrderDirection.DESC) {
+    //                 return b.volume - a.volume;
+    //             }
+    //             if (orderDirection === OrderDirection.ASC) {
+    //                 return a.volume - b.volume;
+    //             }
+    //         }
 
-    const sortedData: any = useMemo(() => {
-        return competition.sort((a, b) => {
-            if (orderBy === 4) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.trades - a.trades;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.trades - b.trades;
-                }
-            }
-            if (orderBy === 5) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.volume - a.volume;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.volume - b.volume;
-                }
-            }
+    //         if (orderBy === 6) {
+    //             if (orderDirection === OrderDirection.DESC) {
+    //                 return b.investment - a.investment;
+    //             }
+    //             if (orderDirection === OrderDirection.ASC) {
+    //                 return a.investment - b.investment;
+    //             }
+    //         }
 
-            if (orderBy === 6) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.investment - a.investment;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.investment - b.investment;
-                }
-            }
+    //         if (orderBy === 7) {
+    //             if (orderDirection === OrderDirection.DESC) {
+    //                 return b.netProfit - a.netProfit;
+    //             }
+    //             if (orderDirection === OrderDirection.ASC) {
+    //                 return a.netProfit - b.netProfit;
+    //             }
+    //         }
 
-            if (orderBy === 7) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.netProfit - a.netProfit;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.netProfit - b.netProfit;
-                }
-            }
+    //         if (orderBy === 8) {
+    //             if (orderDirection === OrderDirection.DESC) {
+    //                 return b.gain - a.gain;
+    //             }
+    //             if (orderDirection === OrderDirection.ASC) {
+    //                 return a.gain - b.gain;
+    //             }
+    //         }
+    //         return 0;
+    //     });
+    // }, [orderBy, orderDirection, competition]);
 
-            if (orderBy === 8) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.gain - a.gain;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.gain - b.gain;
-                }
-            }
-            return 0;
-        });
-    }, [orderBy, orderDirection, competition]);
+    // const leaderboardData = useMemo(() => {
+    //     if (verifiedTwitterAccountsQuery.isSuccess) {
+    //         return sortedData
+    //             .filter((leader: any) => {
+    //                 if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
+    //                     if (searchString === '') return true;
+    //                     if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+    //                         return true;
+    //                     }
 
-    const leaderboardData = useMemo(() => {
-        if (verifiedTwitterAccountsQuery.isSuccess) {
-            return sortedData
-                .filter((leader: any) => {
-                    if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
-                        if (searchString === '') return true;
-                        if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
-                            return true;
-                        }
+    //                     const disp = displayNamesMap.get(leader.walletAddress);
 
-                        const disp = displayNamesMap.get(leader.walletAddress);
+    //                     if (disp) {
+    //                         return disp.toLowerCase().includes(searchString.toLowerCase());
+    //                     }
 
-                        if (disp) {
-                            return disp.toLowerCase().includes(searchString.toLowerCase());
-                        }
-
-                        return false;
-                    } else return false;
-                })
-                .map((leader: any, index: number, self: any) => {
-                    if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-                    return { rank: self.length - index, ...leader };
-                })
-                .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-        } else {
-            return [];
-        }
-    }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
+    //                     return false;
+    //                 } else return false;
+    //             })
+    //             .map((leader: any, index: number, self: any) => {
+    //                 if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+    //                 return { rank: self.length - index, ...leader };
+    //             })
+    //             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+    //     } else {
+    //         return [];
+    //     }
+    // }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
@@ -286,7 +286,46 @@ const TradingCompetition: React.FC<any> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {leaderboardData
+                        {twitterAccountsData.map((data: any, index: any) => {
+                            return (
+                                <StyledTableRow key={index}>
+                                    <StyledTableCell>{index + 1}</StyledTableCell>
+                                    <StyledTableCell>
+                                        <StyledLink
+                                            style={{ verticalAlign: 'text-top' }}
+                                            href={data[1].twitter}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <img
+                                                style={{ width: 35, height: 35, borderRadius: '50%' }}
+                                                src={data[1].avatar}
+                                            ></img>
+                                            <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
+                                        </StyledLink>
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        style={{
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, data[0])}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {displayNamesMap.get(data[0]) ? displayNamesMap.get(data[0]) : data[0]}
+                                        </StyledLink>
+                                    </StyledTableCell>
+                                    <StyledTableCell>N/A</StyledTableCell>
+                                    <StyledTableCell>N/A</StyledTableCell>
+                                    <StyledTableCell>N/A</StyledTableCell>
+                                    <StyledTableCell>N/A</StyledTableCell>
+                                    <StyledTableCell>N/A</StyledTableCell>
+                                </StyledTableRow>
+                            );
+                        })}
+                        {/* {leaderboardData
                             .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
                             .map((leader: any, index: any) => {
                                 return (
@@ -435,7 +474,7 @@ const TradingCompetition: React.FC<any> = () => {
                                     </StyledTableCell>
                                 </StyledTableRow>
                             );
-                        })}
+                        })} */}
                     </TableBody>
                     {competition.length !== 0 && (
                         <TableFooter>
@@ -530,18 +569,18 @@ export const StyledTableCell = withStyles(() => ({
 
 export default TradingCompetition;
 
-const getHeight = (leader: any, yourRank?: boolean) => {
-    if (yourRank) {
-        return 60;
-    }
-    switch (leader.rank) {
-        case 1:
-            return 120;
-        default:
-            return 60;
-    }
-};
+// const getHeight = (leader: any, yourRank?: boolean) => {
+//     if (yourRank) {
+//         return 60;
+//     }
+//     switch (leader.rank) {
+//         case 1:
+//             return 120;
+//         default:
+//             return 60;
+//     }
+// };
 
-const getFontSizeByRank = (rank: number) => {
-    return rank === 1 ? 96 : 48;
-};
+// const getFontSizeByRank = (rank: number) => {
+//     return rank === 1 ? 96 : 48;
+// };
