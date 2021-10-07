@@ -281,6 +281,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
+                        {twitterAccountsData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
+                            .length === 0 && ( // will be changed upon start of trading competition when everything is uncommented
+                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
+                        )}
                         {twitterAccountsData.map((data: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>

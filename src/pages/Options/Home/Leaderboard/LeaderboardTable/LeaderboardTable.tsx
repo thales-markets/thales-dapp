@@ -175,6 +175,13 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [rowsPerPage, memoizedPage, searchString, sortedData]);
 
+    const userLeaderboardData = useMemo(() => {
+        const userData = leaderboardData.filter(
+            (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
+        );
+        return userData;
+    }, [walletAddress, leaderboardData]);
+
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
         { id: 2, label: t('options.leaderboard.table.display-name-col'), sortable: false },
@@ -263,47 +270,48 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {leaderboardData
-                            .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
-                            .map((leader: any, index: any) => {
-                                return (
-                                    <StyledTableRow key={index} className="leaderboard__tableBody__yourRank">
-                                        <StyledTableCell
-                                            style={{
-                                                height: getHeight(leader, true),
-                                                fontSize: getFontSizeByRank(leader.rank),
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
-                                            {(leader as any).rank}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
-                                            {'Your current rank'}
-                                        </StyledTableCell>
-                                        <StyledTableCell>{leader.trades}</StyledTableCell>
-                                        <StyledTableCell>
-                                            {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
-                                        </StyledTableCell>
-                                        <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
-                                                2
-                                            )}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {formatCurrencyWithSign(USD_SIGN, leader.investment)}
-                                        </StyledTableCell>
-                                        <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
-                                            {Math.abs(leader.gain).toFixed(1)}%
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                );
-                            })}
+                        {userLeaderboardData.map((leader: any, index: any) => {
+                            return (
+                                <StyledTableRow key={index} className="leaderboard__tableBody__yourRank">
+                                    <StyledTableCell
+                                        style={{
+                                            height: getHeight(leader, true),
+                                            fontSize: getFontSizeByRank(leader.rank),
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {(leader as any).rank}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        style={{
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        {'Your current rank'}
+                                    </StyledTableCell>
+                                    <StyledTableCell>{leader.trades}</StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
+                                    </StyledTableCell>
+                                    <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                        {formatCurrencyWithSign(
+                                            USD_SIGN,
+                                            leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
+                                            2
+                                        )}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                    </StyledTableCell>
+                                    <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                        {Math.abs(leader.gain).toFixed(1)}%
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            );
+                        })}
+                        {userLeaderboardData.length === 0 && (
+                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
+                        )}
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
