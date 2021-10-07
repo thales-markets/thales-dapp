@@ -43,7 +43,7 @@
     }
 
     &__tableBody {
-        &__firstRow {
+        &__yourRank {
             background: linear-gradient(
                 90deg,
                 #3936c7 -10.96%,
@@ -51,6 +51,11 @@
                 #23a5dd 103.01%,
                 #35dadb 127.72%
             ) !important;
+        }
+        &__firstRank {
+            td {
+                font-weight: bold;
+            }
         }
         & > tr:first-child {
             margin-bottom: 30px;

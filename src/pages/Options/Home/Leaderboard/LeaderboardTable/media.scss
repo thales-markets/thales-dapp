@@ -40,6 +40,11 @@
                 #35dadb 127.72%
             ) !important;
         }
+        &__firstRank {
+            td {
+                font-weight: bold;
+            }
+        }
         & > tr:first-child {
             margin-bottom: 30px;
             td {

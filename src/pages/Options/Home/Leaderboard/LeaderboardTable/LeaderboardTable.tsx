@@ -282,13 +282,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                                     >
                                         {(leader as any).rank}
                                     </StyledTableCell>
-                                    <StyledTableCell
-                                        style={{
-                                            fontWeight: 'bold',
-                                        }}
-                                    >
-                                        {'Your current rank'}
-                                    </StyledTableCell>
+                                    <StyledTableCell>{'Your current rank'}</StyledTableCell>
                                     <StyledTableCell>{leader.trades}</StyledTableCell>
                                     <StyledTableCell>
                                         {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
@@ -314,9 +308,15 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                         )}
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
-                                <StyledTableRow key={index}>
+                                <StyledTableRow
+                                    key={index}
+                                    className={leader.rank === 1 ? 'leaderboard__tableBody__firstRank' : ''}
+                                >
                                     <StyledTableCell
-                                        style={{ height: getHeight(leader), fontSize: getFontSizeByRank(leader.rank) }}
+                                        style={{
+                                            height: getHeight(leader),
+                                            fontSize: getFontSizeByRank(leader.rank),
+                                        }}
                                     >
                                         {(leader as any).rank}
                                     </StyledTableCell>

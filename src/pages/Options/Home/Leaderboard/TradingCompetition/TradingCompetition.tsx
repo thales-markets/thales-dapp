@@ -398,7 +398,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             })}
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
-                                <StyledTableRow key={index}>
+                                <StyledTableRow key={index} className={leader.rank === 1 ? 'leaderboard__tableBody__firstRank' : ''}>
                                     <StyledTableCell
                                         style={{
                                             height: getHeight(leader),
