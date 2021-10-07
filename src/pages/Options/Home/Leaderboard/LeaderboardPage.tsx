@@ -314,7 +314,7 @@ const LeaderboardPage: React.FC = () => {
 };
 
 const TWEET_TEXT = "I'm joining the @Thalesmarket trading competition with address ";
-const TWEET_SUFFIX = '. Let the games begin!';
+const TWEET_SUFFIX = '.%0AWanna jump in? https://thales.market/markets/leaderboard%0ALet the games begin!';
 
 const MainContentContainer = styled.div`
     padding-top: 5px;
