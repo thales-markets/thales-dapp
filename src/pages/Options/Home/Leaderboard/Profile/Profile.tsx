@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useProfilesQuery from 'queries/options/useProfilesQuery';
-import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -37,7 +36,11 @@ export enum Filters {
     Unclaimed = 'unclaimed',
 }
 
-const Profile: React.FC<any> = () => {
+type ProfileProps = {
+    displayNamesMap: Map<string, string>;
+};
+
+const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -49,14 +52,6 @@ const Profile: React.FC<any> = () => {
     const profilesQuery = useProfilesQuery(networkId, {
         enabled: isAppReady,
     });
-
-    const displayNamesQuery = useUsersDisplayNamesQuery({
-        enabled: isAppReady,
-    });
-
-    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
-        displayNamesQuery,
-    ]);
 
     const profiles = useMemo(() => (profilesQuery.data ? profilesQuery.data.profiles : new Map()), [profilesQuery]);
 
@@ -70,7 +65,7 @@ const Profile: React.FC<any> = () => {
 
     const invertedDisplayNamesMap = useMemo(() => {
         const invertedMap = new Map();
-        for (const [key, value] of displayNamesMap.entries()) {
+        for (const [key, value] of (displayNamesMap as any).entries()) {
             invertedMap.set(value, key);
         }
         return invertedMap;

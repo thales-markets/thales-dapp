@@ -300,9 +300,11 @@ const LeaderboardPage: React.FC = () => {
                             ))}
                         </OptionsTabContainer>
                         <WidgetsContainer>
-                            {selectedTab === 'trading-competition' && <TradingCompetition />}
-                            {selectedTab === 'leaderboard' && <LeaderboardTable />}
-                            {selectedTab === 'profile' && <Profile />}
+                            {selectedTab === 'trading-competition' && (
+                                <TradingCompetition displayNamesMap={displayNamesMap} />
+                            )}
+                            {selectedTab === 'leaderboard' && <LeaderboardTable displayNamesMap={displayNamesMap} />}
+                            {selectedTab === 'profile' && <Profile displayNamesMap={displayNamesMap} />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </FlexDivColumn>

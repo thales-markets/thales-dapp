@@ -17,7 +17,6 @@ import { USD_SIGN } from 'constants/currency';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useLeaderboardQuery, { Leaderboard } from 'queries/options/useLeaderboardQuery';
-import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -39,9 +38,13 @@ enum OrderDirection {
     DESC,
 }
 
+type LeaderboardTableProps = {
+    displayNamesMap: Map<string, string>;
+};
+
 const defaultOrderBy = 4; // Volume
 
-const LeaderboardPage: React.FC<any> = () => {
+const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -54,10 +57,6 @@ const LeaderboardPage: React.FC<any> = () => {
     const leaderboard = leaderboardQuery.data?.leaderboard
         ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
         : [];
-
-    const displayNamesQuery = useUsersDisplayNamesQuery({
-        enabled: isAppReady,
-    });
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
@@ -102,10 +101,6 @@ const LeaderboardPage: React.FC<any> = () => {
         }
         return page;
     }, [page, numberOfPages]);
-
-    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
-        displayNamesQuery,
-    ]);
 
     const sortedData: any = useMemo(() => {
         return leaderboard
@@ -459,7 +454,7 @@ export const StyledTableCell = withStyles(() => ({
     },
 }))(TableCell);
 
-export default LeaderboardPage;
+export default LeaderboardTable;
 
 const getFontSizeByRank = (rank: number) => {
     return rank === 1 ? 96 : 48;

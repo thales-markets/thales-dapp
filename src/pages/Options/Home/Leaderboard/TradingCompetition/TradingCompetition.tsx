@@ -17,7 +17,6 @@ import up from 'assets/images/up.svg';
 import { TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
-import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 // import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,9 +39,13 @@ enum OrderDirection {
     DESC,
 }
 
+type TradingCompetitionProps = {
+    displayNamesMap: Map<string, string>;
+};
+
 const defaultOrderBy = 7; // Netprofit
 
-const TradingCompetition: React.FC<any> = () => {
+const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -73,14 +76,6 @@ const TradingCompetition: React.FC<any> = () => {
     const competition = competitionQuery.data
         ? competitionQuery.data.competition.sort((a, b) => b.volume - a.volume)
         : [];
-
-    const displayNamesQuery = useUsersDisplayNamesQuery({
-        enabled: isAppReady,
-    });
-
-    const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
-        displayNamesQuery,
-    ]);
 
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
