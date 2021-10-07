@@ -75,7 +75,6 @@ const LeaderboardPage: React.FC = () => {
             const url = 'https://api.thales.market/auth/' + walletAddress;
             fetch(url).then(async (result) => {
                 if ((await result.text()) === 'true') {
-                    console.log('verify');
                     setAccVerified(true);
                 }
             });
@@ -92,16 +91,13 @@ const LeaderboardPage: React.FC = () => {
         const intervalId = setInterval(async () => {
             attempt = attempt + 1;
             if (attempt > 5) {
-                console.log('clear');
                 clearInterval(intervalId);
             }
             const baseUrl = 'https://api.thales.market/twitter/' + walletAddress;
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            console.log(result);
             if (result) {
                 setTwitterAccountData(result);
-                console.log('clear');
                 setAccVerified(true);
                 clearInterval(intervalId);
             }
