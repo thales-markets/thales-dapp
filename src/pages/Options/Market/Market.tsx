@@ -41,6 +41,7 @@ import { useLocation } from 'react-router-dom';
 import './media.scss';
 import { MarketOverviewMobile } from './components/MarketOverview/MarketOverviewMobile';
 import MarketMobile from './MarketMobile';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -71,7 +72,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         const fetchMarketData = async () => {
             if (marketQuery.isSuccess && marketQuery.data) {
                 if (marketQuery.data.customMarket) {
-                    console.log('I break here1');
                     try {
                         const sportFeedContract = new ethers.Contract(
                             marketQuery.data.oracleAdress,
@@ -90,7 +90,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                             outcome: data[2],
                         });
                     } catch (e) {
-                        console.log('I got here1');
                         const sportFeedContract = new ethers.Contract(
                             marketQuery.data.oracleAdress,
                             ethBurnedOracleInstance.abi,
@@ -105,7 +104,10 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                             ...marketQuery.data,
                             country: data[0],
                             eventName: data[1],
-                            outcome: Number(data[2]).toString(),
+                            outcome:
+                                data[1] === 'Flippening Markets'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString(),
                         });
                     }
                 } else {

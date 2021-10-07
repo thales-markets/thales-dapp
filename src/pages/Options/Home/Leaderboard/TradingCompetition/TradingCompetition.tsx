@@ -281,6 +281,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
+                        {twitterAccountsData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
+                            .length === 0 && ( // will be changed upon start of trading competition when everything is uncommented
+                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
+                        )}
                         {twitterAccountsData.map((data: any, index: any) => {
                             return (
                                 <StyledTableRow key={index}>
@@ -324,12 +328,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
                             .map((leader: any, index: any) => {
                                 return (
-                                    <StyledTableRow
+                                    <StyledTableRow 
+                                        className="leaderboard__tableBody__yourRank"
                                         key={index}
-                                        style={{
-                                            background:
-                                                'linear-gradient(90deg, #3936C7 -10.96%, #2D83D2 46.31%, #23A5DD 103.01%, #35DADB 127.72%)',
-                                        }}
                                     >
                                         <StyledTableCell
                                             style={{
@@ -397,7 +398,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             })}
                         {leaderboardData.map((leader: any, index: any) => {
                             return (
-                                <StyledTableRow key={index}>
+                                <StyledTableRow key={index} className={leader.rank === 1 ? 'leaderboard__tableBody__firstRank' : ''}>
                                     <StyledTableCell
                                         style={{
                                             height: getHeight(leader),

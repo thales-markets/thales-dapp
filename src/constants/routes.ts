@@ -3,7 +3,7 @@ export const ROUTES = {
     Options: {
         Home: '/markets',
         HotMarkets: '/markets?anchor=hot-markets',
-        Olympics: '/markets?userFilter2=Olympics',
+        CustomMarkets: '/markets?userFilter2=custom',
         Overview: '/markets?anchor=overview',
         CreateMarket: '/markets/create-market',
         MarketMatch: '/markets/:marketAddress',

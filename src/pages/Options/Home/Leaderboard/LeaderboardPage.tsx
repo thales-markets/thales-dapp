@@ -1,4 +1,4 @@
-import twitterBlue from 'assets/images/twitter-blue-logo.svg';
+import twitter from 'assets/images/twitter.svg';
 import ROUTES from 'constants/routes';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 // import useTwitterAccountsQuery from 'queries/user/useTwitterAccountsQuery';
@@ -255,7 +255,7 @@ const LeaderboardPage: React.FC = () => {
                                 }}
                             >
                                 {walletAddress && !accVerified && (
-                                    <Image src={twitterBlue} style={{ height: 50, width: 50 }}></Image>
+                                    <Image src={twitter} style={{ height: 50, width: 50 }}></Image>
                                 )}
                                 {walletAddress && accVerified && (
                                     <>

@@ -12,6 +12,7 @@ import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { sortOptionsMarkets } from 'utils/options';
 import { ORDERBOOK_AMOUNT_THRESHOLD } from 'constants/options';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const filterAndPrepareOrders = (
     optionSide: OptionSide,
@@ -105,7 +106,10 @@ const useBinaryOptionsOrders = (
                             ]);
                             currentMarket.country = data[0];
                             currentMarket.eventName = data[1];
-                            currentMarket.outcome = data[2];
+                            currentMarket.outcome =
+                                currentMarket.eventName === 'Flippening Markets'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString();
                             return currentMarket;
                         }
                     } else {
