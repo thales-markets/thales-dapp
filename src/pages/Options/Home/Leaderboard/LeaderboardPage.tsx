@@ -201,7 +201,7 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 26,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
                                     {t('options.leaderboard.display-name')}:{' '}
                                     {displayNamesMap.get(walletAddress.toLowerCase().trim())}
                                 </Text>
@@ -217,7 +217,7 @@ const LeaderboardPage: React.FC = () => {
                                     paddingTop: 4,
                                 }}
                             >
-                                <Text className="bold" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
                                     {t('options.leaderboard.address')}: {walletAddress}
                                 </Text>
                             </Row>

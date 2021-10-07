@@ -5,6 +5,7 @@ import myMarkets from 'assets/images/filters/my-markets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
 import olympicsImg from 'assets/images/filters/olympics.svg';
+import competitionImg from 'assets/images/filters/competition.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import ROUTES from 'constants/routes';
@@ -34,6 +35,7 @@ import SearchMarket from '../SearchMarket';
 import { ExploreMarketsMobile } from './ExploreMarketsMobile';
 import './media.scss';
 import UserFilter from './UserFilters';
+import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
@@ -67,6 +69,7 @@ export enum SecondaryFilters {
     Bitcoin = 'bitcoin',
     Ethereum = 'ethereum',
     Olympics = 'olympics',
+    Competition = 'competition',
 }
 
 const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
@@ -240,6 +243,9 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
             case SecondaryFilters.Olympics:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
                 break;
+            case SecondaryFilters.Competition:
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter((market) => console.log(market));
+                break;
         }
 
         if (phaseFilter !== PhaseFilterEnum.all) {
@@ -383,6 +389,8 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 return ethereum;
             case SecondaryFilters.Olympics:
                 return olympicsImg;
+            case SecondaryFilters.Competition:
+                return competitionImg;
         }
     };
 
@@ -558,48 +566,67 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     setOrderDirection={setOrderDirection}
                 >
                     <NoMarkets>
-                        {userFilter !== PrimaryFilters.MyMarkets && (
+                        {secondLevelUserFilter === SecondaryFilters.Competition && (
                             <>
-                                <Text className="text-l bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-found')}
+                                <Text
+                                    className="text-lm bold pale-grey"
+                                    style={{ whiteSpace: 'break-spaces', textAlign: 'center' }}
+                                >
+                                    {t('options.home.explore-markets.table.trading-comp')}
+                                    <StyledLink
+                                        href="https://thalesmarket.medium.com/921d0d058f73"
+                                        rel="noreferrer"
+                                        target="_blank"
+                                    >
+                                        https://thalesmarket.medium.com/921d0d058f73
+                                    </StyledLink>
                                 </Text>
-                                <Button className="primary" onClick={resetFilters}>
-                                    {t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
                             </>
                         )}
-                        {userFilter === PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-l bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-created')}
-                                </Text>
-                                <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                    <Button
-                                        className="secondary"
-                                        onClick={() =>
-                                            isWalletConnected
-                                                ? navigateTo(ROUTES.Options.CreateMarket)
-                                                : onboardConnector.connectWallet()
-                                        }
-                                    >
-                                        {isWalletConnected
-                                            ? t('options.home.market-creation.create-market-button-label')
-                                            : t('common.wallet.connect-your-wallet')}
-                                    </Button>
-                                    <Text
-                                        className="text-l bold pale-grey"
-                                        style={{
-                                            margin: 'auto 60px',
-                                        }}
-                                    >
-                                        {t('common.wallet.or')}
+                        {secondLevelUserFilter !== SecondaryFilters.Competition &&
+                            userFilter !== PrimaryFilters.MyMarkets && (
+                                <>
+                                    <Text className="text-l bold pale-grey">
+                                        {t('options.home.explore-markets.table.no-markets-found')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}
                                     </Button>
-                                </FlexDiv>
-                            </>
-                        )}
+                                </>
+                            )}
+                        {secondLevelUserFilter !== SecondaryFilters.Competition &&
+                            userFilter === PrimaryFilters.MyMarkets && (
+                                <>
+                                    <Text className="text-l bold pale-grey">
+                                        {t('options.home.explore-markets.table.no-markets-created')}
+                                    </Text>
+                                    <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
+                                        <Button
+                                            className="secondary"
+                                            onClick={() =>
+                                                isWalletConnected
+                                                    ? navigateTo(ROUTES.Options.CreateMarket)
+                                                    : onboardConnector.connectWallet()
+                                            }
+                                        >
+                                            {isWalletConnected
+                                                ? t('options.home.market-creation.create-market-button-label')
+                                                : t('common.wallet.connect-your-wallet')}
+                                        </Button>
+                                        <Text
+                                            className="text-l bold pale-grey"
+                                            style={{
+                                                margin: 'auto 60px',
+                                            }}
+                                        >
+                                            {t('common.wallet.or')}
+                                        </Text>
+                                        <Button className="primary" onClick={resetFilters}>
+                                            {t('options.home.explore-markets.table.view-all-markets')}
+                                        </Button>
+                                    </FlexDiv>
+                                </>
+                            )}
                     </NoMarkets>
                 </MarketsTable>
             </div>

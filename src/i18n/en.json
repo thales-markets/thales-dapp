@@ -208,6 +208,7 @@
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
             "olympics": "Olympics",
+            "competition": "Trading Competition",
             "long": "Long",
             "short": "Short"
         },
@@ -232,7 +233,8 @@
                 "table": {
                     "view-all-markets": "View all markets",
                     "no-markets-created": "You haven’t created any market yet.",
-                    "no-markets-found": "No markets found."
+                    "no-markets-found": "No markets found.",
+                    "trading-comp": "No markets available at the moment.\n Trading competition will start on Monday, October 11th at 10:00AM UTC.\n For more information click here: "
                 }
             },
             "markets-table": {
