@@ -416,3 +416,17 @@ export const Row = styled(FlexDiv)`
 `;
 
 export default LeaderboardPage;
+`;
+
+export const Row = styled(FlexDiv)`
+    color: #f6f6fe;
+    line-height: 16px;
+    font-weight: 600;
+    padding: 5px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #04045a;
+    padding-left: 20px;
+`;
+
+export default LeaderboardPage;
