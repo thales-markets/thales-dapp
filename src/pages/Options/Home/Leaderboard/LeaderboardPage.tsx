@@ -1,4 +1,4 @@
-import twitterBlue from 'assets/images/twitter-blue-logo.svg';
+import twitter from 'assets/images/twitter.svg';
 import ROUTES from 'constants/routes';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 // import useTwitterAccountsQuery from 'queries/user/useTwitterAccountsQuery';
@@ -255,7 +255,7 @@ const LeaderboardPage: React.FC = () => {
                                 }}
                             >
                                 {walletAddress && !accVerified && (
-                                    <Image src={twitterBlue} style={{ height: 50, width: 50 }}></Image>
+                                    <Image src={twitter} style={{ height: 50, width: 50 }}></Image>
                                 )}
                                 {walletAddress && accVerified && (
                                     <>
@@ -402,20 +402,6 @@ const LeaderboardTitle = styled(Text)`
     font-size: 39px;
     line-height: 72px;
     font-weight: 600;
-`;
-
-export const Row = styled(FlexDiv)`
-    color: #f6f6fe;
-    line-height: 16px;
-    font-weight: 600;
-    padding: 5px;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #04045a;
-    padding-left: 20px;
-`;
-
-export default LeaderboardPage;
 `;
 
 export const Row = styled(FlexDiv)`
