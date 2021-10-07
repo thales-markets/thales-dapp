@@ -164,8 +164,7 @@ const LeaderboardPage: React.FC = () => {
                     <InfoContainer>
                         <FlexDiv
                             style={{
-                                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                                border: '1px solid transparent',
+                                background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
                                 borderRadius: 23,
                                 marginBottom: 16,
                                 flexDirection: 'column',
@@ -177,6 +176,7 @@ const LeaderboardPage: React.FC = () => {
                                     borderTopLeftRadius: 23,
                                     borderTopRightRadius: 23,
                                     height: 50,
+                                    margin: '1px 1px 0 1px',
                                     paddingLeft: 36,
                                     lineHeight: 40,
                                     letterSpacing: 0.15,
@@ -193,6 +193,7 @@ const LeaderboardPage: React.FC = () => {
                                     height: 48,
                                     paddingLeft: 36,
                                     lineHeight: 32,
+                                    margin: '0 1px 0 1px',
                                     letterSpacing: 0.35,
                                     paddingTop: 26,
                                 }}
@@ -208,6 +209,7 @@ const LeaderboardPage: React.FC = () => {
                                     borderBottomRightRadius: 23,
                                     height: 48,
                                     paddingLeft: 36,
+                                    margin: '0 1px 0 1px',
                                     lineHeight: 32,
                                     letterSpacing: 0.35,
                                     paddingTop: 4,
@@ -220,8 +222,7 @@ const LeaderboardPage: React.FC = () => {
                         </FlexDiv>
                         <FlexDiv
                             style={{
-                                background: 'linear-gradient(#ca91dc, #6ac1d5)',
-                                border: '1px solid transparent',
+                                background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
                                 borderRadius: 23,
                                 marginBottom: 16,
                                 flexDirection: 'column',
@@ -234,6 +235,7 @@ const LeaderboardPage: React.FC = () => {
                                     borderTopRightRadius: 23,
                                     height: 50,
                                     paddingLeft: 36,
+                                    margin: '1px 1px 0 1px',
                                     lineHeight: 40,
                                     letterSpacing: 0.15,
                                     fontSize: 20,
@@ -249,6 +251,7 @@ const LeaderboardPage: React.FC = () => {
                                     borderBottomLeftRadius: 23,
                                     borderBottomRightRadius: 23,
                                     paddingLeft: 36,
+                                    margin: '0 1px 0 1px',
                                     paddingRight: 43,
                                     height: 96,
                                 }}

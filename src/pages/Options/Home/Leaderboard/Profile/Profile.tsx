@@ -343,7 +343,8 @@ const Profile: React.FC<any> = () => {
                                                 paddingLeft: 15,
                                                 fontSize: 31,
                                                 borderRadius: 23,
-                                                height: '100%',
+                                                height: '99.3%',
+                                                margin: 1,
                                             }}
                                         >
                                             <Text

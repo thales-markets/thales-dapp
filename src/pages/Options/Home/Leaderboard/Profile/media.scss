@@ -12,8 +12,7 @@
 
         &__rowBorder {
             flex: 1 1 0%;
-            background: linear-gradient(#ca91dc, #6ac1d5);
-            border: 1px solid transparent;
+            background: linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6));
             border-radius: 23px;
             margin-bottom: 16px;
         }
@@ -27,12 +26,14 @@
                 align-items: center;
                 justify-content: flex-start !important;
                 padding-top: 16px;
+                margin: 1px 0 1px 1px;
             }
             &--right {
                 flex-grow: 8 !important;
                 padding-top: 11px;
                 border-bottom-right-radius: 23px;
                 border-top-right-radius: 23px;
+                margin: 1px 1px 1px 0;
             }
 
             &__columns {
