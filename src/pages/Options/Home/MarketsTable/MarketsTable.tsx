@@ -283,7 +283,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                         >
                                             <StyledAnchoredTableCell>
                                                 {market.customMarket ? (
-                                                    market.eventName === 'XYZ airdrop claims' ? (
+                                                    market.eventName === 'XYZ airdrop claims' ||
+                                                    market.eventName === 'ETH burned count' ? (
                                                         formatCurrency(market.outcome || 0, 0)
                                                     ) : (
                                                         market.eventName
