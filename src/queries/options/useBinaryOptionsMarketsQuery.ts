@@ -5,6 +5,7 @@ import { OptionsMarkets } from 'types/options';
 import { NetworkId } from 'utils/network';
 import { ethers } from 'ethers';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import snxJSConnector from 'utils/snxJSConnector';
 
 const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOptions<OptionsMarkets>) => {
@@ -18,20 +19,39 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
             return Promise.all(
                 optionsMarkets.map(async (currentMarket) => {
                     if (currentMarket.customMarket) {
-                        const sportFeedContract = new ethers.Contract(
-                            currentMarket.customOracle,
-                            sportFeedOracleContract.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        currentMarket.country = data[0];
-                        currentMarket.eventName = data[1];
-                        currentMarket.outcome = data[2];
-                        return currentMarket;
+                        console.log('I break here');
+                        try {
+                            const sportFeedContract = new ethers.Contract(
+                                currentMarket.customOracle,
+                                sportFeedOracleContract.abi,
+                                (snxJSConnector as any).provider
+                            );
+                            const data: any = await Promise.all([
+                                sportFeedContract.targetName(),
+                                sportFeedContract.eventName(),
+                                sportFeedContract.targetOutcome(),
+                            ]);
+                            currentMarket.country = data[0];
+                            currentMarket.eventName = data[1];
+                            currentMarket.outcome = data[2];
+                            return currentMarket;
+                        } catch (e) {
+                            console.log('I got here');
+                            const sportFeedContract = new ethers.Contract(
+                                currentMarket.customOracle,
+                                ethBurnedOracleInstance.abi,
+                                (snxJSConnector as any).provider
+                            );
+                            const data: any = await Promise.all([
+                                sportFeedContract.targetName(),
+                                sportFeedContract.eventName(),
+                                sportFeedContract.targetOutcome(),
+                            ]);
+                            currentMarket.country = data[0];
+                            currentMarket.eventName = data[1];
+                            currentMarket.outcome = data[2];
+                            return currentMarket;
+                        }
                     } else {
                         return currentMarket;
                     }

@@ -9,6 +9,7 @@ import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 import { keyBy } from 'lodash';
 import { ethers } from 'ethers';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { sortOptionsMarkets } from 'utils/options';
 import { ORDERBOOK_AMOUNT_THRESHOLD } from 'constants/options';
 
@@ -76,20 +77,37 @@ const useBinaryOptionsOrders = (
             const optionsMarkets = await Promise.all(
                 rawOptionsMarkets.map(async (currentMarket) => {
                     if (currentMarket.customMarket) {
-                        const sportFeedContract = new ethers.Contract(
-                            currentMarket.customOracle,
-                            sportFeedOracleContract.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        currentMarket.country = data[0];
-                        currentMarket.eventName = data[1];
-                        currentMarket.outcome = data[2];
-                        return currentMarket;
+                        try {
+                            const sportFeedContract = new ethers.Contract(
+                                currentMarket.customOracle,
+                                sportFeedOracleContract.abi,
+                                (snxJSConnector as any).provider
+                            );
+                            const data: any = await Promise.all([
+                                sportFeedContract.targetName(),
+                                sportFeedContract.eventName(),
+                                sportFeedContract.targetOutcome(),
+                            ]);
+                            currentMarket.country = data[0];
+                            currentMarket.eventName = data[1];
+                            currentMarket.outcome = data[2];
+                            return currentMarket;
+                        } catch (e) {
+                            const sportFeedContract = new ethers.Contract(
+                                currentMarket.customOracle,
+                                ethBurnedOracleInstance.abi,
+                                (snxJSConnector as any).provider
+                            );
+                            const data: any = await Promise.all([
+                                sportFeedContract.targetName(),
+                                sportFeedContract.eventName(),
+                                sportFeedContract.targetOutcome(),
+                            ]);
+                            currentMarket.country = data[0];
+                            currentMarket.eventName = data[1];
+                            currentMarket.outcome = data[2];
+                            return currentMarket;
+                        }
                     } else {
                         return currentMarket;
                     }
