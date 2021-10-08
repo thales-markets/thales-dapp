@@ -28,7 +28,7 @@ const Loader: React.FC = () => {
                     <Text className="pale-grey text-l ls25">{t(`common.unsupported-network.title`)}</Text>
 
                     <Text style={{ marginTop: 45 }} className="pale-grey text-s lh32 ls35">
-                        {t(`common.unsupported-network.descirption`)}
+                        {t(`common.unsupported-network.description`)}
                     </Text>
                     <Button
                         style={{ alignSelf: 'flex-end', margin: '80px 0' }}
