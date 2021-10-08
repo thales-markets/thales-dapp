@@ -7,8 +7,8 @@ const ETHBurnedCount: React.FC = () => {
         <FlexDivCentered>
             <CountContainer>
                 <StakingRewardsAmountContainer gradient="#00D1FF">
-                    <Title>Total burned</Title>
-                    <Amount>464,656.06 ETH</Amount>
+                    <Title> </Title>
+                    <Amount> </Amount>
                 </StakingRewardsAmountContainer>
             </CountContainer>
         </FlexDivCentered>

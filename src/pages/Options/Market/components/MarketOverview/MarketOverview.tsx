@@ -60,7 +60,7 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
             {optionsMarket.customMarket ? (
                 <Container>
                     <ItemContainer className="market__overview__cell">
-                        <FlexDivCentered>
+                        <FlexDivCentered style={{ paddingLeft: 2, paddingRight: 2 }}>
                             <ReactCountryFlag
                                 countryCode={countryToCountryCode(optionsMarket.country as any)}
                                 style={{ width: 40, height: 40, marginRight: 10 }}

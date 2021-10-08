@@ -214,6 +214,13 @@ export type Flippening = {
     ratio: number;
 };
 
+export type ETHBTCRatio = {
+    timestamp: number;
+    ratio: number;
+};
+
+export type ETHBTCRatios = ETHBTCRatio[];
+
 export type ETHBurned = {
     total: number;
     totalUsd: number;

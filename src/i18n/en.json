@@ -854,7 +854,8 @@
             "legacy-signing": {
                 "label": "Use legacy signing",
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue."
-            }
+            },
+            "ratio": "Ratio"
         }
     }
 }
