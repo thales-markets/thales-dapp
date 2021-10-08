@@ -111,182 +111,194 @@ const LeaderboardPage: React.FC = () => {
                 <FlexDivColumn className="leaderboard" style={{ zIndex: 10 }}>
                     <MarketHeader route={ROUTES.Options.Leaderboard} />
                 </FlexDivColumn>
-                <FlexDivColumn style={{ width: '100%' }}>
-                    {selectedTab === 'leaderboard' && (
-                        <LeaderboardTitle className="pale-grey">
-                            {t('options.leaderboard.leaderboard-title')}
-                        </LeaderboardTitle>
-                    )}
-                    {selectedTab === 'leaderboard' && (
-                        <>
-                            <Text className="text-s ls25 lh24 pale-grey">
-                                {t('options.leaderboard.leaderboard-subtitle')}
-                            </Text>
-                            <Text className="text-s ls25 lh24 pale-grey">
-                                {t('options.leaderboard.leaderboard-subtitle-2')}
-                            </Text>
-                        </>
-                    )}
-                    {selectedTab === 'trading-competition' && (
-                        <LeaderboardTitle className="pale-grey">
-                            {t('options.leaderboard.trading-comp-title')}
-                        </LeaderboardTitle>
-                    )}
-                    {selectedTab === 'trading-competition' && (
-                        <>
-                            <Text className="text-s ls25 lh24 pale-grey">
-                                {t('options.leaderboard.trading-comp-subtitle')}
-                            </Text>
-                            <Text className="text-s ls25 lh24 pale-grey">
-                                {t('options.leaderboard.trading-comp-subtitle-2')}
-                            </Text>
-                            <Text className="text-s ls25 lh24 pale-grey">
-                                {t('options.leaderboard.trading-comp-subtitle-3')}
-                            </Text>
-                            <Text className="text-s ls25 lh24 pale-grey">
-                                {t('options.leaderboard.trading-comp-subtitle-4')}
-                                <StyledLink
-                                    href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
-                                    rel="noreferrer"
-                                    target="_blank"
-                                >
-                                    https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
-                                </StyledLink>
-                            </Text>
-                        </>
-                    )}
-                    {selectedTab === 'profile' && (
-                        <LeaderboardTitle className="pale-grey">
-                            {t('options.leaderboard.profile-title')}
-                        </LeaderboardTitle>
-                    )}
 
-                    <InfoContainer>
-                        <FlexDiv
-                            style={{
-                                background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
-                                borderRadius: 23,
-                                marginBottom: 16,
-                                flexDirection: 'column',
-                                height: 148,
-                            }}
-                        >
-                            <Row
-                                style={{
-                                    borderTopLeftRadius: 23,
-                                    borderTopRightRadius: 23,
-                                    height: 50,
-                                    margin: '1px 1px 0 1px',
-                                    paddingLeft: 36,
-                                    lineHeight: 40,
-                                    letterSpacing: 0.15,
-                                    fontSize: 20,
-                                    paddingTop: 18,
-                                }}
-                            >
-                                <Text className="bold lh24" style={{ flex: 1 }}>
-                                    {t('options.leaderboard.my-info')}:
-                                </Text>
-                            </Row>
-                            <Row
-                                style={{
-                                    height: 48,
-                                    paddingLeft: 36,
-                                    lineHeight: 32,
-                                    margin: '0 1px 0 1px',
-                                    letterSpacing: 0.35,
-                                    paddingTop: 26,
-                                }}
-                            >
-                                <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
-                                    {t('options.leaderboard.display-name')}:{' '}
-                                    {displayNamesMap.get(walletAddress.toLowerCase().trim())}
-                                </Text>
-                            </Row>
-                            <Row
-                                style={{
-                                    borderBottomLeftRadius: 23,
-                                    borderBottomRightRadius: 23,
-                                    height: 48,
-                                    paddingLeft: 36,
-                                    margin: '0 1px 0 1px',
-                                    lineHeight: 32,
-                                    letterSpacing: 0.35,
-                                    paddingTop: 4,
-                                }}
-                            >
-                                <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
-                                    {t('options.leaderboard.address')}: {walletAddress}
-                                </Text>
-                            </Row>
-                        </FlexDiv>
-                        <FlexDiv
-                            style={{
-                                background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
-                                borderRadius: 23,
-                                marginBottom: 16,
-                                flexDirection: 'column',
-                                height: 148,
-                            }}
-                        >
-                            <Row
-                                style={{
-                                    borderTopLeftRadius: 23,
-                                    borderTopRightRadius: 23,
-                                    height: 50,
-                                    paddingLeft: 36,
-                                    margin: '1px 1px 0 1px',
-                                    lineHeight: 40,
-                                    letterSpacing: 0.15,
-                                    fontSize: 20,
-                                    paddingTop: 18,
-                                }}
-                            >
-                                <Text className="bold lh24" style={{ flex: 1 }}>
-                                    {t('options.leaderboard.twitter-account')}
-                                </Text>
-                            </Row>
-                            <Row
-                                style={{
-                                    borderBottomLeftRadius: 23,
-                                    borderBottomRightRadius: 23,
-                                    paddingLeft: 36,
-                                    margin: '0 1px 0 1px',
-                                    paddingRight: 43,
-                                    height: 96,
-                                }}
-                            >
-                                {walletAddress && !accVerified && (
-                                    <Image src={twitter} style={{ height: 50, width: 50 }}></Image>
-                                )}
-                                {walletAddress && accVerified && (
-                                    <>
-                                        <Image
-                                            src={twitterAccountData.avatar}
-                                            style={{ height: 50, width: 50, borderRadius: '50%' }}
-                                        ></Image>
+                <FlexDivColumn style={{ width: '100%' }}>
+                    <div style={{ height: 356 }}>
+                        <div style={{ height: 168 }}>
+                            {selectedTab === 'leaderboard' && (
+                                <LeaderboardTitle className="pale-grey">
+                                    {t('options.leaderboard.leaderboard-title')}
+                                </LeaderboardTitle>
+                            )}
+                            {selectedTab === 'leaderboard' && (
+                                <>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.leaderboard-subtitle')}
+                                    </Text>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.leaderboard-subtitle-2')}
+                                    </Text>
+                                </>
+                            )}
+                            {selectedTab === 'trading-competition' && (
+                                <LeaderboardTitle className="pale-grey">
+                                    {t('options.leaderboard.trading-comp-title')}
+                                </LeaderboardTitle>
+                            )}
+                            {selectedTab === 'trading-competition' && (
+                                <>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trading-comp-subtitle')}
+                                    </Text>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trading-comp-subtitle-2')}
+                                    </Text>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trading-comp-subtitle-3')}
+                                    </Text>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trading-comp-subtitle-4')}
                                         <StyledLink
-                                            href={twitterAccountData.twitter}
+                                            href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
+                                            rel="noreferrer"
                                             target="_blank"
-                                            className="text-m"
-                                            style={{ flex: 1, marginLeft: 15 }}
                                         >
-                                            {twitterAccountData.name}
+                                            https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
                                         </StyledLink>
-                                    </>
-                                )}
-                                {walletAddress && !accVerified && (
-                                    <Button
-                                        className="primary"
-                                        style={{ width: 202, fontSize: 20 }}
-                                        onClick={checkAddress}
-                                    >
-                                        {'Verify'}
-                                    </Button>
-                                )}
-                            </Row>
-                        </FlexDiv>
-                    </InfoContainer>
+                                    </Text>
+                                </>
+                            )}
+                            {selectedTab === 'profile' && (
+                                <LeaderboardTitle className="pale-grey">
+                                    {t('options.leaderboard.profile-title')}
+                                </LeaderboardTitle>
+                            )}
+                            {selectedTab === 'profile' && (
+                                <Text className="text-s ls25 lh24 pale-grey">
+                                    {t('options.leaderboard.profile-subtitle')}
+                                </Text>
+                            )}
+                        </div>
+                        <InfoContainer>
+                            <FlexDiv
+                                style={{
+                                    background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
+                                    borderRadius: 23,
+                                    marginBottom: 16,
+                                    flexDirection: 'column',
+                                    height: 148,
+                                }}
+                            >
+                                <Row
+                                    style={{
+                                        borderTopLeftRadius: 23,
+                                        borderTopRightRadius: 23,
+                                        height: 50,
+                                        margin: '1px 1px 0 1px',
+                                        paddingLeft: 36,
+                                        lineHeight: 40,
+                                        letterSpacing: 0.15,
+                                        fontSize: 20,
+                                        paddingTop: 8,
+                                    }}
+                                >
+                                    <Text className="bold lh24" style={{ flex: 1 }}>
+                                        {t('options.leaderboard.my-info')}:
+                                    </Text>
+                                </Row>
+                                <Row
+                                    style={{
+                                        height: 48,
+                                        paddingLeft: 36,
+                                        lineHeight: 32,
+                                        margin: '0 1px 0 1px',
+                                        letterSpacing: 0.35,
+                                        paddingTop: 26,
+                                    }}
+                                >
+                                    <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                        {t('options.leaderboard.display-name')}:{' '}
+                                        <span style={{ fontSize: 20, fontWeight: 700 }}>
+                                            {displayNamesMap.get(walletAddress.toLowerCase().trim())}
+                                        </span>
+                                    </Text>
+                                </Row>
+                                <Row
+                                    style={{
+                                        borderBottomLeftRadius: 23,
+                                        borderBottomRightRadius: 23,
+                                        height: 48,
+                                        paddingLeft: 36,
+                                        margin: '0 1px 0 1px',
+                                        lineHeight: 32,
+                                        letterSpacing: 0.35,
+                                        paddingTop: 4,
+                                    }}
+                                >
+                                    <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                        {t('options.leaderboard.address')}:{' '}
+                                        <span style={{ fontSize: 20, fontWeight: 700 }}>{walletAddress}</span>
+                                    </Text>
+                                </Row>
+                            </FlexDiv>
+                            <FlexDiv
+                                style={{
+                                    background: 'linear-gradient(rgba(140, 114, 184, 0.6), rgba(106, 193, 213, 0.6))',
+                                    borderRadius: 23,
+                                    marginBottom: 16,
+                                    flexDirection: 'column',
+                                    height: 148,
+                                }}
+                            >
+                                <Row
+                                    style={{
+                                        borderTopLeftRadius: 23,
+                                        borderTopRightRadius: 23,
+                                        height: 50,
+                                        paddingLeft: 36,
+                                        margin: '1px 1px 0 1px',
+                                        lineHeight: 40,
+                                        letterSpacing: 0.15,
+                                        fontSize: 20,
+                                        paddingTop: 8,
+                                    }}
+                                >
+                                    <Text className="bold lh24" style={{ flex: 1 }}>
+                                        {t('options.leaderboard.twitter-account')}
+                                    </Text>
+                                </Row>
+                                <Row
+                                    style={{
+                                        borderBottomLeftRadius: 23,
+                                        borderBottomRightRadius: 23,
+                                        paddingLeft: 36,
+                                        margin: '0 1px 0 1px',
+                                        paddingRight: 43,
+                                        height: 96,
+                                    }}
+                                >
+                                    {walletAddress && !accVerified && (
+                                        <Image src={twitter} style={{ height: 50, width: 50 }}></Image>
+                                    )}
+                                    {walletAddress && accVerified && (
+                                        <>
+                                            <Image
+                                                src={twitterAccountData.avatar}
+                                                style={{ height: 50, width: 50, borderRadius: '50%' }}
+                                            ></Image>
+                                            <StyledLink
+                                                href={twitterAccountData.twitter}
+                                                target="_blank"
+                                                className="text-m"
+                                                style={{ flex: 1, marginLeft: 15 }}
+                                            >
+                                                {twitterAccountData.name}
+                                            </StyledLink>
+                                        </>
+                                    )}
+                                    {walletAddress && !accVerified && (
+                                        <Button
+                                            className="primary"
+                                            style={{ width: 202, fontSize: 20 }}
+                                            onClick={checkAddress}
+                                        >
+                                            {'Verify'}
+                                        </Button>
+                                    )}
+                                </Row>
+                            </FlexDiv>
+                        </InfoContainer>
+                    </div>
                     <MainContentContainer>
                         <OptionsTabContainer>
                             {optionsTabContent.map((tab, index) => (
@@ -360,6 +372,8 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
         background: #121776;
         transition: 0.2s;
         color: #f6f6fe;
+        font-size: 20px;
+        font-weight: 700;
         transform: scale(1.1) translateY(-1px);
         border-top: 1px solid rgba(202, 145, 220, 0.2);
         border-left: 1px solid rgba(202, 145, 220, 0.2);
@@ -388,7 +402,7 @@ const WidgetsContainer = styled.div`
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: auto min-content;
     grid-gap: 20px;
-    padding: 20px;
+    padding: 16px 20px;
     border: 1px solid rgba(202, 145, 220, 0.2);
     border-radius: 15px;
     background: #121776;
