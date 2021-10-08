@@ -496,7 +496,14 @@
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
-                "event-name-label": "Event Name"
+                "event-name-label": "Event Name",
+                "current-ratio-label": "Current ratio",
+                "final-ratio-label": "Final ratio",
+                "strike-ratio-label": "Strike ratio",
+                "current-burn-label": "Current burn",
+                "final-burn-label": "Final burn",
+                "strike-burn-label": "Strike burn",
+                "rank-label": "Rank"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",

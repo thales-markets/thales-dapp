@@ -60,7 +60,12 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     sportFeedContract.eventName(),
                     sportFeedContract.targetOutcome(),
                 ]).then((data) => {
-                    setOptionsMarket({ ...marketQuery.data, country: data[0], eventName: data[1], outcome: data[2] });
+                    setOptionsMarket({
+                        ...marketQuery.data,
+                        country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                        eventName: data[1],
+                        outcome: data[2],
+                    });
                 });
             } else {
                 setOptionsMarket(marketQuery.data);

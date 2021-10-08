@@ -31,7 +31,8 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                                 sportFeedContract.eventName(),
                                 sportFeedContract.targetOutcome(),
                             ]);
-                            currentMarket.country = data[0];
+                            currentMarket.country =
+                                data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0];
                             currentMarket.eventName = data[1];
                             currentMarket.outcome = data[2];
                             return currentMarket;
@@ -46,7 +47,8 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                                 sportFeedContract.eventName(),
                                 sportFeedContract.targetOutcome(),
                             ]);
-                            currentMarket.country = data[0];
+                            currentMarket.country =
+                                data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0];
                             currentMarket.eventName = data[1];
                             currentMarket.outcome =
                                 currentMarket.eventName === 'Flippening Markets'

@@ -85,11 +85,14 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Title>
-                            {optionsMarket.eventName === 'ETH burned count' ||
-                            optionsMarket.eventName === 'Flippening Markets'
+                            {optionsMarket.eventName === 'ETH burned count'
                                 ? optionsMarket.isResolved
-                                    ? t('options.market.overview.final-price-label')
-                                    : t('options.market.overview.current-price-label')
+                                    ? t('options.market.overview.final-burn-label')
+                                    : t('options.market.overview.current-burn-label')
+                                : optionsMarket.eventName === 'Flippening Markets'
+                                ? optionsMarket.isResolved
+                                    ? t('options.market.overview.final-ratio-label')
+                                    : t('options.market.overview.current-ratio-label')
                                 : t('options.market.overview.event-name-label')}
                         </Title>
                         <Content fontSize={16}>
@@ -106,11 +109,13 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Title>
-                            {optionsMarket.eventName === 'XYZ airdrop claims' ||
-                            optionsMarket.eventName === 'ETH burned count' ||
-                            optionsMarket.eventName === 'Flippening Markets'
-                                ? 'Strike price'
-                                : 'Rank'}
+                            {optionsMarket.eventName === 'XYZ airdrop claims'
+                                ? t('options.market.overview.strike-price-label')
+                                : optionsMarket.eventName === 'ETH burned count'
+                                ? t('options.market.overview.strike-burn-label')
+                                : optionsMarket.eventName === 'Flippening Markets'
+                                ? t('options.market.overview.strike-ratio-label')
+                                : t('options.market.overview.rank-label')}
                         </Title>
                         <Content fontSize={16}>{formatCurrency(optionsMarket.outcome || 0, 0)}</Content>
                     </ItemContainer>
@@ -138,7 +143,8 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                 ? t('options.market.overview.final-result-label')
                                 : t('options.market.overview.current-result-label')}
                         </Title>
-                        {optionsMarket.eventName === 'ETH burned count' ||
+                        {optionsMarket.eventName === 'XYZ airdrop claims' ||
+                        optionsMarket.eventName === 'ETH burned count' ||
                         optionsMarket.eventName === 'Flippening Markets' ? (
                             <Result isLong={optionsMarket.result === 'long'}>{optionsMarket.result}</Result>
                         ) : (
