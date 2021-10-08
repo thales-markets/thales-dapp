@@ -85,7 +85,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         ]);
                         setOptionsMarket({
                             ...marketQuery.data,
-                            country: data[0],
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
                             eventName: data[1],
                             outcome: data[2],
                         });
@@ -102,7 +102,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         ]);
                         setOptionsMarket({
                             ...marketQuery.data,
-                            country: data[0],
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
                             eventName: data[1],
                             outcome:
                                 data[1] === 'Flippening Markets'

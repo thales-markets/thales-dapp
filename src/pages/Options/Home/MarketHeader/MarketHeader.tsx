@@ -21,6 +21,8 @@ import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.
 import burger from 'assets/images/burger.svg';
 import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
 import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
+import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
+import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -153,6 +155,28 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ userFilter2: ['custom'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                        href={buildHref(ROUTES.Options.CustomMarkets)}
+                    >
+                        <SidebarItem
+                            imgSrc={customMarketsDefaultIcon}
+                            imgSrcHoverSelected={customMarketsSelectedIcon}
+                            className={route === ROUTES.Options.CustomMarkets ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.custom-markets-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>

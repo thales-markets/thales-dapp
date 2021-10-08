@@ -10,12 +10,16 @@ import BasketballResults from './BasketballResults';
 import VolleyballResults from './VolleyballResults';
 import { useTranslation } from 'react-i18next';
 import USOpenResults from './USOpenResults';
+import ETHBurnedCount from './ETHBurnedCount';
+import ETHBTCFlippeningChart from './ETHBTCFlippeningChart';
 
 enum CustomMarketEvent {
     OLYMPICS_GOLD_MEDALS_RANKING = 'Olympics Gold Medals Ranking',
     OLYMPICS_MEN_BASKETBALL_RANKING = 'Olympics Basketball Rankings (m)',
     OLYMPICS_MEN_VOLLEYBALL_RANKING = 'Olympics Volleyball Rankings (m)',
     US_OPEN_MEN_WINNER = 'US Open 2021 winner',
+    ETH_BURNED_COUNT = 'ETH burned count',
+    FLIPPENING_MARKETS = 'Flippening Markets',
 }
 
 const CustomMarketEventMap: Record<string, any> = {
@@ -23,6 +27,8 @@ const CustomMarketEventMap: Record<string, any> = {
     [CustomMarketEvent.OLYMPICS_MEN_BASKETBALL_RANKING]: <BasketballResults />,
     [CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING]: <VolleyballResults />,
     [CustomMarketEvent.US_OPEN_MEN_WINNER]: <USOpenResults />,
+    [CustomMarketEvent.ETH_BURNED_COUNT]: <ETHBurnedCount />,
+    [CustomMarketEvent.FLIPPENING_MARKETS]: <ETHBTCFlippeningChart />,
 };
 
 const CustomMarketResults: React.FC = () => {
@@ -34,8 +40,10 @@ const CustomMarketResults: React.FC = () => {
             <MarketWidgetHeader
                 widgetKey={MarketWidgetKey.CUSTOM_MARKET_RESULTS}
                 title={
-                    optionsMarket.eventName == CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING ||
-                    optionsMarket.eventName == CustomMarketEvent.US_OPEN_MEN_WINNER
+                    optionsMarket.eventName == CustomMarketEvent.FLIPPENING_MARKETS
+                        ? 'ETH/BTC market cap ratio chart'
+                        : optionsMarket.eventName == CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING ||
+                          optionsMarket.eventName == CustomMarketEvent.US_OPEN_MEN_WINNER
                         ? t(`options.market.widgets.custom-market-results-odds-widget`)
                         : undefined
                 }

@@ -496,7 +496,14 @@
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
-                "event-name-label": "Event Name"
+                "event-name-label": "Event Name",
+                "current-ratio-label": "Current ratio",
+                "final-ratio-label": "Final ratio",
+                "strike-ratio-label": "Strike ratio",
+                "current-burn-label": "Current burn",
+                "final-burn-label": "Final burn",
+                "strike-burn-label": "Strike burn",
+                "rank-label": "Rank"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
@@ -742,6 +749,7 @@
             "trading-comp-subtitle-2": "Please note that this competition hasn't started yet, but registrations are open.",
             "trading-comp-subtitle-3": "You'll need to connect your wallet (top right corner) and then verify it, associating it with a Twitter account (that's older than 3 months).",
             "trading-comp-subtitle-4": "You can read all the details regarding this trading competition here: ",
+            "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
             "profile-title": "Profile",
             "verify-twitter-account": "Verify account",
             "display-name": "Display Name",
@@ -847,7 +855,8 @@
             "legacy-signing": {
                 "label": "Use legacy signing",
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue."
-            }
+            },
+            "ratio": "Ratio"
         }
     }
 }
