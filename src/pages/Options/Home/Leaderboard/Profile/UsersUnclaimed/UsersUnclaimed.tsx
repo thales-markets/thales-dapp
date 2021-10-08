@@ -89,12 +89,15 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                             {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
                                     countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 50, height: 50, marginRight: 0 }}
+                                    style={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
                                     svg
                                 />
                             )}
                             {!countryToCountryCode(optionsMarket?.country as string) && (
-                                <CustomIcon src={eventToIcon(optionsMarket?.eventName as string)}></CustomIcon>
+                                <CustomIcon
+                                    style={{ marginLeft: 32 }}
+                                    src={eventToIcon(optionsMarket?.eventName as string)}
+                                ></CustomIcon>
                             )}
                             {market.country}
                         </>
@@ -102,10 +105,12 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                         <>
                             <CurrencyIcon
                                 currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 50, height: 50, marginRight: 0 }}
+                                synthIconStyle={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
                             />
-                            <CryptoName style={{ marginTop: 8 }}>{getSynthName(market.currencyKey)}</CryptoName>
-                            <CryptoKey>{market.asset}</CryptoKey>
+                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
+                                {getSynthName(market.currencyKey)}
+                            </CryptoName>
+                            <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
                         </>
                     )}
                 </DisplayContentsAnchor>
@@ -122,7 +127,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                         {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                 </Row>
-                <Row className="text-m">
+                <Row className="text-profile-data">
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                     <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                     <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
@@ -138,7 +143,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                             : t('options.leaderboard.profile.common.short')}
                     </Text>
                 </Row>
-                <Row className="text-m" style={{ paddingBottom: 16 }}>
+                <Row className="text-profile-data" style={{ paddingBottom: 16 }}>
                     <Text style={{ flex: 1, color: getCellColor(market.result) }}>{market.result.toUpperCase()}</Text>
                     <Text style={{ flex: 1, paddingLeft: 16 }}>
                         {market.result === 'long'
@@ -185,6 +190,9 @@ export const RowScrollable = styled(FlexDiv)`
     overflow-x: hidden;
     max-height: 245px;
     max-width: 95%;
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
 `;
 
 export const CustomIcon = styled(Image)`
