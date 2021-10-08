@@ -195,7 +195,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
             <FlexDivRow style={{ flexDirection: 'row-reverse' }}>
-                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '22px 0' }}>
+                <SearchWrapper style={{ alignSelf: 'flex-start', flex: 1, maxWidth: 400, margin: '0 0 22px 0' }}>
                     <SearchInput
                         style={{ width: '100%', paddingRight: 40 }}
                         className="leaderboard__search"
@@ -222,7 +222,10 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
                         borderSpacing: '0px 8px',
                     }}
                 >
-                    <TableHead className="leaderboard__columns" style={{ textTransform: 'uppercase', fontSize: 14 }}>
+                    <TableHead
+                        className="leaderboard__columns"
+                        style={{ textTransform: 'uppercase', fontSize: 14, whiteSpace: 'nowrap' }}
+                    >
                         <TableRow>
                             {headCells.map((cell: HeadCell, index) => {
                                 return (

@@ -21,9 +21,10 @@
             flex-grow: 1;
             background: #04045a !important;
             &--left {
+                flex: 1.5 !important;
                 border-bottom-left-radius: 23px;
                 border-top-left-radius: 23px;
-                align-items: center;
+                align-items: self-start;
                 justify-content: flex-start !important;
                 padding-top: 16px;
                 margin: 1px 0 1px 1px;
@@ -50,4 +51,9 @@
             }
         }
     }
+}
+
+.text-profile-data {
+    font-size: 16px;
+    letter-spacing: 0.5px;
 }

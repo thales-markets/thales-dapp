@@ -76,12 +76,15 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                             {countryToCountryCode(optionsMarket?.country as string) && (
                                 <ReactCountryFlag
                                     countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 50, height: 50, marginRight: 0 }}
+                                    style={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
                                     svg
                                 />
                             )}
                             {!countryToCountryCode(optionsMarket?.country as string) && (
-                                <CustomIcon src={eventToIcon(optionsMarket?.eventName as string)}></CustomIcon>
+                                <CustomIcon
+                                    src={eventToIcon(optionsMarket?.eventName as string)}
+                                    style={{ marginLeft: 32 }}
+                                ></CustomIcon>
                             )}
                             {market.country}
                         </>
@@ -89,10 +92,12 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                         <>
                             <CurrencyIcon
                                 currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 50, height: 50, marginRight: 0 }}
+                                synthIconStyle={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
                             />
-                            <CryptoName style={{ marginTop: 8 }}>{getSynthName(market.currencyKey)}</CryptoName>
-                            <CryptoKey>{market.asset}</CryptoKey>
+                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
+                                {getSynthName(market.currencyKey)}
+                            </CryptoName>
+                            <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
                         </>
                     )}
                 </DisplayContentsAnchor>
@@ -109,7 +114,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                         {t('options.leaderboard.profile.markets.maturity-date')}
                     </Text>
                 </Row>
-                <Row className="text-m">
+                <Row className="text-profile-data">
                     <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
                     <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
@@ -123,7 +128,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     </Text>
                 </Row>
                 {!showAll && (
-                    <Row className="text-m" style={usersMints.length === 1 ? { paddingBottom: 16 } : {}}>
+                    <Row className="text-profile-data" style={usersMints.length === 1 ? { paddingBottom: 16 } : {}}>
                         <Text style={{ flex: 4 }}>{usersMints[0].amount}</Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersMints[0].timestamp))}</Text>
                     </Row>
@@ -131,7 +136,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 <RowScrollable>
                     {showAll &&
                         usersMints?.map((mint, index) => (
-                            <Row className="text-m" key={index} style={{ width: '106.5%' }}>
+                            <Row className="text-profile-data" key={index} style={{ width: '105.3%' }}>
                                 <Text style={{ flex: 4 }}>{mint.amount}</Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(mint.timestamp))}</Text>
                             </Row>
@@ -183,6 +188,9 @@ export const RowScrollable = styled(FlexDiv)`
     overflow-x: hidden;
     max-height: 245px;
     max-width: 95%;
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
 `;
 
 export const CustomIcon = styled(Image)`

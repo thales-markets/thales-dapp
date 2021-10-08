@@ -7,7 +7,7 @@ const useETHBurnedCountQuery = (options?: UseQueryOptions<ETHBurned>) => {
         QUERY_KEYS.BinaryOptions.EthBurnedCount(),
         async () => {
             try {
-                const ethBurnedResponse = await fetch('https://ethburned.info/api/v1/burned', { mode: 'cors' });
+                const ethBurnedResponse = await fetch('https://api.thales.market/utils/ethburned');
 
                 const ethBurnedJson = await ethBurnedResponse.json();
                 const ethBurned: ETHBurned = {
