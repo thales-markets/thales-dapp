@@ -400,7 +400,6 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             const twitterData = twitterAccountsData.filter(
                                 (account: any) => account[0] === leader.walletAddress.toLowerCase()
                             );
-                            console.log(twitterData);
                             return (
                                 <StyledTableRow
                                     key={index}
