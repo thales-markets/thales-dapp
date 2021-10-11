@@ -45,6 +45,8 @@ const CustomMarketResults: React.FC = () => {
                     optionsMarket.eventName == CustomMarketEvent.FLIPPENING_MARKETS ||
                     optionsMarket.eventName == CustomMarketEvent.ETH_BTC_MARKET_CAP_RATIO
                         ? 'ETH/BTC market cap ratio chart'
+                        : optionsMarket.eventName == CustomMarketEvent.ETH_BURNED_COUNT
+                        ? 'ETH burned count stats'
                         : optionsMarket.eventName == CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING ||
                           optionsMarket.eventName == CustomMarketEvent.US_OPEN_MEN_WINNER
                         ? t(`options.market.widgets.custom-market-results-odds-widget`)

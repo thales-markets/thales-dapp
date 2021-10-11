@@ -1,27 +1,26 @@
+import { Overlay } from 'components/Header/Header';
+import { SYNTHS_MAP } from 'constants/currency';
+import ROUTES from 'constants/routes';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import queryString from 'query-string';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { OptionsMarkets } from 'types/options';
-import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
+import { OptionsMarkets } from 'types/options';
+import onboardConnector from 'utils/onboardConnector';
+import { history, navigateTo } from 'utils/routes';
+import { getSynthName } from 'utils/snxJSConnector';
 import SearchMarket from '../SearchMarket';
-import { PhaseFilters } from './Mobile/PhaseFilters';
+import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
 import { MarketCardMobile } from './Mobile/MarketCardMobile';
+import { PhaseFilters } from './Mobile/PhaseFilters';
 import { SortyByMobile } from './Mobile/SortByMobile';
-import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import onboardConnector from 'utils/onboardConnector';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
-import { Overlay } from 'components/Header/Header';
-import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { history, navigateTo } from 'utils/routes';
-import { SYNTHS_MAP } from 'constants/currency';
-import { getSynthName } from 'utils/snxJSConnector';
-import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
@@ -322,73 +321,54 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
             ) : (
                 <NoMarkets>
                     <Container>
-                        {secondLevelUserFilter === SecondaryFilters.Competition && (
+                        {userFilter !== PrimaryFilters.MyMarkets && (
                             <>
-                                <Text
-                                    className="text-sm lh24 bold pale-grey"
-                                    style={{ whiteSpace: 'break-spaces', textAlign: 'center' }}
-                                >
-                                    {t('options.home.explore-markets.table.trading-comp')}
-                                    <StyledLink
-                                        href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
-                                        rel="noreferrer"
-                                        target="_blank"
-                                    >
-                                        https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
-                                    </StyledLink>
+                                <Text className="text-m bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-found')}
                                 </Text>
+                                <Button className="primary" onClick={resetFilters}>
+                                    {t('options.home.explore-markets.table.view-all-markets')}
+                                </Button>
                             </>
                         )}
-                        {secondLevelUserFilter !== SecondaryFilters.Competition &&
-                            userFilter !== PrimaryFilters.MyMarkets && (
-                                <>
-                                    <Text className="text-m bold pale-grey">
-                                        {t('options.home.explore-markets.table.no-markets-found')}
+                        {userFilter === PrimaryFilters.MyMarkets && (
+                            <>
+                                <Text className="text-m bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-created')}
+                                </Text>
+                                <FlexDiv
+                                    style={{
+                                        justifyContent: 'space-around',
+                                        alignItems: 'center',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    <Button
+                                        className="primary"
+                                        onClick={() =>
+                                            isWalletConnected
+                                                ? navigateTo(ROUTES.Options.CreateMarket)
+                                                : onboardConnector.connectWallet()
+                                        }
+                                    >
+                                        {isWalletConnected
+                                            ? t('options.home.market-creation.create-market-button-label')
+                                            : t('common.wallet.connect-your-wallet')}
+                                    </Button>
+                                    <Text
+                                        className="text-m bold pale-grey"
+                                        style={{
+                                            margin: '24px',
+                                        }}
+                                    >
+                                        {t('common.wallet.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}
                                     </Button>
-                                </>
-                            )}
-                        {secondLevelUserFilter !== SecondaryFilters.Competition &&
-                            userFilter === PrimaryFilters.MyMarkets && (
-                                <>
-                                    <Text className="text-m bold pale-grey">
-                                        {t('options.home.explore-markets.table.no-markets-created')}
-                                    </Text>
-                                    <FlexDiv
-                                        style={{
-                                            justifyContent: 'space-around',
-                                            alignItems: 'center',
-                                            flexDirection: 'column',
-                                        }}
-                                    >
-                                        <Button
-                                            className="primary"
-                                            onClick={() =>
-                                                isWalletConnected
-                                                    ? navigateTo(ROUTES.Options.CreateMarket)
-                                                    : onboardConnector.connectWallet()
-                                            }
-                                        >
-                                            {isWalletConnected
-                                                ? t('options.home.market-creation.create-market-button-label')
-                                                : t('common.wallet.connect-your-wallet')}
-                                        </Button>
-                                        <Text
-                                            className="text-m bold pale-grey"
-                                            style={{
-                                                margin: '24px',
-                                            }}
-                                        >
-                                            {t('common.wallet.or')}
-                                        </Text>
-                                        <Button className="primary" onClick={resetFilters}>
-                                            {t('options.home.explore-markets.table.view-all-markets')}
-                                        </Button>
-                                    </FlexDiv>
-                                </>
-                            )}
+                                </FlexDiv>
+                            </>
+                        )}
                     </Container>
                 </NoMarkets>
             )}

@@ -503,7 +503,9 @@
                 "current-burn-label": "Current burn",
                 "final-burn-label": "Final burn",
                 "strike-burn-label": "Strike burn",
-                "rank-label": "Rank"
+                "rank-label": "Rank",
+                "total-burned": "Total burned",
+                "burned-yesterday": "Burned yesterday"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
