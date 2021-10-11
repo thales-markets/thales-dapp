@@ -167,10 +167,16 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
     const marketHeading = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
         const orderbookSign = optionsMarket.customMarket
             ? optionSide === 'long'
-                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+                  optionsMarket.eventName === 'ETH burned count' ||
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                     ? '>='
                     : '=='
-                : optionsMarket.eventName === 'XYZ airdrop claims'
+                : optionsMarket.eventName === 'XYZ airdrop claims' ||
+                  optionsMarket.eventName === 'ETH burned count' ||
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                 ? '<'
                 : '!='
             : optionSide === 'long'
@@ -178,7 +184,13 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
             : '<';
 
         return optionsMarket.customMarket
-            ? `${optionsMarket.country} ${orderbookSign} ${optionsMarket.outcome}`
+            ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
+                  optionsMarket.outcome || 0,
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                      ? 2
+                      : 0
+              )}`
             : `${getSynthName(optionsMarket.currencyKey)} ${orderbookSign} ${formatCurrencyWithSign(
                   USD_SIGN,
                   optionsMarket.strikePrice

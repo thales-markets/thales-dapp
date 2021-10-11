@@ -364,6 +364,7 @@ export const Divider = styled.hr`
 `;
 
 type TooltipIconProps = {
+    disableHoverListener?: boolean;
     title: React.ReactNode;
     children: any;
 };
@@ -399,8 +400,13 @@ const StyledLightTooltip = withStyles(() => ({
     },
 }))(MaterialTooltip);
 
-export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledLightTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLightTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
         {children}
     </StyledLightTooltip>
 );

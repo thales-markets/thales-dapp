@@ -1,18 +1,18 @@
 import bitcoin from 'assets/images/filters/bitcoin.svg';
+import competitionImg from 'assets/images/filters/competition.svg';
+import customMarketsImg from 'assets/images/filters/custom-markets.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myAssets from 'assets/images/filters/my-assets.svg';
 import myMarkets from 'assets/images/filters/my-markets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
-import olympicsImg from 'assets/images/filters/olympics.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import ROUTES from 'constants/routes';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 import queryString from 'query-string';
-import React, { useMemo, useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -66,7 +66,8 @@ export enum SecondaryFilters {
     all = 'all',
     Bitcoin = 'bitcoin',
     Ethereum = 'ethereum',
-    Olympics = 'olympics',
+    CustomMarkets = 'custom',
+    Competition = 'competition',
 }
 
 const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
@@ -237,8 +238,20 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH
                 );
                 break;
-            case SecondaryFilters.Olympics:
+            case SecondaryFilters.CustomMarkets:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
+                break;
+            case SecondaryFilters.Competition:
+                console.log();
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ timestamp, maturityDate }) => {
+                    const marketCreationCompetition = new Date('Oct 10 2021 10:00:00 UTC');
+                    const marketEndingCompetition = new Date('Nov 01 2021 11:00:00 UTC');
+                    const marketCreationDate = new Date(timestamp);
+                    const marketMaturityDate = new Date(maturityDate);
+                    return (
+                        marketCreationDate >= marketCreationCompetition && marketMaturityDate <= marketEndingCompetition
+                    );
+                });
                 break;
         }
 
@@ -381,8 +394,10 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 return bitcoin;
             case SecondaryFilters.Ethereum:
                 return ethereum;
-            case SecondaryFilters.Olympics:
-                return olympicsImg;
+            case SecondaryFilters.CustomMarkets:
+                return customMarketsImg;
+            case SecondaryFilters.Competition:
+                return competitionImg;
         }
     };
 
@@ -408,7 +423,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 filteredMarkets={assetSearch ? searchFilteredOptionsMarkets : secondLevelFilteredOptionsMarket}
                 orderBy={orderBy}
                 setOrderBy={setOrderBy}
-            ></ExploreMarketsMobile>
+            />
             <div id="explore-markets" className="markets-desktop" style={{ width: '100%' }}>
                 <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                     {Object.keys(PrimaryFilters)
@@ -483,7 +498,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                 case SecondaryFilters.Ethereum:
                                     isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                     break;
-                                case SecondaryFilters.Olympics:
+                                case SecondaryFilters.CustomMarkets:
                                     isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                     break;
                             }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { OptionsMarketInfo } from 'types/options';
+import React, { useEffect, useState } from 'react';
+import { ETHBurned, Flippening, OptionsMarketInfo } from 'types/options';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { LightTooltip } from '../../components';
@@ -13,13 +13,16 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { PhaseLabel } from 'pages/Options/Home/MarketsTable/components';
-import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import ReactCountryFlag from 'react-country-flag';
 import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTable';
+import { getIsAppReady } from 'redux/modules/app';
+import useFlippeningQuery from 'queries/options/useFlippeningQuery';
+import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -28,6 +31,29 @@ type MarketOverviewProps = {
 export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMarket }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
+    const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+    const flippeningQuery = useFlippeningQuery({
+        enabled: isAppReady,
+    });
+
+    useEffect(() => {
+        if (flippeningQuery.isSuccess && flippeningQuery.data) {
+            setFlippening(flippeningQuery.data);
+        }
+    }, [flippeningQuery.isSuccess, flippeningQuery.data]);
+
+    const ethBurnedQuery = useETHBurnedCountQuery({
+        enabled: isAppReady,
+    });
+
+    useEffect(() => {
+        if (ethBurnedQuery.isSuccess && ethBurnedQuery.data) {
+            setEthBurned(ethBurnedQuery.data);
+        }
+    }, [ethBurnedQuery.isSuccess, ethBurnedQuery.data]);
 
     return (
         <Wrapper className="market__overview--mobile">
@@ -67,11 +93,73 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
             <FlexDivColumnCentered className="market__overview--mobile__section">
                 <FlexDivRowCentered>
                     <FlexDivColumnCentered>
-                        <Title>{t(`options.market.overview.strike-price-label`)}</Title>
-
-                        <Content fontSize={optionsMarket.strikePrice < 0.01 ? 14 : 16}>
+                        <Title>
+                            {optionsMarket.customMarket
+                                ? optionsMarket.eventName === 'ETH burned count'
+                                    ? optionsMarket.isResolved
+                                        ? t('options.market.overview.final-burn-label')
+                                        : t('options.market.overview.current-burn-label')
+                                    : optionsMarket.eventName === 'Flippening Markets' ||
+                                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                    ? optionsMarket.isResolved
+                                        ? t('options.market.overview.final-ratio-label')
+                                        : t('options.market.overview.current-ratio-label')
+                                    : t('options.market.overview.event-name-label')
+                                : optionsMarket.isResolved
+                                ? t('options.market.overview.final-price-label', {
+                                      currencyKey: optionsMarket.asset,
+                                  })
+                                : t('options.market.overview.current-price-label', {
+                                      currencyKey: optionsMarket.asset,
+                                  })}
+                        </Title>
+                        <Content
+                            fontSize={
+                                (optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice) <
+                                    0.01 && !optionsMarket.customMarket
+                                    ? 14
+                                    : 16
+                            }
+                        >
+                            {optionsMarket.customMarket
+                                ? optionsMarket.eventName === 'Flippening Markets' ||
+                                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                    ? flippening
+                                        ? formatCurrency(flippening.ratio)
+                                        : '-'
+                                    : optionsMarket.eventName === 'ETH burned count'
+                                    ? ethBurned
+                                        ? formatCurrency(ethBurned.total)
+                                        : '-'
+                                    : optionsMarket.eventName
+                                : formatCurrencyWithSign(
+                                      USD_SIGN,
+                                      optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
+                                  )}
+                        </Content>
+                    </FlexDivColumnCentered>
+                    <FlexDivColumnCentered style={{ alignItems: 'flex-end' }}>
+                        <Title>
+                            {optionsMarket.customMarket
+                                ? optionsMarket.eventName === 'XYZ airdrop claims'
+                                    ? t('options.market.overview.strike-price-label')
+                                    : optionsMarket.eventName === 'ETH burned count'
+                                    ? t('options.market.overview.strike-burn-label')
+                                    : optionsMarket.eventName === 'Flippening Markets' ||
+                                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                    ? t('options.market.overview.strike-ratio-label')
+                                    : t('options.market.overview.rank-label')
+                                : t('options.market.overview.strike-price-label')}
+                        </Title>
+                        <Content fontSize={optionsMarket.strikePrice < 0.01 && !optionsMarket.customMarket ? 14 : 16}>
                             {optionsMarket.customMarket ? (
-                                optionsMarket.eventName
+                                formatCurrency(
+                                    optionsMarket.outcome || 0,
+                                    optionsMarket.eventName === 'Flippening Markets' ||
+                                        optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                        ? 2
+                                        : 0
+                                )
                             ) : (
                                 <FlexDiv>
                                     {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
@@ -99,30 +187,6 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                                         </LightTooltip>
                                     )}
                                 </FlexDiv>
-                            )}
-                        </Content>
-                    </FlexDivColumnCentered>
-                    <FlexDivColumnCentered style={{ alignItems: 'flex-end' }}>
-                        <Title>
-                            {optionsMarket.isResolved
-                                ? t('options.market.overview.final-price-label', {
-                                      currencyKey: optionsMarket.asset,
-                                  })
-                                : t('options.market.overview.current-price-label', {
-                                      currencyKey: optionsMarket.asset,
-                                  })}
-                        </Title>
-                        <Content
-                            fontSize={
-                                (optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice) <
-                                0.01
-                                    ? 14
-                                    : 16
-                            }
-                        >
-                            {formatCurrencyWithSign(
-                                USD_SIGN,
-                                optionsMarket.isResolved ? optionsMarket.finalPrice : optionsMarket.currentPrice
                             )}
                         </Content>
                     </FlexDivColumnCentered>
@@ -154,7 +218,11 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                         ? t('options.market.overview.final-result-label')
                         : t('options.market.overview.current-result-label')}
                 </Title>
-                {optionsMarket.customMarket === false ? (
+                {!optionsMarket.customMarket ||
+                optionsMarket.eventName === 'XYZ airdrop claims' ||
+                optionsMarket.eventName === 'ETH burned count' ||
+                optionsMarket.eventName === 'Flippening Markets' ||
+                optionsMarket.eventName === 'ETH/BTC market cap ratio' ? (
                     <Result style={{ fontSize: 14 }} isLong={optionsMarket.result === 'long'}>
                         {optionsMarket.result}
                     </Result>

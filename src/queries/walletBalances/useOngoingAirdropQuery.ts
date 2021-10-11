@@ -14,9 +14,11 @@ const useOngoingAirdropQuery = (
     return useQuery<StakingReward>(
         QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId),
         async () => {
-            const [paused, period] = await Promise.all([
+            const [paused, period, lastPeriodTimeStamp, durationPeriod] = await Promise.all([
                 (snxJSConnector as any).ongoingAirdropContract.paused(),
                 (snxJSConnector as any).ongoingAirdropContract.period(),
+                (snxJSConnector as any).stakingThalesContract.lastPeriodTimeStamp(),
+                (snxJSConnector as any).stakingThalesContract.durationPeriod(),
             ]);
 
             let ongoingAirdropHashes: any = [];
@@ -36,6 +38,7 @@ const useOngoingAirdropQuery = (
                 hasClaimRights: ongoingAirdropHash !== undefined,
                 claimed: true,
                 period: period,
+                closingDate: Number(lastPeriodTimeStamp) * 1000 + Number(durationPeriod) * 1000,
             };
             if (ongoingAirdropHash) {
                 airdrop.reward = {

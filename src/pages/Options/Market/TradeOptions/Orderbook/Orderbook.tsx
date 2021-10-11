@@ -8,7 +8,7 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { formatShortDate } from 'utils/formatters/date';
 import styled from 'styled-components';
@@ -52,10 +52,16 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
     const optionsTokenAddress = optionSide === 'long' ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const orderbookSign = optionsMarket.customMarket
         ? optionSide === 'long'
-            ? optionsMarket.eventName === 'XYZ airdrop claims'
+            ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets' ||
+              optionsMarket.eventName === 'ETH/BTC market cap ratio'
                 ? '>='
                 : '=='
-            : optionsMarket.eventName === 'XYZ airdrop claims'
+            : optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets' ||
+              optionsMarket.eventName === 'ETH/BTC market cap ratio'
             ? '<'
             : '!='
         : optionSide === 'long'
@@ -93,9 +99,13 @@ const Orderbook: React.FC<OrderbookProps> = ({ optionSide }) => {
 
     const marketHeading = optionsMarket
         ? optionsMarket.customMarket
-            ? `${optionsMarket.country} ${orderbookSign} ${optionsMarket.outcome} @ ${formatShortDate(
-                  optionsMarket.maturityDate
-              )}`
+            ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
+                  optionsMarket.outcome || 0,
+                  optionsMarket.eventName === 'Flippening Markets' ||
+                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                      ? 2
+                      : 0
+              )} @ ${formatShortDate(optionsMarket.maturityDate)}`
             : `${optionsMarket.asset} ${orderbookSign} ${formatCurrencyWithSign(
                   USD_SIGN,
                   optionsMarket.strikePrice

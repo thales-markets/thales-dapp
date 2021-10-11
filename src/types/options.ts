@@ -206,4 +206,26 @@ export type ExpirationOption = {
     label: string;
 };
 
+export type Flippening = {
+    ethPrice: number;
+    btcPrice: number;
+    ethMarketCap: number;
+    btcMarketCap: number;
+    ratio: number;
+};
+
+export type ETHBTCRatio = {
+    timestamp: number;
+    ratio: number;
+};
+
+export type ETHBTCRatios = ETHBTCRatio[];
+
+export type ETHBurned = {
+    total: number;
+    totalUsd: number;
+    yesterday: number;
+    yesterdayUsd: number;
+};
+
 export type ExpirationOptions = ExpirationOption[];

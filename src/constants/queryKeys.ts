@@ -38,6 +38,9 @@ export const QUERY_KEYS = {
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
+        MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
+        ETHBTCMarketCapRatioHistory: () => ['binaryOptions', 'ETHBTCMarketCapRatioHistory'],
+        EthBurnedCount: () => ['binaryOptions', 'ethBurnedCount'],
         AccountMarketInfo: (marketAddress: string, accountAddress: string) => [
             'binaryOptions',
             'markets',
@@ -67,7 +70,10 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         Leaderboard: (networkId: NetworkId) => ['binaryOptions', 'leaderboard', networkId],
+        Profiles: (networkId: NetworkId) => ['binaryOptions', 'profiles', networkId],
+        Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
+        OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
@@ -75,6 +81,9 @@ export const QUERY_KEYS = {
         Assets: (walletAddress: string, networkId: NetworkId) => ['user', 'assets', walletAddress, networkId],
         DisplayName: (walletAddress: string) => ['user', 'displayName', walletAddress],
         DisplayNames: () => ['user', 'displayNames'],
+        TwitterAccount: (walletAddress: string) => ['user', 'twitterAccount', walletAddress],
+        TwitterAccounts: () => ['user', 'twitterAccounts'],
+        VerifiedTwitterAccounts: () => ['user', 'verifiedTwitterAccounts'],
     },
     Staking: {
         Thales: (walletAddress: string, networkId: NetworkId) => ['staking', 'thales', walletAddress, networkId],

@@ -1,0 +1,166 @@
+.leaderboard {
+    width: 100%;
+    &__wrapper {
+        margin: 0 auto;
+        width: 100%;
+        grid-column: 1/-1;
+    }
+
+    &__label {
+        flex: 1 1 0%;
+        max-width: 400px;
+        margin: 22px 0px;
+        color: #f6f6fe;
+        font-size: 16px;
+        text-align: center;
+        font-weight: bold;
+        line-height: 40px;
+        letter-spacing: 0.25px;
+    }
+
+    &__columns {
+        &__net-profit {
+            .tooltip-icon {
+                border: 1px solid #f6f6fe !important;
+                border-radius: 50%;
+                padding: 1px;
+                width: 18px;
+                height: 18px;
+                padding: 2px;
+                position: relative;
+                top: 4px;
+                right: 6px;
+            }
+        }
+        & > tr {
+            th:first-child {
+                border-top-left-radius: 23px !important;
+            }
+            th:last-child {
+                border-top-right-radius: 23px !important;
+            }
+        }
+    }
+
+    &__tableBody {
+        &__yourRank {
+            background: linear-gradient(
+                90deg,
+                #3936c7 -10.96%,
+                #2d83d2 46.31%,
+                #23a5dd 103.01%,
+                #35dadb 127.72%
+            ) !important;
+        }
+        &__firstRank {
+            td {
+                font-weight: bold;
+            }
+        }
+        & > tr:first-child {
+            margin-bottom: 30px;
+            td {
+                border: none !important;
+                background: transparent !important;
+            }
+        }
+        & > tr:last-child {
+            td:first-child {
+                border-bottom-left-radius: 23px !important;
+            }
+            td:last-child {
+                border-bottom-right-radius: 23px !important;
+            }
+        }
+    }
+
+    @media (max-width: 1100px) {
+        &__tableBody {
+            tr td:first-child {
+                display: none;
+            }
+            tr td {
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            & > tr:last-child td:nth-child(2) {
+                border-bottom-left-radius: 23px !important;
+            }
+        }
+        &__columns {
+            tr th:nth-child(2) {
+                border-top-left-radius: 23px !important;
+            }
+            tr th:first-child {
+                display: none;
+            }
+        }
+    }
+
+    @media (max-width: 767px) {
+        &__table {
+            table-layout: fixed;
+        }
+        &__icon {
+            height: 85px !important;
+            margin-left: 10px;
+        }
+        &__tableBody > tr > td,
+        &__columns > tr > th {
+            font-size: 12px;
+            padding: 10px;
+            max-width: 120px;
+            width: 100%;
+            &:nth-child(2) {
+                width: 44px;
+            }
+        }
+        &__columns {
+            &__net-profit {
+                .tooltip-icon {
+                    width: 14px;
+                    height: 14px;
+                    padding: 2px;
+
+                    top: 2px;
+                    right: 4px;
+                }
+            }
+
+            & > tr > th {
+                &:last-child {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 512px) {
+        &__tableBody > tr > td,
+        &__columns > tr > th {
+            &:nth-child(2) {
+                display: none;
+            }
+        }
+
+        &__columns > tr > th:nth-child(3) {
+            border-top-left-radius: 23px !important;
+        }
+        &__tableBody > tr:last-child td:nth-child(3) {
+            border-bottom-left-radius: 23px !important;
+        }
+
+        &__tableBody > tr > td,
+        &__columns > tr > th {
+            font-size: 10px;
+        }
+
+        &__icon {
+            height: 70px !important;
+            width: 70px !important;
+            margin-top: 10px;
+        }
+    }
+}

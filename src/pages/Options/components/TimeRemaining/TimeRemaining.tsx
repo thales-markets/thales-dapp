@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import intervalToDuration from 'date-fns/intervalToDuration';
 //import differenceInHours from 'date-fns/differenceInHours';
 import differenceInWeeks from 'date-fns/differenceInWeeks';
-import { formattedDuration } from 'utils/formatters/date';
+import { formattedDuration, formattedDurationFull } from 'utils/formatters/date';
 import useInterval from 'hooks/useInterval';
 import styled from 'styled-components';
 
@@ -13,12 +13,19 @@ type TimeRemainingProps = {
     onEnded?: () => void;
     fontSize?: number;
     showBorder?: boolean;
+    showFullCounter?: boolean;
 };
 
 const ONE_SECOND_IN_MS = 1000;
 //const ENDING_SOON_IN_HOURS = 48;
 
-export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, fontSize, showBorder }) => {
+export const TimeRemaining: React.FC<TimeRemainingProps> = ({
+    end,
+    onEnded,
+    fontSize,
+    showBorder,
+    showFullCounter,
+}) => {
     const now = Date.now();
     const [timeElapsed, setTimeElapsed] = useState(now >= end);
     const [weeksDiff, setWeekDiff] = useState(Math.abs(differenceInWeeks(now, end)));
@@ -44,6 +51,8 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, font
         minute: t('options.common.time-remaining.minute'),
         seconds: t('options.common.time-remaining.seconds'),
         second: t('options.common.time-remaining.second'),
+        'days-short': t('options.common.time-remaining.days-short'),
+        'hours-short': t('options.common.time-remaining.hours-short'),
         'minutes-short': t('options.common.time-remaining.minutes-short'),
         'seconds-short': t('options.common.time-remaining.seconds-short'),
     };
@@ -78,6 +87,8 @@ export const TimeRemaining: React.FC<TimeRemainingProps> = ({ end, onEnded, font
                 ? t('options.common.time-remaining.ended')
                 : showRemainingInWeeks
                 ? `${weeksDiff} ${t('options.common.time-remaining.weeks')}`
+                : showFullCounter
+                ? formattedDurationFull(duration, dateTimeTranslationMap)
                 : formattedDuration(duration, dateTimeTranslationMap)}
         </Container>
     );

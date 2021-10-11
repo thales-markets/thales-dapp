@@ -2,7 +2,7 @@ import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import useUserOrdersQuery from 'queries/user/useUserOrdersQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { FlexDivCentered, Image, Text } from 'theme/common';
 import { OptionsMarkets, Trade } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
@@ -19,12 +19,10 @@ import { getIsAppReady } from 'redux/modules/app';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
-import { fetchOrders, openOrdersMapCache } from '../../../../queries/options/fetchMarketOrders';
 import ReactCountryFlag from 'react-country-flag';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import { useTranslation } from 'react-i18next';
-
-let fetchOrdersInterval: NodeJS.Timeout;
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 
 type UsersOrdersProps = {
     optionsMarkets: OptionsMarkets;
@@ -44,21 +42,18 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
     const ordersQuery = useUserOrdersQuery(networkId, walletAddress, {
         enabled: isAppReady && isWalletConnected,
     });
-    const [openOrdersMap, setOpenOrdersMap] = useState(openOrdersMapCache);
 
-    useEffect(() => {
-        if (!openOrdersMap && !fetchOrdersInterval && networkId && optionsMarkets.length) {
-            fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
-            fetchOrdersInterval = setInterval(() => {
-                fetchOrders(networkId, optionsMarkets, setOpenOrdersMap);
-            }, 10000);
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
         }
-    }, [networkId, optionsMarkets]);
+    }, [openOrdersQuery]);
 
     const filteredOrders = useMemo(() => {
-        if (ordersQuery.isSuccess) {
+        if (ordersQuery.isSuccess && openOrdersQuery.isSuccess) {
             return optionsMarkets.reduce((acc, market: any) => {
-                const openOrders = openOrdersMapCache?.[market.address] || 0;
+                const openOrders = (openOrdersMap as any).get(market.address) || 0;
                 if (openOrders > 0) {
                     const userOrdersForMarket: [] = ordersQuery.data.records.reduce((temp: any, data: any) => {
                         const rawOrder: Trade = data.order;

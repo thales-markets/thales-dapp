@@ -1,26 +1,26 @@
+import { Overlay } from 'components/Header/Header';
+import { SYNTHS_MAP } from 'constants/currency';
+import ROUTES from 'constants/routes';
+import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import queryString from 'query-string';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { OptionsMarkets } from 'types/options';
-import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getIsWalletConnected } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
+import { OptionsMarkets } from 'types/options';
+import onboardConnector from 'utils/onboardConnector';
+import { history, navigateTo } from 'utils/routes';
+import { getSynthName } from 'utils/snxJSConnector';
 import SearchMarket from '../SearchMarket';
-import { PhaseFilters } from './Mobile/PhaseFilters';
+import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
 import { MarketCardMobile } from './Mobile/MarketCardMobile';
+import { PhaseFilters } from './Mobile/PhaseFilters';
 import { SortyByMobile } from './Mobile/SortByMobile';
-import { Rates } from 'queries/rates/useExchangeRatesQuery';
-import onboardConnector from 'utils/onboardConnector';
-import styled from 'styled-components';
-import ROUTES from 'constants/routes';
-import { Overlay } from 'components/Header/Header';
-import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
-import { history, navigateTo } from 'utils/routes';
-import { SYNTHS_MAP } from 'constants/currency';
-import { getSynthName } from 'utils/snxJSConnector';
 
 type ExploreMarketsMobileProps = {
     exchangeRates: Rates | null;
@@ -235,7 +235,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         case SecondaryFilters.Ethereum:
                                             isEthMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
-                                        case SecondaryFilters.Olympics:
+                                        case SecondaryFilters.CustomMarkets:
                                             isCustomMarketsEmpty ? (isDisabled = true) : (isDisabled = false);
                                             break;
                                     }
