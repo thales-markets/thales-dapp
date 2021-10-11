@@ -21,6 +21,7 @@ import orderbookActiveIcon from 'assets/images/footer-nav/orderbook-active.svg';
 import transactionsActiveIcon from 'assets/images/footer-nav/transactions-active.svg';
 import TradingView from '../TradingView';
 import MaturityPhaseCard from '../TradeCard/MaturityPhaseCard';
+import CustomMarketResults from '../CustomMarketResults';
 
 type MarketMobileProps = {
     side: OptionSide;
@@ -81,9 +82,15 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                         <WidgetWrapper className="market__priceChart">
                             <OptionsPriceChart />
                         </WidgetWrapper>
-                        <WidgetWrapper className="market__tradingView">
-                            <TradingView />
-                        </WidgetWrapper>
+                        {market.customMarket ? (
+                            <WidgetWrapper className="market__customMarketResults">
+                                <CustomMarketResults />
+                            </WidgetWrapper>
+                        ) : (
+                            <WidgetWrapper className="market__tradingView">
+                                <TradingView />
+                            </WidgetWrapper>
+                        )}
                     </>
                 );
         }
