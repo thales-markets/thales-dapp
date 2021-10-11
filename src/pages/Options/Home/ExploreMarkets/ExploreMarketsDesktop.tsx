@@ -1,19 +1,18 @@
 import bitcoin from 'assets/images/filters/bitcoin.svg';
+import competitionImg from 'assets/images/filters/competition.svg';
+import customMarketsImg from 'assets/images/filters/custom-markets.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myAssets from 'assets/images/filters/my-assets.svg';
 import myMarkets from 'assets/images/filters/my-markets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
-import customMarketsImg from 'assets/images/filters/custom-markets.svg';
-import competitionImg from 'assets/images/filters/competition.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import ROUTES from 'constants/routes';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 import queryString from 'query-string';
-import React, { useMemo, useState } from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -35,7 +34,6 @@ import SearchMarket from '../SearchMarket';
 import { ExploreMarketsMobile } from './ExploreMarketsMobile';
 import './media.scss';
 import UserFilter from './UserFilters';
-import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 
 type ExploreMarketsProps = {
     exchangeRates: Rates | null;
@@ -244,7 +242,16 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
                 break;
             case SecondaryFilters.Competition:
-                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(() => false);
+                console.log();
+                secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ timestamp, maturityDate }) => {
+                    const marketCreationCompetition = new Date('Oct 10 2021 10:00:00 UTC');
+                    const marketEndingCompetition = new Date('Nov 01 2021 11:00:00 UTC');
+                    const marketCreationDate = new Date(timestamp);
+                    const marketMaturityDate = new Date(maturityDate);
+                    return (
+                        marketCreationDate >= marketCreationCompetition && marketMaturityDate <= marketEndingCompetition
+                    );
+                });
                 break;
         }
 
@@ -566,67 +573,48 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     setOrderDirection={setOrderDirection}
                 >
                     <NoMarkets>
-                        {secondLevelUserFilter === SecondaryFilters.Competition && (
+                        {userFilter !== PrimaryFilters.MyMarkets && (
                             <>
-                                <Text
-                                    className="text-lm bold pale-grey"
-                                    style={{ whiteSpace: 'break-spaces', textAlign: 'center' }}
-                                >
-                                    {t('options.home.explore-markets.table.trading-comp')}
-                                    <StyledLink
-                                        href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
-                                        rel="noreferrer"
-                                        target="_blank"
-                                    >
-                                        https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
-                                    </StyledLink>
+                                <Text className="text-l bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-found')}
                                 </Text>
+                                <Button className="primary" onClick={resetFilters}>
+                                    {t('options.home.explore-markets.table.view-all-markets')}
+                                </Button>
                             </>
                         )}
-                        {secondLevelUserFilter !== SecondaryFilters.Competition &&
-                            userFilter !== PrimaryFilters.MyMarkets && (
-                                <>
-                                    <Text className="text-l bold pale-grey">
-                                        {t('options.home.explore-markets.table.no-markets-found')}
+                        {userFilter === PrimaryFilters.MyMarkets && (
+                            <>
+                                <Text className="text-l bold pale-grey">
+                                    {t('options.home.explore-markets.table.no-markets-created')}
+                                </Text>
+                                <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
+                                    <Button
+                                        className="secondary"
+                                        onClick={() =>
+                                            isWalletConnected
+                                                ? navigateTo(ROUTES.Options.CreateMarket)
+                                                : onboardConnector.connectWallet()
+                                        }
+                                    >
+                                        {isWalletConnected
+                                            ? t('options.home.market-creation.create-market-button-label')
+                                            : t('common.wallet.connect-your-wallet')}
+                                    </Button>
+                                    <Text
+                                        className="text-l bold pale-grey"
+                                        style={{
+                                            margin: 'auto 60px',
+                                        }}
+                                    >
+                                        {t('common.wallet.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}
                                     </Button>
-                                </>
-                            )}
-                        {secondLevelUserFilter !== SecondaryFilters.Competition &&
-                            userFilter === PrimaryFilters.MyMarkets && (
-                                <>
-                                    <Text className="text-l bold pale-grey">
-                                        {t('options.home.explore-markets.table.no-markets-created')}
-                                    </Text>
-                                    <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                        <Button
-                                            className="secondary"
-                                            onClick={() =>
-                                                isWalletConnected
-                                                    ? navigateTo(ROUTES.Options.CreateMarket)
-                                                    : onboardConnector.connectWallet()
-                                            }
-                                        >
-                                            {isWalletConnected
-                                                ? t('options.home.market-creation.create-market-button-label')
-                                                : t('common.wallet.connect-your-wallet')}
-                                        </Button>
-                                        <Text
-                                            className="text-l bold pale-grey"
-                                            style={{
-                                                margin: 'auto 60px',
-                                            }}
-                                        >
-                                            {t('common.wallet.or')}
-                                        </Text>
-                                        <Button className="primary" onClick={resetFilters}>
-                                            {t('options.home.explore-markets.table.view-all-markets')}
-                                        </Button>
-                                    </FlexDiv>
-                                </>
-                            )}
+                                </FlexDiv>
+                            </>
+                        )}
                     </NoMarkets>
                 </MarketsTable>
             </div>
