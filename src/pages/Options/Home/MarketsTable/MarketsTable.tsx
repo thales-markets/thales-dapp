@@ -53,6 +53,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
+import { TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
 
 dotenv.config();
 
@@ -217,6 +218,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                     currentAssetPrice,
                                     market.strikePrice
                                 );
+                                const isMarketInTradingCompetition =
+                                    new Date(market.timestamp) >= new Date('Oct 10 2021 10:00:00 UTC') &&
+                                    new Date(market.maturityDate) <= new Date('Nov 01 2021 11:00:00 UTC');
                                 return (
                                     <StyledTableRow
                                         className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
@@ -241,7 +245,14 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             {market.customMarket ? (
-                                                <StyledAnchoredTableCell style={{ textAlign: 'left' }}>
+                                                <StyledAnchoredTableCell
+                                                    style={{
+                                                        textAlign: 'left',
+                                                        display: isMarketInTradingCompetition ? 'flex' : '',
+                                                    }}
+                                                    className={`
+                                                ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
+                                                >
                                                     <ReactCountryFlag
                                                         countryCode={countryToCountryCode(market.country as any)}
                                                         style={{ width: 32, height: 32, marginRight: 10 }}
@@ -253,15 +264,29 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         ></CustomIcon>
                                                     )}
                                                     {market.country}
+                                                    {isMarketInTradingCompetition && (
+                                                        <TooltipInfoIcon
+                                                            title={t(`options.home.markets-table.competition-tooltip`)}
+                                                        ></TooltipInfoIcon>
+                                                    )}
                                                 </StyledAnchoredTableCell>
                                             ) : (
-                                                <StyledAnchoredTableCell>
+                                                <StyledAnchoredTableCell
+                                                    style={{ display: isMarketInTradingCompetition ? 'flex' : '' }}
+                                                    className={`
+                                                ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
+                                                >
                                                     <Currency.Name
                                                         currencyKey={market.currencyKey}
                                                         showIcon={true}
                                                         iconProps={{ type: 'asset' }}
                                                         synthIconStyle={{ width: 32, height: 32 }}
                                                     />
+                                                    {isMarketInTradingCompetition && (
+                                                        <TooltipInfoIcon
+                                                            title={t(`options.home.markets-table.competition-tooltip`)}
+                                                        ></TooltipInfoIcon>
+                                                    )}
                                                 </StyledAnchoredTableCell>
                                             )}
                                         </DisplayContentsAnchor>
@@ -440,6 +465,17 @@ export const StyledTableRow = withStyles(() => ({
 
 const StyledAnchoredTableCell = styled(StyledTableCell)`
     vertical-align: middle !important;
+    .tooltip-icon {
+        border-radius: 50%;
+        padding: 1px;
+        width: 18px;
+        height: 18px;
+        padding: 2px;
+        position: relative;
+        display: flex;
+        align-self: center;
+        margin-left: 5px;
+    }
 `;
 
 export const PaginationWrapper = styled(TablePagination)`
