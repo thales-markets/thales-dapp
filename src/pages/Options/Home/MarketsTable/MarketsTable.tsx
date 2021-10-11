@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
-import { OptionsMarkets } from 'types/options';
+import { ETHBurned, Flippening, OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
     Paper,
@@ -54,6 +54,9 @@ import ReactCountryFlag from 'react-country-flag';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
 import { TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
+import { getIsAppReady } from 'redux/modules/app';
+import useFlippeningQuery from 'queries/options/useFlippeningQuery';
+import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
 
 dotenv.config();
 
@@ -94,6 +97,29 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const networkId = useSelector((state: RootState) => getNetworkId(state));
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+        const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+        const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
+        const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+        const flippeningQuery = useFlippeningQuery({
+            enabled: isAppReady,
+        });
+
+        useEffect(() => {
+            if (flippeningQuery.isSuccess && flippeningQuery.data) {
+                setFlippening(flippeningQuery.data);
+            }
+        }, [flippeningQuery.isSuccess, flippeningQuery.data]);
+
+        const ethBurnedQuery = useETHBurnedCountQuery({
+            enabled: isAppReady,
+        });
+
+        useEffect(() => {
+            if (ethBurnedQuery.isSuccess && ethBurnedQuery.data) {
+                setEthBurned(ethBurnedQuery.data);
+            }
+        }, [ethBurnedQuery.isSuccess, ethBurnedQuery.data]);
 
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
@@ -297,7 +323,18 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {currentAssetPrice
+                                                {market.customMarket
+                                                    ? market.eventName === 'Flippening Markets' ||
+                                                      market.eventName === 'ETH/BTC market cap ratio'
+                                                        ? flippening
+                                                            ? formatCurrency(flippening.ratio)
+                                                            : '-'
+                                                        : market.eventName === 'ETH burned count'
+                                                        ? ethBurned
+                                                            ? formatCurrency(ethBurned.total)
+                                                            : '-'
+                                                        : 'N/A'
+                                                    : currentAssetPrice
                                                     ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
                                                     : 'N/A'}
                                             </StyledAnchoredTableCell>
