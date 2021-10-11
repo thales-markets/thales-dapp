@@ -335,7 +335,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         <StyledTableCell
                                             style={{
                                                 height: getHeight(leader, true),
-                                                fontSize: getFontSizeByRank(leader.rank),
+                                                fontSize: getFontSizeByRank(leader.rank, true),
                                                 fontWeight: 'bold',
                                             }}
                                         >
@@ -592,6 +592,9 @@ const getHeight = (leader: any, yourRank?: boolean) => {
     }
 };
 
-const getFontSizeByRank = (rank: number) => {
+const getFontSizeByRank = (rank: number, yourRank?: boolean) => {
+    if (yourRank) {
+        return 48;
+    }
     return rank === 1 ? 96 : 48;
 };
