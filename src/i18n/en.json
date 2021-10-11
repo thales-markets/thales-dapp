@@ -246,7 +246,8 @@
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Market size",
-                "time-remaining-col": "Time remaining"
+                "time-remaining-col": "Time remaining",
+                "competition-tooltip": "This market is eligible for trading competition"
             }
         },
         "earn": {
