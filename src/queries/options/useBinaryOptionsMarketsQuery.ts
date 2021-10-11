@@ -51,7 +51,8 @@ const useBinaryOptionsMarketsQuery = (networkId: NetworkId, options?: UseQueryOp
                                 data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0];
                             currentMarket.eventName = data[1];
                             currentMarket.outcome =
-                                currentMarket.eventName === 'Flippening Markets'
+                                currentMarket.eventName === 'Flippening Markets' ||
+                                currentMarket.eventName === 'ETH/BTC market cap ratio'
                                     ? bigNumberFormatter(data[2]).toString()
                                     : Number(data[2]).toString();
                             return currentMarket;

@@ -89,8 +89,15 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                         {market.customMarket
                                             ? market.eventName === 'XYZ airdrop claims' ||
                                               market.eventName === 'ETH burned count' ||
-                                              market.eventName === 'Flippening Markets'
-                                                ? formatCurrency(market.outcome || 0, 0)
+                                              market.eventName === 'Flippening Markets' ||
+                                              market.eventName === 'ETH/BTC market cap ratio'
+                                                ? formatCurrency(
+                                                      market.outcome || 0,
+                                                      market.eventName === 'Flippening Markets' ||
+                                                          market.eventName === 'ETH/BTC market cap ratio'
+                                                          ? 2
+                                                          : 0
+                                                  )
                                                 : market.eventName
                                             : formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
                                     </Text>
@@ -151,7 +158,8 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 </FlexDivColumnCentered>
                                 {market.eventName !== 'XYZ airdrop claims' &&
                                     market.eventName !== 'ETH burned count' &&
-                                    market.eventName !== 'Flippening Markets' && (
+                                    market.eventName !== 'Flippening Markets' &&
+                                    market.eventName !== 'ETH/BTC market cap ratio' && (
                                         <FlexDivColumnCentered style={{ textAlign: 'center' }}>
                                             <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
                                                 {t('options.home.market-card.result')}
@@ -293,7 +301,10 @@ export const eventToIcon = (event: string) => {
         if (event.toLowerCase().indexOf('xyz') !== -1) {
             return xyz;
         }
-        if (event.toLowerCase().indexOf('flippening markets') !== -1) {
+        if (
+            event.toLowerCase().indexOf('flippening markets') !== -1 ||
+            event.toLowerCase().indexOf('market cap ratio') !== -1
+        ) {
             return flippening;
         }
         if (event.toLowerCase().indexOf('eth burned count') !== -1) {

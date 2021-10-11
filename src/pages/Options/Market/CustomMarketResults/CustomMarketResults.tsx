@@ -20,6 +20,7 @@ enum CustomMarketEvent {
     US_OPEN_MEN_WINNER = 'US Open 2021 winner',
     ETH_BURNED_COUNT = 'ETH burned count',
     FLIPPENING_MARKETS = 'Flippening Markets',
+    ETH_BTC_MARKET_CAP_RATIO = 'ETH/BTC market cap ratio',
 }
 
 const CustomMarketEventMap: Record<string, any> = {
@@ -29,6 +30,7 @@ const CustomMarketEventMap: Record<string, any> = {
     [CustomMarketEvent.US_OPEN_MEN_WINNER]: <USOpenResults />,
     [CustomMarketEvent.ETH_BURNED_COUNT]: <ETHBurnedCount />,
     [CustomMarketEvent.FLIPPENING_MARKETS]: <ETHBTCFlippeningChart />,
+    [CustomMarketEvent.ETH_BTC_MARKET_CAP_RATIO]: <ETHBTCFlippeningChart />,
 };
 
 const CustomMarketResults: React.FC = () => {
@@ -40,7 +42,8 @@ const CustomMarketResults: React.FC = () => {
             <MarketWidgetHeader
                 widgetKey={MarketWidgetKey.CUSTOM_MARKET_RESULTS}
                 title={
-                    optionsMarket.eventName == CustomMarketEvent.FLIPPENING_MARKETS
+                    optionsMarket.eventName == CustomMarketEvent.FLIPPENING_MARKETS ||
+                    optionsMarket.eventName == CustomMarketEvent.ETH_BTC_MARKET_CAP_RATIO
                         ? 'ETH/BTC market cap ratio chart'
                         : optionsMarket.eventName == CustomMarketEvent.OLYMPICS_MEN_VOLLEYBALL_RANKING ||
                           optionsMarket.eventName == CustomMarketEvent.US_OPEN_MEN_WINNER
