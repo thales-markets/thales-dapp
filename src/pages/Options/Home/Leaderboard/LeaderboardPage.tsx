@@ -1,16 +1,17 @@
 import twitter from 'assets/images/twitter.svg';
+import Loader from 'components/Loader';
 import ROUTES from 'constants/routes';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
-// import useTwitterAccountsQuery from 'queries/user/useTwitterAccountsQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Button, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
+import { isNetworkSupported } from 'utils/network';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
@@ -20,6 +21,7 @@ const LeaderboardPage: React.FC = () => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [selectedTab, setSelectedTab] = useState('trading-competition');
     const [accVerified, setAccVerified] = useState(false);
     const [twitterAccountData, setTwitterAccountData] = useState({} as any);
@@ -103,7 +105,7 @@ const LeaderboardPage: React.FC = () => {
         }, 5000);
     };
 
-    return (
+    return isNetworkSupported(networkId) ? (
         <Background style={{ minHeight: '100vh' }}>
             <Wrapper>
                 <FlexDivColumn className="leaderboard" style={{ zIndex: 10 }}>
@@ -324,6 +326,8 @@ const LeaderboardPage: React.FC = () => {
                 </FlexDivColumn>
             </Wrapper>
         </Background>
+    ) : (
+        <Loader />
     );
 };
 

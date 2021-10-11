@@ -99,7 +99,8 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                                     ? optionsMarket.isResolved
                                         ? t('options.market.overview.final-burn-label')
                                         : t('options.market.overview.current-burn-label')
-                                    : optionsMarket.eventName === 'Flippening Markets'
+                                    : optionsMarket.eventName === 'Flippening Markets' ||
+                                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
                                     ? optionsMarket.isResolved
                                         ? t('options.market.overview.final-ratio-label')
                                         : t('options.market.overview.current-ratio-label')
@@ -121,7 +122,8 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                             }
                         >
                             {optionsMarket.customMarket
-                                ? optionsMarket.eventName === 'Flippening Markets'
+                                ? optionsMarket.eventName === 'Flippening Markets' ||
+                                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
                                     ? flippening
                                         ? formatCurrency(flippening.ratio)
                                         : '-'
@@ -143,14 +145,21 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                                     ? t('options.market.overview.strike-price-label')
                                     : optionsMarket.eventName === 'ETH burned count'
                                     ? t('options.market.overview.strike-burn-label')
-                                    : optionsMarket.eventName === 'Flippening Markets'
+                                    : optionsMarket.eventName === 'Flippening Markets' ||
+                                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
                                     ? t('options.market.overview.strike-ratio-label')
                                     : t('options.market.overview.rank-label')
                                 : t('options.market.overview.strike-price-label')}
                         </Title>
                         <Content fontSize={optionsMarket.strikePrice < 0.01 && !optionsMarket.customMarket ? 14 : 16}>
                             {optionsMarket.customMarket ? (
-                                formatCurrency(optionsMarket.outcome || 0, 0)
+                                formatCurrency(
+                                    optionsMarket.outcome || 0,
+                                    optionsMarket.eventName === 'Flippening Markets' ||
+                                        optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                                        ? 2
+                                        : 0
+                                )
                             ) : (
                                 <FlexDiv>
                                     {formatCurrencyWithSign(USD_SIGN, optionsMarket.strikePrice)}
@@ -212,7 +221,8 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                 {!optionsMarket.customMarket ||
                 optionsMarket.eventName === 'XYZ airdrop claims' ||
                 optionsMarket.eventName === 'ETH burned count' ||
-                optionsMarket.eventName === 'Flippening Markets' ? (
+                optionsMarket.eventName === 'Flippening Markets' ||
+                optionsMarket.eventName === 'ETH/BTC market cap ratio' ? (
                     <Result style={{ fontSize: 14 }} isLong={optionsMarket.result === 'long'}>
                         {optionsMarket.result}
                     </Result>

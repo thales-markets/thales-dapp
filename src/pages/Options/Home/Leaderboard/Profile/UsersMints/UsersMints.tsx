@@ -19,7 +19,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { ethers } from 'ethers';
 import { RootState } from 'redux/rootReducer';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { OptionsMarketInfo } from 'types/options';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 type UsersMintsProps = {
     usersMints: any[];
@@ -37,29 +39,53 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
     });
 
     useEffect(() => {
-        if (marketQuery.isSuccess && marketQuery.data) {
-            if (marketQuery.data.customMarket) {
-                const sportFeedContract = new ethers.Contract(
-                    marketQuery.data.oracleAdress,
-                    sportFeedOracleContract.abi,
-                    (snxJSConnector as any).provider
-                );
-                Promise.all([
-                    sportFeedContract.targetName(),
-                    sportFeedContract.eventName(),
-                    sportFeedContract.targetOutcome(),
-                ]).then((data) => {
-                    setOptionsMarket({
-                        ...marketQuery.data,
-                        country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
-                        eventName: data[1],
-                        outcome: data[2],
-                    });
-                });
-            } else {
-                setOptionsMarket(marketQuery.data);
+        const fetchMarketData = async () => {
+            if (marketQuery.isSuccess && marketQuery.data) {
+                if (marketQuery.data.customMarket) {
+                    try {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            sportFeedOracleContract.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
+                        setOptionsMarket({
+                            ...marketQuery.data,
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                            eventName: data[1],
+                            outcome: data[2],
+                        });
+                    } catch (e) {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            ethBurnedOracleInstance.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
+                        setOptionsMarket({
+                            ...marketQuery.data,
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                            eventName: data[1],
+                            outcome:
+                                data[1] === 'Flippening Markets' || data[1] === 'ETH/BTC market cap ratio'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString(),
+                        });
+                    }
+                } else {
+                    setOptionsMarket(marketQuery.data);
+                }
             }
-        }
+        };
+        fetchMarketData();
     }, [marketQuery.isSuccess]);
 
     return (

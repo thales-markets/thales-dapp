@@ -105,7 +105,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                             country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
                             eventName: data[1],
                             outcome:
-                                data[1] === 'Flippening Markets'
+                                data[1] === 'Flippening Markets' || data[1] === 'ETH/BTC market cap ratio'
                                     ? bigNumberFormatter(data[2]).toString()
                                     : Number(data[2]).toString(),
                         });
