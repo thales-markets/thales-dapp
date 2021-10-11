@@ -144,6 +144,7 @@
             "trending-label": "趋势市场",
             "overview-label": "市场概述",
             "olympics-label": "奥运市场",
+            "custom-markets-label": "Custom markets",
             "create-market-label": "创建市场",
             "trade-label": "交易期权",
             "maturity-label": "期权到期",
@@ -208,6 +209,8 @@
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
             "olympics": "Olympics",
+            "competition": "Trading Competition",
+            "custom": "Custom Markets",
             "long": "多头",
             "short": "空头"
         },
@@ -232,7 +235,8 @@
                 "table": {
                     "view-all-markets": "查看所有市场",
                     "no-markets-created": "你还没有创造任何市场。",
-                    "no-markets-found": "未找到市场。"
+                    "no-markets-found": "未找到市场。",
+                    "trading-comp": "No markets available at the moment.\n Trading competition will start on Monday, October 11th at 10:00AM UTC.\n For more information click here: "
                 }
             },
             "markets-table": {
@@ -262,8 +266,7 @@
                     "not-eligible-message": "您不符合此分发的条件。",
                     "learn-more-text": "奖励在2年内线性解锁。申请当前解锁的奖励不会受到处罚。",
                     "learn-more": "了解更多",
-                    "info-tooltip": "<0>自质押开始至2021年9月6日10:00 UTC，已按比例向所有SNX质押者分配了1500万泰雷兹。</0><0>通过此算法分配的泰雷兹Thales至少有24个符合条件。</0><1>您可以检查是否满足阈值要求 </1><2 />。",
-                    "button-tooltip": "收到的奖励有 10 周的归属期。"
+                    "info-tooltip": "<0>自质押开始至2021年9月6日10:00 UTC，已按比例向所有SNX质押者分配了1500万泰雷兹。</0><0>通过此算法分配的泰雷兹Thales至少有24个符合条件。</0><1>您可以检查是否满足阈值要求 </1><2 />。"
                 },
                 "airdropped-amount": "空投金额",
                 "claim": "领取",
@@ -310,7 +313,9 @@
                     "start-unstaking-tooltip": "在7天解锁冷却时间内，您将无法锁定或质押更多泰雷兹。",
                     "cancel": "取消抵押",
                     "canceling": "取消抵押",
-                    "cancel-confirmation-message": "取消抵押成功取消"
+                    "cancel-confirmation-message": "取消抵押成功取消",
+                    "network-fee-cancel": "取消",
+                    "network-fee-unstake": "取消质押"
                 },
                 "staking-rewards": {
                     "title": "质押奖励",
@@ -327,7 +332,8 @@
                     "paused-message": "已暂停，请稍后再试。",
                     "confirmation-message": "代币成功认领",
                     "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
-                    "learn-more": "了解更多"
+                    "learn-more": "了解更多",
+                    "button-tooltip": "收到的奖励有 10 周的归属期。"
                 }
             },
             "vesting": {
@@ -490,7 +496,16 @@
                 "current-result-label": "当前结果",
                 "final-result-label": "最终结果",
                 "deposited-currency-label": "存款{{currencyKey}}",
-                "event-name-label": "事件名称"
+                "event-name-label": "事件名称",
+                "current-ratio-label": "Current ratio",
+                "final-ratio-label": "Final ratio",
+                "strike-ratio-label": "Strike ratio",
+                "current-burn-label": "Current burn",
+                "final-burn-label": "Final burn",
+                "strike-burn-label": "Strike burn",
+                "rank-label": "Rank",
+                "total-burned": "Total burned",
+                "burned-yesterday": "Burned yesterday"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -544,7 +559,8 @@
                     "all": "全部",
                     "mint": "铸造",
                     "trade": "交易",
-                    "exercise": "行权"
+                    "exercise": "行权",
+                    "filter": "Filter"
                 }
             },
             "trade-card": {
@@ -727,14 +743,76 @@
             }
         },
         "leaderboard": {
-            "search-placeholder": "显示名字",
+            "leaderboard-title": "Leaderboard",
+            "leaderboard-subtitle": "This is Thales' overall leaderboard.",
+            "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
+            "trading-comp-title": "Trading Competition",
+            "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
+            "trading-comp-subtitle-2": "Please note that this competition hasn't started yet, but registrations are open.",
+            "trading-comp-subtitle-3": "You'll need to connect your wallet (top right corner) and then verify it, associating it with a Twitter account (that's older than 3 months).",
+            "trading-comp-subtitle-4": "You can read all the details regarding this trading competition here: ",
+            "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
+            "profile-title": "Profile",
+            "verify-twitter-account": "Verify account",
+            "display-name": "Display Name",
+            "address": "Address",
+            "twitter-account": "My twitter account",
+            "my-info": "My info",
             "table": {
                 "rank-col": "排名",
                 "display-name-col": "显示名字",
                 "trades-col": "交易",
                 "volume-col": "交易量",
                 "netprofit-col": "净利润",
-                "netprofit-col-tooltip": "利润仅在成熟市场上计算"
+                "netprofit-col-tooltip": "利润仅在成熟市场上计算",
+                "investment-col": "Investment",
+                "gain-col": "Gain",
+                "twitter-col": "Twitter"
+            },
+            "trading-competition": {
+                "tab-title": "Trading competition",
+                "competition-period": "Selected period"
+            },
+            "board": {
+                "tab-title": "Leaderboard"
+            },
+            "profile": {
+                "tab-title": "Profile",
+                "search-placeholder": "Search other profiles by typing display name",
+                "transaction-details": "Transaction details for user:",
+                "no-transactions": "No transactions available",
+                "filters": {
+                    "mints": "Mints",
+                    "trades": "Trades",
+                    "exercises": "Exercises",
+                    "redeemable": "Redeemable"
+                },
+                "markets": {
+                    "strike-price": "Strike price",
+                    "pool-size": "Pool size",
+                    "maturity-date": "Maturity date",
+                    "result": "Result"
+                },
+                "common": {
+                    "amount": "Amount",
+                    "timestamp": "Date | Time",
+                    "view-less": "View less",
+                    "view-more": "View more",
+                    "long": "Long",
+                    "short": "Short",
+                    "buy": "Buy",
+                    "sell": "Sell"
+                },
+                "exercises": {
+                    "side": "Side"
+                },
+                "trades": {
+                    "price": "Price",
+                    "type": "Type"
+                },
+                "unclaimed": {
+                    "redeem": "Redeem"
+                }
             }
         },
         "common": {
@@ -754,6 +832,8 @@
                 "minute": "分钟",
                 "seconds": "秒钟",
                 "second": "秒钟",
+                "days-short": "d",
+                "hours-short": "h",
                 "minutes-short": "m",
                 "seconds-short": "s"
             },
@@ -777,7 +857,8 @@
             "legacy-signing": {
                 "label": "使用传统签名",
                 "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
-            }
+            },
+            "ratio": "Ratio"
         }
     }
 }
