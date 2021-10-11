@@ -397,6 +397,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                 );
                             })}
                         {leaderboardData.map((leader: any, index: any) => {
+                            const twitterData = twitterAccountsData.filter(
+                                (account: any) => account[0] === leader.walletAddress.toLowerCase()
+                            );
+                            console.log(twitterData);
                             return (
                                 <StyledTableRow
                                     key={index}
@@ -412,28 +416,16 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
-                                        {twitterAccountsData.filter(
-                                            (account: any) => account[0] === leader.walletAddress.toLowerCase()
-                                        ).length === 1 && (
+                                        {twitterData.length === 1 && (
                                             <StyledLink
                                                 style={{ verticalAlign: 'text-top' }}
-                                                href={
-                                                    twitterAccountsData.filter(
-                                                        (account: any) =>
-                                                            account[0] === leader.walletAddress.toLowerCase()
-                                                    )[0][1].twitter
-                                                }
+                                                href={twitterData[0][1].twitter}
                                                 target="_blank"
                                                 rel="noreferrer"
                                             >
                                                 <img
                                                     style={{ width: 35, height: 35, borderRadius: '50%' }}
-                                                    src={
-                                                        twitterAccountsData.filter(
-                                                            (account: any) =>
-                                                                account[0] === leader.walletAddress.toLowerCase()
-                                                        )[0][1].avatar
-                                                    }
+                                                    src={twitterData[0][1].avatar}
                                                 ></img>
                                                 <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                             </StyledLink>
@@ -451,7 +443,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         >
                                             {displayNamesMap.get(leader.walletAddress)
                                                 ? displayNamesMap.get(leader.walletAddress)
-                                                : leader.walletAddress}
+                                                : twitterData[0][1].name}
                                         </StyledLink>
                                     </StyledTableCell>
                                     <StyledTableCell>{leader.trades}</StyledTableCell>
