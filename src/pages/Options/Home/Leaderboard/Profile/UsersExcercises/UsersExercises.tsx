@@ -22,6 +22,7 @@ import { OptionsMarketInfo } from 'types/options';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
 
 type UsersExercisesProps = {
     usersExercises: any[];
@@ -118,11 +119,13 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             )}
                             {!countryToCountryCode(optionsMarket?.country as string) && (
                                 <CustomIcon
-                                    style={{ marginLeft: 32 }}
+                                    style={{ marginLeft: 32, width: 50, height: 50 }}
                                     src={eventToIcon(optionsMarket?.eventName as string)}
                                 ></CustomIcon>
                             )}
-                            {market.country}
+                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
+                                {market.country ? market.country : optionsMarket?.country}
+                            </CryptoName>
                         </>
                     ) : (
                         <>
@@ -156,10 +159,13 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                     <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
                 </Row>
                 <Row className="text-ms leaderboard__profile__rowBackground__columns">
-                    <Text className="bold" style={{ flex: 2 }}>
+                    <Text className="bold" style={{ flex: 1.33 }}>
+                        {t('options.leaderboard.profile.common.tx-status')}
+                    </Text>
+                    <Text className="bold" style={{ flex: 1.33 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
-                    <Text className="bold" style={{ flex: 2 }}>
+                    <Text className="bold" style={{ flex: 1.33 }}>
                         {t('options.leaderboard.profile.exercises.side')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
@@ -168,8 +174,11 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                 </Row>
                 {!showAll && (
                     <Row className="text-profile-data" style={usersExercises.length === 1 ? { paddingBottom: 16 } : {}}>
-                        <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, usersExercises[0].amount)}</Text>
-                        <Text style={{ flex: 2, color: getCellColor(usersExercises[0].side) }}>
+                        <Text style={{ flex: 1.33 }}>
+                            <ViewEtherscanLink hash={usersExercises[0].hash} />
+                        </Text>
+                        <Text style={{ flex: 1.33 }}>{formatCurrencyWithSign(USD_SIGN, usersExercises[0].amount)}</Text>
+                        <Text style={{ flex: 1.33, color: getCellColor(usersExercises[0].side) }}>
                             {usersExercises[0].side.toUpperCase()}
                         </Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersExercises[0].timestamp))}</Text>
@@ -178,9 +187,12 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                 <RowScrollable>
                     {showAll &&
                         usersExercises?.map((exercise, index) => (
-                            <Row className="text-profile-data" key={index} style={{ width: '126.3%' }}>
-                                <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
-                                <Text style={{ flex: 1, color: getCellColor(exercise.side) }}>
+                            <Row className="text-profile-data" key={index} style={{ width: '105.3%' }}>
+                                <Text style={{ flex: 1.33 }}>
+                                    <ViewEtherscanLink hash={exercise.hash} />
+                                </Text>
+                                <Text style={{ flex: 1.33 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
+                                <Text style={{ flex: 1.33, color: getCellColor(exercise.side) }}>
                                     {exercise.side.toUpperCase()}
                                 </Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(exercise.timestamp))}</Text>
