@@ -97,7 +97,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     };
 
     const calcDirection = (cell: HeadCell) => {
-        if (orderBy === cell.id) {
+        if (orderBy === cell.id && cell.id !== 5) {
             switch (orderDirection) {
                 case OrderDirection.NONE:
                     setOrderDirection(OrderDirection.DESC);
@@ -273,7 +273,24 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             )}
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {(cell.id === 5 || cell.id === 6) && (
+                                            <ArrowsWrapper>
+                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                    <Arrow
+                                                        src={
+                                                            orderDirection === OrderDirection.ASC
+                                                                ? upSelected
+                                                                : downSelected
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <Arrow src={down} />
+                                                    </>
+                                                )}
+                                            </ArrowsWrapper>
+                                        )}
+                                        {cell.sortable && cell.id !== 5 && cell.id !== 6 && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
