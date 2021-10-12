@@ -749,8 +749,8 @@
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "Please note that this competition hasn't started yet, but registrations are open.",
-            "trading-comp-subtitle-3": "You'll need to connect your wallet (top right corner) and then verify it, associating it with a Twitter account (that's older than 3 months).",
+            "trading-comp-subtitle-2": "The competition has officialy started on Oct 11 2021 | 10AM UTC",
+            "trading-comp-subtitle-3": "For more information and guide on how to participate, please visit: ",
             "trading-comp-subtitle-4": "You can read all the details regarding this trading competition here: ",
             "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
             "profile-title": "Profile",
@@ -768,7 +768,8 @@
                 "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
                 "investment-col": "Investment",
                 "gain-col": "Gain",
-                "twitter-col": "Twitter"
+                "twitter-col": "Twitter",
+                "rewards-col": "Rewards"
             },
             "trading-competition": {
                 "tab-title": "Trading competition",

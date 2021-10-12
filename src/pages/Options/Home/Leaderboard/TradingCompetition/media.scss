@@ -62,6 +62,20 @@
             td {
                 border: none !important;
                 background: transparent !important;
+                .tooltip-icon {
+                    width: 22px;
+                    height: 22px;
+                    padding: 0 !important;
+                    border: none !important;
+                }
+            }
+        }
+        tr td {
+            .tooltip-icon {
+                width: 22px;
+                height: 22px;
+                padding: 0 !important;
+                border: none !important;
             }
         }
         & > tr:last-child {

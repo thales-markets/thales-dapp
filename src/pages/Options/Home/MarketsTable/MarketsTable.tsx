@@ -1,62 +1,62 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
-import { ETHBurned, Flippening, OptionsMarkets } from 'types/options';
-import dotenv from 'dotenv';
 import {
     Paper,
     Table,
-    TableContainer,
-    TableHead,
     TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TablePagination,
     TableRow,
     withStyles,
-    TablePagination,
-    TableFooter,
 } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import arrowDown from 'assets/images/arrow-down.svg';
+import arrowUp from 'assets/images/arrow-up.svg';
+import basketball from 'assets/images/basketball.svg';
+import burn from 'assets/images/burn.png';
+import downSelected from 'assets/images/down-selected.svg';
+import down from 'assets/images/down.svg';
+import flippening from 'assets/images/flippening.png';
+import fullStar from 'assets/images/full-star.svg';
+import medals from 'assets/images/medals.png';
+import star from 'assets/images/star.svg';
+import tennis from 'assets/images/tennis.svg';
+import upSelected from 'assets/images/up-selected.svg';
+import up from 'assets/images/up.svg';
+import volleyball from 'assets/images/volleyball.svg';
+import xyz from 'assets/images/xyz.png';
+import axios from 'axios';
 import Currency from 'components/Currency';
-import { useTranslation } from 'react-i18next';
+import { USD_SIGN } from 'constants/currency';
+import dotenv from 'dotenv';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import { TooltipDollarIcon } from 'pages/Options/CreateMarket/components';
+import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
+import useFlippeningQuery from 'queries/options/useFlippeningQuery';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import ReactCountryFlag from 'react-country-flag';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import { ETHBurned, Flippening, OptionsMarkets } from 'types/options';
 import { buildOptionsMarketLink } from 'utils/routes';
+import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
+import { FlexDivCentered, Image } from '../../../../theme/common';
+import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
+import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
 import {
     Arrow,
     ArrowsWrapper,
+    DisplayContentsAnchor,
     PhaseLabel,
+    Star,
     StyledTableCell,
     TableHeaderLabel,
-    Star,
-    DisplayContentsAnchor,
 } from './components';
 import Pagination from './Pagination';
-import styled from 'styled-components';
-import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
-import down from 'assets/images/down.svg';
-import up from 'assets/images/up.svg';
-import star from 'assets/images/star.svg';
-import fullStar from 'assets/images/full-star.svg';
-import downSelected from 'assets/images/down-selected.svg';
-import upSelected from 'assets/images/up-selected.svg';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import axios from 'axios';
-import { USD_SIGN } from 'constants/currency';
-import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
-import { FlexDivCentered, Image } from '../../../../theme/common';
-import arrowDown from 'assets/images/arrow-down.svg';
-import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
-import arrowUp from 'assets/images/arrow-up.svg';
-import basketball from 'assets/images/basketball.svg';
-import volleyball from 'assets/images/volleyball.svg';
-import medals from 'assets/images/medals.png';
-import tennis from 'assets/images/tennis.svg';
-import xyz from 'assets/images/xyz.png';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import ReactCountryFlag from 'react-country-flag';
-import flippening from 'assets/images/flippening.png';
-import burn from 'assets/images/burn.png';
-import { TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
-import { getIsAppReady } from 'redux/modules/app';
-import useFlippeningQuery from 'queries/options/useFlippeningQuery';
-import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
 
 dotenv.config();
 
@@ -274,7 +274,6 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 <StyledAnchoredTableCell
                                                     style={{
                                                         textAlign: 'left',
-                                                        display: isMarketInTradingCompetition ? 'flex' : '',
                                                     }}
                                                     className={`
                                                 ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
@@ -291,14 +290,13 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     )}
                                                     {market.country}
                                                     {isMarketInTradingCompetition && (
-                                                        <TooltipInfoIcon
+                                                        <TooltipDollarIcon
                                                             title={t(`options.home.markets-table.competition-tooltip`)}
-                                                        ></TooltipInfoIcon>
+                                                        ></TooltipDollarIcon>
                                                     )}
                                                 </StyledAnchoredTableCell>
                                             ) : (
                                                 <StyledAnchoredTableCell
-                                                    style={{ display: isMarketInTradingCompetition ? 'flex' : '' }}
                                                     className={`
                                                 ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
                                                 >
@@ -309,9 +307,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         synthIconStyle={{ width: 32, height: 32 }}
                                                     />
                                                     {isMarketInTradingCompetition && (
-                                                        <TooltipInfoIcon
+                                                        <TooltipDollarIcon
                                                             title={t(`options.home.markets-table.competition-tooltip`)}
-                                                        ></TooltipInfoIcon>
+                                                        ></TooltipDollarIcon>
                                                     )}
                                                 </StyledAnchoredTableCell>
                                             )}
@@ -504,14 +502,13 @@ const StyledAnchoredTableCell = styled(StyledTableCell)`
     vertical-align: middle !important;
     .tooltip-icon {
         border-radius: 50%;
-        padding: 1px;
-        width: 18px;
-        height: 18px;
-        padding: 2px;
-        position: relative;
-        display: flex;
+        width: 26px;
+        height: 26px;
+        position: absolute;
+        display: inline;
         align-self: center;
         margin-left: 5px;
+        padding: 0px !important;
     }
 `;
 
