@@ -1,6 +1,7 @@
 import twitter from 'assets/images/twitter.svg';
 import Loader from 'components/Loader';
 import ROUTES from 'constants/routes';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -145,6 +146,14 @@ const LeaderboardPage: React.FC = () => {
                                     </Text>
                                     <Text className="text-s ls25 lh24 pale-grey">
                                         {t('options.leaderboard.trading-comp-subtitle-3')}
+                                        <TimeRemaining
+                                            end={new Date('Nov 01 2021 11:00:00 UTC')}
+                                            fontSize={16}
+                                            showFullCounter
+                                        />
+                                    </Text>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trading-comp-subtitle-4')}
                                         <StyledLink
                                             href="https://docs.thales.market/using-thales/guide-for-thales-first-trading-competition"
                                             rel="noreferrer"
