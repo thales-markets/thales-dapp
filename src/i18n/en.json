@@ -300,7 +300,11 @@
                     "locked-in-escrow": "Escrowed balance",
                     "total-staked": "Total staked balance",
                     "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
-                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
+                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards",
+                    "global-staking-stats": "Global staking stats",
+                    "total-thales-staked": "Total THALES Staked",
+                    "my-staked-share": "My Staked Share",
+                    "estimated-rewards": "Estimated rewards for this period"
                 },
                 "unstake": {
                     "unstake": "Unstake",
