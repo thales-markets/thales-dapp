@@ -110,8 +110,6 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         return !+thalesStaked && !!+escrowedBalance;
     }, [thalesStaked, escrowedBalance]);
 
-    const isMobile = window.innerWidth < 768;
-
     return (
         <EarnSection
             orderOnMobile={3}
@@ -205,7 +203,6 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
                                 {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
                             </GradientText>
                         </GlobalStatsInfo>
-                        <EarnSymbol style={{ visibility: 'hidden', display: isMobile ? 'none' : 'flex' }}>+</EarnSymbol>
                         <GlobalStatsInfo>
                             <StyledClaimTitle fontSize={15}>
                                 {t('options.earn.thales-staking.my-stake.my-staked-share')}:
@@ -218,7 +215,6 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
                                 {myStakedShare.toFixed(2)}%
                             </GradientText>
                         </GlobalStatsInfo>
-                        <EarnSymbol style={{ visibility: 'hidden', display: isMobile ? 'none' : 'flex' }}>=</EarnSymbol>
                         <GlobalStatsInfo>
                             <StyledClaimTitle fontSize={15}>
                                 {t('options.earn.thales-staking.my-stake.estimated-rewards')}:
