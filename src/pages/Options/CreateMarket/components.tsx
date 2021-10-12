@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core';
 import errorIcon from 'assets/images/errorIcon.svg';
@@ -13,6 +13,7 @@ import { COLORS } from 'constants/ui';
 
 type TooltipIconProps = {
     title: React.ReactNode;
+    iconProps?: CSSProperties;
 };
 
 const LightTooltip = withStyles(() => ({
@@ -48,10 +49,10 @@ export const TooltipInfoIcon: React.FC<TooltipIconProps> = ({ title }) => (
     </LightTooltip>
 );
 
-export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title }) => (
+export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title, iconProps }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <DollarIcon
-            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1, ...iconProps }}
             width="12"
             height="12"
             className="tooltip-icon"
