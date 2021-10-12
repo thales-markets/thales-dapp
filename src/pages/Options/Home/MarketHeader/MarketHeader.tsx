@@ -295,7 +295,7 @@ const Sidebar = styled.nav`
     transition: width 0.3s ease;
     overflow: hidden;
     &:hover {
-        width: 256px;
+        width: 300px;
         span {
             display: block;
         }

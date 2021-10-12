@@ -79,11 +79,11 @@
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
             "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
-        "discord": "Join Discord"
+        "discord": "加入不和諧"
     },
     "maintenance-page": {
         "title": "敬请关注，马上就来…",
-        "powered-by": "Powered by"
+        "powered-by": "供電"
     },
     "common": {
         "max": "max",
@@ -144,7 +144,7 @@
             "trending-label": "趋势市场",
             "overview-label": "市场概述",
             "olympics-label": "奥运市场",
-            "custom-markets-label": "Custom markets",
+            "custom-markets-label": "定制市場",
             "create-market-label": "创建市场",
             "trade-label": "交易期权",
             "maturity-label": "期权到期",
@@ -208,9 +208,9 @@
             "recently-added": "最近添加",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
-            "olympics": "Olympics",
-            "competition": "Trading Competition",
-            "custom": "Custom Markets",
+            "olympics": "奧運會",
+            "competition": "交易大賽",
+            "custom": "定制市場",
             "long": "多头",
             "short": "空头"
         },
@@ -236,7 +236,7 @@
                     "view-all-markets": "查看所有市场",
                     "no-markets-created": "你还没有创造任何市场。",
                     "no-markets-found": "未找到市场。",
-                    "trading-comp": "No markets available at the moment.\n Trading competition will start on Monday, October 11th at 10:00AM UTC.\n For more information click here: "
+                    "trading-comp": "目前沒有可用的市場.\n 交易比賽將於 UTC 時間 10 月 11 日星期一上午 10:00 開始.\n 欲了解更多信息，請點擊此處: "
                 }
             },
             "markets-table": {
@@ -497,15 +497,15 @@
                 "final-result-label": "最终结果",
                 "deposited-currency-label": "存款{{currencyKey}}",
                 "event-name-label": "事件名称",
-                "current-ratio-label": "Current ratio",
-                "final-ratio-label": "Final ratio",
-                "strike-ratio-label": "Strike ratio",
-                "current-burn-label": "Current burn",
-                "final-burn-label": "Final burn",
-                "strike-burn-label": "Strike burn",
-                "rank-label": "Rank",
-                "total-burned": "Total burned",
-                "burned-yesterday": "Burned yesterday"
+                "current-ratio-label": "目前的比例",
+                "final-ratio-label": "最終比率",
+                "strike-ratio-label": "罷工率",
+                "current-burn-label": "電流消耗",
+                "final-burn-label": "最後燃燒",
+                "strike-burn-label": "罷工燒",
+                "rank-label": "秩",
+                "total-burned": "燃燒總量",
+                "burned-yesterday": "昨天燒了"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -743,21 +743,21 @@
             }
         },
         "leaderboard": {
-            "leaderboard-title": "Leaderboard",
-            "leaderboard-subtitle": "This is Thales' overall leaderboard.",
-            "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
-            "trading-comp-title": "Trading Competition",
-            "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "Please note that this competition hasn't started yet, but registrations are open.",
-            "trading-comp-subtitle-3": "You'll need to connect your wallet (top right corner) and then verify it, associating it with a Twitter account (that's older than 3 months).",
-            "trading-comp-subtitle-4": "You can read all the details regarding this trading competition here: ",
-            "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
-            "profile-title": "Profile",
-            "verify-twitter-account": "Verify account",
-            "display-name": "Display Name",
-            "address": "Address",
-            "twitter-account": "My twitter account",
-            "my-info": "My info",
+            "leaderboard-title": "排行榜",
+            "leaderboard-subtitle": "這是泰雷茲的整體排行榜.",
+            "leaderboard-subtitle-2": "它考慮了在泰雷茲平台內進行的所有交易.",
+            "trading-comp-title": "交易大賽",
+            "trading-comp-subtitle": "這是泰雷茲第一次交易競賽的排行榜.",
+            "trading-comp-subtitle-2": "請注意，本次比賽尚未開始，但註冊已開放.",
+            "trading-comp-subtitle-3": "你需要連接你的錢包（右上角）然後驗證它，將它與一個 Twitter 帳戶（超過 3 個月）相關聯.",
+            "trading-comp-subtitle-4": "您可以在此處閱讀有關本次交易競賽的所有詳細信息: ",
+            "profile-subtitle": "選項卡顯示您的所有交易以及其他用戶的交易.",
+            "profile-title": "輪廓",
+            "verify-twitter-account": "驗證賬戶",
+            "display-name": "顯示名稱",
+            "address": "地址",
+            "twitter-account": "我的推特賬號",
+            "my-info": "我的信息",
             "table": {
                 "rank-col": "排名",
                 "display-name-col": "显示名字",
@@ -765,53 +765,53 @@
                 "volume-col": "交易量",
                 "netprofit-col": "净利润",
                 "netprofit-col-tooltip": "利润仅在成熟市场上计算",
-                "investment-col": "Investment",
-                "gain-col": "Gain",
-                "twitter-col": "Twitter"
+                "investment-col": "投資",
+                "gain-col": "獲得",
+                "twitter-col": "推特"
             },
             "trading-competition": {
-                "tab-title": "Trading competition",
-                "competition-period": "Selected period"
+                "tab-title": "交易大賽",
+                "competition-period": "所選期間"
             },
             "board": {
-                "tab-title": "Leaderboard"
+                "tab-title": "排行榜"
             },
             "profile": {
-                "tab-title": "Profile",
-                "search-placeholder": "Search other profiles by typing display name",
-                "transaction-details": "Transaction details for user:",
-                "no-transactions": "No transactions available",
+                "tab-title": "輪廓",
+                "search-placeholder": "通過鍵入顯示名稱搜索其他配置文件",
+                "transaction-details": "用戶的交易詳情:",
+                "no-transactions": "沒有可用的交易",
                 "filters": {
-                    "mints": "Mints",
-                    "trades": "Trades",
-                    "exercises": "Exercises",
-                    "redeemable": "Redeemable"
+                    "mints": "薄荷糖",
+                    "trades": "交易",
+                    "exercises": "練習",
+                    "redeemable": "可贖回"
                 },
                 "markets": {
-                    "strike-price": "Strike price",
-                    "pool-size": "Pool size",
-                    "maturity-date": "Maturity date",
-                    "result": "Result"
+                    "strike-price": "行權價",
+                    "pool-size": "泳池大小",
+                    "maturity-date": "成人禮",
+                    "result": "結果"
                 },
                 "common": {
-                    "amount": "Amount",
-                    "timestamp": "Date | Time",
-                    "view-less": "View less",
-                    "view-more": "View more",
-                    "long": "Long",
-                    "short": "Short",
-                    "buy": "Buy",
-                    "sell": "Sell"
+                    "amount": "數量",
+                    "timestamp": "日期 | 時間",
+                    "view-less": "查看更少",
+                    "view-more": "查看更多",
+                    "long": "長",
+                    "short": "短的",
+                    "buy": "買",
+                    "sell": "賣"
                 },
                 "exercises": {
-                    "side": "Side"
+                    "side": "邊"
                 },
                 "trades": {
-                    "price": "Price",
-                    "type": "Type"
+                    "price": "價錢",
+                    "type": "類型"
                 },
                 "unclaimed": {
-                    "redeem": "Redeem"
+                    "redeem": "贖回"
                 }
             }
         },
@@ -858,7 +858,7 @@
                 "label": "使用传统签名",
                 "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
             },
-            "ratio": "Ratio"
+            "ratio": "比率"
         }
     }
 }

@@ -68,7 +68,9 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <Text>{t('options.home.market-card.strike-price')}</Text>
                             <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
                             <div style={{ visibility: isFinite(strikeAndAssetPriceDifference) ? 'visible' : 'hidden' }}>
-                                <Text>{t('options.home.market-card.difference-text')}:</Text>
+                                <Text style={{ fontSize: '13px' }}>
+                                    {t('options.home.market-card.difference-text')}:
+                                </Text>
                                 {currentAssetPrice > optionMarket.strikePrice ? (
                                     <FlexDivCentered
                                         style={{
