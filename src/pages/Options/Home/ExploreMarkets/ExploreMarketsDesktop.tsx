@@ -185,10 +185,11 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
         if (!secondLevelUserFilterParamValue && secondLevelUserFilter !== SecondaryFilters.all) {
             setSecondLevelUserFilter(SecondaryFilters.all);
-        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter === SecondaryFilters.all) {
+        } else if (secondLevelUserFilterParamValue && secondLevelUserFilter !== secondLevelUserFilterParamValue) {
             Object.keys(SecondaryFilters).forEach((key) => {
-                if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue)
+                if (SecondaryFilters[key as keyof typeof SecondaryFilters] === secondLevelUserFilterParamValue) {
                     setSecondLevelUserFilter(secondLevelUserFilterParamValue);
+                }
             });
         }
 
@@ -242,7 +243,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ customMarket }) => customMarket);
                 break;
             case SecondaryFilters.Competition:
-                console.log();
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(({ timestamp, maturityDate }) => {
                     const marketCreationCompetition = new Date('Oct 10 2021 10:00:00 UTC');
                     const marketEndingCompetition = new Date('Nov 01 2021 11:00:00 UTC');
