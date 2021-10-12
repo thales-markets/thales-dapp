@@ -17,7 +17,7 @@ import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
-import { TooltipDollarIcon, TooltipIcon } from 'pages/Options/CreateMarket/components';
+import { TooltipIcon, TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
@@ -358,7 +358,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
                                         {(leader as any).rank <= 20 && (
-                                            <TooltipDollarIcon title={getRewardsData(leader)}></TooltipDollarIcon>
+                                            <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -447,7 +447,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
                                         {(leader as any).rank <= 20 && (
-                                            <TooltipDollarIcon title={getRewardsData(leader)}></TooltipDollarIcon>
+                                            <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
