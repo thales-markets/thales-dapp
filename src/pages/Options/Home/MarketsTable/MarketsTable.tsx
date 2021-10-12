@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
-import { OptionsMarkets } from 'types/options';
+import { ETHBurned, Flippening, OptionsMarkets } from 'types/options';
 import dotenv from 'dotenv';
 import {
     Paper,
@@ -53,6 +53,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactCountryFlag from 'react-country-flag';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
+import { TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
+import { getIsAppReady } from 'redux/modules/app';
+import useFlippeningQuery from 'queries/options/useFlippeningQuery';
+import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
 
 dotenv.config();
 
@@ -93,6 +97,29 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
         const networkId = useSelector((state: RootState) => getNetworkId(state));
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+        const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+        const [flippening, setFlippening] = useState<Flippening | undefined>(undefined);
+        const [ethBurned, setEthBurned] = useState<ETHBurned | undefined>(undefined);
+
+        const flippeningQuery = useFlippeningQuery({
+            enabled: isAppReady,
+        });
+
+        useEffect(() => {
+            if (flippeningQuery.isSuccess && flippeningQuery.data) {
+                setFlippening(flippeningQuery.data);
+            }
+        }, [flippeningQuery.isSuccess, flippeningQuery.data]);
+
+        const ethBurnedQuery = useETHBurnedCountQuery({
+            enabled: isAppReady,
+        });
+
+        useEffect(() => {
+            if (ethBurnedQuery.isSuccess && ethBurnedQuery.data) {
+                setEthBurned(ethBurnedQuery.data);
+            }
+        }, [ethBurnedQuery.isSuccess, ethBurnedQuery.data]);
 
         const [page, setPage] = useState(0);
         const handleChangePage = (_event: unknown, newPage: number) => {
@@ -217,6 +244,9 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                     currentAssetPrice,
                                     market.strikePrice
                                 );
+                                const isMarketInTradingCompetition =
+                                    new Date(market.timestamp) >= new Date('Oct 10 2021 10:00:00 UTC') &&
+                                    new Date(market.maturityDate) <= new Date('Nov 01 2021 11:00:00 UTC');
                                 return (
                                     <StyledTableRow
                                         className={`${market.phase !== 'expiry' ? 'clickable' : ''}`}
@@ -241,7 +271,14 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             {market.customMarket ? (
-                                                <StyledAnchoredTableCell style={{ textAlign: 'left' }}>
+                                                <StyledAnchoredTableCell
+                                                    style={{
+                                                        textAlign: 'left',
+                                                        display: isMarketInTradingCompetition ? 'flex' : '',
+                                                    }}
+                                                    className={`
+                                                ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
+                                                >
                                                     <ReactCountryFlag
                                                         countryCode={countryToCountryCode(market.country as any)}
                                                         style={{ width: 32, height: 32, marginRight: 10 }}
@@ -253,15 +290,29 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         ></CustomIcon>
                                                     )}
                                                     {market.country}
+                                                    {isMarketInTradingCompetition && (
+                                                        <TooltipInfoIcon
+                                                            title={t(`options.home.markets-table.competition-tooltip`)}
+                                                        ></TooltipInfoIcon>
+                                                    )}
                                                 </StyledAnchoredTableCell>
                                             ) : (
-                                                <StyledAnchoredTableCell>
+                                                <StyledAnchoredTableCell
+                                                    style={{ display: isMarketInTradingCompetition ? 'flex' : '' }}
+                                                    className={`
+                                                ${isMarketInTradingCompetition ? 'tooltip-icon' : ''}`}
+                                                >
                                                     <Currency.Name
                                                         currencyKey={market.currencyKey}
                                                         showIcon={true}
                                                         iconProps={{ type: 'asset' }}
                                                         synthIconStyle={{ width: 32, height: 32 }}
                                                     />
+                                                    {isMarketInTradingCompetition && (
+                                                        <TooltipInfoIcon
+                                                            title={t(`options.home.markets-table.competition-tooltip`)}
+                                                        ></TooltipInfoIcon>
+                                                    )}
                                                 </StyledAnchoredTableCell>
                                             )}
                                         </DisplayContentsAnchor>
@@ -272,7 +323,18 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {currentAssetPrice
+                                                {market.customMarket
+                                                    ? market.eventName === 'Flippening Markets' ||
+                                                      market.eventName === 'ETH/BTC market cap ratio'
+                                                        ? flippening
+                                                            ? formatCurrency(flippening.ratio)
+                                                            : '-'
+                                                        : market.eventName === 'ETH burned count'
+                                                        ? ethBurned
+                                                            ? formatCurrency(ethBurned.total)
+                                                            : '-'
+                                                        : 'N/A'
+                                                    : currentAssetPrice
                                                     ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
                                                     : 'N/A'}
                                             </StyledAnchoredTableCell>
@@ -440,6 +502,17 @@ export const StyledTableRow = withStyles(() => ({
 
 const StyledAnchoredTableCell = styled(StyledTableCell)`
     vertical-align: middle !important;
+    .tooltip-icon {
+        border-radius: 50%;
+        padding: 1px;
+        width: 18px;
+        height: 18px;
+        padding: 2px;
+        position: relative;
+        display: flex;
+        align-self: center;
+        margin-left: 5px;
+    }
 `;
 
 export const PaginationWrapper = styled(TablePagination)`

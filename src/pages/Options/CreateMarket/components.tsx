@@ -5,6 +5,7 @@ import errorIcon from 'assets/images/errorIcon.svg';
 import Tooltip from '@material-ui/core/Tooltip';
 import Slider from '@material-ui/core/Slider';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark.svg';
+import { ReactComponent as InfoIcon } from 'assets/images/info-circle.svg';
 import { FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
 import { COLORS } from 'constants/ui';
 
@@ -26,6 +27,17 @@ const LightTooltip = withStyles(() => ({
 export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <QuestionMarkIcon
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            width="12"
+            height="12"
+            className="tooltip-icon"
+        />
+    </LightTooltip>
+);
+
+export const TooltipInfoIcon: React.FC<TooltipIconProps> = ({ title }) => (
+    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
+        <InfoIcon
             style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"

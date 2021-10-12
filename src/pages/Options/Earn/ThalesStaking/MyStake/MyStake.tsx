@@ -86,9 +86,11 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         >
             <SectionHeader>
                 {t('options.earn.thales-staking.my-stake.my-stake')}
-                <RewardsInfo>
-                    <span>APR: {APR.toFixed(2)}%</span> <span>APY: {APY.toFixed(2)}%</span>
-                </RewardsInfo>
+                {!tokenStakingDisabled && (
+                    <RewardsInfo>
+                        <span>APR: {APR.toFixed(2)}%</span> <span>APY: {APY.toFixed(2)}%</span>
+                    </RewardsInfo>
+                )}
             </SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (

@@ -22,6 +22,7 @@ import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { OptionsMarketInfo } from 'types/options';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
 
 type UsersMintsProps = {
     usersMints: any[];
@@ -108,11 +109,13 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                             )}
                             {!countryToCountryCode(optionsMarket?.country as string) && (
                                 <CustomIcon
+                                    style={{ marginLeft: 32, width: 50, height: 50 }}
                                     src={eventToIcon(optionsMarket?.eventName as string)}
-                                    style={{ marginLeft: 32 }}
                                 ></CustomIcon>
                             )}
-                            {market.country}
+                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
+                                {market.country ? market.country : optionsMarket?.country}
+                            </CryptoName>
                         </>
                     ) : (
                         <>
@@ -146,7 +149,10 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
                 </Row>
                 <Row className="text-ms leaderboard__profile__rowBackground__columns">
-                    <Text className="bold" style={{ flex: 4 }}>
+                    <Text className="bold" style={{ flex: 2 }}>
+                        {t('options.leaderboard.profile.common.tx-status')}
+                    </Text>
+                    <Text className="bold" style={{ flex: 2 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
@@ -155,15 +161,21 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, market }) => {
                 </Row>
                 {!showAll && (
                     <Row className="text-profile-data" style={usersMints.length === 1 ? { paddingBottom: 16 } : {}}>
-                        <Text style={{ flex: 4 }}>{usersMints[0].amount}</Text>
+                        <Text style={{ flex: 2 }}>
+                            <ViewEtherscanLink hash={usersMints[0].hash} />
+                        </Text>
+                        <Text style={{ flex: 2 }}>{usersMints[0].amount}</Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersMints[0].timestamp))}</Text>
                     </Row>
                 )}
                 <RowScrollable>
                     {showAll &&
                         usersMints?.map((mint, index) => (
-                            <Row className="text-profile-data" key={index} style={{ width: '105.3%' }}>
-                                <Text style={{ flex: 4 }}>{mint.amount}</Text>
+                            <Row className="text-profile-data" key={index} style={{ width: '126.3%' }}>
+                                <Text style={{ flex: 1 }}>
+                                    <ViewEtherscanLink hash={mint.hash} />
+                                </Text>
+                                <Text style={{ flex: 1 }}>{mint.amount}</Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(mint.timestamp))}</Text>
                             </Row>
                         ))}

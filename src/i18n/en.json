@@ -246,7 +246,8 @@
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Market size",
-                "time-remaining-col": "Time remaining"
+                "time-remaining-col": "Time remaining",
+                "competition-tooltip": "This market is eligible for trading competition"
             }
         },
         "earn": {
@@ -505,7 +506,7 @@
                 "strike-burn-label": "Strike burn",
                 "rank-label": "Rank",
                 "total-burned": "Total burned",
-                "burned-yesterday": "Burned yesterday"
+                "burned-last-hour": "Burned in the last hour"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
@@ -801,7 +802,8 @@
                     "long": "Long",
                     "short": "Short",
                     "buy": "Buy",
-                    "sell": "Sell"
+                    "sell": "Sell",
+                    "tx-status": "TX Status"
                 },
                 "exercises": {
                     "side": "Side"

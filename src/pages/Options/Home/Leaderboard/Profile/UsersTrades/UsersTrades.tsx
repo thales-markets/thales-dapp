@@ -22,6 +22,7 @@ import { RootState } from 'redux/rootReducer';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
 
 type UsersTradesProps = {
     usersTrades: UserTrade[];
@@ -99,6 +100,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
         fetchMarketData();
     }, [marketQuery.isSuccess]);
 
+    console.log(optionsMarket);
     return (
         <FlexDiv className="leaderboard__profile__rowBorder">
             <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
@@ -119,11 +121,13 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             )}
                             {!countryToCountryCode(optionsMarket?.country as string) && (
                                 <CustomIcon
-                                    style={{ marginLeft: 32 }}
+                                    style={{ marginLeft: 32, width: 50, height: 50 }}
                                     src={eventToIcon(optionsMarket?.eventName as string)}
                                 ></CustomIcon>
                             )}
-                            {market.country}
+                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
+                                {market.country ? market.country : optionsMarket?.country}
+                            </CryptoName>
                         </>
                     ) : (
                         <>
@@ -157,13 +161,16 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     <Text style={{ flex: 1 }}>{formatShortDate(market.maturityDate)}</Text>
                 </Row>
                 <Row className="text-ms leaderboard__profile__rowBackground__columns">
-                    <Text className="bold" style={{ flex: 1.33 }}>
+                    <Text className="bold" style={{ flex: 1 }}>
+                        {t('options.leaderboard.profile.common.tx-status')}
+                    </Text>
+                    <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.trades.type')}
                     </Text>
-                    <Text className="bold" style={{ flex: 1.33 }}>
+                    <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.common.amount')}
                     </Text>
-                    <Text className="bold" style={{ flex: 1.33 }}>
+                    <Text className="bold" style={{ flex: 1 }}>
                         {t('options.leaderboard.profile.trades.price')}
                     </Text>
                     <Text className="bold" style={{ flex: 1 }}>
@@ -172,15 +179,16 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                 </Row>
                 {!showAll && (
                     <Row className="text-profile-data" style={usersTrades.length === 1 ? { paddingBottom: 16 } : {}}>
-                        <Text style={{ flex: 1.33, color: getCellColor(usersTrades[0].type) }}>
+                        <Text style={{ flex: 1 }}>
+                            <ViewEtherscanLink hash={usersTrades[0].hash} />
+                        </Text>
+                        <Text style={{ flex: 1, color: getCellColor(usersTrades[0].type) }}>
                             {t(`options.leaderboard.profile.common.${usersTrades[0].type}`)}
                         </Text>
-                        <Text style={{ flex: 1.33 }}>
+                        <Text style={{ flex: 1 }}>
                             {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[usersTrades[0].side], usersTrades[0].amount)}
                         </Text>
-                        <Text style={{ flex: 1.33 }}>
-                            {formatCurrencyWithKey(SYNTHS_MAP.sUSD, usersTrades[0].price)}
-                        </Text>
+                        <Text style={{ flex: 1 }}>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, usersTrades[0].price)}</Text>
                         <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersTrades[0].timestamp))}</Text>
                     </Row>
                 )}
@@ -188,15 +196,16 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     {showAll &&
                         usersTrades?.map((trade, index) => (
                             <Row className="text-profile-data" key={index} style={{ width: '105.3%' }}>
-                                <Text style={{ flex: 1.33, color: getCellColor(trade.type) }}>
+                                <Text style={{ flex: 1 }}>
+                                    <ViewEtherscanLink hash={trade.hash} />
+                                </Text>
+                                <Text style={{ flex: 1, color: getCellColor(trade.type) }}>
                                     {t(`options.leaderboard.profile.common.${trade.type}`)}
                                 </Text>
-                                <Text style={{ flex: 1.33 }}>
+                                <Text style={{ flex: 1 }}>
                                     {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[trade.side], trade.amount)}
                                 </Text>
-                                <Text style={{ flex: 1.33 }}>
-                                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, trade.price)}
-                                </Text>
+                                <Text style={{ flex: 1 }}>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, trade.price)}</Text>
                                 <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(trade.timestamp))}</Text>
                             </Row>
                         ))}
