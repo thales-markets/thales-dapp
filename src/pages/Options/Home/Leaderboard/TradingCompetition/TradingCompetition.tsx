@@ -442,7 +442,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         >
                                             {displayNamesMap.get(leader.walletAddress)
                                                 ? displayNamesMap.get(leader.walletAddress)
-                                                : twitterData[0][1].name}
+                                                : twitterData.length === 1
+                                                ? twitterData[0][1].name
+                                                : leader.walletAddress}
                                         </StyledLink>
                                     </StyledTableCell>
                                     <StyledTableCell>{leader.trades}</StyledTableCell>
