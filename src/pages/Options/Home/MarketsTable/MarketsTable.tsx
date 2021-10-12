@@ -125,7 +125,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
         };
-        const [rowsPerPage, setRowsPerPage] = React.useState(10);
+        const [rowsPerPage, setRowsPerPage] = React.useState(15);
         const numberOfPages = Math.ceil(optionsMarkets.length / rowsPerPage) || 1;
 
         const calcDirection = (cell: HeadCell) => {
