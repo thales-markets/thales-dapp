@@ -15,6 +15,7 @@ import { isNetworkSupported } from 'utils/network';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
+import Trades from './Trades';
 import TradingCompetition from './TradingCompetition';
 
 const LeaderboardPage: React.FC = () => {
@@ -65,6 +66,11 @@ const LeaderboardPage: React.FC = () => {
             {
                 id: 'profile',
                 name: t('options.leaderboard.profile.tab-title'),
+                disabled: false,
+            },
+            {
+                id: 'trades',
+                name: 'Trades',
                 disabled: false,
             },
         ],
@@ -318,6 +324,7 @@ const LeaderboardPage: React.FC = () => {
                             )}
                             {selectedTab === 'leaderboard' && <LeaderboardTable displayNamesMap={displayNamesMap} />}
                             {selectedTab === 'profile' && <Profile displayNamesMap={displayNamesMap} />}
+                            {selectedTab === 'trades' && <Trades />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </FlexDivColumn>
