@@ -250,7 +250,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                     </StakingRewardsInfoTitle>
                                     <StakingRewardsInfoContent>
                                         {ongoingAirdrop
-                                            ? `${ongoingAirdrop.period - 2}/${MAX_THALES_STAKING_PERIOD}`
+                                            ? `${ongoingAirdrop.period - 3}/${MAX_THALES_STAKING_PERIOD}`
                                             : '-'}
                                     </StakingRewardsInfoContent>
                                 </PeriodInfo>
@@ -310,7 +310,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 {t('options.earn.thales-staking.staking-rewards.period')}:
                             </StakingRewardsInfoTitle>
                             <StakingRewardsInfoContent>
-                                {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_SNX_STAKING_PERIOD}` : '-'}
+                                {ongoingAirdrop ? `${ongoingAirdrop.period - 1}/${MAX_SNX_STAKING_PERIOD}` : '-'}
                             </StakingRewardsInfoContent>
                         </PeriodInfo>
                         <PeriodInfo>
