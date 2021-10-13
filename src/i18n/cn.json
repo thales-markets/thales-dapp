@@ -86,7 +86,7 @@
         "powered-by": "供電"
     },
     "common": {
-        "max": "max",
+        "max": "最大限度",
         "save": "节省 ",
         "network-fee-gas": "网络gas费",
         "gas-price-gwei": "gas（gwei）",
@@ -157,7 +157,7 @@
         "coming-soon": "即将到来…",
         "of": "之",
         "here": "这里",
-        "sheet": "sheet",
+        "sheet": "床單",
         "pagination": {
             "page": "页",
             "rows-per-page": "每页行数:"
@@ -355,7 +355,7 @@
                 },
                 "vest": {
                     "available-to-vest": "可解锁",
-                    "vest": "vest",
+                    "vest": "背心",
                     "vesting": "正在解锁",
                     "confirmation-message": "代币已成功解锁"
                 },
@@ -398,7 +398,7 @@
                     "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
-                    "vest": "vest"
+                    "vest": "背心"
                 },
                 "filter": {
                     "all": "全部",
@@ -410,7 +410,7 @@
                     "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
-                    "vest": "vest"
+                    "vest": "背心"
                 }
             },
             "overview": {

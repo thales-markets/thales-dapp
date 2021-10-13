@@ -40,6 +40,8 @@ import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
+import i18n from '../../../../../i18n';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -63,6 +65,10 @@ const RetroRewards: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
+
+    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+        ? i18n.language
+        : DEFAULT_LANGUAGE;
 
     const vestingQuery = useVestingBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -142,11 +148,11 @@ const RetroRewards: React.FC = () => {
             return [{ name: 'Locked', value: 100, color: '#748bc6' }];
         }
         return [
-            { name: 'Unlocked', value: vestingInfo.unlocked, color: '#5EA0A0' },
-            { name: 'Claimed', value: vestingInfo.totalClaimed, color: '#AFC171' },
-            { name: 'Locked', value: locked, color: '#FFD9BA' },
+            { name: t('options.earn.snx-stakers.unlocked'), value: vestingInfo.unlocked, color: '#5EA0A0' },
+            { name: t('options.earn.snx-stakers.claimed'), value: vestingInfo.totalClaimed, color: '#AFC171' },
+            { name: t('options.earn.snx-stakers.locked'), value: locked, color: '#FFD9BA' },
         ];
-    }, [vestingInfo, locked]);
+    }, [vestingInfo, locked, selectedLanguage]);
 
     const CustomTooltip = ({ active, payload }: any) => {
         if (active && payload && payload.length) {
@@ -189,7 +195,7 @@ const RetroRewards: React.FC = () => {
                             {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
                         </InfoContent>
                     </InfoDiv>
-                    <PieChart style={{ margin: 'auto' }} height={200} width={200}>
+                    <PieChart style={{ margin: 'auto', zIndex: 100 }} height={200} width={200}>
                         <Pie
                             isAnimationActive={false}
                             blendStroke={true}
