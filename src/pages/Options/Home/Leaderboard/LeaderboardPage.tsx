@@ -1,12 +1,12 @@
-import twitter from 'assets/images/twitter.svg';
 import pencil from 'assets/images/leaderboard/pencil.svg';
 import xmark from 'assets/images/leaderboard/xmark.svg';
+import twitter from 'assets/images/twitter.svg';
 import axios from 'axios';
 import Loader from 'components/Loader';
 import ROUTES from 'constants/routes';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { Input } from 'pages/Options/Market/components';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
+import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,12 +17,12 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Button, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
 import { isNetworkSupported } from 'utils/network';
+import { buildHref } from 'utils/routes';
 import Web3 from 'web3';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
 import TradingCompetition from './TradingCompetition';
-import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 
 const ethEnabled = () => {
     if (window.ethereum) {
@@ -192,12 +192,13 @@ const LeaderboardPage: React.FC = () => {
                                         {t('options.leaderboard.trading-comp-subtitle-2')}
                                     </Text>
                                     <Text className="text-s ls25 lh24 pale-grey">
-                                        {t('options.leaderboard.trading-comp-subtitle-3')}
-                                        <TimeRemaining
-                                            end={new Date('Nov 01 2021 11:00:00 UTC')}
-                                            fontSize={16}
-                                            showFullCounter
-                                        />
+                                        <StyledLink
+                                            href={buildHref(ROUTES.Options.CompetitionMarkets)}
+                                            rel="noreferrer"
+                                            target="_blank"
+                                        >
+                                            {t('options.leaderboard.trading-comp-subtitle-3')}
+                                        </StyledLink>
                                     </Text>
                                     <Text className="text-s ls25 lh24 pale-grey">
                                         {t('options.leaderboard.trading-comp-subtitle-4')}
@@ -386,7 +387,7 @@ const LeaderboardPage: React.FC = () => {
                                             style={{ width: 202, fontSize: 20 }}
                                             onClick={checkAddress}
                                         >
-                                            {'Verify'}
+                                            {t('options.leaderboard.verify')}
                                         </Button>
                                     )}
                                 </Row>

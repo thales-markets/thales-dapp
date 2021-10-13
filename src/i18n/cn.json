@@ -1,0 +1,875 @@
+{
+    "header": {
+        "links": {
+            "faq": "常见问题",
+            "partners": "集成",
+            "community": "社区",
+            "blog": "博客",
+            "docs": "文件",
+            "tokenomics": "代币经济学"
+        }
+    },
+    "user-info": {
+        "tabs": {
+            "my-markets": "参与的市场",
+            "my-open-orders": "我的未结订单",
+            "my-assets": "我的资产"
+        },
+        "table": {
+            "asset-col": "资产",
+            "strike-price-col": "执行价",
+            "maturity-date-col": "到期日",
+            "long-col": "sLONG",
+            "short-col": "sSHORT",
+            "pool-size-col": "交易池容量",
+            "amount-col": "数量",
+            "price-col": "价格",
+            "filled-col": "已成交",
+            "expires-col": "过期于"
+        },
+        "wallet": {
+            "switch-wallet": "更换钱包",
+            "disconnect-wallet": "断开钱包链接",
+            "display-name": "显示名称",
+            "change-display-name": "变更显示名称",
+            "in-wallet": "钱包内",
+            "total-staked": "所有质押",
+            "total-escrowed": "所有锁仓"
+        }
+    },
+    "landing-page": {
+        "title": "二元期权交易",
+        "description": "在以太坊上创建、交易和行使二进制选项",
+        "use-app": "使用dApp",
+        "launch": "发布应用程序",
+        "who-is-thales": "谁是泰雷兹？",
+        "thales-is1": "thales泰雷兹是一位出生于古希腊的思想家，他喜欢收集数据和研究自然现象，但由于贫穷而被其他人嘲笑哲学无用。",
+        "thales-is2": "有一年，泰雷兹通过对天体的研究，发现下一季橄榄收获将是丰收的。凭借他的知识，他用一小笔钱押注于此，为米利都的整个橄榄压榨机支付押金，他以非常低的价格租用了这些压榨机，因为没有其他人出价。",
+        "thales-is3": "当收获到来时，当需求增长时，他按照自己的条件出租压榨机，赚了一大笔钱，成为<strong>第一个行使期权合同的人。</strong>",
+        "markets": {
+            "title": "二元市场",
+            "option1": "世界上任何人都可以根据资产的价格创建二元期权市场。",
+            "option2": "做市商不支付任何费用，但随着流动性的增加而盈利。",
+            "option3": "无许可、自托管和不受限。",
+            "view-markets": "查看市场"
+        },
+        "options": {
+            "title": "交易二元期权",
+            "option1": "二元期权使用户能够根据价格反馈对特定结果进行多头或空头操作。",
+            "option2": "了解你的赔率，抓住机会从趋势中获利，或对冲波动性资产的风险。",
+            "option3": "交易、铸造和行使前所未有的二元期权！",
+            "view-markets": "开始交易"
+        },
+        "partners": {
+            "seed": "种子轮投资者",
+            "technical": "集成"
+        },
+        "get-started": {
+            "title": "要开始，您需要",
+            "first": "Web3钱包，比如说Metamask",
+            "second": "以太支付网络费用（也称为gas）",
+            "third": "Synth USD（sUSD），可获得于"
+        },
+        "faq": {
+            "title": "常见问题",
+            "firstQ": "什么是二元期权？",
+            "firstA": "二元期权是一种简单直观的衍生品工具，在有限的风险环境中为多种市场提供收益，使风险管理更加精确。",
+            "secondQ": "支持哪些市场？",
+            "secondA": "超过60种市场类型由Chainlink喂价担保，包括加密货币、股票、商品、外汇和指数产品。",
+            "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
+            "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
+        },
+        "discord": "加入不和諧"
+    },
+    "maintenance-page": {
+        "title": "敬请关注，马上就来…",
+        "powered-by": "供電"
+    },
+    "common": {
+        "max": "最大限度",
+        "save": "节省 ",
+        "network-fee-gas": "网络gas费",
+        "gas-price-gwei": "gas（gwei）",
+        "gwei": "gwei",
+        "transaction": {
+            "view": "查看"
+        },
+        "contracts": {
+            "view": "查看合约"
+        },
+        "tx-status": {
+            "waiting": "等待",
+            "open": "打开",
+            "closed": "已关闭",
+            "closing": "结束",
+            "in": "转入",
+            "out": "转出",
+            "complete": "完成",
+            "pending": "待定",
+            "confirmed": "已确认",
+            "cancelled": "已取消",
+            "failed": "失败"
+        },
+        "wallet": {
+            "connect-your-wallet": "连接钱包"
+        },
+        "errors": {
+            "unknown-error-try-again": "提交后出现未知错误。请重试。",
+            "unknown-error-try-again-general": "出现未知错误。请重试。",
+            "insufficient-balance": "余额不足",
+            "insufficient-liquidity": "流动性不足",
+            "insufficient-liquidity-for-trade": "本次交易流动性不足",
+            "insufficient-order-amount": "订单金额不足",
+            "invalid-order-amount-max": "订单金额必须小于或等于{{max}}",
+            "enter-amount": "输入金额",
+            "enter-price": "输入价格",
+            "enter-valid-slippage": "输入有效滑点值",
+            "invalid-price": "无效价格",
+            "invalid-price-max": "价格不能高于${{max}}",
+            "invalid-amount-max": "金额不能高于{{max}}",
+            "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
+            "invalid-slippage": "无效滑点"
+        },
+        "search": "搜索",
+        "buy": "买",
+        "sell": "出售",
+        "eg-val": "例如{{val}}",
+        "select-date": "选择日期",
+        "select": "选择",
+        "or": "或",
+        "enable-wallet-access": {
+            "approve-label": "批准{{currencyKey}}",
+            "approve-progress-label": "批准{{currencyKey}}…"
+        },
+        "sidebar": {
+            "trending-label": "趋势市场",
+            "overview-label": "市场概述",
+            "olympics-label": "奥运市场",
+            "custom-markets-label": "定制市場",
+            "competition-markets-label": "竞争市场",
+            "create-market-label": "创建市场",
+            "trade-label": "交易期权",
+            "maturity-label": "期权到期",
+            "leaderboard-label": "排行榜",
+            "quick-trading-label": "快速交易",
+            "earn-label": "泰雷兹"
+        },
+        "coming-soon": "即将到来…",
+        "of": "之",
+        "here": "这里",
+        "sheet": "床單",
+        "pagination": {
+            "page": "页",
+            "rows-per-page": "每页行数:"
+        },
+        "unsupported-network": {
+            "title": "哎呀！你在错的网络上！",
+            "description": "您在钱包中选择了错误的网络。请从wallet切换到以太坊网络以继续。",
+            "button": "切换到主网"
+        }
+    },
+    "modals": {
+        "gwei": {
+            "placeholder": "自定义",
+            "table": {
+                "slow": "慢",
+                "safe": "安全",
+                "standard": "标准",
+                "average": "平均值",
+                "fast": "快",
+                "fastest": "最快"
+            }
+        }
+    },
+    "options": {
+        "phases": {
+            "all": "全部",
+            "trading": "交易",
+            "maturity": "到期日",
+            "expiry": "到期"
+        },
+        "trading-mode": {
+            "buy": "买",
+            "sell": "出售"
+        },
+        "filters-labels": {
+            "category": "类别",
+            "discover": "发现",
+            "sort-by": "排序 (最近)",
+            "option": "期权",
+            "show": "显示",
+            "search-placeholder": "试试 ETH",
+            "all": "全部l",
+            "trading": "交易",
+            "maturity": "到期",
+            "expiry": "到期",
+            "my-markets": "我参与的市场",
+            "my-orders": "我的订单",
+            "my-assets": "我的资产",
+            "watchlist": "观察名单",
+            "recently-added": "最近添加",
+            "bitcoin": "Bitcoin",
+            "ethereum": "Ethereum",
+            "olympics": "奧運會",
+            "competition": "交易大賽",
+            "custom": "定制市場",
+            "long": "多头",
+            "short": "空头"
+        },
+        "home": {
+            "market-card": {
+                "current-asset-price": "流动资产价格",
+                "pool-size": "池大小",
+                "end-date": "结束日期",
+                "strike-price": "执行价格",
+                "open-orders": "未结订单",
+                "difference-text": "当前价格与执行价格之间的差异",
+                "time-remaining": "剩余时间",
+                "result": "当前结果",
+                "view-market": "查看市场"
+            },
+            "market-creation": {
+                "explore-markets-button-label": "探索市场",
+                "create-market-button-label": "创建市场"
+            },
+            "explore-markets": {
+                "trending": "趋势市场",
+                "table": {
+                    "view-all-markets": "查看所有市场",
+                    "no-markets-created": "你还没有创造任何市场。",
+                    "no-markets-found": "未找到市场。",
+                    "trading-comp": "目前沒有可用的市場.\n 交易比賽將於 UTC 時間 10 月 11 日星期一上午 10:00 開始.\n 欲了解更多信息，請點擊此處: "
+                }
+            },
+            "markets-table": {
+                "asset-col": "资产",
+                "strike-price-col": "执行价",
+                "asset-price-col": "资产价格",
+                "open-orders-col": "未结订单",
+                "phase-col": "阶段",
+                "pool-size-col": "市场大小",
+                "time-remaining-col": "剩余时间",
+                "competition-tooltip": "这个市场有资格进行交易竞争"
+            }
+        },
+        "earn": {
+            "snx-stakers": {
+                "tab-title": "追溯奖励",
+                "retro-airdrop": {
+                    "title": "追溯空投",
+                    "claimed-message": "您已经声明空投。",
+                    "not-eligible-message": "您不符合此次空投的条件。",
+                    "complete-quiz-to-claim": "认领此空投完整测验。",
+                    "completed-quiz": "测验已完成！您现在可以申请空投。",
+                    "claim-end-label": "可领取至2022年9月12日。",
+                    "info-tooltip": "<0>自SNX质押开始至2021年9月6日上午10:00 UTC之前，137Thales币被空投</0><0>-SNX质押L1</0><0>-SNX质押L2</0><0>-xSNX</0><0>质押和领取奖励的人。</0><1>您可以检查自己是否有资格参加此项活动 </1><2 />。"
+                },
+                "retro-rewards": {
+                    "title": "追溯解锁",
+                    "not-eligible-message": "您不符合此分发的条件。",
+                    "learn-more-text": "奖励在2年内线性解锁。申请当前解锁的奖励不会受到处罚。",
+                    "learn-more": "了解更多",
+                    "info-tooltip": "<0>自质押开始至2021年9月6日10:00 UTC，已按比例向所有SNX质押者分配了1500万泰雷兹。</0><0>通过此算法分配的泰雷兹Thales至少有24个符合条件。</0><1>您可以检查是否满足阈值要求 </1><2 />。"
+                },
+                "airdropped-amount": "空投金额",
+                "claim": "领取",
+                "claiming": "领取…",
+                "claimed": "领取",
+                "claim-unlocked": "可领取已解锁代币",
+                "claiming-unlocked": "领取已解锁代币",
+                "unlocked": "已解锁",
+                "locked": "锁定",
+                "total": "总计",
+                "start-time": "开始时间",
+                "end-time": "结束时间",
+                "initial-locked": "初始锁定",
+                "start-quiz": "开始测验",
+                "confirmation-message": "代币已成功认领"
+            },
+            "thales-staking": {
+                "tab-title": "质押",
+                "stake": {
+                    "stake": "押",
+                    "staking": "质押",
+                    "available-to-stake": "可质押",
+                    "amount-to-stake": "持股金额",
+                    "confirmation-message": "代币已成功质押"
+                },
+                "my-stake": {
+                    "my-stake": "我的质押",
+                    "staked-in-contract": "直接质押",
+                    "locked-in-escrow": "托管余额",
+                    "total-staked": "总质押",
+                    "not-eligible-message": "除非您的直接质押余额大于0，否则您没有资格获得质押奖励",
+                    "eligible-message": "您质押的{{amount}}有资格获得质押奖励",
+                    "global-staking-stats": "全球赌注统计",
+                    "total-thales-staked": "总 TALES 质押 ",
+                    "my-staked-share": "我的股份",
+                    "estimated-rewards": "本期预计奖励"
+                },
+                "unstake": {
+                    "unstake": "取消质押",
+                    "unlock-cooldown-text": "开始解锁冷却，在此期间未锁定的金额不计入您的质押余额",
+                    "cooldown-started-text": "您可以取消{{amount}}的质押",
+                    "cooldown-ended-text": "您现在可以领取{{amount}}",
+                    "start-unstaking": "开始取消质押",
+                    "cooldown-confirmation-messag": "取消质押成功启动",
+                    "unstake-confirmation-message": "代币成功取消质押",
+                    "unstaking": "取消质押",
+                    "amount-to-unstake": "未兑现金额",
+                    "start-unstaking-tooltip": "在7天解锁冷却时间内，您将无法锁定或质押更多泰雷兹。",
+                    "cancel": "取消抵押",
+                    "canceling": "取消抵押",
+                    "cancel-confirmation-message": "取消抵押成功取消",
+                    "network-fee-cancel": "取消",
+                    "network-fee-unstake": "取消质押"
+                },
+                "staking-rewards": {
+                    "title": "质押奖励",
+                    "amount-to-claim-snx": "作为snx质押用户",
+                    "amount-to-claim-thales": "作为",
+                    "period": "期间",
+                    "weekly-rewards": "每周奖励",
+                    "total": "总计",
+                    "previous-period": "来自上期",
+                    "claim": "领取",
+                    "claiming": "领取",
+                    "claimed-message": "您已经声明了本周的奖励，请下周再来。",
+                    "not-eligible-message": "您没有资格获得这些奖励。",
+                    "paused-message": "已暂停，请稍后再试。",
+                    "confirmation-message": "代币成功认领",
+                    "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
+                    "learn-more": "了解更多",
+                    "button-tooltip": "收到的奖励有 10 周的归属期。"
+                }
+            },
+            "vesting": {
+                "tab-title": "归属",
+                "schedule": {
+                    "title": "时间表",
+                    "table": {
+                        "date-time-col": "解锁日期-时间",
+                        "amount-col": "金额",
+                        "no-results": "未找到。"
+                    }
+                },
+                "vest": {
+                    "available-to-vest": "可解锁",
+                    "vest": "背心",
+                    "vesting": "正在解锁",
+                    "confirmation-message": "代币已成功解锁"
+                },
+                "info": {
+                    "title": "将您的泰雷兹奖励托管",
+                    "text": "泰雷兹持续奖励以10周解锁为准。托管泰雷兹在您的泰雷兹余额中计算。"
+                },
+                "lp-staking": {
+                    "title": "您可以为泰雷兹Thales/ETH配对提供流动性，并获得泰雷兹Thales+DODO双倍奖励",
+                    "button-text": "单击此处可获得双重奖励"
+                }
+            },
+            "lp-staking": {
+                "tab-title": "LP"
+            },
+            "table": {
+                "title": "您的活动",
+                "date-time-col": "日期-时间",
+                "type-col": "类型",
+                "amount-col": "金额",
+                "tx-status-col": "发送状态",
+                "no-results": {
+                    "all": "没有与此钱包相关的交易。",
+                    "claimRetroAirdrop": "没有与此钱包相关的追溯空投交易。",
+                    "claimRetroUnlocked": "没有与此钱包相关的追溯解锁交易。",
+                    "claimStakingRewards": "没有与此钱包相关的质押奖励交易。",
+                    "stake": "没有与此钱包相关的质押交易。",
+                    "startUnstake": "没有与此钱包相关的开始取消交易。",
+                    "cancelUnstake": "没有取消与此钱包相关的取消抵押交易。",
+                    "unstake": "没有与此钱包相关的取消质押交易。",
+                    "addToEscrow": "不添加与此钱包相关的托管交易。",
+                    "vest": "没有与此钱包相关的vest交易。"
+                },
+                "types": {
+                    "claimRetroAirdrop": "领取追溯空投",
+                    "claimRetroUnlocked": "领取追溯解锁",
+                    "claimStakingRewards": "领取质押奖励",
+                    "stake": "桩",
+                    "startUnstake": "开始分离",
+                    "cancelUnstake": "取消抵押",
+                    "unstake": "取消质押",
+                    "addToEscrow": "添加托管",
+                    "vest": "背心"
+                },
+                "filter": {
+                    "all": "全部",
+                    "claimRetroAirdrop": "追溯空投",
+                    "claimRetroUnlocked": "复古解锁",
+                    "claimStakingRewards": "质押奖励",
+                    "stake": "桩",
+                    "startUnstake": "开始分离",
+                    "cancelUnstake": "取消抵押",
+                    "unstake": "取消质押",
+                    "addToEscrow": "添加托管",
+                    "vest": "背心"
+                }
+            },
+            "overview": {
+                "token-tooltip": "查看泰雷兹合同",
+                "price-label": "价格",
+                "price-tooltip": "查看DODO池",
+                "market-cap-label": "市值",
+                "earn-label": "赢取LP奖励",
+                "earn-tooltip": "为泰雷兹/ETH对提供流动性，赚取泰雷兹+DODO双倍奖励",
+                "earn-info-tooltip": "如何提供流动性的查看指南",
+                "circulating-supply-label": "市场供应",
+                "total-supply-label": "总供应"
+            }
+        },
+        "quiz": {
+            "title": "测验",
+            "discord-link": "Discord",
+            "discord-tip": "向我们的Discord社区寻求帮助",
+            "docs-link": "文档",
+            "docs-tip": "在我们的文档中查找答案",
+            "discord-button": "询问我们的Discord",
+            "submit-answers": "提交答案",
+            "next-page": "下一页",
+            "question": {
+                "correct-answer": "你的答案是正确的！",
+                "wrong-answer": "哎呀！答错了！"
+            }
+        },
+        "create-market": {
+            "title": "创建新的二元期权市场",
+            "subtitle": "要创建新的二元期权市场，请选择资产、执行价格和市场到期日。您还必须选择您将铸造多少期权代币",
+            "note": "*注：sUSD的存款金额将决定将铸造多少多头和空头期权代币。例如，为该市场存入1000枚sUSD代币、1000枚sLONG代币和1000枚sSHORT期权代币。",
+            "details": {
+                "select-asset-label": "选择资产：",
+                "strike-price-label": "执行价格：",
+                "market-maturity-date-label": "市场到期日：",
+                "market-maturity-time-label": "时间（UTC）：",
+                "funding-amount": {
+                    "label": "市场融资金额：",
+                    "desc": "注意：您的sUSD将被锁定在本合同中，直至市场到期日"
+                }
+            },
+            "min-amount": "请输入资金金额。需要最低{{minimum}}sUSD。",
+            "insufficient-amount": "请确保您的钱包有足够的sUSD。",
+            "sellOptions": "卖出做多/做空期权",
+            "summary": {
+                "title": "市場摘要",
+                "strikePrice": "执行价格",
+                "current": "当前市场价格",
+                "difference": "执行价与当前价格的差价",
+                "dates": {
+                    "maturity-date": "到期日",
+                    "maturity-date-mobile": "到期日",
+                    "time-to-exercise": "行权时间"
+                },
+                "fees": {
+                    "minting": "铸造费",
+                    "creator": "您将获得",
+                    "pool": "费用池收入"
+                },
+                "create-market-button-label": "创建市场",
+                "creating-market-button-label": "创建市场…",
+                "approve-manager-button-label": "批准",
+                "waiting-for-approval-button-label": "批准…",
+                "note": "*创建市场时，您将：",
+                "note1": "在到期日以sUSD赚取总市场规模的0.5%，减去您的初始存款金额。",
+                "note2": "为铸造期权代币支付零泰利斯协议费。",
+                "note3": "批准市场创建时，支付以太坊网络费（gas）。"
+            },
+            "select-asset": "请选择资产.",
+            "enter-strike-price": "请输入履约价格",
+            "difference-warning": "差异大于100倍",
+            "progress-tracker": {
+                "approving": "批准 {{currencyKey}}",
+                "submitting": "提交 {{currencyKey}}",
+                "creating-market": "创建市场",
+                "finished": "已完成"
+            },
+            "go-to-market": "进入市场"
+        },
+        "market": {
+            "overview": {
+                "view-market-contract-tooltip": "查看市场合同",
+                "strike-price-label": "执行价格",
+                "difference-text-tooltip": "当前价格与执行价格之间的差异",
+                "current-price-label": "当前{{currencyKey}}价格",
+                "final-price-label": "最终价格",
+                "maturity-label": "到期日",
+                "time-remaining-label": "剩余时间",
+                "expiry-label": "到期",
+                "current-result-label": "当前结果",
+                "final-result-label": "最终结果",
+                "deposited-currency-label": "存款{{currencyKey}}",
+                "event-name-label": "事件名称",
+                "current-ratio-label": "目前的比例",
+                "final-ratio-label": "最終比率",
+                "strike-ratio-label": "罷工率",
+                "current-burn-label": "電流消耗",
+                "final-burn-label": "最後燃燒",
+                "strike-burn-label": "罷工燒",
+                "rank-label": "秩",
+                "total-burned": "燃燒總量",
+                "burned-last-hour": "在最后一小时被烧毁"
+            },
+            "widgets": {
+                "trading-phase-widget": "领取选项",
+                "maturity-phase-widget": "行权选项",
+                "orderbook-widget": "订单簿",
+                "trade-widget": "交易",
+                "chart-trading-view-widget": "交易视图",
+                "chart-options-price-widget": "选项价格",
+                "recent-transactions-widget": "最近的市场活动",
+                "your-transactions-widget": "您的活动",
+                "custom-market-results-widget": "结果",
+                "custom-market-results-odds-widget": "赔率",
+                "button": {
+                    "customize-layout": "自定义视图",
+                    "reset-layout": "重置布局"
+                }
+            },
+            "chart-card": {
+                "no-chart-data": "无图表数据"
+            },
+            "transactions-card": {
+                "table": {
+                    "date-time-col": "日期-时间",
+                    "type-col": "类型",
+                    "position-col": "位置",
+                    "amount-col": "金额",
+                    "price-col": "价格",
+                    "tx-status-col": "发送状态",
+                    "no-results": {
+                        "recent-activity": {
+                            "all": "没有与该市场相关的交易。",
+                            "mint": "没有与该市场相关的铸造交易。",
+                            "trade": "没有与该市场相关的交易",
+                            "exercise": "没有与该市场相关的行权交易。"
+                        },
+                        "your-activity": {
+                            "all": "没有与此钱包相关的交易。",
+                            "mint": "没有与此钱包相关的铸造厂交易。",
+                            "trade": "没有与此钱包相关的交易。",
+                            "exercise": "没有与此钱包关联的行使交易。"
+                        }
+                    },
+                    "types": {
+                        "exercise": "行权",
+                        "buy": "买",
+                        "sell": "出售",
+                        "mint": "铸造"
+                    }
+                },
+                "filter": {
+                    "all": "全部",
+                    "mint": "铸造",
+                    "trade": "交易",
+                    "exercise": "行权",
+                    "filter": "Filter"
+                }
+            },
+            "trade-card": {
+                "maturity": {
+                    "card-title": "市场已关闭",
+                    "card-subtitle": "可用选项：",
+                    "payout-amount-label": "支出金额",
+                    "end-label": "剩下的行权时间",
+                    "confirm-button": {
+                        "label": "行权选项",
+                        "progress-label": "正在进行的…",
+                        "success-label": "无需行权",
+                        "confirmation-message": "已成功执行选项"
+                    }
+                }
+            },
+            "trade-options": {
+                "trade-long-options-tab-title": "交易多头期权",
+                "trade-short-options-tab-title": "交易卖空期权",
+                "trade-long-options-tab-title-mobile": "多头期权",
+                "trade-short-options-tab-title-mobile": "空头选项",
+                "market-tab-title": "市场",
+                "limit-tab-title": "限额",
+                "mint-tab-title": "铸造",
+                "orderbook": {
+                    "title": "订单簿",
+                    "buy": {
+                        "no-results": "未找到购买订单。"
+                    },
+                    "sell": {
+                        "no-results": "未找到出售订单。"
+                    },
+                    "filter": {
+                        "my-orders": {
+                            "tooltip-connected": "您已创建的订单。连接钱包即可启动。",
+                            "tooltip-not-connected": "您已创建订单。单击该行可输入或取消订单。",
+                            "buy": {
+                                "no-results": "您尚未创建任何购买订单。"
+                            },
+                            "sell": {
+                                "no-results": "您尚未创建任何出售订单。"
+                            }
+                        },
+                        "tooltips": {
+                            "all": "查看所有订单。单击该行以填写订单",
+                            "buy": "查看购买订单。单击该行填写订单",
+                            "sell": "查看销售订单。单击该行以填写订单"
+                        }
+                    },
+                    "table": {
+                        "type-col": "类型",
+                        "price-col": "价格（sUSD）",
+                        "amount-col": "金额（{{currencyKey}}）",
+                        "filled-col": "填充（%）",
+                        "return-col": "返回",
+                        "return-col-tooltip": "如果此选项获胜，则可能返回",
+                        "total-col": "总计（sUSD）",
+                        "time-remaining-col": "剩余时间",
+                        "cancel-col-tooltip": "单击以取消订单"
+                    }
+                },
+                "place-order": {
+                    "modal": {
+                        "buy": {
+                            "title": "下购买订单"
+                        },
+                        "sell": {
+                            "title": "下出售订单"
+                        }
+                    },
+                    "order-type-label": "订单类型",
+                    "amount-label": "金额至{{orderSide}}",
+                    "amount-label-mobile": "金额：",
+                    "price-label": "每{{currencyKey}}的价格",
+                    "price-label-mobile": "价格：",
+                    "expiration-label": "到期时间",
+                    "total-label": "总量（sUSD）",
+                    "total-max-label": "最大发送量（sUSD）",
+                    "total-min-label": "最小接收（sUSD）",
+                    "slippage-label": "滑动公差",
+                    "slippage-tooltip": "如果价格的不利变化超过此百分比，您的交易将恢复",
+                    "protocol-fee-label": "0x协议费",
+                    "protocol-fee-tooltip": "这是0x与0x协议的订单簿交互时收取的基本费用",
+                    "confirm-button": {
+                        "label": "提交订单",
+                        "long": "提交sLong",
+                        "short": "提交sShort",
+                        "progress-label": "正在提交订单…",
+                        "confirmation-message": "订单已成功提交"
+                    },
+                    "swap-confirm-button": {
+                        "buy": {
+                            "label": "购买",
+                            "progress-label": "正在购买…",
+                            "confirmation-message": "已成功购买"
+                        },
+                        "sell": {
+                            "label": "出售",
+                            "progress-label": "正在出售…",
+                            "confirmation-message": "已成功售出"
+                        }
+                    }
+                },
+                "mint": {
+                    "amount-label": "金额",
+                    "minting-label": "你要铸造",
+                    "long-label": "多选项",
+                    "short-label": "空选项",
+                    "sell-options-title": "卖出做多/做空期权",
+                    "fees": {
+                        "minting": "铸造费",
+                        "creator": "创造者收益",
+                        "pool": "费用池收入"
+                    },
+                    "confirm-button": {
+                        "label": "铸造",
+                        "progress-label": "正在铸造…",
+                        "submit-long-progress-label": "正在提交做多订单…",
+                        "submit-short-progress-label": "正在提交做空订单…",
+                        "confirmation-message": "已成功生成选项"
+                    }
+                },
+                "fill-order": {
+                    "buy": {
+                        "title": "出售{{currencyKey}}"
+                    },
+                    "sell": {
+                        "title": "购买{{currencyKey}}"
+                    },
+                    "max-button-tooltip": "根据剩余订单金额和钱包余额设置最大可用金额",
+                    "amount-label": "金额至{{orderSide}}",
+                    "total-label": "总量（sUSD）",
+                    "protocol-fee-label": "0x协议费",
+                    "protocol-fee-tooltip": "这是0x与0x协议的订单簿交互时收取的基本费用",
+                    "confirm-button": {
+                        "label": "填写订单",
+                        "progress-label": "正在填写订单…"
+                    }
+                },
+                "cancel-order": {
+                    "title": "取消订单？",
+                    "confirm-button": {
+                        "label": "取消订单",
+                        "progress-label": "正在取消订单…"
+                    }
+                },
+                "order-details": {
+                    "title": "订单详情",
+                    "price-label": "每{{currencyKey}}（sUSD）的价格",
+                    "amount-label": "金额（{{currencyKey}}）",
+                    "total-label": "总量（sUSD）",
+                    "filled-label": "填充（%）",
+                    "return-label": "返回",
+                    "return-col-tooltip": "如果此选项获胜，则可能返回",
+                    "inital-amount-label": "初始金额（{{currencyKey}}）",
+                    "inital-total-label": "初始总计（{{currencyKey}}）"
+                }
+            }
+        },
+        "quick-trading": {
+            "title": "快速交易",
+            "mode-label": "我想要",
+            "cancel-tooltip": "单击以取消订单",
+            "counter-offer-button-label": "柜台",
+            "cancel-button-label": "取消",
+            "counter-offer-button-tooltip": "还盘",
+            "view-market-tooltip": "查看市场",
+            "no-orders-found": "未找到订单",
+            "view-all-orders": "查看所有订单",
+            "difference-text-tooltip": "当前价格与执行价格之间的差额",
+            "table": {
+                "condition-col": "条件",
+                "when-col": "When",
+                "deposit-amount-col": "存款金额",
+                "return-col": "赢了就返回",
+                "receive-amount-col": "接收金额",
+                "options-to-sell-col": "出售期权",
+                "options-in-wallet-col": "已有期权",
+                "actions-col": "操作"
+            }
+        },
+        "leaderboard": {
+            "leaderboard-title": "排行榜",
+            "leaderboard-subtitle": "這是泰雷茲的整體排行榜.",
+            "leaderboard-subtitle-2": "它考慮了在泰雷茲平台內進行的所有交易.",
+            "trading-comp-title": "交易大賽",
+            "trading-comp-subtitle": "這是泰雷茲第一次交易競賽的排行榜.",
+            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| 世界标准时间上午 10 点",
+            "trading-comp-subtitle-3": "比赛结束倒计时：",
+            "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
+            "profile-subtitle": "選項卡顯示您的所有交易以及其他用戶的交易.",
+            "profile-title": "輪廓",
+            "verify-twitter-account": "驗證賬戶",
+            "verify": "核實",
+            "display-name": "顯示名稱",
+            "address": "地址",
+            "twitter-account": "我的推特賬號",
+            "my-info": "我的信息",
+            "table": {
+                "rank-col": "排名",
+                "display-name-col": "显示名字",
+                "trades-col": "交易",
+                "volume-col": "交易量",
+                "netprofit-col": "净利润",
+                "netprofit-col-tooltip": "利润仅在成熟市场上计算",
+                "investment-col": "投資",
+                "gain-col": "獲得",
+                "twitter-col": "推特",
+                "rewards-col": "奖励"
+            },
+            "trading-competition": {
+                "tab-title": "交易大賽",
+                "competition-period": "所選期間"
+            },
+            "board": {
+                "tab-title": "排行榜"
+            },
+            "profile": {
+                "tab-title": "輪廓",
+                "search-placeholder": "通過鍵入顯示名稱搜索其他配置文件",
+                "transaction-details": "用戶的交易詳情:",
+                "no-transactions": "沒有可用的交易",
+                "filters": {
+                    "mints": "薄荷糖",
+                    "trades": "交易",
+                    "exercises": "練習",
+                    "redeemable": "可贖回"
+                },
+                "markets": {
+                    "strike-price": "行權價",
+                    "pool-size": "泳池大小",
+                    "maturity-date": "成人禮",
+                    "result": "結果"
+                },
+                "common": {
+                    "amount": "數量",
+                    "timestamp": "日期 | 時間",
+                    "view-less": "查看更少",
+                    "view-more": "查看更多",
+                    "long": "長",
+                    "short": "短的",
+                    "buy": "買",
+                    "sell": "賣",
+                    "tx-status": "发送状态"
+                },
+                "exercises": {
+                    "side": "邊"
+                },
+                "trades": {
+                    "price": "價錢",
+                    "type": "類型"
+                },
+                "unclaimed": {
+                    "redeem": "贖回"
+                }
+            }
+        },
+        "common": {
+            "time-remaining": {
+                "ended": "结束",
+                "years": "年",
+                "year": "年",
+                "months": "月",
+                "month": "月",
+                "weeks": "周",
+                "week": "周",
+                "days": "日",
+                "day": "日",
+                "hours": "小时",
+                "hour": "小时",
+                "minutes": "分钟",
+                "minute": "分钟",
+                "seconds": "秒钟",
+                "second": "秒钟",
+                "days-short": "d",
+                "hours-short": "h",
+                "minutes-short": "m",
+                "seconds-short": "s"
+            },
+            "long": "多",
+            "short": "空",
+            "amount-long": "{{amount}}多",
+            "amount-short": "{{amount}}空",
+            "long-price": "多头价格",
+            "short-price": "空头价格",
+            "new-to-binary-options": "Synthetix上的二进制选项新手？请确保先阅读它的工作原理！",
+            "order-periods": {
+                "10M": "10分钟",
+                "1H": "1小时",
+                "1D": "1天",
+                "1W": "1周",
+                "trading-end": "交易期到期时"
+            },
+            "warning": {
+                "gas-price-change": "提交tx后，请不要更改gas价格"
+            },
+            "legacy-signing": {
+                "label": "使用传统签名",
+                "tooltip": "如果下单时遇到问题，请选中此选项以尝试旧版签名。某些钱包（如Trezor）在签名时遇到问题，选择此选项可以解决此问题。"
+            },
+            "ratio": "比率"
+        }
+    }
+}

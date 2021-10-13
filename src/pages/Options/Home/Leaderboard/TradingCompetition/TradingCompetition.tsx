@@ -17,6 +17,7 @@ import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { TooltipIcon, TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
@@ -27,7 +28,7 @@ import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import { FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
@@ -204,7 +205,6 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
 
     const userLeaderboardData = useMemo(() => {
-        console.log(leaderboardData);
         const userData = leaderboardData.filter(
             (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
         );
@@ -235,6 +235,13 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         placeholder={t('options.leaderboard.display-name')}
                     ></SearchInput>
                 </SearchWrapper>
+                <Text
+                    className="text-s ls25 lh24 pale-grey"
+                    style={{ alignItems: 'center', flex: 1, height: 44, display: 'flex', columnGap: 2.5 }}
+                >
+                    {t('options.leaderboard.trading-comp-countdown')}
+                    <TimeRemaining end={new Date('Nov 01 2021 11:00:00 UTC')} fontSize={16} showFullCounter />
+                </Text>
             </FlexDivRow>
 
             <TableContainer style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }} component={Paper}>
@@ -527,6 +534,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                 <PaginationWrapper
                                     rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                     count={competition.length}
                                     rowsPerPage={rowsPerPage}
                                     page={memoizedPage}

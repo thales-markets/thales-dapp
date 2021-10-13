@@ -429,6 +429,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                                     <PaginationWrapper
                                         rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
+                                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                         count={profileDataMarketKeys.length}
                                         rowsPerPage={rowsPerPage}
                                         page={memoizedPage}
