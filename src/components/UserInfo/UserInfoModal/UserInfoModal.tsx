@@ -153,7 +153,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     </FlexDivColumn>
                 </WalletWrapper>
                 <FlexDivCentered style={{ justifyContent: 'space-between', margin: 25 }}>
-                    <ShortInputContainer style={{ margin: 0, width: '90%' }}>
+                    <ShortInputContainer style={{ margin: 0, width: '45%' }}>
                         <InputLabel>{t(`user-info.wallet.display-name`)}</InputLabel>
                         <Input
                             onChange={(event) => {

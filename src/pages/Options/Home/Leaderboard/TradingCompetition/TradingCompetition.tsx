@@ -527,6 +527,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                 <PaginationWrapper
                                     rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                     count={competition.length}
                                     rowsPerPage={rowsPerPage}
                                     page={memoizedPage}

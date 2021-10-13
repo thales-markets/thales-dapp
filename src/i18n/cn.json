@@ -457,6 +457,7 @@
             "insufficient-amount": "请确保您的钱包有足够的sUSD。",
             "sellOptions": "卖出做多/做空期权",
             "summary": {
+                "title": "市場摘要",
                 "strikePrice": "执行价格",
                 "current": "当前市场价格",
                 "difference": "执行价与当前价格的差价",
@@ -761,6 +762,7 @@
             "profile-subtitle": "選項卡顯示您的所有交易以及其他用戶的交易.",
             "profile-title": "輪廓",
             "verify-twitter-account": "驗證賬戶",
+            "verify": "核實",
             "display-name": "顯示名稱",
             "address": "地址",
             "twitter-account": "我的推特賬號",

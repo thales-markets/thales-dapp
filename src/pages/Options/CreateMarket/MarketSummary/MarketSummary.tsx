@@ -36,7 +36,7 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
     return (
         <Wrapper>
             <SummaryHeader>
-                <Text className="text-m ls5 pale-grey uppercase bold">Market Summary</Text>
+                <Text className="text-m ls5 pale-grey uppercase bold">{t('options.create-market.summary.title')}</Text>
             </SummaryHeader>
             <FlexDivColumn
                 className="summary-market"
