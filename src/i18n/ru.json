@@ -87,6 +87,7 @@
     },
     "common": {
         "max": "макс",
+        "save": "Сохранить",
         "network-fee-gas": "Сетевая комиссия (газ)",
         "gas-price-gwei": "Цена газа (gwei)",
         "gwei": "gwei",
@@ -145,6 +146,7 @@
             "overview-label": "Обзор рынков",
             "olympics-label": "Олимпийские рынки",
             "custom-markets-label": "Пользовательские рынки",
+            "competition-markets-label": "Рынки конкуренции",
             "create-market-label": "Создание рынка",
             "trade-label": "Торговля опционами",
             "maturity-label": "Реализация опционов",
@@ -246,7 +248,8 @@
                 "open-orders-col": "Открытые ордера",
                 "phase-col": "Фаза",
                 "pool-size-col": "Размер рынка",
-                "time-remaining-col": "Оставшееся время"
+                "time-remaining-col": "Оставшееся время",
+                "competition-tooltip": "Этот рынок имеет право на торговую конкуренцию "
             }
         },
         "earn": {
@@ -298,7 +301,11 @@
                     "locked-in-escrow": "Депонированный баланс",
                     "total-staked": "Общий баланс стайка",
                     "not-eligible-message": "Вы не имеете доступа на получение вознаграждений за стэйк, если ваш баланс прямых стэйков не превышает 0",
-                    "eligible-message": "Ваши {{amount}} стэйков имеют право на получение вознаграждений."
+                    "eligible-message": "Ваши {{amount}} стэйков имеют право на получение вознаграждений.",
+                    "global-staking-stats": "Глобальная статистика ставок ",
+                    "total-thales-staked": "Всего поставлено THALES ",
+                    "my-staked-share": "Моя ставка на долю",
+                    "estimated-rewards": "Предполагаемые награды за этот период"
                 },
                 "unstake": {
                     "unstake": "Снять стэйк",
@@ -505,7 +512,7 @@
                 "strike-burn-label": "Ожог удара",
                 "rank-label": "Ранг",
                 "total-burned": "Общий ожог",
-                "burned-yesterday": "Ожог вчера"
+                "burned-last-houry": "Ожог за последний час"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",
@@ -748,9 +755,9 @@
             "leaderboard-subtitle-2": "В нем учитываются все сделки, совершенные в Thales платформы.",
             "trading-comp-title": "Торговое соревнование",
             "trading-comp-subtitle": "Это лидеры для первой торговой конкуренции Фалеса.",
-            "trading-comp-subtitle-2": "Обратите внимание, что этот конкурс еще не начался, а регистрация открыта.",
-            "trading-comp-subtitle-3": "Вам необходимо подключить свой кошелек (в верхнем правом углу), а затем проверить его, связывая его с аккаунта Twitter (старше 3 месяцев).",
-            "trading-comp-subtitle-4": "Вы можете прочитать все подробности вот в этом конкурсе: ",
+            "trading-comp-subtitle-2": "Конкурс официально стартовал 11 октября 2021 года | 10:00 UTC",
+            "trading-comp-subtitle-3": "Обратный отсчет до конца конкурса: ",
+            "trading-comp-subtitle-4": "Для получения дополнительной информации и руководства о том, как принять участие, посетите: ",
             "profile-subtitle": "Вкладка показывает вам все ваши транзакции, а также транзакции других пользователей.",
             "profile-title": "Профиль",
             "verify-twitter-account": "Подтвердить учетную запись",
@@ -767,7 +774,8 @@
                 "netprofit-col-tooltip": "Прибыль рассчитывается только на зрелых рынках",
                 "investment-col": "Инвестиции",
                 "gain-col": "Прибыль",
-                "twitter-col": "Твиттер"
+                "twitter-col": "Твиттер",
+                "rewards-col": "Награды"
             },
             "trading-competition": {
                 "tab-title": "Торговая конкуренция",
@@ -801,7 +809,8 @@
                     "long": "Длинный",
                     "short": "Короткий",
                     "buy": "Купить",
-                    "sell": "Продать"
+                    "sell": "Продать",
+                    "tx-status": "Статус tx"
                 },
                 "exercises": {
                     "side": "Сторона"

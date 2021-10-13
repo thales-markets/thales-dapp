@@ -87,6 +87,7 @@
     },
     "common": {
         "max": "max",
+        "save": "节省 ",
         "network-fee-gas": "网络gas费",
         "gas-price-gwei": "gas（gwei）",
         "gwei": "gwei",
@@ -145,6 +146,7 @@
             "overview-label": "市场概述",
             "olympics-label": "奥运市场",
             "custom-markets-label": "定制市場",
+            "competition-markets-label": "竞争市场",
             "create-market-label": "创建市场",
             "trade-label": "交易期权",
             "maturity-label": "期权到期",
@@ -246,7 +248,8 @@
                 "open-orders-col": "未结订单",
                 "phase-col": "阶段",
                 "pool-size-col": "市场大小",
-                "time-remaining-col": "剩余时间"
+                "time-remaining-col": "剩余时间",
+                "competition-tooltip": "这个市场有资格进行交易竞争"
             }
         },
         "earn": {
@@ -298,7 +301,11 @@
                     "locked-in-escrow": "托管余额",
                     "total-staked": "总质押",
                     "not-eligible-message": "除非您的直接质押余额大于0，否则您没有资格获得质押奖励",
-                    "eligible-message": "您质押的{{amount}}有资格获得质押奖励"
+                    "eligible-message": "您质押的{{amount}}有资格获得质押奖励",
+                    "global-staking-stats": "全球赌注统计",
+                    "total-thales-staked": "总 TALES 质押 ",
+                    "my-staked-share": "我的股份",
+                    "estimated-rewards": "本期预计奖励"
                 },
                 "unstake": {
                     "unstake": "取消质押",
@@ -505,7 +512,7 @@
                 "strike-burn-label": "罷工燒",
                 "rank-label": "秩",
                 "total-burned": "燃燒總量",
-                "burned-yesterday": "昨天燒了"
+                "burned-last-hour": "在最后一小时被烧毁"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -748,9 +755,9 @@
             "leaderboard-subtitle-2": "它考慮了在泰雷茲平台內進行的所有交易.",
             "trading-comp-title": "交易大賽",
             "trading-comp-subtitle": "這是泰雷茲第一次交易競賽的排行榜.",
-            "trading-comp-subtitle-2": "請注意，本次比賽尚未開始，但註冊已開放.",
-            "trading-comp-subtitle-3": "你需要連接你的錢包（右上角）然後驗證它，將它與一個 Twitter 帳戶（超過 3 個月）相關聯.",
-            "trading-comp-subtitle-4": "您可以在此處閱讀有關本次交易競賽的所有詳細信息: ",
+            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| 世界标准时间上午 10 点",
+            "trading-comp-subtitle-3": "比赛结束倒计时：",
+            "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
             "profile-subtitle": "選項卡顯示您的所有交易以及其他用戶的交易.",
             "profile-title": "輪廓",
             "verify-twitter-account": "驗證賬戶",
@@ -767,7 +774,8 @@
                 "netprofit-col-tooltip": "利润仅在成熟市场上计算",
                 "investment-col": "投資",
                 "gain-col": "獲得",
-                "twitter-col": "推特"
+                "twitter-col": "推特",
+                "rewards-col": "奖励"
             },
             "trading-competition": {
                 "tab-title": "交易大賽",
@@ -801,7 +809,8 @@
                     "long": "長",
                     "short": "短的",
                     "buy": "買",
-                    "sell": "賣"
+                    "sell": "賣",
+                    "tx-status": "发送状态"
                 },
                 "exercises": {
                     "side": "邊"
