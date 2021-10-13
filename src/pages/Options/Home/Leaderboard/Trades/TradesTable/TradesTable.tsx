@@ -28,6 +28,7 @@ import SimpleLoader from 'components/SimpleLoader';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import { formatTxTimestamp } from 'utils/formatters/date';
 
 interface HeadCell {
     id: keyof ExtendedTrade[];
@@ -143,12 +144,13 @@ const TradesTable: React.FC<TradesTableProps> = ({
     };
 
     const headCells: HeadCell[] = [
-        { id: 1, label: '', sortable: false },
+        { id: 1, label: t('options.market.transactions-card.table.date-time-col'), sortable: true },
         { id: 2, label: t('options.quick-trading.table.condition-col'), sortable: true },
-        { id: 3, label: t('options.quick-trading.table.when-col'), sortable: true },
-        { id: 4, label: t('options.quick-trading.table.deposit-amount-col'), sortable: true },
-        { id: 5, label: t('options.quick-trading.table.return-col'), sortable: true },
-        { id: 6, label: t('options.quick-trading.table.actions-col'), sortable: false },
+        { id: 3, label: t('options.market.transactions-card.table.position-col'), sortable: true },
+        { id: 4, label: t('options.market.transactions-card.table.type-col'), sortable: true },
+        { id: 5, label: t('options.market.transactions-card.table.amount-col'), sortable: true },
+        { id: 5, label: t('options.market.transactions-card.table.price-col'), sortable: true },
+        { id: 6, label: t('options.market.transactions-card.table.tx-status-col'), sortable: false },
     ];
 
     return (
@@ -200,8 +202,8 @@ const TradesTable: React.FC<TradesTableProps> = ({
                             {sortedMarkets.map((trade: ExtendedTrade, index: any) => {
                                 return (
                                     <StyledTableRow key={index}>
-                                        <StyledTableCell>test</StyledTableCell>
-                                        <StyledTableCell style={{ textAlign: 'left', paddingRight: 0, paddingLeft: 0 }}>
+                                        <StyledTableCell>{formatTxTimestamp(trade.timestamp)}</StyledTableCell>
+                                        <StyledTableCell>
                                             <FlexDiv>
                                                 <Currency.Icon
                                                     synthIconStyle={{
@@ -227,25 +229,26 @@ const TradesTable: React.FC<TradesTableProps> = ({
                                                             )}
                                                         <CryptoName>
                                                             {marketHeading(trade.marketItem, trade.optionSide)}
-                                                            {trade.optionSide === 'long' ? (
-                                                                <SideImage src={longIcon} />
-                                                            ) : (
-                                                                <SideImage src={shortIcon} />
-                                                            )}
-                                                        </CryptoName>{' '}
+                                                        </CryptoName>
                                                     </StyledLink>
                                                 </LightTooltip>
                                             </FlexDiv>
                                         </StyledTableCell>
+                                        <StyledTableCell>
+                                            {trade.optionSide === 'long' ? (
+                                                <SideImage src={longIcon} />
+                                            ) : (
+                                                <SideImage src={shortIcon} />
+                                            )}
+                                        </StyledTableCell>
                                         <StyledTableCell>{trade.orderSide}</StyledTableCell>
-                                        <StyledTableCell style={{ width: '120px' }}>{trade.optionSide}</StyledTableCell>
                                         <StyledTableCell>
                                             {formatCurrencyWithKey(
                                                 OPTIONS_CURRENCY_MAP[trade.optionSide],
                                                 trade.orderSide === 'buy' ? trade.makerAmount : trade.takerAmount
                                             )}
                                         </StyledTableCell>
-                                        <StyledTableCell style={{ width: '120px' }}>
+                                        <StyledTableCell>
                                             {formatCurrencyWithKey(
                                                 SYNTHS_MAP.sUSD,
                                                 trade.orderSide === 'buy'
