@@ -16,7 +16,7 @@ enum OrderDirection {
     DESC,
 }
 
-const DEFAULT_ORDER_BY = 1; // market expiration time
+const DEFAULT_ORDER_BY = 1;
 
 const Trades: React.FC = () => {
     const { t } = useTranslation();
@@ -36,7 +36,7 @@ const Trades: React.FC = () => {
                 case 1:
                     return sortByField(a, b, orderDirection, 'timestamp');
                 case 2:
-                    return sortByMarketField(a.marketItem, b.marketItem, orderDirection, 'asset');
+                    return sortByMarketField(a.marketItem, b.marketItem, orderDirection, 'currencyKey');
                 case 3:
                     return sortByField(a, b, orderDirection, 'optionSide');
                 case 4:
@@ -100,10 +100,10 @@ const sortByAmount = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirect
     const aAmount = a.orderSide === 'buy' ? a.makerAmount : a.takerAmount;
     const bAmount = b.orderSide === 'buy' ? b.makerAmount : b.takerAmount;
     if (direction === OrderDirection.ASC) {
-        return aAmount > bAmount ? -1 : 1;
+        return aAmount < bAmount ? -1 : 1;
     }
     if (direction === OrderDirection.DESC) {
-        return aAmount > bAmount ? 1 : -1;
+        return aAmount < bAmount ? 1 : -1;
     }
 
     return 0;
@@ -113,10 +113,10 @@ const sortByPrice = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirecti
     const aPrice = a.orderSide === 'buy' ? a.takerAmount / a.makerAmount : a.makerAmount / a.takerAmount;
     const bPrice = b.orderSide === 'buy' ? b.takerAmount / b.makerAmount : b.makerAmount / b.takerAmount;
     if (direction === OrderDirection.ASC) {
-        return aPrice > bPrice ? -1 : 1;
+        return aPrice < bPrice ? -1 : 1;
     }
     if (direction === OrderDirection.DESC) {
-        return aPrice > bPrice ? 1 : -1;
+        return aPrice < bPrice ? 1 : -1;
     }
 
     return 0;

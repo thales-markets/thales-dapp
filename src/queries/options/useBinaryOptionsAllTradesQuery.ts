@@ -15,6 +15,7 @@ const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOpt
         async () => {
             const [trades, rawOptionsMarkets] = await Promise.all([
                 thalesData.binaryOptions.trades({
+                    max: Infinity,
                     network: networkId,
                 }),
                 thalesData.binaryOptions.markets({

@@ -786,7 +786,16 @@
             },
             "trades": {
                 "tab-title": "Trades",
-                "no-trades-found": "No trades found"
+                "no-trades-found": "No trades found",
+                "table": {
+                    "date-time-col": "date | time",
+                    "market-col": "market",
+                    "asset-col": "asset",
+                    "type-col": "type",
+                    "amount-col": "amount",
+                    "price-col": "price",
+                    "tx-status-col": "tx status"
+                }
             },
             "profile": {
                 "tab-title": "Profile",

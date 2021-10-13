@@ -29,6 +29,7 @@ import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { formatTxTimestamp } from 'utils/formatters/date';
+import { COLORS } from 'constants/ui';
 
 interface HeadCell {
     id: keyof ExtendedTrade[];
@@ -36,7 +37,7 @@ interface HeadCell {
     sortable: boolean;
 }
 
-const DEFAULT_ORDER_BY = 3; // market expiration time
+const DEFAULT_ORDER_BY = 1;
 
 enum OrderDirection {
     NONE,
@@ -144,13 +145,13 @@ const TradesTable: React.FC<TradesTableProps> = ({
     };
 
     const headCells: HeadCell[] = [
-        { id: 1, label: t('options.market.transactions-card.table.date-time-col'), sortable: true },
-        { id: 2, label: t('options.quick-trading.table.condition-col'), sortable: true },
-        { id: 3, label: t('options.market.transactions-card.table.position-col'), sortable: true },
-        { id: 4, label: t('options.market.transactions-card.table.type-col'), sortable: true },
-        { id: 5, label: t('options.market.transactions-card.table.amount-col'), sortable: true },
-        { id: 5, label: t('options.market.transactions-card.table.price-col'), sortable: true },
-        { id: 6, label: t('options.market.transactions-card.table.tx-status-col'), sortable: false },
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.type-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
     ];
 
     return (
@@ -161,7 +162,9 @@ const TradesTable: React.FC<TradesTableProps> = ({
                     component={Paper}
                 >
                     <Table aria-label="customized table">
-                        <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                        <TableHead
+                            style={{ textTransform: 'uppercase', background: '#04045a', borderRadius: '23px 23px 0 0' }}
+                        >
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (
@@ -241,20 +244,28 @@ const TradesTable: React.FC<TradesTableProps> = ({
                                                 <SideImage src={shortIcon} />
                                             )}
                                         </StyledTableCell>
-                                        <StyledTableCell>{trade.orderSide}</StyledTableCell>
                                         <StyledTableCell>
-                                            {formatCurrencyWithKey(
-                                                OPTIONS_CURRENCY_MAP[trade.optionSide],
-                                                trade.orderSide === 'buy' ? trade.makerAmount : trade.takerAmount
-                                            )}
+                                            <Cell orderSide={trade.orderSide} style={{ textTransform: 'uppercase' }}>
+                                                {trade.orderSide}
+                                            </Cell>
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {formatCurrencyWithKey(
-                                                SYNTHS_MAP.sUSD,
-                                                trade.orderSide === 'buy'
-                                                    ? trade.takerAmount / trade.makerAmount
-                                                    : trade.makerAmount / trade.takerAmount
-                                            )}
+                                            <Cell orderSide={trade.orderSide}>
+                                                {formatCurrencyWithKey(
+                                                    OPTIONS_CURRENCY_MAP[trade.optionSide],
+                                                    trade.orderSide === 'buy' ? trade.makerAmount : trade.takerAmount
+                                                )}
+                                            </Cell>
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            <Cell orderSide={trade.orderSide}>
+                                                {formatCurrencyWithKey(
+                                                    SYNTHS_MAP.sUSD,
+                                                    trade.orderSide === 'buy'
+                                                        ? trade.takerAmount / trade.makerAmount
+                                                        : trade.makerAmount / trade.takerAmount
+                                                )}
+                                            </Cell>
                                         </StyledTableCell>
                                         <StyledTableCell
                                             style={
@@ -321,8 +332,7 @@ const LoaderContainer = styled(FlexDivColumn)`
 `;
 
 const SideImage = styled.img`
-    width: 32px;
-    margin-left: 4px;
+    width: 38px;
 `;
 
 export const CustomIcon = styled(Image)`
@@ -331,4 +341,9 @@ export const CustomIcon = styled(Image)`
     width: 24px;
     height: 24px;
 `;
+
+const Cell = styled.span<{ orderSide: string }>`
+    color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
+`;
+
 export default TradesTable;
