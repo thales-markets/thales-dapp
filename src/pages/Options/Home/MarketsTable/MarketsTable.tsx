@@ -125,7 +125,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
         const handleChangePage = (_event: unknown, newPage: number) => {
             setPage(newPage);
         };
-        const [rowsPerPage, setRowsPerPage] = React.useState(10);
+        const [rowsPerPage, setRowsPerPage] = React.useState(15);
         const numberOfPages = Math.ceil(optionsMarkets.length / rowsPerPage) || 1;
 
         const calcDirection = (cell: HeadCell) => {
@@ -305,9 +305,15 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                         showIcon={true}
                                                         iconProps={{ type: 'asset' }}
                                                         synthIconStyle={{ width: 32, height: 32 }}
+                                                        spanStyle={{ float: 'left' }}
                                                     />
                                                     {isMarketInTradingCompetition && (
                                                         <TooltipDollarIcon
+                                                            iconProps={{
+                                                                display: 'flex',
+                                                                marginTop: 3,
+                                                                position: 'inherit',
+                                                            }}
                                                             title={t(`options.home.markets-table.competition-tooltip`)}
                                                         ></TooltipDollarIcon>
                                                     )}
@@ -507,7 +513,6 @@ const StyledAnchoredTableCell = styled(StyledTableCell)`
         position: absolute;
         display: inline;
         align-self: center;
-        margin-left: 5px;
         padding: 0px !important;
     }
 `;

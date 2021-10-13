@@ -17,7 +17,7 @@ import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
-import { TooltipDollarIcon, TooltipIcon } from 'pages/Options/CreateMarket/components';
+import { TooltipIcon, TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
@@ -97,7 +97,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     };
 
     const calcDirection = (cell: HeadCell) => {
-        if (orderBy === cell.id) {
+        if (orderBy === cell.id && cell.id !== 5) {
             switch (orderDirection) {
                 case OrderDirection.NONE:
                     setOrderDirection(OrderDirection.DESC);
@@ -273,7 +273,24 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             )}
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {(cell.id === 5 || cell.id === 6) && (
+                                            <ArrowsWrapper>
+                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                    <Arrow
+                                                        src={
+                                                            orderDirection === OrderDirection.ASC
+                                                                ? upSelected
+                                                                : downSelected
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <Arrow src={down} />
+                                                    </>
+                                                )}
+                                            </ArrowsWrapper>
+                                        )}
+                                        {cell.sortable && cell.id !== 5 && cell.id !== 6 && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
@@ -358,7 +375,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
                                         {(leader as any).rank <= 20 && (
-                                            <TooltipDollarIcon title={getRewardsData(leader)}></TooltipDollarIcon>
+                                            <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -447,7 +464,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
                                         {(leader as any).rank <= 20 && (
-                                            <TooltipDollarIcon title={getRewardsData(leader)}></TooltipDollarIcon>
+                                            <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>

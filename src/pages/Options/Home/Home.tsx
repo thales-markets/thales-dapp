@@ -61,6 +61,8 @@ export const Home: React.FC = () => {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
         } else if (location.search === '?userFilter2=custom') {
             document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
+        } else if (location.search === '?userFilter2=competition') {
+            document.getElementById('explore-markets')?.scrollIntoView({ behavior: 'smooth' });
         } else if (location.search === '?anchor=hot-markets') {
             document.getElementById('hot-markets')?.scrollIntoView({ behavior: 'smooth' });
         } else {
@@ -80,6 +82,8 @@ export const Home: React.FC = () => {
                                     ? ROUTES.Options.Home
                                     : location.search === '?userFilter2=custom'
                                     ? ROUTES.Options.CustomMarkets
+                                    : location.search === '?userFilter2=competition'
+                                    ? ROUTES.Options.CompetitionMarkets
                                     : ROUTES.Options.Overview
                             }
                         />
