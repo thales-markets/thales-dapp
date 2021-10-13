@@ -9,24 +9,27 @@ import {
     TableRow,
     withStyles,
 } from '@material-ui/core';
+import bronze from 'assets/images/bronze.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
+import gold from 'assets/images/gold.svg';
+import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
-// import { USD_SIGN } from 'constants/currency';
-import { TooltipIcon } from 'pages/Options/CreateMarket/components';
+import { USD_SIGN } from 'constants/currency';
+import { TooltipIcon, TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
-// import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
+import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-// import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../../MarketsTable/components';
 import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
@@ -43,12 +46,12 @@ type TradingCompetitionProps = {
     displayNamesMap: Map<string, string>;
 };
 
-const defaultOrderBy = 7; // Netprofit
+const defaultOrderBy = 5; // Netprofit
 
 const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [twitterAccountsData, setTwitterAccountsData] = useState([] as any);
 
@@ -64,14 +67,14 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         enabled: isAppReady,
     });
 
-    // const verifiedTwitterAccountsQuery = useVerifiedTwitterAccountsQuery({
-    //     enabled: isAppReady,
-    // });
+    const verifiedTwitterAccountsQuery = useVerifiedTwitterAccountsQuery({
+        enabled: isAppReady,
+    });
 
-    // const verifiedTwitterAccounts: any = useMemo(
-    //     () => (verifiedTwitterAccountsQuery.isSuccess ? verifiedTwitterAccountsQuery.data : new Set()),
-    //     [verifiedTwitterAccountsQuery]
-    // );
+    const verifiedTwitterAccounts: any = useMemo(
+        () => (verifiedTwitterAccountsQuery.isSuccess ? verifiedTwitterAccountsQuery.data : new Set()),
+        [verifiedTwitterAccountsQuery]
+    );
 
     const competition = competitionQuery.data
         ? competitionQuery.data.competition.sort((a, b) => b.volume - a.volume)
@@ -94,7 +97,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     };
 
     const calcDirection = (cell: HeadCell) => {
-        if (orderBy === cell.id) {
+        if (orderBy === cell.id && cell.id !== 5) {
             switch (orderDirection) {
                 case OrderDirection.NONE:
                     setOrderDirection(OrderDirection.DESC);
@@ -121,97 +124,103 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         return page;
     }, [page, numberOfPages]);
 
-    const filteredTwitterData = useMemo(() => {
-        return twitterAccountsData.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, twitterAccountsData]);
+    const sortedData: any = useMemo(() => {
+        return competition.sort((a, b) => {
+            if (orderBy === 5) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.netProfit - a.netProfit;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.netProfit - b.netProfit;
+                }
+            }
 
-    // const sortedData: any = useMemo(() => {
-    //     return competition.sort((a, b) => {
-    //         if (orderBy === 4) {
-    //             if (orderDirection === OrderDirection.DESC) {
-    //                 return b.trades - a.trades;
-    //             }
-    //             if (orderDirection === OrderDirection.ASC) {
-    //                 return a.trades - b.trades;
-    //             }
-    //         }
-    //         if (orderBy === 5) {
-    //             if (orderDirection === OrderDirection.DESC) {
-    //                 return b.volume - a.volume;
-    //             }
-    //             if (orderDirection === OrderDirection.ASC) {
-    //                 return a.volume - b.volume;
-    //             }
-    //         }
+            if (orderBy === 6) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.gain - a.gain;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.gain - b.gain;
+                }
+            }
 
-    //         if (orderBy === 6) {
-    //             if (orderDirection === OrderDirection.DESC) {
-    //                 return b.investment - a.investment;
-    //             }
-    //             if (orderDirection === OrderDirection.ASC) {
-    //                 return a.investment - b.investment;
-    //             }
-    //         }
+            if (orderBy === 7) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.trades - a.trades;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.trades - b.trades;
+                }
+            }
+            if (orderBy === 8) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.volume - a.volume;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.volume - b.volume;
+                }
+            }
 
-    //         if (orderBy === 7) {
-    //             if (orderDirection === OrderDirection.DESC) {
-    //                 return b.netProfit - a.netProfit;
-    //             }
-    //             if (orderDirection === OrderDirection.ASC) {
-    //                 return a.netProfit - b.netProfit;
-    //             }
-    //         }
+            if (orderBy === 9) {
+                if (orderDirection === OrderDirection.DESC) {
+                    return b.investment - a.investment;
+                }
+                if (orderDirection === OrderDirection.ASC) {
+                    return a.investment - b.investment;
+                }
+            }
 
-    //         if (orderBy === 8) {
-    //             if (orderDirection === OrderDirection.DESC) {
-    //                 return b.gain - a.gain;
-    //             }
-    //             if (orderDirection === OrderDirection.ASC) {
-    //                 return a.gain - b.gain;
-    //             }
-    //         }
-    //         return 0;
-    //     });
-    // }, [orderBy, orderDirection, competition]);
+            return 0;
+        });
+    }, [orderBy, orderDirection, competition]);
 
-    // const leaderboardData = useMemo(() => {
-    //     if (verifiedTwitterAccountsQuery.isSuccess) {
-    //         return sortedData
-    //             .filter((leader: any) => {
-    //                 if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
-    //                     if (searchString === '') return true;
-    //                     if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
-    //                         return true;
-    //                     }
+    const leaderboardData = useMemo(() => {
+        if (verifiedTwitterAccountsQuery.isSuccess) {
+            return sortedData
+                .filter((leader: any) => {
+                    if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
+                        if (searchString === '') return true;
+                        if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                            return true;
+                        }
 
-    //                     const disp = displayNamesMap.get(leader.walletAddress);
+                        const disp = displayNamesMap.get(leader.walletAddress);
 
-    //                     if (disp) {
-    //                         return disp.toLowerCase().includes(searchString.toLowerCase());
-    //                     }
+                        if (disp) {
+                            return disp.toLowerCase().includes(searchString.toLowerCase());
+                        }
 
-    //                     return false;
-    //                 } else return false;
-    //             })
-    //             .map((leader: any, index: number, self: any) => {
-    //                 if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-    //                 return { rank: self.length - index, ...leader };
-    //             })
-    //             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    //     } else {
-    //         return [];
-    //     }
-    // }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
+                        return false;
+                    } else return false;
+                })
+                .map((leader: any, index: number, self: any) => {
+                    if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+                    return { rank: self.length - index, ...leader };
+                })
+                .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+        } else {
+            return [];
+        }
+    }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
+
+    const userLeaderboardData = useMemo(() => {
+        console.log(leaderboardData);
+        const userData = leaderboardData.filter(
+            (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
+        );
+        return userData;
+    }, [walletAddress, networkId]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
-        { id: 2, label: t('options.leaderboard.table.twitter-col'), sortable: false },
-        { id: 3, label: t('options.leaderboard.table.display-name-col'), sortable: false },
-        { id: 4, label: t('options.leaderboard.table.trades-col'), sortable: true },
-        { id: 5, label: t('options.leaderboard.table.volume-col'), sortable: true },
-        { id: 6, label: t('options.leaderboard.table.investment-col'), sortable: true },
-        { id: 7, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
-        { id: 8, label: t('options.leaderboard.table.gain-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.table.rewards-col'), sortable: false },
+        { id: 3, label: t('options.leaderboard.table.twitter-col'), sortable: false },
+        { id: 4, label: t('options.leaderboard.table.display-name-col'), sortable: false },
+        { id: 5, label: t('options.leaderboard.table.netprofit-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.table.gain-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.table.trades-col'), sortable: false },
+        { id: 8, label: t('options.leaderboard.table.volume-col'), sortable: false },
+        { id: 9, label: t('options.leaderboard.table.investment-col'), sortable: false },
     ];
 
     return (
@@ -254,17 +263,34 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                             ${
                                                                 cell.sortable && orderBy === cell.id ? 'selected' : ''
                                                             }  ${
-                                                cell.id === 7 ? 'leaderboard__columns__net-profit' : ''
+                                                cell.id === 5 ? 'leaderboard__columns__net-profit' : ''
                                             }`}
                                         >
-                                            {cell.id === 7 && (
+                                            {cell.id === 5 && (
                                                 <TooltipIcon
                                                     title={t('options.leaderboard.table.netprofit-col-tooltip')}
                                                 ></TooltipIcon>
                                             )}
                                             {cell.label}
                                         </TableHeaderLabel>
-                                        {cell.sortable && (
+                                        {(cell.id === 5 || cell.id === 6) && (
+                                            <ArrowsWrapper>
+                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                    <Arrow
+                                                        src={
+                                                            orderDirection === OrderDirection.ASC
+                                                                ? upSelected
+                                                                : downSelected
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <Arrow src={down} />
+                                                    </>
+                                                )}
+                                            </ArrowsWrapper>
+                                        )}
+                                        {cell.sortable && cell.id !== 5 && cell.id !== 6 && (
                                             <ArrowsWrapper>
                                                 {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                     <Arrow
@@ -288,7 +314,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         </TableRow>
                     </TableHead>
                     <TableBody className="leaderboard__tableBody">
-                        {filteredTwitterData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
+                        {/* {filteredTwitterData.filter((leader: any) => leader === 'leader.walletAddress.toLowerCase()') // dirty fix for creating borders on the first row of table by creating empty row
                             .length === 0 && ( // will be changed upon start of trading competition when everything is uncommented
                             <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
                         )}
@@ -330,90 +356,27 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     <StyledTableCell>N/A</StyledTableCell>
                                 </StyledTableRow>
                             );
-                        })}
-                        {/* {leaderboardData
-                            .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase())
-                            .map((leader: any, index: any) => {
-                                return (
-                                    <StyledTableRow 
-                                        className="leaderboard__tableBody__yourRank"
-                                        key={index}
-                                    >
-                                        <StyledTableCell
-                                            style={{
-                                                height: getHeight(leader, true),
-                                                fontSize: getFontSizeByRank(leader.rank),
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
-                                            {(leader as any).rank}
-                                        </StyledTableCell>
-                                        <StyledTableCell style={{ padding: 0 }}>
-                                            {twitterAccountsData.filter(
-                                                (account: any) => account[0] === leader.walletAddress.toLowerCase()
-                                            ).length === 1 && (
-                                                <StyledLink
-                                                    style={{ verticalAlign: 'text-top' }}
-                                                    href={
-                                                        twitterAccountsData.filter(
-                                                            (account: any) =>
-                                                                account[0] === leader.walletAddress.toLowerCase()
-                                                        )[0][1].twitter
-                                                    }
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    <img
-                                                        style={{ width: 35, height: 35, borderRadius: '50%' }}
-                                                        src={
-                                                            twitterAccountsData.filter(
-                                                                (account: any) =>
-                                                                    account[0] === leader.walletAddress.toLowerCase()
-                                                            )[0][1].avatar
-                                                        }
-                                                    ></img>
-                                                    <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
-                                                </StyledLink>
-                                            )}
-                                        </StyledTableCell>
-                                        <StyledTableCell
-                                            style={{
-                                                fontWeight: 'bold',
-                                            }}
-                                        >
-                                            {'Your current rank'}
-                                        </StyledTableCell>
-                                        <StyledTableCell>{leader.trades}</StyledTableCell>
-                                        <StyledTableCell>
-                                            {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
-                                        </StyledTableCell>
-                                        <StyledTableCell>
-                                            {formatCurrencyWithSign(USD_SIGN, leader.investment)}
-                                        </StyledTableCell>
-                                        <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
-                                            {formatCurrencyWithSign(
-                                                USD_SIGN,
-                                                leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
-                                                2
-                                            )}
-                                        </StyledTableCell>
-                                        <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
-                                            {Math.abs(leader.gain).toFixed(1)}%
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                );
-                            })}
-                        {leaderboardData.map((leader: any, index: any) => {
+                        })} */}
+                        {userLeaderboardData.map((leader: any, index: any) => {
                             return (
-                                <StyledTableRow key={index} className={leader.rank === 1 ? 'leaderboard__tableBody__firstRank' : ''}>
+                                <StyledTableRow className="leaderboard__tableBody__yourRank" key={index}>
                                     <StyledTableCell
                                         style={{
-                                            height: getHeight(leader),
-                                            fontSize: getFontSizeByRank(leader.rank),
+                                            height: getHeight(leader, true),
+                                            fontSize: 36,
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        {(leader as any).rank}
+                                        {(leader as any).rank <= 3 && (
+                                            <img src={getMedal(leader)} style={{ width: 35, height: 48 }}></img>
+                                        )}
+
+                                        {(leader as any).rank > 3 && (leader as any).rank}
+                                    </StyledTableCell>
+                                    <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
+                                        {(leader as any).rank <= 20 && (
+                                            <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
+                                        )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
                                         {twitterAccountsData.filter(
@@ -448,22 +411,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        <StyledLink
-                                            href={getEtherscanAddressLink(networkId, leader.walletAddress)}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            {displayNamesMap.get(leader.walletAddress)
-                                                ? displayNamesMap.get(leader.walletAddress)
-                                                : leader.walletAddress}
-                                        </StyledLink>
-                                    </StyledTableCell>
-                                    <StyledTableCell>{leader.trades}</StyledTableCell>
-                                    <StyledTableCell>
-                                        {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                        {'Your current rank'}
                                     </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                         {formatCurrencyWithSign(
@@ -475,9 +423,103 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                         {Math.abs(leader.gain).toFixed(1)}%
                                     </StyledTableCell>
+                                    <StyledTableCell>{leader.trades}</StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                    </StyledTableCell>
                                 </StyledTableRow>
                             );
-                        })} */}
+                        })}
+                        {userLeaderboardData.length === 0 && (
+                            <StyledTableRow className="leaderboard__tableBody__yourRank"></StyledTableRow>
+                        )}
+                        {leaderboardData.map((leader: any, index: any) => {
+                            const twitterData = twitterAccountsData.filter(
+                                (account: any) => account[0] === leader.walletAddress.toLowerCase()
+                            );
+                            return (
+                                <StyledTableRow
+                                    key={index}
+                                    className={leader.rank === 1 ? 'leaderboard__tableBody__firstRank' : ''}
+                                >
+                                    <StyledTableCell
+                                        style={{
+                                            height: getHeight(leader),
+                                            fontSize: 36,
+                                            fontWeight: 'bold',
+                                            padding: (leader as any).rank === 2 || (leader as any).rank === 3 ? 0 : '',
+                                        }}
+                                    >
+                                        {(leader as any).rank <= 3 && (
+                                            <img
+                                                src={getMedal(leader)}
+                                                style={{ width: getMedalWidth(leader), height: getMedalHeight(leader) }}
+                                            ></img>
+                                        )}
+
+                                        {(leader as any).rank > 3 && (leader as any).rank}
+                                    </StyledTableCell>
+                                    <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
+                                        {(leader as any).rank <= 20 && (
+                                            <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
+                                        )}
+                                    </StyledTableCell>
+                                    <StyledTableCell style={{ padding: 0 }}>
+                                        {twitterData.length === 1 && (
+                                            <StyledLink
+                                                style={{ verticalAlign: 'text-top' }}
+                                                href={twitterData[0][1].twitter}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                <img
+                                                    style={{ width: 35, height: 35, borderRadius: '50%' }}
+                                                    src={twitterData[0][1].avatar}
+                                                ></img>
+                                                <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
+                                            </StyledLink>
+                                        )}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        style={{
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        <StyledLink
+                                            href={getEtherscanAddressLink(networkId, leader.walletAddress)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            {displayNamesMap.get(leader.walletAddress)
+                                                ? displayNamesMap.get(leader.walletAddress)
+                                                : twitterData.length === 1
+                                                ? twitterData[0][1].name
+                                                : leader.walletAddress}
+                                        </StyledLink>
+                                    </StyledTableCell>
+                                    <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                        {formatCurrencyWithSign(
+                                            USD_SIGN,
+                                            leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
+                                            2
+                                        )}
+                                    </StyledTableCell>
+                                    <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                        {Math.abs(leader.gain).toFixed(1)}%
+                                    </StyledTableCell>
+                                    <StyledTableCell>{leader.trades}</StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {formatCurrencyWithSign(USD_SIGN, leader.investment)}
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            );
+                        })}
                     </TableBody>
                     {competition.length !== 0 && (
                         <TableFooter>
@@ -485,7 +527,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                 <PaginationWrapper
                                     rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
-                                    count={filteredTwitterData.length}
+                                    count={competition.length}
                                     rowsPerPage={rowsPerPage}
                                     page={memoizedPage}
                                     onPageChange={handleChangePage}
@@ -584,18 +626,96 @@ export const StyledTableCell = withStyles(() => ({
 
 export default TradingCompetition;
 
-// const getHeight = (leader: any, yourRank?: boolean) => {
-//     if (yourRank) {
-//         return 60;
-//     }
-//     switch (leader.rank) {
-//         case 1:
-//             return 120;
-//         default:
-//             return 60;
-//     }
-// };
+const getHeight = (leader: any, yourRank?: boolean) => {
+    if (yourRank) {
+        return 60;
+    }
+    switch (leader.rank) {
+        case 1:
+            return 120;
+        default:
+            return 60;
+    }
+};
 
-// const getFontSizeByRank = (rank: number) => {
-//     return rank === 1 ? 96 : 48;
-// };
+const getMedalHeight = (leader: any, yourRank?: boolean) => {
+    if (yourRank) {
+        return 48;
+    }
+    switch (leader.rank) {
+        case 1:
+            return 80;
+        default:
+            return 48;
+    }
+};
+
+const getMedalWidth = (leader: any, yourRank?: boolean) => {
+    if (yourRank) {
+        return 35;
+    }
+    switch (leader.rank) {
+        case 1:
+            return 72;
+        default:
+            return 35;
+    }
+};
+
+const getMedal = (leader: any) => {
+    switch (leader.rank) {
+        case 1:
+            return gold;
+        case 2:
+            return silver;
+        case 3:
+            return bronze;
+        default:
+            return '';
+    }
+};
+
+const getRewardsData = (leader: any) => {
+    switch (leader.rank) {
+        case 1:
+            return 'THALES: 2500, SNX: 150, ZRX: 1000';
+        case 2:
+            return 'THALES: 1500, SNX: 90, ZRX: 600';
+        case 3:
+            return 'THALES: 1000, SNX: 60, ZRX: 400';
+        case 4:
+            return 'THALES: 925, SNX: 55.5, ZRX: 370';
+        case 5:
+            return 'THALES: 850, SNX: 51, ZRX: 340';
+        case 6:
+            return 'THALES: 800, SNX: 48, ZRX: 320';
+        case 7:
+            return 'THALES: 750, SNX: 45, ZRX: 300';
+        case 8:
+            return 'THALES: 675, SNX: 40.5, ZRX: 270';
+        case 9:
+            return 'THALES: 550, SNX: 33, ZRX: 220';
+        case 10:
+            return 'THALES: 450, SNX: 27, ZRX: 180';
+        case 11:
+            return 'THALES: 375, SNX: 22.5, ZRX: 150';
+        case 12:
+            return 'THALES: 350, SNX: 21, ZRX: 140';
+        case 13:
+            return 'THALES: 325, SNX: 19.5, ZRX: 130';
+        case 14:
+            return 'THALES: 290, SNX: 17.4, ZRX: 116';
+        case 15:
+            return 'THALES: 265, SNX: 15.9, ZRX: 106';
+        case 16:
+            return 'THALES: 235, SNX: 14.1, ZRX: 94';
+        case 17:
+            return 'THALES: 210, SNX: 12.6, ZRX: 84';
+        case 18:
+            return 'THALES: 175, SNX: 10.5, ZRX: 70';
+        case 19:
+            return 'THALES: 150, SNX: 9, ZRX: 60';
+        case 20:
+            return 'THALES: 125, SNX: 7.5, ZRX: 50';
+    }
+};

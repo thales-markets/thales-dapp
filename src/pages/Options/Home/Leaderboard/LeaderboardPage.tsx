@@ -1,6 +1,11 @@
 import twitter from 'assets/images/twitter.svg';
+import pencil from 'assets/images/leaderboard/pencil.svg';
+import xmark from 'assets/images/leaderboard/xmark.svg';
+import axios from 'axios';
 import Loader from 'components/Loader';
 import ROUTES from 'constants/routes';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import { Input } from 'pages/Options/Market/components';
 import { StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -12,10 +17,20 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Button, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, Wrapper } from 'theme/common';
 import { isNetworkSupported } from 'utils/network';
+import Web3 from 'web3';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
 import TradingCompetition from './TradingCompetition';
+import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
+
+const ethEnabled = () => {
+    if (window.ethereum) {
+        window.web3 = new Web3(Web3.givenProvider) as any;
+        return true;
+    }
+    return false;
+};
 
 const LeaderboardPage: React.FC = () => {
     const { t } = useTranslation();
@@ -25,10 +40,31 @@ const LeaderboardPage: React.FC = () => {
     const [selectedTab, setSelectedTab] = useState('trading-competition');
     const [accVerified, setAccVerified] = useState(false);
     const [twitterAccountData, setTwitterAccountData] = useState({} as any);
+    const [editMode, setEditMode] = useState(false);
 
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
     });
+
+    const setDisplayName = async (walletAddress: string, displayName: string) => {
+        if (!ethEnabled()) {
+            alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
+        }
+
+        (window.web3?.eth as any).personal.sign(displayName, walletAddress, async (_test: any, signature: any) => {
+            try {
+                await axios.post('https://api.thales.market/display-name', {
+                    walletAddress,
+                    displayName,
+                    signature,
+                });
+                setEditMode(false);
+                displayNamesQuery.refetch();
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    };
 
     useEffect(() => {
         if (walletAddress) {
@@ -45,6 +81,18 @@ const LeaderboardPage: React.FC = () => {
     const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
         displayNamesQuery,
     ]);
+
+    const displayNameQuery = useDisplayNameQuery(walletAddress);
+
+    const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
+
+    useEffect(() => {
+        if (currentDisplayName !== '') {
+            setName(currentDisplayName);
+        }
+    }, [currentDisplayName]);
+
+    const [displayName, setName] = useState(currentDisplayName);
 
     const optionsTabContent: Array<{
         id: string;
@@ -145,15 +193,20 @@ const LeaderboardPage: React.FC = () => {
                                     </Text>
                                     <Text className="text-s ls25 lh24 pale-grey">
                                         {t('options.leaderboard.trading-comp-subtitle-3')}
+                                        <TimeRemaining
+                                            end={new Date('Nov 01 2021 11:00:00 UTC')}
+                                            fontSize={16}
+                                            showFullCounter
+                                        />
                                     </Text>
                                     <Text className="text-s ls25 lh24 pale-grey">
                                         {t('options.leaderboard.trading-comp-subtitle-4')}
                                         <StyledLink
-                                            href="https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73"
+                                            href="https://docs.thales.market/using-thales/guide-for-thales-first-trading-competition"
                                             rel="noreferrer"
                                             target="_blank"
                                         >
-                                            https://thalesmarket.medium.com/thales-new-markets-and-first-trading-competition-921d0d058f73
+                                            https://docs.thales.market/using-thales/guide-for-thales-first-trading-competition
                                         </StyledLink>
                                     </Text>
                                 </>
@@ -206,13 +259,54 @@ const LeaderboardPage: React.FC = () => {
                                         paddingTop: 26,
                                     }}
                                 >
-                                    <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                    <Text className="bold lh24" style={{ marginRight: 4 }}>
                                         {t('options.leaderboard.display-name')}:{' '}
-                                        <span style={{ fontSize: 20, fontWeight: 700 }}>
-                                            {displayNamesMap.get(walletAddress.toLowerCase().trim())}
-                                        </span>
                                     </Text>
+
+                                    {!editMode && (
+                                        <Text className="bold lh24" style={{ flex: 1, letterSpacing: 0.5 }}>
+                                            <span style={{ fontSize: 20, fontWeight: 700 }}>
+                                                {displayNamesMap.get(walletAddress.toLowerCase().trim())}
+                                            </span>
+                                            <Image
+                                                style={{ width: 20, height: 20, marginLeft: 20, cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    setEditMode(true);
+                                                }}
+                                                src={pencil}
+                                            />
+                                        </Text>
+                                    )}
+
+                                    {editMode && (
+                                        <DispayNameWrapper>
+                                            {' '}
+                                            <Input
+                                                onChange={(event) => {
+                                                    setName(event.target.value);
+                                                }}
+                                                value={displayName}
+                                                style={{ fontSize: 20 }}
+                                            ></Input>
+                                            <Button
+                                                onClick={() => {
+                                                    setDisplayName(walletAddress, displayName);
+                                                }}
+                                                className="primary"
+                                            >
+                                                {t(`common.save`)}
+                                            </Button>
+                                            <Image
+                                                style={{ width: 20, height: 20, marginLeft: 20, cursor: 'pointer' }}
+                                                onClick={() => {
+                                                    setEditMode(false);
+                                                }}
+                                                src={xmark}
+                                            />
+                                        </DispayNameWrapper>
+                                    )}
                                 </Row>
+
                                 <Row
                                     style={{
                                         borderBottomLeftRadius: 23,
@@ -420,6 +514,19 @@ const LeaderboardTitle = styled(Text)`
     font-size: 39px;
     line-height: 72px;
     font-weight: 600;
+`;
+
+const DispayNameWrapper = styled.div`
+    position: relative;
+    bottom: 10px;
+    height: 40px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    *:first-child {
+        margin-right: 20px;
+    }
 `;
 
 export const Row = styled(FlexDiv)`

@@ -23,6 +23,8 @@ import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
 import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
 import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
 import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
+import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
+import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -120,6 +122,28 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 <ItemsContainer>
                     <DisplayContentsAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor
+                        onClick={(event) => {
+                            if (history.location.pathname === ROUTES.Options.Home) {
+                                event.preventDefault();
+                                history.push({
+                                    pathname: ROUTES.Options.Home,
+                                    search: queryString.stringify({ userFilter2: ['competition'] }),
+                                });
+                                return false;
+                            }
+                        }}
+                        href={buildHref(ROUTES.Options.CompetitionMarkets)}
+                    >
+                        <SidebarItem
+                            imgSrc={competitionMarketsDefaultIcon}
+                            imgSrcHoverSelected={competitionMarketsSelectedIcon}
+                            className={route === ROUTES.Options.CompetitionMarkets ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.competition-markets-label')}</SidebarText>
+                        </SidebarItem>
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor
                         href={buildHref(ROUTES.Options.HotMarkets)}
@@ -357,6 +381,7 @@ const SidebarIcon = styled.div`
     position: relative;
     width: 22px;
     height: 22px;
+    background-size: contain !important;
 `;
 
 const SidebarText = styled.span`

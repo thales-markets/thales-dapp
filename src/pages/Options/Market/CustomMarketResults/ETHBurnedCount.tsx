@@ -34,7 +34,7 @@ const ETHBurnedCount: React.FC = () => {
                 <USDAmount>{ethBurned ? formatCurrencyWithSign(USD_SIGN, ethBurned.totalUsd) : '-'}</USDAmount>
             </CountContainer>
             <CountContainer>
-                <Title>{t('options.market.overview.burned-yesterday')}</Title>
+                <Title>{t('options.market.overview.burned-last-hour')}</Title>
                 <Amount>{ethBurned ? formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.ETH, ethBurned.yesterday) : '-'}</Amount>
                 <USDAmount>{ethBurned ? formatCurrencyWithSign(USD_SIGN, ethBurned.yesterdayUsd) : '-'}</USDAmount>
             </CountContainer>

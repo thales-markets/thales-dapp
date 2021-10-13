@@ -174,7 +174,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         };
     });
 
-    const [expiration, setExpiration] = useState<OrderPeriod | undefined>(OrderPeriod.TRADING_END);
+    const [expiration, setExpiration] = useState<OrderPeriod | undefined>(OrderPeriod.ONE_DAY);
     const [customHoursExpiration, setCustomHoursExpiration] = useState<number | string>('');
 
     const isPriceEntered = Number(price) > 0;
@@ -415,7 +415,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const resetForm = () => {
         setAmount(defaultAmount || '');
         setPrice(defaultPrice || '');
-        setExpiration(OrderPeriod.TRADING_END);
+        setExpiration(OrderPeriod.ONE_DAY);
         setCustomHoursExpiration('');
         const defaultOrderSideOption = orderSideOptions.find((option) => option.value === defaultOrderSide);
         setOrderSide(defaultOrderSideOption || orderSideOptions[0]);

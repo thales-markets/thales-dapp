@@ -121,11 +121,13 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                             )}
                             {!countryToCountryCode(optionsMarket?.country as string) && (
                                 <CustomIcon
-                                    style={{ marginLeft: 32 }}
+                                    style={{ marginLeft: 32, width: 50, height: 50 }}
                                     src={eventToIcon(optionsMarket?.eventName as string)}
                                 ></CustomIcon>
                             )}
-                            {market.country}
+                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
+                                {market.country ? market.country : optionsMarket?.country}
+                            </CryptoName>
                         </>
                     ) : (
                         <>

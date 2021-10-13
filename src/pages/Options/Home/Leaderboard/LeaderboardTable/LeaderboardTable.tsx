@@ -180,7 +180,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
             (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
         );
         return userData;
-    }, [walletAddress, leaderboardData]);
+    }, [walletAddress, networkId]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },

@@ -87,6 +87,7 @@
     },
     "common": {
         "max": "max",
+        "save": "Save",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
         "gwei": "gwei",
@@ -145,6 +146,7 @@
             "overview-label": "Markets overview",
             "olympics-label": "Olympics markets",
             "custom-markets-label": "Custom markets",
+            "competition-markets-label": "Competition markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
@@ -246,7 +248,8 @@
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Market size",
-                "time-remaining-col": "Time remaining"
+                "time-remaining-col": "Time remaining",
+                "competition-tooltip": "This market is eligible for trading competition"
             }
         },
         "earn": {
@@ -298,7 +301,11 @@
                     "locked-in-escrow": "Escrowed balance",
                     "total-staked": "Total staked balance",
                     "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
-                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
+                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards",
+                    "global-staking-stats": "Global staking stats",
+                    "total-thales-staked": "Total THALES Staked",
+                    "my-staked-share": "My Staked Share",
+                    "estimated-rewards": "Estimated rewards for this period"
                 },
                 "unstake": {
                     "unstake": "Unstake",
@@ -505,7 +512,7 @@
                 "strike-burn-label": "Strike burn",
                 "rank-label": "Rank",
                 "total-burned": "Total burned",
-                "burned-yesterday": "Burned yesterday"
+                "burned-last-hour": "Burned in the last hour"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
@@ -748,9 +755,9 @@
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "Please note that this competition hasn't started yet, but registrations are open.",
-            "trading-comp-subtitle-3": "You'll need to connect your wallet (top right corner) and then verify it, associating it with a Twitter account (that's older than 3 months).",
-            "trading-comp-subtitle-4": "You can read all the details regarding this trading competition here: ",
+            "trading-comp-subtitle-2": "The competition has officialy started on Oct 11 2021 | 10AM UTC",
+            "trading-comp-subtitle-3": "Countdown until the end of the competition: ",
+            "trading-comp-subtitle-4": "For more information and guide on how to participate, please visit: ",
             "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
             "profile-title": "Profile",
             "verify-twitter-account": "Verify account",
@@ -767,7 +774,8 @@
                 "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
                 "investment-col": "Investment",
                 "gain-col": "Gain",
-                "twitter-col": "Twitter"
+                "twitter-col": "Twitter",
+                "rewards-col": "Rewards"
             },
             "trading-competition": {
                 "tab-title": "Trading competition",
@@ -801,7 +809,8 @@
                     "long": "Long",
                     "short": "Short",
                     "buy": "Buy",
-                    "sell": "Sell"
+                    "sell": "Sell",
+                    "tx-status": "TX Status"
                 },
                 "exercises": {
                     "side": "Side"
