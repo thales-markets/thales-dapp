@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core';
 import errorIcon from 'assets/images/errorIcon.svg';
@@ -6,11 +6,14 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Slider from '@material-ui/core/Slider';
 import { ReactComponent as QuestionMarkIcon } from 'assets/images/question-mark.svg';
 import { ReactComponent as InfoIcon } from 'assets/images/info-circle.svg';
+import { ReactComponent as DollarIcon } from 'assets/images/dollar.svg';
+import { ReactComponent as AssetIcon } from 'assets/images/asset.svg';
 import { FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
 import { COLORS } from 'constants/ui';
 
 type TooltipIconProps = {
     title: React.ReactNode;
+    iconProps?: CSSProperties;
 };
 
 const LightTooltip = withStyles(() => ({
@@ -38,6 +41,28 @@ export const TooltipIcon: React.FC<TooltipIconProps> = ({ title }) => (
 export const TooltipInfoIcon: React.FC<TooltipIconProps> = ({ title }) => (
     <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
         <InfoIcon
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
+            width="12"
+            height="12"
+            className="tooltip-icon"
+        />
+    </LightTooltip>
+);
+
+export const TooltipDollarIcon: React.FC<TooltipIconProps> = ({ title, iconProps }) => (
+    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
+        <DollarIcon
+            style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1, ...iconProps }}
+            width="12"
+            height="12"
+            className="tooltip-icon"
+        />
+    </LightTooltip>
+);
+
+export const TooltipAssetIcon: React.FC<TooltipIconProps> = ({ title }) => (
+    <LightTooltip title={<span className="text-xxxs dark">{title}</span>} placement="top" arrow={true}>
+        <AssetIcon
             style={{ border: '1px solid #04045A', borderRadius: '50%', padding: 1 }}
             width="12"
             height="12"
