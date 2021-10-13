@@ -128,7 +128,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         <Button
                             className="primary text-xs"
                             style={{
-                                width: 150,
+                                width: 180,
                                 height: 40,
                                 marginBottom: 10,
                                 padding: '4px 24px',
@@ -142,7 +142,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                         </Button>
                         <Button
                             className="primary text-xs"
-                            style={{ width: 150, height: 40, padding: '4px 24px', alignSelf: 'flex-end' }}
+                            style={{ width: 180, height: 40, padding: '4px 24px', alignSelf: 'flex-end' }}
                             onClick={() => {
                                 onboardConnector.disconnectWallet();
                                 handleClose(false);
@@ -153,14 +153,14 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     </FlexDivColumn>
                 </WalletWrapper>
                 <FlexDivCentered style={{ justifyContent: 'space-between', margin: 25 }}>
-                    <ShortInputContainer style={{ margin: 0 }}>
+                    <ShortInputContainer style={{ margin: 0, width: '45%' }}>
                         <InputLabel>{t(`user-info.wallet.display-name`)}</InputLabel>
                         <Input
                             onChange={(event) => {
                                 setName(event.target.value);
                             }}
                             value={displayName}
-                        ></Input>
+                        />
                     </ShortInputContainer>
                     <Button
                         onClick={() => {
@@ -275,6 +275,7 @@ export const Row = styled(FlexDiv)`
     justify-content: space-between;
     align-items: center;
     background: #24273133;
+    text-align: center;
 `;
 
 export const MarketRow = styled(Row)`

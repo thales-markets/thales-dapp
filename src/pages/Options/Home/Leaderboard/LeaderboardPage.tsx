@@ -386,7 +386,7 @@ const LeaderboardPage: React.FC = () => {
                                             style={{ width: 202, fontSize: 20 }}
                                             onClick={checkAddress}
                                         >
-                                            {'Verify'}
+                                            {t('options.leaderboard.verify')}
                                         </Button>
                                     )}
                                 </Row>

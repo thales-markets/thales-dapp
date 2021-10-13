@@ -148,10 +148,7 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                     </FlexDivCentered>
                     <Text className="text-xxs" style={{ flex: 2 }}>
                         {order.market.customMarket ? (
-                            <Image
-                                style={{ width: 32, height: 32 }}
-                                src={eventToIcon(order.market.eventName as any)}
-                            ></Image>
+                            <Image style={{ width: 32, height: 32 }} src={eventToIcon(order.market.eventName as any)} />
                         ) : (
                             formatCurrencyWithSign(USD_SIGN, order.market.strikePrice)
                         )}
