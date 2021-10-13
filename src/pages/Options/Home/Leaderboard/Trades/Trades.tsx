@@ -4,7 +4,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
-import { ExtendedTrade } from 'types/options';
+import { ExtendedTrade, HistoricalOptionsMarketInfo } from 'types/options';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useBinaryOptionsAllTradesQuery from 'queries/options/useBinaryOptionsAllTradesQuery';
@@ -16,7 +16,7 @@ enum OrderDirection {
     DESC,
 }
 
-const DEFAULT_ORDER_BY = 3; // market expiration time
+const DEFAULT_ORDER_BY = 1; // market expiration time
 
 const Trades: React.FC = () => {
     const { t } = useTranslation();
@@ -31,19 +31,20 @@ const Trades: React.FC = () => {
     const trades: ExtendedTrade[] = tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : [];
 
     const sortedTrades = useMemo(() => {
-        return trades.sort(() => {
+        return trades.sort((a, b) => {
             switch (orderBy) {
-                // case 2:
-                //     return sortByMarketField(a.market, b.market, orderDirection, 'asset');
-                // case 3:
-                //     return sortByTime(a, b, orderDirection);
-                // case 4:
-                //     return sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableTotal');
-                // case 5:
-                //     return
-                //         : sortByOrderField(a.displayOrder, b.displayOrder, orderDirection, 'fillableAmount');
-                // case 6:
-                //     return sortByField(a, b, orderDirection, 'walletBalance');
+                case 1:
+                    return sortByField(a, b, orderDirection, 'timestamp');
+                case 2:
+                    return sortByMarketField(a.marketItem, b.marketItem, orderDirection, 'asset');
+                case 3:
+                    return sortByField(a, b, orderDirection, 'optionSide');
+                case 4:
+                    return sortByField(a, b, orderDirection, 'orderSide');
+                case 5:
+                    return sortByAmount(a, b, orderDirection);
+                case 6:
+                    return sortByPrice(a, b, orderDirection);
                 default:
                     return 0;
             }
@@ -60,71 +61,68 @@ const Trades: React.FC = () => {
                 setOrderBy={setOrderBy}
                 setOrderDirection={setOrderDirection}
             >
-                <NoOrders>
-                    <>
-                        <Text className="text-l bold pale-grey">{t('options.quick-trading.no-orders-found')}</Text>
-                    </>
-                </NoOrders>
+                <NoTrades>
+                    <Text className="text-l bold pale-grey">{t('options.leaderboard.trades.no-trades-found')}</Text>
+                </NoTrades>
             </TradesTable>
         </FlexDivColumnCentered>
     );
 };
 
-// const sortByTime = (a: ExtendedOrderItem, b: ExtendedOrderItem, direction: OrderDirection) => {
-//     if (direction === OrderDirection.ASC && a.market.phaseNum === b.market.phaseNum) {
-//         return a.market.timeRemaining > b.market.timeRemaining ? -1 : 1;
-//     }
-//     if (direction === OrderDirection.DESC && a.market.phaseNum === b.market.phaseNum) {
-//         return a.market.timeRemaining > b.market.timeRemaining ? 1 : -1;
-//     }
+const sortByField = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirection, field: keyof ExtendedTrade) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
 
-//     return 0;
-// };
+    return 0;
+};
 
-// const sortByField = (
-//     a: ExtendedOrderItem,
-//     b: ExtendedOrderItem,
-//     direction: OrderDirection,
-//     field: keyof ExtendedOrderItem
-// ) => {
-//     if (direction === OrderDirection.ASC) {
-//         return (a[field] as any) > (b[field] as any) ? 1 : -1;
-//     }
-//     if (direction === OrderDirection.DESC) {
-//         return (a[field] as any) > (b[field] as any) ? -1 : 1;
-//     }
+const sortByMarketField = (
+    a: HistoricalOptionsMarketInfo,
+    b: HistoricalOptionsMarketInfo,
+    direction: OrderDirection,
+    field: keyof HistoricalOptionsMarketInfo
+) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
 
-//     return 0;
-// };
+    return 0;
+};
 
-// const sortByOrderField = (a: DisplayOrder, b: DisplayOrder, direction: OrderDirection, field: keyof DisplayOrder) => {
-//     if (direction === OrderDirection.ASC) {
-//         return (a[field] as any) > (b[field] as any) ? 1 : -1;
-//     }
-//     if (direction === OrderDirection.DESC) {
-//         return (a[field] as any) > (b[field] as any) ? -1 : 1;
-//     }
+const sortByAmount = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirection) => {
+    const aAmount = a.orderSide === 'buy' ? a.makerAmount : a.takerAmount;
+    const bAmount = b.orderSide === 'buy' ? b.makerAmount : b.takerAmount;
+    if (direction === OrderDirection.ASC) {
+        return aAmount > bAmount ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aAmount > bAmount ? 1 : -1;
+    }
 
-//     return 0;
-// };
+    return 0;
+};
 
-// const sortByMarketField = (
-//     a: HistoricalOptionsMarketInfo,
-//     b: HistoricalOptionsMarketInfo,
-//     direction: OrderDirection,
-//     field: keyof HistoricalOptionsMarketInfo
-// ) => {
-//     if (direction === OrderDirection.ASC) {
-//         return (a[field] as any) > (b[field] as any) ? 1 : -1;
-//     }
-//     if (direction === OrderDirection.DESC) {
-//         return (a[field] as any) > (b[field] as any) ? -1 : 1;
-//     }
+const sortByPrice = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirection) => {
+    const aPrice = a.orderSide === 'buy' ? a.takerAmount / a.makerAmount : a.makerAmount / a.takerAmount;
+    const bPrice = b.orderSide === 'buy' ? b.takerAmount / b.makerAmount : b.makerAmount / b.takerAmount;
+    if (direction === OrderDirection.ASC) {
+        return aPrice > bPrice ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aPrice > bPrice ? 1 : -1;
+    }
 
-//     return 0;
-// };
+    return 0;
+};
 
-const NoOrders = styled(FlexDivColumn)`
+const NoTrades = styled(FlexDivColumn)`
     min-height: 400px;
     background: #04045a;
     justify-content: space-evenly;

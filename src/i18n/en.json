@@ -784,6 +784,10 @@
             "board": {
                 "tab-title": "Leaderboard"
             },
+            "trades": {
+                "tab-title": "Trades",
+                "no-trades-found": "No trades found"
+            },
             "profile": {
                 "tab-title": "Profile",
                 "search-placeholder": "Search other profiles by typing display name",

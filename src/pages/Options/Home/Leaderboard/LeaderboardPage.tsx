@@ -118,7 +118,7 @@ const LeaderboardPage: React.FC = () => {
             },
             {
                 id: 'trades',
-                name: 'Trades',
+                name: t('options.leaderboard.trades.tab-title'),
                 disabled: false,
             },
         ],
@@ -450,9 +450,9 @@ const OptionsTabContainer = styled.div`
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     position: absolute;
     top: 0;
-    left: ${(props) => props.index * 33 + '% '};
+    left: ${(props) => props.index * 25 + '% '};
     background: linear-gradient(90deg, #141874, #04045a);
-    width: 33.3%;
+    width: 25%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
     transition: 0.5s;
     transition-property: color;
