@@ -117,6 +117,10 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     useEffect(() => {
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
+        if (assetSearchValue && !assetSearch) {
+            setAssetSearch(assetSearchValue);
+        }
         const tradingMarkets = filteredOptionsMarkets.filter((market) => {
             return market.phase === PhaseFilterEnum.trading;
         });
@@ -139,12 +143,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     useEffect(() => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
-        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
-        if (assetSearchValue && !assetSearch) {
-            if (assetSearchValue.length !== 1 && assetSearchValue !== assetSearch) {
-                setAssetSearch(assetSearchValue);
-            }
-        }
 
         if (assetSearch) {
             history.push({
