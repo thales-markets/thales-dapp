@@ -136,6 +136,36 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         }
     }, [secondLevelUserFilter]);
 
+    useEffect(() => {
+        const userFilterValue = queryString.parse(searchFilter.search).userFilter;
+        const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
+        if (assetSearchValue && !assetSearch) {
+            if (assetSearchValue.length !== 1 && assetSearchValue !== assetSearch) {
+                setAssetSearch(assetSearchValue);
+            }
+        }
+
+        if (assetSearch) {
+            history.push({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                    userFilter2: [secondLevelFilterValue],
+                    assetSearch: [assetSearch],
+                }),
+            });
+        } else {
+            history.push({
+                pathname: searchFilter.pathname,
+                search: queryString.stringify({
+                    userFilter: [userFilterValue],
+                    userFilter2: [secondLevelFilterValue],
+                }),
+            });
+        }
+    }, [assetSearch]);
+
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
@@ -316,16 +346,16 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     const onClickUserFilter = (filter: PrimaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
-
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
         if (!isDisabled && userFilterValue !== filter) {
             history.push({
                 pathname: searchFilter.pathname,
-                search: queryString.stringify({ userFilter: [filter] }),
+                search: queryString.stringify({ userFilter: [filter], assetSearch: [assetSearchValue] }),
             });
         } else if (userFilterValue === filter && userFilter !== PrimaryFilters.all) {
             history.push({
                 pathname: searchFilter.pathname,
-                search: '',
+                search: queryString.stringify({ assetSearch: [assetSearchValue] }),
             });
         }
 
@@ -345,13 +375,14 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const onClickSecondLevelUserFilter = (filter: SecondaryFilters, isDisabled: boolean) => {
         const userFilterValue = queryString.parse(searchFilter.search).userFilter;
         const secondLevelFilterValue = queryString.parse(searchFilter.search).userFilter2;
-
+        const assetSearchValue = queryString.parse(searchFilter.search).assetSearch;
         if (!isDisabled && secondLevelFilterValue !== filter && userFilter) {
             history.push({
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
                     userFilter2: [filter],
+                    assetSearch: [assetSearchValue],
                 }),
             });
         } else if (userFilter && secondLevelFilterValue === filter && secondLevelUserFilter !== SecondaryFilters.all) {
@@ -359,6 +390,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter: [userFilterValue],
+                    assetSearch: [assetSearchValue],
                 }),
             });
         } else if (!isDisabled && !userFilter && secondLevelFilterValue !== filter) {
@@ -366,6 +398,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 pathname: searchFilter.pathname,
                 search: queryString.stringify({
                     userFilter2: [filter],
+                    assetSearch: [assetSearchValue],
                 }),
             });
         }
