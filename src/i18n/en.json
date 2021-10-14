@@ -760,6 +760,8 @@
             "trading-comp-subtitle-4": "For more information and guide on how to participate, please visit: ",
             "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
             "profile-title": "Profile",
+            "trades-subtitle": "The tab shows you all trades sorted by latest timestamp.",
+            "trades-title": "Trades",
             "verify-twitter-account": "Verify account",
             "display-name": "Display Name",
             "address": "Address",

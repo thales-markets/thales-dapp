@@ -72,14 +72,11 @@ const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOpt
 
             const optionsMarketsMap = keyBy(optionsMarkets, 'address');
 
-            const filteredTrades = trades.filter(
-                (trade: ExtendedTrade) => trade.market !== null && trade.orderSide !== null && trade.optionSide !== null
-            );
-            filteredTrades.forEach((trade: ExtendedTrade) => {
+            trades.forEach((trade: ExtendedTrade) => {
                 trade.marketItem = optionsMarketsMap[trade.market];
             });
 
-            return filteredTrades;
+            return trades;
         },
         {
             refetchInterval: 5000,

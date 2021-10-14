@@ -4,11 +4,15 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
-import { ExtendedTrade, HistoricalOptionsMarketInfo } from 'types/options';
+import { ExtendedTrade, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import useBinaryOptionsAllTradesQuery from 'queries/options/useBinaryOptionsAllTradesQuery';
 import TradesTable from './TradesTable';
+import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import { formatShortDate } from 'utils/formatters/date';
+import { getSynthName } from 'utils/snxJSConnector';
+import { USD_SIGN } from 'constants/currency';
 
 enum OrderDirection {
     NONE,
@@ -36,7 +40,7 @@ const Trades: React.FC = () => {
                 case 1:
                     return sortByField(a, b, orderDirection, 'timestamp');
                 case 2:
-                    return sortByMarketField(a.marketItem, b.marketItem, orderDirection, 'currencyKey');
+                    return sortByMarketHeading(a, b, orderDirection);
                 case 3:
                     return sortByField(a, b, orderDirection, 'optionSide');
                 case 4:
@@ -69,23 +73,52 @@ const Trades: React.FC = () => {
     );
 };
 
-const sortByField = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirection, field: keyof ExtendedTrade) => {
+export const marketHeading = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
+    const orderbookSign = optionsMarket.customMarket
+        ? optionSide === 'long'
+            ? optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets' ||
+              optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                ? '>='
+                : '=='
+            : optionsMarket.eventName === 'XYZ airdrop claims' ||
+              optionsMarket.eventName === 'ETH burned count' ||
+              optionsMarket.eventName === 'Flippening Markets' ||
+              optionsMarket.eventName === 'ETH/BTC market cap ratio'
+            ? '<'
+            : '!='
+        : optionSide === 'long'
+        ? '>'
+        : '<';
+
+    return optionsMarket.customMarket
+        ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
+              optionsMarket.outcome || 0,
+              optionsMarket.eventName === 'Flippening Markets' || optionsMarket.eventName === 'ETH/BTC market cap ratio'
+                  ? 2
+                  : 0
+          )} @ ${formatShortDate(optionsMarket.maturityDate)}`
+        : `${getSynthName(optionsMarket.currencyKey)} ${orderbookSign} ${formatCurrencyWithSign(
+              USD_SIGN,
+              optionsMarket.strikePrice
+          )} @ ${formatShortDate(optionsMarket.maturityDate)}`;
+};
+
+const sortByMarketHeading = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirection) => {
+    const aMarket = marketHeading(a.marketItem, a.optionSide);
+    const bMarket = marketHeading(b.marketItem, b.optionSide);
     if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+        return aMarket < bMarket ? -1 : 1;
     }
     if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+        return aMarket < bMarket ? 1 : -1;
     }
 
     return 0;
 };
 
-const sortByMarketField = (
-    a: HistoricalOptionsMarketInfo,
-    b: HistoricalOptionsMarketInfo,
-    direction: OrderDirection,
-    field: keyof HistoricalOptionsMarketInfo
-) => {
+const sortByField = (a: ExtendedTrade, b: ExtendedTrade, direction: OrderDirection, field: keyof ExtendedTrade) => {
     if (direction === OrderDirection.ASC) {
         return (a[field] as any) > (b[field] as any) ? 1 : -1;
     }

@@ -10,10 +10,9 @@ import {
 } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import { TableFooter } from '@material-ui/core';
 import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
-import { formatCurrency, formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
-import { ExtendedTrade, ExtendedTrades, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
-import { getSynthName } from 'utils/snxJSConnector';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { ExtendedTrade, ExtendedTrades } from 'types/options';
 import { LightTooltip } from 'pages/Options/Market/components';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
@@ -30,6 +29,7 @@ import shortIcon from 'assets/images/short_small.svg';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { COLORS } from 'constants/ui';
+import { marketHeading } from '../Trades';
 
 interface HeadCell {
     id: keyof ExtendedTrade[];
@@ -111,39 +111,6 @@ const TradesTable: React.FC<TradesTableProps> = ({
         return trades.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [trades, orderBy, orderDirection, memoizedPage, rowsPerPage]);
 
-    const marketHeading = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
-        const orderbookSign = optionsMarket.customMarket
-            ? optionSide === 'long'
-                ? optionsMarket.eventName === 'XYZ airdrop claims' ||
-                  optionsMarket.eventName === 'ETH burned count' ||
-                  optionsMarket.eventName === 'Flippening Markets' ||
-                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
-                    ? '>='
-                    : '=='
-                : optionsMarket.eventName === 'XYZ airdrop claims' ||
-                  optionsMarket.eventName === 'ETH burned count' ||
-                  optionsMarket.eventName === 'Flippening Markets' ||
-                  optionsMarket.eventName === 'ETH/BTC market cap ratio'
-                ? '<'
-                : '!='
-            : optionSide === 'long'
-            ? '>'
-            : '<';
-
-        return optionsMarket.customMarket
-            ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
-                  optionsMarket.outcome || 0,
-                  optionsMarket.eventName === 'Flippening Markets' ||
-                      optionsMarket.eventName === 'ETH/BTC market cap ratio'
-                      ? 2
-                      : 0
-              )}`
-            : `${getSynthName(optionsMarket.currencyKey)} ${orderbookSign} ${formatCurrencyWithSign(
-                  USD_SIGN,
-                  optionsMarket.strikePrice
-              )}`;
-    };
-
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
         { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
@@ -158,13 +125,11 @@ const TradesTable: React.FC<TradesTableProps> = ({
         <>
             {!isLoading && (
                 <TableContainer
-                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
+                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: '23px' }}
                     component={Paper}
                 >
                     <Table aria-label="customized table">
-                        <TableHead
-                            style={{ textTransform: 'uppercase', background: '#04045a', borderRadius: '23px 23px 0 0' }}
-                        >
+                        <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                             <TableRow>
                                 {headCells.map((cell: HeadCell, index) => {
                                     return (
@@ -328,7 +293,7 @@ const LoaderContainer = styled(FlexDivColumn)`
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
-    border-radius: 0 0 23px 23px;
+    border-radius: 23px;
 `;
 
 const SideImage = styled.img`

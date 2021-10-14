@@ -227,6 +227,16 @@ const LeaderboardPage: React.FC = () => {
                                     {t('options.leaderboard.profile-subtitle')}
                                 </Text>
                             )}
+                            {selectedTab === 'trades' && (
+                                <>
+                                    <LeaderboardTitle className="pale-grey">
+                                        {t('options.leaderboard.trades-title')}
+                                    </LeaderboardTitle>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trades-subtitle')}
+                                    </Text>
+                                </>
+                            )}
                         </div>
                         <InfoContainer>
                             <FlexDiv
