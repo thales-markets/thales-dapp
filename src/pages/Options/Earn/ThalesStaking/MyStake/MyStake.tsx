@@ -48,7 +48,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady,
     });
 
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
@@ -71,7 +71,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
 
     const totalThalesStaked = useMemo(
         () => Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking),
-        [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+        [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
     const myStakedShare = useMemo(() => (100 * Number(thalesStaked)) / totalThalesStaked, [
