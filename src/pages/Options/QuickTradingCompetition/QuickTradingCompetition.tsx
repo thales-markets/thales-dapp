@@ -26,6 +26,8 @@ import { useTranslation } from 'react-i18next';
 import { getSynthName } from 'utils/snxJSConnector';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
+import customMarkets from 'assets/images/filters/custom-markets.svg';
+import synthetix from 'assets/images/filters/synthetix.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import long from 'assets/images/filters/long.svg';
 import short from 'assets/images/filters/short.svg';
@@ -55,6 +57,8 @@ export enum CoinFilterEnum {
     All = 'all',
     Bitcoin = 'bitcoin',
     Ethereum = 'ethereum',
+    Custom = 'custom',
+    Snx = 'synthetix',
 }
 
 export enum OptionFilterEnum {
@@ -248,6 +252,12 @@ const QuickTradingCompetitionPage: React.FC<any> = () => {
                 case CoinFilterEnum.Ethereum:
                     filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sETH);
                     break;
+                case CoinFilterEnum.Custom:
+                    filteredOrders = filteredOrders.filter((order) => order.market.customMarket);
+                    break;
+                case CoinFilterEnum.Snx:
+                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === 'SNX');
+                    break;
             }
             switch (optionFilter) {
                 case OptionFilterEnum.Long:
@@ -331,7 +341,7 @@ const QuickTradingCompetitionPage: React.FC<any> = () => {
             <Background>
                 <Wrapper>
                     <MarketHeader route={ROUTES.Options.QuickTradingCompetition} />
-                    <Title style={{ alignSelf: 'flex-start' }}>{t('options.quick-trading.title')}</Title>
+                    <Title style={{ alignSelf: 'flex-start' }}>{t('options.competition-quick-trading.title')}</Title>
                     <QuickTradingCompetitionMobile
                         exchangeRates={exchangeRates}
                         tradingModeFilter={tradingModeFilter}
@@ -386,6 +396,8 @@ const QuickTradingCompetitionPage: React.FC<any> = () => {
                                     />
                                 );
                             })}
+                        </FlexDivCentered>
+                        <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                             {Object.values(OptionFilterEnum).map((filterItem) => {
                                 return filterItem === OptionFilterEnum.All ? null : (
                                     <UserFilter
@@ -481,6 +493,10 @@ const getCoinImage = (filter: CoinFilterEnum) => {
             return bitcoin;
         case CoinFilterEnum.Ethereum:
             return ethereum;
+        case CoinFilterEnum.Custom:
+            return customMarkets;
+        case CoinFilterEnum.Snx:
+            return synthetix;
     }
 };
 

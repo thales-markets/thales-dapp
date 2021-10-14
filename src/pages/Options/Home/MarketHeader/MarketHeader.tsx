@@ -25,8 +25,6 @@ import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-defau
 import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
 import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
-import quickCompetitionMarketsDefaultIcon from 'assets/images/sidebar/quick-trading-default.svg';
-import quickCompetitionMarketsSelectedIcon from 'assets/images/sidebar/quick-trading-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -149,8 +147,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTradingCompetition)}>
                         <SidebarItem
-                            imgSrc={quickCompetitionMarketsDefaultIcon}
-                            imgSrcHoverSelected={quickCompetitionMarketsSelectedIcon}
+                            imgSrc={competitionMarketsDefaultIcon}
+                            imgSrcHoverSelected={competitionMarketsSelectedIcon}
                             className={route === ROUTES.Options.QuickTradingCompetition ? 'selected' : ''}
                         >
                             <SidebarIcon />

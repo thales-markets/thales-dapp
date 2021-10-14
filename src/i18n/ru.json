@@ -152,6 +152,7 @@
             "maturity-label": "Реализация опционов",
             "leaderboard-label": "Лидеры",
             "quick-trading-label": "Быстрая торговля",
+            "quick-trading-label-competition": "Kонк. быстрая торговля",
             "earn-label": "THALES"
         },
         "coming-soon": "Скоро...",
@@ -749,6 +750,9 @@
                 "options-in-wallet-col": "Опционы в кошельке",
                 "actions-col": "Действия"
             }
+        },
+        "competition-quick-trading": {
+            "title": "Kонкурентная быстрая торговля"
         },
         "leaderboard": {
             "leaderboard-title": "Таблица лидеров",

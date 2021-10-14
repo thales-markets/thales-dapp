@@ -152,6 +152,7 @@
             "maturity-label": "期权到期",
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
+            "quick-trading-label-competition": "有竞争力的快速交易",
             "earn-label": "泰雷兹"
         },
         "coming-soon": "即将到来…",
@@ -749,6 +750,9 @@
                 "options-in-wallet-col": "已有期权",
                 "actions-col": "操作"
             }
+        },
+        "competition-quick-trading": {
+            "title": "有竞争力的快速交易"
         },
         "leaderboard": {
             "leaderboard-title": "排行榜",
