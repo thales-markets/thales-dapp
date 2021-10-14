@@ -205,7 +205,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                         <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                             <Button
                                 className="primary"
-                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                style={{ background: 'transparent', padding: '24px 24px' }}
                                 onClick={() => setShowAll(!showAll)}
                             >
                                 {showAll

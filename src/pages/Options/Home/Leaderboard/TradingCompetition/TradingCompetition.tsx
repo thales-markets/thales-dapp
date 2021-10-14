@@ -18,7 +18,7 @@ import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { TooltipIcon, TooltipAssetIcon } from 'pages/Options/CreateMarket/components';
+import { TooltipAssetIcon, TooltipIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
@@ -205,11 +205,18 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
 
     const userLeaderboardData = useMemo(() => {
-        const userData = leaderboardData.filter(
-            (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
-        );
-        return userData;
-    }, [walletAddress, networkId]);
+        if (verifiedTwitterAccountsQuery.isSuccess) {
+            return sortedData
+                .filter((leader: any) => verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim()))
+                .map((leader: any, index: number, self: any) => {
+                    if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
+                    return { rank: self.length - index, ...leader };
+                })
+                .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase());
+        } else {
+            return [];
+        }
+    }, [walletAddress, networkId, sortedData]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
