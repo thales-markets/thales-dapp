@@ -111,7 +111,17 @@ const QuickTradingPage: React.FC<any> = () => {
         const orders: ExtendedOrderItem[] = ordersQuery.isSuccess && ordersQuery.data ? ordersQuery.data : [];
         const myOrders: ExtendedOrderItem[] = myOrdersQuery.isSuccess && myOrdersQuery.data ? myOrdersQuery.data : [];
 
-        const optionsMarkets = [...orders.map((order) => order.market), ...myOrders.map((order) => order.market)];
+        const emptySet = new Set();
+
+        const optionsMarkets = [
+            ...orders.map((order) => order.market),
+            ...myOrders.map((order) => order.market),
+        ].filter((market) => {
+            if (emptySet.has(market.address)) return false;
+            emptySet.add(market.address);
+            return true;
+        });
+
         const userAssetsQuery = useUserAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
             enabled: isAppReady && isWalletConnected && optionsMarkets.length > 0 && !isBuyMode,
         });

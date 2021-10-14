@@ -34,6 +34,7 @@ export enum Filters {
     Trades = 'trades',
     Excercises = 'excercises',
     Unclaimed = 'unclaimed',
+    All = 'all',
 }
 
 type ProfileProps = {
@@ -46,7 +47,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
-    const [filter, setFilter] = useState<string>(Filters.Mints);
+    const [filter, setFilter] = useState<string>(Filters.All);
     const [displayAddress, setDisplayAddress] = useState<string>(walletAddress);
 
     const profilesQuery = useProfilesQuery(networkId, {
@@ -196,6 +197,16 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
             case Filters.Unclaimed:
                 pages = Math.ceil(Array.from(extractUnclaimedProfileData.keys()).length / rowsPerPage) || 1;
                 break;
+            case Filters.All:
+                pages =
+                    Math.ceil(
+                        (Array.from(extractMintsProfileData.keys()).length +
+                            Array.from(extractTradesProfileData.keys()).length +
+                            Array.from(extractExercisesProfileData.keys()).length +
+                            Array.from(extractUnclaimedProfileData.keys()).length) /
+                            rowsPerPage
+                    ) || 1;
+                break;
             default:
                 pages = 0;
         }
@@ -231,6 +242,24 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                 break;
             default:
                 data = [];
+        }
+
+        if (filter === Filters.All) {
+            data = Array.from(extractMintsProfileData.keys())
+                .map((key) => {
+                    return { type: Filters.Mints, market: key };
+                })
+                .concat(
+                    Array.from(extractTradesProfileData.keys()).map((key) => {
+                        return { type: Filters.Trades, market: key };
+                    }),
+                    Array.from(extractExercisesProfileData.keys()).map((key) => {
+                        return { type: Filters.Excercises, market: key };
+                    }),
+                    Array.from(extractUnclaimedProfileData.keys()).map((key) => {
+                        return { type: Filters.Unclaimed, market: key };
+                    })
+                );
         }
 
         return data.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
@@ -280,6 +309,12 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
             </FlexDivRow>
             <FlexDivRow style={{ flexDirection: 'row' }}>
                 <FilterWrapper>
+                    <FilterButton
+                        className={'leaderboard__profile__filter ' + (filter === Filters.All ? 'selected' : '')}
+                        onClick={() => setFilter(Filters.All)}
+                    >
+                        {'All'}
+                    </FilterButton>
                     <FilterButton
                         className={'leaderboard__profile__filter ' + (filter === Filters.Mints ? 'selected' : '')}
                         onClick={() => setFilter(Filters.Mints)}
@@ -422,6 +457,86 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                                         </StyledTableRow>
                                     );
                                 })}
+                            {filter === Filters.All &&
+                                profileDataMarketKeys
+                                    .filter((key) => key.type === Filters.Mints)
+                                    .map((key, index) => {
+                                        return (
+                                            <StyledTableRow key={index}>
+                                                <UsersMints
+                                                    key={index}
+                                                    market={
+                                                        profile?.mints
+                                                            .filter((mint: any) => mint.market.address === key.market)
+                                                            .map((mint: any) => mint.market)[0]
+                                                    }
+                                                    usersMints={extractMintsProfileData.get(key.market)}
+                                                />
+                                            </StyledTableRow>
+                                        );
+                                    })}
+                            {filter === Filters.All &&
+                                profileDataMarketKeys
+                                    .filter((key) => key.type === Filters.Trades)
+                                    .map((key, index) => {
+                                        return (
+                                            <StyledTableRow key={index}>
+                                                <UsersTrades
+                                                    key={index}
+                                                    market={
+                                                        profile?.trades
+                                                            .filter((trade: any) => trade.market.address === key.market)
+                                                            .map((trade: any) => trade.market)[0]
+                                                    }
+                                                    usersTrades={extractTradesProfileData.get(key.market)}
+                                                />
+                                            </StyledTableRow>
+                                        );
+                                    })}
+                            {filter === Filters.All &&
+                                profileDataMarketKeys
+                                    .filter((key) => key.type === Filters.Excercises)
+                                    .map((key, index) => {
+                                        return (
+                                            <StyledTableRow key={index}>
+                                                <UsersExercises
+                                                    key={index}
+                                                    market={
+                                                        profile?.excercises
+                                                            .filter(
+                                                                (excercise: any) =>
+                                                                    excercise.market.address === key.market
+                                                            )
+                                                            .map((excercise: any) => excercise.market)[0]
+                                                    }
+                                                    usersExercises={extractExercisesProfileData.get(key.market)}
+                                                />
+                                            </StyledTableRow>
+                                        );
+                                    })}
+
+                            {filter === Filters.All &&
+                                profileDataMarketKeys
+                                    .filter((key) => key.type === Filters.Unclaimed)
+                                    .map((key, index) => {
+                                        return (
+                                            <StyledTableRow key={index}>
+                                                <UsersUnclaimed
+                                                    key={index}
+                                                    market={
+                                                        profile?.unclaimed
+                                                            .filter(
+                                                                (unclaimed: any) =>
+                                                                    unclaimed.market.address === key.market
+                                                            )
+                                                            .map((unclaimed: any) => unclaimed.market)[0]
+                                                    }
+                                                    usersUnclaimed={extractUnclaimedProfileData.get(key.market)}
+                                                    userDisplay={walletAddress.toLowerCase() === displayAddress}
+                                                />
+                                            </StyledTableRow>
+                                        );
+                                    })}
                         </TableBody>
                         {profileDataMarketKeys.length !== 0 && (
                             <TableFooter>

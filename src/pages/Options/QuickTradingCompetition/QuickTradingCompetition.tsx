@@ -134,9 +134,17 @@ const QuickTradingCompetitionPage: React.FC<any> = () => {
                       );
                   })
                 : [];
-        console.log(orders.length);
 
-        const optionsMarkets = [...orders.map((order) => order.market), ...myOrders.map((order) => order.market)];
+        const emptySet = new Set();
+
+        const optionsMarkets = [
+            ...orders.map((order) => order.market),
+            ...myOrders.map((order) => order.market),
+        ].filter((market) => {
+            if (emptySet.has(market.address)) return false;
+            emptySet.add(market.address);
+            return true;
+        });
         const userAssetsQuery = useUserAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
             enabled: isAppReady && isWalletConnected && optionsMarkets.length > 0 && !isBuyMode,
         });
