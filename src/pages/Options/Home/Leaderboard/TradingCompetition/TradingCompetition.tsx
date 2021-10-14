@@ -205,18 +205,11 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
 
     const userLeaderboardData = useMemo(() => {
-        if (verifiedTwitterAccountsQuery.isSuccess) {
-            return sortedData
-                .filter((leader: any) => verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim()))
-                .map((leader: any, index: number, self: any) => {
-                    if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-                    return { rank: self.length - index, ...leader };
-                })
-                .filter((leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase());
-        } else {
-            return [];
-        }
-    }, [walletAddress, networkId, sortedData]);
+        const userData = leaderboardData.filter(
+            (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
+        );
+        return userData;
+    }, [walletAddress, networkId]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
