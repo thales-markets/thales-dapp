@@ -35,7 +35,7 @@ const useOngoingAirdropQuery = (
 
             const airdrop: StakingReward = {
                 isClaimPaused: paused || !isHashFileAvailable,
-                hasClaimRights: ongoingAirdropHash !== undefined,
+                hasClaimRights: ongoingAirdropHash !== undefined && ongoingAirdropHash.balance !== '0',
                 claimed: true,
                 period: period,
                 closingDate: Number(lastPeriodTimeStamp) * 1000 + Number(durationPeriod) * 1000,
