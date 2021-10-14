@@ -362,7 +362,7 @@ const Unstake: React.FC<Properties> = ({
                                     fontWeight={600}
                                 >
                                     {!isUnstakingInContract ? (
-                                        '7 days'
+                                        `7 ${t('options.common.time-remaining.days')}`
                                     ) : (
                                         <TimeRemaining
                                             onEnded={() => setUnstakingEnded(true)}
@@ -395,7 +395,7 @@ const Unstake: React.FC<Properties> = ({
                                     setAmountToUnstake(thalesStaked);
                                 }}
                             >
-                                MAX
+                                {t('common.max')}
                             </MaxButton>
                         </MaxButtonContainer>
                     </FlexDiv>

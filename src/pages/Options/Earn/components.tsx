@@ -141,7 +141,7 @@ export const PieChartContainer = styled.div`
 
 export const PieChartCenterDiv = styled.div`
     position: absolute;
-    top: 50%;
+    top: 44%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -151,6 +151,8 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
+    max-width: 200px;
+    white-space: break-spaces;
     text-align: center;
     margin-bottom: 5px;
     color: ${(props) => (props.disabled ? '#B8C6E5' : 'white')};

@@ -68,7 +68,9 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <Text>{t('options.home.market-card.strike-price')}</Text>
                             <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
                             <div style={{ visibility: isFinite(strikeAndAssetPriceDifference) ? 'visible' : 'hidden' }}>
-                                <Text>{t('options.home.market-card.difference-text')}:</Text>
+                                <Text style={{ fontSize: '13px' }}>
+                                    {t('options.home.market-card.difference-text')}:
+                                </Text>
                                 {currentAssetPrice > optionMarket.strikePrice ? (
                                     <FlexDivCentered
                                         style={{
@@ -238,7 +240,6 @@ const ViewMarket = styled.div`
 `;
 
 export const CryptoName = styled.p`
-    font-family: Titillium Web;
     font-weight: 600;
     font-size: 20px;
     line-height: 20px;
