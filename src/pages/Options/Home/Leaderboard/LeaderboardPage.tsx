@@ -11,6 +11,7 @@ import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -24,6 +25,8 @@ import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
 import Trades from './Trades';
 import TradingCompetition from './TradingCompetition';
+import { history } from 'utils/routes';
+import queryString from 'query-string';
 
 const ethEnabled = () => {
     if (window.ethereum) {
@@ -38,10 +41,11 @@ const LeaderboardPage: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [selectedTab, setSelectedTab] = useState('trading-competition');
+    const [selectedTab, setSelectedTab] = useState('');
     const [accVerified, setAccVerified] = useState(false);
     const [twitterAccountData, setTwitterAccountData] = useState({} as any);
     const [editMode, setEditMode] = useState(false);
+    const location = useLocation();
 
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
@@ -68,6 +72,16 @@ const LeaderboardPage: React.FC = () => {
     };
 
     useEffect(() => {
+        const selectedTabParameter = queryString.parse(location.search).selectedTab;
+
+        if (!selectedTabParameter) {
+            setSelectedTab('trading-competition');
+        } else {
+            setSelectedTab(selectedTabParameter);
+        }
+    }, []);
+
+    useEffect(() => {
         if (walletAddress) {
             const url = 'https://api.thales.market/twitter/' + walletAddress.toLowerCase();
             fetch(url).then(async (response) => {
@@ -78,6 +92,15 @@ const LeaderboardPage: React.FC = () => {
             });
         }
     }, [walletAddress]);
+
+    useEffect(() => {
+        history.push({
+            pathname: location.pathname,
+            search: queryString.stringify({
+                selectedTab: selectedTab,
+            }),
+        });
+    }, [selectedTab]);
 
     const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
         displayNamesQuery,
