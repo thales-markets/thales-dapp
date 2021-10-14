@@ -137,6 +137,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.competition-markets-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTradingCompetition)}>
+                        <SidebarItem
+                            imgSrc={tradeExerciseDefaultIcon}
+                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
+                            className={route === ROUTES.Options.QuickTradingCompetition ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.quick-trading-label-competition')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                     <DisplayContentsAnchor
                         href={buildHref(ROUTES.Options.HotMarkets)}
                         onClick={(event) => {
@@ -223,6 +233,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
+
                     <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}

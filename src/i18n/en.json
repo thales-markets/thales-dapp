@@ -152,6 +152,7 @@
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
+            "quick-trading-label-competition": "Competition orders",
             "earn-label": "THALES"
         },
         "coming-soon": "Coming soon...",
