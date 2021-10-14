@@ -50,7 +50,7 @@ export const Input = styled.input`
 
 export const InputLabel = styled.label`
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
     line-height: 16px;
     letter-spacing: 1px;
     color: #748bc6;

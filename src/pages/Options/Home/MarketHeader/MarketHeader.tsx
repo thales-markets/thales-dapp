@@ -35,6 +35,7 @@ import './media.scss';
 import { buildHref, history } from 'utils/routes';
 import { Overlay } from 'components/Header/Header';
 import queryString from 'query-string';
+import LanguageSelector from 'components/LanguageSelector';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -83,6 +84,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
             >
                 <FlexDiv className="dapp-header__logoWrapper">
                     <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
+                    <MobileLanguageSelectorContainer>
+                        <LanguageSelector />
+                    </MobileLanguageSelectorContainer>
                     <BurdgerIcon
                         className="dapp-header__logoWrapper__burger"
                         onClick={() =>
@@ -94,19 +98,23 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         src={burger}
                     />
                 </FlexDiv>
-
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                {!isWalletConnected ? (
-                    <Button
-                        className="primary dapp-header__connectWallet"
-                        style={{ fontSize: '16px', alignSelf: 'center' }}
-                        onClick={() => onboardConnector.connectWallet()}
-                    >
-                        {t('common.wallet.connect-your-wallet')}
-                    </Button>
-                ) : (
-                    <UserInfo />
-                )}
+                <FlexDiv>
+                    <DesktopLanguageSelectorContainer>
+                        <LanguageSelector />
+                    </DesktopLanguageSelectorContainer>
+                    {!isWalletConnected ? (
+                        <Button
+                            className="primary dapp-header__connectWallet"
+                            style={{ fontSize: '16px', alignSelf: 'center' }}
+                            onClick={() => onboardConnector.connectWallet()}
+                        >
+                            {t('common.wallet.connect-your-wallet')}
+                        </Button>
+                    ) : (
+                        <UserInfo />
+                    )}
+                </FlexDiv>
             </MarketHeaderWrapper>
             <Sidebar
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
@@ -288,6 +296,20 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
     );
 };
 
+const DesktopLanguageSelectorContainer = styled.div`
+    display: block;
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
+`;
+
+const MobileLanguageSelectorContainer = styled.div`
+    display: none;
+    @media screen and (max-width: 767px) {
+        display: block;
+    }
+`;
+
 const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     width: 100%;
     height: 100px;
@@ -308,7 +330,7 @@ const Sidebar = styled.nav`
     transition: width 0.3s ease;
     overflow: hidden;
     &:hover {
-        width: 256px;
+        width: 300px;
         span {
             display: block;
         }

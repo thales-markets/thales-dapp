@@ -100,7 +100,6 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
         fetchMarketData();
     }, [marketQuery.isSuccess]);
 
-    console.log(optionsMarket);
     return (
         <FlexDiv className="leaderboard__profile__rowBorder">
             <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
@@ -216,7 +215,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                         <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
                             <Button
                                 className="primary"
-                                style={{ background: 'transparent', padding: '24px 35px' }}
+                                style={{ background: 'transparent', padding: '24px 24px' }}
                                 onClick={() => setShowAll(!showAll)}
                             >
                                 {showAll

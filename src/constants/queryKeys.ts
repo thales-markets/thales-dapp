@@ -62,6 +62,7 @@ export const QUERY_KEYS = {
         ],
         OptionPrices: (marketAddress: string) => ['binaryOptions', marketAddress],
         MarketOrderBook: (optionsTokenAddress: string) => ['binaryOptions', 'marketOrderBook', optionsTokenAddress],
+        AllTrades: () => ['binaryOptions', 'allTrades'],
         Trades: (marketAddress: string) => ['binaryOptions', 'trades', marketAddress],
         UserTrades: (marketAddress: string, walletAddress: string) => [
             'binaryOptions',

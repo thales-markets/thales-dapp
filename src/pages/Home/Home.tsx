@@ -56,7 +56,7 @@ const Home: React.FC = () => {
             <Section id="faq" class={isAnimationAvailable ? 'hide-background' : ''}>
                 <Faq />
             </Section>
-            <Footer isAnimationAvailable={isAnimationAvailable}></Footer>
+            <Footer isAnimationAvailable={isAnimationAvailable} />
         </>
     );
 };

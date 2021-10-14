@@ -458,6 +458,7 @@
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
             "sellOptions": "Sell minted LONG/SHORT options",
             "summary": {
+                "title": "Market Summary",
                 "strikePrice": "Strike price",
                 "current": "Current market price",
                 "difference": "Difference between strike and current price",
@@ -756,12 +757,16 @@
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "The competition has officialy started on Oct 11 2021 | 10AM UTC",
-            "trading-comp-subtitle-3": "Countdown until the end of the competition: ",
+            "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10AM UTC",
+            "trading-comp-subtitle-3": "Click here to see markets eligible for trading competition",
             "trading-comp-subtitle-4": "For more information and guide on how to participate, please visit: ",
             "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
+            "trading-comp-countdown": "Countdown until the end of the competition: ",
             "profile-title": "Profile",
+            "trades-subtitle": "The tab shows you all trades sorted by latest timestamp.",
+            "trades-title": "Trades",
             "verify-twitter-account": "Verify account",
+            "verify": "Verify",
             "display-name": "Display Name",
             "address": "Address",
             "twitter-account": "My twitter account",
@@ -784,6 +789,19 @@
             },
             "board": {
                 "tab-title": "Leaderboard"
+            },
+            "trades": {
+                "tab-title": "Trades",
+                "no-trades-found": "No trades found",
+                "table": {
+                    "date-time-col": "date | time",
+                    "market-col": "market",
+                    "asset-col": "asset",
+                    "type-col": "type",
+                    "amount-col": "amount",
+                    "price-col": "price",
+                    "tx-status-col": "tx status"
+                }
             },
             "profile": {
                 "tab-title": "Profile",

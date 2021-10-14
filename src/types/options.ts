@@ -167,8 +167,15 @@ export type Trade = {
     makerAmount: number;
     takerAmount: number;
 };
+export type ExtendedTrade = Trade & {
+    market: string;
+    optionSide: OptionSide;
+    orderSide: OrderSide;
+    marketItem: HistoricalOptionsMarketInfo;
+};
 
 export type Trades = Trade[];
+export type ExtendedTrades = ExtendedTrade[];
 
 export type UsersAssets = {
     market: HistoricalOptionsMarketInfo;

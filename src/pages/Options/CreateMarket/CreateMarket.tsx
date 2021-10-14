@@ -732,7 +732,7 @@ export const CreateMarket: React.FC = () => {
                                             className="create-market-content__double-fields__field"
                                             style={{
                                                 marginBottom: 40,
-                                                flex: 3,
+                                                flex: 2,
                                                 opacity: isCreatingMarket || isMarketCreated ? 0.4 : 1,
                                             }}
                                         >
