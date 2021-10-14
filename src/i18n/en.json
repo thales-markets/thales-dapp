@@ -152,6 +152,7 @@
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
+            "quick-trading-label-competition": "Comp. quick trading",
             "earn-label": "THALES"
         },
         "coming-soon": "Coming soon...",
@@ -210,6 +211,7 @@
             "recently-added": "Recently Added",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
+            "synthetix": "Synthetix",
             "olympics": "Olympics",
             "competition": "Trading Competition",
             "custom": "Custom Markets",
@@ -750,6 +752,9 @@
                 "actions-col": "Actions"
             }
         },
+        "competition-quick-trading": {
+            "title": "Competition quick trading"
+        },
         "leaderboard": {
             "leaderboard-title": "Leaderboard",
             "leaderboard-subtitle": "This is Thales' overall leaderboard.",
@@ -762,6 +767,8 @@
             "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
             "trading-comp-countdown": "Countdown until the end of the competition: ",
             "profile-title": "Profile",
+            "trades-subtitle": "The tab shows you all trades sorted by latest timestamp.",
+            "trades-title": "Trades",
             "verify-twitter-account": "Verify account",
             "verify": "Verify",
             "display-name": "Display Name",
@@ -786,6 +793,19 @@
             },
             "board": {
                 "tab-title": "Leaderboard"
+            },
+            "trades": {
+                "tab-title": "Trades",
+                "no-trades-found": "No trades found",
+                "table": {
+                    "date-time-col": "date | time",
+                    "market-col": "market",
+                    "asset-col": "asset",
+                    "type-col": "type",
+                    "amount-col": "amount",
+                    "price-col": "price",
+                    "tx-status-col": "tx status"
+                }
             },
             "profile": {
                 "tab-title": "Profile",

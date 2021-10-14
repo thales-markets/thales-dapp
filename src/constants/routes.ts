@@ -10,6 +10,7 @@ export const ROUTES = {
         MarketMatch: '/markets/:marketAddress',
         Leaderboard: '/markets/leaderboard',
         QuickTrading: '/markets/quick-trading',
+        QuickTradingCompetition: '/markets/competition-orders',
         Token: '/token',
     },
 };

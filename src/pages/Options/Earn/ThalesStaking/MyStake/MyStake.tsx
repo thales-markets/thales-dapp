@@ -33,9 +33,6 @@ function getNumberLabel(labelValue: number) {
             : // Six Zeroes for Millions
             Math.abs(Number(labelValue)) >= 1.0e6
             ? Math.round(Math.abs(Number(labelValue)) / 1.0e6) + 'M'
-            : // Three Zeroes for Thousands
-            Math.abs(Number(labelValue)) >= 1.0e3
-            ? Math.round(Math.abs(Number(labelValue)) / 1.0e3) + 'K'
             : Math.abs(Number(labelValue))
     );
 }
@@ -51,7 +48,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady,
     });
 
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
@@ -70,11 +67,11 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
-    const APY = useMemo(() => getNumberLabel(aprToApy(APR, 52)), [APR]);
+    const APY = useMemo(() => getNumberLabel(Number(aprToApy(APR, 52).toFixed(2))), [APR]);
 
     const totalThalesStaked = useMemo(
         () => Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking),
-        [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+        [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
     const myStakedShare = useMemo(() => (100 * Number(thalesStaked)) / totalThalesStaked, [

@@ -152,6 +152,7 @@
             "maturity-label": "Реализация опционов",
             "leaderboard-label": "Лидеры",
             "quick-trading-label": "Быстрая торговля",
+            "quick-trading-label-competition": "Kонк. быстрая торговля",
             "earn-label": "THALES"
         },
         "coming-soon": "Скоро...",
@@ -750,6 +751,9 @@
                 "actions-col": "Действия"
             }
         },
+        "competition-quick-trading": {
+            "title": "Kонкурентная быстрая торговля"
+        },
         "leaderboard": {
             "leaderboard-title": "Таблица лидеров",
             "leaderboard-subtitle": "Это Фалеса общей таблице лидеров.",
@@ -757,10 +761,13 @@
             "trading-comp-title": "Торговое соревнование",
             "trading-comp-subtitle": "Это лидеры для первой торговой конкуренции Фалеса.",
             "trading-comp-subtitle-2": "Конкурс официально стартовал 11 октября 2021 года | 10:00 UTC",
-            "trading-comp-subtitle-3": "Обратный отсчет до конца конкурса: ",
+            "trading-comp-subtitle-3": "Щелкните здесь, чтобы увидеть рынки, имеющие право на участие в торговом соревновании.",
             "trading-comp-subtitle-4": "Для получения дополнительной информации и руководства о том, как принять участие, посетите: ",
             "profile-subtitle": "Вкладка показывает вам все ваши транзакции, а также транзакции других пользователей.",
+            "trading-comp-countdown": "Обратный отсчет до конца конкурса: ",
             "profile-title": "Профиль",
+            "trades-subtitle": "На вкладке показаны все сделки, отсортированные по последней отметке времени.",
+            "trades-title": "Сделки",
             "verify-twitter-account": "Подтвердить учетную запись",
             "verify": "Проверять",
             "display-name": "Отображаемое имя",
@@ -785,6 +792,19 @@
             },
             "board": {
                 "tab-title": "Таблица лидеров"
+            },
+            "trades": {
+                "tab-title": "Сделки",
+                "no-trades-found": "Сделок не найдено",
+                "table": {
+                    "date-time-col": "дата | время",
+                    "market-col": "рыночнный",
+                    "asset-col": "aктив",
+                    "type-col": "тип",
+                    "amount-col": "сумма",
+                    "price-col": "цена",
+                    "tx-status-col": "статус tx"
+                }
             },
             "profile": {
                 "tab-title": "Профиль",

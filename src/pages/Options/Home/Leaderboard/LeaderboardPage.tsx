@@ -11,6 +11,7 @@ import useUsersDisplayNamesQuery from 'queries/user/useUsersDisplayNamesQuery';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -22,7 +23,10 @@ import Web3 from 'web3';
 import MarketHeader from '../MarketHeader';
 import LeaderboardTable from './LeaderboardTable';
 import Profile from './Profile';
+import Trades from './Trades';
 import TradingCompetition from './TradingCompetition';
+import { history } from 'utils/routes';
+import queryString from 'query-string';
 
 const ethEnabled = () => {
     if (window.ethereum) {
@@ -37,10 +41,11 @@ const LeaderboardPage: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [selectedTab, setSelectedTab] = useState('trading-competition');
+    const [selectedTab, setSelectedTab] = useState('');
     const [accVerified, setAccVerified] = useState(false);
     const [twitterAccountData, setTwitterAccountData] = useState({} as any);
     const [editMode, setEditMode] = useState(false);
+    const location = useLocation();
 
     const displayNamesQuery = useUsersDisplayNamesQuery({
         enabled: isAppReady,
@@ -67,6 +72,16 @@ const LeaderboardPage: React.FC = () => {
     };
 
     useEffect(() => {
+        const selectedTabParameter = queryString.parse(location.search).selectedTab;
+
+        if (!selectedTabParameter) {
+            setSelectedTab('trading-competition');
+        } else {
+            setSelectedTab(selectedTabParameter);
+        }
+    }, []);
+
+    useEffect(() => {
         if (walletAddress) {
             const url = 'https://api.thales.market/twitter/' + walletAddress.toLowerCase();
             fetch(url).then(async (response) => {
@@ -77,6 +92,15 @@ const LeaderboardPage: React.FC = () => {
             });
         }
     }, [walletAddress]);
+
+    useEffect(() => {
+        history.push({
+            pathname: location.pathname,
+            search: queryString.stringify({
+                selectedTab: selectedTab,
+            }),
+        });
+    }, [selectedTab]);
 
     const displayNamesMap = useMemo(() => (displayNamesQuery.isSuccess ? displayNamesQuery.data : new Map()), [
         displayNamesQuery,
@@ -113,6 +137,11 @@ const LeaderboardPage: React.FC = () => {
             {
                 id: 'profile',
                 name: t('options.leaderboard.profile.tab-title'),
+                disabled: false,
+            },
+            {
+                id: 'trades',
+                name: t('options.leaderboard.trades.tab-title'),
                 disabled: false,
             },
         ],
@@ -221,6 +250,16 @@ const LeaderboardPage: React.FC = () => {
                                 <Text className="text-s ls25 lh24 pale-grey">
                                     {t('options.leaderboard.profile-subtitle')}
                                 </Text>
+                            )}
+                            {selectedTab === 'trades' && (
+                                <>
+                                    <LeaderboardTitle className="pale-grey">
+                                        {t('options.leaderboard.trades-title')}
+                                    </LeaderboardTitle>
+                                    <Text className="text-s ls25 lh24 pale-grey">
+                                        {t('options.leaderboard.trades-subtitle')}
+                                    </Text>
+                                </>
                             )}
                         </div>
                         <InfoContainer>
@@ -416,6 +455,7 @@ const LeaderboardPage: React.FC = () => {
                             )}
                             {selectedTab === 'leaderboard' && <LeaderboardTable displayNamesMap={displayNamesMap} />}
                             {selectedTab === 'profile' && <Profile displayNamesMap={displayNamesMap} />}
+                            {selectedTab === 'trades' && <Trades />}
                         </WidgetsContainer>
                     </MainContentContainer>
                 </FlexDivColumn>
@@ -444,9 +484,9 @@ const OptionsTabContainer = styled.div`
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     position: absolute;
     top: 0;
-    left: ${(props) => props.index * 33 + '% '};
+    left: ${(props) => props.index * 25 + '% '};
     background: linear-gradient(90deg, #141874, #04045a);
-    width: 33.3%;
+    width: 25%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
     transition: 0.5s;
     transition-property: color;

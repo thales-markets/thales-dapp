@@ -42,7 +42,7 @@ type LeaderboardTableProps = {
     displayNamesMap: Map<string, string>;
 };
 
-const defaultOrderBy = 4; // Volume
+const defaultOrderBy = 5; // NetProfit
 
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
@@ -55,7 +55,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     });
 
     const leaderboard = leaderboardQuery.data?.leaderboard
-        ? leaderboardQuery.data.leaderboard.sort((a, b) => b.volume - a.volume)
+        ? leaderboardQuery.data.leaderboard.sort((a, b) => b.netProfit - a.netProfit)
         : [];
 
     const [page, setPage] = useState(0);
@@ -176,11 +176,11 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     }, [rowsPerPage, memoizedPage, searchString, sortedData]);
 
     const userLeaderboardData = useMemo(() => {
-        const userData = leaderboardData.filter(
+        const userData = sortedData.filter(
             (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
         );
         return userData;
-    }, [walletAddress, networkId]);
+    }, [walletAddress, networkId, sortedData]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },
