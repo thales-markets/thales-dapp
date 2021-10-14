@@ -757,10 +757,13 @@
             "trading-comp-title": "交易大賽",
             "trading-comp-subtitle": "這是泰雷茲第一次交易競賽的排行榜.",
             "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| 世界标准时间上午 10 点",
-            "trading-comp-subtitle-3": "比赛结束倒计时：",
+            "trading-comp-subtitle-3": "单击此处查看符合交易竞争条件的市场",
             "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
             "profile-subtitle": "選項卡顯示您的所有交易以及其他用戶的交易.",
+            "trading-comp-countdown": "比赛结束倒计时：",
             "profile-title": "輪廓",
+            "trades-subtitle": "该选项卡显示按最新时间戳排序的所有交易。",
+            "trades-title": "交易",
             "verify-twitter-account": "驗證賬戶",
             "verify": "核實",
             "display-name": "顯示名稱",
@@ -785,6 +788,19 @@
             },
             "board": {
                 "tab-title": "排行榜"
+            },
+            "trades": {
+                "tab-title": "交易",
+                "no-trades-found": "没有找到交易",
+                "table": {
+                    "date-time-col": "日期-时间",
+                    "market-col": "市场",
+                    "asset-col": "资产",
+                    "type-col": "类型",
+                    "amount-col": "金额",
+                    "price-col": "价格",
+                    "tx-status-col": "发送状态"
+                }
             },
             "profile": {
                 "tab-title": "輪廓",

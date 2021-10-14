@@ -176,11 +176,11 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     }, [rowsPerPage, memoizedPage, searchString, sortedData]);
 
     const userLeaderboardData = useMemo(() => {
-        const userData = leaderboardData.filter(
+        const userData = sortedData.filter(
             (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()
         );
         return userData;
-    }, [walletAddress, networkId]);
+    }, [walletAddress, networkId, sortedData]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.table.rank-col'), sortable: false },

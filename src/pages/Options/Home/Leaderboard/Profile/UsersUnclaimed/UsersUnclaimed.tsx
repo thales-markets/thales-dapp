@@ -45,8 +45,6 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
 
-    console.log(usersUnclaimed);
-
     const marketQuery = useBinaryOptionsMarketQuery(market.address, {
         enabled: isAppReady,
     });
