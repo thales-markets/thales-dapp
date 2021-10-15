@@ -106,6 +106,9 @@ export const QUERY_KEYS = {
         ],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
     },
+    Swap: {
+        Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
+    },
 };
 
 export default QUERY_KEYS;
