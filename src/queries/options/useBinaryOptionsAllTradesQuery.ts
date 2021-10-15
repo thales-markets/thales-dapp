@@ -8,6 +8,7 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { keyBy } from 'lodash';
+import { sortOptionsMarkets } from 'utils/options';
 
 const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOptions<ExtendedTrades>) => {
     return useQuery<ExtendedTrades>(
@@ -70,7 +71,7 @@ const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOpt
                 })
             );
 
-            const optionsMarketsMap = keyBy(optionsMarkets, 'address');
+            const optionsMarketsMap = keyBy(sortOptionsMarkets(optionsMarkets, snxJSConnector.synthsMap), 'address');
 
             trades.forEach((trade: ExtendedTrade) => {
                 trade.marketItem = optionsMarketsMap[trade.market];

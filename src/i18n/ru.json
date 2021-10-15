@@ -211,6 +211,7 @@
             "recently-added": "Недавно добавленные",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
+            "synthetix": "Synthetix",
             "olympics": "Олимпийские игры",
             "competition": "Торговый конкурс",
             "custom": "рынки пользователей",
@@ -795,7 +796,11 @@
             },
             "trades": {
                 "tab-title": "Сделки",
-                "no-trades-found": "Сделок не найдено",
+                "only-trading-competition-checkbox": "Показать только торги торговыми соревнованиями",
+                "number-of-trades": "Кол-во сделок",
+                "volume": "Объем",
+                "view-all-trades": "Посмотреть все сделки",
+                "no-trades-found": "Сделки не найдены",
                 "table": {
                     "date-time-col": "дата | время",
                     "market-col": "рыночнный",
