@@ -280,6 +280,7 @@ const RewardsInfo = styled.span`
     }
     @media (max-width: 767px) {
         font-size: 14px;
+        display: flex;
         > * {
             &:nth-child(2) {
                 padding-left: 0;
