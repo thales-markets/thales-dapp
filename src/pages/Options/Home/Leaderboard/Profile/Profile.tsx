@@ -313,7 +313,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                         className={'leaderboard__profile__filter ' + (filter === Filters.All ? 'selected' : '')}
                         onClick={() => setFilter(Filters.All)}
                     >
-                        {'All'}
+                        {t('options.leaderboard.profile.filters.all')}
                     </FilterButton>
                     <FilterButton
                         className={'leaderboard__profile__filter ' + (filter === Filters.Mints ? 'selected' : '')}

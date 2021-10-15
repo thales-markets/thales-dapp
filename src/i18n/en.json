@@ -817,6 +817,7 @@
                 "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
                 "filters": {
+                    "all": "All",
                     "mints": "Mints",
                     "trades": "Trades",
                     "exercises": "Exercises",

@@ -817,6 +817,7 @@
                 "transaction-details": "用戶的交易詳情:",
                 "no-transactions": "沒有可用的交易",
                 "filters": {
+                    "all": "全部",
                     "mints": "薄荷糖",
                     "trades": "交易",
                     "exercises": "練習",
