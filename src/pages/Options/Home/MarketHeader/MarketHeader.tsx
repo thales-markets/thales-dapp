@@ -10,10 +10,8 @@ import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
 import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
-import trendingMarketsDefaultIcon from 'assets/images/sidebar/trending-default.svg';
 import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
-import trendingMarketsSelectedIcon from 'assets/images/sidebar/trending-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
 import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
@@ -120,6 +118,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     <DisplayContentsAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
                     </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Token)}>
+                        <SidebarItem
+                            imgSrc={earnDefaultIcon}
+                            imgSrcHoverSelected={earnSelectedIcon}
+                            className={route === ROUTES.Options.Token ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
                     <DisplayContentsAnchor
                         onClick={(event) => {
                             if (history.location.pathname === ROUTES.Options.Home) {
@@ -150,28 +158,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label-competition')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        href={buildHref(ROUTES.Options.HotMarkets)}
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ anchor: ['hot-markets'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                    >
-                        <SidebarItem
-                            imgSrc={trendingMarketsDefaultIcon}
-                            imgSrcHoverSelected={trendingMarketsSelectedIcon}
-                            className={route === ROUTES.Options.Home ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.trending-label')}</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor
@@ -271,16 +257,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Token)}>
-                        <SidebarItem
-                            imgSrc={earnDefaultIcon}
-                            imgSrcHoverSelected={earnSelectedIcon}
-                            className={route === ROUTES.Options.Token ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
-                        </SidebarItem>
-                    </DisplayContentsAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
