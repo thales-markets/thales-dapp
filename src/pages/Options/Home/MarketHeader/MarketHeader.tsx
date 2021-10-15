@@ -25,6 +25,8 @@ import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-defau
 import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
 import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
+import swapDefaultIcon from 'assets/images/sidebar/swap-default.svg';
+import swapSelectedIcon from 'assets/images/sidebar/swap-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -150,6 +152,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label-competition')}</SidebarText>
+                        </SidebarItem>
+                    </DisplayContentsAnchor>
+                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Swap)}>
+                        <SidebarItem
+                            imgSrc={swapDefaultIcon}
+                            imgSrcHoverSelected={swapSelectedIcon}
+                            className={route === ROUTES.Options.Swap ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>Swap</SidebarText>
                         </SidebarItem>
                     </DisplayContentsAnchor>
                     <DisplayContentsAnchor
