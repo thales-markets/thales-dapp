@@ -180,7 +180,7 @@ export const CreateMarket: React.FC = () => {
                         label: CRYPTO_CURRENCY_MAP.KNC,
                         value: CRYPTO_CURRENCY_MAP.KNC,
                     },
-                    ...Object.values(synths)
+                    ...Object.values(synths ?? [])
                         .filter((synth) => !synth.inverted && synth.name !== SYNTHS_MAP.sUSD)
                         .map((synth) => ({
                             label: synth.asset,
@@ -287,6 +287,7 @@ export const CreateMarket: React.FC = () => {
             BOMMContractWithSigner.estimateGas
                 .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
                 .then((gasEstimate: any) => {
+                    console.log('ok', gasEstimate);
                     setGasLimit(normalizeGasLimit(Number(gasEstimate)));
                     setUserHasEnoughFunds(true);
                 })
@@ -294,7 +295,7 @@ export const CreateMarket: React.FC = () => {
                     // if (e.data?.originalError.code === 3) {
                     //     setUserHasEnoughFunds(false);
                     // }
-                    console.log(e);
+                    console.log('erorr', e);
                     setGasLimit(null);
                 });
         } catch (e) {}

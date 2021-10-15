@@ -43,13 +43,13 @@ const App = () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
-                if (!snxJSConnector.initialized) {
-                    const provider = new ethers.providers.InfuraProvider(
-                        networkId,
-                        process.env.REACT_APP_INFURA_PROJECT_ID
-                    );
-                    snxJSConnector.setContractSettings({ networkId, provider });
-                }
+                // if (!snxJSConnector.initialized) {
+                //     const provider = new ethers.providers.InfuraProvider(
+                //         networkId,
+                //         process.env.REACT_APP_INFURA_PROJECT_ID
+                //     );
+                //     snxJSConnector.setContractSettings({ networkId, provider });
+                // }
                 dispatch(setAppReady());
             } catch (e) {
                 dispatch(setAppReady());
