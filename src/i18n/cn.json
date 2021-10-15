@@ -795,6 +795,10 @@
             },
             "trades": {
                 "tab-title": "交易",
+                "only-trading-competition-checkbox": "仅显示交易竞争交易",
+                "number-of-trades": "交易数量",
+                "volume": "交易量",
+                "view-all-trades": "查看所有交易",
                 "no-trades-found": "没有找到交易",
                 "table": {
                     "date-time-col": "日期-时间",

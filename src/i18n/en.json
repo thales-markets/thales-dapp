@@ -796,6 +796,10 @@
             },
             "trades": {
                 "tab-title": "Trades",
+                "only-trading-competition-checkbox": "Show only trading competition trades",
+                "number-of-trades": "Number of trades",
+                "volume": "Volume",
+                "view-all-trades": "View all trades",
                 "no-trades-found": "No trades found",
                 "table": {
                     "date-time-col": "date | time",
