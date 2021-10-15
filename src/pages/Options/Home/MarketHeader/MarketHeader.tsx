@@ -64,14 +64,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
     useMemo(() => {
-        if (showBurgerMenu !== BurgerState.Init) {
-            // const hero = document.getElementById('landing-hero');
-            // if (hero && showBurgerMenu === BurgerState.Show) {
-            //     hero.className += ' higher-z-index';
-            // }
-            // if (hero && showBurgerMenu === BurgerState.Hide) {
-            //     hero.className.replace(' higher-z-index', '');
-            // }
+        const htmlEl = document.getElementsByTagName('html')[0];
+        if (showBurgerMenu === BurgerState.Show) {
+            htmlEl.style.overflow = 'hidden';
+        } else {
+            htmlEl.style.overflow = 'visible';
         }
     }, [showBurgerMenu]);
 
