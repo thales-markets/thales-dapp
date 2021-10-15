@@ -167,6 +167,7 @@ export const LearnMore = styled.span<{ top: string }>`
     font-size: 16px;
     line-height: 24px;
     cursor: pointer;
+    z-index: 101;
     @media (max-width: 767px) {
         top: ${(props) => props.top};
     }
@@ -188,7 +189,7 @@ export const StyledMaterialTooltip = withStyles(() => ({
         lineHeight: '24px',
         letterSpacing: '0.4px',
         color: '#F6F6FE',
-        maxWidth: 700,
+        maxWidth: window.innerWidth < 768 ? 350 : 700,
     },
 }))(MaterialTooltip);
 
