@@ -348,7 +348,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             </GradientText>
                         </FlexDivColumnCentered>
                     </StyledPieChartCenterDiv>
-                    <LearnMore top="30%">
+                    <LearnMore top="29%">
                         <StyledMaterialTooltip
                             enterTouchDelay={1}
                             arrow={true}
@@ -428,6 +428,7 @@ const StakingRewardsAmountContainer = styled.div<{ gradient: string; marginRight
     @media (max-width: 767px) {
         margin-right: 0;
         margin-left: 0;
+        min-height: 90px;
     }
 `;
 
@@ -438,6 +439,10 @@ const StakingRewardsAmount = styled(FlexDivColumn)`
     border-radius: 15px;
     padding: 10px;
     text-align: center;
+    @media (max-width: 767px) {
+        min-height: 88px;
+        justify-content: center;
+    }
 `;
 
 const StakingRewardsTitle = styled.span`

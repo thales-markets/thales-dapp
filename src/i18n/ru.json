@@ -196,7 +196,7 @@
         "filters-labels": {
             "category": "Категория",
             "discover": "Откройте для себя",
-            "sort-by": "Сортировать по (всегда последняя)",
+            "sort-by": "Сортировать по",
             "option": "Опцион",
             "show": "Показать",
             "search-placeholder": "Попробовать ETH",
@@ -522,7 +522,7 @@
                 "maturity-phase-widget": "Использовать опционы",
                 "orderbook-widget": "Таблица заказов",
                 "trade-widget": "Торговля",
-                "chart-trading-view-widget  ": "Trading View",
+                "chart-trading-view-widget  ": "Торговая точка зрения",
                 "chart-options-price-widget": "Цена опционов",
                 "recent-transactions-widget": "Недавняя торговля на рынке",
                 "your-transactions-widget": "Ваша торговля",

@@ -321,6 +321,9 @@ export const FilterButton = styled.button`
         border: 2px solid #00f9ff;
         color: #b8c6e5;
     }
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
 `;
 
 export const SliderRange = styled.div<{ color?: string }>`

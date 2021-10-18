@@ -588,7 +588,7 @@ export const CreateMarket: React.FC = () => {
                     <MarketHeader route={ROUTES.Options.CreateMarket} />
                     <Text
                         className="create-market create-market-title"
-                        style={{ padding: '50px 0', alignSelf: 'flex-start' }}
+                        style={{ height: '100%', paddingTop: '50px', alignSelf: 'flex-start' }}
                     >
                         {t('options.create-market.title')}
                     </Text>
