@@ -63,7 +63,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ displayNamesMap }) 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
-    const [rowsPerPage, setRowsPerPage] = React.useState(15);
+    const [rowsPerPage, setRowsPerPage] = React.useState(20);
     const numberOfPages = Math.ceil(leaderboard.length / rowsPerPage) || 1;
 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);

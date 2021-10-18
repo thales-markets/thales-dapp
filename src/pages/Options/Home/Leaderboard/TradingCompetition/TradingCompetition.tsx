@@ -15,7 +15,6 @@ import down from 'assets/images/down.svg';
 import gold from 'assets/images/gold.svg';
 import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
-import up from 'assets/images/up.svg';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { TooltipAssetIcon, TooltipIcon } from 'pages/Options/CreateMarket/components';
@@ -78,7 +77,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     );
 
     const competition = competitionQuery.data
-        ? competitionQuery.data.competition.sort((a, b) => b.volume - a.volume)
+        ? competitionQuery.data.competition.sort((a, b) => b.netProfit - a.netProfit)
         : [];
 
     const [page, setPage] = useState(0);
@@ -86,7 +85,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
-    const [rowsPerPage, setRowsPerPage] = React.useState(15);
+    const [rowsPerPage, setRowsPerPage] = React.useState(20);
     const numberOfPages = Math.ceil(twitterAccountsData.length / rowsPerPage) || 1;
 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
@@ -98,24 +97,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     };
 
     const calcDirection = (cell: HeadCell) => {
-        if (orderBy === cell.id && cell.id !== 5) {
-            switch (orderDirection) {
-                case OrderDirection.NONE:
-                    setOrderDirection(OrderDirection.DESC);
-                    break;
-                case OrderDirection.DESC:
-                    setOrderDirection(OrderDirection.ASC);
-                    break;
-                case OrderDirection.ASC:
-                    setOrderDirection(OrderDirection.DESC);
-                    setOrderBy(defaultOrderBy);
-                    break;
-            }
-        } else {
-            setOrderBy(parseInt(cell.id.toString()));
-            setPage(0);
-            setOrderDirection(OrderDirection.DESC);
-        }
+        setOrderBy(parseInt(cell.id.toString()));
+        setPage(0);
+        setOrderDirection(OrderDirection.DESC);
     };
 
     const memoizedPage = useMemo(() => {
@@ -126,53 +110,24 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     }, [page, numberOfPages]);
 
     const sortedData: any = useMemo(() => {
-        return competition.sort((a, b) => {
-            if (orderBy === 5) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.netProfit - a.netProfit;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.netProfit - b.netProfit;
-                }
-            }
+        if (competition) {
+            const sorted = competition.sort((a, b) => {
+                if (orderBy === 5) {
+                    if (a.netProfit !== b.netProfit) return b.netProfit - a.netProfit;
 
-            if (orderBy === 6) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.gain - a.gain;
+                    if (a.trades !== b.trades) return b.trades - a.trades;
                 }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.gain - b.gain;
-                }
-            }
+                if (orderBy === 6) {
+                    if (a.gain !== b.gain) return b.gain - a.gain;
 
-            if (orderBy === 7) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.trades - a.trades;
+                    if (a.trades !== b.trades) return b.trades - a.trades;
                 }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.trades - b.trades;
-                }
-            }
-            if (orderBy === 8) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.volume - a.volume;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.volume - b.volume;
-                }
-            }
 
-            if (orderBy === 9) {
-                if (orderDirection === OrderDirection.DESC) {
-                    return b.investment - a.investment;
-                }
-                if (orderDirection === OrderDirection.ASC) {
-                    return a.investment - b.investment;
-                }
-            }
+                return 0;
+            });
 
-            return 0;
-        });
+            return sorted;
+        }
     }, [orderBy, orderDirection, competition]);
 
     const leaderboardData = useMemo(() => {
@@ -193,6 +148,11 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
 
                         return false;
                     } else return false;
+                })
+                .sort((a: any, b: any) => {
+                    if (a.trades === 0) return 1;
+                    if (b.trades === 0) return -1;
+                    return 0;
                 })
                 .map((leader: any, index: number, self: any) => {
                     if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
@@ -292,24 +252,6 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                     />
                                                 ) : (
                                                     <>
-                                                        <Arrow src={down} />
-                                                    </>
-                                                )}
-                                            </ArrowsWrapper>
-                                        )}
-                                        {cell.sortable && cell.id !== 5 && cell.id !== 6 && (
-                                            <ArrowsWrapper>
-                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                                    <Arrow
-                                                        src={
-                                                            orderDirection === OrderDirection.ASC
-                                                                ? upSelected
-                                                                : downSelected
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <>
-                                                        <Arrow src={up} />
                                                         <Arrow src={down} />
                                                     </>
                                                 )}
