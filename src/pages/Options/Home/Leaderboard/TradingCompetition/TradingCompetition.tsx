@@ -348,7 +348,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && (
+                                        {(leader as any).rank <= 20 && (leader as any).rank !== 0 && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                     </StyledTableCell>
@@ -445,7 +445,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && (
+                                        {(leader as any).rank <= 20 && (leader as any).rank !== 0 && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                     </StyledTableCell>
