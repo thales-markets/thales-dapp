@@ -1,7 +1,6 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
-import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import React, { useEffect, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
@@ -22,6 +21,7 @@ import { OptionsMarketInfo } from 'types/options';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import SPAAnchor from '../../../../../../components/SPAAnchor';
 
 type UsersUnclaimedProps = {
     usersUnclaimed: any[];
@@ -102,11 +102,11 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
     return (
         <FlexDiv className="leaderboard__profile__rowBorder">
             <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
-                <DisplayContentsAnchor
+                <SPAAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    href={buildOptionsMarketLink(market.address)}
+                    path={buildOptionsMarketLink(market.address)}
                 >
                     {market.customMarket ? (
                         <>
@@ -139,7 +139,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                             <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
                         </>
                     )}
-                </DisplayContentsAnchor>
+                </SPAAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>

@@ -10,7 +10,6 @@ import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey, formatCurrencyWithSign } from 'utils/formatters/number';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import ReactCountryFlag from 'react-country-flag';
-import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { COLORS } from 'constants/ui';
@@ -23,6 +22,7 @@ import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import SPAAnchor from '../../../../../../components/SPAAnchor';
 
 type UsersTradesProps = {
     usersTrades: UserTrade[];
@@ -103,11 +103,11 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
     return (
         <FlexDiv className="leaderboard__profile__rowBorder">
             <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
-                <DisplayContentsAnchor
+                <SPAAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    href={buildOptionsMarketLink(market.address)}
+                    path={buildOptionsMarketLink(market.address)}
                 >
                     {market.customMarket ? (
                         <>
@@ -140,7 +140,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                             <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
                         </>
                     )}
-                </DisplayContentsAnchor>
+                </SPAAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>

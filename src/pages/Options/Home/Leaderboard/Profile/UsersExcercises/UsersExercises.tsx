@@ -1,7 +1,6 @@
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { USD_SIGN } from 'constants/currency';
 import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
-import { DisplayContentsAnchor } from 'pages/Options/Home/MarketsTable/components';
 import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +22,7 @@ import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
 import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import SPAAnchor from '../../../../../../components/SPAAnchor';
 
 type UsersExercisesProps = {
     usersExercises: any[];
@@ -102,11 +102,11 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
     return (
         <FlexDiv className="leaderboard__profile__rowBorder">
             <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
-                <DisplayContentsAnchor
+                <SPAAnchor
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    href={buildOptionsMarketLink(market.address)}
+                    path={buildOptionsMarketLink(market.address)}
                 >
                     {market.customMarket ? (
                         <>
@@ -121,7 +121,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                                 <CustomIcon
                                     style={{ marginLeft: 32, width: 50, height: 50 }}
                                     src={eventToIcon(optionsMarket?.eventName as string)}
-                                ></CustomIcon>
+                                />
                             )}
                             <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
                                 {market.country ? market.country : optionsMarket?.country}
@@ -139,7 +139,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market 
                             <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
                         </>
                     )}
-                </DisplayContentsAnchor>
+                </SPAAnchor>
             </FlexDivColumnCentered>
             <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
                 <Row>
