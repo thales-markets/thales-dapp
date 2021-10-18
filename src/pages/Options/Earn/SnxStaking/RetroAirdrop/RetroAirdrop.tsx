@@ -1,15 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Button, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
@@ -26,13 +20,12 @@ import {
     TooltipLink,
     StyledInfoIcon,
 } from '../../components';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { normalizeGasLimit } from 'utils/network';
 import { refetchRetroAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import { Airdrop } from 'types/token';
 import { THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Quiz } from 'components/Quiz/Quiz';
 import { QuizQuestion } from 'components/Quiz/QuizQuestion';
@@ -47,8 +40,6 @@ const RetroAirdrop: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [retroAirdrop, setRetroAirdrop] = useState<Airdrop | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -62,17 +53,6 @@ const RetroAirdrop: React.FC = () => {
     const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     useEffect(() => {
         if (airdropQuery.isSuccess && airdropQuery.data) {
@@ -103,7 +83,7 @@ const RetroAirdrop: React.FC = () => {
     }, [isWalletConnected, isClaimAvailable]);
 
     const handleClaimRetroAirdrop = async () => {
-        if (isClaimAvailable && retroAirdrop && retroAirdrop.accountInfo && gasPrice !== null) {
+        if (isClaimAvailable && retroAirdrop && retroAirdrop.accountInfo) {
             const { retroAirdropContract } = snxJSConnector as any;
 
             try {
@@ -115,7 +95,6 @@ const RetroAirdrop: React.FC = () => {
                     retroAirdrop.accountInfo.rawBalance,
                     retroAirdrop.accountInfo.proof,
                     {
-                        gasPrice: gasPriceInWei(gasPrice),
                         gasLimit,
                     }
                 )) as ethers.ContractTransaction;

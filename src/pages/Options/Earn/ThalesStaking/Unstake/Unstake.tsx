@@ -1,21 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EarnSection, MaxButton, MaxButtonContainer, SectionContentContainer, SectionHeader } from '../../components';
 import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
+import { normalizeGasLimit } from '../../../../../utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from '../../../../../redux/modules/wallet';
-import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import NetworkFees from '../../../components/NetworkFees';
 import styled from 'styled-components';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
@@ -59,23 +52,10 @@ const Unstake: React.FC<Properties> = ({
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
 
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
     const [unstakeDurationPeriod, setUnstakeDurationPeriod] = useState<number>(7 * 24 * 60 * 60);
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
@@ -150,114 +130,105 @@ const Unstake: React.FC<Properties> = ({
         const { stakingThalesContract } = snxJSConnector as any;
         setShowTooltip(false);
 
-        if (gasPrice !== null) {
-            try {
-                setTxErrorMessage(null);
-                setIsUnstaking(true);
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const amount = ethers.utils.parseEther(amountToUnstake);
-                const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                });
-                const txResult = await tx.wait();
+        try {
+            setTxErrorMessage(null);
+            setIsUnstaking(true);
+            const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+            const amount = ethers.utils.parseEther(amountToUnstake);
+            const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
+                gasLimit,
+            });
+            const txResult = await tx.wait();
 
-                if (txResult && txResult.events) {
-                    dispatchMarketNotification(t('options.earn.thales-staking.unstake.cooldown-confirmation-message'));
-                    const rawData = txResult.events[txResult.events?.length - 1];
-                    if (rawData && rawData.decode) {
-                        const newThalesStaked = ethers.utils.parseEther(thalesStaked).sub(amount);
-                        refetchUserTokenTransactions(walletAddress, networkId);
-                        setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
-                        setUnstakingEnded(false);
-                        setIsUnstaking(false);
-                        setIsUnstakingInContract(true);
-                        setThalesStaked(ethers.utils.formatEther(newThalesStaked));
-                        setUnstakingAmount(ethers.utils.formatEther(amount));
-                    }
+            if (txResult && txResult.events) {
+                dispatchMarketNotification(t('options.earn.thales-staking.unstake.cooldown-confirmation-message'));
+                const rawData = txResult.events[txResult.events?.length - 1];
+                if (rawData && rawData.decode) {
+                    const newThalesStaked = ethers.utils.parseEther(thalesStaked).sub(amount);
+                    refetchUserTokenTransactions(walletAddress, networkId);
+                    setUnstakeEndTime(addDurationPeriod(new Date(), unstakeDurationPeriod));
+                    setUnstakingEnded(false);
+                    setIsUnstaking(false);
+                    setIsUnstakingInContract(true);
+                    setThalesStaked(ethers.utils.formatEther(newThalesStaked));
+                    setUnstakingAmount(ethers.utils.formatEther(amount));
                 }
-            } catch (e) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsUnstaking(false);
             }
+        } catch (e) {
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsUnstaking(false);
         }
     };
 
     const handleUnstakeThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
 
-        if (gasPrice !== null) {
-            try {
-                setTxErrorMessage(null);
-                setIsUnstaking(true);
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const tx = await stakingThalesContractWithSigner.unstake({
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit: (gasLimit as GasLimit[])?.find(
-                        (gas) => gas.label === t('options.earn.thales-staking.unstake.network-fee-unstake')
-                    )?.gasLimit,
-                });
-                const txResult = await tx.wait();
+        try {
+            setTxErrorMessage(null);
+            setIsUnstaking(true);
+            const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+            const tx = await stakingThalesContractWithSigner.unstake({
+                gasLimit: (gasLimit as GasLimit[])?.find(
+                    (gas) => gas.label === t('options.earn.thales-staking.unstake.network-fee-unstake')
+                )?.gasLimit,
+            });
+            const txResult = await tx.wait();
 
-                if (txResult && txResult.events) {
-                    dispatchMarketNotification(t('options.earn.thales-staking.unstake.unstake-confirmation-message'));
-                    const rawData = txResult.events[txResult.events?.length - 1];
-                    if (rawData && rawData.decode) {
-                        const newThalesBalance = ethers.utils
-                            .parseEther(thalesBalance)
-                            .add(ethers.utils.parseEther(unstakingAmount));
-                        setIsUnstaking(false);
-                        setIsUnstakingInContract(false);
-                        setThalesBalance(ethers.utils.formatEther(newThalesBalance));
-                        setUnstakingAmount('0');
-                        setAmountToUnstake('0');
-                        setUnstakingEnded(true);
-                        setGasLimit(null);
-                    }
+            if (txResult && txResult.events) {
+                dispatchMarketNotification(t('options.earn.thales-staking.unstake.unstake-confirmation-message'));
+                const rawData = txResult.events[txResult.events?.length - 1];
+                if (rawData && rawData.decode) {
+                    const newThalesBalance = ethers.utils
+                        .parseEther(thalesBalance)
+                        .add(ethers.utils.parseEther(unstakingAmount));
+                    setIsUnstaking(false);
+                    setIsUnstakingInContract(false);
+                    setThalesBalance(ethers.utils.formatEther(newThalesBalance));
+                    setUnstakingAmount('0');
+                    setAmountToUnstake('0');
+                    setUnstakingEnded(true);
+                    setGasLimit(null);
                 }
-            } catch (e) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsUnstaking(false);
             }
+        } catch (e) {
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsUnstaking(false);
         }
     };
 
     const handleCancelUnstakingThales = async () => {
         const { stakingThalesContract } = snxJSConnector as any;
 
-        if (gasPrice !== null) {
-            try {
-                setTxErrorMessage(null);
-                setIsCanceling(true);
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const tx = await stakingThalesContractWithSigner.cancelUnstake({
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit: (gasLimit as GasLimit[])?.find(
-                        (gas) => gas.label === t('options.earn.thales-staking.unstake.network-fee-cancel')
-                    )?.gasLimit,
-                });
-                const txResult = await tx.wait();
+        try {
+            setTxErrorMessage(null);
+            setIsCanceling(true);
+            const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+            const tx = await stakingThalesContractWithSigner.cancelUnstake({
+                gasLimit: (gasLimit as GasLimit[])?.find(
+                    (gas) => gas.label === t('options.earn.thales-staking.unstake.network-fee-cancel')
+                )?.gasLimit,
+            });
+            const txResult = await tx.wait();
 
-                if (txResult && txResult.events) {
-                    dispatchMarketNotification(t('options.earn.thales-staking.unstake.cancel-confirmation-message'));
-                    const rawData = txResult.events[txResult.events?.length - 1];
-                    if (rawData && rawData.decode) {
-                        // const newThalesStaked = ethers.utils.parseEther(thalesStaked).add(unstakingAmount);
-                        // setThalesStaked(ethers.utils.formatEther(newThalesStaked));
-                        refetchUserTokenTransactions(walletAddress, networkId);
-                        setIsUnstaking(false);
-                        setIsUnstakingInContract(false);
-                        setUnstakingAmount('0');
-                        setAmountToUnstake('0');
-                        setUnstakingEnded(true);
-                        setIsCanceling(false);
-                        setGasLimit(null);
-                    }
+            if (txResult && txResult.events) {
+                dispatchMarketNotification(t('options.earn.thales-staking.unstake.cancel-confirmation-message'));
+                const rawData = txResult.events[txResult.events?.length - 1];
+                if (rawData && rawData.decode) {
+                    // const newThalesStaked = ethers.utils.parseEther(thalesStaked).add(unstakingAmount);
+                    // setThalesStaked(ethers.utils.formatEther(newThalesStaked));
+                    refetchUserTokenTransactions(walletAddress, networkId);
+                    setIsUnstaking(false);
+                    setIsUnstakingInContract(false);
+                    setUnstakingAmount('0');
+                    setAmountToUnstake('0');
+                    setUnstakingEnded(true);
+                    setIsCanceling(false);
+                    setGasLimit(null);
                 }
-            } catch (e) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsCanceling(false);
             }
+        } catch (e) {
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsCanceling(false);
         }
     };
 
