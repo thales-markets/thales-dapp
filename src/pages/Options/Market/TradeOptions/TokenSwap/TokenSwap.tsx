@@ -225,6 +225,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 delete quote.protocolFee;
                 delete quote.minimumProtocolFee;
                 delete quote.value;
+                // delete doesn't work for gasPrice for some reason, set to null
+                quote.gasPrice = null;
                 await window.web3.eth.sendTransaction(quote);
                 refetchOrderbook(baseToken);
                 refetchTrades(optionsMarket.address);
