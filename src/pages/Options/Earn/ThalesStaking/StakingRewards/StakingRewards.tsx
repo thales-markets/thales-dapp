@@ -3,13 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
@@ -31,8 +25,7 @@ import {
     SectionHeader,
     StyledMaterialTooltip,
 } from '../../components';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import { normalizeGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
@@ -58,8 +51,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -85,17 +76,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
     });
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     useEffect(() => {
         if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
@@ -128,7 +108,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
 
     const handleClaimOngoingAirdrop = async () => {
         setShowTooltip(false);
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward && gasPrice !== null) {
+        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
@@ -138,7 +118,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     ongoingAirdrop.reward.rawBalance,
                     ongoingAirdrop.reward.proof,
                     {
-                        gasPrice: gasPriceInWei(gasPrice),
                         gasLimit,
                     }
                 )) as ethers.ContractTransaction;

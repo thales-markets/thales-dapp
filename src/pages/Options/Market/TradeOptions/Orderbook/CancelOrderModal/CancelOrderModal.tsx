@@ -1,17 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { OptionSide, OrderItem } from 'types/options';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { normalizeGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
@@ -40,24 +33,12 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
 
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
     const { exchangeProxy } = contractWrappers0xConnector;
 
     const isButtonDisabled = !isWalletConnected || isCanceling || !is0xReady;
@@ -98,21 +79,18 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     }, [isButtonDisabled]);
 
     const handleCancelOrder = async () => {
-        if (gasPrice !== null) {
-            setTxErrorMessage(null);
-            setIsCanceling(true);
+        setTxErrorMessage(null);
+        setIsCanceling(true);
 
-            try {
-                await exchangeProxy.cancelLimitOrder(order.rawOrder).sendTransactionAsync({
-                    from: walletAddress,
-                    gas: gasLimit !== null ? gasLimit : undefined,
-                    gasPrice: gasPriceInWei(gasPrice),
-                });
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsCanceling(false);
-            }
+        try {
+            await exchangeProxy.cancelLimitOrder(order.rawOrder).sendTransactionAsync({
+                from: walletAddress,
+                gas: gasLimit !== null ? gasLimit : undefined,
+            });
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsCanceling(false);
         }
     };
 

@@ -90,6 +90,7 @@
         "save": "保存",
         "network-fee-gas": "网络gas费",
         "gas-price-gwei": "gas（gwei）",
+        "gas-fee-info": "根据最新的基本费用和中等优先级估算的gas费用。",
         "gwei": "gwei",
         "transaction": {
             "view": "查看"

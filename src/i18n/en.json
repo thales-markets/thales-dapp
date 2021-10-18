@@ -90,6 +90,7 @@
         "save": "Save",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
+        "gas-fee-info": "Estimated gas fee based on the latest base fee and medium priority.",
         "gwei": "gwei",
         "transaction": {
             "view": "View"

@@ -34,6 +34,7 @@ export const QUERY_KEYS = {
     },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
+        EthGasPriceEip1559: ['network', 'ethGasPriceEip1559'],
     },
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
