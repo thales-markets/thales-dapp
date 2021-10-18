@@ -13,6 +13,7 @@ import bronze from 'assets/images/bronze.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import gold from 'assets/images/gold.svg';
+import angryThales from 'assets/images/angry_thales.gif';
 import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import { USD_SIGN } from 'constants/currency';
@@ -45,6 +46,8 @@ enum OrderDirection {
 type TradingCompetitionProps = {
     displayNamesMap: Map<string, string>;
 };
+
+const cheaters = ['0x81533c7938946e0605f6b3f0950381db1e0a81ea', '0x4ecc8a1c7e838bc47fc2cd1c7aac642fc5826cf4'];
 
 const defaultOrderBy = 5; // Netprofit
 
@@ -131,6 +134,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     }, [orderBy, orderDirection, competition]);
 
     const leaderboardData = useMemo(() => {
+        let variableIndex = 0;
         if (verifiedTwitterAccountsQuery.isSuccess) {
             return sortedData
                 .filter((leader: any) => {
@@ -150,13 +154,30 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                     } else return false;
                 })
                 .sort((a: any, b: any) => {
+                    if (cheaters.includes(a.walletAddress) && b.trades > 0) {
+                        return 1;
+                    }
+
+                    if (cheaters.includes(b.walletAddress) && a.trades > 0) {
+                        return -1;
+                    }
                     if (a.trades === 0) return 1;
                     if (b.trades === 0) return -1;
                     return 0;
                 })
                 .map((leader: any, index: number, self: any) => {
-                    if (orderDirection === OrderDirection.DESC) return { rank: index + 1, ...leader };
-                    return { rank: self.length - index, ...leader };
+                    if (cheaters.includes(leader.walletAddress)) {
+                        return { rank: 0, ...leader };
+                    }
+                    if (orderDirection === OrderDirection.DESC) {
+                        const leaderObject = { rank: variableIndex + 1, ...leader };
+                        variableIndex++;
+                        return leaderObject;
+                    }
+
+                    const leaderObject = { rank: self.length - index, ...leader };
+                    variableIndex++;
+                    return leaderObject;
                 })
                 .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
         } else {
@@ -314,9 +335,13 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             height: getHeight(leader, true),
                                             fontSize: 36,
                                             fontWeight: 'bold',
+                                            padding: (leader as any).rank === 0 ? 0 : '',
                                         }}
                                     >
-                                        {(leader as any).rank <= 3 && (
+                                        {(leader as any).rank === 0 && (
+                                            <img src={angryThales} style={{ width: 60, height: 60 }} />
+                                        )}
+                                        {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
                                             <img src={getMedal(leader)} style={{ width: 35, height: 48 }}></img>
                                         )}
 
@@ -399,10 +424,18 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             height: getHeight(leader),
                                             fontSize: 36,
                                             fontWeight: 'bold',
-                                            padding: (leader as any).rank === 2 || (leader as any).rank === 3 ? 0 : '',
+                                            padding:
+                                                (leader as any).rank === 2 || (leader as any).rank === 3
+                                                    ? 0
+                                                    : (leader as any).rank === 0
+                                                    ? 0
+                                                    : '',
                                         }}
                                     >
-                                        {(leader as any).rank <= 3 && (
+                                        {(leader as any).rank === 0 && (
+                                            <img src={angryThales} style={{ width: 60, height: 60 }} />
+                                        )}
+                                        {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
                                             <img
                                                 src={getMedal(leader)}
                                                 style={{ width: getMedalWidth(leader), height: getMedalHeight(leader) }}
@@ -435,6 +468,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     <StyledTableCell
                                         style={{
                                             fontWeight: 'bold',
+                                            textDecoration: (leader as any).rank === 0 ? 'line-through' : '',
                                         }}
                                     >
                                         <StyledLink
@@ -449,21 +483,35 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                 : leader.walletAddress}
                                         </StyledLink>
                                     </StyledTableCell>
-                                    <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                    <StyledTableCell
+                                        className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
+                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                    >
                                         {formatCurrencyWithSign(
                                             USD_SIGN,
                                             leader.netProfit < 0 ? Math.abs(leader.netProfit) : leader.netProfit,
                                             2
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
+                                    <StyledTableCell
+                                        className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
+                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                    >
                                         {Math.abs(leader.gain).toFixed(1)}%
                                     </StyledTableCell>
-                                    <StyledTableCell>{leader.trades}</StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell
+                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                    >
+                                        {leader.trades}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                    >
                                         {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
                                     </StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell
+                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                    >
                                         {formatCurrencyWithSign(USD_SIGN, leader.investment)}
                                     </StyledTableCell>
                                 </StyledTableRow>
