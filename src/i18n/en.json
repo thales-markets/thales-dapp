@@ -790,7 +790,9 @@
             },
             "trading-competition": {
                 "tab-title": "Trading competition",
-                "competition-period": "Selected period"
+                "competition-period": "Selected period",
+                "disqualified": "Disqualified",
+                "current-rank": "Your current rank"
             },
             "board": {
                 "tab-title": "Leaderboard"

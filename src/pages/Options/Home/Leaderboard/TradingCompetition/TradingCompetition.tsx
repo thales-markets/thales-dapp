@@ -13,12 +13,12 @@ import bronze from 'assets/images/bronze.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import gold from 'assets/images/gold.svg';
-import angryThales from 'assets/images/angry_thales.gif';
+import angryThales from 'assets/images/red-thales-head.png';
 import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { TooltipAssetIcon, TooltipIcon } from 'pages/Options/CreateMarket/components';
+import { TooltipAssetIcon, TooltipIcon, TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
@@ -36,6 +36,7 @@ import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
+import twitter from 'assets/images/twitter-blue-logo.svg';
 
 enum OrderDirection {
     NONE,
@@ -88,7 +89,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
-    const [rowsPerPage, setRowsPerPage] = React.useState(20);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
     const numberOfPages = Math.ceil(twitterAccountsData.length / rowsPerPage) || 1;
 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
@@ -121,6 +122,16 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                     if (a.trades !== b.trades) return b.trades - a.trades;
                 }
                 if (orderBy === 6) {
+                    if (a.gain.toString() === 'NaN') {
+                        const gain = (a.netProfit / a.investment) * 100;
+                        return b.gain - gain;
+                    }
+
+                    if (b.gain.toString() === 'NaN') {
+                        const gain = (b.netProfit / b.investment) * 100;
+                        return gain - a.gain;
+                    }
+
                     if (a.gain !== b.gain) return b.gain - a.gain;
 
                     if (a.trades !== b.trades) return b.trades - a.trades;
@@ -328,6 +339,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             );
                         })} */}
                         {userLeaderboardData.map((leader: any, index: any) => {
+                            const cheater = cheaters.includes(leader.walletAddress);
                             return (
                                 <StyledTableRow className="leaderboard__tableBody__yourRank" key={index}>
                                     <StyledTableCell
@@ -335,12 +347,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             height: getHeight(leader, true),
                                             fontSize: 36,
                                             fontWeight: 'bold',
-                                            padding: (leader as any).rank === 0 ? 0 : '',
+                                            padding: cheater ? 0 : '',
                                         }}
                                     >
-                                        {(leader as any).rank === 0 && (
-                                            <img src={angryThales} style={{ width: 60, height: 60 }} />
-                                        )}
+                                        {cheater && <img src={angryThales} style={{ width: 60, height: 60 }} />}
                                         {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
                                             <img src={getMedal(leader)} style={{ width: 35, height: 48 }}></img>
                                         )}
@@ -348,8 +358,13 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && (leader as any).rank !== 0 && (
+                                        {(leader as any).rank <= 20 && !cheater && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
+                                        )}
+                                        {cheater && (
+                                            <TooltipInfoIcon
+                                                title={t('options.leaderboard.trading-competition.disqualified')}
+                                            ></TooltipInfoIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -375,6 +390,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                                 account[0] === leader.walletAddress.toLowerCase()
                                                         )[0][1].avatar
                                                     }
+                                                    onError={(e: any) => (e.target.src = twitter)}
                                                 ></img>
                                                 <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                             </StyledLink>
@@ -385,7 +401,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        {'Your current rank'}
+                                        {cheaters.includes(leader.walletAddress)
+                                            ? t('options.leaderboard.trading-competition.disqualified')
+                                            : t('options.leaderboard.trading-competition.current-rank')}
                                     </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                         {formatCurrencyWithSign(
@@ -395,7 +413,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
-                                        {Math.abs(leader.gain).toFixed(1)}%
+                                        {leader.gain === 'NaN'
+                                            ? Math.abs((leader.netProfit / leader.investment) * 100).toFixed(1)
+                                            : Math.abs(leader.gain).toFixed(1)}
+                                        %
                                     </StyledTableCell>
                                     <StyledTableCell>{leader.trades}</StyledTableCell>
                                     <StyledTableCell>
@@ -414,6 +435,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             const twitterData = twitterAccountsData.filter(
                                 (account: any) => account[0] === leader.walletAddress.toLowerCase()
                             );
+                            const cheater = cheaters.includes(leader.walletAddress);
                             return (
                                 <StyledTableRow
                                     key={index}
@@ -427,14 +449,12 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             padding:
                                                 (leader as any).rank === 2 || (leader as any).rank === 3
                                                     ? 0
-                                                    : (leader as any).rank === 0
+                                                    : cheater
                                                     ? 0
                                                     : '',
                                         }}
                                     >
-                                        {(leader as any).rank === 0 && (
-                                            <img src={angryThales} style={{ width: 60, height: 60 }} />
-                                        )}
+                                        {cheater && <img src={angryThales} style={{ width: 60, height: 60 }} />}
                                         {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
                                             <img
                                                 src={getMedal(leader)}
@@ -445,8 +465,13 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && (leader as any).rank !== 0 && (
+                                        {(leader as any).rank <= 20 && !cheater && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
+                                        )}
+                                        {cheater && (
+                                            <TooltipInfoIcon
+                                                title={t('options.leaderboard.trading-competition.disqualified')}
+                                            ></TooltipInfoIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -460,6 +485,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                 <img
                                                     style={{ width: 35, height: 35, borderRadius: '50%' }}
                                                     src={twitterData[0][1].avatar}
+                                                    onError={(e: any) => (e.target.src = twitter)}
                                                 ></img>
                                                 <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                             </StyledLink>
@@ -468,13 +494,14 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                     <StyledTableCell
                                         style={{
                                             fontWeight: 'bold',
-                                            textDecoration: (leader as any).rank === 0 ? 'line-through' : '',
+                                            textDecoration: cheater ? 'line-through' : '',
                                         }}
                                     >
                                         <StyledLink
                                             href={getEtherscanAddressLink(networkId, leader.walletAddress)}
                                             target="_blank"
                                             rel="noreferrer"
+                                            className={`${cheater ? 'white-fade' : ''}`}
                                         >
                                             {displayNamesMap.get(leader.walletAddress)
                                                 ? displayNamesMap.get(leader.walletAddress)
@@ -484,8 +511,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         </StyledLink>
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
-                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                        className={`${leader.netProfit < 0 ? 'red' : 'green'} ${
+                                            cheater ? (leader.netProfit < 0 ? ' red-fade ' : ' green-fade ') : ''
+                                        }`}
+                                        style={{ textDecoration: cheater ? 'line-through' : '' }}
                                     >
                                         {formatCurrencyWithSign(
                                             USD_SIGN,
@@ -494,23 +523,31 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
-                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                        className={`${leader.netProfit < 0 ? 'red' : 'green'} ${
+                                            cheater ? (leader.netProfit < 0 ? ' red-fade ' : ' green-fade ') : ''
+                                        }`}
+                                        style={{ textDecoration: cheater ? 'line-through' : '' }}
                                     >
-                                        {Math.abs(leader.gain).toFixed(1)}%
+                                        {leader.gain === 'NaN'
+                                            ? Math.abs((leader.netProfit / leader.investment) * 100).toFixed(1)
+                                            : Math.abs(leader.gain).toFixed(1)}
+                                        %
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                        className={`${cheater ? 'white-fade' : ''}`}
+                                        style={{ textDecoration: cheater ? 'line-through' : '' }}
                                     >
                                         {leader.trades}
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                        className={`${cheater ? 'white-fade' : ''}`}
+                                        style={{ textDecoration: cheater ? 'line-through' : '' }}
                                     >
                                         {formatCurrencyWithSign(USD_SIGN, leader.volume, 2)}
                                     </StyledTableCell>
                                     <StyledTableCell
-                                        style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
+                                        className={`${cheater ? 'white-fade' : ''}`}
+                                        style={{ textDecoration: cheater ? 'line-through' : '' }}
                                     >
                                         {formatCurrencyWithSign(USD_SIGN, leader.investment)}
                                     </StyledTableCell>
@@ -522,7 +559,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         <TableFooter>
                             <TableRow>
                                 <PaginationWrapper
-                                    rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                    rowsPerPageOptions={[5, 10, 15, 20, 25, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
                                     labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                     count={competition.length}

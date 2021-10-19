@@ -27,13 +27,12 @@ import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-se
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
-import { DisplayContentsAnchor } from '../MarketsTable/components';
 import { useState } from 'react';
 import './media.scss';
-import { buildHref, history } from 'utils/routes';
 import { Overlay } from 'components/Header/Header';
-import queryString from 'query-string';
 import LanguageSelector from 'components/LanguageSelector';
+import SPAAnchor from '../../../../components/SPAAnchor';
+import { buildHref } from '../../../../utils/routes';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -78,7 +77,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 showCustomizeLayout={showCustomizeLayout}
             >
                 <FlexDiv className="dapp-header__logoWrapper">
-                    <Logo to="" className="dapp-header__logoWrapper__logo"></Logo>
+                    <Logo to="" className="dapp-header__logoWrapper__logo" />
                     <MobileLanguageSelectorContainer>
                         <LanguageSelector />
                     </MobileLanguageSelectorContainer>
@@ -115,10 +114,10 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 className={`dapp-header__nav ${showBurgerMenu === BurgerState.Show ? 'dapp-header__nav--show' : ''}`}
             >
                 <ItemsContainer>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Home)}>
+                    <SPAAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Token)}>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
                         <SidebarItem
                             imgSrc={earnDefaultIcon}
                             imgSrcHoverSelected={earnSelectedIcon}
@@ -127,20 +126,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ userFilter2: ['competition'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={buildHref(ROUTES.Options.CompetitionMarkets)}
-                    >
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.CompetitionMarkets)}>
                         <SidebarItem
                             imgSrc={competitionMarketsDefaultIcon}
                             imgSrcHoverSelected={competitionMarketsSelectedIcon}
@@ -149,8 +136,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.competition-markets-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTradingCompetition)}>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTradingCompetition)}>
                         <SidebarItem
                             imgSrc={competitionMarketsDefaultIcon}
                             imgSrcHoverSelected={competitionMarketsSelectedIcon}
@@ -159,20 +146,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label-competition')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ anchor: ['overview'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={buildHref(ROUTES.Options.Overview)}
-                    >
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Overview)}>
                         <SidebarItem
                             imgSrc={marketOverviewDefaultIcon}
                             imgSrcHoverSelected={marketOverviewSelectedIcon}
@@ -181,20 +156,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor
-                        onClick={(event) => {
-                            if (history.location.pathname === ROUTES.Options.Home) {
-                                event.preventDefault();
-                                history.push({
-                                    pathname: ROUTES.Options.Home,
-                                    search: queryString.stringify({ userFilter2: ['custom'] }),
-                                });
-                                return false;
-                            }
-                        }}
-                        href={buildHref(ROUTES.Options.CustomMarkets)}
-                    >
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
                         <SidebarItem
                             imgSrc={customMarketsDefaultIcon}
                             imgSrcHoverSelected={customMarketsSelectedIcon}
@@ -203,8 +166,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.custom-markets-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
                             imgSrcHoverSelected={createMarketSelectedIcon}
@@ -213,8 +176,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
                         <SidebarItem
                             imgSrc={leaderboardDefaultIcon}
                             imgSrcHoverSelected={leaderboardSelectedIcon}
@@ -223,9 +186,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
+                    </SPAAnchor>
 
-                    <DisplayContentsAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
+                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
                             imgSrcHoverSelected={tradeExerciseSelectedIcon}
@@ -234,7 +197,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
                         </SidebarItem>
-                    </DisplayContentsAnchor>
+                    </SPAAnchor>
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
@@ -264,7 +227,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     setShowBurdgerMenu(BurgerState.Hide);
                 }}
                 className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
-            ></Overlay>
+            />
         </FlexDivColumn>
     );
 };

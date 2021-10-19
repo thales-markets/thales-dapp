@@ -30,6 +30,7 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { COLORS } from 'constants/ui';
 import { marketHeading } from '../Trades';
+import SPAAnchor from '../../../../../../components/SPAAnchor';
 
 interface HeadCell {
     id: keyof ExtendedTrade[];
@@ -280,7 +281,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
 
 const CryptoName = styled.span``;
 
-export const StyledLink = styled.a`
+export const StyledLink = styled(SPAAnchor)`
     color: #f6f6fe;
     &:hover {
         color: #00f9ff;

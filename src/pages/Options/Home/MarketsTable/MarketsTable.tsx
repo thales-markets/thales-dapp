@@ -47,16 +47,9 @@ import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import { FlexDivCentered, Image } from '../../../../theme/common';
 import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from '../../../../utils/formatters/number';
 import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarketsDesktop';
-import {
-    Arrow,
-    ArrowsWrapper,
-    DisplayContentsAnchor,
-    PhaseLabel,
-    Star,
-    StyledTableCell,
-    TableHeaderLabel,
-} from './components';
+import { Arrow, ArrowsWrapper, PhaseLabel, Star, StyledTableCell, TableHeaderLabel } from './components';
 import Pagination from './Pagination';
+import SPAAnchor from '../../../../components/SPAAnchor';
 
 dotenv.config();
 
@@ -264,7 +257,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                 src={watchlistedMarkets?.includes(market.address) ? fullStar : star}
                                             />
                                         </StyledTableCell>
-                                        <DisplayContentsAnchor
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -319,8 +312,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     )}
                                                 </StyledAnchoredTableCell>
                                             )}
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -342,8 +335,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
                                                     : 'N/A'}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -400,8 +393,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     </FlexDivCentered>
                                                 )}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -410,8 +403,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <StyledAnchoredTableCell>
                                                 {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -420,8 +413,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <StyledAnchoredTableCell>
                                                 <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -430,8 +423,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             <StyledAnchoredTableCell>
                                                 {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
-                                        <DisplayContentsAnchor
+                                        </SPAAnchor>
+                                        <SPAAnchor
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
@@ -442,7 +435,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                                     {t(`options.phases.${market.phase}`)}
                                                 </PhaseLabel>
                                             </StyledAnchoredTableCell>
-                                        </DisplayContentsAnchor>
+                                        </SPAAnchor>
                                     </StyledTableRow>
                                 );
                             })}

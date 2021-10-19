@@ -790,7 +790,9 @@
             },
             "trading-competition": {
                 "tab-title": "Торговая конкуренция",
-                "competition-period": "Выбранный период"
+                "competition-period": "Выбранный период",
+                "disqualified": "Дисквалифицирован",
+                "current-rank": "Ваше текущее звание"
             },
             "board": {
                 "tab-title": "Таблица лидеров"
