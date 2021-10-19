@@ -13,7 +13,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
-    69: 'OPTIMISM-KOVAN',
+    69: 'KOVAN-OPTIMISTIC',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -74,3 +74,5 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
             return false;
     }
 };
+
+export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);

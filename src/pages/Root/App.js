@@ -3,7 +3,7 @@ import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import ROUTES from '../../constants/routes';
 import MainLayout from '../../components/MainLayout';
 import { QueryClientProvider } from 'react-query';
-import { getEthereumNetwork, isNetworkSupported, SUPPORTED_NETWORKS } from 'utils/network';
+import { getEthereumNetwork, isNetworkSupported, SUPPORTED_NETWORKS, getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
@@ -12,7 +12,6 @@ import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import queryConnector from 'utils/queryConnector';
 import Loader from 'components/Loader';
 import { initOnboard } from 'config/onboard';
-import { ethers } from 'ethers';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import onboardConnector from 'utils/onboardConnector';
@@ -23,6 +22,7 @@ import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import { loadProvider } from '@synthetixio/providers';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -44,13 +44,16 @@ const App = () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
-                // if (!snxJSConnector.initialized) {
-                //     const provider = new ethers.providers.InfuraProvider(
-                //         networkId,
-                //         process.env.REACT_APP_INFURA_PROJECT_ID
-                //     );
-                //     snxJSConnector.setContractSettings({ networkId, provider });
-                // }
+                if (!snxJSConnector.initialized) {
+                    const provider = loadProvider({
+                        networkId,
+                        infuraId: process.env.REACT_APP_INFURA_PROJECT_ID,
+                        provider: window.ethereum,
+                    });
+                    const useOvm = getIsOVM(networkId);
+
+                    snxJSConnector.setContractSettings({ networkId, provider, useOvm });
+                }
                 dispatch(setAppReady());
             } catch (e) {
                 dispatch(setAppReady());
@@ -70,18 +73,21 @@ const App = () => {
                 network: (networkId) => {
                     if (networkId && isNetworkSupported(networkId)) {
                         if (onboardConnector.onboard.getState().wallet.provider) {
-                            const provider = new ethers.providers.Web3Provider(
-                                onboardConnector.onboard.getState().wallet.provider
-                            );
+                            const provider = loadProvider({
+                                provider: onboardConnector.onboard.getState().wallet.provider,
+                            });
                             const signer = provider.getSigner();
+                            const useOvm = getIsOVM(networkId);
 
                             snxJSConnector.setContractSettings({
                                 networkId,
                                 provider,
                                 signer,
+                                useOvm,
                             });
                         } else {
-                            snxJSConnector.setContractSettings({ networkId });
+                            const useOvm = getIsOVM(networkId);
+                            snxJSConnector.setContractSettings({ networkId, useOvm });
                         }
 
                         onboardConnector.onboard.config({ networkId });
@@ -103,15 +109,19 @@ const App = () => {
                 },
                 wallet: async (wallet) => {
                     if (wallet.provider) {
-                        const provider = new ethers.providers.Web3Provider(wallet.provider);
+                        const provider = loadProvider({
+                            provider: wallet.provider,
+                        });
                         const signer = provider.getSigner();
                         const network = await provider.getNetwork();
                         const networkId = network.chainId;
+                        const useOvm = getIsOVM(networkId);
                         if (networkId && isNetworkSupported(networkId)) {
                             snxJSConnector.setContractSettings({
                                 networkId,
                                 provider,
                                 signer,
+                                useOvm,
                             });
 
                             dispatch(

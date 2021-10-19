@@ -9,13 +9,13 @@ import stakingThales from './contracts/stakingThales';
 import thalesContract from './contracts/thalesContract';
 import escrowThales from './contracts/escrowThales';
 import keyBy from 'lodash/keyBy';
-import initSynthetixJS, { Synth } from '@synthetixio/contracts-interface';
-import { SynthsMap, ContractSettings } from 'types/synthetix';
+import { synthetix, Synth, SynthetixJS, Config } from '@synthetixio/contracts-interface';
+import { SynthsMap } from 'types/synthetix';
 import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
 
 type SnxJSConnector = {
     initialized: boolean;
-    snxJS: ReturnType<typeof initSynthetixJS> | null;
+    snxJS: SynthetixJS | null;
     synths: Synth[];
     synthsMap: SynthsMap;
     provider: ethers.providers.Provider | undefined;
@@ -29,16 +29,17 @@ type SnxJSConnector = {
     stakingThalesContract?: ethers.Contract;
     thalesTokenContract?: ethers.Contract;
     escrowThalesContract?: ethers.Contract;
-    setContractSettings: (contractSettings: ContractSettings) => void;
+    setContractSettings: (contractSettings: Config) => void;
 };
 
 // @ts-ignore
 const snxJSConnector: SnxJSConnector = {
     initialized: false,
 
-    setContractSettings: function (contractSettings: ContractSettings) {
+    setContractSettings: function (contractSettings: Config) {
         this.initialized = true;
-        this.snxJS = initSynthetixJS(contractSettings);
+        console.log(contractSettings);
+        this.snxJS = synthetix(contractSettings);
         this.synths = this.snxJS.synths;
         this.synthsMap = keyBy(this.synths, 'name');
         this.signer = contractSettings.signer;
@@ -58,12 +59,16 @@ const snxJSConnector: SnxJSConnector = {
     },
 };
 
-const initializeContract = (contract: any, contractSettings: ContractSettings) =>
-    new ethers.Contract(contract.addresses[contractSettings.networkId], contract.abi, snxJSConnector.provider);
+const initializeContract = (contract: any, contractSettings: Config) =>
+    new ethers.Contract(contract.addresses[contractSettings.networkId || 1], contract.abi, snxJSConnector.provider);
 
-const conditionalInitializeContract = (contract: any, contractSettings: ContractSettings) =>
-    contract.addresses[contractSettings.networkId] !== 'TBD'
-        ? new ethers.Contract(contract.addresses[contractSettings.networkId], contract.abi, snxJSConnector.provider)
+const conditionalInitializeContract = (contract: any, contractSettings: Config) =>
+    contract.addresses[contractSettings.networkId || 1] !== 'TBD'
+        ? new ethers.Contract(
+              contract.addresses[contractSettings.networkId || 1],
+              contract.abi,
+              snxJSConnector.provider
+          )
         : undefined;
 
 export const getSynthName = (currencyKey: string) => {

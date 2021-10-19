@@ -30,7 +30,7 @@ import {
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+// import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import {
     Container,
     InputLabel,
@@ -95,7 +95,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+    //const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
@@ -145,7 +145,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const addressToApprove = 'aaaaa';
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
