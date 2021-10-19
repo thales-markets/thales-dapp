@@ -6,20 +6,20 @@ type FieldValidationMessageProps = {
     className?: string;
     onClick?: MouseEventHandler<HTMLAnchorElement> | undefined;
     style?: CSSProperties;
-    path: string;
+    href: string;
 };
 
-const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, path, style, className }) => {
+const SPAAnchor: React.FC<FieldValidationMessageProps> = ({ onClick, children, href, style, className }) => {
     return (
         <>
             <Anchor
                 className={className}
                 style={style}
-                href={path}
+                href={href}
                 onClick={(event) => {
                     event.preventDefault();
                     onClick && onClick(event);
-                    navigateTo(path);
+                    navigateTo(href);
                 }}
             >
                 {children}

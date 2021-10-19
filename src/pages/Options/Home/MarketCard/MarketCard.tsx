@@ -34,7 +34,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                     style={{
                         pointerEvents: optionMarket.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    path={buildOptionsMarketLink(optionMarket.address)}
+                    href={buildOptionsMarketLink(optionMarket.address)}
                 >
                     <Card id="market-card">
                         <Header>

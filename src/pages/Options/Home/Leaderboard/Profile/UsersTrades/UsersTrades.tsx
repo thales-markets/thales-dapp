@@ -107,7 +107,7 @@ const UsersTrades: React.FC<UsersTradesProps> = ({ usersTrades, market }) => {
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    path={buildOptionsMarketLink(market.address)}
+                    href={buildOptionsMarketLink(market.address)}
                 >
                     {market.customMarket ? (
                         <>

@@ -33,7 +33,7 @@ const MarketCreation: React.FC = () => {
                                 {t(`common.or`)}
                             </Text>
                             {
-                                <SPAAnchor path={buildHref(ROUTES.Options.CreateMarket)}>
+                                <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                                     <Button
                                         className="primary market-creation__createBtn"
                                         style={{ padding: '13px 24px', fontSize: 20 }}

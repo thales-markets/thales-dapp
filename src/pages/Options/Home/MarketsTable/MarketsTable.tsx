@@ -261,7 +261,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             {market.customMarket ? (
                                                 <StyledAnchoredTableCell
@@ -317,7 +317,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
                                                 {market.customMarket
@@ -340,7 +340,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
                                                 {market.customMarket ? (
@@ -398,7 +398,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
                                                 {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
@@ -408,7 +408,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
                                                 <TimeRemaining end={market.timeRemaining} fontSize={14} />
@@ -418,7 +418,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
                                                 {(market.phase === 'trading' && market.openOrders) ?? <StyledLoader />}
@@ -428,7 +428,7 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             style={{
                                                 pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                                             }}
-                                            path={buildOptionsMarketLink(market.address)}
+                                            href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
                                                 <PhaseLabel className={market.phase}>

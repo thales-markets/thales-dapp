@@ -106,7 +106,7 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market,
                     style={{
                         pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    path={buildOptionsMarketLink(market.address)}
+                    href={buildOptionsMarketLink(market.address)}
                 >
                     {market.customMarket ? (
                         <>

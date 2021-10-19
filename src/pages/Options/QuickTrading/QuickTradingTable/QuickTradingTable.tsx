@@ -47,6 +47,7 @@ import { EMPTY_VALUE } from 'constants/placeholder';
 import arrowDown from 'assets/images/arrow-down.svg';
 import arrowUp from 'assets/images/arrow-up.svg';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import SPAAnchor from '../../../../components/SPAAnchor';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];
@@ -531,7 +532,7 @@ const YellowDot = styled.span`
 
 const CryptoName = styled.span``;
 
-export const StyledLink = styled.a`
+export const StyledLink = styled(SPAAnchor)`
     color: #f6f6fe;
     &:hover {
         color: #00f9ff;
