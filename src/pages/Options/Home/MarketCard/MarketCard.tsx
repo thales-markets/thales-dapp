@@ -11,10 +11,11 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
-import { DisplayContentsAnchor, PhaseLabel } from '../MarketsTable/components';
+import { PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
+import SPAAnchor from '../../../../components/SPAAnchor';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -28,12 +29,12 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     return (
         <>
             {optionMarket && (
-                <DisplayContentsAnchor
+                <SPAAnchor
                     className="hot-markets__card"
                     style={{
                         pointerEvents: optionMarket.phase !== 'expiry' ? 'auto' : 'none',
                     }}
-                    href={buildOptionsMarketLink(optionMarket.address)}
+                    path={buildOptionsMarketLink(optionMarket.address)}
                 >
                     <Card id="market-card">
                         <Header>
@@ -132,7 +133,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <ViewMarket className="view-market">{t('options.home.market-card.view-market')}</ViewMarket>
                         </Footer>
                     </Card>
-                </DisplayContentsAnchor>
+                </SPAAnchor>
             )}
         </>
     );

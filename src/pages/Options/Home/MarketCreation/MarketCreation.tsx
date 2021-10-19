@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { DisplayContentsAnchor } from '../MarketsTable/components';
 import './media.scss';
-import { buildHref } from 'utils/routes';
+import SPAAnchor from '../../../../components/SPAAnchor';
+import { buildHref } from '../../../../utils/routes';
 
 const MarketCreation: React.FC = () => {
     const { t } = useTranslation();
@@ -33,14 +33,14 @@ const MarketCreation: React.FC = () => {
                                 {t(`common.or`)}
                             </Text>
                             {
-                                <DisplayContentsAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
+                                <SPAAnchor path={buildHref(ROUTES.Options.CreateMarket)}>
                                     <Button
                                         className="primary market-creation__createBtn"
                                         style={{ padding: '13px 24px', fontSize: 20 }}
                                     >
                                         {t('options.home.market-creation.create-market-button-label')}
                                     </Button>
-                                </DisplayContentsAnchor>
+                                </SPAAnchor>
                             }
                         </>
                     )}
