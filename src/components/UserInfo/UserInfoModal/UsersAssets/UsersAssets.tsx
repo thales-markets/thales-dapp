@@ -117,7 +117,7 @@ const UsersAssets: React.FC<UsersAssetsProps> = ({ optionsMarkets, walletAddress
                                 {formatCurrency(asset.balances.short)}
                             </Text>
 
-                            <LightTooltip title="Has options to exercise">
+                            <LightTooltip disableHoverListener={!hasFundsToExercise} title="Has options to exercise">
                                 <FlexDiv style={{ width: 15, height: 15 }}>
                                     {hasFundsToExercise && (
                                         <Image src={exerciseOptionIcon} style={{ width: 15, height: 15 }} />

@@ -9,6 +9,7 @@ import { ReactComponent as PlayIcon } from 'assets/images/play.svg';
 import { ReactComponent as PauseIcon } from 'assets/images/pause.svg';
 import Cookies from 'universal-cookie';
 import { LightTooltip } from 'pages/Options/Market/components';
+import LanguageSelector from 'components/LanguageSelector';
 
 enum BurgerState {
     Init,
@@ -91,6 +92,9 @@ const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
                 >
                     {t('header.links.faq')}
                 </CommunityLink>
+                <DesktopLanguageSelectorContainer>
+                    <LanguageSelector isLandingPage />
+                </DesktopLanguageSelectorContainer>
                 {isAnimationAvailable && (
                     <LightTooltip title="Toogle animation">
                         <>
@@ -120,6 +124,9 @@ const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
                     </Button>
                 </NavLink>
             </Links>
+            <MobileLanguageSelectorContainer>
+                <LanguageSelector isLandingPage />
+            </MobileLanguageSelectorContainer>
             <BurdgerIcon
                 onClick={() =>
                     setShowBurdgerMenu(showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show)
@@ -136,6 +143,20 @@ const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
         </HeaderWrapper>
     );
 };
+
+const DesktopLanguageSelectorContainer = styled.div`
+    display: block;
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
+`;
+
+const MobileLanguageSelectorContainer = styled.div`
+    display: none;
+    @media screen and (max-width: 767px) {
+        display: block;
+    }
+`;
 
 const HeaderWrapper = styled.div`
     padding: 0 75px;
@@ -295,7 +316,7 @@ const StyledPauseIcon = styled(PauseIcon)`
 const BurdgerIcon = styled.img`
     position: absolute;
     right: 30px;
-    top: 32px;
+    top: 34px;
     padding: 10px;
     @media (min-width: 768px) {
         display: none;

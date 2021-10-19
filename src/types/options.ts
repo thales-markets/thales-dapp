@@ -167,8 +167,15 @@ export type Trade = {
     makerAmount: number;
     takerAmount: number;
 };
+export type ExtendedTrade = Trade & {
+    market: string;
+    optionSide: OptionSide;
+    orderSide: OrderSide;
+    marketItem: HistoricalOptionsMarketInfo;
+};
 
 export type Trades = Trade[];
+export type ExtendedTrades = ExtendedTrade[];
 
 export type UsersAssets = {
     market: HistoricalOptionsMarketInfo;
@@ -204,6 +211,28 @@ export type ZeroExValidationError = {
 export type ExpirationOption = {
     value: OrderPeriod;
     label: string;
+};
+
+export type Flippening = {
+    ethPrice: number;
+    btcPrice: number;
+    ethMarketCap: number;
+    btcMarketCap: number;
+    ratio: number;
+};
+
+export type ETHBTCRatio = {
+    timestamp: number;
+    ratio: number;
+};
+
+export type ETHBTCRatios = ETHBTCRatio[];
+
+export type ETHBurned = {
+    total: number;
+    totalUsd: number;
+    yesterday: number;
+    yesterdayUsd: number;
 };
 
 export type ExpirationOptions = ExpirationOption[];

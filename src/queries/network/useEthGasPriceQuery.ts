@@ -3,7 +3,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 
 const ETH_GAS_STATION_API_URL = 'https://ethgasstation.info/json/ethgasAPI.json';
-const GAS_NOW_API_URL = 'https://www.gasnow.org/api/v3/gas/price';
+const GAS_NOW_API_URL = 'https://etherchain.org/api/gasnow';
 
 type EthGasStationResponse = {
     average: number;
@@ -55,8 +55,6 @@ const useEthGasPriceQuery = (options?: UseQueryOptions<GasPrices>) => {
                     average: Math.round(standard / 1e8 / 10),
                 };
             } catch (e) {
-                console.log(e);
-
                 const result = await axios.get<EthGasStationResponse>(ETH_GAS_STATION_API_URL);
                 const { average, fast, fastest } = result.data;
 

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
 import ComingSoon from 'components/ComingSoon';
 import styled from 'styled-components';
+import { WEEKLY_REWARDS_THALES } from '../../../../../constants/token';
 
 type Properties = {
     thalesStaked: string;
@@ -19,6 +20,24 @@ type Properties = {
     escrowedBalance: number;
     setEscrowedBalance: (escrowed: number) => void;
 };
+
+function numberWithCommas(x: string | number) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function getNumberLabel(labelValue: number) {
+    // Nine Zeroes for Billions
+    return numberWithCommas(
+        Math.abs(Number(labelValue)) >= 1.0e9
+            ? Math.round(Math.abs(Number(labelValue)) / 1.0e9) + 'B'
+            : // Six Zeroes for Millions
+            Math.abs(Number(labelValue)) >= 1.0e6
+            ? Math.round(Math.abs(Number(labelValue)) / 1.0e6) + 'M'
+            : Math.abs(Number(labelValue))
+    );
+}
+
+const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 / frequency) ** frequency - 1) * 100;
 
 const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowedBalance, setEscrowedBalance }) => {
     const { t } = useTranslation();
@@ -29,22 +48,56 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady,
     });
 
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
+    const [fixedPeriodReward, setFixedPeriodReward] = useState<string>('0');
+    const [totalStakedAmount, setTotalStakedAmount] = useState<string>('0');
+    const [totalEscrowedRewards, setTotalEscrowedRewards] = useState<string>('0');
+    const [totalEscrowBalanceNotIncludedInStaking, setTotalEscrowBalanceNotIncludedInStaking] = useState<string>('0');
+
+    const APR = useMemo(
+        () =>
+            (Number(fixedPeriodReward) * 52 * 100) /
+            (Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking)),
+        [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+    );
+
+    const APY = useMemo(() => getNumberLabel(Number(aprToApy(APR, 52).toFixed(2))), [APR]);
+
+    const totalThalesStaked = useMemo(
+        () => Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking),
+        [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
+    );
+
+    const myStakedShare = useMemo(() => (100 * Number(thalesStaked)) / totalThalesStaked, [
+        thalesStaked,
+        totalThalesStaked,
+    ]);
+
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * WEEKLY_REWARDS_THALES, [myStakedShare]);
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { thalesStaked, unstakingAmount } = stakingThalesQuery.data;
+            const { thalesStaked, unstakingAmount, fixedPeriodReward, totalStakedAmount } = stakingThalesQuery.data;
             setThalesStaked(thalesStaked);
             setUnstakingAmount(unstakingAmount);
+            setFixedPeriodReward(fixedPeriodReward);
+            setTotalStakedAmount(totalStakedAmount);
         }
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
-            setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
+            const {
+                escrowedBalance,
+                totalEscrowedRewards,
+                totalEscrowBalanceNotIncludedInStaking,
+            } = escrowThalesQuery.data;
+            setEscrowedBalance(escrowedBalance);
+            setTotalEscrowedRewards(totalEscrowedRewards);
+            setTotalEscrowBalanceNotIncludedInStaking(totalEscrowBalanceNotIncludedInStaking);
         }
     }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
 
@@ -60,7 +113,14 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
             orderOnTablet={3}
             style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}
         >
-            <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
+            <SectionHeader>
+                {t('options.earn.thales-staking.my-stake.my-stake')}
+                {!tokenStakingDisabled && (
+                    <RewardsInfo>
+                        <span>APR: {APR.toFixed(2)}%</span> <span>APY: {APY}%</span>
+                    </RewardsInfo>
+                )}
+            </SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
                 <>
@@ -120,6 +180,51 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
                             {t('options.earn.thales-staking.my-stake.not-eligible-message')}
                         </ClaimMessage>
                     )}
+                    <SectionHeader style={{ fontSize: '18px' }}>
+                        {t('options.earn.thales-staking.my-stake.global-staking-stats')}
+                    </SectionHeader>
+                    <MyStakeContent style={{ paddingTop: '0' }}>
+                        <GlobalStatsInfo>
+                            <StyledClaimTitle fontSize={15}>
+                                {t('options.earn.thales-staking.my-stake.total-thales-staked')}:
+                            </StyledClaimTitle>
+                            <GradientText
+                                gradient={
+                                    notEligibleForStakingRewards
+                                        ? '#ffcc00'
+                                        : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                }
+                                fontSize={23}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
+                            </GradientText>
+                        </GlobalStatsInfo>
+                        <GlobalStatsInfo>
+                            <StyledClaimTitle fontSize={15}>
+                                {t('options.earn.thales-staking.my-stake.my-staked-share')}:
+                            </StyledClaimTitle>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={23}
+                                fontWeight={600}
+                            >
+                                {myStakedShare.toFixed(2)}%
+                            </GradientText>
+                        </GlobalStatsInfo>
+                        <GlobalStatsInfo>
+                            <StyledClaimTitle fontSize={15}>
+                                {t('options.earn.thales-staking.my-stake.estimated-rewards')}:
+                            </StyledClaimTitle>
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={23}
+                                fontWeight={600}
+                            >
+                                {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
+                            </GradientText>
+                        </GlobalStatsInfo>
+                    </MyStakeContent>
                 </>
             )}
         </EarnSection>
@@ -131,7 +236,7 @@ const MyStakeContent = styled(SectionContent)`
     height: 100%;
     @media (max-width: 767px) {
         flex-direction: column;
-        padding-top: 20px;
+        padding-top: 45px !important;
     }
 `;
 
@@ -159,9 +264,36 @@ const UnstakingTitle = styled.div`
     top: 0;
 `;
 
-const StyledClaimTitle = styled(ClaimTitle)`
+const StyledClaimTitle = styled(ClaimTitle)<{ fontSize?: number }>`
     position: relative;
     padding-bottom: 10px;
+    font-size: ${(props) => (props.fontSize ?? '17') + 'px'};
+`;
+
+const RewardsInfo = styled.span`
+    font-weight: normal;
+    font-size: 18px;
+    > * {
+        &:nth-child(2) {
+            padding-left: 35px;
+        }
+    }
+    @media (max-width: 767px) {
+        font-size: 14px;
+        display: flex;
+        width: 50%;
+        > * {
+            &:nth-child(2) {
+                padding-left: 0;
+            }
+        }
+    }
+`;
+
+const GlobalStatsInfo = styled(FlexDivColumnCentered)`
+    @media (max-width: 767px) {
+        padding-bottom: 20px;
+    }
 `;
 
 export default MyStake;

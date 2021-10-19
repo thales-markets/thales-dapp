@@ -1,22 +1,15 @@
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
-import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
+import { isMainNet, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -82,8 +75,6 @@ const MintOptions: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [amount, setAmount] = useState<number | string>('');
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isMinting, setIsMinting] = useState<boolean>(false);
@@ -120,17 +111,6 @@ const MintOptions: React.FC = () => {
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     const isAmountEntered = Number(amount) > 0;
     const insufficientBalance = Number(amount) > sUSDBalance || !sUSDBalance;
@@ -229,92 +209,86 @@ const MintOptions: React.FC = () => {
     }, [isButtonDisabled, amount, hasAllowance, walletAddress]);
 
     const handleAllowance = async () => {
-        if (gasPrice !== null) {
-            const {
-                contracts: { SynthsUSD },
-            } = snxJSConnector.snxJS as any;
-            const { binaryOptionsMarketManagerContract } = snxJSConnector;
-            try {
-                setIsAllowing(true);
-                const gasEstimate = await SynthsUSD.estimateGas.approve(
-                    binaryOptionsMarketManagerContract.address,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await SynthsUSD.approve(
-                    binaryOptionsMarketManagerContract.address,
-                    ethers.constants.MaxUint256,
-                    {
-                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                        gasPrice: gasPriceInWei(gasPrice),
-                    }
-                )) as ethers.ContractTransaction;
-
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setAllowance(true);
-                    setIsAllowing(false);
+        const {
+            contracts: { SynthsUSD },
+        } = snxJSConnector.snxJS as any;
+        const { binaryOptionsMarketManagerContract } = snxJSConnector;
+        try {
+            setIsAllowing(true);
+            const gasEstimate = await SynthsUSD.estimateGas.approve(
+                binaryOptionsMarketManagerContract.address,
+                ethers.constants.MaxUint256
+            );
+            const tx = (await SynthsUSD.approve(
+                binaryOptionsMarketManagerContract.address,
+                ethers.constants.MaxUint256,
+                {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
                 }
-            } catch (e) {
-                console.log(e);
+            )) as ethers.ContractTransaction;
+
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setAllowance(true);
                 setIsAllowing(false);
             }
+        } catch (e) {
+            console.log(e);
+            setIsAllowing(false);
         }
     };
     const handleMint = async () => {
-        if (gasPrice !== null) {
-            try {
-                setTxErrorMessage(null);
-                setIsMinting(true);
-                const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-                const mintAmount = ethers.utils.parseEther(amount.toString());
-                const tx = (await BOMContractWithSigner.mint(mintAmount, {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                })) as ethers.ContractTransaction;
+        try {
+            setTxErrorMessage(null);
+            setIsMinting(true);
+            const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
+            const mintAmount = ethers.utils.parseEther(amount.toString());
+            const tx = (await BOMContractWithSigner.mint(mintAmount, {
+                gasLimit,
+            })) as ethers.ContractTransaction;
 
+            dispatch(
+                addOptionsPendingTransaction({
+                    optionTransaction: {
+                        market: optionsMarket.address,
+                        currencyKey: optionsMarket.currencyKey,
+                        account: walletAddress,
+                        hash: tx.hash || '',
+                        type: 'mint',
+                        amount: mintedAmount,
+                        side: 'long',
+                    },
+                })
+            );
+
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                if (!sellShort && !sellLong) {
+                    dispatchMarketNotification(
+                        t('options.market.trade-options.mint.confirm-button.confirmation-message')
+                    );
+                }
                 dispatch(
-                    addOptionsPendingTransaction({
-                        optionTransaction: {
-                            market: optionsMarket.address,
-                            currencyKey: optionsMarket.currencyKey,
-                            account: walletAddress,
-                            hash: tx.hash || '',
-                            type: 'mint',
-                            amount: mintedAmount,
-                            side: 'long',
-                        },
+                    updateOptionsPendingTransactionStatus({
+                        hash: txResult.transactionHash,
+                        status: 'confirmed',
                     })
                 );
 
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    if (!sellShort && !sellLong) {
-                        dispatchMarketNotification(
-                            t('options.market.trade-options.mint.confirm-button.confirmation-message')
-                        );
-                    }
-                    dispatch(
-                        updateOptionsPendingTransactionStatus({
-                            hash: txResult.transactionHash,
-                            status: 'confirmed',
-                        })
-                    );
-
-                    if (sellLong) {
-                        await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
-                    }
-                    if (sellShort) {
-                        await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
-                    }
-                    refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
-                    resetForm();
+                if (sellLong) {
+                    await handleSubmitOrder(longPrice, optionsMarket.longAddress, longAmount, true);
                 }
-                setIsMinting(false);
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsMinting(false);
+                if (sellShort) {
+                    await handleSubmitOrder(shortPrice, optionsMarket.shortAddress, shortAmount, false);
+                }
+                refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);
+                resetForm();
             }
+            setIsMinting(false);
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsMinting(false);
         }
     };
 
@@ -417,32 +391,22 @@ const MintOptions: React.FC = () => {
     }, [walletAddress, isWalletConnected, sellLong, hasLongAllowance]);
 
     const handleLongAllowance = async () => {
-        if (gasPrice !== null) {
-            const erc20Instance = new ethers.Contract(
-                optionsMarket.longAddress,
-                erc20Contract.abi,
-                snxJSConnector.signer
-            );
-            try {
-                setIsLongAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                })) as ethers.ContractTransaction;
+        const erc20Instance = new ethers.Contract(optionsMarket.longAddress, erc20Contract.abi, snxJSConnector.signer);
+        try {
+            setIsLongAllowing(true);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
+            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+            })) as ethers.ContractTransaction;
 
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setLongAllowance(true);
-                    setIsLongAllowing(false);
-                }
-            } catch (e) {
-                console.log(e);
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setLongAllowance(true);
                 setIsLongAllowing(false);
             }
+        } catch (e) {
+            console.log(e);
+            setIsLongAllowing(false);
         }
     };
 
@@ -475,31 +439,21 @@ const MintOptions: React.FC = () => {
     }, [walletAddress, isWalletConnected, sellShort, hasShortAllowance]);
 
     const handleShortAllowance = async () => {
-        if (gasPrice !== null) {
-            const erc20Instance = new ethers.Contract(
-                optionsMarket.shortAddress,
-                erc20Contract.abi,
-                snxJSConnector.signer
-            );
-            try {
-                setIsShortAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                })) as ethers.ContractTransaction;
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setShortAllowance(true);
-                    setIsShortAllowing(false);
-                }
-            } catch (e) {
-                console.log(e);
+        const erc20Instance = new ethers.Contract(optionsMarket.shortAddress, erc20Contract.abi, snxJSConnector.signer);
+        try {
+            setIsShortAllowing(true);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
+            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+            })) as ethers.ContractTransaction;
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setShortAllowance(true);
                 setIsShortAllowing(false);
             }
+        } catch (e) {
+            console.log(e);
+            setIsShortAllowing(false);
         }
     };
 

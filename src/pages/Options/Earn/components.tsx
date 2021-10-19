@@ -53,6 +53,11 @@ export const SectionHeader = styled(FlexDivRowCentered)`
     color: #f6f6fe;
     min-height: 50px;
     padding: 0px 20px 0 20px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        padding: 0px 5px 0 5px;
+        min-height: 25px;
+    }
 `;
 
 export const SectionContent = styled(FlexDiv)`
@@ -71,6 +76,9 @@ export const ClaimTitle = styled.span`
     font-weight: 600;
     letter-spacing: 0.15px;
     padding-bottom: 20px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+    }
 `;
 
 export const ClaimContent = styled.span`
@@ -133,7 +141,7 @@ export const PieChartContainer = styled.div`
 
 export const PieChartCenterDiv = styled.div`
     position: absolute;
-    top: 50%;
+    top: 44%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -143,22 +151,26 @@ export const PieChartCenterText = styled.span<{ disabled?: boolean }>`
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.25px;
+    max-width: 200px;
+    white-space: break-spaces;
     text-align: center;
     margin-bottom: 5px;
     color: ${(props) => (props.disabled ? '#B8C6E5' : 'white')};
 `;
 
-export const LearnMore = styled.span`
+export const LearnMore = styled.span<{ top: string }>`
     position: absolute;
     bottom: 18%;
     left: 50%;
     transform: translate(-50%, 0);
     color: #f6f6fe;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 24px;
     cursor: pointer;
-    @media (max-width: 1024px) {
-        display: none;
+    z-index: 101;
+    height: 20px;
+    @media (max-width: 767px) {
+        top: ${(props) => props.top};
     }
 `;
 
@@ -178,7 +190,7 @@ export const StyledMaterialTooltip = withStyles(() => ({
         lineHeight: '24px',
         letterSpacing: '0.4px',
         color: '#F6F6FE',
-        maxWidth: 700,
+        maxWidth: window.innerWidth < 768 ? 350 : 700,
     },
 }))(MaterialTooltip);
 

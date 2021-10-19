@@ -50,7 +50,7 @@ export const Input = styled.input`
 
 export const InputLabel = styled.label`
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
     line-height: 16px;
     letter-spacing: 1px;
     color: #748bc6;
@@ -321,6 +321,9 @@ export const FilterButton = styled.button`
         border: 2px solid #00f9ff;
         color: #b8c6e5;
     }
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
 `;
 
 export const SliderRange = styled.div<{ color?: string }>`
@@ -364,6 +367,7 @@ export const Divider = styled.hr`
 `;
 
 type TooltipIconProps = {
+    disableHoverListener?: boolean;
     title: React.ReactNode;
     children: any;
 };
@@ -399,8 +403,13 @@ const StyledLightTooltip = withStyles(() => ({
     },
 }))(MaterialTooltip);
 
-export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledLightTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLightTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
         {children}
     </StyledLightTooltip>
 );

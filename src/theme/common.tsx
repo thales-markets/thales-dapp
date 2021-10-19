@@ -192,7 +192,7 @@ export const Button = styled.button`
     text-transform: none !important;
     color: #f6f6fe;
     cursor: pointer;
-    white-space: pre;
+    white-space: break-spaces;
     &.primary {
         background: #3936c7;
         &:hover {

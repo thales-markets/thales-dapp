@@ -37,7 +37,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ marketAddress }
 
     return (
         <>
-            <MarketWidgetHeader widgetKey={MarketWidgetKey.RECENT_TRANSACTIONS}></MarketWidgetHeader>
+            <MarketWidgetHeader hideBorderOnMobile={true} widgetKey={MarketWidgetKey.RECENT_TRANSACTIONS} />
             <MarketWidgetContent>
                 <TransactionsWithFilters
                     marketTransactions={marketTransactions}

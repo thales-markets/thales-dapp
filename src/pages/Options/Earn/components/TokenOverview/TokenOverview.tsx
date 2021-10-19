@@ -190,6 +190,9 @@ const InnerItemContainer = styled(FlexDivCentered)`
         border-right: 2px solid rgba(1, 38, 81, 0.5);
     }
     color: #b8c6e5;
+    @media (max-width: 1024px) {
+        flex-basis: 33%;
+    }
     @media (max-width: 767px) {
         min-height: 50px;
     }
@@ -241,7 +244,11 @@ const StyledLink = styled.a`
     }
 `;
 
-const ArrowIcon = styled(ArrowHyperlinkIcon)``;
+const ArrowIcon = styled(ArrowHyperlinkIcon)`
+    @media (max-width: 767px) {
+        display: none;
+    }
+`;
 
 const CustomIcon = styled(Image)`
     margin-right: 10px;

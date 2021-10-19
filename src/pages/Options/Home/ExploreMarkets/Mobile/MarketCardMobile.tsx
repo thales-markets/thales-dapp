@@ -21,6 +21,8 @@ import volleyball from 'assets/images/volleyball.svg';
 import medals from 'assets/images/medals.png';
 import tennis from 'assets/images/tennis.svg';
 import xyz from 'assets/images/xyz.png';
+import flippening from 'assets/images/flippening.png';
+import burn from 'assets/images/burn.png';
 
 type MarketCardMobileProps = {
     optionsMarkets: HistoricalOptionsMarketInfo[];
@@ -85,43 +87,66 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                     </Text>
                                     <Text className="text-ms pale-grey">
                                         {market.customMarket
-                                            ? market.eventName === 'XYZ airdrop claims'
-                                                ? formatCurrency(market.outcome || 0, 0)
+                                            ? market.eventName === 'XYZ airdrop claims' ||
+                                              market.eventName === 'ETH burned count' ||
+                                              market.eventName === 'Flippening Markets' ||
+                                              market.eventName === 'ETH/BTC market cap ratio'
+                                                ? formatCurrency(
+                                                      market.outcome || 0,
+                                                      market.eventName === 'Flippening Markets' ||
+                                                          market.eventName === 'ETH/BTC market cap ratio'
+                                                          ? 2
+                                                          : 0
+                                                  )
                                                 : market.eventName
                                             : formatCurrencyWithSign(USD_SIGN, market.strikePrice)}
                                     </Text>
                                 </FlexDivColumnCentered>
-                                <FlexDivColumnCentered style={{ textAlign: 'right' }}>
-                                    <Text className="text-ms pale-grey">
-                                        {t('options.home.market-card.difference-text')}:
-                                    </Text>
-                                    {currentAssetPrice > market.strikePrice ? (
-                                        <DifferenceWrapper>
-                                            <Image style={{ width: 14, height: 14 }} src={arrowDown} />
-                                            <Text className="text-ms red lh16">
-                                                {strikeAndAssetPriceDifference.toFixed(2)}%
-                                            </Text>
-                                        </DifferenceWrapper>
-                                    ) : (
-                                        <DifferenceWrapper>
-                                            <Image style={{ width: 14, height: 14 }} src={arrowUp} />
-                                            <Text className="text-ms green lh16">
-                                                {strikeAndAssetPriceDifference.toFixed(2)}%
-                                            </Text>
-                                        </DifferenceWrapper>
-                                    )}
-                                </FlexDivColumnCentered>
+                                {!market.customMarket && (
+                                    <FlexDivColumnCentered style={{ textAlign: 'right' }}>
+                                        <Text className="text-ms pale-grey">
+                                            {t('options.home.market-card.difference-text')}:
+                                        </Text>
+                                        {currentAssetPrice > market.strikePrice ? (
+                                            <DifferenceWrapper>
+                                                <Image style={{ width: 14, height: 14 }} src={arrowDown} />
+                                                <Text className="text-ms red lh16">
+                                                    {strikeAndAssetPriceDifference.toFixed(2)}%
+                                                </Text>
+                                            </DifferenceWrapper>
+                                        ) : (
+                                            <DifferenceWrapper>
+                                                <Image style={{ width: 14, height: 14 }} src={arrowUp} />
+                                                <Text className="text-ms green lh16">
+                                                    {strikeAndAssetPriceDifference.toFixed(2)}%
+                                                </Text>
+                                            </DifferenceWrapper>
+                                        )}
+                                    </FlexDivColumnCentered>
+                                )}
+                                {market.customMarket && (
+                                    <FlexDivColumnCentered style={{ textAlign: 'right' }}>
+                                        <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
+                                            {t('options.home.market-card.pool-size')}
+                                        </Text>
+                                        <Text className="text-ms pale-grey">
+                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                        </Text>
+                                    </FlexDivColumnCentered>
+                                )}
                             </FlexDivRow>
-                            <FlexDivRow style={{ marginBottom: 8 }}>
-                                <FlexDivColumnCentered>
-                                    <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                        {t('options.home.market-card.pool-size')}
-                                    </Text>
-                                    <Text className="text-ms pale-grey">
-                                        {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
-                                    </Text>
-                                </FlexDivColumnCentered>
-                            </FlexDivRow>
+                            {!market.customMarket && (
+                                <FlexDivRow style={{ marginBottom: 8 }}>
+                                    <FlexDivColumnCentered>
+                                        <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
+                                            {t('options.home.market-card.pool-size')}
+                                        </Text>
+                                        <Text className="text-ms pale-grey">
+                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                        </Text>
+                                    </FlexDivColumnCentered>
+                                </FlexDivRow>
+                            )}
                             <FlexDivRow style={{ marginBottom: 8, alignItems: 'flex-start' }}>
                                 <FlexDivColumnCentered>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
@@ -131,24 +156,29 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                         <TimeRemaining end={market.timeRemaining} fontSize={14} />
                                     </Text>
                                 </FlexDivColumnCentered>
-                                <FlexDivColumnCentered style={{ textAlign: 'center' }}>
-                                    <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                        {t('options.home.market-card.result')}
-                                    </Text>
-                                    {market.customMarket === false ? (
-                                        <Result isLong={currentAssetPrice > market.strikePrice}>
-                                            {currentAssetPrice < market.strikePrice ? 'SHORT' : 'LONG'}
-                                        </Result>
-                                    ) : (
-                                        <StyledLink
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            href="http://www.espn.com/tennis/dailyResults"
-                                        >
-                                            ESPN
-                                        </StyledLink>
+                                {market.eventName !== 'XYZ airdrop claims' &&
+                                    market.eventName !== 'ETH burned count' &&
+                                    market.eventName !== 'Flippening Markets' &&
+                                    market.eventName !== 'ETH/BTC market cap ratio' && (
+                                        <FlexDivColumnCentered style={{ textAlign: 'center' }}>
+                                            <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
+                                                {t('options.home.market-card.result')}
+                                            </Text>
+                                            {market.customMarket === false ? (
+                                                <Result isLong={currentAssetPrice > market.strikePrice}>
+                                                    {currentAssetPrice < market.strikePrice ? 'SHORT' : 'LONG'}
+                                                </Result>
+                                            ) : (
+                                                <StyledLink
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    href="http://www.espn.com/tennis/dailyResults"
+                                                >
+                                                    ESPN
+                                                </StyledLink>
+                                            )}
+                                        </FlexDivColumnCentered>
                                     )}
-                                </FlexDivColumnCentered>
                                 <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                     <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
                                         {t('options.home.market-card.open-orders')}
@@ -270,6 +300,15 @@ export const eventToIcon = (event: string) => {
         }
         if (event.toLowerCase().indexOf('xyz') !== -1) {
             return xyz;
+        }
+        if (
+            event.toLowerCase().indexOf('flippening markets') !== -1 ||
+            event.toLowerCase().indexOf('market cap ratio') !== -1
+        ) {
+            return flippening;
+        }
+        if (event.toLowerCase().indexOf('eth burned count') !== -1) {
+            return burn;
         }
     }
 };

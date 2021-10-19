@@ -34,12 +34,14 @@ import TradingView from './TradingView';
 import ROUTES from 'constants/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
+import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { ethers } from 'ethers';
 import CustomMarketResults from './CustomMarketResults';
 import { useLocation } from 'react-router-dom';
 import './media.scss';
 import { MarketOverviewMobile } from './components/MarketOverview/MarketOverviewMobile';
 import MarketMobile from './MarketMobile';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -67,24 +69,53 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     });
 
     useEffect(() => {
-        if (marketQuery.isSuccess && marketQuery.data) {
-            if (marketQuery.data.customMarket) {
-                const sportFeedContract = new ethers.Contract(
-                    marketQuery.data.oracleAdress,
-                    sportFeedOracleContract.abi,
-                    (snxJSConnector as any).provider
-                );
-                Promise.all([
-                    sportFeedContract.targetName(),
-                    sportFeedContract.eventName(),
-                    sportFeedContract.targetOutcome(),
-                ]).then((data) => {
-                    setOptionsMarket({ ...marketQuery.data, country: data[0], eventName: data[1], outcome: data[2] });
-                });
-            } else {
-                setOptionsMarket(marketQuery.data);
+        const fetchMarketData = async () => {
+            if (marketQuery.isSuccess && marketQuery.data) {
+                if (marketQuery.data.customMarket) {
+                    try {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            sportFeedOracleContract.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
+                        setOptionsMarket({
+                            ...marketQuery.data,
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                            eventName: data[1],
+                            outcome: data[2],
+                        });
+                    } catch (e) {
+                        const sportFeedContract = new ethers.Contract(
+                            marketQuery.data.oracleAdress,
+                            ethBurnedOracleInstance.abi,
+                            (snxJSConnector as any).provider
+                        );
+                        const data: any = await Promise.all([
+                            sportFeedContract.targetName(),
+                            sportFeedContract.eventName(),
+                            sportFeedContract.targetOutcome(),
+                        ]);
+                        setOptionsMarket({
+                            ...marketQuery.data,
+                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
+                            eventName: data[1],
+                            outcome:
+                                data[1] === 'Flippening Markets' || data[1] === 'ETH/BTC market cap ratio'
+                                    ? bigNumberFormatter(data[2]).toString()
+                                    : Number(data[2]).toString(),
+                        });
+                    }
+                } else {
+                    setOptionsMarket(marketQuery.data);
+                }
             }
-        }
+        };
+        fetchMarketData();
     }, [marketQuery.isSuccess]);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(marketAddress, walletAddress, {

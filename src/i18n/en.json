@@ -19,8 +19,8 @@
             "asset-col": "Asset",
             "strike-price-col": "Strike price",
             "maturity-date-col": "Maturity date",
-            "short-col": "sLONG",
-            "long-col": "sSHORT",
+            "long-col": "sLONG",
+            "short-col": "sSHORT",
             "pool-size-col": "Pool size",
             "amount-col": "Amount",
             "price-col": "Price",
@@ -87,8 +87,10 @@
     },
     "common": {
         "max": "max",
+        "save": "Save",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
+        "gas-fee-info": "Estimated gas fee based on the latest base fee and medium priority.",
         "gwei": "gwei",
         "transaction": {
             "view": "View"
@@ -144,11 +146,14 @@
             "trending-label": "Trending markets",
             "overview-label": "Markets overview",
             "olympics-label": "Olympics markets",
+            "custom-markets-label": "Custom markets",
+            "competition-markets-label": "Competition markets",
             "create-market-label": "Create market",
             "trade-label": "Trade options",
             "maturity-label": "Exercise options",
             "leaderboard-label": "Leaderboard",
             "quick-trading-label": "Quick trading",
+            "quick-trading-label-competition": "Comp. quick trading",
             "earn-label": "THALES"
         },
         "coming-soon": "Coming soon...",
@@ -207,7 +212,10 @@
             "recently-added": "Recently Added",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
+            "synthetix": "Synthetix",
             "olympics": "Olympics",
+            "competition": "Trading Competition",
+            "custom": "Custom Markets",
             "long": "Long",
             "short": "Short"
         },
@@ -232,7 +240,8 @@
                 "table": {
                     "view-all-markets": "View all markets",
                     "no-markets-created": "You haven’t created any market yet.",
-                    "no-markets-found": "No markets found."
+                    "no-markets-found": "No markets found.",
+                    "trading-comp": "No markets available at the moment.\n Trading competition will start on Monday, October 11th at 10:00AM UTC.\n For more information click here: "
                 }
             },
             "markets-table": {
@@ -242,7 +251,8 @@
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Market size",
-                "time-remaining-col": "Time remaining"
+                "time-remaining-col": "Time remaining",
+                "competition-tooltip": "This market is eligible for trading competition"
             }
         },
         "earn": {
@@ -294,7 +304,11 @@
                     "locked-in-escrow": "Escrowed balance",
                     "total-staked": "Total staked balance",
                     "not-eligible-message": "You are not eligible for staking rewards unless your directly staked balance is greater than 0",
-                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards"
+                    "eligible-message": "Your {{amount}} staked are eligible for staking rewards",
+                    "global-staking-stats": "Global staking stats",
+                    "total-thales-staked": "Total THALES Staked",
+                    "my-staked-share": "My Staked Share",
+                    "estimated-rewards": "Estimated rewards for this period"
                 },
                 "unstake": {
                     "unstake": "Unstake",
@@ -309,7 +323,9 @@
                     "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",
-                    "cancel-confirmation-message": "Unstaking successfully canceled"
+                    "cancel-confirmation-message": "Unstaking successfully canceled",
+                    "network-fee-cancel": "Cancel",
+                    "network-fee-unstake": "Unstake"
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -444,6 +460,7 @@
             "insufficient-amount": "Please ensure your wallet has sufficient sUSD.",
             "sellOptions": "Sell minted LONG/SHORT options",
             "summary": {
+                "title": "Market Summary",
                 "strikePrice": "Strike price",
                 "current": "Current market price",
                 "difference": "Difference between strike and current price",
@@ -490,7 +507,16 @@
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
-                "event-name-label": "Event Name"
+                "event-name-label": "Event Name",
+                "current-ratio-label": "Current ratio",
+                "final-ratio-label": "Final ratio",
+                "strike-ratio-label": "Strike ratio",
+                "current-burn-label": "Current burn",
+                "final-burn-label": "Final burn",
+                "strike-burn-label": "Strike burn",
+                "rank-label": "Rank",
+                "total-burned": "Total burned",
+                "burned-last-hour": "Burned in the last hour"
             },
             "widgets": {
                 "trading-phase-widget": "Claim options",
@@ -544,7 +570,8 @@
                     "all": "All",
                     "mint": "Mint",
                     "trade": "Trades",
-                    "exercise": "Exercise"
+                    "exercise": "Exercise",
+                    "filter": "Filter"
                 }
             },
             "trade-card": {
@@ -726,15 +753,104 @@
                 "actions-col": "Actions"
             }
         },
+        "competition-quick-trading": {
+            "title": "Competition quick trading"
+        },
         "leaderboard": {
-            "search-placeholder": "Display Name",
+            "leaderboard-title": "Leaderboard",
+            "leaderboard-subtitle": "This is Thales' overall leaderboard.",
+            "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
+            "trading-comp-title": "Trading Competition",
+            "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
+            "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10AM UTC",
+            "trading-comp-subtitle-3": "Click here to see markets eligible for trading competition",
+            "trading-comp-subtitle-4": "For more information and guide on how to participate, please visit: ",
+            "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
+            "trading-comp-countdown": "Countdown until the end of the competition: ",
+            "profile-title": "Profile",
+            "trades-subtitle": "The tab shows you all trades sorted by latest timestamp.",
+            "trades-title": "Trades",
+            "verify-twitter-account": "Verify account",
+            "verify": "Verify",
+            "display-name": "Display Name",
+            "address": "Address",
+            "twitter-account": "My twitter account",
+            "my-info": "My info",
             "table": {
                 "rank-col": "Rank",
                 "display-name-col": "Display Name",
                 "trades-col": "Trades",
                 "volume-col": "Volume",
                 "netprofit-col": "Netprofit",
-                "netprofit-col-tooltip": "Profit is only calculated on the matured markets"
+                "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
+                "investment-col": "Investment",
+                "gain-col": "Gain",
+                "twitter-col": "Twitter",
+                "rewards-col": "Rewards"
+            },
+            "trading-competition": {
+                "tab-title": "Trading competition",
+                "competition-period": "Selected period"
+            },
+            "board": {
+                "tab-title": "Leaderboard"
+            },
+            "trades": {
+                "tab-title": "Trades",
+                "only-trading-competition-checkbox": "Show only trading competition trades",
+                "number-of-trades": "Number of trades",
+                "volume": "Volume",
+                "view-all-trades": "View all trades",
+                "no-trades-found": "No trades found",
+                "table": {
+                    "date-time-col": "date | time",
+                    "market-col": "market",
+                    "asset-col": "asset",
+                    "type-col": "type",
+                    "amount-col": "amount",
+                    "price-col": "price",
+                    "tx-status-col": "tx status"
+                }
+            },
+            "profile": {
+                "tab-title": "Profile",
+                "search-placeholder": "Search other profiles by typing display name",
+                "transaction-details": "Transaction details for user:",
+                "no-transactions": "No transactions available",
+                "filters": {
+                    "all": "All",
+                    "mints": "Mints",
+                    "trades": "Trades",
+                    "exercises": "Exercises",
+                    "redeemable": "Redeemable"
+                },
+                "markets": {
+                    "strike-price": "Strike price",
+                    "pool-size": "Pool size",
+                    "maturity-date": "Maturity date",
+                    "result": "Result"
+                },
+                "common": {
+                    "amount": "Amount",
+                    "timestamp": "Date | Time",
+                    "view-less": "View less",
+                    "view-more": "View more",
+                    "long": "Long",
+                    "short": "Short",
+                    "buy": "Buy",
+                    "sell": "Sell",
+                    "tx-status": "TX Status"
+                },
+                "exercises": {
+                    "side": "Side"
+                },
+                "trades": {
+                    "price": "Price",
+                    "type": "Type"
+                },
+                "unclaimed": {
+                    "redeem": "Redeem"
+                }
             }
         },
         "common": {
@@ -754,6 +870,8 @@
                 "minute": "minute",
                 "seconds": "seconds",
                 "second": "second",
+                "days-short": "d",
+                "hours-short": "h",
                 "minutes-short": "m",
                 "seconds-short": "s"
             },
@@ -777,7 +895,8 @@
             "legacy-signing": {
                 "label": "Use legacy signing",
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue."
-            }
+            },
+            "ratio": "Ratio"
         }
     }
 }

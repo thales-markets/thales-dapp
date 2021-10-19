@@ -72,6 +72,7 @@ type Reward = {
 };
 
 export type StakingReward = {
+    closingDate: number;
     period: number;
     isClaimPaused: boolean;
     hasClaimRights: boolean;

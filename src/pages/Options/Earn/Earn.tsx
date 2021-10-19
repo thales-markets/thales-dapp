@@ -70,7 +70,7 @@ const EarnPage: React.FC = () => {
     }> = useMemo(() => tabs, [t]);
 
     return (
-        <Background style={{ height: '100%', position: 'fixed', overflow: 'auto', width: '100%', overflowX: 'hidden' }}>
+        <Background style={{ minHeight: '100vh' }}>
             {networkId && isNetworkSupported(networkId) ? (
                 <>
                     <Container>
@@ -203,7 +203,7 @@ const MainContentContainer = styled.div`
     padding-top: 5px;
     overflow: hidden;
     @media (max-width: 767px) {
-        padding-bottom: 88px;
+        padding-bottom: 100px;
     }
 `;
 

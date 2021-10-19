@@ -6,9 +6,25 @@ import minus from 'assets/images/minus.svg';
 import faq from 'assets/images/faq.svg';
 import discord from 'assets/images/discord.svg';
 import { useTranslation } from 'react-i18next';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../i18n/config';
+import i18n from '../../../../i18n';
+
+const getDiscordLink = (selectedLanguage: string) => {
+    switch (selectedLanguage) {
+        case 'ru':
+            return 'https://discord.gg/vTRawduKew';
+        case 'cn':
+            return 'https://discord.gg/Z5DeQQw57T';
+        default:
+            return 'https://discord.gg/cFGv5zyVEj';
+    }
+};
 
 const Faq: React.FC = () => {
     const { t } = useTranslation();
+    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+        ? i18n.language
+        : DEFAULT_LANGUAGE;
 
     const [q1open, setQ1open] = useState(false);
     const [q2open, setQ2open] = useState(false);
@@ -22,21 +38,21 @@ const Faq: React.FC = () => {
                     <DropDownWrapper className={q1open ? 'open' : ''}>
                         <Question onClick={() => setQ1open(!q1open)}>
                             <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.firstQ')}</Text>
-                            <Image src={q1open ? minus : plus}></Image>
+                            <Image src={q1open ? minus : plus} />
                         </Question>
                         <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.firstA')}</Answer>
                     </DropDownWrapper>
                     <DropDownWrapper className={q2open ? 'open' : ''}>
                         <Question onClick={() => setQ2open(!q2open)}>
                             <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.secondQ')}</Text>
-                            <Image src={q2open ? minus : plus}></Image>
+                            <Image src={q2open ? minus : plus} />
                         </Question>
                         <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.secondA')}</Answer>
                     </DropDownWrapper>
                     <DropDownWrapper className={q3open ? 'open' : ''}>
                         <Question onClick={() => setQ3open(!q3open)}>
                             <Text className="text-m pale-grey bold lh32 ls25">{t('landing-page.faq.thirdQ')}</Text>
-                            <Image src={q3open ? minus : plus}></Image>
+                            <Image src={q3open ? minus : plus} />
                         </Question>
                         <Answer className="text-s pale-grey lh24 ls25">{t('landing-page.faq.thirdA')}</Answer>
                     </DropDownWrapper>
@@ -54,10 +70,10 @@ const Faq: React.FC = () => {
                     padding: '16px 26px',
                 }}
                 onClick={() => {
-                    window.open('https://discord.gg/cFGv5zyVEj', '_blank');
+                    window.open(getDiscordLink(selectedLanguage), '_blank');
                 }}
             >
-                <Image src={discord} style={{ height: 37, width: 32, marginRight: 8 }}></Image>
+                <Image src={discord} style={{ height: 37, width: 32, marginRight: 8 }} />
                 <Text className="text-l pale-grey bold">{t('landing-page.discord')}</Text>
             </Button>
         </FlexDivColumn>

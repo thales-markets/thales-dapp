@@ -21,6 +21,7 @@ import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
+import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
@@ -181,6 +182,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                            <MainLayout>
+                                <QuickTradingCompetitionPage />
                             </MainLayout>
                         </Route>
 

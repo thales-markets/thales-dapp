@@ -3,12 +3,14 @@ export const ROUTES = {
     Options: {
         Home: '/markets',
         HotMarkets: '/markets?anchor=hot-markets',
-        Olympics: '/markets?userFilter2=Olympics',
+        CustomMarkets: '/markets?userFilter2=custom',
+        CompetitionMarkets: '/markets?userFilter2=competition',
         Overview: '/markets?anchor=overview',
         CreateMarket: '/markets/create-market',
         MarketMatch: '/markets/:marketAddress',
         Leaderboard: '/markets/leaderboard',
         QuickTrading: '/markets/quick-trading',
+        QuickTradingCompetition: '/markets/competition-orders',
         Token: '/token',
     },
 };

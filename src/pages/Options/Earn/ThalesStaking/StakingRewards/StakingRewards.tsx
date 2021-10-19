@@ -3,13 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
@@ -23,27 +17,28 @@ import {
     ButtonContainer,
     ClaimMessage,
     EarnSection,
+    LearnMore,
     PieChartCenterDiv,
     PieChartCenterText,
     PieChartContainer,
     SectionContentContainer,
     SectionHeader,
-    LearnMore,
     StyledMaterialTooltip,
 } from '../../components';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
+import { normalizeGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import ComingSoon from 'components/ComingSoon';
-
-const MAX_SNX_STAKING_PERIOD = 144;
-const MAX_THALES_STAKING_PERIOD = 150;
-const WEEKLY_REWARDS_SNX = 125000;
-const WEEKLY_REWARDS_THALES = 100000;
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import {
+    MAX_SNX_STAKING_PERIOD,
+    MAX_THALES_STAKING_PERIOD,
+    WEEKLY_REWARDS_SNX,
+    WEEKLY_REWARDS_THALES,
+} from '../../../../../constants/token';
 
 type Properties = {
     escrowedBalance: number;
@@ -56,8 +51,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -83,17 +76,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
     });
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     useEffect(() => {
         if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
@@ -126,7 +108,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
 
     const handleClaimOngoingAirdrop = async () => {
         setShowTooltip(false);
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward && gasPrice !== null) {
+        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
@@ -136,7 +118,6 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     ongoingAirdrop.reward.rawBalance,
                     ongoingAirdrop.reward.proof,
                     {
-                        gasPrice: gasPriceInWei(gasPrice),
                         gasLimit,
                     }
                 )) as ethers.ContractTransaction;
@@ -193,14 +174,17 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
 
     return (
-        <EarnSection
-            paddingOnMobile={5}
-            orderOnMobile={4}
-            orderOnTablet={4}
-            style={{ gridColumn: 'span 7', gridRow: 'span 3' }}
-        >
+        <EarnSection orderOnMobile={4} orderOnTablet={4} style={{ gridColumn: 'span 7', gridRow: 'span 3' }}>
             <SectionHeader>
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
+                <div>
+                    {t('options.earn.thales-staking.staking-rewards.period')}:{' '}
+                    {ongoingAirdrop ? (
+                        <TimeRemaining end={ongoingAirdrop.closingDate} fontSize={20} showFullCounter />
+                    ) : (
+                        '-'
+                    )}
+                </div>
             </SectionHeader>
             <SectionContentContainer>
                 <StyledPieChartContainer>
@@ -244,7 +228,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                         {t('options.earn.thales-staking.staking-rewards.period')}:
                                     </StakingRewardsInfoTitle>
                                     <StakingRewardsInfoContent>
-                                        {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_THALES_STAKING_PERIOD}` : '-'}
+                                        {ongoingAirdrop
+                                            ? `${ongoingAirdrop.period - 3}/${MAX_THALES_STAKING_PERIOD}`
+                                            : '-'}
                                     </StakingRewardsInfoContent>
                                 </PeriodInfo>
                                 <PeriodInfo>
@@ -303,7 +289,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                                 {t('options.earn.thales-staking.staking-rewards.period')}:
                             </StakingRewardsInfoTitle>
                             <StakingRewardsInfoContent>
-                                {ongoingAirdrop ? `${ongoingAirdrop.period}/${MAX_SNX_STAKING_PERIOD}` : '-'}
+                                {ongoingAirdrop ? `${ongoingAirdrop.period - 1}/${MAX_SNX_STAKING_PERIOD}` : '-'}
                             </StakingRewardsInfoContent>
                         </PeriodInfo>
                         <PeriodInfo>
@@ -341,8 +327,9 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             </GradientText>
                         </FlexDivColumnCentered>
                     </StyledPieChartCenterDiv>
-                    <LearnMore>
+                    <LearnMore top="29%">
                         <StyledMaterialTooltip
+                            enterTouchDelay={1}
                             arrow={true}
                             title={t('options.earn.thales-staking.staking-rewards.learn-more-text') as string}
                         >
@@ -420,6 +407,7 @@ const StakingRewardsAmountContainer = styled.div<{ gradient: string; marginRight
     @media (max-width: 767px) {
         margin-right: 0;
         margin-left: 0;
+        min-height: 90px;
     }
 `;
 
@@ -430,6 +418,10 @@ const StakingRewardsAmount = styled(FlexDivColumn)`
     border-radius: 15px;
     padding: 10px;
     text-align: center;
+    @media (max-width: 767px) {
+        min-height: 88px;
+        justify-content: center;
+    }
 `;
 
 const StakingRewardsTitle = styled.span`

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ClaimItem,
     EarnSection,
@@ -18,21 +18,14 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from '../../../../../redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { bigNumberFormatter, getAddress } from '../../../../../utils/formatters/ethers';
 import { APPROVAL_EVENTS } from '../../../../../constants/events';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import NetworkFees from '../../../components/NetworkFees';
-import { gasPriceInWei, normalizeGasLimit } from '../../../../../utils/network';
-import useEthGasPriceQuery from '../../../../../queries/network/useEthGasPriceQuery';
+import { normalizeGasLimit } from '../../../../../utils/network';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import ComingSoon from 'components/ComingSoon';
@@ -53,19 +46,6 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -166,39 +146,36 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     };
 
     const handleStakeThales = async () => {
-        if (gasPrice !== null) {
-            try {
-                setTxErrorMessage(null);
-                setIsStaking(true);
-                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const toStake = ethers.utils.parseEther(amountToStake.toString());
-                const tx = await stakingThalesContractWithSigner.stake(toStake, {
-                    gasPrice: gasPriceInWei(gasPrice),
-                    gasLimit,
-                });
-                const txResult = await tx.wait();
+        try {
+            setTxErrorMessage(null);
+            setIsStaking(true);
+            const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+            const toStake = ethers.utils.parseEther(amountToStake.toString());
+            const tx = await stakingThalesContractWithSigner.stake(toStake, {
+                gasLimit,
+            });
+            const txResult = await tx.wait();
 
-                if (txResult && txResult.events) {
-                    dispatchMarketNotification(t('options.earn.thales-staking.stake.confirmation-message'));
-                    const rawData = txResult.events[txResult.events?.length - 1];
-                    if (rawData && rawData.decode) {
-                        const netThalesBalance = ethers.utils
-                            .parseEther(balance)
-                            .sub(ethers.utils.parseEther(amountToStake.toString()));
-                        const netThalesStaked = ethers.utils
-                            .parseEther(thalesStaked)
-                            .add(ethers.utils.parseEther(amountToStake.toString()));
-                        refetchUserTokenTransactions(walletAddress, networkId);
-                        setBalance(ethers.utils.formatEther(netThalesBalance));
-                        setAmountToStake(0);
-                        setThalesStaked(ethers.utils.formatEther(netThalesStaked));
-                        setIsStaking(false);
-                    }
+            if (txResult && txResult.events) {
+                dispatchMarketNotification(t('options.earn.thales-staking.stake.confirmation-message'));
+                const rawData = txResult.events[txResult.events?.length - 1];
+                if (rawData && rawData.decode) {
+                    const netThalesBalance = ethers.utils
+                        .parseEther(balance)
+                        .sub(ethers.utils.parseEther(amountToStake.toString()));
+                    const netThalesStaked = ethers.utils
+                        .parseEther(thalesStaked)
+                        .add(ethers.utils.parseEther(amountToStake.toString()));
+                    refetchUserTokenTransactions(walletAddress, networkId);
+                    setBalance(ethers.utils.formatEther(netThalesBalance));
+                    setAmountToStake(0);
+                    setThalesStaked(ethers.utils.formatEther(netThalesStaked));
+                    setIsStaking(false);
                 }
-            } catch (e) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsStaking(false);
             }
+        } catch (e) {
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsStaking(false);
         }
     };
 
@@ -207,28 +184,25 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
         const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
 
         const addressToApprove = stakingThalesContract.address;
-        if (gasPrice !== null) {
-            try {
-                setIsAllowingStake(true);
-                const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                })) as ethers.ContractTransaction;
+        try {
+            setIsAllowingStake(true);
+            const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
+                addressToApprove,
+                ethers.constants.MaxUint256
+            );
+            const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
+                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+            })) as ethers.ContractTransaction;
 
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setStakeAllowance(true);
-                    setIsAllowingStake(false);
-                }
-            } catch (e) {
-                console.log(e);
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setStakeAllowance(true);
                 setIsAllowingStake(false);
             }
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsAllowingStake(false);
         }
     };
 
