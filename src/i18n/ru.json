@@ -90,6 +90,7 @@
         "save": "Сохранить",
         "network-fee-gas": "Сетевая комиссия (газ)",
         "gas-price-gwei": "Цена газа (gwei)",
+        "gas-fee-info": "Расчетная плата за газ основана на последней базовой цене и средней приоритетности.",
         "gwei": "gwei",
         "transaction": {
             "view": "Просмотр"
@@ -196,7 +197,7 @@
         "filters-labels": {
             "category": "Категория",
             "discover": "Откройте для себя",
-            "sort-by": "Сортировать по (всегда последняя)",
+            "sort-by": "Сортировать по",
             "option": "Опцион",
             "show": "Показать",
             "search-placeholder": "Попробовать ETH",
@@ -211,6 +212,7 @@
             "recently-added": "Недавно добавленные",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
+            "synthetix": "Synthetix",
             "olympics": "Олимпийские игры",
             "competition": "Торговый конкурс",
             "custom": "рынки пользователей",
@@ -521,7 +523,7 @@
                 "maturity-phase-widget": "Использовать опционы",
                 "orderbook-widget": "Таблица заказов",
                 "trade-widget": "Торговля",
-                "chart-trading-view-widget  ": "Trading View",
+                "chart-trading-view-widget  ": "Торговая точка зрения",
                 "chart-options-price-widget": "Цена опционов",
                 "recent-transactions-widget": "Недавняя торговля на рынке",
                 "your-transactions-widget": "Ваша торговля",
@@ -788,14 +790,20 @@
             },
             "trading-competition": {
                 "tab-title": "Торговая конкуренция",
-                "competition-period": "Выбранный период"
+                "competition-period": "Выбранный период",
+                "disqualified": "Дисквалифицирован",
+                "current-rank": "Ваше текущее звание"
             },
             "board": {
                 "tab-title": "Таблица лидеров"
             },
             "trades": {
                 "tab-title": "Сделки",
-                "no-trades-found": "Сделок не найдено",
+                "only-trading-competition-checkbox": "Показать только торги торговыми соревнованиями",
+                "number-of-trades": "Кол-во сделок",
+                "volume": "Объем",
+                "view-all-trades": "Посмотреть все сделки",
+                "no-trades-found": "Сделки не найдены",
                 "table": {
                     "date-time-col": "дата | время",
                     "market-col": "рыночнный",
@@ -812,6 +820,7 @@
                 "transaction-details": "Сведения о транзакции для пользователя:",
                 "no-transactions": "Транзакции недоступны",
                 "filters": {
+                    "all": "Все",
                     "mints": "Монетные дворы",
                     "trades": "Сделки",
                     "exercises": "Упражнения",

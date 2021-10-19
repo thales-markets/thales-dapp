@@ -30,6 +30,7 @@ import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { COLORS } from 'constants/ui';
 import { marketHeading } from '../Trades';
+import SPAAnchor from '../../../../../../components/SPAAnchor';
 
 interface HeadCell {
     id: keyof ExtendedTrade[];
@@ -107,7 +108,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
 
     useEffect(() => setPage(0), [orderBy, orderDirection]);
 
-    const sortedMarkets = useMemo(() => {
+    const sortedTrades = useMemo(() => {
         return trades.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [trades, orderBy, orderDirection, memoizedPage, rowsPerPage]);
 
@@ -125,7 +126,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
         <>
             {!isLoading && (
                 <TableContainer
-                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: '23px' }}
+                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: '23px 23px 0 0' }}
                     component={Paper}
                 >
                     <Table aria-label="customized table">
@@ -167,7 +168,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sortedMarkets.map((trade: ExtendedTrade, index: any) => {
+                            {sortedTrades.map((trade: ExtendedTrade, index: any) => {
                                 return (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell>{formatTxTimestamp(trade.timestamp)}</StyledTableCell>
@@ -234,7 +235,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
                                         </StyledTableCell>
                                         <StyledTableCell
                                             style={
-                                                index === sortedMarkets.length - 1 ? { borderRadius: '0 0 23px 0' } : {}
+                                                index === sortedTrades.length - 1 ? { borderRadius: '0 0 23px 0' } : {}
                                             }
                                         >
                                             <ViewEtherscanLink hash={trade.transactionHash} />
@@ -243,14 +244,14 @@ const TradesTable: React.FC<TradesTableProps> = ({
                                 );
                             })}
                         </TableBody>
-                        {sortedMarkets.length !== 0 && (
+                        {sortedTrades.length !== 0 && (
                             <TableFooter>
                                 <TableRow>
                                     <PaginationWrapper
                                         rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                                         onRowsPerPageChange={handleChangeRowsPerPage}
                                         labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                                        count={sortedMarkets.length}
+                                        count={sortedTrades.length}
                                         rowsPerPage={rowsPerPage}
                                         page={memoizedPage}
                                         onPageChange={handleChangePage}
@@ -273,14 +274,14 @@ const TradesTable: React.FC<TradesTableProps> = ({
                     <SimpleLoader />
                 </LoaderContainer>
             )}
-            {sortedMarkets.length === 0 && !isLoading && children}
+            {sortedTrades.length === 0 && !isLoading && children}
         </>
     );
 };
 
 const CryptoName = styled.span``;
 
-export const StyledLink = styled.a`
+export const StyledLink = styled(SPAAnchor)`
     color: #f6f6fe;
     &:hover {
         color: #00f9ff;

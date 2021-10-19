@@ -17,6 +17,12 @@
                 right: 0;
                 left: unset !important;
                 width: 256px !important;
+                height: 100%;
+                overflow: auto !important;
+                z-index: 1001 !important;
+                &::-webkit-scrollbar {
+                    width: 0px;
+                }
                 span {
                     display: block !important;
                 }

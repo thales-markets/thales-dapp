@@ -5,13 +5,7 @@ import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import useVestingBalanceQuery from 'queries/walletBalances/useVestingBalanceQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { VestingInfo } from 'types/token';
@@ -33,8 +27,7 @@ import {
     TooltipLink,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { normalizeGasLimit } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -57,8 +50,6 @@ const RetroRewards: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [vestingInfo, setVestingInfo] = useState<VestingInfo>(initialVestingInfo);
     const [isClaiming, setIsClaiming] = useState(false);
@@ -73,17 +64,6 @@ const RetroRewards: React.FC = () => {
     const vestingQuery = useVestingBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     useEffect(() => {
         if (vestingQuery.isSuccess && vestingQuery.data) {
@@ -108,7 +88,7 @@ const RetroRewards: React.FC = () => {
     }, [isWalletConnected, isClaimAvailable]);
 
     const handleClaimRetroRewards = async () => {
-        if (isClaimAvailable && gasPrice !== null) {
+        if (isClaimAvailable) {
             const { vestingEscrowContract } = snxJSConnector as any;
 
             try {
@@ -116,7 +96,6 @@ const RetroRewards: React.FC = () => {
                 setIsClaiming(true);
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
                 const tx = await vestingContractWithSigner.claim({
-                    gasPrice: gasPriceInWei(gasPrice),
                     gasLimit,
                 });
                 const txResult = await tx.wait();

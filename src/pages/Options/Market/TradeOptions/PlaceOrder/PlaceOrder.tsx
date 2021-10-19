@@ -4,27 +4,20 @@ import { Web3Wrapper } from '@0x/web3-wrapper';
 import axios from 'axios';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { gasPriceInWei, isMainNet, normalizeGasLimit } from 'utils/network';
+import { isMainNet, normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import {
@@ -96,8 +89,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [price, setPrice] = useState<number | string>(defaultPrice || '');
     const [amount, setAmount] = useState<number | string>(defaultAmount || '');
     const [hasAllowance, setAllowance] = useState<boolean>(false);
@@ -130,17 +121,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
-
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -236,28 +216,22 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
     const handleAllowance = async () => {
-        if (gasPrice !== null) {
-            const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                })) as ethers.ContractTransaction;
+        const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
+        try {
+            setIsAllowing(true);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
+            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+            })) as ethers.ContractTransaction;
 
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            } catch (e) {
-                console.log(e);
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setAllowance(true);
                 setIsAllowing(false);
             }
+        } catch (e) {
+            console.log(e);
+            setIsAllowing(false);
         }
     };
 

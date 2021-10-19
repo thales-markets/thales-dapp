@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
+import { Button, FlexDivRow, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
 import { ExtendedTrade, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -13,6 +13,10 @@ import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number'
 import { formatShortDate } from 'utils/formatters/date';
 import { getSynthName } from 'utils/snxJSConnector';
 import { USD_SIGN } from 'constants/currency';
+import SearchMarket from '../../SearchMarket';
+import useDebouncedMemo from 'hooks/useDebouncedMemo';
+import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
+import Checkbox from 'components/Checkbox';
 
 enum OrderDirection {
     NONE,
@@ -28,14 +32,28 @@ const Trades: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+    const [assetSearch, setAssetSearch] = useState<string>('');
+    const [volume, setVolume] = useState<number>(0);
+    const [showOnlyTradingCompetition, setShowOnlyTradingCompetition] = useState<boolean>(true);
 
     const tradesQuery = useBinaryOptionsAllTradesQuery(networkId, {
         enabled: isAppReady,
     });
     const trades: ExtendedTrade[] = tradesQuery.isSuccess && tradesQuery.data ? tradesQuery.data : [];
 
-    const sortedTrades = useMemo(() => {
-        return trades.sort((a, b) => {
+    const filteredTrades = useMemo(() => {
+        let filteredTrades = trades;
+        if (showOnlyTradingCompetition) {
+            filteredTrades = filteredTrades.filter((trade: ExtendedTrade) => {
+                const marketCreationCompetition = new Date('Oct 10 2021 10:00:00 UTC');
+                const marketEndingCompetition = new Date('Nov 01 2021 11:00:00 UTC');
+                const marketCreationDate = new Date(trade.marketItem.timestamp);
+                const marketMaturityDate = new Date(trade.marketItem.maturityDate);
+                return marketCreationDate >= marketCreationCompetition && marketMaturityDate <= marketEndingCompetition;
+            });
+        }
+
+        return filteredTrades.sort((a, b) => {
             switch (orderBy) {
                 case 1:
                     return sortByField(a, b, orderDirection, 'timestamp');
@@ -53,12 +71,68 @@ const Trades: React.FC = () => {
                     return 0;
             }
         });
-    }, [trades, orderBy, orderDirection]);
+    }, [trades, orderBy, orderDirection, showOnlyTradingCompetition]);
+
+    const searchFilteredTrades = useDebouncedMemo(
+        () => {
+            return assetSearch
+                ? filteredTrades.filter((trade: ExtendedTrade) => {
+                      console.log('asset', trade.marketItem);
+                      return (
+                          trade.marketItem.asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          getSynthName(trade.marketItem.currencyKey)
+                              ?.toLowerCase()
+                              .includes(assetSearch.toLowerCase()) ||
+                          trade.marketItem.country?.toLowerCase().includes(assetSearch.toLowerCase()) ||
+                          trade.marketItem.eventName?.toLowerCase().includes(assetSearch.toLowerCase())
+                      );
+                  })
+                : filteredTrades;
+        },
+        [filteredTrades, assetSearch],
+        DEFAULT_SEARCH_DEBOUNCE_MS
+    );
+
+    useEffect(() => {
+        setVolume(
+            searchFilteredTrades.reduce(
+                (acc, trade) => acc + (trade.orderSide === 'buy' ? trade.takerAmount : trade.makerAmount),
+                0
+            )
+        );
+    }, [searchFilteredTrades]);
+
+    const resetFilters = () => {
+        setAssetSearch('');
+    };
 
     return (
         <FlexDivColumnCentered className="leaderboard__wrapper">
+            <FlexDivRow>
+                <CheckboxContainer>
+                    <Checkbox
+                        checked={showOnlyTradingCompetition}
+                        value={showOnlyTradingCompetition.toString()}
+                        onChange={(e: any) => setShowOnlyTradingCompetition(e.target.checked || false)}
+                        label={t('options.leaderboard.trades.only-trading-competition-checkbox')}
+                    />
+                </CheckboxContainer>
+                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
+            </FlexDivRow>
+            <InfoContainer>
+                <Info>
+                    {`${t('options.leaderboard.trades.number-of-trades')}: ${
+                        tradesQuery.isLoading ? '-' : searchFilteredTrades.length
+                    }`}
+                </Info>
+                <Info>
+                    {`${t('options.leaderboard.trades.volume')}: ${
+                        tradesQuery.isLoading ? '-' : formatCurrencyWithSign(USD_SIGN, volume)
+                    }`}
+                </Info>
+            </InfoContainer>
             <TradesTable
-                trades={sortedTrades}
+                trades={assetSearch ? searchFilteredTrades : filteredTrades}
                 isLoading={tradesQuery.isLoading}
                 orderBy={orderBy}
                 orderDirection={orderDirection}
@@ -66,7 +140,12 @@ const Trades: React.FC = () => {
                 setOrderDirection={setOrderDirection}
             >
                 <NoTrades>
-                    <Text className="text-l bold pale-grey">{t('options.leaderboard.trades.no-trades-found')}</Text>
+                    <>
+                        <Text className="text-l bold pale-grey">{t('options.leaderboard.trades.no-trades-found')}</Text>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.leaderboard.trades.view-all-trades')}
+                        </Button>
+                    </>
                 </NoTrades>
             </TradesTable>
         </FlexDivColumnCentered>
@@ -164,6 +243,42 @@ const NoTrades = styled(FlexDivColumn)`
         align-self: center;
     }
     border-radius: 0 0 23px 23px;
+`;
+
+const InfoContainer = styled.div`
+    margin-left: 22px;
+    margin-bottom: 20px;
+`;
+
+const Info = styled.span`
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 24px;
+    color: #f6f6fe;
+    &:first-child {
+        margin-right: 50px;
+    }
+`;
+
+export const CheckboxContainer = styled.div`
+    padding-top: 4px;
+    margin-top: 21px;
+    margin-left: 22px;
+    label {
+        font-size: 16px;
+    }
+    span {
+        :after {
+            height: 12px;
+            width: 5px;
+            left: 4px;
+            top: -2px;
+            border-width: 0 3px 3px 0;
+        }
+        height: 18px;
+        width: 18px;
+        margin-top: 2px;
+    }
 `;
 
 export default Trades;

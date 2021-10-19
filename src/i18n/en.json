@@ -90,6 +90,7 @@
         "save": "Save",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
+        "gas-fee-info": "Estimated gas fee based on the latest base fee and medium priority.",
         "gwei": "gwei",
         "transaction": {
             "view": "View"
@@ -789,13 +790,19 @@
             },
             "trading-competition": {
                 "tab-title": "Trading competition",
-                "competition-period": "Selected period"
+                "competition-period": "Selected period",
+                "disqualified": "Disqualified",
+                "current-rank": "Your current rank"
             },
             "board": {
                 "tab-title": "Leaderboard"
             },
             "trades": {
                 "tab-title": "Trades",
+                "only-trading-competition-checkbox": "Show only trading competition trades",
+                "number-of-trades": "Number of trades",
+                "volume": "Volume",
+                "view-all-trades": "View all trades",
                 "no-trades-found": "No trades found",
                 "table": {
                     "date-time-col": "date | time",
@@ -813,6 +820,7 @@
                 "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
                 "filters": {
+                    "all": "All",
                     "mints": "Mints",
                     "trades": "Trades",
                     "exercises": "Exercises",
