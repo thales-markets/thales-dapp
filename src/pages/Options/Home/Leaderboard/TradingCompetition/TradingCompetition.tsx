@@ -36,6 +36,7 @@ import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
 import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
+import twitter from 'assets/images/twitter-blue-logo.svg';
 
 enum OrderDirection {
     NONE,
@@ -121,6 +122,16 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                     if (a.trades !== b.trades) return b.trades - a.trades;
                 }
                 if (orderBy === 6) {
+                    if (a.gain.toString() === 'NaN') {
+                        const gain = (a.netProfit / a.investment) * 100;
+                        return b.gain - gain;
+                    }
+
+                    if (b.gain.toString() === 'NaN') {
+                        const gain = (b.netProfit / b.investment) * 100;
+                        return gain - a.gain;
+                    }
+
                     if (a.gain !== b.gain) return b.gain - a.gain;
 
                     if (a.trades !== b.trades) return b.trades - a.trades;
@@ -375,6 +386,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                                 account[0] === leader.walletAddress.toLowerCase()
                                                         )[0][1].avatar
                                                     }
+                                                    onError={(e: any) => (e.target.src = twitter)}
                                                 ></img>
                                                 <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                             </StyledLink>
@@ -395,7 +407,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
-                                        {Math.abs(leader.gain).toFixed(1)}%
+                                        {leader.gain === 'NaN'
+                                            ? Math.abs((leader.netProfit / leader.investment) * 100).toFixed(1)
+                                            : Math.abs(leader.gain).toFixed(1)}
+                                        %
                                     </StyledTableCell>
                                     <StyledTableCell>{leader.trades}</StyledTableCell>
                                     <StyledTableCell>
@@ -414,6 +429,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                             const twitterData = twitterAccountsData.filter(
                                 (account: any) => account[0] === leader.walletAddress.toLowerCase()
                             );
+
                             return (
                                 <StyledTableRow
                                     key={index}
@@ -460,6 +476,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                 <img
                                                     style={{ width: 35, height: 35, borderRadius: '50%' }}
                                                     src={twitterData[0][1].avatar}
+                                                    onError={(e: any) => (e.target.src = twitter)}
                                                 ></img>
                                                 <ArrowIcon width="16" height="16" style={{ marginBottom: 8 }} />
                                             </StyledLink>
@@ -497,7 +514,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         className={`${leader.netProfit < 0 ? 'red' : 'green'}`}
                                         style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
                                     >
-                                        {Math.abs(leader.gain).toFixed(1)}%
+                                        {leader.gain === 'NaN'
+                                            ? Math.abs((leader.netProfit / leader.investment) * 100).toFixed(1)
+                                            : Math.abs(leader.gain).toFixed(1)}
+                                        %
                                     </StyledTableCell>
                                     <StyledTableCell
                                         style={{ textDecoration: (leader as any).rank === 0 ? 'line-through' : '' }}
