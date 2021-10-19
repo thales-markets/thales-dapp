@@ -13,12 +13,17 @@ import bronze from 'assets/images/bronze.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import gold from 'assets/images/gold.svg';
-import angryThales from 'assets/images/red-thales-head.png';
 import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { TooltipAssetIcon, TooltipIcon, TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
+import {
+    TooltipAssetIcon,
+    TooltipDQIcon,
+    TooltipIcon,
+    TooltipInfoIcon,
+    TooltipWarningIcon,
+} from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
@@ -49,7 +54,7 @@ type TradingCompetitionProps = {
 };
 
 const cheaters = ['0x81533c7938946e0605f6b3f0950381db1e0a81ea', '0x4ecc8a1c7e838bc47fc2cd1c7aac642fc5826cf4'];
-
+const unverifiedWallets = new Set();
 const defaultOrderBy = 5; // Netprofit
 
 const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap }) => {
@@ -75,10 +80,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         enabled: isAppReady,
     });
 
-    const verifiedTwitterAccounts: any = useMemo(
-        () => (verifiedTwitterAccountsQuery.isSuccess ? verifiedTwitterAccountsQuery.data : new Set()),
-        [verifiedTwitterAccountsQuery]
-    );
+    const verifiedTwitterAccounts = verifiedTwitterAccountsQuery.isSuccess
+        ? verifiedTwitterAccountsQuery.data
+        : new Set();
 
     const competition = competitionQuery.data
         ? competitionQuery.data.competition.sort((a, b) => b.netProfit - a.netProfit)
@@ -113,88 +117,106 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         return page;
     }, [page, numberOfPages]);
 
-    const sortedData: any = useMemo(() => {
-        if (competition) {
-            const sorted = competition.sort((a, b) => {
-                if (orderBy === 5) {
-                    if (a.netProfit !== b.netProfit) return b.netProfit - a.netProfit;
+    const dataRdy: any = useMemo(() => {
+        if (competition.length > 0 && verifiedTwitterAccounts.size > 0) {
+            const verifiedWithInv = [] as any;
+            const verifiedWithoutInvOrTrades = [] as any;
+            const unverified = [] as any;
+            const cheatersArr = [] as any;
 
-                    if (a.trades !== b.trades) return b.trades - a.trades;
-                }
-                if (orderBy === 6) {
-                    if (a.gain.toString() === 'NaN') {
-                        const gain = (a.netProfit / a.investment) * 100;
-                        return b.gain - gain;
-                    }
-
-                    if (b.gain.toString() === 'NaN') {
-                        const gain = (b.netProfit / b.investment) * 100;
-                        return gain - a.gain;
-                    }
-
-                    if (a.gain !== b.gain) return b.gain - a.gain;
-
-                    if (a.trades !== b.trades) return b.trades - a.trades;
+            competition.map((leader: any) => {
+                if (cheaters.includes(leader.walletAddress.toLowerCase().trim())) {
+                    cheatersArr.push(leader);
+                    return;
                 }
 
-                return 0;
+                if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
+                    if (leader.investment > 0) verifiedWithInv.push(leader);
+                    else verifiedWithoutInvOrTrades.push(leader);
+                } else {
+                    if (leader.investment > 0) {
+                        unverified.push(leader);
+                        unverifiedWallets.add(leader.walletAddress);
+                    }
+                }
             });
 
-            return sorted;
+            return [verifiedWithInv as any, verifiedWithoutInvOrTrades, unverified, cheatersArr];
         }
-    }, [orderBy, orderDirection, competition]);
+        return undefined;
+    }, [competition, verifiedTwitterAccounts]);
 
-    const leaderboardData = useMemo(() => {
-        let variableIndex = 0;
-        if (verifiedTwitterAccountsQuery.isSuccess) {
-            return sortedData
-                .filter((leader: any) => {
-                    if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
-                        if (searchString === '') return true;
-                        if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
-                            return true;
-                        }
-
-                        const disp = displayNamesMap.get(leader.walletAddress);
-
-                        if (disp) {
-                            return disp.toLowerCase().includes(searchString.toLowerCase());
-                        }
-
-                        return false;
-                    } else return false;
-                })
+    const sortedData: any = useMemo(() => {
+        if (dataRdy) {
+            let verifiedWithInv = dataRdy[0];
+            let verifiedWithoutInvOrTrades = dataRdy[1];
+            const unverified = dataRdy[2];
+            const cheatersArr = dataRdy[3];
+            verifiedWithInv = verifiedWithInv
                 .sort((a: any, b: any) => {
-                    if (cheaters.includes(a.walletAddress) && b.trades > 0) {
-                        return 1;
+                    if (orderBy === 5) {
+                        if (a.netProfit !== b.netProfit) return b.netProfit - a.netProfit;
+
+                        if (a.trades !== b.trades) return b.trades - a.trades;
+                    }
+                    if (orderBy === 6) {
+                        if (a.gain.toString() === 'NaN') {
+                            const gain = (a.netProfit / a.investment) * 100;
+                            return b.gain - gain;
+                        }
+
+                        if (b.gain.toString() === 'NaN') {
+                            const gain = (b.netProfit / b.investment) * 100;
+                            return gain - a.gain;
+                        }
+
+                        if (a.gain !== b.gain) return b.gain - a.gain;
+
+                        if (a.trades !== b.trades) return b.trades - a.trades;
                     }
 
-                    if (cheaters.includes(b.walletAddress) && a.trades > 0) {
-                        return -1;
-                    }
-                    if (a.trades === 0) return 1;
-                    if (b.trades === 0) return -1;
                     return 0;
                 })
                 .map((leader: any, index: number, self: any) => {
-                    if (cheaters.includes(leader.walletAddress)) {
-                        return { rank: 0, ...leader };
-                    }
                     if (orderDirection === OrderDirection.DESC) {
-                        const leaderObject = { rank: variableIndex + 1, ...leader };
-                        variableIndex++;
-                        return leaderObject;
+                        return { rank: index + 1, ...leader };
                     }
 
-                    const leaderObject = { rank: self.length - index, ...leader };
-                    variableIndex++;
-                    return leaderObject;
+                    return { rank: self.length - index, ...leader };
+                });
+
+            verifiedWithoutInvOrTrades = verifiedWithoutInvOrTrades.map((leader: any) => {
+                return { rank: verifiedWithInv.length + 1, ...leader };
+            });
+
+            return [...verifiedWithInv, ...cheatersArr, ...unverified, ...verifiedWithoutInvOrTrades];
+        }
+    }, [orderBy, orderDirection, dataRdy]);
+
+    const leaderboardData = useMemo(() => {
+        if (verifiedTwitterAccountsQuery.isSuccess) {
+            return sortedData
+                .filter((leader: any) => {
+                    if (searchString === '') return true;
+                    if (leader.walletAddress.toLowerCase().includes(searchString.toLowerCase())) {
+                        return true;
+                    }
+
+                    const disp = displayNamesMap.get(leader.walletAddress);
+
+                    if (disp) {
+                        return disp.toLowerCase().includes(searchString.toLowerCase());
+                    }
+
+                    return false;
                 })
                 .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
         } else {
             return [];
         }
-    }, [rowsPerPage, memoizedPage, searchString, sortedData, verifiedTwitterAccountsQuery]);
+    }, [rowsPerPage, memoizedPage, searchString, sortedData]);
+
+    console.log(leaderboardData);
 
     const userLeaderboardData = useMemo(() => {
         const userData = leaderboardData.filter(
@@ -340,8 +362,15 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         })} */}
                         {userLeaderboardData.map((leader: any, index: any) => {
                             const cheater = cheaters.includes(leader.walletAddress);
+                            const unverified = unverifiedWallets.has(leader.walletAddress);
                             return (
-                                <StyledTableRow className="leaderboard__tableBody__yourRank" key={index}>
+                                <StyledTableRow
+                                    style={{
+                                        opacity: cheater ? 0.3 : unverified ? 0.5 : 1,
+                                    }}
+                                    className="leaderboard__tableBody__yourRank"
+                                    key={index}
+                                >
                                     <StyledTableCell
                                         style={{
                                             height: getHeight(leader, true),
@@ -350,7 +379,8 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             padding: cheater ? 0 : '',
                                         }}
                                     >
-                                        {cheater && <img src={angryThales} style={{ width: 60, height: 60 }} />}
+                                        {cheater && 'DQ'}
+                                        {unverified && '-'}
                                         {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
                                             <img src={getMedal(leader)} style={{ width: 35, height: 48 }}></img>
                                         )}
@@ -436,10 +466,20 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                 (account: any) => account[0] === leader.walletAddress.toLowerCase()
                             );
                             const cheater = cheaters.includes(leader.walletAddress);
+                            const unverified = unverifiedWallets.has(leader.walletAddress);
                             return (
                                 <StyledTableRow
                                     key={index}
-                                    className={leader.rank === 1 ? 'leaderboard__tableBody__firstRank' : ''}
+                                    style={{
+                                        opacity: cheater ? 0.3 : unverified ? 0.5 : 1,
+                                    }}
+                                    className={
+                                        leader.rank === 1
+                                            ? 'leaderboard__tableBody__firstRank'
+                                            : cheater
+                                            ? 'leaderboard__tableBody__cheater'
+                                            : ''
+                                    }
                                 >
                                     <StyledTableCell
                                         style={{
@@ -454,24 +494,32 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                     : '',
                                         }}
                                     >
-                                        {cheater && <img src={angryThales} style={{ width: 60, height: 60 }} />}
-                                        {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
+                                        {cheater ? (
+                                            'DQ'
+                                        ) : unverified ? (
+                                            '-'
+                                        ) : (leader as any).rank <= 3 && (leader as any).rank > 0 ? (
                                             <img
                                                 src={getMedal(leader)}
                                                 style={{ width: getMedalWidth(leader), height: getMedalHeight(leader) }}
                                             ></img>
+                                        ) : (
+                                            (leader as any).rank
                                         )}
-
-                                        {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && !cheater && (
+                                        {(leader as any).rank <= 20 && !cheater && !unverified && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
                                         )}
                                         {cheater && (
-                                            <TooltipInfoIcon
+                                            <TooltipDQIcon
                                                 title={t('options.leaderboard.trading-competition.disqualified')}
-                                            ></TooltipInfoIcon>
+                                            ></TooltipDQIcon>
+                                        )}
+                                        {unverified && (
+                                            <TooltipWarningIcon
+                                                title={t('options.leaderboard.trading-competition.unverified')}
+                                            ></TooltipWarningIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -495,6 +543,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         style={{
                                             fontWeight: 'bold',
                                             textDecoration: cheater ? 'line-through' : '',
+                                            maxWidth: 200,
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
                                         }}
                                     >
                                         <StyledLink
