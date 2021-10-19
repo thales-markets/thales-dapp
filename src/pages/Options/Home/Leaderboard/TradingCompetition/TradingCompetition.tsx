@@ -18,7 +18,7 @@ import silver from 'assets/images/silver.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import { USD_SIGN } from 'constants/currency';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { TooltipAssetIcon, TooltipIcon } from 'pages/Options/CreateMarket/components';
+import { TooltipAssetIcon, TooltipIcon, TooltipInfoIcon } from 'pages/Options/CreateMarket/components';
 import { ArrowIcon, StyledLink } from 'pages/Options/Market/components/MarketOverview/MarketOverview';
 import useCompetitionQuery, { Competition } from 'queries/options/useCompetitionQuery';
 import useVerifiedTwitterAccountsQuery from 'queries/user/useVerifiedTwitterAccountsQuery';
@@ -89,7 +89,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
-    const [rowsPerPage, setRowsPerPage] = React.useState(20);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
     const numberOfPages = Math.ceil(twitterAccountsData.length / rowsPerPage) || 1;
 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
@@ -349,7 +349,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             padding: (leader as any).rank === 0 ? 0 : '',
                                         }}
                                     >
-                                        {(leader as any).rank === 0 && (
+                                        {cheaters.includes(leader.walletAddress) && (
                                             <img src={angryThales} style={{ width: 60, height: 60 }} />
                                         )}
                                         {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
@@ -359,8 +359,13 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && (leader as any).rank !== 0 && (
+                                        {(leader as any).rank <= 20 && !cheaters.includes(leader.walletAddress) && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
+                                        )}
+                                        {cheaters.includes(leader.walletAddress) && (
+                                            <TooltipInfoIcon
+                                                title={t('options.leaderboard.trading-competition.disqualified')}
+                                            ></TooltipInfoIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -397,7 +402,9 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        {'Your current rank'}
+                                        {cheaters.includes(leader.walletAddress)
+                                            ? t('options.leaderboard.trading-competition.disqualified')
+                                            : t('options.leaderboard.trading-competition.current-rank')}
                                     </StyledTableCell>
                                     <StyledTableCell className={`${leader.netProfit < 0 ? 'red' : 'green'}`}>
                                         {formatCurrencyWithSign(
@@ -448,7 +455,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                                     : '',
                                         }}
                                     >
-                                        {(leader as any).rank === 0 && (
+                                        {cheaters.includes(leader.walletAddress) && (
                                             <img src={angryThales} style={{ width: 60, height: 60 }} />
                                         )}
                                         {(leader as any).rank <= 3 && (leader as any).rank > 0 && (
@@ -461,8 +468,13 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                                         {(leader as any).rank > 3 && (leader as any).rank}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0, verticalAlign: 'middle' }}>
-                                        {(leader as any).rank <= 20 && (leader as any).rank !== 0 && (
+                                        {(leader as any).rank <= 20 && !cheaters.includes(leader.walletAddress) && (
                                             <TooltipAssetIcon title={getRewardsData(leader)}></TooltipAssetIcon>
+                                        )}
+                                        {cheaters.includes(leader.walletAddress) && (
+                                            <TooltipInfoIcon
+                                                title={t('options.leaderboard.trading-competition.disqualified')}
+                                            ></TooltipInfoIcon>
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell style={{ padding: 0 }}>
@@ -542,7 +554,7 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                         <TableFooter>
                             <TableRow>
                                 <PaginationWrapper
-                                    rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                    rowsPerPageOptions={[5, 10, 15, 20, 25, 30, 50]}
                                     onRowsPerPageChange={handleChangeRowsPerPage}
                                     labelRowsPerPage={t(`common.pagination.rows-per-page`)}
                                     count={competition.length}
