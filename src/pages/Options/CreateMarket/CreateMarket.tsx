@@ -74,7 +74,7 @@ import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
 
-const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
+const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
 const roundMinutes = (date: Date) => {
