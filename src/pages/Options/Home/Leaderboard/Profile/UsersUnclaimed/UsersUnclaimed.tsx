@@ -1,196 +1,249 @@
-import CurrencyIcon from 'components/Currency/CurrencyIcon';
+import { Table, TableBody, TableFooter, TableHead, TableRow } from '@material-ui/core';
+import downSelected from 'assets/images/down-selected.svg';
+import down from 'assets/images/down.svg';
+import longIcon from 'assets/images/long_small.svg';
+import shortIcon from 'assets/images/short_small.svg';
+import upSelected from 'assets/images/up-selected.svg';
+import up from 'assets/images/up.svg';
+import Currency from 'components/Currency';
 import { USD_SIGN } from 'constants/currency';
-import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
-import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
-import React, { useEffect, useState } from 'react';
-import ReactCountryFlag from 'react-country-flag';
+import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
+import {
+    countryToCountryCode,
+    eventToIcon,
+    PaginationWrapper,
+    StyledTableRow,
+} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
+import { LightTooltip } from 'pages/Options/Market/components';
+import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Image, Text } from 'theme/common';
-import { formatShortDate } from 'utils/formatters/date';
+import { Button, FlexDiv, Image } from 'theme/common';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
-import { COLORS } from 'constants/ui';
-import { ethers } from 'ethers';
-import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
-import { OptionsMarketInfo } from 'types/options';
-import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
-import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
-import SPAAnchor from '../../../../../../components/SPAAnchor';
+import { marketHeading } from '../../Trades/Trades';
+import { HeadCell } from '../Profile';
+import ReactCountryFlag from 'react-country-flag';
 
 type UsersUnclaimedProps = {
     usersUnclaimed: any[];
-    market: any;
+    marketsData: any[];
     userDisplay: boolean;
 };
 
-const getCellColor = (type: string) => {
-    switch (type) {
-        case 'long':
-            return COLORS.LONG;
-        case 'short':
-            return COLORS.SHORT;
-        default:
-            return COLORS.WHITE;
-    }
-};
+const DEFAULT_ORDER_BY = 1;
 
-const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, market, userDisplay }) => {
+enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
+const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, marketsData, userDisplay }) => {
     const { t } = useTranslation();
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
+    console.log(userDisplay);
+    const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
-    const marketQuery = useBinaryOptionsMarketQuery(market.address, {
-        enabled: isAppReady,
-    });
+    useEffect(() => setPage(0), [orderBy, orderDirection]);
 
-    useEffect(() => {
-        const fetchMarketData = async () => {
-            if (marketQuery.isSuccess && marketQuery.data) {
-                if (marketQuery.data.customMarket) {
-                    try {
-                        const sportFeedContract = new ethers.Contract(
-                            marketQuery.data.oracleAdress,
-                            sportFeedOracleContract.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        setOptionsMarket({
-                            ...marketQuery.data,
-                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
-                            eventName: data[1],
-                            outcome: data[2],
-                        });
-                    } catch (e) {
-                        const sportFeedContract = new ethers.Contract(
-                            marketQuery.data.oracleAdress,
-                            ethBurnedOracleInstance.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        setOptionsMarket({
-                            ...marketQuery.data,
-                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
-                            eventName: data[1],
-                            outcome:
-                                data[1] === 'Flippening Markets' || data[1] === 'ETH/BTC market cap ratio'
-                                    ? bigNumberFormatter(data[2]).toString()
-                                    : Number(data[2]).toString(),
-                        });
-                    }
-                } else {
-                    setOptionsMarket(marketQuery.data);
-                }
+    const [page, setPage] = useState(0);
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+    const numberOfPages = useMemo(() => {
+        return Math.ceil(usersUnclaimed.length / rowsPerPage) || 1;
+    }, [rowsPerPage, usersUnclaimed]);
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const memoizedPage = useMemo(() => {
+        if (page > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return page;
+    }, [page, numberOfPages, usersUnclaimed]);
+
+    const calcDirection = (cell: HeadCell) => {
+        if (orderBy === cell.id) {
+            switch (orderDirection) {
+                case OrderDirection.NONE:
+                    setOrderDirection(OrderDirection.DESC);
+                    break;
+                case OrderDirection.DESC:
+                    setOrderDirection(OrderDirection.ASC);
+                    break;
+                case OrderDirection.ASC:
+                    setOrderDirection(OrderDirection.DESC);
+                    setOrderBy(DEFAULT_ORDER_BY);
+                    break;
             }
-        };
-        fetchMarketData();
-    }, [marketQuery.isSuccess]);
+        } else {
+            setOrderBy(parseInt(cell.id.toString()));
+            setOrderDirection(OrderDirection.DESC);
+        }
+    };
+
+    const sortedUnclaimed = useMemo(() => {
+        return usersUnclaimed
+            .sort((a, b) => {
+                if (orderBy === 1) {
+                    const bMarket = marketsData.filter((market) => market.address === b.market.address)[0];
+                    const aMarket = marketsData.filter((market) => market.address === a.market.address)[0];
+                    return sortByMarketHeading(aMarket, bMarket, orderDirection);
+                }
+                if (orderBy === 2) {
+                    return sortByField(a.market, b.market, orderDirection, 'result');
+                }
+                if (orderBy === 3) {
+                    const claimAmountA = a.market.result === 'long' ? a.long : a.short;
+                    const claimAmountB = b.market.result === 'long' ? b.long : b.short;
+
+                    if (orderDirection === OrderDirection.ASC) {
+                        return claimAmountA > claimAmountB ? 1 : -1;
+                    }
+                    if (orderDirection === OrderDirection.DESC) {
+                        return claimAmountA > claimAmountB ? -1 : 1;
+                    }
+
+                    return 0;
+                }
+
+                return 0;
+            })
+            .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+    }, [orderBy, orderDirection, memoizedPage, rowsPerPage, usersUnclaimed]);
+
+    const headCells: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.profile.markets.result'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 4, label: '', sortable: false },
+    ];
 
     return (
-        <FlexDiv className="leaderboard__profile__rowBorder">
-            <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
-                <SPAAnchor
-                    style={{
-                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                    }}
-                    href={buildOptionsMarketLink(market.address)}
-                >
-                    {market.customMarket ? (
-                        <>
-                            {countryToCountryCode(optionsMarket?.country as string) && (
-                                <ReactCountryFlag
-                                    countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
-                                    svg
-                                />
-                            )}
-                            {!countryToCountryCode(optionsMarket?.country as string) && (
-                                <CustomIcon
-                                    style={{ marginLeft: 32, width: 50, height: 50 }}
-                                    src={eventToIcon(optionsMarket?.eventName as string)}
-                                ></CustomIcon>
-                            )}
-                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
-                                {market.country ? market.country : optionsMarket?.country}
-                            </CryptoName>
-                        </>
-                    ) : (
-                        <>
-                            <CurrencyIcon
-                                currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
-                            />
-                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
-                                {getSynthName(market.currencyKey)}
-                            </CryptoName>
-                            <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
-                        </>
-                    )}
-                </SPAAnchor>
-            </FlexDivColumnCentered>
-            <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
-                <Row>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.markets.strike-price')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.markets.pool-size')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.markets.maturity-date')}
-                    </Text>
-                </Row>
-                <Row className="text-profile-data">
-                    <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
-                    <Text style={{ flex: 1 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
-                    <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
-                </Row>
-
-                <Row className="text-ms leaderboard__profile__rowBackground__columns" style={{ borderBottom: 'none' }}>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.markets.result')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 2 }}>
-                        {market.result === 'long'
-                            ? t('options.leaderboard.profile.common.long')
-                            : t('options.leaderboard.profile.common.short')}
-                    </Text>
-                </Row>
-                <Row className="text-profile-data" style={{ paddingBottom: 16 }}>
-                    <Text style={{ flex: 1, color: getCellColor(market.result) }}>{market.result.toUpperCase()}</Text>
-                    <Text style={{ flex: 1, paddingLeft: 16 }}>
-                        {market.result === 'long'
-                            ? formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].long)
-                            : formatCurrencyWithSign(USD_SIGN, usersUnclaimed[0].short)}
-                    </Text>
-                    <FlexDivColumnCentered style={{ flex: 1, alignItems: 'baseline', paddingRight: 35 }}>
-                        <Button className="primary" style={{ display: !userDisplay ? 'none' : '' }}>
-                            <a
-                                target="_blank"
-                                rel="noreferrer"
-                                href={buildOptionsMarketLink(market.address)}
-                                style={{ color: 'white', verticalAlign: 'top' }}
+        <Table aria-label="customized table">
+            <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                <TableRow>
+                    {headCells.map((cell: HeadCell, index) => {
+                        return (
+                            <StyledTableCell
+                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                key={index}
+                                style={cell.sortable ? { cursor: 'pointer' } : {}}
                             >
-                                {t('options.leaderboard.profile.unclaimed.redeem')}
-                            </a>
-                        </Button>
-                    </FlexDivColumnCentered>
-                </Row>
-            </FlexDivColumnCentered>
-        </FlexDiv>
+                                <TableHeaderLabel className={cell.sortable && orderBy === cell.id ? 'selected' : ''}>
+                                    {cell.label}
+                                </TableHeaderLabel>
+                                {cell.sortable && (
+                                    <ArrowsWrapper>
+                                        {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                            <Arrow
+                                                src={orderDirection === OrderDirection.ASC ? upSelected : downSelected}
+                                            />
+                                        ) : (
+                                            <>
+                                                <Arrow src={up} />
+                                                <Arrow src={down} />
+                                            </>
+                                        )}
+                                    </ArrowsWrapper>
+                                )}
+                            </StyledTableCell>
+                        );
+                    })}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {sortedUnclaimed.map((unclaimed: any, index: any) => {
+                    const market = marketsData.filter((market) => market.address === unclaimed.market.address)[0];
+                    return (
+                        <StyledTableRow key={index}>
+                            <StyledTableCell>
+                                <FlexDiv>
+                                    <Currency.Icon
+                                        synthIconStyle={{
+                                            width: 24,
+                                            height: 24,
+                                            marginRight: 6,
+                                            marginBottom: -6,
+                                        }}
+                                        currencyKey={market.currencyKey}
+                                    />{' '}
+                                    <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                        <StyledLink href={buildOptionsMarketLink(market.address, unclaimed.side)}>
+                                            {countryToCountryCode(market.country as string) && (
+                                                <ReactCountryFlag
+                                                    countryCode={countryToCountryCode(market.country as string)}
+                                                    style={{ marginBottom: -6, marginRight: 6, width: 24, height: 24 }}
+                                                    svg
+                                                />
+                                            )}
+                                            {market.customMarket && !countryToCountryCode(market.country as any) && (
+                                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                                            )}
+                                            <CryptoName>{marketHeading(market, unclaimed.side)}</CryptoName>
+                                        </StyledLink>
+                                    </LightTooltip>
+                                </FlexDiv>
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                {unclaimed.market.result === 'long' ? (
+                                    <SideImage src={longIcon} />
+                                ) : (
+                                    <SideImage src={shortIcon} />
+                                )}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                {unclaimed.market.result === 'long'
+                                    ? formatCurrencyWithSign(USD_SIGN, unclaimed.long)
+                                    : formatCurrencyWithSign(USD_SIGN, unclaimed.short)}
+                            </StyledTableCell>
+                            <StyledTableCell
+                                style={index === sortedUnclaimed.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                            >
+                                <Button className="primary">
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href={buildOptionsMarketLink(market.address)}
+                                        style={{ color: 'white', verticalAlign: 'top' }}
+                                    >
+                                        {t('options.leaderboard.profile.unclaimed.redeem')}
+                                    </a>
+                                </Button>
+                            </StyledTableCell>
+                        </StyledTableRow>
+                    );
+                })}
+            </TableBody>
+            {sortedUnclaimed.length !== 0 && (
+                <TableFooter>
+                    <TableRow>
+                        <PaginationWrapper
+                            rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                            count={sortedUnclaimed.length}
+                            rowsPerPage={rowsPerPage}
+                            page={memoizedPage}
+                            onPageChange={handleChangePage}
+                            ActionsComponent={() => (
+                                <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
+                            )}
+                        />
+                    </TableRow>
+                </TableFooter>
+            )}
+        </Table>
     );
 };
 
@@ -221,10 +274,41 @@ export const RowScrollable = styled(FlexDiv)`
     }
 `;
 
-export const CustomIcon = styled(Image)`
-    margin-right: 0px;
-    width: 100px;
-    height: 100px;
+const CryptoName = styled.span``;
+
+const SideImage = styled.img`
+    width: 38px;
 `;
+
+export const CustomIcon = styled(Image)`
+    margin-bottom: -6px;
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
+`;
+
+const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
+    const aMarket = marketHeading(a, a.optionSide);
+    const bMarket = marketHeading(b, b.optionSide);
+    if (direction === OrderDirection.ASC) {
+        return aMarket < bMarket ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aMarket < bMarket ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
+
+    return 0;
+};
 
 export default UsersUnclaimed;

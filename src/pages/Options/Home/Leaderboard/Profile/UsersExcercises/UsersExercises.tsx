@@ -1,224 +1,240 @@
-import CurrencyIcon from 'components/Currency/CurrencyIcon';
-import { USD_SIGN } from 'constants/currency';
-import { CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
-import { countryToCountryCode, eventToIcon } from 'pages/Options/Home/MarketsTable/MarketsTable';
-import React, { useEffect, useState } from 'react';
+import { TableBody, TableFooter, TableHead, TableRow, Table } from '@material-ui/core';
+import Currency from 'components/Currency';
+import ViewEtherscanLink from 'components/ViewEtherscanLink';
+import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
+import { COLORS } from 'constants/ui';
+import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
+import {
+    countryToCountryCode,
+    eventToIcon,
+    PaginationWrapper,
+    StyledTableRow,
+} from 'pages/Options/Home/MarketsTable/MarketsTable';
+import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
+import { LightTooltip } from 'pages/Options/Market/components';
+import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumnCentered, Text, Image } from 'theme/common';
-import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
-import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { FlexDiv, Image } from 'theme/common';
+import { OptionSide } from 'types/options';
+import { formatTxTimestamp } from 'utils/formatters/date';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
+import { marketHeading } from '../../Trades/Trades';
+import down from 'assets/images/down.svg';
+import up from 'assets/images/up.svg';
+import downSelected from 'assets/images/down-selected.svg';
+import upSelected from 'assets/images/up-selected.svg';
+import longIcon from 'assets/images/long_small.svg';
+import shortIcon from 'assets/images/short_small.svg';
+import { HeadCell } from '../Profile';
 import ReactCountryFlag from 'react-country-flag';
-import { COLORS } from 'constants/ui';
-import { ethers } from 'ethers';
-import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { RootState } from 'redux/rootReducer';
-import { OptionsMarketInfo } from 'types/options';
-import sportFeedOracleContract from 'utils/contracts/sportFeedOracleInstance';
-import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
-import { bigNumberFormatter } from 'utils/formatters/ethers';
-import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import SPAAnchor from '../../../../../../components/SPAAnchor';
 
 type UsersExercisesProps = {
     usersExercises: any[];
-    market: any;
+    marketsData: any[];
 };
 
-const getCellColor = (type: string) => {
-    switch (type) {
-        case 'long':
-            return COLORS.LONG;
-        case 'short':
-            return COLORS.SHORT;
-        default:
-            return COLORS.WHITE;
-    }
-};
+const DEFAULT_ORDER_BY = 1;
 
-const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, market }) => {
+enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
+const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, marketsData }) => {
     const { t } = useTranslation();
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const [showAll, setShowAll] = useState<boolean>(false);
-    const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
+    const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
-    const marketQuery = useBinaryOptionsMarketQuery(market.address, {
-        enabled: isAppReady,
-    });
+    useEffect(() => setPage(0), [orderBy, orderDirection]);
 
-    useEffect(() => {
-        const fetchMarketData = async () => {
-            if (marketQuery.isSuccess && marketQuery.data) {
-                if (marketQuery.data.customMarket) {
-                    try {
-                        const sportFeedContract = new ethers.Contract(
-                            marketQuery.data.oracleAdress,
-                            sportFeedOracleContract.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        setOptionsMarket({
-                            ...marketQuery.data,
-                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
-                            eventName: data[1],
-                            outcome: data[2],
-                        });
-                    } catch (e) {
-                        const sportFeedContract = new ethers.Contract(
-                            marketQuery.data.oracleAdress,
-                            ethBurnedOracleInstance.abi,
-                            (snxJSConnector as any).provider
-                        );
-                        const data: any = await Promise.all([
-                            sportFeedContract.targetName(),
-                            sportFeedContract.eventName(),
-                            sportFeedContract.targetOutcome(),
-                        ]);
-                        setOptionsMarket({
-                            ...marketQuery.data,
-                            country: data[0] === 'ETH/BTC Flippening Market' ? 'ETH/BTC market cap ratio' : data[0],
-                            eventName: data[1],
-                            outcome:
-                                data[1] === 'Flippening Markets' || data[1] === 'ETH/BTC market cap ratio'
-                                    ? bigNumberFormatter(data[2]).toString()
-                                    : Number(data[2]).toString(),
-                        });
-                    }
-                } else {
-                    setOptionsMarket(marketQuery.data);
-                }
+    const [page, setPage] = useState(0);
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+    const numberOfPages = useMemo(() => {
+        return Math.ceil(usersExercises.length / rowsPerPage) || 1;
+    }, [rowsPerPage, usersExercises]);
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const memoizedPage = useMemo(() => {
+        if (page > numberOfPages - 1) {
+            return numberOfPages - 1;
+        }
+        return page;
+    }, [page, numberOfPages, usersExercises]);
+
+    const calcDirection = (cell: HeadCell) => {
+        if (orderBy === cell.id) {
+            switch (orderDirection) {
+                case OrderDirection.NONE:
+                    setOrderDirection(OrderDirection.DESC);
+                    break;
+                case OrderDirection.DESC:
+                    setOrderDirection(OrderDirection.ASC);
+                    break;
+                case OrderDirection.ASC:
+                    setOrderDirection(OrderDirection.DESC);
+                    setOrderBy(DEFAULT_ORDER_BY);
+                    break;
             }
-        };
-        fetchMarketData();
-    }, [marketQuery.isSuccess]);
-    return (
-        <FlexDiv className="leaderboard__profile__rowBorder">
-            <FlexDivColumnCentered className="leaderboard__profile__rowBackground leaderboard__profile__rowBackground--left">
-                <SPAAnchor
-                    style={{
-                        pointerEvents: market.phase !== 'expiry' ? 'auto' : 'none',
-                    }}
-                    href={buildOptionsMarketLink(market.address)}
-                >
-                    {market.customMarket ? (
-                        <>
-                            {countryToCountryCode(optionsMarket?.country as string) && (
-                                <ReactCountryFlag
-                                    countryCode={countryToCountryCode(optionsMarket?.country as string)}
-                                    style={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
-                                    svg
-                                />
-                            )}
-                            {!countryToCountryCode(optionsMarket?.country as string) && (
-                                <CustomIcon
-                                    style={{ marginLeft: 32, width: 50, height: 50 }}
-                                    src={eventToIcon(optionsMarket?.eventName as string)}
-                                />
-                            )}
-                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
-                                {market.country ? market.country : optionsMarket?.country}
-                            </CryptoName>
-                        </>
-                    ) : (
-                        <>
-                            <CurrencyIcon
-                                currencyKey={market.currencyKey}
-                                synthIconStyle={{ width: 50, height: 50, marginRight: 0, marginLeft: 32 }}
-                            />
-                            <CryptoName style={{ marginTop: 8, marginLeft: 32 }}>
-                                {getSynthName(market.currencyKey)}
-                            </CryptoName>
-                            <CryptoKey style={{ marginLeft: 32 }}>{optionsMarket?.asset}</CryptoKey>
-                        </>
-                    )}
-                </SPAAnchor>
-            </FlexDivColumnCentered>
-            <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground leaderboard__profile__rowBackground--right">
-                <Row>
-                    <Text className="bold" style={{ flex: 2 }}>
-                        {t('options.leaderboard.profile.markets.strike-price')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 2 }}>
-                        {t('options.leaderboard.profile.markets.pool-size')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.markets.maturity-date')}
-                    </Text>
-                </Row>
-                <Row className="text-profile-data">
-                    <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.strikePrice)}</Text>
-                    <Text style={{ flex: 2 }}>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</Text>
-                    <Text style={{ flex: 1 }}> {formatShortDate(market.maturityDate)}</Text>
-                </Row>
-                <Row className="text-ms leaderboard__profile__rowBackground__columns">
-                    <Text className="bold" style={{ flex: 1.33 }}>
-                        {t('options.leaderboard.profile.common.tx-status')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 1.33 }}>
-                        {t('options.leaderboard.profile.common.amount')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 1.33 }}>
-                        {t('options.leaderboard.profile.exercises.side')}
-                    </Text>
-                    <Text className="bold" style={{ flex: 1 }}>
-                        {t('options.leaderboard.profile.common.timestamp')}
-                    </Text>
-                </Row>
-                {!showAll && (
-                    <Row className="text-profile-data" style={usersExercises.length === 1 ? { paddingBottom: 16 } : {}}>
-                        <Text style={{ flex: 1.33 }}>
-                            <ViewEtherscanLink hash={usersExercises[0].hash} />
-                        </Text>
-                        <Text style={{ flex: 1.33 }}>{formatCurrencyWithSign(USD_SIGN, usersExercises[0].amount)}</Text>
-                        <Text style={{ flex: 1.33, color: getCellColor(usersExercises[0].side) }}>
-                            {usersExercises[0].side.toUpperCase()}
-                        </Text>
-                        <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(usersExercises[0].timestamp))}</Text>
-                    </Row>
-                )}
-                <RowScrollable>
-                    {showAll &&
-                        usersExercises?.map((exercise, index) => (
-                            <Row className="text-profile-data" key={index} style={{ width: '105.3%' }}>
-                                <Text style={{ flex: 1.33 }}>
-                                    <ViewEtherscanLink hash={exercise.hash} />
-                                </Text>
-                                <Text style={{ flex: 1.33 }}>{formatCurrencyWithSign(USD_SIGN, exercise.amount)}</Text>
-                                <Text style={{ flex: 1.33, color: getCellColor(exercise.side) }}>
-                                    {exercise.side.toUpperCase()}
-                                </Text>
-                                <Text style={{ flex: 1 }}>{formatTxTimestamp(new Date(exercise.timestamp))}</Text>
-                            </Row>
-                        ))}
-                </RowScrollable>
-                {usersExercises.length > 1 && (
-                    <Row>
-                        <Text style={{ flex: 3 }}></Text>
-                        <FlexDivColumnCentered className="text-ms leaderboard__profile__rowBackground__buttonContainer">
-                            <Button
-                                className="primary"
-                                style={{ background: 'transparent', padding: '24px 24px' }}
-                                onClick={() => setShowAll(!showAll)}
-                            >
-                                {showAll
-                                    ? t('options.leaderboard.profile.common.view-less')
-                                    : t('options.leaderboard.profile.common.view-more')}
-                            </Button>
-                        </FlexDivColumnCentered>
+        } else {
+            setOrderBy(parseInt(cell.id.toString()));
+            setOrderDirection(OrderDirection.DESC);
+        }
+    };
 
-                        <Text style={{ flex: 4 }}></Text>
-                    </Row>
-                )}
-            </FlexDivColumnCentered>
-        </FlexDiv>
+    const sortedExercises = useMemo(() => {
+        return usersExercises
+            .sort((a, b) => {
+                if (orderBy === 1) {
+                    return sortByField(a, b, orderDirection, 'timestamp');
+                }
+                if (orderBy === 2) {
+                    const bMarket = marketsData.filter((market) => market.address === b.market)[0];
+                    const aMarket = marketsData.filter((market) => market.address === a.market)[0];
+                    return sortByMarketHeading(aMarket, bMarket, orderDirection);
+                }
+                if (orderBy === 3) {
+                    return sortByField(a, b, orderDirection, 'side');
+                }
+                if (orderBy === 4) {
+                    return sortByField(a, b, orderDirection, 'amount');
+                }
+
+                return 0;
+            })
+            .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
+    }, [orderBy, orderDirection, memoizedPage, rowsPerPage, usersExercises]);
+
+    const headCells: HeadCell[] = [
+        { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
+        { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
+        { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
+    ];
+
+    return (
+        <Table aria-label="customized table">
+            <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                <TableRow>
+                    {headCells.map((cell: HeadCell, index) => {
+                        return (
+                            <StyledTableCell
+                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                key={index}
+                                style={cell.sortable ? { cursor: 'pointer' } : {}}
+                            >
+                                <TableHeaderLabel className={cell.sortable && orderBy === cell.id ? 'selected' : ''}>
+                                    {cell.label}
+                                </TableHeaderLabel>
+                                {cell.sortable && (
+                                    <ArrowsWrapper>
+                                        {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                            <Arrow
+                                                src={orderDirection === OrderDirection.ASC ? upSelected : downSelected}
+                                            />
+                                        ) : (
+                                            <>
+                                                <Arrow src={up} />
+                                                <Arrow src={down} />
+                                            </>
+                                        )}
+                                    </ArrowsWrapper>
+                                )}
+                            </StyledTableCell>
+                        );
+                    })}
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {sortedExercises.map((exercise: any, index: any) => {
+                    const market = marketsData.filter((market) => market.address === exercise.market)[0];
+                    console.log(exercise.side);
+                    const tradeSide: OptionSide = exercise.side;
+                    return (
+                        <StyledTableRow key={index}>
+                            <StyledTableCell>{formatTxTimestamp(exercise.timestamp)}</StyledTableCell>
+                            <StyledTableCell>
+                                <FlexDiv>
+                                    <Currency.Icon
+                                        synthIconStyle={{
+                                            width: 24,
+                                            height: 24,
+                                            marginRight: 6,
+                                            marginBottom: -6,
+                                        }}
+                                        currencyKey={market.currencyKey}
+                                    />{' '}
+                                    <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                        <StyledLink href={buildOptionsMarketLink(market.address, exercise.side)}>
+                                            {countryToCountryCode(market.country as string) && (
+                                                <ReactCountryFlag
+                                                    countryCode={countryToCountryCode(market.country as string)}
+                                                    style={{ marginBottom: -6, marginRight: 6, width: 24, height: 24 }}
+                                                    svg
+                                                />
+                                            )}
+                                            {market.customMarket && !countryToCountryCode(market.country as any) && (
+                                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
+                                            )}
+                                            <CryptoName>{marketHeading(market, exercise.side)}</CryptoName>
+                                        </StyledLink>
+                                    </LightTooltip>
+                                </FlexDiv>
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                {exercise.side === 'long' ? (
+                                    <SideImage src={longIcon} />
+                                ) : (
+                                    <SideImage src={shortIcon} />
+                                )}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                <Cell orderSide={exercise.side}>
+                                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], exercise.amount)}
+                                </Cell>
+                            </StyledTableCell>
+
+                            <StyledTableCell
+                                style={index === sortedExercises.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                            >
+                                <ViewEtherscanLink hash={exercise.hash} />
+                            </StyledTableCell>
+                        </StyledTableRow>
+                    );
+                })}
+            </TableBody>
+            {sortedExercises.length !== 0 && (
+                <TableFooter>
+                    <TableRow>
+                        <PaginationWrapper
+                            rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                            count={sortedExercises.length}
+                            rowsPerPage={rowsPerPage}
+                            page={memoizedPage}
+                            onPageChange={handleChangePage}
+                            ActionsComponent={() => (
+                                <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
+                            )}
+                        />
+                    </TableRow>
+                </TableFooter>
+            )}
+        </Table>
     );
 };
 
@@ -250,9 +266,44 @@ export const RowScrollable = styled(FlexDiv)`
 `;
 
 export const CustomIcon = styled(Image)`
-    margin-right: 0px;
-    width: 100px;
-    height: 100px;
+    margin-bottom: -6px;
+    margin-right: 6px;
+    width: 24px;
+    height: 24px;
 `;
+
+const SideImage = styled.img`
+    width: 38px;
+`;
+
+const CryptoName = styled.span``;
+
+const Cell = styled.span<{ orderSide: string }>`
+    color: ${(props) => (props.orderSide === 'long' ? COLORS.BUY : COLORS.SELL)};
+`;
+
+const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
+    const aMarket = marketHeading(a, a.optionSide);
+    const bMarket = marketHeading(b, b.optionSide);
+    if (direction === OrderDirection.ASC) {
+        return aMarket < bMarket ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aMarket < bMarket ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
+    if (direction === OrderDirection.ASC) {
+        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+    }
+
+    return 0;
+};
 
 export default UsersExercises;
