@@ -1,5 +1,4 @@
 import { ethers, Signer } from 'ethers';
-import { synthSummaryUtilContract } from './contracts/synthSummaryUtilContract';
 import binaryOptionsMarketDataContract from './contracts/binaryOptionsMarketDataContract';
 import binaryOptionsMarketManagerContract from './contracts/binaryOptionsMarketManagerContract';
 import vestingEscrow from './contracts/vestingEscrow';
@@ -20,7 +19,6 @@ type SnxJSConnector = {
     synthsMap: SynthsMap;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
-    synthSummaryUtilContract?: ethers.Contract;
     binaryOptionsMarketDataContract: ethers.Contract;
     binaryOptionsMarketManagerContract: ethers.Contract;
     retroAirdropContract?: ethers.Contract;
@@ -43,7 +41,6 @@ const snxJSConnector: SnxJSConnector = {
         this.synthsMap = keyBy(this.synths, 'name');
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
-        this.synthSummaryUtilContract = conditionalInitializeContract(synthSummaryUtilContract, contractSettings);
         this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);
         this.binaryOptionsMarketManagerContract = initializeContract(
             binaryOptionsMarketManagerContract,

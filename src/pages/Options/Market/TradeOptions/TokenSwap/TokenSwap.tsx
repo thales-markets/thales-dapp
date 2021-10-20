@@ -43,8 +43,6 @@ import {
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { FlexDivEnd, FlexDivColumn, FlexDivRow } from 'theme/common';
-import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
-import { get } from 'lodash';
 import Web3 from 'web3';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import ValidationMessage from 'components/ValidationMessage';
@@ -146,9 +144,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     const baseUrl = get0xBaseURL(networkId);
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
-    const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-    const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, baseToken, {
         enabled: isAppReady,
@@ -301,7 +296,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             }
         };
         get0xPrice();
-    }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, ethRate, isAmountEntered, isSlippageValid]);
+    }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, isAmountEntered, isSlippageValid]);
 
     const handle0xErrorResponse = (response: ZeroExErrorResponse) => {
         console.log(response);
