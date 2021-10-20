@@ -38,7 +38,6 @@ const snxJSConnector: SnxJSConnector = {
 
     setContractSettings: function (contractSettings: Config) {
         this.initialized = true;
-        console.log(contractSettings);
         this.snxJS = synthetix(contractSettings);
         this.synths = this.snxJS.synths;
         this.synthsMap = keyBy(this.synths, 'name');

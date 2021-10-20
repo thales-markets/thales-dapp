@@ -25,7 +25,6 @@ import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defa
 import { refetchOrderbook, refetchOrders, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
 import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import {
     CloseIconContainer,
     ModalContainer,
@@ -56,6 +55,7 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet-light.svg';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import styled from 'styled-components';
+import { get0xExchangeProxyAddress } from 'utils/0x';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -80,7 +80,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
@@ -123,7 +122,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const takeTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);

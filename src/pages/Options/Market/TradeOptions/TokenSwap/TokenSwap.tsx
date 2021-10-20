@@ -7,7 +7,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide, ZeroExErrorResponse } from 'types/options';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -50,7 +50,6 @@ import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMar
 import ValidationMessage from 'components/ValidationMessage';
 import onboardConnector from 'utils/onboardConnector';
 import NumericInput from '../../components/NumericInput';
-// import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
@@ -86,7 +85,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
     const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
-    // const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
 
@@ -145,7 +143,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
-    const addressToApprove = 'aaaa';
+    const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     const baseUrl = get0xBaseURL(networkId);
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });

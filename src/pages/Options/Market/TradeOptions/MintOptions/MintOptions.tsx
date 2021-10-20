@@ -48,9 +48,8 @@ import {
 } from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
-// import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
@@ -94,7 +93,6 @@ const MintOptions: React.FC = () => {
     const [hasShortAllowance, setShortAllowance] = useState<boolean>(false);
     const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
     const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
-    // const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
     const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
@@ -125,7 +123,7 @@ const MintOptions: React.FC = () => {
         !isLongPriceValid ||
         !isShortPriceValid;
 
-    const addressToApprove = 'aaaaa';
+    const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     useEffect(() => {
         const {

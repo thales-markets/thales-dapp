@@ -27,10 +27,8 @@ export async function getEthereumNetwork() {
     try {
         if (hasEthereumInjected()) {
             const provider = (await detectEthereumProvider()) as EthereumProvider;
-            console.log(provider);
             if (provider && provider.networkVersion != null) {
                 const networkId = Number(provider.networkVersion) as NetworkId;
-                console.log(provider.networkVersion, networkId);
                 return { name: SUPPORTED_NETWORKS[networkId], networkId };
             }
         }
@@ -76,3 +74,5 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
 };
 
 export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
+
+export const formatGwei = (wei: number) => wei / GWEI_UNIT;

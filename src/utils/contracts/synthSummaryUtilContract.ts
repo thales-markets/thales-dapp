@@ -8,7 +8,7 @@ export const synthSummaryUtilContract = {
         [NetworkId.Kovan]: '0xA2b5742922ae4CA1676349009E33DA5fB4D05dCB',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
+        [NetworkId['Mainnet-Ovm']]: 'TBD',
         [NetworkId['Kovan-Ovm']]: 'TBD',
     },
     abi: [

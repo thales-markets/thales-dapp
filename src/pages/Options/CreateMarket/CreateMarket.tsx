@@ -54,11 +54,10 @@ import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
 import erc20Contract from 'utils/contracts/erc20Contract';
-// import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import { toBigNumber } from 'utils/formatters/number';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import axios from 'axios';
@@ -103,7 +102,6 @@ export const CreateMarket: React.FC = () => {
         const [shortAmount, setShortAmount] = useState<number | string>('');
         const [sellLong, setSellLong] = useState<boolean>(false);
         const [sellShort, setSellShort] = useState<boolean>(false);
-        // const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
         const { t } = useTranslation();
         const { synthsMap: synths } = snxJSConnector;
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -146,7 +144,7 @@ export const CreateMarket: React.FC = () => {
 
         const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-        const addressToApprove = 'aaaaa';
+        const addressToApprove = get0xExchangeProxyAddress(networkId);
         let isCurrencySelected = false;
 
         const marketQuery = useBinaryOptionsMarketQuery(market, {
@@ -236,7 +234,10 @@ export const CreateMarket: React.FC = () => {
                     maturity,
                     initialMint,
                     false,
-                    ZERO_ADDRESS
+                    ZERO_ADDRESS,
+                    {
+                        gasLimit,
+                    }
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
                 if (txResult && txResult.events) {
@@ -263,22 +264,9 @@ export const CreateMarket: React.FC = () => {
         useEffect(() => {
             if (!hasAllowance) return;
             const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-            const {
-                contracts: { SynthsUSD },
-            } = snxJSConnector.snxJS as any;
             try {
                 const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
                 const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                    (snxJSConnector as any).signer
-                );
-                console.log(
-                    oracleKey,
-                    price,
-                    maturity,
-                    initialMint,
-                    false,
-                    ZERO_ADDRESS,
-                    SynthsUSD.address,
                     (snxJSConnector as any).signer
                 );
                 BOMMContractWithSigner.estimateGas
@@ -288,9 +276,9 @@ export const CreateMarket: React.FC = () => {
                         setUserHasEnoughFunds(true);
                     })
                     .catch((e: any) => {
-                        // if (e.data?.originalError.code === 3) {
-                        //     setUserHasEnoughFunds(false);
-                        // }
+                        if (e.data?.originalError?.code === 3) {
+                            setUserHasEnoughFunds(false);
+                        }
                         console.log(e);
                         setGasLimit(null);
                     });
@@ -325,8 +313,7 @@ export const CreateMarket: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256,
                     {
-                        gasLimit: Number(gasEstimate),
-                        gasPrice: 10000,
+                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
                     }
                 )) as ethers.ContractTransaction;
                 await tx.wait();
@@ -398,7 +385,7 @@ export const CreateMarket: React.FC = () => {
                     <Button
                         style={{ padding: '8px 24px' }}
                         className="primary"
-                        disabled={isButtonDisabled || isCreatingMarket}
+                        disabled={isButtonDisabled || isCreatingMarket || !gasLimit}
                         onClick={handleMarketCreation}
                     >
                         {isCreatingMarket

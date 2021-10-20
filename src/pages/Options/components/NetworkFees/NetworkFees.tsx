@@ -1,17 +1,18 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { formatCurrencyWithSign, formatCurrency } from 'utils/formatters/number';
+import { formatCurrencyWithSign, formatCurrency, formatCurrencyWithPrecision } from 'utils/formatters/number';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { getIsAppReady } from 'redux/modules/app';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
 import { RootState } from 'redux/rootReducer';
-import { getTransactionPrice } from 'utils/network';
+import { getIsOVM, getTransactionPrice } from 'utils/network';
 import { SummaryContent, SummaryItem, SummaryLabel } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
 import WarningMessage from 'components/WarningMessage';
+import { getNetworkId } from 'redux/modules/wallet';
 
 export type GasLimit = {
     gasLimit: number;
@@ -25,8 +26,9 @@ type NetworkFeesProps = {
 
 const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const ethGasPriceEip1559Query = useEthGasPriceEip1559Query();
+    const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
     const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
 
     const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
@@ -34,6 +36,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
     const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 
     const { t } = useTranslation();
+    const isL2 = getIsOVM(networkId);
 
     return (
         <>
@@ -70,7 +73,9 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
             )}
             <NetworkFeeSummaryItem key="Gas Price">
                 <NetworkFeeSummaryLabel key={0}>{t('common.gas-price-gwei')}</NetworkFeeSummaryLabel>
-                <NetworkFeeSummaryContent>{formatCurrency(gasPrice ?? 0, 0)}</NetworkFeeSummaryContent>
+                <NetworkFeeSummaryContent>
+                    {isL2 ? formatCurrencyWithPrecision(gasPrice ?? 0, true) : formatCurrency(gasPrice ?? 0, 0)}
+                </NetworkFeeSummaryContent>
             </NetworkFeeSummaryItem>
             <WarningMessage hideIcon message={t('common.gas-fee-info')} />
         </>

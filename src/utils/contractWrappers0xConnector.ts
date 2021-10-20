@@ -2,9 +2,9 @@ import { IZeroExContract } from '@0x/contract-wrappers';
 import { RPCSubprovider } from '@0x/subproviders';
 import { providerUtils } from '@0x/utils';
 import Web3ProviderEngine from 'web3-provider-engine';
-import { getInfuraRpcURL, getIsOVM, NetworkId } from './network';
+import { getInfuraRpcURL, NetworkId } from './network';
 import snxJSConnector from './snxJSConnector';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
+import { get0xExchangeProxyAddress } from './0x';
 
 type ContractWrappers0xConnector = {
     exchangeProxy: IZeroExContract;
@@ -14,18 +14,15 @@ type ContractWrappers0xConnector = {
 // @ts-ignore
 const contractWrappers0xConnector: ContractWrappers0xConnector = {
     setExchangeProxy: function (isWalletConnected: boolean, networkId: NetworkId) {
-        if (getIsOVM(networkId)) return;
-        const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
+        const exchangeProxyAddress = get0xExchangeProxyAddress(networkId);
+        if (exchangeProxyAddress === '') return;
         if (isWalletConnected) {
-            this.exchangeProxy = new IZeroExContract(
-                contractAddresses0x.exchangeProxy,
-                (snxJSConnector.provider as any).provider
-            );
+            this.exchangeProxy = new IZeroExContract(exchangeProxyAddress, (snxJSConnector.provider as any).provider);
         } else {
             const providerEngine = new Web3ProviderEngine();
             providerEngine.addProvider(new RPCSubprovider(getInfuraRpcURL(networkId)));
             providerUtils.startProviderEngine(providerEngine);
-            this.exchangeProxy = new IZeroExContract(contractAddresses0x.exchangeProxy, providerEngine);
+            this.exchangeProxy = new IZeroExContract(exchangeProxyAddress, providerEngine);
         }
     },
 };
