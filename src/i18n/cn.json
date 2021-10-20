@@ -79,17 +79,18 @@
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
             "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
-        "discord": "加入不和諧"
+        "discord": "加入Discord"
     },
     "maintenance-page": {
         "title": "敬请关注，马上就来…",
         "powered-by": "供電"
     },
     "common": {
-        "max": "最大限度",
-        "save": "节省 ",
+        "max": "max",
+        "save": "保存",
         "network-fee-gas": "网络gas费",
         "gas-price-gwei": "gas（gwei）",
+        "gas-fee-info": "根据最新的基本费用和中等优先级估算的gas费用。",
         "gwei": "gwei",
         "transaction": {
             "view": "查看"
@@ -145,20 +146,20 @@
             "trending-label": "趋势市场",
             "overview-label": "市场概述",
             "olympics-label": "奥运市场",
-            "custom-markets-label": "定制市場",
-            "competition-markets-label": "竞争市场",
+            "custom-markets-label": "自定义市场",
+            "competition-markets-label": "竞赛市场",
             "create-market-label": "创建市场",
             "trade-label": "交易期权",
             "maturity-label": "期权到期",
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
-            "quick-trading-label-competition": "有竞争力的快速交易",
+            "quick-trading-label-competition": "竞赛订单",
             "earn-label": "泰雷兹"
         },
         "coming-soon": "即将到来…",
         "of": "之",
         "here": "这里",
-        "sheet": "床單",
+        "sheet": "表",
         "pagination": {
             "page": "页",
             "rows-per-page": "每页行数:"
@@ -200,7 +201,7 @@
             "option": "期权",
             "show": "显示",
             "search-placeholder": "试试 ETH",
-            "all": "全部l",
+            "all": "全部",
             "trading": "交易",
             "maturity": "到期",
             "expiry": "到期",
@@ -213,8 +214,8 @@
             "ethereum": "Ethereum",
             "synthetix": "Synthetix",
             "olympics": "奧運會",
-            "competition": "交易大賽",
-            "custom": "定制市場",
+            "competition": "交易竞赛",
+            "custom": "自定义市场",
             "long": "多头",
             "short": "空头"
         },
@@ -240,7 +241,7 @@
                     "view-all-markets": "查看所有市场",
                     "no-markets-created": "你还没有创造任何市场。",
                     "no-markets-found": "未找到市场。",
-                    "trading-comp": "目前沒有可用的市場.\n 交易比賽將於 UTC 時間 10 月 11 日星期一上午 10:00 開始.\n 欲了解更多信息，請點擊此處: "
+                    "trading-comp": "目前没有竞赛市场。\n交易竞赛将于10月11日星期一UTC上午10:00开始。\n有关更多信息，请单击此处："
                 }
             },
             "markets-table": {
@@ -251,7 +252,7 @@
                 "phase-col": "阶段",
                 "pool-size-col": "市场大小",
                 "time-remaining-col": "剩余时间",
-                "competition-tooltip": "这个市场有资格进行交易竞争"
+                "competition-tooltip": "该市场参与交易竞赛"
             }
         },
         "earn": {
@@ -304,9 +305,9 @@
                     "total-staked": "总质押",
                     "not-eligible-message": "除非您的直接质押余额大于0，否则您没有资格获得质押奖励",
                     "eligible-message": "您质押的{{amount}}有资格获得质押奖励",
-                    "global-staking-stats": "全球赌注统计",
-                    "total-thales-staked": "总 TALES 质押 ",
-                    "my-staked-share": "我的股份",
+                    "global-staking-stats": "全局质押量",
+                    "total-thales-staked": "THALES质押总量",
+                    "my-staked-share": "我的质押",
                     "estimated-rewards": "本期预计奖励"
                 },
                 "unstake": {
@@ -342,7 +343,7 @@
                     "confirmation-message": "代币成功认领",
                     "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
                     "learn-more": "了解更多",
-                    "button-tooltip": "收到的奖励有 10 周的归属期。"
+                    "button-tooltip": "奖励有10周的解锁期."
                 }
             },
             "vesting": {
@@ -357,7 +358,7 @@
                 },
                 "vest": {
                     "available-to-vest": "可解锁",
-                    "vest": "背心",
+                    "vest": "解锁期",
                     "vesting": "正在解锁",
                     "confirmation-message": "代币已成功解锁"
                 },
@@ -400,7 +401,7 @@
                     "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
-                    "vest": "背心"
+                    "vest": "解锁期"
                 },
                 "filter": {
                     "all": "全部",
@@ -412,7 +413,7 @@
                     "cancelUnstake": "取消抵押",
                     "unstake": "取消质押",
                     "addToEscrow": "添加托管",
-                    "vest": "背心"
+                    "vest": "解锁期"
                 }
             },
             "overview": {
@@ -459,7 +460,7 @@
             "insufficient-amount": "请确保您的钱包有足够的sUSD。",
             "sellOptions": "卖出做多/做空期权",
             "summary": {
-                "title": "市場摘要",
+                "title": "市场总结",
                 "strikePrice": "执行价格",
                 "current": "当前市场价格",
                 "difference": "执行价与当前价格的差价",
@@ -507,15 +508,15 @@
                 "final-result-label": "最终结果",
                 "deposited-currency-label": "存款{{currencyKey}}",
                 "event-name-label": "事件名称",
-                "current-ratio-label": "目前的比例",
-                "final-ratio-label": "最終比率",
-                "strike-ratio-label": "罷工率",
-                "current-burn-label": "電流消耗",
-                "final-burn-label": "最後燃燒",
-                "strike-burn-label": "罷工燒",
-                "rank-label": "秩",
-                "total-burned": "燃燒總量",
-                "burned-last-hour": "在最后一小时被烧毁"
+                "current-ratio-label": "现比率",
+                "final-ratio-label": "最终比率",
+                "strike-ratio-label": "执行比率",
+                "current-burn-label": "当前比率",
+                "final-burn-label": "最终销毁量",
+                "strike-burn-label": "执行销毁量",
+                "rank-label": "排名",
+                "total-burned": "总销毁量",
+                "burned-last-hour": "上一小时销毁量"
             },
             "widgets": {
                 "trading-phase-widget": "领取选项",
@@ -570,7 +571,7 @@
                     "mint": "铸造",
                     "trade": "交易",
                     "exercise": "行权",
-                    "filter": "Filter"
+                    "filter": "分流"
                 }
             },
             "trade-card": {
@@ -753,43 +754,45 @@
             }
         },
         "competition-quick-trading": {
-            "title": "有竞争力的快速交易"
+            "title": "竞赛订单"
         },
         "leaderboard": {
             "leaderboard-title": "排行榜",
-            "leaderboard-subtitle": "這是泰雷茲的整體排行榜.",
-            "leaderboard-subtitle-2": "它考慮了在泰雷茲平台內進行的所有交易.",
-            "trading-comp-title": "交易大賽",
-            "trading-comp-subtitle": "這是泰雷茲第一次交易競賽的排行榜.",
-            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| 世界标准时间上午 10 点",
-            "trading-comp-subtitle-3": "单击此处查看符合交易竞争条件的市场",
+            "leaderboard-subtitle": "这是泰利斯的整体排行榜.",
+            "leaderboard-subtitle-2": "它考虑了泰雷兹平台内的所有交易",
+            "trading-comp-title": "交易竞赛",
+            "trading-comp-subtitle": "这是泰雷兹第一次交易竞赛的排行榜.",
+            "trading-comp-subtitle-2": "竞赛赛已于2021年10月11日UTC上午10点正式开始",
+            "trading-comp-subtitle-3": "单击此处查看符合交易竞赛条件的市场",
             "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
-            "profile-subtitle": "選項卡顯示您的所有交易以及其他用戶的交易.",
-            "trading-comp-countdown": "比赛结束倒计时：",
-            "profile-title": "輪廓",
+            "profile-subtitle": "选项卡显示您的所有交易以及其他用户的交易",
+            "trading-comp-countdown": "竞赛结束前的倒计时：",
+            "profile-title": "个人资料",
             "trades-subtitle": "该选项卡显示按最新时间戳排序的所有交易。",
             "trades-title": "交易",
-            "verify-twitter-account": "驗證賬戶",
-            "verify": "核實",
-            "display-name": "顯示名稱",
+            "verify-twitter-account": "验证帐户",
+            "verify": "验证",
+            "display-name": "显示名称",
             "address": "地址",
-            "twitter-account": "我的推特賬號",
+            "twitter-account": "我的推特账号",
             "my-info": "我的信息",
             "table": {
-                "rank-col": "排名",
-                "display-name-col": "显示名字",
+                "rank-col": "等次",
+                "display-name-col": "显示名称",
                 "trades-col": "交易",
-                "volume-col": "交易量",
+                "volume-col": "量",
                 "netprofit-col": "净利润",
                 "netprofit-col-tooltip": "利润仅在成熟市场上计算",
-                "investment-col": "投資",
-                "gain-col": "獲得",
+                "investment-col": "投资",
+                "gain-col": "增益",
                 "twitter-col": "推特",
                 "rewards-col": "奖励"
             },
             "trading-competition": {
-                "tab-title": "交易大賽",
-                "competition-period": "所選期間"
+                "tab-title": "交易竞赛",
+                "competition-period": "选定时间",
+                "disqualified": "取消资格",
+                "current-rank": "您目前的排名"
             },
             "board": {
                 "tab-title": "排行榜"
@@ -800,54 +803,55 @@
                 "number-of-trades": "交易数量",
                 "volume": "交易量",
                 "view-all-trades": "查看所有交易",
-                "no-trades-found": "没有找到交易",
+                "no-trades-found": "未找到交易",
                 "table": {
                     "date-time-col": "日期-时间",
                     "market-col": "市场",
                     "asset-col": "资产",
-                    "type-col": "类型",
+                    "type-col": "类别",
                     "amount-col": "金额",
                     "price-col": "价格",
-                    "tx-status-col": "发送状态"
+                    "tx-status-col": "交易状态"
                 }
             },
             "profile": {
-                "tab-title": "輪廓",
-                "search-placeholder": "通過鍵入顯示名稱搜索其他配置文件",
-                "transaction-details": "用戶的交易詳情:",
-                "no-transactions": "沒有可用的交易",
+                "tab-title": "账户信息",
+                "search-placeholder": "输入名称来搜索其他账户信息",
+                "transaction-details": "用户的交易明细：",
+                "no-transactions": "无任何交易",
                 "filters": {
-                    "mints": "薄荷糖",
+                    "all": "全部",
+                    "mints": "铸造",
                     "trades": "交易",
-                    "exercises": "練習",
-                    "redeemable": "可贖回"
+                    "exercises": "行权",
+                    "redeemable": "可赎回"
                 },
                 "markets": {
-                    "strike-price": "行權價",
-                    "pool-size": "泳池大小",
-                    "maturity-date": "成人禮",
-                    "result": "結果"
+                    "strike-price": "执行价格",
+                    "pool-size": "池大小",
+                    "maturity-date": "到期日",
+                    "result": "结果"
                 },
                 "common": {
-                    "amount": "數量",
-                    "timestamp": "日期 | 時間",
-                    "view-less": "查看更少",
-                    "view-more": "查看更多",
-                    "long": "長",
-                    "short": "短的",
-                    "buy": "買",
-                    "sell": "賣",
-                    "tx-status": "发送状态"
+                    "amount": "金额",
+                    "timestamp": "日期-时间",
+                    "view-less": "简略视图",
+                    "view-more": "详细视图",
+                    "long": "多",
+                    "short": "空",
+                    "buy": "买",
+                    "sell": "卖",
+                    "tx-status": "交易状态"
                 },
                 "exercises": {
-                    "side": "邊"
+                    "side": "方向"
                 },
                 "trades": {
-                    "price": "價錢",
-                    "type": "類型"
+                    "price": "价格",
+                    "type": "类型"
                 },
                 "unclaimed": {
-                    "redeem": "贖回"
+                    "redeem": "赎回"
                 }
             }
         },

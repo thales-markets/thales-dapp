@@ -1,26 +1,19 @@
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import {
-    getCustomGasPrice,
-    getGasSpeed,
-    getIsWalletConnected,
-    getNetworkId,
-    getWalletAddress,
-} from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide, ZeroExErrorResponse } from 'types/options';
 import { get0xBaseURL } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { gasPriceInWei, normalizeGasLimit } from 'utils/network';
+import { normalizeGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorCode } from 'constants/options';
@@ -52,7 +45,6 @@ import styled from 'styled-components';
 import { FlexDivEnd, FlexDivColumn, FlexDivRow } from 'theme/common';
 import useExchangeRatesQuery from 'queries/rates/useExchangeRatesQuery';
 import { get } from 'lodash';
-import { GWEI_UNIT } from 'constants/network';
 import Web3 from 'web3';
 import useBinaryOptionsMarketOrderbook from 'queries/options/useBinaryOptionsMarketOrderbook';
 import ValidationMessage from 'components/ValidationMessage';
@@ -80,8 +72,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-    const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
     const [amount, setAmount] = useState<number | string>('');
     const [price, setPrice] = useState<number | string>('');
     const [total, setTotal] = useState<number | string>('');
@@ -137,16 +127,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
 
-    const ethGasPriceQuery = useEthGasPriceQuery();
-    const gasPrice = useMemo(
-        () =>
-            customGasPrice !== null
-                ? customGasPrice
-                : ethGasPriceQuery.data != null
-                ? ethGasPriceQuery.data[gasSpeed]
-                : null,
-        [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-    );
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
@@ -214,28 +194,22 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
     const handleAllowance = async () => {
-        if (gasPrice !== null) {
-            const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                    gasPrice: gasPriceInWei(gasPrice),
-                })) as ethers.ContractTransaction;
+        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        try {
+            setIsAllowing(true);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
+            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+            })) as ethers.ContractTransaction;
 
-                const txResult = await tx.wait();
-                if (txResult && txResult.transactionHash) {
-                    setAllowance(true);
-                    setIsAllowing(false);
-                }
-            } catch (e) {
-                console.log(e);
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setAllowance(true);
                 setIsAllowing(false);
             }
+        } catch (e) {
+            console.log(e);
+            setIsAllowing(false);
         }
     };
     const handleSubmitOrder = async () => {
@@ -251,6 +225,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 delete quote.protocolFee;
                 delete quote.minimumProtocolFee;
                 delete quote.value;
+                // delete doesn't work for gasPrice for some reason, set to null
+                quote.gasPrice = null;
                 await window.web3.eth.sendTransaction(quote);
                 refetchOrderbook(baseToken);
                 refetchTrades(optionsMarket.address);
@@ -293,8 +269,8 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                     const swapUrl = `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&${
                         isBuy ? 'buyAmount' : 'sellAmount'
                     }=${tokenAmount}&slippagePercentage=${Number(slippage) / 100}${
-                        gasPrice != null ? `&gasPrice=${gasPrice * GWEI_UNIT}` : ''
-                    }${isWalletConnected && hasAllowance ? `&takerAddress=${walletAddress}` : ''}`;
+                        isWalletConnected && hasAllowance ? `&takerAddress=${walletAddress}` : ''
+                    }`;
 
                     const response = await fetch(swapUrl);
                     if (response.status == 200) {
@@ -327,18 +303,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             }
         };
         get0xPrice();
-    }, [
-        amount,
-        slippage,
-        hasAllowance,
-        walletAddress,
-        sellToken,
-        buyToken,
-        gasPrice,
-        ethRate,
-        isAmountEntered,
-        isSlippageValid,
-    ]);
+    }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, ethRate, isAmountEntered, isSlippageValid]);
 
     const handle0xErrorResponse = (response: ZeroExErrorResponse) => {
         console.log(response);
@@ -604,6 +569,9 @@ const SlippageButton = styled(AmountButton)`
     font-size: 12px;
     letter-spacing: 0.25px;
     padding-bottom: 1px;
+    @media (max-width: 767px) {
+        margin: 0 8px 0 0;
+    }
 `;
 
 const SlippageInput = styled(NumericInput)`
@@ -615,6 +583,9 @@ const SlippageInput = styled(NumericInput)`
     border-radius: 5px;
     font-size: 12px;
     text-overflow: ellipsis;
+    @media (max-width: 767px) {
+        width: 60px;
+    }
 `;
 
 const PercentageLabel = styled(CurrencyLabel)`

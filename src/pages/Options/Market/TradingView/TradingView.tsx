@@ -16,7 +16,7 @@ const TradingView: React.FC = () => {
     const symbol = assetToTradingViewMap[optionsMarket.currencyKey] || `${optionsMarket.asset}USDT`;
     return (
         <>
-            <MarketWidgetHeader widgetKey={MarketWidgetKey.CHART_TRADING_VIEW}></MarketWidgetHeader>
+            <MarketWidgetHeader widgetKey={MarketWidgetKey.CHART_TRADING_VIEW} />
             <MarketWidgetContent>
                 <Container>
                     <ChartHeader>

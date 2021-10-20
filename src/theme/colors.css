@@ -33,3 +33,15 @@
 .greyed-out {
     color: grey !important;
 }
+
+.white-fade {
+    color: rgba(246, 246, 254, 0.5) !important;
+}
+
+.green-fade {
+    color: rgba(79, 191, 103, 0.5) !important;
+}
+
+.red-fade {
+    color: rgba(229, 55, 32, 0.5) !important;
+}

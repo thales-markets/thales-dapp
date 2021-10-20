@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Stake from './Stake';
 import MyStake from './MyStake';
 import Unstake from './Unstake';
@@ -10,6 +10,10 @@ const ThalesStaking: React.FC = () => {
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [thalesBalance, setThalesBalance] = useState('0');
     const [escrowedBalance, setEscrowedBalance] = useState(0);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <>

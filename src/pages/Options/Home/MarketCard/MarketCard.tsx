@@ -11,10 +11,11 @@ import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
-import { DisplayContentsAnchor, PhaseLabel } from '../MarketsTable/components';
+import { PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
+import SPAAnchor from '../../../../components/SPAAnchor';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -28,7 +29,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
     return (
         <>
             {optionMarket && (
-                <DisplayContentsAnchor
+                <SPAAnchor
                     className="hot-markets__card"
                     style={{
                         pointerEvents: optionMarket.phase !== 'expiry' ? 'auto' : 'none',
@@ -68,9 +69,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <Text>{t('options.home.market-card.strike-price')}</Text>
                             <Price>{formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}</Price>
                             <div style={{ visibility: isFinite(strikeAndAssetPriceDifference) ? 'visible' : 'hidden' }}>
-                                <Text style={{ fontSize: '13px' }}>
-                                    {t('options.home.market-card.difference-text')}:
-                                </Text>
+                                <DifferenceText>{t('options.home.market-card.difference-text')}:</DifferenceText>
                                 {currentAssetPrice > optionMarket.strikePrice ? (
                                     <FlexDivCentered
                                         style={{
@@ -98,45 +97,43 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                                     <MarketInfoTitle>
                                         {t('options.home.market-card.current-asset-price')}:
                                     </MarketInfoTitle>
-                                    <span style={{ fontWeight: 'bold' }}>
+                                    <MarketInfoContent>
                                         {currentAssetPrice
                                             ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice)
                                             : 'N/A'}
-                                    </span>
+                                    </MarketInfoContent>
                                 </MarketInfo>
                             </GradientBorderWrapper>
                             <GradientBorderWrapper>
                                 <MarketInfo>
                                     <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
-                                    <span style={{ fontWeight: 'bold' }}>
+                                    <MarketInfoContent>
                                         {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
-                                    </span>
+                                    </MarketInfoContent>
                                 </MarketInfo>
                             </GradientBorderWrapper>
                             <GradientBorderWrapper>
                                 <MarketInfo>
                                     <MarketInfoTitle>{t('options.home.market-card.end-date')}:</MarketInfoTitle>
-                                    <span style={{ fontWeight: 'bold' }}>
-                                        {formatShortDate(optionMarket.maturityDate)}
-                                    </span>
+                                    <MarketInfoContent>{formatShortDate(optionMarket.maturityDate)}</MarketInfoContent>
                                 </MarketInfo>
                             </GradientBorderWrapper>
                             <GradientBorderWrapper>
                                 <MarketInfo>
                                     <MarketInfoTitle>{t('options.home.market-card.open-orders')}:</MarketInfoTitle>
-                                    <span style={{ fontWeight: 'bold' }}>
+                                    <MarketInfoContent>
                                         {optionMarket.openOrders ?? (
                                             <div style={{ height: '16px', width: '100%', position: 'relative' }}>
                                                 <StyledLoader />
                                             </div>
                                         )}
-                                    </span>
+                                    </MarketInfoContent>
                                 </MarketInfo>
                             </GradientBorderWrapper>
                             <ViewMarket className="view-market">{t('options.home.market-card.view-market')}</ViewMarket>
                         </Footer>
                     </Card>
-                </DisplayContentsAnchor>
+                </SPAAnchor>
             )}
         </>
     );
@@ -300,6 +297,16 @@ const MarketInfo = styled(GradientBorderContent)`
 const MarketInfoTitle = styled(Text)`
     margin-right: 4px;
     font-size: 12px;
+    @media (max-width: 767px) {
+        font-size: 10px;
+    }
+`;
+
+const MarketInfoContent = styled.span`
+    font-weight: bold;
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
 `;
 
 export const Phase = styled(PhaseLabel)`
@@ -326,6 +333,13 @@ const GreenText = styled.span`
 const RedText = styled.span`
     color: #be2727;
     font-size: 20px;
+`;
+
+const DifferenceText = styled(Text)`
+    font-size: 13px;
+    @media (max-width: 767px) {
+        font-size: 11px;
+    }
 `;
 
 export default MarketCard;

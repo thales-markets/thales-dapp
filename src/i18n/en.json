@@ -90,6 +90,7 @@
         "save": "Save",
         "network-fee-gas": "Network fee (gas)",
         "gas-price-gwei": "Gas price (gwei)",
+        "gas-fee-info": "Estimated gas fee based on the latest base fee and medium priority.",
         "gwei": "gwei",
         "transaction": {
             "view": "View"
@@ -789,7 +790,10 @@
             },
             "trading-competition": {
                 "tab-title": "Trading competition",
-                "competition-period": "Selected period"
+                "competition-period": "Selected period",
+                "disqualified": "Disqualified",
+                "unverified": "Unverified",
+                "current-rank": "Your current rank"
             },
             "board": {
                 "tab-title": "Leaderboard"
@@ -817,6 +821,7 @@
                 "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
                 "filters": {
+                    "all": "All",
                     "mints": "Mints",
                     "trades": "Trades",
                     "exercises": "Exercises",

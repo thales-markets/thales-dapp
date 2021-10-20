@@ -57,8 +57,8 @@ export enum CoinFilterEnum {
     All = 'all',
     Bitcoin = 'bitcoin',
     Ethereum = 'ethereum',
-    Custom = 'custom',
     Snx = 'synthetix',
+    Custom = 'custom',
 }
 
 export enum OptionFilterEnum {

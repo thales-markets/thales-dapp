@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { FlexDivRowCentered, Image } from 'theme/common';
 import { OptionSide, OptionsMarketInfo } from 'types/options';
@@ -39,6 +39,10 @@ enum Widgets {
 const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [widget, setWidget] = useState(Widgets.Trade);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [widget]);
 
     const renderWidget = () => {
         switch (widget) {

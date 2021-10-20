@@ -9,14 +9,13 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { gasPriceInWei, normalizeGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
+import { normalizeGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import { RootState } from 'redux/rootReducer';
-import { getWalletAddress, getCustomGasPrice, getGasSpeed, getNetworkId } from 'redux/modules/wallet';
+import { getWalletAddress, getNetworkId } from 'redux/modules/wallet';
 import Currency from 'components/Currency';
-import useEthGasPriceQuery from 'queries/network/useEthGasPriceQuery';
 import { ethers } from 'ethers';
 import {
     FlexDiv,
@@ -108,8 +107,6 @@ export const CreateMarket: React.FC = () => {
         const { t } = useTranslation();
         const { synthsMap: synths } = snxJSConnector;
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-        const gasSpeed = useSelector((state: RootState) => getGasSpeed(state));
-        const customGasPrice = useSelector((state: RootState) => getCustomGasPrice(state));
         const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
         const [isCurrencyKeyValid, setIsCurrencyKeyValid] = useState(true);
         const [isFocused, setIsFocused] = useState(true);
@@ -158,17 +155,6 @@ export const CreateMarket: React.FC = () => {
 
         const optionsMarket: OptionsMarketInfo | null =
             marketQuery.isSuccess && marketQuery.data ? marketQuery.data : null;
-
-        const ethGasPriceQuery = useEthGasPriceQuery();
-        const gasPrice = useMemo(
-            () =>
-                customGasPrice !== null
-                    ? customGasPrice
-                    : ethGasPriceQuery.data != null
-                    ? ethGasPriceQuery.data[gasSpeed]
-                    : null,
-            [customGasPrice, ethGasPriceQuery.data, gasSpeed]
-        );
 
         const assetsOptions = useMemo(
             () =>
@@ -236,47 +222,44 @@ export const CreateMarket: React.FC = () => {
         const getOrderEndDate = () => toBigNumber(Math.round((optionsMarket as any)?.timeRemaining / 1000));
 
         const handleMarketCreation = async () => {
-            if (gasPrice !== null) {
-                const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-                try {
-                    setTxErrorMessage(null);
-                    setIsCreatingMarket(true);
-                    const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                    const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                        (snxJSConnector as any).signer
-                    );
-                    const tx = (await BOMMContractWithSigner.createMarket(
-                        oracleKey,
-                        price,
-                        maturity,
-                        initialMint,
-                        false,
-                        ZERO_ADDRESS,
-                        {
-                            gasPrice: gasPriceInWei(gasPrice),
-                            gasLimit,
-                        }
-                    )) as ethers.ContractTransaction;
-                    const txResult = await tx.wait();
-                    if (txResult && txResult.events) {
-                        const rawData = txResult.events[txResult.events?.length - 1];
-                        if (rawData && rawData.decode) {
-                            const goodData = rawData.decode(rawData.data);
-                            setMarket(goodData.market);
-                            setLong(goodData.long);
-                            setShort(goodData.short);
-                            setIsMarketCreated(true);
-                            setIsCreatingMarket(false);
-                            if (!sellLong && !sellShort) {
-                                navigateToOptionsMarket(goodData.market);
-                            }
+            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+            try {
+                setTxErrorMessage(null);
+                setIsCreatingMarket(true);
+                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
+                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const tx = (await BOMMContractWithSigner.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint,
+                    false,
+                    ZERO_ADDRESS,
+                    {
+                        gasLimit,
+                    }
+                )) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
+                if (txResult && txResult.events) {
+                    const rawData = txResult.events[txResult.events?.length - 1];
+                    if (rawData && rawData.decode) {
+                        const goodData = rawData.decode(rawData.data);
+                        setMarket(goodData.market);
+                        setLong(goodData.long);
+                        setShort(goodData.short);
+                        setIsMarketCreated(true);
+                        setIsCreatingMarket(false);
+                        if (!sellLong && !sellShort) {
+                            navigateToOptionsMarket(goodData.market);
                         }
                     }
-                } catch (e) {
-                    console.log(e);
-                    setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                    setIsCreatingMarket(false);
                 }
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsCreatingMarket(false);
             }
         };
 
@@ -317,78 +300,69 @@ export const CreateMarket: React.FC = () => {
         }, [initialFundingAmount, longAmount, longPrice, shortAmount, shortPrice]);
 
         const handleAllowance = async () => {
-            if (gasPrice !== null) {
-                const {
-                    contracts: { SynthsUSD },
-                } = snxJSConnector.snxJS as any;
-                const { binaryOptionsMarketManagerContract } = snxJSConnector;
-                try {
-                    setIsAllowing(true);
-                    const gasEstimate = await SynthsUSD.estimateGas.approve(
-                        binaryOptionsMarketManagerContract.address,
-                        ethers.constants.MaxUint256
-                    );
-                    const tx = (await SynthsUSD.approve(
-                        binaryOptionsMarketManagerContract.address,
-                        ethers.constants.MaxUint256,
-                        {
-                            gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                            gasPrice: gasPriceInWei(gasPrice),
-                        }
-                    )) as ethers.ContractTransaction;
-                    await tx.wait();
-                    setIsAllowing(false);
-                    setAllowance(true);
-                } catch (e) {
-                    console.log(e);
-                    setIsAllowing(false);
-                }
+            const {
+                contracts: { SynthsUSD },
+            } = snxJSConnector.snxJS as any;
+            const { binaryOptionsMarketManagerContract } = snxJSConnector;
+            try {
+                setIsAllowing(true);
+                const gasEstimate = await SynthsUSD.estimateGas.approve(
+                    binaryOptionsMarketManagerContract.address,
+                    ethers.constants.MaxUint256
+                );
+                const tx = (await SynthsUSD.approve(
+                    binaryOptionsMarketManagerContract.address,
+                    ethers.constants.MaxUint256,
+                    {
+                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    }
+                )) as ethers.ContractTransaction;
+                await tx.wait();
+                setIsAllowing(false);
+                setAllowance(true);
+            } catch (e) {
+                console.log(e);
+                setIsAllowing(false);
             }
         };
 
         const handleLongAllowance = async () => {
-            if (gasPrice !== null) {
-                const erc20Instance = new ethers.Contract(longAddress, erc20Contract.abi, snxJSConnector.signer);
-                try {
-                    setIsLongAllowing(true);
-                    const gasEstimate = await erc20Instance.estimateGas.approve(
-                        addressToApprove,
-                        ethers.constants.MaxUint256
-                    );
-                    const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                        gasPrice: gasPriceInWei(gasPrice),
-                    })) as ethers.ContractTransaction;
-                    await tx.wait();
-                    setLongAllowance(true);
-                    setIsLongAllowing(false);
-                } catch (e) {
-                    console.log(e);
-                    setIsLongAllowing(false);
-                }
+            const erc20Instance = new ethers.Contract(longAddress, erc20Contract.abi, snxJSConnector.signer);
+            try {
+                setIsLongAllowing(true);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                })) as ethers.ContractTransaction;
+                await tx.wait();
+                setLongAllowance(true);
+                setIsLongAllowing(false);
+            } catch (e) {
+                console.log(e);
+                setIsLongAllowing(false);
             }
         };
 
         const handleShortAllowance = async () => {
-            if (gasPrice !== null) {
-                const erc20Instance = new ethers.Contract(shortAddress, erc20Contract.abi, snxJSConnector.signer);
-                try {
-                    setIsShortAllowing(true);
-                    const gasEstimate = await erc20Instance.estimateGas.approve(
-                        addressToApprove,
-                        ethers.constants.MaxUint256
-                    );
-                    const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
-                        gasPrice: gasPriceInWei(gasPrice),
-                    })) as ethers.ContractTransaction;
-                    await tx.wait();
-                    setShortAllowance(true);
-                    setIsShortAllowing(false);
-                } catch (e) {
-                    console.log(e);
-                    setIsShortAllowing(false);
-                }
+            const erc20Instance = new ethers.Contract(shortAddress, erc20Contract.abi, snxJSConnector.signer);
+            try {
+                setIsShortAllowing(true);
+                const gasEstimate = await erc20Instance.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                })) as ethers.ContractTransaction;
+                await tx.wait();
+                setShortAllowance(true);
+                setIsShortAllowing(false);
+            } catch (e) {
+                console.log(e);
+                setIsShortAllowing(false);
             }
         };
 
@@ -588,7 +562,7 @@ export const CreateMarket: React.FC = () => {
                     <MarketHeader route={ROUTES.Options.CreateMarket} />
                     <Text
                         className="create-market create-market-title"
-                        style={{ padding: '50px 0', alignSelf: 'flex-start' }}
+                        style={{ height: '100%', paddingTop: '50px', alignSelf: 'flex-start' }}
                     >
                         {t('options.create-market.title')}
                     </Text>
