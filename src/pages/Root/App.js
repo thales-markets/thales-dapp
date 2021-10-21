@@ -34,6 +34,7 @@ const App = () => {
     const isAppReady = useSelector((state) => getIsAppReady(state));
     const [selectedWallet, setSelectedWallet] = useLocalStorage(LOCAL_STORAGE_KEYS.SELECTED_WALLET, '');
     const networkId = useSelector((state) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false });
 
@@ -183,11 +184,13 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <MainLayout>
-                                <LeaderboardPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Leaderboard}>
+                                <MainLayout>
+                                    <LeaderboardPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
@@ -195,17 +198,21 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.QuickTradingCompetition}>
-                            <MainLayout>
-                                <QuickTradingCompetitionPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                                <MainLayout>
+                                    <QuickTradingCompetitionPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
-                        <Route exact path={ROUTES.Options.Token}>
-                            <MainLayout>
-                                <EarnPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Token}>
+                                <MainLayout>
+                                    <EarnPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route
                             exact

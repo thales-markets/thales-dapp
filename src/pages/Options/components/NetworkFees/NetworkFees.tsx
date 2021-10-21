@@ -77,7 +77,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
                     {isL2 ? formatCurrencyWithPrecision(gasPrice ?? 0, true) : formatCurrency(gasPrice ?? 0, 0)}
                 </NetworkFeeSummaryContent>
             </NetworkFeeSummaryItem>
-            <WarningMessage hideIcon message={t('common.gas-fee-info')} />
+            {!isL2 && <WarningMessage hideIcon message={t('common.gas-fee-info')} />}
         </>
     );
 };
