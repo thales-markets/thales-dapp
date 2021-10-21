@@ -1,18 +1,18 @@
 import ROUTES from 'constants/routes';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, Button, FlexDivColumn, FlexDivRowCentered, Image, Text, Wrapper } from 'theme/common';
-import { ethers } from 'ethers';
 import MarketHeader from '../MarketHeader';
-import useQuoteTokensQuery from './useQuoteTokensQuery';
-import useApproveToken from './useApproveToken';
-import useSwapTokenQuery from './useSwapTokenQuery';
 import { ReactSelect } from 'pages/Options/Market/components';
-import { gasPriceInWei } from 'utils/network';
+import { USD_SIGN } from 'constants/currency';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { ethers } from 'ethers';
+import { fetchQuote, getTxForSwap } from './0xApiQuerys';
 
 const sUSD = {
     address: '0x57ab1ec28d129707052df4df418d58a2d46d5f51',
@@ -55,10 +55,12 @@ const USDT = {
     symbol: 'USDT',
 };
 
+const SPENDER = '0xdef1c0ded9bec7f1a1670819833240f027b25eff';
+
 const preLoadTokens = [sUSD, Dai, USDC, USDT, Eth];
 
 const Swap: React.FC = () => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    // const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
 
     // A Web3Provider wraps a standard Web3 provider, which is
@@ -69,69 +71,63 @@ const Swap: React.FC = () => {
     // send ether and pay to change state within the blockchain.
     // For this, you need the account signer...
     const signer = provider.getSigner();
-    console.log(signer);
-    const [fromToken, _setFromToken] = useState(USDC);
+
+    const [fromToken, _setFromToken] = useState(undefined);
     const [toToken, _setToToken] = useState(sUSD);
-    const [amount, setAmount] = useState(1);
+    const [amount, setAmount] = useState(0);
+    const [previewData, setPreviedData] = useState(undefined);
+    const [allowance, setAllowance] = useState(false);
+    const [balance, setBalance] = useState('0');
 
-    const quoteQuery = useQuoteTokensQuery(
-        networkId,
-        fromToken,
-        toToken,
-        ethers.utils.parseUnits(amount.toString(), fromToken.decimals),
-        {
-            enabled: false,
+    useEffect(() => {
+        if (fromToken && amount > 0) {
+            fetchQuote(toToken.symbol, (fromToken as any).symbol, amount.toString(), (fromToken as any).decimals).then(
+                (data) => {
+                    setPreviedData(data as any);
+                }
+            );
         }
-    );
+    }, [fromToken, amount]);
 
-    const previewData = quoteQuery.isSuccess ? quoteQuery.data : undefined;
-
-    console.log(previewData);
-
-    const approveQuery = useApproveToken(
-        networkId,
-        fromToken,
-        ethers.utils.parseUnits(amount.toString(), fromToken.decimals),
-        {
-            enabled: false,
+    useEffect(() => {
+        if (fromToken) {
+            if (fromToken === Eth) {
+                signer
+                    .getBalance()
+                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (fromToken as any).decimals)));
+            } else {
+                const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
+                erc20Instance
+                    .allowance(walletAddress, SPENDER)
+                    .then((data: any) =>
+                        setAllowance(Number(ethers.utils.formatUnits(data, (fromToken as any).decimals)) > 0)
+                    );
+                erc20Instance
+                    .balanceOf(walletAddress)
+                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (fromToken as any).decimals)));
+            }
         }
-    );
-
-    const approveTx = async () => {
-        const req = await approveQuery.refetch();
-        console.log(req);
-        return {
-            data: (req.data as any).data,
-            to: (req.data as any).to,
-        };
-    };
-
-    const swapQuery = useSwapTokenQuery(
-        networkId,
-        fromToken,
-        toToken,
-        walletAddress ? walletAddress : '',
-        ethers.utils.parseUnits(amount.toString(), fromToken.decimals),
-        {
-            enabled: false,
-        }
-    );
+    }, [fromToken]);
 
     const swapTx = async () => {
-        const req = await swapQuery.refetch();
-        if (req.isSuccess) {
-            const data = req.data;
-            return {
-                data: (data as any).tx.data,
-                from: (data as any).tx.from,
-                to: (data as any).tx.to,
-                value:
-                    Number((data as any).tx.value) > 0
-                        ? ethers.utils.parseUnits(amount.toString(), fromToken.decimals)
-                        : undefined,
-            };
+        const data = await getTxForSwap(
+            toToken.symbol,
+            (fromToken as any).symbol,
+            amount.toString(),
+            (fromToken as any).decimals
+        );
+        try {
+            await signer.sendTransaction(data);
+        } catch (e) {
+            console.log('failed: ', e);
         }
-        return {};
+    };
+
+    const approve = () => {
+        const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
+        erc20Instance.approve(SPENDER, ethers.constants.MaxUint256).then((data: any) => {
+            console.log(data);
+        });
     };
 
     return (
@@ -141,7 +137,10 @@ const Swap: React.FC = () => {
                 <GradientBorderWrapper>
                     <GradientBorderContent>
                         <SectionWrapper>
-                            <Text className="text-s white">From:</Text>
+                            <FlexDivRowCentered>
+                                <Text className="text-xxs white">From:</Text>
+                                <Text className="text-xxs white">Balance: {Number(balance).toFixed(4)}</Text>
+                            </FlexDivRowCentered>
                             <FlexDivRowCentered>
                                 <Select
                                     options={preLoadTokens}
@@ -150,7 +149,7 @@ const Swap: React.FC = () => {
                                             <FlexDivRowCentered style={{ flex: 1 }}>
                                                 <Image
                                                     src={option.logoURI}
-                                                    style={{ width: 40, height: 40, marginRight: 6 }}
+                                                    style={{ width: 32, height: 32, marginRight: 6 }}
                                                 ></Image>
                                                 <Text className="text-xs white">{option.name}</Text>
                                             </FlexDivRowCentered>
@@ -162,17 +161,25 @@ const Swap: React.FC = () => {
                                     }}
                                 ></Select>
 
-                                <NumericInput
+                                <NumInput
                                     style={{ padding: 10, width: 150, textAlign: 'right' }}
                                     value={amount}
                                     onChange={(_, value) => {
                                         setAmount(value as any);
                                     }}
-                                ></NumericInput>
+                                ></NumInput>
                             </FlexDivRowCentered>
                         </SectionWrapper>
                         <SectionWrapper>
-                            <Text className="text-s white">To:</Text>
+                            <FlexDivRowCentered>
+                                <Text className="text-xxs white">To:</Text>
+                                <Text className="text-xxs white">
+                                    Estimated Gas:{' '}
+                                    {previewData
+                                        ? formatCurrencyWithSign(USD_SIGN, (previewData as any).gasPrice)
+                                        : 'n/a'}
+                                </Text>
+                            </FlexDivRowCentered>
                             <FlexDivRowCentered>
                                 <Select
                                     options={preLoadTokens}
@@ -181,69 +188,41 @@ const Swap: React.FC = () => {
                                             <FlexDivRowCentered style={{ flex: 1 }}>
                                                 <Image
                                                     src={option.logoURI}
-                                                    style={{ width: 40, height: 40, marginRight: 6 }}
+                                                    style={{ width: 32, height: 32, marginRight: 6 }}
                                                 ></Image>
                                                 <Text className="text-xs white">{option.name}</Text>
                                             </FlexDivRowCentered>
                                         );
                                     }}
+                                    disabled={true}
                                     value={toToken}
                                     onChange={(option: any) => {
                                         _setToToken(option);
                                     }}
                                 ></Select>
+                                <Text className="text-m white blur">
+                                    {previewData ? Number((previewData as any).buyAmount).toFixed(4) : 'n/a'}
+                                </Text>
                             </FlexDivRowCentered>
                         </SectionWrapper>
-                        <SectionWrapper>
-                            <Text className="text-s white">Preview: </Text>
-                            <FlexDivColumn>
-                                <Text className="text-xs white">
-                                    Estimated Gas: {previewData ? gasPriceInWei(previewData.estimatedGas) : 0}
-                                </Text>
-                                <Text className="text-xs white">
-                                    From Amount:{' '}
-                                    {previewData
-                                        ? ethers.utils.formatUnits(
-                                              previewData?.fromTokenAmount,
-                                              previewData.fromToken.decimals
-                                          )
-                                        : 0}
-                                </Text>
-                                <Text className="text-xs white">
-                                    To Amount:{' '}
-                                    {previewData
-                                        ? ethers.utils.formatUnits(
-                                              previewData?.toTokenAmount,
-                                              previewData.toToken.decimals
-                                          )
-                                        : 0}
-                                </Text>
-                            </FlexDivColumn>
-                        </SectionWrapper>
 
-                        <Button
-                            className="primary"
-                            onClick={async () => {
-                                quoteQuery.refetch();
-                                const tx = await approveTx();
-                                console.log(tx);
-                                const txApp = await signer.sendTransaction(tx);
-                                console.log(txApp);
-                            }}
-                        >
-                            Approve
-                        </Button>
-                        <Button
-                            className="primary"
-                            onClick={async () => {
-                                const tx = await swapTx();
-                                console.log(tx);
-                                const swapTrans = await signer.sendTransaction(tx);
-                                console.log(swapTrans);
-                            }}
-                        >
-                            Swap
-                        </Button>
+                        {!allowance && (
+                            <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
+                                Approve
+                            </Button>
+                        )}
+                        {allowance && (
+                            <Button
+                                className="primary"
+                                onClick={async () => {
+                                    const tx = await swapTx();
+                                    console.log(tx);
+                                }}
+                                disabled={Number(amount) > Number(balance)}
+                            >
+                                Swap
+                            </Button>
+                        )}
                     </GradientBorderContent>
                 </GradientBorderWrapper>
             </Wrapper>
@@ -252,18 +231,33 @@ const Swap: React.FC = () => {
 };
 
 const SectionWrapper = styled(FlexDivColumn)`
-    margin: 20px 0;
-    & > p {
-        margin-bottom: 20px;
+    background: #0a2e66;
+    padding: 16px;
+    padding-bottom: 0;
+    border-radius: 20px;
+    &:last-of-type {
+        position: relative;
+        margin: 20px 0;
+    }
+`;
+
+const NumInput = styled(NumericInput)`
+    font-size: 20px;
+    &:focus {
+        border: none !important;
     }
 `;
 
 const Select = styled(ReactSelect)`
     flex: 1;
     max-width: 200px;
+    margin-left: -10px;
     .react-select__single-value,
     .react-select__single-value > div {
         padding: 0 !important;
+    }
+    .react-select__control--is-focused {
+        border: none !important;
     }
 `;
 
@@ -271,6 +265,7 @@ const GradientBorderWrapper = styled.div`
     border-radius: 18px;
     background: linear-gradient(to right, #3936c7, #2d83d2, #23a5dd, #35dadb);
     margin-bottom: 6px;
+    margin-top: 60px;
 `;
 
 const GradientBorderContent = styled.div`
@@ -279,14 +274,14 @@ const GradientBorderContent = styled.div`
     line-height: 24px;
     border-radius: 20px;
     min-width: 70px;
-    background-color: #1c1a71;
-    margin: 2px;
+    background-color: #04045a;
+    margin: 1px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     color: #f6f6fe;
     justify-content: space-between;
-    width: 500px;
+    width: 420px;
 `;
 
 export default Swap;
