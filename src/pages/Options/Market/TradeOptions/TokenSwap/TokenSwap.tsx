@@ -562,6 +562,9 @@ const SlippageButton = styled(AmountButton)`
     font-size: 12px;
     letter-spacing: 0.25px;
     padding-bottom: 1px;
+    @media (max-width: 767px) {
+        margin: 0 8px 0 0;
+    }
 `;
 
 const SlippageInput = styled(NumericInput)`
@@ -573,6 +576,9 @@ const SlippageInput = styled(NumericInput)`
     border-radius: 5px;
     font-size: 12px;
     text-overflow: ellipsis;
+    @media (max-width: 767px) {
+        width: 60px;
+    }
 `;
 
 const PercentageLabel = styled(CurrencyLabel)`
