@@ -1,6 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
+import { ethers } from 'ethers';
 
 export type NetworkId = 1 | 3 | 42 | 69;
 
@@ -76,3 +77,6 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
 export const getIsOVM = (networkId: number): boolean => !!~[10, 69].indexOf(networkId);
 
 export const formatGwei = (wei: number) => wei / GWEI_UNIT;
+
+export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId: number): number =>
+    getIsOVM(networkId) ? Number(gasEstimate) : normalizeGasLimit(Number(gasEstimate));

@@ -13,7 +13,7 @@ import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDe
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorCode } from 'constants/options';
@@ -192,7 +192,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
             const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();

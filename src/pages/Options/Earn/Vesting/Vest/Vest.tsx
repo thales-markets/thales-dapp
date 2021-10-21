@@ -20,7 +20,7 @@ import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { normalizeGasLimit } from '../../../../../utils/network';
+import { formatGasLimit } from '../../../../../utils/network';
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import styled from 'styled-components';
@@ -54,7 +54,7 @@ const Vest: React.FC = () => {
                 const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
                 const toVest = ethers.utils.parseEther(claimable.toString());
                 const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(toVest);
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);

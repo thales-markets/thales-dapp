@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { normalizeGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
+import { formatGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -272,7 +272,7 @@ export const CreateMarket: React.FC = () => {
                 BOMMContractWithSigner.estimateGas
                     .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
                     .then((gasEstimate: any) => {
-                        setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
                     })
                     .catch((e: any) => {
@@ -313,7 +313,7 @@ export const CreateMarket: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256,
                     {
-                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                        gasLimit: formatGasLimit(gasEstimate, networkId),
                     }
                 )) as ethers.ContractTransaction;
                 await tx.wait();
@@ -334,7 +334,7 @@ export const CreateMarket: React.FC = () => {
                     ethers.constants.MaxUint256
                 );
                 const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
                 await tx.wait();
                 setLongAllowance(true);
@@ -354,7 +354,7 @@ export const CreateMarket: React.FC = () => {
                     ethers.constants.MaxUint256
                 );
                 const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
                 await tx.wait();
                 setShortAllowance(true);

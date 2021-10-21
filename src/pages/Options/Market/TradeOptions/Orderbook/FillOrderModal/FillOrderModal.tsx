@@ -10,7 +10,7 @@ import { ethers } from 'ethers';
 import { APPROVAL_EVENTS } from 'constants/events';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { getIs0xReady, getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -186,7 +186,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
                     )
                     .estimateGasAsync({ from: walletAddress });
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -202,7 +202,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
             const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();

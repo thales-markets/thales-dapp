@@ -5,7 +5,7 @@ import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { normalizeGasLimit } from '../../../../../utils/network';
+import { formatGasLimit } from '../../../../../utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
@@ -90,14 +90,16 @@ const Unstake: React.FC<Properties> = ({
                     if (unstakingEnded) {
                         setGasLimit([
                             {
-                                gasLimit: normalizeGasLimit(
-                                    Number(await stakingThalesContractWithSigner.estimateGas.unstake())
+                                gasLimit: formatGasLimit(
+                                    await stakingThalesContractWithSigner.estimateGas.unstake(),
+                                    networkId
                                 ),
                                 label: t('options.earn.thales-staking.unstake.network-fee-unstake'),
                             },
                             {
-                                gasLimit: normalizeGasLimit(
-                                    Number(await stakingThalesContractWithSigner.estimateGas.cancelUnstake())
+                                gasLimit: formatGasLimit(
+                                    await stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
+                                    networkId
                                 ),
                                 label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
                             },
@@ -105,8 +107,9 @@ const Unstake: React.FC<Properties> = ({
                     } else {
                         setGasLimit([
                             {
-                                gasLimit: normalizeGasLimit(
-                                    Number(await stakingThalesContractWithSigner.estimateGas.cancelUnstake())
+                                gasLimit: formatGasLimit(
+                                    await stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
+                                    networkId
                                 ),
                                 label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
                             },
@@ -115,7 +118,7 @@ const Unstake: React.FC<Properties> = ({
                 } else {
                     const amount = ethers.utils.parseEther(amountToUnstake);
                     gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
-                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
                 }
             } catch (e) {
                 console.log(e);
