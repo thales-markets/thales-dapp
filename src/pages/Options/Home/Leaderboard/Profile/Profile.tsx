@@ -6,17 +6,18 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { OptionSide, OrderSide } from 'types/options';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
-import UsersExcercises from './UsersExcercises';
-import UsersMints from './UsersMints';
-import UsersTrades from './UsersTrades';
-import UsersUnclaimed from './UsersUnclaimed';
+import UserAllTxTable from './UserAllTxTable';
+import UserExercisesTable from './UserExercisesTable';
+import UserMintsTable from './UserMintsTable';
+import UserTradesTable from './UserTradesTable';
+import UserUnclaimedTable from './UserUnclaimedTable';
 
 export enum Filters {
     Mints = 'mints',
@@ -33,7 +34,8 @@ type ProfileProps = {
 const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const walletAddress = '0x461783a831e6db52d68ba2f3194f6fd1e0087e04';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.All);
@@ -99,32 +101,43 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     }, [profiles, walletAddress, userFilter]);
 
     const extractedMintsProfileData = useMemo(() => {
-        return Array.from(new Set(profile?.mints.map((mint: any) => mint.tx))).filter((value: any, index, self) => {
-            return self.findIndex((mint: any) => mint.hash === value.hash) === index;
-        });
+        if (profile) {
+            return Array.from(new Set(profile.mints.map((mint: any) => mint.tx))).filter((value: any, index, self) => {
+                return self.findIndex((mint: any) => mint.hash === value.hash) === index;
+            });
+        }
+
+        return [];
     }, [userFilter, profilesQuery]);
 
     const extractedTradesProfileData = useMemo(() => {
-        const usersTrades = new Array<UserTrade>();
+        if (profile) {
+            const usersTrades = new Array<UserTrade>();
 
-        profile?.trades.map((trade: any) => {
-            const userTrade: UserTrade = {
-                market: trade.market.address,
-                ...trade.trade,
-            };
-            usersTrades.push(userTrade);
-            return userTrade;
-        });
+            profile.trades.map((trade: any) => {
+                const userTrade: UserTrade = {
+                    market: trade.market.address,
+                    ...trade.trade,
+                };
+                usersTrades.push(userTrade);
+                return userTrade;
+            });
 
-        return usersTrades.filter((value: any, index, self) => {
-            return self.findIndex((trade: any) => trade.hash === value.hash) === index;
-        });
+            return usersTrades.filter((value: any, index, self) => {
+                return self.findIndex((trade: any) => trade.hash === value.hash) === index;
+            });
+        }
+
+        return [];
     }, [userFilter, profilesQuery]);
 
     const extractedExercisesProfileData = useMemo(() => {
-        return Array.from(new Set(profile?.excercises.map((ex: any) => ex.tx))).filter((value: any, index, self) => {
-            return self.findIndex((ex: any) => ex.hash === value.hash) === index;
-        });
+        if (profile) {
+            return Array.from(new Set(profile.excercises.map((ex: any) => ex.tx))).filter((value: any, index, self) => {
+                return self.findIndex((ex: any) => ex.hash === value.hash) === index;
+            });
+        }
+        return [];
     }, [userFilter, profilesQuery]);
 
     const filterUnclaimedData = (unclaimed: any) => {
@@ -138,7 +151,10 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     };
 
     const extractedUnclaimedProfileData = useMemo(() => {
-        return profile?.unclaimed.filter(filterUnclaimedData);
+        if (profile) {
+            return profile.unclaimed.filter(filterUnclaimedData);
+        }
+        return [];
     }, [userFilter, profilesQuery]);
 
     return (
@@ -220,19 +236,31 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                     style={{ background: 'transparent', boxShadow: 'none', borderRadius: '23px 23px 0 0' }}
                     component={Paper}
                 >
+                    {filter === Filters.All && (
+                        <UserAllTxTable
+                            profile={profile}
+                            marketsData={marketsData}
+                            usersMints={extractedMintsProfileData}
+                            usersTrades={extractedTradesProfileData}
+                            usersExercises={extractedExercisesProfileData}
+                            usersUnclaimed={extractedUnclaimedProfileData}
+                            userDisplay={walletAddress.toLowerCase() === displayAddress}
+                            isLoading={marketsQuery.isLoading}
+                        />
+                    )}
                     {filter === Filters.Mints && (
-                        <UsersMints marketsData={marketsData} usersMints={extractedMintsProfileData} />
+                        <UserMintsTable marketsData={marketsData} usersMints={extractedMintsProfileData} />
                     )}
 
                     {filter === Filters.Trades && (
-                        <UsersTrades marketsData={marketsData} usersTrades={extractedTradesProfileData} />
+                        <UserTradesTable marketsData={marketsData} usersTrades={extractedTradesProfileData} />
                     )}
 
                     {filter === Filters.Excercises && (
-                        <UsersExcercises marketsData={marketsData} usersExercises={extractedExercisesProfileData} />
+                        <UserExercisesTable marketsData={marketsData} usersExercises={extractedExercisesProfileData} />
                     )}
                     {filter === Filters.Unclaimed && (
-                        <UsersUnclaimed
+                        <UserUnclaimedTable
                             marketsData={marketsData}
                             usersUnclaimed={extractedUnclaimedProfileData}
                             userDisplay={walletAddress.toLowerCase() === displayAddress}

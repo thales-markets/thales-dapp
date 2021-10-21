@@ -27,7 +27,7 @@ import { marketHeading } from '../../Trades/Trades';
 import { HeadCell } from '../Profile';
 import ReactCountryFlag from 'react-country-flag';
 
-type UsersUnclaimedProps = {
+type UserUnclaimedTableProps = {
     usersUnclaimed: any[];
     marketsData: any[];
     userDisplay: boolean;
@@ -41,7 +41,7 @@ enum OrderDirection {
     DESC,
 }
 
-const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, marketsData, userDisplay }) => {
+const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed, marketsData, userDisplay }) => {
     const { t } = useTranslation();
     console.log(userDisplay);
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
@@ -215,7 +215,11 @@ const UsersUnclaimed: React.FC<UsersUnclaimedProps> = ({ usersUnclaimed, markets
                                         target="_blank"
                                         rel="noreferrer"
                                         href={buildOptionsMarketLink(market.address)}
-                                        style={{ color: 'white', verticalAlign: 'top' }}
+                                        style={{
+                                            color: 'white',
+                                            verticalAlign: 'top',
+                                            display: !userDisplay ? 'none' : '',
+                                        }}
                                     >
                                         {t('options.leaderboard.profile.unclaimed.redeem')}
                                     </a>
@@ -311,4 +315,4 @@ const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
     return 0;
 };
 
-export default UsersUnclaimed;
+export default UserUnclaimedTable;

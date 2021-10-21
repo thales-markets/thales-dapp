@@ -1,11 +1,8 @@
-import { Table, TableBody, TableFooter, TableHead, TableRow } from '@material-ui/core';
-import downSelected from 'assets/images/down-selected.svg';
-import down from 'assets/images/down.svg';
-import upSelected from 'assets/images/up-selected.svg';
-import up from 'assets/images/up.svg';
+import { TableBody, TableFooter, TableHead, TableRow, Table } from '@material-ui/core';
 import Currency from 'components/Currency';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { USD_SIGN } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
+import { COLORS } from 'constants/ui';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
 import {
     countryToCountryCode,
@@ -17,22 +14,28 @@ import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, Image } from 'theme/common';
-import { HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
-import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
-import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
+import { OptionSide } from 'types/options';
+import { formatTxTimestamp } from 'utils/formatters/date';
+import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { getSynthName } from 'utils/snxJSConnector';
-import '../media.scss';
+import { marketHeading } from '../../Trades/Trades';
+import down from 'assets/images/down.svg';
+import up from 'assets/images/up.svg';
+import downSelected from 'assets/images/down-selected.svg';
+import upSelected from 'assets/images/up-selected.svg';
+import longIcon from 'assets/images/long_small.svg';
+import shortIcon from 'assets/images/short_small.svg';
 import { HeadCell } from '../Profile';
+import ReactCountryFlag from 'react-country-flag';
 
-type UsersMintsProps = {
-    usersMints: any[];
+type UserExcersisesTableProps = {
+    usersExercises: any[];
     marketsData: any[];
 };
+
 const DEFAULT_ORDER_BY = 1;
 
 enum OrderDirection {
@@ -41,7 +44,7 @@ enum OrderDirection {
     DESC,
 }
 
-const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
+const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({ usersExercises, marketsData }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -56,8 +59,8 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const numberOfPages = useMemo(() => {
-        return Math.ceil(usersMints.length / rowsPerPage) || 1;
-    }, [rowsPerPage, usersMints]);
+        return Math.ceil(usersExercises.length / rowsPerPage) || 1;
+    }, [rowsPerPage, usersExercises]);
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -69,7 +72,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
             return numberOfPages - 1;
         }
         return page;
-    }, [page, numberOfPages, usersMints]);
+    }, [page, numberOfPages, usersExercises]);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -91,8 +94,8 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
         }
     };
 
-    const sortedMints = useMemo(() => {
-        return usersMints
+    const sortedExercises = useMemo(() => {
+        return usersExercises
             .sort((a, b) => {
                 if (orderBy === 1) {
                     return sortByField(a, b, orderDirection, 'timestamp');
@@ -103,26 +106,30 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
                     return sortByMarketHeading(aMarket, bMarket, orderDirection);
                 }
                 if (orderBy === 3) {
+                    return sortByField(a, b, orderDirection, 'side');
+                }
+                if (orderBy === 4) {
                     return sortByField(a, b, orderDirection, 'amount');
                 }
 
                 return 0;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [orderBy, orderDirection, memoizedPage, rowsPerPage, usersMints]);
+    }, [orderBy, orderDirection, memoizedPage, rowsPerPage, usersExercises]);
 
-    const headCellsMints: HeadCell[] = [
+    const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
         { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
-        { id: 3, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
-        { id: 4, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
+        { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
+        { id: 4, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
     ];
 
     return (
         <Table aria-label="customized table">
             <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                 <TableRow>
-                    {headCellsMints.map((cell: HeadCell, index) => {
+                    {headCells.map((cell: HeadCell, index) => {
                         return (
                             <StyledTableCell
                                 onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
@@ -152,11 +159,12 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
                 </TableRow>
             </TableHead>
             <TableBody>
-                {sortedMints.map((mint: any, index: any) => {
-                    const market = marketsData.filter((market) => market.address === mint.market)[0];
+                {sortedExercises.map((exercise: any, index: any) => {
+                    const market = marketsData.filter((market) => market.address === exercise.market)[0];
+                    const tradeSide: OptionSide = exercise.side;
                     return (
                         <StyledTableRow key={index}>
-                            <StyledTableCell>{formatTxTimestamp(mint.timestamp)}</StyledTableCell>
+                            <StyledTableCell>{formatTxTimestamp(exercise.timestamp)}</StyledTableCell>
                             <StyledTableCell>
                                 <FlexDiv>
                                     <Currency.Icon
@@ -169,7 +177,7 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
                                         currencyKey={market.currencyKey}
                                     />{' '}
                                     <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                        <StyledLink href={buildOptionsMarketLink(market.address, mint.optionSide)}>
+                                        <StyledLink href={buildOptionsMarketLink(market.address, exercise.side)}>
                                             {countryToCountryCode(market.country as string) && (
                                                 <ReactCountryFlag
                                                     countryCode={countryToCountryCode(market.country as string)}
@@ -180,29 +188,41 @@ const UsersMints: React.FC<UsersMintsProps> = ({ usersMints, marketsData }) => {
                                             {market.customMarket && !countryToCountryCode(market.country as any) && (
                                                 <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
                                             )}
-                                            <CryptoName>{marketHeadingMints(market, market.optionSide)}</CryptoName>
+                                            <CryptoName>{marketHeading(market, exercise.side)}</CryptoName>
                                         </StyledLink>
                                     </LightTooltip>
                                 </FlexDiv>
                             </StyledTableCell>
-                            <StyledTableCell>{mint.amount}</StyledTableCell>
+                            <StyledTableCell>
+                                {exercise.side === 'long' ? (
+                                    <SideImage src={longIcon} />
+                                ) : (
+                                    <SideImage src={shortIcon} />
+                                )}
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                <Cell orderSide={exercise.side}>
+                                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], exercise.amount)}
+                                </Cell>
+                            </StyledTableCell>
+
                             <StyledTableCell
-                                style={index === usersMints.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                                style={index === sortedExercises.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
                             >
-                                <ViewEtherscanLink hash={mint.hash} />
+                                <ViewEtherscanLink hash={exercise.hash} />
                             </StyledTableCell>
                         </StyledTableRow>
                     );
                 })}
             </TableBody>
-            {sortedMints.length !== 0 && (
+            {sortedExercises.length !== 0 && (
                 <TableFooter>
                     <TableRow>
                         <PaginationWrapper
                             rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                             labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                            count={sortedMints.length}
+                            count={sortedExercises.length}
                             rowsPerPage={rowsPerPage}
                             page={memoizedPage}
                             onPageChange={handleChangePage}
@@ -251,11 +271,19 @@ export const CustomIcon = styled(Image)`
     height: 24px;
 `;
 
+const SideImage = styled.img`
+    width: 38px;
+`;
+
 const CryptoName = styled.span``;
 
+const Cell = styled.span<{ orderSide: string }>`
+    color: ${(props) => (props.orderSide === 'long' ? COLORS.BUY : COLORS.SELL)};
+`;
+
 const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
-    const aMarket = marketHeadingMints(a, a.optionSide);
-    const bMarket = marketHeadingMints(b, b.optionSide);
+    const aMarket = marketHeading(a, a.optionSide);
+    const bMarket = marketHeading(b, b.optionSide);
     if (direction === OrderDirection.ASC) {
         return aMarket < bMarket ? -1 : 1;
     }
@@ -277,36 +305,4 @@ const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
     return 0;
 };
 
-const marketHeadingMints = (optionsMarket: HistoricalOptionsMarketInfo, optionSide: OptionSide) => {
-    const orderbookSign = optionsMarket.customMarket
-        ? optionSide === 'long'
-            ? optionsMarket.eventName === 'XYZ airdrop claims' ||
-              optionsMarket.eventName === 'ETH burned count' ||
-              optionsMarket.eventName === 'Flippening Markets' ||
-              optionsMarket.eventName === 'ETH/BTC market cap ratio'
-                ? '>='
-                : '=='
-            : optionsMarket.eventName === 'XYZ airdrop claims' ||
-              optionsMarket.eventName === 'ETH burned count' ||
-              optionsMarket.eventName === 'Flippening Markets' ||
-              optionsMarket.eventName === 'ETH/BTC market cap ratio'
-            ? '<'
-            : '!='
-        : optionSide === 'long'
-        ? '='
-        : '=';
-
-    return optionsMarket.customMarket
-        ? `${optionsMarket.country} ${orderbookSign} ${formatCurrency(
-              optionsMarket.outcome || 0,
-              optionsMarket.eventName === 'Flippening Markets' || optionsMarket.eventName === 'ETH/BTC market cap ratio'
-                  ? 2
-                  : 0
-          )} @ ${formatShortDate(optionsMarket.maturityDate)}`
-        : `${getSynthName(optionsMarket.currencyKey)} ${orderbookSign} ${formatCurrencyWithSign(
-              USD_SIGN,
-              optionsMarket.strikePrice
-          )} @ ${formatShortDate(optionsMarket.maturityDate)}`;
-};
-
-export default UsersMints;
+export default UserExercisesTable;

@@ -810,6 +810,7 @@
                     "market-col": "market",
                     "asset-col": "asset",
                     "type-col": "type",
+                    "tx-type-col": "tx type",
                     "amount-col": "amount",
                     "price-col": "price",
                     "tx-status-col": "tx status"

@@ -809,6 +809,7 @@
                     "market-col": "市场",
                     "asset-col": "资产",
                     "type-col": "类别",
+                    "tx-type-col": "发送类型",
                     "amount-col": "金额",
                     "price-col": "价格",
                     "tx-status-col": "交易状态"

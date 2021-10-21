@@ -809,6 +809,7 @@
                     "market-col": "рыночнный",
                     "asset-col": "aктив",
                     "type-col": "тип",
+                    "tx-type-col": "тип tx",
                     "amount-col": "сумма",
                     "price-col": "цена",
                     "tx-status-col": "статус tx"

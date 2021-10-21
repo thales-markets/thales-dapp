@@ -1,7 +1,7 @@
 import { TableBody, TableFooter, TableHead, TableRow, Table } from '@material-ui/core';
 import Currency from 'components/Currency';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
-import { OPTIONS_CURRENCY_MAP } from 'constants/currency';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { COLORS } from 'constants/ui';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
 import {
@@ -17,22 +17,22 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, Image } from 'theme/common';
-import { OptionSide } from 'types/options';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
+import { HeadCell } from '../Profile';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import downSelected from 'assets/images/down-selected.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
-import { HeadCell } from '../Profile';
+import { OptionSide, OrderSide } from 'types/options';
 import ReactCountryFlag from 'react-country-flag';
 
-type UsersExercisesProps = {
-    usersExercises: any[];
+type UserTradesTableProps = {
+    usersTrades: UserTrade[];
     marketsData: any[];
 };
 
@@ -44,7 +44,7 @@ enum OrderDirection {
     DESC,
 }
 
-const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, marketsData }) => {
+const UserTradesTable: React.FC<UserTradesTableProps> = ({ usersTrades, marketsData }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -59,8 +59,8 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const numberOfPages = useMemo(() => {
-        return Math.ceil(usersExercises.length / rowsPerPage) || 1;
-    }, [rowsPerPage, usersExercises]);
+        return Math.ceil(usersTrades.length / rowsPerPage) || 1;
+    }, [rowsPerPage, usersTrades]);
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -72,7 +72,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
             return numberOfPages - 1;
         }
         return page;
-    }, [page, numberOfPages, usersExercises]);
+    }, [page, numberOfPages, usersTrades]);
 
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -94,8 +94,8 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
         }
     };
 
-    const sortedExercises = useMemo(() => {
-        return usersExercises
+    const sortedTrades = useMemo(() => {
+        return usersTrades
             .sort((a, b) => {
                 if (orderBy === 1) {
                     return sortByField(a, b, orderDirection, 'timestamp');
@@ -109,20 +109,28 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
                     return sortByField(a, b, orderDirection, 'side');
                 }
                 if (orderBy === 4) {
+                    return sortByField(a, b, orderDirection, 'type');
+                }
+                if (orderBy === 5) {
                     return sortByField(a, b, orderDirection, 'amount');
+                }
+                if (orderBy === 6) {
+                    return sortByField(a, b, orderDirection, 'price');
                 }
 
                 return 0;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [orderBy, orderDirection, memoizedPage, rowsPerPage, usersExercises]);
+    }, [orderBy, orderDirection, memoizedPage, rowsPerPage, usersTrades]);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
         { id: 2, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
         { id: 3, label: t('options.leaderboard.trades.table.asset-col'), sortable: true },
-        { id: 4, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
-        { id: 5, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
+        { id: 4, label: t('options.leaderboard.trades.table.type-col'), sortable: true },
+        { id: 5, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
+        { id: 6, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
+        { id: 7, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
     ];
 
     return (
@@ -159,13 +167,12 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
                 </TableRow>
             </TableHead>
             <TableBody>
-                {sortedExercises.map((exercise: any, index: any) => {
-                    const market = marketsData.filter((market) => market.address === exercise.market)[0];
-                    console.log(exercise.side);
-                    const tradeSide: OptionSide = exercise.side;
+                {sortedTrades.map((trade: any, index: any) => {
+                    const market = marketsData.filter((market) => market.address === trade.market)[0];
+                    const tradeSide: OptionSide = trade.side;
                     return (
                         <StyledTableRow key={index}>
-                            <StyledTableCell>{formatTxTimestamp(exercise.timestamp)}</StyledTableCell>
+                            <StyledTableCell>{formatTxTimestamp(trade.timestamp)}</StyledTableCell>
                             <StyledTableCell>
                                 <FlexDiv>
                                     <Currency.Icon
@@ -178,7 +185,7 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
                                         currencyKey={market.currencyKey}
                                     />{' '}
                                     <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                        <StyledLink href={buildOptionsMarketLink(market.address, exercise.side)}>
+                                        <StyledLink href={buildOptionsMarketLink(market.address, trade.side)}>
                                             {countryToCountryCode(market.country as string) && (
                                                 <ReactCountryFlag
                                                     countryCode={countryToCountryCode(market.country as string)}
@@ -189,41 +196,46 @@ const UsersExercises: React.FC<UsersExercisesProps> = ({ usersExercises, markets
                                             {market.customMarket && !countryToCountryCode(market.country as any) && (
                                                 <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
                                             )}
-                                            <CryptoName>{marketHeading(market, exercise.side)}</CryptoName>
+                                            <CryptoName>{marketHeading(market, trade.side)}</CryptoName>
                                         </StyledLink>
                                     </LightTooltip>
                                 </FlexDiv>
                             </StyledTableCell>
                             <StyledTableCell>
-                                {exercise.side === 'long' ? (
-                                    <SideImage src={longIcon} />
-                                ) : (
-                                    <SideImage src={shortIcon} />
-                                )}
+                                {trade.side === 'long' ? <SideImage src={longIcon} /> : <SideImage src={shortIcon} />}
                             </StyledTableCell>
                             <StyledTableCell>
-                                <Cell orderSide={exercise.side}>
-                                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], exercise.amount)}
+                                <Cell orderSide={trade.type} style={{ textTransform: 'uppercase' }}>
+                                    {trade.type}
                                 </Cell>
                             </StyledTableCell>
-
+                            <StyledTableCell>
+                                <Cell orderSide={trade.type}>
+                                    {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], trade.amount)}
+                                </Cell>
+                            </StyledTableCell>
+                            <StyledTableCell>
+                                <Cell orderSide={trade.type}>
+                                    {formatCurrencyWithKey(SYNTHS_MAP.sUSD, trade.price)}
+                                </Cell>
+                            </StyledTableCell>
                             <StyledTableCell
-                                style={index === sortedExercises.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                                style={index === sortedTrades.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
                             >
-                                <ViewEtherscanLink hash={exercise.hash} />
+                                <ViewEtherscanLink hash={trade.hash} />
                             </StyledTableCell>
                         </StyledTableRow>
                     );
                 })}
             </TableBody>
-            {sortedExercises.length !== 0 && (
+            {sortedTrades.length !== 0 && (
                 <TableFooter>
                     <TableRow>
                         <PaginationWrapper
                             rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                             labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                            count={sortedExercises.length}
+                            count={sortedTrades.length}
                             rowsPerPage={rowsPerPage}
                             page={memoizedPage}
                             onPageChange={handleChangePage}
@@ -272,6 +284,16 @@ export const CustomIcon = styled(Image)`
     height: 24px;
 `;
 
+type UserTrade = {
+    amount: number;
+    hash: string;
+    price: number;
+    side: OptionSide;
+    timestamp: string;
+    type: OrderSide;
+    market: string;
+};
+
 const SideImage = styled.img`
     width: 38px;
 `;
@@ -279,7 +301,7 @@ const SideImage = styled.img`
 const CryptoName = styled.span``;
 
 const Cell = styled.span<{ orderSide: string }>`
-    color: ${(props) => (props.orderSide === 'long' ? COLORS.BUY : COLORS.SELL)};
+    color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
 `;
 
 const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
@@ -306,4 +328,4 @@ const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
     return 0;
 };
 
-export default UsersExercises;
+export default UserTradesTable;
