@@ -325,7 +325,8 @@
                     "canceling": "取消抵押",
                     "cancel-confirmation-message": "取消抵押成功取消",
                     "network-fee-cancel": "取消",
-                    "network-fee-unstake": "取消质押"
+                    "network-fee-unstake": "取消质押",
+                    "cooldown-confirmation-message": "成功啟動"
                 },
                 "staking-rewards": {
                     "title": "质押奖励",
@@ -792,7 +793,8 @@
                 "tab-title": "交易竞赛",
                 "competition-period": "选定时间",
                 "disqualified": "取消资格",
-                "current-rank": "您目前的排名"
+                "current-rank": "您目前的排名",
+                "unverified": "未經證實"
             },
             "board": {
                 "tab-title": "排行榜"

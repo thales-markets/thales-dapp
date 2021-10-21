@@ -44,6 +44,19 @@ Then, open `.env.local` and add the missing environment variables:
 -   `REACT_APP_TOKEN_STAKING_DISABLED` - Enable/disable THALES token staking. Set to `false`.
 -   `REACT_APP_IPFS_DEPLOYMENT` - Is dApp in the mode for deployment on IPFS. Set to `false`.
 
+### Set up Google Translate API
+
+This step is needed only if you wish to contribute to the project.
+
+On every commit a pre-commit hook is triggered to translate missing values from the en.json located in src/i18n.
+
+In order for this to work a Google Cloud account is needed and a system environment variable needs to be set pointing 
+to a locally stored json provided by Google.
+
+Full Guide: https://github.com/googleapis/nodejs-translate#before-you-begin
+
+In the check_translations.js script the projectId variable needs to be set to the project id provided by Google.
+
 ### Run
 
 ```bash

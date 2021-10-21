@@ -1,0 +1,9 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+translationsAdded=$(node check_translations.js)
+
+if [ ! -z "$translationsAdded" ]
+then
+  touch .commit
+fi
