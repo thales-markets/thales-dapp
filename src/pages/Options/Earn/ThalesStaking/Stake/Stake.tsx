@@ -25,7 +25,7 @@ import { bigNumberFormatter, getAddress } from '../../../../../utils/formatters/
 import { APPROVAL_EVENTS } from '../../../../../constants/events';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import NetworkFees from '../../../components/NetworkFees';
-import { normalizeGasLimit } from '../../../../../utils/network';
+import { formatGasLimit } from '../../../../../utils/network';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import ComingSoon from 'components/ComingSoon';
@@ -103,7 +103,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
             try {
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await stakingThalesContractWithSigner.estimateGas.stake(amount);
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -191,7 +191,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 ethers.constants.MaxUint256
             );
             const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();

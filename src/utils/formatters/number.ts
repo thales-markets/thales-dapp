@@ -38,7 +38,8 @@ export const formatCurrency = (value: NumericValue, decimals = DEFAULT_CURRENCY_
     });
 };
 
-export const formatCurrencyWithPrecision = (value: NumericValue) => formatCurrency(value, getPrecision(value));
+export const formatCurrencyWithPrecision = (value: NumericValue, trimDecimals = false) =>
+    formatCurrency(value, getPrecision(value), trimDecimals);
 
 export const formatPercentage = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS) =>
     numbro(value).format({

@@ -8,8 +8,8 @@ export const escrowThales = {
         [NetworkId.Kovan]: '0xcE9c1aAb41b18b24355138776186484B260B9cf0',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
-        [NetworkId['Kovan-Ovm']]: '', // TODO: kovan-ovm remove or implement
+        [NetworkId['Mainnet-Ovm']]: 'TBD',
+        [NetworkId['Kovan-Ovm']]: 'TBD',
     },
     abi: [
         {

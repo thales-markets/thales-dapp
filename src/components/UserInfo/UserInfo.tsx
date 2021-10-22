@@ -16,12 +16,14 @@ import { ReactComponent as InfoIcon } from '../../assets/images/info.svg';
 import ThalesBalanceTooltip from './ThalesBalanceTooltip';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
+import { getIsOVM } from 'utils/network';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
+    const isL2 = getIsOVM(network.networkId);
     const [open, setOpen] = useState(false);
     const [thalesTotalBalance, setThalesTotalBalance] = useState(0);
 
@@ -60,15 +62,17 @@ const UserInfo: React.FC = () => {
                         src={avatar}
                     />
                 </NetworkWrapper>
-                <ThalesBalance>
-                    <StyledMaterialTooltip
-                        PopperProps={{ keepMounted: true }}
-                        title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
-                    >
-                        <StyledInfoIcon width={iconSize} height={iconSize} />
-                    </StyledMaterialTooltip>
-                    {formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}
-                </ThalesBalance>
+                {!isL2 && (
+                    <ThalesBalance>
+                        <StyledMaterialTooltip
+                            PopperProps={{ keepMounted: true }}
+                            title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
+                        >
+                            <StyledInfoIcon width={iconSize} height={iconSize} />
+                        </StyledMaterialTooltip>
+                        {formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}
+                    </ThalesBalance>
+                )}
             </UserInfoWrapper>
             <UserInfoModal
                 walletAddress={walletAddress}
