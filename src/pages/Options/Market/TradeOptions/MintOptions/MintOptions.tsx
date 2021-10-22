@@ -64,6 +64,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import { MetamaskSubprovider } from '@0x/subproviders';
+import { INCLUDE_MINTING_FEES } from 'constants/options';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -540,7 +541,12 @@ const MintOptions: React.FC = () => {
 
     useEffect(() => {
         setMintedAmount(
-            marketFees ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)) : 0
+            marketFees
+                ? Number(
+                      Number(amount) -
+                          (INCLUDE_MINTING_FEES ? Number(amount) * (marketFees.creator + marketFees.pool) : 0)
+                  )
+                : 0
         );
     }, [amount, marketFees]);
 
@@ -775,36 +781,40 @@ const MintOptions: React.FC = () => {
             <Divider style={{ marginTop: 4 }} />
 
             <FeeSummaryContainer className="mintTab__summary">
-                <MintingSummaryItem>
-                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
-                    <ProtocolFeeContent>{`${formatPercentage(
-                        marketFees ? marketFees.creator + marketFees.pool : 0
-                    )} (${formatCurrencyWithSign(
-                        USD_SIGN,
-                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
-                        DEFAULT_OPTIONS_DECIMALS
-                    )})`}</ProtocolFeeContent>
-                </MintingSummaryItem>
-                <MintingInnerSummaryItem>
-                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.creator')}</ProtocolFeeLabel>
-                    <ProtocolFeeContent>{`${formatPercentage(
-                        marketFees ? marketFees.creator : 0
-                    )} (${formatCurrencyWithSign(
-                        USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.creator : 0,
-                        DEFAULT_OPTIONS_DECIMALS
-                    )})`}</ProtocolFeeContent>
-                </MintingInnerSummaryItem>
-                <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
-                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.pool')}</ProtocolFeeLabel>
-                    <ProtocolFeeContent>{`${formatPercentage(
-                        marketFees ? marketFees.pool : 0
-                    )} (${formatCurrencyWithSign(
-                        USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.pool : 0,
-                        DEFAULT_OPTIONS_DECIMALS
-                    )})`}</ProtocolFeeContent>
-                </MintingInnerSummaryItem>
+                {INCLUDE_MINTING_FEES && (
+                    <>
+                        <MintingSummaryItem>
+                            <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
+                            <ProtocolFeeContent>{`${formatPercentage(
+                                marketFees ? marketFees.creator + marketFees.pool : 0
+                            )} (${formatCurrencyWithSign(
+                                USD_SIGN,
+                                marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )})`}</ProtocolFeeContent>
+                        </MintingSummaryItem>
+                        <MintingInnerSummaryItem>
+                            <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.creator')}</ProtocolFeeLabel>
+                            <ProtocolFeeContent>{`${formatPercentage(
+                                marketFees ? marketFees.creator : 0
+                            )} (${formatCurrencyWithSign(
+                                USD_SIGN,
+                                marketFees ? Number(amount) * marketFees.creator : 0,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )})`}</ProtocolFeeContent>
+                        </MintingInnerSummaryItem>
+                        <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
+                            <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.pool')}</ProtocolFeeLabel>
+                            <ProtocolFeeContent>{`${formatPercentage(
+                                marketFees ? marketFees.pool : 0
+                            )} (${formatCurrencyWithSign(
+                                USD_SIGN,
+                                marketFees ? Number(amount) * marketFees.pool : 0,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )})`}</ProtocolFeeContent>
+                        </MintingInnerSummaryItem>
+                    </>
+                )}
                 <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} />
             </FeeSummaryContainer>
             <SubmitButtonContainer style={{ marginTop: '20px' }}>
