@@ -7,11 +7,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { getIsWalletConnected } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
+import { getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { history, navigateTo } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
@@ -63,6 +64,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
     setOrderBy,
 }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
     const { t } = useTranslation();
     const [showDropdownPhase, setShowDropwodnPhase] = useState(false);
     const [showDropdownUserFilters, setShowDropwodnUserFilters] = useState(false);
@@ -194,6 +197,14 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         SecondaryFilters[key as keyof typeof SecondaryFilters] !== SecondaryFilters.all
                                 )
                                 .map((key) => {
+                                    if (
+                                        isL2 &&
+                                        (SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                            SecondaryFilters.CustomMarkets ||
+                                            SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                                SecondaryFilters.Competition)
+                                    )
+                                        return null;
                                     const isCustomMarketsEmpty =
                                         allMarkets.filter(({ customMarket }) => customMarket).length === 0;
                                     const isBtcMarketsEmpty =

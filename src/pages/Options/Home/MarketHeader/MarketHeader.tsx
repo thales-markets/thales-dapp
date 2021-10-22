@@ -166,16 +166,18 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
-                    <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
-                        <SidebarItem
-                            imgSrc={customMarketsDefaultIcon}
-                            imgSrcHoverSelected={customMarketsSelectedIcon}
-                            className={route === ROUTES.Options.CustomMarkets ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.custom-markets-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
+                    {!isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
+                            <SidebarItem
+                                imgSrc={customMarketsDefaultIcon}
+                                imgSrcHoverSelected={customMarketsSelectedIcon}
+                                className={route === ROUTES.Options.CustomMarkets ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.custom-markets-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )}
                     <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
