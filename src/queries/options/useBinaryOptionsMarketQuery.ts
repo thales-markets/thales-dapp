@@ -16,7 +16,7 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
             ]);
 
             const { times, oracleDetails, creator, options, fees } = marketParameters;
-            const { totalSupplies, oraclePriceAndTimestamp, resolution, deposits } = marketData;
+            const { totalSupplies, oraclePrice, resolution, deposits } = marketData;
 
             const maturityDate = Number(times.maturity) * 1000;
             const expiryDate = Number(times.expiry) * 1000;
@@ -28,8 +28,7 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                 isResolved: resolution.resolved,
                 address: marketAddress,
                 currencyKey,
-                priceUpdatedAt: Number(oraclePriceAndTimestamp.updatedAt) * 1000,
-                currentPrice: bigNumberFormatter(oraclePriceAndTimestamp.price),
+                currentPrice: bigNumberFormatter(oraclePrice),
                 finalPrice: bigNumberFormatter(oracleDetails.finalPrice),
                 asset:
                     snxJSConnector.synthsMap != null

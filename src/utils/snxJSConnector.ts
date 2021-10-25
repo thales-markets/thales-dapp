@@ -7,10 +7,11 @@ import ongoingAirdrop from './contracts/ongoingAirdrop';
 import stakingThales from './contracts/stakingThales';
 import thalesContract from './contracts/thalesContract';
 import escrowThales from './contracts/escrowThales';
-import keyBy from 'lodash/keyBy';
+import priceFeedContract from './contracts/priceFeedContract';
 import { synthetix, Synth, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 import { SynthsMap } from 'types/synthetix';
-import { CRYPTO_CURRENCY_MAP } from 'constants/currency';
+import { currencyKeyToNameMap, CurrencyKey } from 'constants/currency';
+import { parseBytes32String } from './formatters/ethers';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -27,6 +28,7 @@ type SnxJSConnector = {
     stakingThalesContract?: ethers.Contract;
     thalesTokenContract?: ethers.Contract;
     escrowThalesContract?: ethers.Contract;
+    priceFeedContract?: ethers.Contract;
     setContractSettings: (contractSettings: Config) => void;
 };
 
@@ -37,8 +39,6 @@ const snxJSConnector: SnxJSConnector = {
     setContractSettings: function (contractSettings: Config) {
         this.initialized = true;
         this.snxJS = synthetix(contractSettings);
-        this.synths = this.snxJS.synths;
-        this.synthsMap = keyBy(this.synths, 'name');
         this.signer = contractSettings.signer;
         this.provider = contractSettings.provider;
         this.binaryOptionsMarketDataContract = initializeContract(binaryOptionsMarketDataContract, contractSettings);
@@ -52,7 +52,24 @@ const snxJSConnector: SnxJSConnector = {
         this.stakingThalesContract = conditionalInitializeContract(stakingThales, contractSettings);
         this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);
         this.escrowThalesContract = conditionalInitializeContract(escrowThales, contractSettings);
+        this.priceFeedContract = conditionalInitializeContract(priceFeedContract, contractSettings);
+        loadSynths();
     },
+};
+
+const loadSynths = async () => {
+    snxJSConnector.synthsMap = {};
+    if (snxJSConnector.priceFeedContract) {
+        const currencies = await snxJSConnector.priceFeedContract.getCurrencies();
+        currencies.forEach((currency: CurrencyKey) => {
+            const currencyName = parseBytes32String(currency);
+            snxJSConnector.synthsMap[currencyName] = {
+                asset: currencyName,
+                name: currencyName,
+                description: currencyName,
+            };
+        });
+    }
 };
 
 const initializeContract = (contract: any, contractSettings: Config) =>
@@ -67,19 +84,7 @@ const conditionalInitializeContract = (contract: any, contractSettings: Config) 
           )
         : undefined;
 
-export const getSynthName = (currencyKey: string) => {
-    switch (currencyKey) {
-        case CRYPTO_CURRENCY_MAP.SNX:
-            return 'Synthetix';
-        case CRYPTO_CURRENCY_MAP.KNC:
-            return 'Kyber Network';
-        case CRYPTO_CURRENCY_MAP.REN:
-            return 'REN';
-        case CRYPTO_CURRENCY_MAP.LEND:
-            return 'LEND';
-        default:
-            return snxJSConnector.synthsMap[currencyKey]?.description;
-    }
-};
+export const getSynthName = (currencyKey: string) =>
+    currencyKeyToNameMap[currencyKey] || currencyKeyToNameMap[`s${currencyKey}`] || currencyKey;
 
 export default snxJSConnector;

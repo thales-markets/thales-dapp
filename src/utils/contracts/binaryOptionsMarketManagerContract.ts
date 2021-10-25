@@ -5,7 +5,7 @@ export const binaryOptionsMarketDataContract = {
         [NetworkId.Mainnet]: '0x5ed98Ebb66A929758C7Fe5Ac60c979aDF0F4040a',
         [NetworkId.Ropsten]: '0x4E48FA3638939D2B8e0acE9ceed724c606FEf608',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x46d9DB2830C005e38878b241199bb09d9d355994',
+        [NetworkId.Kovan]: '0x5c137947a500811672Df13fCaA21Bd7f580067d9',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
@@ -25,9 +25,9 @@ export const binaryOptionsMarketDataContract = {
                     type: 'address',
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_maxOraclePriceAge',
-                    type: 'uint256',
+                    internalType: 'contract IPriceFeed',
+                    name: '_priceFeed',
+                    type: 'address',
                 },
                 {
                     internalType: 'uint256',
@@ -232,19 +232,6 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'MarketsReceived',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'duration',
-                    type: 'uint256',
-                },
-            ],
-            name: 'MaxOraclePriceAgeUpdated',
             type: 'event',
         },
         {
@@ -464,11 +451,6 @@ export const binaryOptionsMarketDataContract = {
             inputs: [],
             name: 'durations',
             outputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'maxOraclePriceAge',
-                    type: 'uint256',
-                },
                 {
                     internalType: 'uint256',
                     name: 'expiryDuration',
@@ -721,6 +703,21 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'priceFeed',
+            outputs: [
+                {
+                    internalType: 'contract IPriceFeed',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -880,21 +877,6 @@ export const binaryOptionsMarketDataContract = {
             inputs: [
                 {
                     internalType: 'uint256',
-                    name: '_maxOraclePriceAge',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxOraclePriceAge',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
                     name: '_maxTimeToMaturity',
                     type: 'uint256',
                 },
@@ -945,6 +927,21 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'setPoolFee',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'setPriceFeed',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

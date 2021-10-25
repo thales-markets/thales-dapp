@@ -5,7 +5,7 @@ export const binaryOptionsMarketDataContract = {
         [NetworkId.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
         [NetworkId.Ropsten]: '0x7a774cE863eE0af8B5cFa38B550977F9104e9d15',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x3e4E650f61C7A747A4baDCfF5C3b3e2BaF37AEc3',
+        [NetworkId.Kovan]: '0x735Ef7c28f9A25De1Dc4F2f788fF6Be278031083',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
@@ -71,21 +71,9 @@ export const binaryOptionsMarketDataContract = {
                 {
                     components: [
                         {
-                            components: [
-                                {
-                                    internalType: 'uint256',
-                                    name: 'price',
-                                    type: 'uint256',
-                                },
-                                {
-                                    internalType: 'uint256',
-                                    name: 'updatedAt',
-                                    type: 'uint256',
-                                },
-                            ],
-                            internalType: 'struct BinaryOptionMarketData.OraclePriceAndTimestamp',
-                            name: 'oraclePriceAndTimestamp',
-                            type: 'tuple',
+                            internalType: 'uint256',
+                            name: 'oraclePrice',
+                            type: 'uint256',
                         },
                         {
                             components: [

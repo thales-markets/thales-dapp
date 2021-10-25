@@ -157,22 +157,12 @@ export const CreateMarket: React.FC = () => {
         const assetsOptions = useMemo(
             () =>
                 orderBy(
-                    [
-                        {
-                            label: CRYPTO_CURRENCY_MAP.SNX,
-                            value: CRYPTO_CURRENCY_MAP.SNX,
-                        },
-                        {
-                            label: CRYPTO_CURRENCY_MAP.KNC,
-                            value: CRYPTO_CURRENCY_MAP.KNC,
-                        },
-                        ...Object.values(synths)
-                            .filter((synth) => !synth.inverted && synth.name !== SYNTHS_MAP.sUSD)
-                            .map((synth) => ({
-                                label: synth.asset,
-                                value: synth.name,
-                            })),
-                    ],
+                    Object.values(synths)
+                        .filter((synth) => synth.name !== SYNTHS_MAP.sUSD)
+                        .map((synth) => ({
+                            label: synth.asset,
+                            value: synth.name,
+                        })),
                     'label',
                     'asc'
                 ),

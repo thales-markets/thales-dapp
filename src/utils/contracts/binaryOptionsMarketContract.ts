@@ -18,12 +18,6 @@ export const binaryOptionMarketContract = {
                 {
                     indexed: false,
                     internalType: 'uint256',
-                    name: 'oracleTimestamp',
-                    type: 'uint256',
-                },
-                {
-                    indexed: false,
-                    internalType: 'uint256',
                     name: 'deposited',
                     type: 'uint256',
                 },
@@ -313,59 +307,71 @@ export const binaryOptionMarketContract = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_binaryOptionMastercopy',
-                    type: 'address',
-                },
-                {
-                    internalType: 'contract IAddressResolver',
-                    name: '_resolver',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_creator',
-                    type: 'address',
-                },
-                {
-                    internalType: 'bytes32',
-                    name: '_oracleKey',
-                    type: 'bytes32',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_strikePrice',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256[2]',
-                    name: '_times',
-                    type: 'uint256[2]',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_deposit',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256[2]',
-                    name: '_fees',
-                    type: 'uint256[2]',
-                },
-                {
-                    internalType: 'bool',
-                    name: '_customMarket',
-                    type: 'bool',
-                },
-                {
-                    internalType: 'address',
-                    name: '_iOracleInstanceAddress',
-                    type: 'address',
+                    components: [
+                        {
+                            internalType: 'address',
+                            name: 'owner',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'address',
+                            name: 'binaryOptionMastercopy',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'contract IAddressResolver',
+                            name: 'resolver',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'contract IPriceFeed',
+                            name: 'priceFeed',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'address',
+                            name: 'creator',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'bytes32',
+                            name: 'oracleKey',
+                            type: 'bytes32',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'strikePrice',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256[2]',
+                            name: 'times',
+                            type: 'uint256[2]',
+                        },
+                        {
+                            internalType: 'uint256',
+                            name: 'deposit',
+                            type: 'uint256',
+                        },
+                        {
+                            internalType: 'uint256[2]',
+                            name: 'fees',
+                            type: 'uint256[2]',
+                        },
+                        {
+                            internalType: 'bool',
+                            name: 'customMarket',
+                            type: 'bool',
+                        },
+                        {
+                            internalType: 'address',
+                            name: 'iOracleInstanceAddress',
+                            type: 'address',
+                        },
+                    ],
+                    internalType: 'struct BinaryOptionMarket.BinaryOptionMarketParameters',
+                    name: '_parameters',
+                    type: 'tuple',
                 },
             ],
             name: 'initialize',
@@ -492,16 +498,11 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'oraclePriceAndTimestamp',
+            name: 'oraclePrice',
             outputs: [
                 {
                     internalType: 'uint256',
                     name: 'price',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'updatedAt',
                     type: 'uint256',
                 },
             ],
@@ -533,6 +534,21 @@ export const binaryOptionMarketContract = {
                     internalType: 'enum IBinaryOptionMarket.Phase',
                     name: '',
                     type: 'uint8',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'priceFeed',
+            outputs: [
+                {
+                    internalType: 'contract IPriceFeed',
+                    name: '',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -612,6 +628,21 @@ export const binaryOptionMarketContract = {
                 },
             ],
             name: 'setIOracleInstance',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'setPriceFeed',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
