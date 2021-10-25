@@ -18,14 +18,14 @@ import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
+import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, Image, Text, FlexDivColumn } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
 import { HeadCell } from '../Profile';
-import ReactCountryFlag from 'react-country-flag';
 
 type UserUnclaimedTableProps = {
     usersUnclaimed: any[];
@@ -43,7 +43,6 @@ enum OrderDirection {
 
 const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed, marketsData, userDisplay }) => {
     const { t } = useTranslation();
-    console.log(userDisplay);
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
 
@@ -126,7 +125,6 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed,
         { id: 1, label: t('options.leaderboard.trades.table.market-col'), sortable: true },
         { id: 2, label: t('options.leaderboard.profile.markets.result'), sortable: true },
         { id: 3, label: t('options.leaderboard.trades.table.amount-col'), sortable: true },
-        { id: 4, label: '', sortable: false },
     ];
 
     return (
@@ -188,7 +186,13 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed,
                                                 }}
                                                 currencyKey={market.currencyKey}
                                             />{' '}
-                                            <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                            <LightTooltip
+                                                title={
+                                                    userDisplay
+                                                        ? t('options.leaderboard.profile.click-to-redeem')
+                                                        : t('options.quick-trading.view-market-tooltip')
+                                                }
+                                            >
                                                 <StyledLink
                                                     href={buildOptionsMarketLink(market.address, unclaimed.side)}
                                                 >
@@ -222,30 +226,14 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed,
                                             <SideImage src={shortIcon} />
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell>
-                                        {unclaimed.market.result === 'long'
-                                            ? formatCurrencyWithSign(USD_SIGN, unclaimed.long)
-                                            : formatCurrencyWithSign(USD_SIGN, unclaimed.short)}
-                                    </StyledTableCell>
                                     <StyledTableCell
                                         style={
                                             index === sortedUnclaimed.length - 1 ? { borderRadius: '0 0 23px 0' } : {}
                                         }
                                     >
-                                        <Button className="primary">
-                                            <a
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                href={buildOptionsMarketLink(market.address)}
-                                                style={{
-                                                    color: 'white',
-                                                    verticalAlign: 'top',
-                                                    display: !userDisplay ? 'none' : '',
-                                                }}
-                                            >
-                                                {t('options.leaderboard.profile.unclaimed.redeem')}
-                                            </a>
-                                        </Button>
+                                        {unclaimed.market.result === 'long'
+                                            ? formatCurrencyWithSign(USD_SIGN, unclaimed.long)
+                                            : formatCurrencyWithSign(USD_SIGN, unclaimed.short)}
                                     </StyledTableCell>
                                 </StyledTableRow>
                             );

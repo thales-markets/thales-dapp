@@ -821,6 +821,7 @@
                 "search-placeholder": "Search other profiles by typing display name",
                 "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
+                "go-to-redeem": "Click to redeem",
                 "filters": {
                     "all": "All",
                     "mints": "Mints",

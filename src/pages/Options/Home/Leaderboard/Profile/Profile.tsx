@@ -6,11 +6,10 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
-import { OptionSide, OrderSide } from 'types/options';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
 import './media.scss';
 import UserAllTxTable from './UserAllTxTable';
@@ -34,7 +33,8 @@ type ProfileProps = {
 const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const walletAddress = '0x461783a831e6db52d68ba2f3194f6fd1e0087e04';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.All);
@@ -111,18 +111,13 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
 
     const extractedTradesProfileData = useMemo(() => {
         if (profile) {
-            const usersTrades = new Array<UserTrade>();
-
-            profile.trades.map((trade: any) => {
-                const userTrade: UserTrade = {
-                    market: trade.market.address,
-                    ...trade.trade,
-                };
-                usersTrades.push(userTrade);
-                return userTrade;
-            });
-
-            return usersTrades.filter((value: any, index, self) => {
+            return Array.from(
+                new Set(
+                    profile.trades.map((trade: any) => {
+                        return { market: trade.market.address, ...trade.trade };
+                    })
+                )
+            ).filter((value: any, index, self) => {
                 return self.findIndex((trade: any) => trade.hash === value.hash) === index;
             });
         }
@@ -377,15 +372,5 @@ const SearchAutoCompleteInput = styled(Autocomplete)`
         opacity: 0.7;
     }
 `;
-
-type UserTrade = {
-    amount: number;
-    hash: string;
-    price: number;
-    side: OptionSide;
-    timestamp: string;
-    type: OrderSide;
-    market: string;
-};
 
 export default Profile;

@@ -820,6 +820,7 @@
                 "search-placeholder": "输入名称来搜索其他账户信息",
                 "transaction-details": "用户的交易明细：",
                 "no-transactions": "无任何交易",
+                "go-to-redeem": "点击兑换",
                 "filters": {
                     "all": "全部",
                     "mints": "铸造",

@@ -25,17 +25,16 @@ import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
-import { OptionSide, OrderSide } from 'types/options';
+import { OptionSide } from 'types/options';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
 import { HeadCell } from '../Profile';
-
 type UserAllTxTableProps = {
     profile: any;
     usersMints: any[];
-    usersTrades: UserTrade[];
+    usersTrades: any[];
     usersExercises: any[];
     usersUnclaimed: any[];
     marketsData: any[];
@@ -159,24 +158,43 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                     return sortByField(a, b, orderDirection, 'side');
                 }
                 if (orderBy === 5) {
-                    return sortByField(a, b, orderDirection, 'type');
+                    const bExtendedTransaction = b.txType === 'redeemable' ? { type: 'redeemable', ...b } : { ...b };
+
+                    const aExtendedTransaction = a.txType === 'redeemable' ? { type: 'redeemable', ...a } : { ...a };
+                    return sortByField(aExtendedTransaction, bExtendedTransaction, orderDirection, 'type');
                 }
                 if (orderBy === 6) {
-                    return sortByField(a, b, orderDirection, 'amount');
-                }
-                if (orderBy === 6) {
-                    return sortByField(a, b, orderDirection, 'amount');
+                    const bExtendedTransaction =
+                        b.txType === 'redeemable'
+                            ? { amount: b.market.result === 'long' ? b.long : b.short, ...b }
+                            : { ...b };
+
+                    const aExtendedTransaction =
+                        a.txType === 'redeemable'
+                            ? { amount: a.market.result === 'long' ? a.long : a.short, ...a }
+                            : { ...a };
+                    return sortByField(aExtendedTransaction, bExtendedTransaction, orderDirection, 'amount');
                 }
                 if (orderBy === 7) {
-                    return sortByField(a, b, orderDirection, 'amount');
+                    return sortByField(a, b, orderDirection, 'price');
+                }
+                if (orderBy === 8) {
+                    const bMarket =
+                        b.txType === 'redeemable'
+                            ? marketsData.filter((market) => market.address === b.market.address)[0]
+                            : marketsData.filter((market) => market.address === b.market)[0];
+
+                    const aMarket =
+                        a.txType === 'redeemable'
+                            ? marketsData.filter((market) => market.address === a.market.address)[0]
+                            : marketsData.filter((market) => market.address === a.market)[0];
+                    return sortByField(aMarket, bMarket, orderDirection, 'result');
                 }
 
                 return 0;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [orderBy, orderDirection, memoizedPage, rowsPerPage, transactionsByType]);
-
-    console.log(sortedTransactions);
 
     const headCells: HeadCell[] = [
         { id: 1, label: t('options.leaderboard.trades.table.date-time-col'), sortable: true },
@@ -239,7 +257,6 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                     : marketsData.filter((market) => market.address === tx.market)[0];
                             const tradeSide: OptionSide = tx.side;
                             const marketResult: OptionSide = tx.txType === 'redeemable' ? tx.market.result : '';
-                            console.log(userDisplay);
                             return (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell>
@@ -256,7 +273,13 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                                 }}
                                                 currencyKey={market.currencyKey}
                                             />{' '}
-                                            <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                            <LightTooltip
+                                                title={
+                                                    userDisplay
+                                                        ? t('options.leaderboard.profile.click-to-redeem')
+                                                        : t('options.quick-trading.view-market-tooltip')
+                                                }
+                                            >
                                                 <StyledLink href={buildOptionsMarketLink(market.address, tx.side)}>
                                                     {countryToCountryCode(market.country as string) && (
                                                         <ReactCountryFlag
@@ -301,7 +324,17 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        <Cell orderSide={tx.type}>
+                                        <CellCurrency
+                                            currencySide={
+                                                tx.txType === 'redeemable'
+                                                    ? tx.market.result
+                                                    : tx.txType === 'exercise'
+                                                    ? tx.side
+                                                    : tx.txType === 'trade'
+                                                    ? tradeSide
+                                                    : ''
+                                            }
+                                        >
                                             {tx.txType === 'redeemable'
                                                 ? formatCurrencyWithKey(
                                                       OPTIONS_CURRENCY_MAP[marketResult],
@@ -310,7 +343,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                                 : tx.txType === 'mint'
                                                 ? tx.amount
                                                 : formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], tx.amount)}
-                                        </Cell>
+                                        </CellCurrency>
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Cell orderSide={tx.type}>
@@ -320,13 +353,23 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        {tx.market.result === 'long' ? (
-                                            <SideImage src={longIcon} />
+                                        {market.result ? (
+                                            market.result === 'long' ? (
+                                                <SideImage src={longIcon} />
+                                            ) : (
+                                                <SideImage src={shortIcon} />
+                                            )
                                         ) : (
-                                            <SideImage src={shortIcon} />
+                                            '-'
                                         )}
                                     </StyledTableCell>
-                                    <StyledTableCell>
+                                    <StyledTableCell
+                                        style={
+                                            index === sortedTransactions.length - 1
+                                                ? { borderRadius: '0 0 23px 0' }
+                                                : {}
+                                        }
+                                    >
                                         <ViewEtherscanLink hash={tx.hash} />
                                     </StyledTableCell>
                                 </StyledTableRow>
@@ -422,16 +465,6 @@ export const CustomIcon = styled(Image)`
     height: 24px;
 `;
 
-type UserTrade = {
-    amount: number;
-    hash: string;
-    price: number;
-    side: OptionSide;
-    timestamp: string;
-    type: OrderSide;
-    market: string;
-};
-
 const SideImage = styled.img`
     width: 38px;
 `;
@@ -443,6 +476,15 @@ const Cell = styled.span<{ orderSide: string }>`
         props.orderSide !== 'buy' && props.orderSide !== 'sell'
             ? ''
             : props.orderSide === 'buy'
+            ? COLORS.BUY
+            : COLORS.SELL};
+`;
+
+const CellCurrency = styled.span<{ currencySide: string }>`
+    color: ${(props) =>
+        props.currencySide !== 'long' && props.currencySide !== 'short'
+            ? ''
+            : props.currencySide === 'long'
             ? COLORS.BUY
             : COLORS.SELL};
 `;
@@ -461,11 +503,14 @@ const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
 };
 
 const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
+    const aField = a[field] ? (a[field] as any) : '';
+    const bField = b[field] ? (b[field] as any) : '';
+
     if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
+        return aField > bField ? 1 : -1;
     }
     if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
+        return aField > bField ? -1 : 1;
     }
 
     return 0;

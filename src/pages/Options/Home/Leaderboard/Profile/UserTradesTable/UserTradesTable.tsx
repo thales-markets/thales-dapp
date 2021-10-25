@@ -1,4 +1,10 @@
-import { TableBody, TableFooter, TableHead, TableRow, Table } from '@material-ui/core';
+import { Table, TableBody, TableFooter, TableHead, TableRow } from '@material-ui/core';
+import downSelected from 'assets/images/down-selected.svg';
+import down from 'assets/images/down.svg';
+import longIcon from 'assets/images/long_small.svg';
+import shortIcon from 'assets/images/short_small.svg';
+import upSelected from 'assets/images/up-selected.svg';
+import up from 'assets/images/up.svg';
 import Currency from 'components/Currency';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
@@ -14,25 +20,19 @@ import Pagination from 'pages/Options/Home/MarketsTable/Pagination';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTradingTable';
 import React, { useEffect, useMemo, useState } from 'react';
+import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv, Image, Text, FlexDivColumn } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
+import { OptionSide } from 'types/options';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
 import { HeadCell } from '../Profile';
-import down from 'assets/images/down.svg';
-import up from 'assets/images/up.svg';
-import downSelected from 'assets/images/down-selected.svg';
-import upSelected from 'assets/images/up-selected.svg';
-import longIcon from 'assets/images/long_small.svg';
-import shortIcon from 'assets/images/short_small.svg';
-import { OptionSide, OrderSide } from 'types/options';
-import ReactCountryFlag from 'react-country-flag';
 
 type UserTradesTableProps = {
-    usersTrades: UserTrade[];
+    usersTrades: any[];
     marketsData: any[];
 };
 
@@ -331,16 +331,6 @@ const LoaderContainer = styled(FlexDivColumn)`
     position: relative;
     border-radius: 23px;
 `;
-
-type UserTrade = {
-    amount: number;
-    hash: string;
-    price: number;
-    side: OptionSide;
-    timestamp: string;
-    type: OrderSide;
-    market: string;
-};
 
 const SideImage = styled.img`
     width: 38px;
