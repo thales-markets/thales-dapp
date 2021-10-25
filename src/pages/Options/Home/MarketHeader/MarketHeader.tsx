@@ -102,7 +102,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         </Button>
                     )}
                     <Modal open={showSwap} onClose={setShowSwap.bind(this, false)}>
-                        <Swap></Swap>
+                        <div>
+                            <Swap></Swap>
+                        </div>
                     </Modal>
                     <DesktopLanguageSelectorContainer>
                         <LanguageSelector />
