@@ -1,12 +1,10 @@
-import ROUTES from 'constants/routes';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Background, Button, FlexDivColumn, FlexDivRowCentered, Image, Text, Wrapper } from 'theme/common';
-import MarketHeader from '../MarketHeader';
+import { Button, FlexDivColumn, FlexDivRowCentered, Image, Text } from 'theme/common';
 import { ReactSelect } from 'pages/Options/Market/components';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -60,16 +58,8 @@ const SPENDER = '0xdef1c0ded9bec7f1a1670819833240f027b25eff';
 const preLoadTokens = [sUSD, Dai, USDC, USDT, Eth];
 
 const Swap: React.FC = () => {
-    // const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-
-    // A Web3Provider wraps a standard Web3 provider, which is
-    // what Metamask injects as window.ethereum into each page
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-
-    // The Metamask plugin also allows signing transactions to
-    // send ether and pay to change state within the blockchain.
-    // For this, you need the account signer...
     const signer = provider.getSigner();
 
     const [fromToken, _setFromToken] = useState(undefined);
@@ -131,102 +121,95 @@ const Swap: React.FC = () => {
     };
 
     return (
-        <Background style={{ minHeight: '100vh' }}>
-            <Wrapper>
-                <MarketHeader route={ROUTES.Options.Swap} />
-                <GradientBorderWrapper>
-                    <GradientBorderContent>
-                        <SectionWrapper>
-                            <FlexDivRowCentered>
-                                <Text className="text-xxs white">From:</Text>
-                                <Text className="text-xxs white">Balance: {Number(balance).toFixed(4)}</Text>
-                            </FlexDivRowCentered>
-                            <FlexDivRowCentered>
-                                <Select
-                                    options={preLoadTokens}
-                                    formatOptionLabel={(option: any) => {
-                                        return (
-                                            <FlexDivRowCentered style={{ flex: 1 }}>
-                                                <Image
-                                                    src={option.logoURI}
-                                                    style={{ width: 32, height: 32, marginRight: 6 }}
-                                                ></Image>
-                                                <Text className="text-xs white">{option.name}</Text>
-                                            </FlexDivRowCentered>
-                                        );
-                                    }}
-                                    value={fromToken}
-                                    onChange={(option: any) => {
-                                        _setFromToken(option);
-                                    }}
-                                ></Select>
+        <GradientBorderWrapper>
+            <GradientBorderContent>
+                <SectionWrapper>
+                    <FlexDivRowCentered>
+                        <Text className="text-xxs white">From:</Text>
+                        <Text className="text-xxs white">Balance: {Number(balance).toFixed(4)}</Text>
+                    </FlexDivRowCentered>
+                    <FlexDivRowCentered>
+                        <Select
+                            options={preLoadTokens}
+                            formatOptionLabel={(option: any) => {
+                                return (
+                                    <FlexDivRowCentered style={{ flex: 1 }}>
+                                        <Image
+                                            src={option.logoURI}
+                                            style={{ width: 32, height: 32, marginRight: 6 }}
+                                        ></Image>
+                                        <Text className="text-xs white">{option.name}</Text>
+                                    </FlexDivRowCentered>
+                                );
+                            }}
+                            value={fromToken}
+                            onChange={(option: any) => {
+                                _setFromToken(option);
+                            }}
+                        ></Select>
 
-                                <NumInput
-                                    style={{ padding: 10, width: 150, textAlign: 'right' }}
-                                    value={amount}
-                                    onChange={(_, value) => {
-                                        setAmount(value as any);
-                                    }}
-                                ></NumInput>
-                            </FlexDivRowCentered>
-                        </SectionWrapper>
-                        <SectionWrapper>
-                            <FlexDivRowCentered>
-                                <Text className="text-xxs white">To:</Text>
-                                <Text className="text-xxs white">
-                                    Estimated Gas:{' '}
-                                    {previewData
-                                        ? formatCurrencyWithSign(USD_SIGN, (previewData as any).gasPrice)
-                                        : 'n/a'}
-                                </Text>
-                            </FlexDivRowCentered>
-                            <FlexDivRowCentered>
-                                <Select
-                                    options={preLoadTokens}
-                                    formatOptionLabel={(option: any) => {
-                                        return (
-                                            <FlexDivRowCentered style={{ flex: 1 }}>
-                                                <Image
-                                                    src={option.logoURI}
-                                                    style={{ width: 32, height: 32, marginRight: 6 }}
-                                                ></Image>
-                                                <Text className="text-xs white">{option.name}</Text>
-                                            </FlexDivRowCentered>
-                                        );
-                                    }}
-                                    disabled={true}
-                                    value={toToken}
-                                    onChange={(option: any) => {
-                                        _setToToken(option);
-                                    }}
-                                ></Select>
-                                <Text className="text-m white blur">
-                                    {previewData ? Number((previewData as any).buyAmount).toFixed(4) : 'n/a'}
-                                </Text>
-                            </FlexDivRowCentered>
-                        </SectionWrapper>
+                        <NumInput
+                            style={{ padding: 10, width: 150, textAlign: 'right' }}
+                            value={amount}
+                            onChange={(_, value) => {
+                                setAmount(value as any);
+                            }}
+                        ></NumInput>
+                    </FlexDivRowCentered>
+                </SectionWrapper>
+                <SectionWrapper>
+                    <FlexDivRowCentered>
+                        <Text className="text-xxs white">To:</Text>
+                        <Text className="text-xxs white">
+                            Estimated Gas:{' '}
+                            {previewData ? formatCurrencyWithSign(USD_SIGN, (previewData as any).gasPrice) : 'n/a'}
+                        </Text>
+                    </FlexDivRowCentered>
+                    <FlexDivRowCentered>
+                        <Select
+                            options={preLoadTokens}
+                            formatOptionLabel={(option: any) => {
+                                return (
+                                    <FlexDivRowCentered style={{ flex: 1 }}>
+                                        <Image
+                                            src={option.logoURI}
+                                            style={{ width: 32, height: 32, marginRight: 6 }}
+                                        ></Image>
+                                        <Text className="text-xs white">{option.name}</Text>
+                                    </FlexDivRowCentered>
+                                );
+                            }}
+                            disabled={true}
+                            value={toToken}
+                            onChange={(option: any) => {
+                                _setToToken(option);
+                            }}
+                        ></Select>
+                        <Text className="text-m white blur">
+                            {previewData ? Number((previewData as any).buyAmount).toFixed(4) : 'n/a'}
+                        </Text>
+                    </FlexDivRowCentered>
+                </SectionWrapper>
 
-                        {!allowance && (
-                            <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
-                                Approve
-                            </Button>
-                        )}
-                        {allowance && (
-                            <Button
-                                className="primary"
-                                onClick={async () => {
-                                    const tx = await swapTx();
-                                    console.log(tx);
-                                }}
-                                disabled={Number(amount) > Number(balance)}
-                            >
-                                Swap
-                            </Button>
-                        )}
-                    </GradientBorderContent>
-                </GradientBorderWrapper>
-            </Wrapper>
-        </Background>
+                {!allowance && (
+                    <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
+                        Approve
+                    </Button>
+                )}
+                {allowance && (
+                    <Button
+                        className="primary"
+                        onClick={async () => {
+                            const tx = await swapTx();
+                            console.log(tx);
+                        }}
+                        disabled={Number(amount) > Number(balance)}
+                    >
+                        Swap
+                    </Button>
+                )}
+            </GradientBorderContent>
+        </GradientBorderWrapper>
     );
 };
 
@@ -264,8 +247,11 @@ const Select = styled(ReactSelect)`
 const GradientBorderWrapper = styled.div`
     border-radius: 18px;
     background: linear-gradient(to right, #3936c7, #2d83d2, #23a5dd, #35dadb);
-    margin-bottom: 6px;
-    margin-top: 60px;
+    margin: auto;
+    position: relative;
+    top: 200px;
+    width: 422px;
+    padding: 1px;
 `;
 
 const GradientBorderContent = styled.div`
@@ -275,7 +261,6 @@ const GradientBorderContent = styled.div`
     border-radius: 20px;
     min-width: 70px;
     background-color: #04045a;
-    margin: 1px;
     padding: 20px;
     display: flex;
     flex-direction: column;

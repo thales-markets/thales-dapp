@@ -216,8 +216,6 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
         }
     }, [rowsPerPage, memoizedPage, searchString, sortedData]);
 
-    console.log(leaderboardData);
-
     const userLeaderboardData = useMemo(() => {
         const userData = leaderboardData.filter(
             (leader: any) => leader.walletAddress.toLowerCase() === walletAddress.toLowerCase()

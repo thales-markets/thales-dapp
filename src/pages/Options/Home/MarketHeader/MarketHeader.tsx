@@ -23,8 +23,6 @@ import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-defau
 import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
 import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
-import swapDefaultIcon from 'assets/images/sidebar/swap-default.svg';
-import swapSelectedIcon from 'assets/images/sidebar/swap-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -35,6 +33,8 @@ import { Overlay } from 'components/Header/Header';
 import LanguageSelector from 'components/LanguageSelector';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { buildHref } from '../../../../utils/routes';
+import { Modal } from '@material-ui/core';
+import Swap from '../Swap';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -59,7 +59,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
 }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
-
+    const [showSwap, setShowSwap] = useState(false);
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
 
     useMemo(() => {
@@ -96,6 +96,12 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 <FlexDiv>
+                    <Button className="tertiary" style={{ padding: '8px 24px' }} onClick={() => setShowSwap(true)}>
+                        Swap for sUSD
+                    </Button>
+                    <Modal open={showSwap} onClose={setShowSwap.bind(this, false)}>
+                        <Swap></Swap>
+                    </Modal>
                     <DesktopLanguageSelectorContainer>
                         <LanguageSelector />
                     </DesktopLanguageSelectorContainer>
@@ -157,16 +163,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
-                    <SPAAnchor href={buildHref(ROUTES.Options.Swap)}>
-                        <SidebarItem
-                            imgSrc={swapDefaultIcon}
-                            imgSrcHoverSelected={swapSelectedIcon}
-                            className={route === ROUTES.Options.Swap ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.overview-swap')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
                     <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>

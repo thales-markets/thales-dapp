@@ -23,7 +23,6 @@ import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
-import Swap from 'pages/Options/Home/Swap';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -171,12 +170,6 @@ const App = () => {
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <MainLayout>
                                 <OptionsCreateMarket />
-                            </MainLayout>
-                        </Route>
-
-                        <Route exact path={ROUTES.Options.Swap}>
-                            <MainLayout>
-                                <Swap />
                             </MainLayout>
                         </Route>
 
