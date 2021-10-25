@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDivColumn, FlexDivRowCentered, Image, Text } from 'theme/common';
+import { Button, FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image, LoaderContainer, Text } from 'theme/common';
 import { ReactSelect } from 'pages/Options/Market/components';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
 import { fetchQuote, getTxForSwap } from './0xApiQuerys';
+import SimpleLoader from 'components/SimpleLoader';
 
 const sUSD = {
     address: '0x57ab1ec28d129707052df4df418d58a2d46d5f51',
@@ -55,7 +56,7 @@ const USDT = {
 
 const SPENDER = '0xdef1c0ded9bec7f1a1670819833240f027b25eff';
 
-const preLoadTokens = [sUSD, Dai, USDC, USDT, Eth];
+const preLoadTokens = [Dai, USDC, USDT, Eth];
 
 const Swap: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -68,36 +69,49 @@ const Swap: React.FC = () => {
     const [previewData, setPreviedData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
+    const [isLoading, setLoading] = useState(false);
+    const [showSceleton, setShowSceleton] = useState(false);
 
     useEffect(() => {
         if (fromToken && amount > 0) {
-            fetchQuote(toToken.symbol, (fromToken as any).symbol, amount.toString(), (fromToken as any).decimals).then(
-                (data) => {
-                    setPreviedData(data as any);
-                }
-            );
+            setShowSceleton(true);
+            fetchQuote(
+                toToken.symbol,
+                toToken.decimals,
+                (fromToken as any).symbol,
+                amount.toString(),
+                (fromToken as any).decimals
+            ).then((data) => {
+                setPreviedData(data as any);
+                setShowSceleton(false);
+            });
         }
     }, [fromToken, amount]);
 
     useEffect(() => {
-        if (fromToken) {
-            if (fromToken === Eth) {
+        updateBalaneAndAllowance(fromToken);
+    }, [fromToken]);
+
+    const updateBalaneAndAllowance = (token: any) => {
+        if (token) {
+            if (token === Eth) {
+                setAllowance(true);
                 signer
                     .getBalance()
-                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (fromToken as any).decimals)));
+                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
             } else {
-                const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
+                const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
                 erc20Instance
                     .allowance(walletAddress, SPENDER)
                     .then((data: any) =>
-                        setAllowance(Number(ethers.utils.formatUnits(data, (fromToken as any).decimals)) > 0)
+                        setAllowance(Number(ethers.utils.formatUnits(data, (token as any).decimals)) > 0)
                     );
                 erc20Instance
                     .balanceOf(walletAddress)
-                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (fromToken as any).decimals)));
+                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
             }
         }
-    }, [fromToken]);
+    };
 
     const swapTx = async () => {
         const data = await getTxForSwap(
@@ -106,23 +120,34 @@ const Swap: React.FC = () => {
             amount.toString(),
             (fromToken as any).decimals
         );
+
         try {
-            await signer.sendTransaction(data);
+            const tx = await signer.sendTransaction(data);
+            setLoading(true);
+            await tx.wait();
+            setLoading(false);
         } catch (e) {
             console.log('failed: ', e);
         }
     };
 
-    const approve = () => {
+    const approve = async () => {
         const erc20Instance = new ethers.Contract((fromToken as any).address, erc20Contract.abi, signer);
-        erc20Instance.approve(SPENDER, ethers.constants.MaxUint256).then((data: any) => {
-            console.log(data);
-        });
+
+        try {
+            const tx = await erc20Instance.approve(SPENDER, ethers.constants.MaxUint256);
+            setLoading(true);
+            await tx.wait();
+            setLoading(false);
+            setAllowance(true);
+        } catch (e) {
+            console.log('tx rejected, try again');
+        }
     };
 
     return (
         <GradientBorderWrapper>
-            <GradientBorderContent>
+            <GradientBorderContent className={isLoading ? 'loading' : ''}>
                 <SectionWrapper>
                     <FlexDivRowCentered>
                         <Text className="text-xxs white">From:</Text>
@@ -157,7 +182,20 @@ const Swap: React.FC = () => {
                         ></NumInput>
                     </FlexDivRowCentered>
                 </SectionWrapper>
-                <SectionWrapper>
+                <SceletonWrapper className={showSceleton ? 'visible' : ''}>
+                    <FlexDivRowCentered>
+                        <TextSceleton className="small" />
+                        <TextSceleton className="large" />
+                    </FlexDivRowCentered>
+                    <FlexDivRowCentered style={{ height: 64 }}>
+                        <FlexDivCentered>
+                            <ImageSceleton />
+                            <TextSceleton className="medium" />
+                        </FlexDivCentered>
+                        <TextSceleton className="medium" />
+                    </FlexDivRowCentered>
+                </SceletonWrapper>
+                <SectionWrapper className={showSceleton ? 'hide' : ''}>
                     <FlexDivRowCentered>
                         <Text className="text-xxs white">To:</Text>
                         <Text className="text-xxs white">
@@ -179,7 +217,7 @@ const Swap: React.FC = () => {
                                     </FlexDivRowCentered>
                                 );
                             }}
-                            disabled={true}
+                            isDisabled={true}
                             value={toToken}
                             onChange={(option: any) => {
                                 _setToToken(option);
@@ -200,13 +238,18 @@ const Swap: React.FC = () => {
                     <Button
                         className="primary"
                         onClick={async () => {
-                            const tx = await swapTx();
-                            console.log(tx);
+                            await swapTx();
+                            updateBalaneAndAllowance(fromToken);
                         }}
-                        disabled={Number(amount) > Number(balance)}
+                        disabled={Number(amount) > Number(balance) || Number(amount) <= 0}
                     >
                         Swap
                     </Button>
+                )}
+                {isLoading && (
+                    <LoaderContainer>
+                        <SimpleLoader />
+                    </LoaderContainer>
                 )}
             </GradientBorderContent>
         </GradientBorderWrapper>
@@ -218,9 +261,16 @@ const SectionWrapper = styled(FlexDivColumn)`
     padding: 16px;
     padding-bottom: 0;
     border-radius: 20px;
+    max-height: 92px;
     &:last-of-type {
         position: relative;
         margin: 20px 0;
+        .react-select__indicators {
+            display: none !important;
+        }
+    }
+    &.hide {
+        display: none;
     }
 `;
 
@@ -267,6 +317,54 @@ const GradientBorderContent = styled.div`
     color: #f6f6fe;
     justify-content: space-between;
     width: 420px;
+    height: 304px;
+    &.loading {
+        opacity: 0.85;
+    }
+`;
+
+const SceletonWrapper = styled.div`
+    display: none;
+    width: 380px;
+    height: 92px;
+    background: #0a2e66;
+    padding: 16px;
+    border-radius: 20px;
+    &.visible {
+        display: block;
+    }
+
+    @keyframes shimmer {
+        100% {
+            -webkit-mask-position: left;
+        }
+    }
+    -webkit-mask: linear-gradient(-60deg, #000 30%, #0005, #000 70%) right/300% 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 2.5s infinite;
+`;
+
+const TextSceleton = styled.div`
+    height: 13px;
+    border-radius: 12px;
+    &.small {
+        width: 40px;
+    }
+    &.medium {
+        width: 80px;
+    }
+    &.large {
+        width: 120px;
+    }
+    background: #6984ad;
+`;
+
+const ImageSceleton = styled.div`
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    background: #6984ad;
+    margin-right: 6px;
 `;
 
 export default Swap;

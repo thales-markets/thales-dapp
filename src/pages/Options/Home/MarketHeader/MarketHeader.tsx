@@ -96,9 +96,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 <FlexDiv>
-                    <Button className="tertiary" style={{ padding: '8px 24px' }} onClick={() => setShowSwap(true)}>
-                        Swap for sUSD
-                    </Button>
+                    {isWalletConnected && (
+                        <Button className="tertiary" style={{ padding: '8px 24px' }} onClick={() => setShowSwap(true)}>
+                            Swap for sUSD
+                        </Button>
+                    )}
                     <Modal open={showSwap} onClose={setShowSwap.bind(this, false)}>
                         <Swap></Swap>
                     </Modal>

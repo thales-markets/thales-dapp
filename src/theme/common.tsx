@@ -179,6 +179,14 @@ export const Side = styled(FlexDivColumnCentered)`
     }
 `;
 
+export const LoaderContainer = styled(GridDivCenteredRow)`
+    grid-gap: 10px;
+    position: absolute;
+    left: 45%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+`;
+
 export const Button = styled.button`
     padding: 8px 35px;
     border-radius: 40px;
