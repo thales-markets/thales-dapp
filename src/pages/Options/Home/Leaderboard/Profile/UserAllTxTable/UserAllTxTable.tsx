@@ -6,6 +6,7 @@ import shortIcon from 'assets/images/short_small.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 import Currency from 'components/Currency';
+import SimpleLoader from 'components/SimpleLoader';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import { COLORS } from 'constants/ui';
@@ -23,14 +24,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn, Image } from 'theme/common';
+import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
 import { OptionSide, OrderSide } from 'types/options';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
 import { HeadCell } from '../Profile';
-import SimpleLoader from 'components/SimpleLoader';
 
 type UserAllTxTableProps = {
     profile: any;
@@ -127,7 +127,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                     return { txType: 'exercise', ...exercise };
                 }),
                 usersUnclaimed.map((unclaimed: any) => {
-                    return { txType: 'unclaimed', ...unclaimed };
+                    return { txType: 'redeemable', ...unclaimed };
                 })
             );
         return data;
@@ -140,21 +140,35 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                     return sortByField(a, b, orderDirection, 'timestamp');
                 }
                 if (orderBy === 2) {
-                    const bMarket = marketsData.filter((market) => market.address === b.market)[0];
-                    const aMarket = marketsData.filter((market) => market.address === a.market)[0];
+                    const bMarket =
+                        b.txType === 'redeemable'
+                            ? marketsData.filter((market) => market.address === b.market.address)[0]
+                            : marketsData.filter((market) => market.address === b.market)[0];
+
+                    const aMarket =
+                        a.txType === 'redeemable'
+                            ? marketsData.filter((market) => market.address === a.market.address)[0]
+                            : marketsData.filter((market) => market.address === a.market)[0];
+
                     return sortByMarketHeading(aMarket, bMarket, orderDirection);
                 }
                 if (orderBy === 3) {
-                    return sortByField(a, b, orderDirection, 'side');
+                    return sortByField(a, b, orderDirection, 'txType');
                 }
                 if (orderBy === 4) {
-                    return sortByField(a, b, orderDirection, 'type');
+                    return sortByField(a, b, orderDirection, 'side');
                 }
                 if (orderBy === 5) {
+                    return sortByField(a, b, orderDirection, 'type');
+                }
+                if (orderBy === 6) {
                     return sortByField(a, b, orderDirection, 'amount');
                 }
                 if (orderBy === 6) {
-                    return sortByField(a, b, orderDirection, 'price');
+                    return sortByField(a, b, orderDirection, 'amount');
+                }
+                if (orderBy === 7) {
+                    return sortByField(a, b, orderDirection, 'amount');
                 }
 
                 return 0;
@@ -174,12 +188,11 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
         { id: 7, label: t('options.leaderboard.trades.table.price-col'), sortable: true },
         { id: 8, label: t('options.leaderboard.profile.markets.result'), sortable: true },
         { id: 9, label: t('options.leaderboard.trades.table.tx-status-col'), sortable: false },
-        { id: 10, label: '', sortable: false },
     ];
 
     return (
         <>
-            {!isLoading && (
+            {!isLoading && sortedTransactions.length > 0 && (
                 <Table aria-label="customized table">
                     <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
                         <TableRow>
@@ -221,13 +234,17 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                     <TableBody>
                         {sortedTransactions.map((tx: any, index: any) => {
                             const market =
-                                tx.txType === 'unclaimed'
+                                tx.txType === 'redeemable'
                                     ? marketsData.filter((market) => market.address === tx.market.address)[0]
                                     : marketsData.filter((market) => market.address === tx.market)[0];
                             const tradeSide: OptionSide = tx.side;
+                            const marketResult: OptionSide = tx.txType === 'redeemable' ? tx.market.result : '';
+                            console.log(userDisplay);
                             return (
                                 <StyledTableRow key={index}>
-                                    <StyledTableCell>{formatTxTimestamp(tx.timestamp)}</StyledTableCell>
+                                    <StyledTableCell>
+                                        {tx.txType !== 'redeemable' ? formatTxTimestamp(tx.timestamp) : '-'}
+                                    </StyledTableCell>
                                     <StyledTableCell>
                                         <FlexDiv>
                                             <Currency.Icon
@@ -285,7 +302,14 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Cell orderSide={tx.type}>
-                                            {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], tx.amount)}
+                                            {tx.txType === 'redeemable'
+                                                ? formatCurrencyWithKey(
+                                                      OPTIONS_CURRENCY_MAP[marketResult],
+                                                      tx.market.result === 'long' ? tx.long : tx.short
+                                                  )
+                                                : tx.txType === 'mint'
+                                                ? tx.amount
+                                                : formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], tx.amount)}
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
@@ -304,36 +328,6 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <ViewEtherscanLink hash={tx.hash} />
-                                    </StyledTableCell>
-                                    <StyledTableCell
-                                        style={
-                                            index === sortedTransactions.length - 1
-                                                ? { borderRadius: '0 0 23px 0' }
-                                                : {}
-                                        }
-                                    >
-                                        <Button
-                                            className="primary"
-                                            style={{
-                                                display: !userDisplay
-                                                    ? tx.type !== 'unclaimed'
-                                                        ? 'none'
-                                                        : ''
-                                                    : 'none',
-                                            }}
-                                        >
-                                            <a
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                href={buildOptionsMarketLink(market.address)}
-                                                style={{
-                                                    color: 'white',
-                                                    verticalAlign: 'top',
-                                                }}
-                                            >
-                                                {t('options.leaderboard.profile.unclaimed.redeem')}
-                                            </a>
-                                        </Button>
                                     </StyledTableCell>
                                 </StyledTableRow>
                             );
@@ -367,6 +361,20 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
             {isLoading && (
                 <LoaderContainer>
                     <SimpleLoader />
+                </LoaderContainer>
+            )}
+            {!isLoading && sortedTransactions.length === 0 && (
+                <LoaderContainer>
+                    <Text
+                        className="bold white"
+                        style={{
+                            alignSelf: 'center',
+                            paddingLeft: 15,
+                            fontSize: 31,
+                        }}
+                    >
+                        {t('options.leaderboard.profile.no-transactions')}
+                    </Text>
                 </LoaderContainer>
             )}
         </>

@@ -20,7 +20,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDiv, Image } from 'theme/common';
+import { FlexDiv, Image, Text, FlexDivColumn } from 'theme/common';
 import { HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
@@ -119,101 +119,141 @@ const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData }) =
     ];
 
     return (
-        <Table aria-label="customized table">
-            <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
-                <TableRow>
-                    {headCellsMints.map((cell: HeadCell, index) => {
-                        return (
-                            <StyledTableCell
-                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                key={index}
-                                style={cell.sortable ? { cursor: 'pointer' } : {}}
-                            >
-                                <TableHeaderLabel className={cell.sortable && orderBy === cell.id ? 'selected' : ''}>
-                                    {cell.label}
-                                </TableHeaderLabel>
-                                {cell.sortable && (
-                                    <ArrowsWrapper>
-                                        {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                            <Arrow
-                                                src={orderDirection === OrderDirection.ASC ? upSelected : downSelected}
-                                            />
-                                        ) : (
-                                            <>
-                                                <Arrow src={up} />
-                                                <Arrow src={down} />
-                                            </>
-                                        )}
-                                    </ArrowsWrapper>
-                                )}
-                            </StyledTableCell>
-                        );
-                    })}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {sortedMints.map((mint: any, index: any) => {
-                    const market = marketsData.filter((market) => market.address === mint.market)[0];
-                    return (
-                        <StyledTableRow key={index}>
-                            <StyledTableCell>{formatTxTimestamp(mint.timestamp)}</StyledTableCell>
-                            <StyledTableCell>
-                                <FlexDiv>
-                                    <Currency.Icon
-                                        synthIconStyle={{
-                                            width: 24,
-                                            height: 24,
-                                            marginRight: 6,
-                                            marginBottom: -6,
-                                        }}
-                                        currencyKey={market.currencyKey}
-                                    />{' '}
-                                    <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                        <StyledLink href={buildOptionsMarketLink(market.address, mint.optionSide)}>
-                                            {countryToCountryCode(market.country as string) && (
-                                                <ReactCountryFlag
-                                                    countryCode={countryToCountryCode(market.country as string)}
-                                                    style={{ marginBottom: -6, marginRight: 6, width: 24, height: 24 }}
-                                                    svg
-                                                />
-                                            )}
-                                            {market.customMarket && !countryToCountryCode(market.country as any) && (
-                                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
-                                            )}
-                                            <CryptoName>{marketHeadingMints(market, market.optionSide)}</CryptoName>
-                                        </StyledLink>
-                                    </LightTooltip>
-                                </FlexDiv>
-                            </StyledTableCell>
-                            <StyledTableCell>{mint.amount}</StyledTableCell>
-                            <StyledTableCell
-                                style={index === usersMints.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
-                            >
-                                <ViewEtherscanLink hash={mint.hash} />
-                            </StyledTableCell>
-                        </StyledTableRow>
-                    );
-                })}
-            </TableBody>
+        <>
             {sortedMints.length !== 0 && (
-                <TableFooter>
-                    <TableRow>
-                        <PaginationWrapper
-                            rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                            count={sortedMints.length}
-                            rowsPerPage={rowsPerPage}
-                            page={memoizedPage}
-                            onPageChange={handleChangePage}
-                            ActionsComponent={() => (
-                                <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
-                            )}
-                        />
-                    </TableRow>
-                </TableFooter>
+                <Table aria-label="customized table">
+                    <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                        <TableRow>
+                            {headCellsMints.map((cell: HeadCell, index) => {
+                                return (
+                                    <StyledTableCell
+                                        onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                        key={index}
+                                        style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                    >
+                                        <TableHeaderLabel
+                                            className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                        >
+                                            {cell.label}
+                                        </TableHeaderLabel>
+                                        {cell.sortable && (
+                                            <ArrowsWrapper>
+                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                    <Arrow
+                                                        src={
+                                                            orderDirection === OrderDirection.ASC
+                                                                ? upSelected
+                                                                : downSelected
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <Arrow src={up} />
+                                                        <Arrow src={down} />
+                                                    </>
+                                                )}
+                                            </ArrowsWrapper>
+                                        )}
+                                    </StyledTableCell>
+                                );
+                            })}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sortedMints.map((mint: any, index: any) => {
+                            const market = marketsData.filter((market) => market.address === mint.market)[0];
+                            return (
+                                <StyledTableRow key={index}>
+                                    <StyledTableCell>{formatTxTimestamp(mint.timestamp)}</StyledTableCell>
+                                    <StyledTableCell>
+                                        <FlexDiv>
+                                            <Currency.Icon
+                                                synthIconStyle={{
+                                                    width: 24,
+                                                    height: 24,
+                                                    marginRight: 6,
+                                                    marginBottom: -6,
+                                                }}
+                                                currencyKey={market.currencyKey}
+                                            />{' '}
+                                            <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                                <StyledLink
+                                                    href={buildOptionsMarketLink(market.address, mint.optionSide)}
+                                                >
+                                                    {countryToCountryCode(market.country as string) && (
+                                                        <ReactCountryFlag
+                                                            countryCode={countryToCountryCode(market.country as string)}
+                                                            style={{
+                                                                marginBottom: -6,
+                                                                marginRight: 6,
+                                                                width: 24,
+                                                                height: 24,
+                                                            }}
+                                                            svg
+                                                        />
+                                                    )}
+                                                    {market.customMarket &&
+                                                        !countryToCountryCode(market.country as any) && (
+                                                            <CustomIcon
+                                                                src={eventToIcon(market.eventName as any)}
+                                                            ></CustomIcon>
+                                                        )}
+                                                    <CryptoName>
+                                                        {marketHeadingMints(market, market.optionSide)}
+                                                    </CryptoName>
+                                                </StyledLink>
+                                            </LightTooltip>
+                                        </FlexDiv>
+                                    </StyledTableCell>
+                                    <StyledTableCell>{mint.amount}</StyledTableCell>
+                                    <StyledTableCell
+                                        style={index === usersMints.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
+                                    >
+                                        <ViewEtherscanLink hash={mint.hash} />
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            );
+                        })}
+                    </TableBody>
+                    {sortedMints.length !== 0 && (
+                        <TableFooter>
+                            <TableRow>
+                                <PaginationWrapper
+                                    rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                                    count={sortedMints.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={memoizedPage}
+                                    onPageChange={handleChangePage}
+                                    ActionsComponent={() => (
+                                        <Pagination
+                                            page={memoizedPage}
+                                            numberOfPages={numberOfPages}
+                                            setPage={setPage}
+                                        />
+                                    )}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    )}
+                </Table>
             )}
-        </Table>
+            {sortedMints.length === 0 && (
+                <LoaderContainer>
+                    <Text
+                        className="bold white"
+                        style={{
+                            alignSelf: 'center',
+                            paddingLeft: 15,
+                            fontSize: 31,
+                        }}
+                    >
+                        {t('options.leaderboard.profile.no-transactions')}
+                    </Text>
+                </LoaderContainer>
+            )}
+        </>
     );
 };
 
@@ -249,6 +289,14 @@ export const CustomIcon = styled(Image)`
     margin-right: 6px;
     width: 24px;
     height: 24px;
+`;
+
+const LoaderContainer = styled(FlexDivColumn)`
+    min-height: 400px;
+    background: #04045a;
+    justify-content: space-evenly;
+    position: relative;
+    border-radius: 23px;
 `;
 
 const CryptoName = styled.span``;

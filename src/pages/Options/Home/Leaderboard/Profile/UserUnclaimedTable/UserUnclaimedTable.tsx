@@ -20,7 +20,7 @@ import { StyledLink } from 'pages/Options/QuickTrading/QuickTradingTable/QuickTr
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, Image } from 'theme/common';
+import { Button, FlexDiv, Image, Text, FlexDivColumn } from 'theme/common';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
@@ -130,124 +130,166 @@ const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed,
     ];
 
     return (
-        <Table aria-label="customized table">
-            <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
-                <TableRow>
-                    {headCells.map((cell: HeadCell, index) => {
-                        return (
-                            <StyledTableCell
-                                onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
-                                key={index}
-                                style={cell.sortable ? { cursor: 'pointer' } : {}}
-                            >
-                                <TableHeaderLabel className={cell.sortable && orderBy === cell.id ? 'selected' : ''}>
-                                    {cell.label}
-                                </TableHeaderLabel>
-                                {cell.sortable && (
-                                    <ArrowsWrapper>
-                                        {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                            <Arrow
-                                                src={orderDirection === OrderDirection.ASC ? upSelected : downSelected}
-                                            />
-                                        ) : (
-                                            <>
-                                                <Arrow src={up} />
-                                                <Arrow src={down} />
-                                            </>
-                                        )}
-                                    </ArrowsWrapper>
-                                )}
-                            </StyledTableCell>
-                        );
-                    })}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {sortedUnclaimed.map((unclaimed: any, index: any) => {
-                    const market = marketsData.filter((market) => market.address === unclaimed.market.address)[0];
-                    return (
-                        <StyledTableRow key={index}>
-                            <StyledTableCell>
-                                <FlexDiv>
-                                    <Currency.Icon
-                                        synthIconStyle={{
-                                            width: 24,
-                                            height: 24,
-                                            marginRight: 6,
-                                            marginBottom: -6,
-                                        }}
-                                        currencyKey={market.currencyKey}
-                                    />{' '}
-                                    <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
-                                        <StyledLink href={buildOptionsMarketLink(market.address, unclaimed.side)}>
-                                            {countryToCountryCode(market.country as string) && (
-                                                <ReactCountryFlag
-                                                    countryCode={countryToCountryCode(market.country as string)}
-                                                    style={{ marginBottom: -6, marginRight: 6, width: 24, height: 24 }}
-                                                    svg
-                                                />
-                                            )}
-                                            {market.customMarket && !countryToCountryCode(market.country as any) && (
-                                                <CustomIcon src={eventToIcon(market.eventName as any)}></CustomIcon>
-                                            )}
-                                            <CryptoName>{marketHeading(market, unclaimed.side)}</CryptoName>
-                                        </StyledLink>
-                                    </LightTooltip>
-                                </FlexDiv>
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                {unclaimed.market.result === 'long' ? (
-                                    <SideImage src={longIcon} />
-                                ) : (
-                                    <SideImage src={shortIcon} />
-                                )}
-                            </StyledTableCell>
-                            <StyledTableCell>
-                                {unclaimed.market.result === 'long'
-                                    ? formatCurrencyWithSign(USD_SIGN, unclaimed.long)
-                                    : formatCurrencyWithSign(USD_SIGN, unclaimed.short)}
-                            </StyledTableCell>
-                            <StyledTableCell
-                                style={index === sortedUnclaimed.length - 1 ? { borderRadius: '0 0 23px 0' } : {}}
-                            >
-                                <Button className="primary">
-                                    <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href={buildOptionsMarketLink(market.address)}
-                                        style={{
-                                            color: 'white',
-                                            verticalAlign: 'top',
-                                            display: !userDisplay ? 'none' : '',
-                                        }}
-                                    >
-                                        {t('options.leaderboard.profile.unclaimed.redeem')}
-                                    </a>
-                                </Button>
-                            </StyledTableCell>
-                        </StyledTableRow>
-                    );
-                })}
-            </TableBody>
+        <>
             {sortedUnclaimed.length !== 0 && (
-                <TableFooter>
-                    <TableRow>
-                        <PaginationWrapper
-                            rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                            count={sortedUnclaimed.length}
-                            rowsPerPage={rowsPerPage}
-                            page={memoizedPage}
-                            onPageChange={handleChangePage}
-                            ActionsComponent={() => (
-                                <Pagination page={memoizedPage} numberOfPages={numberOfPages} setPage={setPage} />
-                            )}
-                        />
-                    </TableRow>
-                </TableFooter>
+                <Table aria-label="customized table">
+                    <TableHead style={{ textTransform: 'uppercase', background: '#04045a' }}>
+                        <TableRow>
+                            {headCells.map((cell: HeadCell, index) => {
+                                return (
+                                    <StyledTableCell
+                                        onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                        key={index}
+                                        style={cell.sortable ? { cursor: 'pointer' } : {}}
+                                    >
+                                        <TableHeaderLabel
+                                            className={cell.sortable && orderBy === cell.id ? 'selected' : ''}
+                                        >
+                                            {cell.label}
+                                        </TableHeaderLabel>
+                                        {cell.sortable && (
+                                            <ArrowsWrapper>
+                                                {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                    <Arrow
+                                                        src={
+                                                            orderDirection === OrderDirection.ASC
+                                                                ? upSelected
+                                                                : downSelected
+                                                        }
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <Arrow src={up} />
+                                                        <Arrow src={down} />
+                                                    </>
+                                                )}
+                                            </ArrowsWrapper>
+                                        )}
+                                    </StyledTableCell>
+                                );
+                            })}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sortedUnclaimed.map((unclaimed: any, index: any) => {
+                            const market = marketsData.filter(
+                                (market) => market.address === unclaimed.market.address
+                            )[0];
+                            return (
+                                <StyledTableRow key={index}>
+                                    <StyledTableCell>
+                                        <FlexDiv>
+                                            <Currency.Icon
+                                                synthIconStyle={{
+                                                    width: 24,
+                                                    height: 24,
+                                                    marginRight: 6,
+                                                    marginBottom: -6,
+                                                }}
+                                                currencyKey={market.currencyKey}
+                                            />{' '}
+                                            <LightTooltip title={t('options.quick-trading.view-market-tooltip')}>
+                                                <StyledLink
+                                                    href={buildOptionsMarketLink(market.address, unclaimed.side)}
+                                                >
+                                                    {countryToCountryCode(market.country as string) && (
+                                                        <ReactCountryFlag
+                                                            countryCode={countryToCountryCode(market.country as string)}
+                                                            style={{
+                                                                marginBottom: -6,
+                                                                marginRight: 6,
+                                                                width: 24,
+                                                                height: 24,
+                                                            }}
+                                                            svg
+                                                        />
+                                                    )}
+                                                    {market.customMarket &&
+                                                        !countryToCountryCode(market.country as any) && (
+                                                            <CustomIcon
+                                                                src={eventToIcon(market.eventName as any)}
+                                                            ></CustomIcon>
+                                                        )}
+                                                    <CryptoName>{marketHeading(market, unclaimed.side)}</CryptoName>
+                                                </StyledLink>
+                                            </LightTooltip>
+                                        </FlexDiv>
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {unclaimed.market.result === 'long' ? (
+                                            <SideImage src={longIcon} />
+                                        ) : (
+                                            <SideImage src={shortIcon} />
+                                        )}
+                                    </StyledTableCell>
+                                    <StyledTableCell>
+                                        {unclaimed.market.result === 'long'
+                                            ? formatCurrencyWithSign(USD_SIGN, unclaimed.long)
+                                            : formatCurrencyWithSign(USD_SIGN, unclaimed.short)}
+                                    </StyledTableCell>
+                                    <StyledTableCell
+                                        style={
+                                            index === sortedUnclaimed.length - 1 ? { borderRadius: '0 0 23px 0' } : {}
+                                        }
+                                    >
+                                        <Button className="primary">
+                                            <a
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                href={buildOptionsMarketLink(market.address)}
+                                                style={{
+                                                    color: 'white',
+                                                    verticalAlign: 'top',
+                                                    display: !userDisplay ? 'none' : '',
+                                                }}
+                                            >
+                                                {t('options.leaderboard.profile.unclaimed.redeem')}
+                                            </a>
+                                        </Button>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            );
+                        })}
+                    </TableBody>
+                    {sortedUnclaimed.length !== 0 && (
+                        <TableFooter>
+                            <TableRow>
+                                <PaginationWrapper
+                                    rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                    labelRowsPerPage={t(`common.pagination.rows-per-page`)}
+                                    count={sortedUnclaimed.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={memoizedPage}
+                                    onPageChange={handleChangePage}
+                                    ActionsComponent={() => (
+                                        <Pagination
+                                            page={memoizedPage}
+                                            numberOfPages={numberOfPages}
+                                            setPage={setPage}
+                                        />
+                                    )}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    )}
+                </Table>
             )}
-        </Table>
+            {sortedUnclaimed.length === 0 && (
+                <LoaderContainer>
+                    <Text
+                        className="bold white"
+                        style={{
+                            alignSelf: 'center',
+                            paddingLeft: 15,
+                            fontSize: 31,
+                        }}
+                    >
+                        {t('options.leaderboard.profile.no-transactions')}
+                    </Text>
+                </LoaderContainer>
+            )}
+        </>
     );
 };
 
@@ -276,6 +318,14 @@ export const RowScrollable = styled(FlexDiv)`
     ::-webkit-scrollbar {
         width: 5px;
     }
+`;
+
+const LoaderContainer = styled(FlexDivColumn)`
+    min-height: 400px;
+    background: #04045a;
+    justify-content: space-evenly;
+    position: relative;
+    border-radius: 23px;
 `;
 
 const CryptoName = styled.span``;
