@@ -29,22 +29,23 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
-import { HeadCell } from '../Profile';
+import { HeadCell, OrderDirection } from '../Profile';
 
 type UserTradesTableProps = {
     usersTrades: any[];
     marketsData: any[];
+    sortByField: any;
+    sortByMarketHeading: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
 
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
-const UserTradesTable: React.FC<UserTradesTableProps> = ({ usersTrades, marketsData }) => {
+const UserTradesTable: React.FC<UserTradesTableProps> = ({
+    usersTrades,
+    marketsData,
+    sortByField,
+    sortByMarketHeading,
+}) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -230,9 +231,9 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({ usersTrades, marketsD
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        <CellCurrency currencySide={tradeSide}>
+                                        <Cell orderSide={trade.type}>
                                             {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], trade.amount)}
-                                        </CellCurrency>
+                                        </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Cell orderSide={trade.type}>
@@ -341,33 +342,5 @@ const CryptoName = styled.span``;
 const Cell = styled.span<{ orderSide: string }>`
     color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
 `;
-
-const CellCurrency = styled.span<{ currencySide: string }>`
-    color: ${(props) => (props.currencySide === 'long' ? COLORS.BUY : COLORS.SELL)};
-`;
-
-const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
-    const aMarket = marketHeading(a, a.optionSide);
-    const bMarket = marketHeading(b, b.optionSide);
-    if (direction === OrderDirection.ASC) {
-        return aMarket < bMarket ? -1 : 1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return aMarket < bMarket ? 1 : -1;
-    }
-
-    return 0;
-};
-
-const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
-};
 
 export default UserTradesTable;

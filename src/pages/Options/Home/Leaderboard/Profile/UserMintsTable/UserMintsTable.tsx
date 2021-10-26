@@ -27,21 +27,16 @@ import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number'
 import { buildOptionsMarketLink } from 'utils/routes';
 import { getSynthName } from 'utils/snxJSConnector';
 import '../media.scss';
-import { HeadCell } from '../Profile';
+import { HeadCell, OrderDirection } from '../Profile';
 
 type UserMintsTable = {
     usersMints: any[];
     marketsData: any[];
+    sortByField: any;
 };
 const DEFAULT_ORDER_BY = 1;
 
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
-const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData }) => {
+const UserMintsTable: React.FC<UserMintsTable> = ({ usersMints, marketsData, sortByField }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -309,17 +304,6 @@ const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
     }
     if (direction === OrderDirection.DESC) {
         return aMarket < bMarket ? 1 : -1;
-    }
-
-    return 0;
-};
-
-const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
     }
 
     return 0;

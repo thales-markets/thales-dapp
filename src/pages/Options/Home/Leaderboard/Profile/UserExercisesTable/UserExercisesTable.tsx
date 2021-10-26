@@ -28,23 +28,24 @@ import downSelected from 'assets/images/down-selected.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
-import { HeadCell } from '../Profile';
+import { HeadCell, OrderDirection } from '../Profile';
 import ReactCountryFlag from 'react-country-flag';
 
 type UserExcersisesTableProps = {
     usersExercises: any[];
     marketsData: any[];
+    sortByField: any;
+    sortByMarketHeading: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
 
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
-const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({ usersExercises, marketsData }) => {
+const UserExercisesTable: React.FC<UserExcersisesTableProps> = ({
+    usersExercises,
+    marketsData,
+    sortByField,
+    sortByMarketHeading,
+}) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -328,29 +329,5 @@ const CryptoName = styled.span``;
 const Cell = styled.span<{ orderSide: string }>`
     color: ${(props) => (props.orderSide === 'long' ? COLORS.BUY : COLORS.SELL)};
 `;
-
-const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
-    const aMarket = marketHeading(a, a.optionSide);
-    const bMarket = marketHeading(b, b.optionSide);
-    if (direction === OrderDirection.ASC) {
-        return aMarket < bMarket ? -1 : 1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return aMarket < bMarket ? 1 : -1;
-    }
-
-    return 0;
-};
-
-const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
-};
 
 export default UserExercisesTable;

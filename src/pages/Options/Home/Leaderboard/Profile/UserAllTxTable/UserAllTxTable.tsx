@@ -31,7 +31,7 @@ import { formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
-import { HeadCell } from '../Profile';
+import { HeadCell, OrderDirection } from '../Profile';
 type UserAllTxTableProps = {
     profile: any;
     usersMints: any[];
@@ -41,15 +41,11 @@ type UserAllTxTableProps = {
     marketsData: any[];
     userDisplay: boolean;
     isLoading: boolean;
+    sortByField: any;
+    sortByMarketHeading: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
-
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
 
 const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
     profile,
@@ -60,6 +56,8 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
     marketsData,
     userDisplay,
     isLoading,
+    sortByField,
+    sortByMarketHeading,
 }) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
@@ -137,6 +135,8 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
         return transactionsByType
             .sort((a, b) => {
                 if (orderBy === 1) {
+                    if (a.timestamp === undefined) return 1;
+                    if (b.timestamp === undefined) return -1;
                     return sortByField(a, b, orderDirection, 'timestamp');
                 }
                 if (orderBy === 2) {
@@ -156,27 +156,30 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                     return sortByField(a, b, orderDirection, 'txType');
                 }
                 if (orderBy === 4) {
+                    if (a.side !== 'long' && a.side !== 'short') return 1;
+                    if (b.side !== 'long' && b.side !== 'short') return -1;
                     return sortByField(a, b, orderDirection, 'side');
                 }
                 if (orderBy === 5) {
-                    const bExtendedTransaction = b.txType === 'redeemable' ? { type: 'redeemable', ...b } : { ...b };
+                    const bExtendedTransaction = b.txType === 'redeemable' ? { type: 'redeemable', ...b } : b;
 
-                    const aExtendedTransaction = a.txType === 'redeemable' ? { type: 'redeemable', ...a } : { ...a };
+                    const aExtendedTransaction = a.txType === 'redeemable' ? { type: 'redeemable', ...a } : a;
+
+                    if (aExtendedTransaction.type !== 'buy' && aExtendedTransaction.type !== 'sell') return 1;
+                    if (bExtendedTransaction.type !== 'buy' && bExtendedTransaction.type !== 'sell') return -1;
                     return sortByField(aExtendedTransaction, bExtendedTransaction, orderDirection, 'type');
                 }
                 if (orderBy === 6) {
                     const bExtendedTransaction =
-                        b.txType === 'redeemable'
-                            ? { amount: b.market.result === 'long' ? b.long : b.short, ...b }
-                            : { ...b };
+                        b.txType === 'redeemable' ? { amount: b.market.result === 'long' ? b.long : b.short, ...b } : b;
 
                     const aExtendedTransaction =
-                        a.txType === 'redeemable'
-                            ? { amount: a.market.result === 'long' ? a.long : a.short, ...a }
-                            : { ...a };
+                        a.txType === 'redeemable' ? { amount: a.market.result === 'long' ? a.long : a.short, ...a } : a;
                     return sortByField(aExtendedTransaction, bExtendedTransaction, orderDirection, 'amount');
                 }
                 if (orderBy === 7) {
+                    if (a.price === undefined) return 1;
+                    if (b.price === undefined) return -1;
                     return sortByField(a, b, orderDirection, 'price');
                 }
                 if (orderBy === 8) {
@@ -189,6 +192,9 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                         a.txType === 'redeemable'
                             ? marketsData.filter((market) => market.address === a.market.address)[0]
                             : marketsData.filter((market) => market.address === a.market)[0];
+
+                    if (aMarket.result === null) return 1;
+                    if (bMarket.result === null) return -1;
                     return sortByField(aMarket, bMarket, orderDirection, 'result');
                 }
 
@@ -322,7 +328,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                     <StyledTableCell>
                                         <Cell orderSide={tx.type} style={{ textTransform: 'uppercase' }}>
                                             {tx.txType === 'trade'
-                                                ? t(`options.leaderboard.profile.table.types.${tx.txType}`)
+                                                ? t(`options.leaderboard.profile.table.types.${tx.type}`)
                                                 : EMPTY_VALUE}
                                         </Cell>
                                     </StyledTableCell>
@@ -334,7 +340,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                                     : tx.txType === 'exercise'
                                                     ? tx.side
                                                     : tx.txType === 'trade'
-                                                    ? tradeSide
+                                                    ? tx.type
                                                     : ''
                                             }
                                         >
@@ -485,38 +491,15 @@ const Cell = styled.span<{ orderSide: string }>`
 
 const CellCurrency = styled.span<{ currencySide: string }>`
     color: ${(props) =>
-        props.currencySide !== 'long' && props.currencySide !== 'short'
+        props.currencySide === 'buy'
+            ? COLORS.BUY
+            : props.currencySide === 'sell'
+            ? COLORS.SELL
+            : props.currencySide !== 'long' && props.currencySide !== 'short'
             ? ''
             : props.currencySide === 'long'
             ? COLORS.BUY
             : COLORS.SELL};
 `;
-
-const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
-    const aMarket = marketHeading(a, a.optionSide);
-    const bMarket = marketHeading(b, b.optionSide);
-    if (direction === OrderDirection.ASC) {
-        return aMarket < bMarket ? -1 : 1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return aMarket < bMarket ? 1 : -1;
-    }
-
-    return 0;
-};
-
-const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
-    const aField = a[field] ? (a[field] as any) : '';
-    const bField = b[field] ? (b[field] as any) : '';
-
-    if (direction === OrderDirection.ASC) {
-        return aField > bField ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return aField > bField ? -1 : 1;
-    }
-
-    return 0;
-};
 
 export default UserAllTxTable;

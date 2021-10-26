@@ -25,23 +25,25 @@ import { FlexDiv, FlexDivColumn, Image, Text } from 'theme/common';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
 import { marketHeading } from '../../Trades/Trades';
-import { HeadCell } from '../Profile';
+import { HeadCell, OrderDirection } from '../Profile';
 
 type UserUnclaimedTableProps = {
     usersUnclaimed: any[];
     marketsData: any[];
     userDisplay: boolean;
+    sortByField: any;
+    sortByMarketHeading: any;
 };
 
 const DEFAULT_ORDER_BY = 1;
 
-enum OrderDirection {
-    NONE,
-    ASC,
-    DESC,
-}
-
-const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({ usersUnclaimed, marketsData, userDisplay }) => {
+const UserUnclaimedTable: React.FC<UserUnclaimedTableProps> = ({
+    usersUnclaimed,
+    marketsData,
+    userDisplay,
+    sortByField,
+    sortByMarketHeading,
+}) => {
     const { t } = useTranslation();
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -328,29 +330,5 @@ export const CustomIcon = styled(Image)`
     width: 24px;
     height: 24px;
 `;
-
-const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
-    const aMarket = marketHeading(a, a.optionSide);
-    const bMarket = marketHeading(b, b.optionSide);
-    if (direction === OrderDirection.ASC) {
-        return aMarket < bMarket ? -1 : 1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return aMarket < bMarket ? 1 : -1;
-    }
-
-    return 0;
-};
-
-const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
-    if (direction === OrderDirection.ASC) {
-        return (a[field] as any) > (b[field] as any) ? 1 : -1;
-    }
-    if (direction === OrderDirection.DESC) {
-        return (a[field] as any) > (b[field] as any) ? -1 : 1;
-    }
-
-    return 0;
-};
 
 export default UserUnclaimedTable;

@@ -11,6 +11,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
+import { marketHeading } from '../Trades/Trades';
 import './media.scss';
 import UserAllTxTable from './UserAllTxTable';
 import UserExercisesTable from './UserExercisesTable';
@@ -24,6 +25,12 @@ export enum Filters {
     Excercises = 'excercises',
     Unclaimed = 'unclaimed',
     All = 'all',
+}
+
+export enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
 }
 
 type ProfileProps = {
@@ -239,24 +246,42 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
                             usersUnclaimed={extractedUnclaimedProfileData}
                             userDisplay={walletAddress.toLowerCase() === displayAddress}
                             isLoading={marketsQuery.isLoading}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
                         />
                     )}
                     {filter === Filters.Mints && (
-                        <UserMintsTable marketsData={marketsData} usersMints={extractedMintsProfileData} />
+                        <UserMintsTable
+                            marketsData={marketsData}
+                            usersMints={extractedMintsProfileData}
+                            sortByField={sortByField}
+                        />
                     )}
 
                     {filter === Filters.Trades && (
-                        <UserTradesTable marketsData={marketsData} usersTrades={extractedTradesProfileData} />
+                        <UserTradesTable
+                            marketsData={marketsData}
+                            usersTrades={extractedTradesProfileData}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
+                        />
                     )}
 
                     {filter === Filters.Excercises && (
-                        <UserExercisesTable marketsData={marketsData} usersExercises={extractedExercisesProfileData} />
+                        <UserExercisesTable
+                            marketsData={marketsData}
+                            usersExercises={extractedExercisesProfileData}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
+                        />
                     )}
                     {filter === Filters.Unclaimed && (
                         <UserUnclaimedTable
                             marketsData={marketsData}
                             usersUnclaimed={extractedUnclaimedProfileData}
                             userDisplay={walletAddress.toLowerCase() === displayAddress}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
                         />
                     )}
                 </TableContainer>
@@ -371,5 +396,32 @@ const SearchAutoCompleteInput = styled(Autocomplete)`
         opacity: 0.7;
     }
 `;
+
+const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
+    const aMarket = marketHeading(a, a.optionSide);
+    const bMarket = marketHeading(b, b.optionSide);
+    if (direction === OrderDirection.ASC) {
+        return aMarket < bMarket ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aMarket < bMarket ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
+    const aField = a[field] ? (a[field] as any) : '';
+    const bField = b[field] ? (b[field] as any) : '';
+
+    if (direction === OrderDirection.ASC) {
+        return aField > bField ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aField > bField ? -1 : 1;
+    }
+
+    return 0;
+};
 
 export default Profile;
