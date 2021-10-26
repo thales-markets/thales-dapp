@@ -6,7 +6,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
@@ -33,8 +33,7 @@ type ProfileProps = {
 const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const walletAddress = '0x461783a831e6db52d68ba2f3194f6fd1e0087e04';
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.All);

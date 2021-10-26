@@ -230,9 +230,9 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({ usersTrades, marketsD
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
-                                        <Cell orderSide={trade.type}>
+                                        <CellCurrency currencySide={tradeSide}>
                                             {formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[tradeSide], trade.amount)}
-                                        </Cell>
+                                        </CellCurrency>
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Cell orderSide={trade.type}>
@@ -340,6 +340,10 @@ const CryptoName = styled.span``;
 
 const Cell = styled.span<{ orderSide: string }>`
     color: ${(props) => (props.orderSide === 'buy' ? COLORS.BUY : COLORS.SELL)};
+`;
+
+const CellCurrency = styled.span<{ currencySide: string }>`
+    color: ${(props) => (props.currencySide === 'long' ? COLORS.BUY : COLORS.SELL)};
 `;
 
 const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
