@@ -25,7 +25,7 @@ import {
     SectionHeader,
     StyledMaterialTooltip,
 } from '../../components';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { Cell, Pie, PieChart } from 'recharts';
 import styled from 'styled-components';
@@ -95,7 +95,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                         ongoingAirdrop.reward.rawBalance,
                         ongoingAirdrop.reward.proof
                     );
-                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
                 } catch (e) {
                     console.log(e);
                     setGasLimit(null);

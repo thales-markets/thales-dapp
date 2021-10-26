@@ -1,11 +1,13 @@
 import BigNumber from 'bignumber.js';
 import { toBigNumber } from './formatters/number';
 import { isMainNet, NetworkId, normalize0xGasLimit } from './network';
+import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 
 export const SUPPORTED_NETWORKS_0X: Record<NetworkId, string | null> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
+    69: '',
 };
 
 export const get0xBaseURL = (networkId: NetworkId) => {
@@ -35,3 +37,6 @@ export const calculate0xProtocolFee = (orders: Array<any>, gasPrice: BigNumber |
         .times(gasPrice !== null ? gasPrice : 1)
         .times(orders.length);
 };
+
+export const get0xExchangeProxyAddress = (networkId: NetworkId) =>
+    SUPPORTED_NETWORKS_0X[networkId] === '' ? '' : getContractAddressesForChainOrThrow(networkId).exchangeProxy;

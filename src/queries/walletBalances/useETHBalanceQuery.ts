@@ -10,7 +10,7 @@ const useETHBalanceQuery = (walletAddress: string, networkId: NetworkId, options
         QUERY_KEYS.WalletBalances.ETH(walletAddress ?? '', networkId),
         async () => {
             const balance = await (snxJSConnector as any).provider.getBalance(walletAddress);
-            const usdBalance = await (snxJSConnector as any).snxJS.contracts.ExchangeRates.effectiveValue(
+            const usdBalance = await (snxJSConnector as any).snxJS?.contracts.ExchangeRates.effectiveValue(
                 bytesFormatter(SYNTHS_MAP.sETH),
                 balance,
                 bytesFormatter(SYNTHS_MAP.sUSD)

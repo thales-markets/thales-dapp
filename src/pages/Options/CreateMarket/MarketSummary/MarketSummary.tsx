@@ -11,6 +11,7 @@ import arrowDown from 'assets/images/red-arrow-down.svg';
 import { USD_SIGN } from 'constants/currency';
 import { LightTooltip } from 'pages/Options/Market/components';
 import './media.scss';
+import { INCLUDE_MINTING_FEES } from 'constants/options';
 
 type MarketSummaryProps = {
     currencyKey?: ValueType<CurrencyKeyOptionType, false>;
@@ -131,61 +132,67 @@ const MarketSummary: React.FC<MarketSummaryProps> = (props) => {
                         <Text className="text-xs pale-grey bold lh24">{props.timeLeftToExercise}</Text>
                     </div>
                 </PrettyWrapper>
-                <PrettyWrapper>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Text className="text-xs pale-grey lh24">
-                            {t('options.create-market.summary.fees.minting')}
-                        </Text>
-                        <Text className="text-xs pale-grey bold lh24">
-                            {formatPercentage(props.marketFees ? props.marketFees.creator + props.marketFees.pool : 0)}
-                        </Text>
-                    </div>
-                    <div style={{ paddingLeft: 20 }}>
-                        <div
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                borderBottom: '0.5px dashed #748BC6',
-                            }}
-                        >
-                            <Text className="text-xs pale-grey lh24">
-                                {t('options.create-market.summary.fees.creator')}
-                            </Text>
-                            <Text className="text-xs pale-grey bold lh24">
-                                {formatPercentage(props.marketFees ? props.marketFees.creator : 0)}
-                            </Text>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Text className="text-xs pale-grey lh24">
-                                {t('options.create-market.summary.fees.pool')}
-                            </Text>
-                            <Text className="text-xs pale-grey bold lh24">
-                                {formatPercentage(props.marketFees ? props.marketFees.pool : 0)}
-                            </Text>
-                        </div>
-                    </div>
-                </PrettyWrapper>
+                {INCLUDE_MINTING_FEES && (
+                    <>
+                        <PrettyWrapper>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Text className="text-xs pale-grey lh24">
+                                    {t('options.create-market.summary.fees.minting')}
+                                </Text>
+                                <Text className="text-xs pale-grey bold lh24">
+                                    {formatPercentage(
+                                        props.marketFees ? props.marketFees.creator + props.marketFees.pool : 0
+                                    )}
+                                </Text>
+                            </div>
+                            <div style={{ paddingLeft: 20 }}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        borderBottom: '0.5px dashed #748BC6',
+                                    }}
+                                >
+                                    <Text className="text-xs pale-grey lh24">
+                                        {t('options.create-market.summary.fees.creator')}
+                                    </Text>
+                                    <Text className="text-xs pale-grey bold lh24">
+                                        {formatPercentage(props.marketFees ? props.marketFees.creator : 0)}
+                                    </Text>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <Text className="text-xs pale-grey lh24">
+                                        {t('options.create-market.summary.fees.pool')}
+                                    </Text>
+                                    <Text className="text-xs pale-grey bold lh24">
+                                        {formatPercentage(props.marketFees ? props.marketFees.pool : 0)}
+                                    </Text>
+                                </div>
+                            </div>
+                        </PrettyWrapper>
 
-                <Text className="text-xs bold pale-grey ls25" style={{ marginBottom: 12 }}>
-                    {t('options.create-market.summary.note')}
-                </Text>
-                <ul style={{ listStyleType: 'disc', color: 'white', marginLeft: '20px' }}>
-                    <li>
-                        <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
-                            {t('options.create-market.summary.note1')}
+                        <Text className="text-xs bold pale-grey ls25" style={{ marginBottom: 12 }}>
+                            {t('options.create-market.summary.note')}
                         </Text>
-                    </li>
-                    <li>
-                        <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
-                            {t('options.create-market.summary.note2')}
-                        </Text>
-                    </li>
-                    <li>
-                        <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
-                            {t('options.create-market.summary.note3')}
-                        </Text>
-                    </li>
-                </ul>
+                        <ul style={{ listStyleType: 'disc', color: 'white', marginLeft: '20px' }}>
+                            <li>
+                                <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                                    {t('options.create-market.summary.note1')}
+                                </Text>
+                            </li>
+                            <li>
+                                <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                                    {t('options.create-market.summary.note2')}
+                                </Text>
+                            </li>
+                            <li>
+                                <Text className="text-xs pale-grey ls25 lh16" style={{ whiteSpace: 'pre-line' }}>
+                                    {t('options.create-market.summary.note3')}
+                                </Text>
+                            </li>
+                        </ul>
+                    </>
+                )}
             </MarketInfo>
         </Wrapper>
     );

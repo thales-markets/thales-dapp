@@ -9,7 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { isMainNet, normalizeGasLimit } from 'utils/network';
+import { isMainNet, formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -48,9 +48,8 @@ import {
 } from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
@@ -65,6 +64,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import { MetamaskSubprovider } from '@0x/subproviders';
+import { INCLUDE_MINTING_FEES } from 'constants/options';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -94,7 +94,6 @@ const MintOptions: React.FC = () => {
     const [hasShortAllowance, setShortAllowance] = useState<boolean>(false);
     const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
     const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
     const [isShortAmountValid, setIsShortAmountValid] = useState<boolean>(true);
@@ -125,7 +124,7 @@ const MintOptions: React.FC = () => {
         !isLongPriceValid ||
         !isShortPriceValid;
 
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     useEffect(() => {
         const {
@@ -198,7 +197,7 @@ const MintOptions: React.FC = () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -223,7 +222,7 @@ const MintOptions: React.FC = () => {
                 binaryOptionsMarketManagerContract.address,
                 ethers.constants.MaxUint256,
                 {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
                 }
             )) as ethers.ContractTransaction;
 
@@ -396,7 +395,7 @@ const MintOptions: React.FC = () => {
             setIsLongAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
             const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();
@@ -444,7 +443,7 @@ const MintOptions: React.FC = () => {
             setIsShortAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
             const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
             const txResult = await tx.wait();
             if (txResult && txResult.transactionHash) {
@@ -542,7 +541,12 @@ const MintOptions: React.FC = () => {
 
     useEffect(() => {
         setMintedAmount(
-            marketFees ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)) : 0
+            marketFees
+                ? Number(
+                      Number(amount) -
+                          (INCLUDE_MINTING_FEES ? Number(amount) * (marketFees.creator + marketFees.pool) : 0)
+                  )
+                : 0
         );
     }, [amount, marketFees]);
 
@@ -777,36 +781,40 @@ const MintOptions: React.FC = () => {
             <Divider style={{ marginTop: 4 }} />
 
             <FeeSummaryContainer className="mintTab__summary">
-                <MintingSummaryItem>
-                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
-                    <ProtocolFeeContent>{`${formatPercentage(
-                        marketFees ? marketFees.creator + marketFees.pool : 0
-                    )} (${formatCurrencyWithSign(
-                        USD_SIGN,
-                        marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
-                        DEFAULT_OPTIONS_DECIMALS
-                    )})`}</ProtocolFeeContent>
-                </MintingSummaryItem>
-                <MintingInnerSummaryItem>
-                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.creator')}</ProtocolFeeLabel>
-                    <ProtocolFeeContent>{`${formatPercentage(
-                        marketFees ? marketFees.creator : 0
-                    )} (${formatCurrencyWithSign(
-                        USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.creator : 0,
-                        DEFAULT_OPTIONS_DECIMALS
-                    )})`}</ProtocolFeeContent>
-                </MintingInnerSummaryItem>
-                <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
-                    <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.pool')}</ProtocolFeeLabel>
-                    <ProtocolFeeContent>{`${formatPercentage(
-                        marketFees ? marketFees.pool : 0
-                    )} (${formatCurrencyWithSign(
-                        USD_SIGN,
-                        marketFees ? Number(amount) * marketFees.pool : 0,
-                        DEFAULT_OPTIONS_DECIMALS
-                    )})`}</ProtocolFeeContent>
-                </MintingInnerSummaryItem>
+                {INCLUDE_MINTING_FEES && (
+                    <>
+                        <MintingSummaryItem>
+                            <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
+                            <ProtocolFeeContent>{`${formatPercentage(
+                                marketFees ? marketFees.creator + marketFees.pool : 0
+                            )} (${formatCurrencyWithSign(
+                                USD_SIGN,
+                                marketFees ? Number(amount) * (marketFees.creator + marketFees.pool) : 0,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )})`}</ProtocolFeeContent>
+                        </MintingSummaryItem>
+                        <MintingInnerSummaryItem>
+                            <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.creator')}</ProtocolFeeLabel>
+                            <ProtocolFeeContent>{`${formatPercentage(
+                                marketFees ? marketFees.creator : 0
+                            )} (${formatCurrencyWithSign(
+                                USD_SIGN,
+                                marketFees ? Number(amount) * marketFees.creator : 0,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )})`}</ProtocolFeeContent>
+                        </MintingInnerSummaryItem>
+                        <MintingInnerSummaryItem style={{ marginBottom: 10 }}>
+                            <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.pool')}</ProtocolFeeLabel>
+                            <ProtocolFeeContent>{`${formatPercentage(
+                                marketFees ? marketFees.pool : 0
+                            )} (${formatCurrencyWithSign(
+                                USD_SIGN,
+                                marketFees ? Number(amount) * marketFees.pool : 0,
+                                DEFAULT_OPTIONS_DECIMALS
+                            )})`}</ProtocolFeeContent>
+                        </MintingInnerSummaryItem>
+                    </>
+                )}
                 <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} />
             </FeeSummaryContainer>
             <SubmitButtonContainer style={{ marginTop: '20px' }}>
