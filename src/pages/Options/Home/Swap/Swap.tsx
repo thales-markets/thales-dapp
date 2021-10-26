@@ -297,6 +297,9 @@ const GradientBorderWrapper = styled.div`
     top: 200px;
     width: 422px;
     padding: 1px;
+    @media screen and (max-width: 500px) {
+        width: 342px;
+    }
 `;
 
 const GradientBorderContent = styled.div`
@@ -316,6 +319,9 @@ const GradientBorderContent = styled.div`
     height: 334px;
     &.loading {
         opacity: 0.85;
+    }
+    @media screen and (max-width: 500px) {
+        width: 340px;
     }
 `;
 

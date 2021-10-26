@@ -99,7 +99,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     />
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                <FlexDiv>
+                <FlexDiv className="dapp-header__buttonsWrapper">
                     {isWalletConnected && (
                         <Button className="tertiary" style={{ padding: '6px 24px' }} onClick={() => setShowSwap(true)}>
                             {t('options.swap.button-text')}
