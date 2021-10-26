@@ -130,7 +130,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
         if (fromToken && !allowance)
             return (
                 <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
-                    {t('options.swap.approve')}
+                    {t('options.swap.approve', { currency: (fromToken as any).symbol })}
                 </Button>
             );
 
