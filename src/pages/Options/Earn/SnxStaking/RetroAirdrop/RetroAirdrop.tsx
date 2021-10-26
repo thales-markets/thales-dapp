@@ -20,7 +20,7 @@ import {
     TooltipLink,
     StyledInfoIcon,
 } from '../../components';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { refetchRetroAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import { Airdrop } from 'types/token';
@@ -71,7 +71,7 @@ const RetroAirdrop: React.FC = () => {
                         retroAirdrop.accountInfo.rawBalance,
                         retroAirdrop.accountInfo.proof
                     );
-                    setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
                 } catch (e) {
                     console.log(e);
                     setGasLimit(null);

@@ -22,6 +22,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
+import { getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { history, navigateTo } from 'utils/routes';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
@@ -100,6 +101,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const searchFilter = useLocation();
+    const isL2 = getIsOVM(networkId);
 
     const userAssetsQuery = useAssetsBalanceQuery(networkId, optionsMarkets, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -489,6 +491,14 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                 key !== SecondaryFilters.all
                         )
                         .map((key) => {
+                            if (
+                                isL2 &&
+                                (SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                    SecondaryFilters.CustomMarkets ||
+                                    SecondaryFilters[key as keyof typeof SecondaryFilters] ===
+                                        SecondaryFilters.Competition)
+                            )
+                                return null;
                             const isCustomMarketsEmpty =
                                 filteredOptionsMarkets.filter(({ customMarket }) => customMarket).length === 0;
                             const isBtcMarketsEmpty =

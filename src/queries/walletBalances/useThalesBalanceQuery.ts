@@ -12,10 +12,13 @@ const useThalesBalanceQuery = (
     return useQuery<{ balance: string }>(
         QUERY_KEYS.WalletBalances.Thales(walletAddress, networkId),
         async () => {
-            const balance = ethers.utils.formatEther(
-                await (snxJSConnector as any).thalesTokenContract.balanceOf(walletAddress)
-            );
-            return { balance };
+            if ((snxJSConnector as any).thalesTokenContract) {
+                const balance = ethers.utils.formatEther(
+                    await (snxJSConnector as any).thalesTokenContract.balanceOf(walletAddress)
+                );
+                return { balance };
+            }
+            return { balance: '0' };
         },
         {
             refetchInterval: 5000,

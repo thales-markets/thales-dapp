@@ -34,7 +34,7 @@ export const QUERY_KEYS = {
     },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
-        EthGasPriceEip1559: ['network', 'ethGasPriceEip1559'],
+        EthGasPriceEip1559: (networkId: NetworkId) => ['network', 'ethGasPriceEip1559', networkId],
     },
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
@@ -106,6 +106,12 @@ export const QUERY_KEYS = {
             networkId,
         ],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
+    },
+    Swap: {
+        Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
+        Quote: () => ['swap', 'quote'],
+        Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
+        Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },
 };
 

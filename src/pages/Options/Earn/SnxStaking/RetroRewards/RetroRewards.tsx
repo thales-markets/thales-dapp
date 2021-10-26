@@ -27,7 +27,7 @@ import {
     TooltipLink,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -77,7 +77,7 @@ const RetroRewards: React.FC = () => {
             try {
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
                 const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);

@@ -8,8 +8,8 @@ export const vestingEscrowContract = {
         [NetworkId.Kovan]: '0x3ec543C220443ad0d30F53fCa52DBFa346763256',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '', // TODO: mainnet-ovm remove or implement
-        [NetworkId['Kovan-Ovm']]: '', // TODO: kovan-ovm remove or implement
+        [NetworkId['Mainnet-Ovm']]: 'TBD',
+        [NetworkId['Kovan-Ovm']]: 'TBD',
     },
     abi: [
         {
