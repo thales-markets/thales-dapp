@@ -151,7 +151,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                     }}
                     disabled={Number(amount) > Number(balance)}
                 >
-                    {t('options.swap.swap')}
+                    {Number(amount) > Number(balance) ? t('options.swap.insufficient-balance') : t('options.swap.swap')}
                 </Button>
             );
     };

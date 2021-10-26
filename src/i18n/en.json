@@ -861,7 +861,8 @@
             "select-token": "Select a token",
             "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
-            "swap": "Swap"
+            "swap": "Swap",
+            "insufficient-balance": "Insufficient balance"
         },
         "common": {
             "time-remaining": {

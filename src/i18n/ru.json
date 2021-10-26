@@ -855,6 +855,14 @@
                 }
             }
         },
+        "swap": {
+            "button-text": "Приобрести sUSD",
+            "select-token": "Выберите токен",
+            "enter-amount": "Введите сумму",
+            "approve": "Дать разрешение на обмен {{currency}}",
+            "swap": "Обмен",
+            "insufficient-balance": "Недостаточно средств"
+        },
         "common": {
             "time-remaining": {
                 "ended": "закончилось",
