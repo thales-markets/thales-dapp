@@ -4,7 +4,16 @@ import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image, LoaderContainer, Text } from 'theme/common';
+import {
+    Button,
+    FlexDivCentered,
+    FlexDivColumn,
+    FlexDivRowCentered,
+    Image,
+    LoaderContainer,
+    Text,
+    XButton,
+} from 'theme/common';
 import { ReactSelect } from 'pages/Options/Market/components';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
@@ -13,53 +22,15 @@ import { ethers } from 'ethers';
 import { fetchQuote, getTxForSwap } from './0xApiQuerys';
 import SimpleLoader from 'components/SimpleLoader';
 import { refetchUserBalance } from 'utils/queryConnector';
-
-const sUSD = {
-    address: '0x57ab1ec28d129707052df4df418d58a2d46d5f51',
-    decimals: 18,
-    logoURI: 'https://tokens.1inch.io/0x57ab1ec28d129707052df4df418d58a2d46d5f51.png',
-    name: 'Synth sUSD',
-    symbol: 'sUSD',
-    synth: true,
-};
-
-const Dai = {
-    symbol: 'DAI',
-    name: 'Dai Stablecoin',
-    decimals: 18,
-    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    logoURI: 'https://tokens.1inch.io/0x6b175474e89094c44da98b954eedeac495271d0f.png',
-};
-
-const Eth = {
-    address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-    decimals: 18,
-    logoURI: 'https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png',
-    name: 'Ethereum',
-    symbol: 'ETH',
-};
-
-const USDC = {
-    symbol: 'USDC',
-    name: 'USD Coin',
-    address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    decimals: 6,
-    logoURI: 'https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png',
-};
-
-const USDT = {
-    address: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-    decimals: 6,
-    logoURI: 'https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png',
-    name: 'Tether USD',
-    symbol: 'USDT',
-};
+import { useTranslation } from 'react-i18next';
+import { Dai, USDC, USDT, Eth, sUSD } from './tokens';
 
 const SPENDER = '0xdef1c0ded9bec7f1a1670819833240f027b25eff';
 
 const preLoadTokens = [Dai, USDC, USDT, Eth];
 
-const Swap: React.FC = () => {
+const Swap: React.FC<any> = ({ handleClose }) => {
+    const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -148,9 +119,47 @@ const Swap: React.FC = () => {
         }
     };
 
+    const getButton = () => {
+        if (!fromToken)
+            return (
+                <Button disabled={true} className="primary">
+                    {t('options.swap.select-token')}
+                </Button>
+            );
+
+        if (fromToken && !allowance)
+            return (
+                <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
+                    {t('options.swap.approve')}
+                </Button>
+            );
+
+        if (fromToken && allowance && Number(amount) <= 0)
+            return (
+                <Button className="primary" disabled={true}>
+                    {t('options.swap.enter-amount')}
+                </Button>
+            );
+
+        if (fromToken && allowance && Number(amount) > 0)
+            return (
+                <Button
+                    className="primary"
+                    onClick={async () => {
+                        await swapTx();
+                        updateBalaneAndAllowance(fromToken);
+                    }}
+                    disabled={Number(amount) > Number(balance)}
+                >
+                    {t('options.swap.swap')}
+                </Button>
+            );
+    };
+
     return (
         <GradientBorderWrapper>
             <GradientBorderContent className={isLoading ? 'loading' : ''}>
+                <CloseButton onClick={handleClose.bind(this, false)} />
                 <SectionWrapper>
                     <FlexDivRowCentered>
                         <Text className="text-xxs white">From:</Text>
@@ -231,24 +240,7 @@ const Swap: React.FC = () => {
                         </Text>
                     </FlexDivRowCentered>
                 </SectionWrapper>
-
-                {!allowance && (
-                    <Button disabled={!fromToken} className="primary" onClick={approve.bind(this)}>
-                        Approve
-                    </Button>
-                )}
-                {allowance && (
-                    <Button
-                        className="primary"
-                        onClick={async () => {
-                            await swapTx();
-                            updateBalaneAndAllowance(fromToken);
-                        }}
-                        disabled={Number(amount) > Number(balance) || Number(amount) <= 0}
-                    >
-                        Swap
-                    </Button>
-                )}
+                {getButton()}
                 {isLoading && (
                     <LoaderContainer>
                         <SimpleLoader />
@@ -320,7 +312,8 @@ const GradientBorderContent = styled.div`
     color: #f6f6fe;
     justify-content: space-between;
     width: 420px;
-    height: 304px;
+    padding-top: 50px;
+    height: 334px;
     &.loading {
         opacity: 0.85;
     }
@@ -368,6 +361,12 @@ const ImageSceleton = styled.div`
     border-radius: 50%;
     background: #6984ad;
     margin-right: 6px;
+`;
+
+const CloseButton = styled(XButton)`
+    position: absolute;
+    top: 20px;
+    right: 20px;
 `;
 
 export default Swap;
