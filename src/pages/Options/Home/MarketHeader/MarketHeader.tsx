@@ -99,15 +99,20 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     />
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                <FlexDiv>
+                <FlexDiv className="dapp-header__buttonsWrapper">
                     {isWalletConnected && (
-                        <Button className="tertiary" style={{ padding: '8px 24px' }} onClick={() => setShowSwap(true)}>
-                            Swap for sUSD
+                        <Button className="tertiary" style={{ padding: '6px 24px' }} onClick={() => setShowSwap(true)}>
+                            {t('options.swap.button-text')}
                         </Button>
                     )}
-                    <Modal open={showSwap} onClose={setShowSwap.bind(this, false)}>
+                    <Modal
+                        open={showSwap}
+                        onClose={(_, reason) => {
+                            if (reason !== 'backdropClick') setShowSwap(false);
+                        }}
+                    >
                         <div style={{ height: 0 }}>
-                            <Swap></Swap>
+                            <Swap handleClose={setShowSwap}></Swap>
                         </div>
                     </Modal>
                     <DesktopLanguageSelectorContainer>
