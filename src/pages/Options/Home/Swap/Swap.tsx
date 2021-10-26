@@ -1,7 +1,7 @@
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image, LoaderContainer, Text } from 'theme/common';
@@ -12,6 +12,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
 import { fetchQuote, getTxForSwap } from './0xApiQuerys';
 import SimpleLoader from 'components/SimpleLoader';
+import { refetchUserBalance } from 'utils/queryConnector';
 
 const sUSD = {
     address: '0x57ab1ec28d129707052df4df418d58a2d46d5f51',
@@ -60,6 +61,7 @@ const preLoadTokens = [Dai, USDC, USDT, Eth];
 
 const Swap: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
 
@@ -125,6 +127,7 @@ const Swap: React.FC = () => {
             const tx = await signer.sendTransaction(data);
             setLoading(true);
             await tx.wait();
+            refetchUserBalance(walletAddress as any, networkId);
             setLoading(false);
         } catch (e) {
             console.log('failed: ', e);
