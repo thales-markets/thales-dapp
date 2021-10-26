@@ -9,6 +9,7 @@ import Currency from 'components/Currency';
 import SimpleLoader from 'components/SimpleLoader';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { EMPTY_VALUE } from 'constants/placeholder';
 import { COLORS } from 'constants/ui';
 import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from 'pages/Options/Home/MarketsTable/components';
 import {
@@ -260,7 +261,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                             return (
                                 <StyledTableRow key={index}>
                                     <StyledTableCell>
-                                        {tx.txType !== 'redeemable' ? formatTxTimestamp(tx.timestamp) : '-'}
+                                        {tx.txType !== 'redeemable' ? formatTxTimestamp(tx.timestamp) : EMPTY_VALUE}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <FlexDiv>
@@ -305,7 +306,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                         </FlexDiv>
                                     </StyledTableCell>
                                     <StyledTableCell style={{ textTransform: 'uppercase' }}>
-                                        {tx.txType}
+                                        {t(`options.leaderboard.profile.table.types.${tx.txType}`)}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         {tx.txType === 'trade' || tx.txType == 'exercise' ? (
@@ -315,12 +316,14 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                                 <SideImage src={shortIcon} />
                                             )
                                         ) : (
-                                            '-'
+                                            EMPTY_VALUE
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Cell orderSide={tx.type} style={{ textTransform: 'uppercase' }}>
-                                            {tx.txType === 'trade' ? tx.type : '-'}
+                                            {tx.txType === 'trade'
+                                                ? t(`options.leaderboard.profile.table.types.${tx.txType}`)
+                                                : EMPTY_VALUE}
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
@@ -349,7 +352,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                         <Cell orderSide={tx.type}>
                                             {tx.txType === 'trade'
                                                 ? formatCurrencyWithKey(SYNTHS_MAP.sUSD, tx.price)
-                                                : '-'}
+                                                : EMPTY_VALUE}
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
@@ -360,7 +363,7 @@ const UserAllTxTable: React.FC<UserAllTxTableProps> = ({
                                                 <SideImage src={shortIcon} />
                                             )
                                         ) : (
-                                            '-'
+                                            EMPTY_VALUE
                                         )}
                                     </StyledTableCell>
                                     <StyledTableCell

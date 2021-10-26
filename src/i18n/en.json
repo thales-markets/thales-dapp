@@ -855,6 +855,16 @@
                 },
                 "unclaimed": {
                     "redeem": "Redeem"
+                },
+                "table": {
+                    "types": {
+                        "mint": "mint",
+                        "trade": "trade",
+                        "exercise": "exercise",
+                        "redeemable": "redeemable",
+                        "buy": "buy",
+                        "sell": "sell"
+                    }
                 }
             }
         },
