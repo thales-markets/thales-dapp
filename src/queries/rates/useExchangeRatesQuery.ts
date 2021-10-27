@@ -19,6 +19,7 @@ const useExchangeRatesQuery = (options?: UseQueryOptions<Rates>) => {
                 currencies.forEach((currency: CurrencyKey, idx: number) => {
                     const currencyName = parseBytes32String(currency);
                     exchangeRates[currencyName] = bigNumberFormatter(rates[idx]);
+                    exchangeRates[`s${currencyName}`] = bigNumberFormatter(rates[idx]);
                 });
             }
 

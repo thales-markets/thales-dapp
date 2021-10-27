@@ -31,7 +31,7 @@ const useExchangeRatesMarketDataQuery = (
             const exchangeRates: Rates = {};
 
             filteredMarkets.forEach((market, idx: number) => {
-                exchangeRates[market.currencyKey] = bigNumberFormatter(marketData[idx].oraclePrice);
+                exchangeRates[market.currencyKey] = bigNumberFormatter(marketData[idx].oraclePriceAndTimestamp.price);
             });
 
             return exchangeRates;

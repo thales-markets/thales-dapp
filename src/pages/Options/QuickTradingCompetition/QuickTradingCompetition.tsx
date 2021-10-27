@@ -17,7 +17,7 @@ import {
 import SearchMarket from '../Home/SearchMarket/SearchMarket';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from 'constants/routes';
-import { SYNTHS_MAP } from 'constants/currency';
+import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP } from 'constants/currency';
 import useBinaryOptionsOrders from 'queries/options/useBinaryOptionsOrders';
 import { DisplayOrder, ExtendedOrderItem, HistoricalOptionsMarketInfo } from 'types/options';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
@@ -247,10 +247,18 @@ const QuickTradingCompetitionPage: React.FC<any> = () => {
             }
             switch (coinFilter) {
                 case CoinFilterEnum.Bitcoin:
-                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sBTC);
+                    filteredOrders = filteredOrders.filter(
+                        (order) =>
+                            order.market.currencyKey === SYNTHS_MAP.sBTC ||
+                            order.market.currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                    );
                     break;
                 case CoinFilterEnum.Ethereum:
-                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sETH);
+                    filteredOrders = filteredOrders.filter(
+                        (order) =>
+                            order.market.currencyKey === SYNTHS_MAP.sETH ||
+                            order.market.currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                    );
                     break;
                 case CoinFilterEnum.Custom:
                     filteredOrders = filteredOrders.filter((order) => order.market.customMarket);

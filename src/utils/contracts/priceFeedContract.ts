@@ -5,7 +5,7 @@ export const priceFeedContract = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x56Fb38cb4c6738d9A5eAB11FC7bC83eAcA535451',
+        [NetworkId.Kovan]: '0x1521ed0AE5B8e6d34A7Fe2E22cA8Cd4aAbc354b8',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
@@ -13,7 +13,13 @@ export const priceFeedContract = {
     },
     abi: [
         {
-            inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
             payable: false,
             stateMutability: 'nonpayable',
             type: 'constructor',
@@ -21,8 +27,18 @@ export const priceFeedContract = {
         {
             anonymous: false,
             inputs: [
-                { indexed: false, internalType: 'bytes32', name: 'currencyKey', type: 'bytes32' },
-                { indexed: false, internalType: 'address', name: 'aggregator', type: 'address' },
+                {
+                    indexed: false,
+                    internalType: 'bytes32',
+                    name: 'currencyKey',
+                    type: 'bytes32',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'aggregator',
+                    type: 'address',
+                },
             ],
             name: 'AggregatorAdded',
             type: 'event',
@@ -30,8 +46,18 @@ export const priceFeedContract = {
         {
             anonymous: false,
             inputs: [
-                { indexed: false, internalType: 'bytes32', name: 'currencyKey', type: 'bytes32' },
-                { indexed: false, internalType: 'address', name: 'aggregator', type: 'address' },
+                {
+                    indexed: false,
+                    internalType: 'bytes32',
+                    name: 'currencyKey',
+                    type: 'bytes32',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'aggregator',
+                    type: 'address',
+                },
             ],
             name: 'AggregatorRemoved',
             type: 'event',
@@ -39,15 +65,32 @@ export const priceFeedContract = {
         {
             anonymous: false,
             inputs: [
-                { indexed: false, internalType: 'address', name: 'oldOwner', type: 'address' },
-                { indexed: false, internalType: 'address', name: 'newOwner', type: 'address' },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'oldOwner',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'newOwner',
+                    type: 'address',
+                },
             ],
             name: 'OwnerChanged',
             type: 'event',
         },
         {
             anonymous: false,
-            inputs: [{ indexed: false, internalType: 'address', name: 'newOwner', type: 'address' }],
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'newOwner',
+                    type: 'address',
+                },
+            ],
             name: 'OwnerNominated',
             type: 'event',
         },
@@ -63,8 +106,16 @@ export const priceFeedContract = {
         {
             constant: false,
             inputs: [
-                { internalType: 'bytes32', name: 'currencyKey', type: 'bytes32' },
-                { internalType: 'address', name: 'aggregatorAddress', type: 'address' },
+                {
+                    internalType: 'bytes32',
+                    name: 'currencyKey',
+                    type: 'bytes32',
+                },
+                {
+                    internalType: 'address',
+                    name: 'aggregatorAddress',
+                    type: 'address',
+                },
             ],
             name: 'addAggregator',
             outputs: [],
@@ -74,27 +125,63 @@ export const priceFeedContract = {
         },
         {
             constant: true,
-            inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
             name: 'aggregatorKeys',
-            outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+            outputs: [
+                {
+                    internalType: 'bytes32',
+                    name: '',
+                    type: 'bytes32',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: '',
+                    type: 'bytes32',
+                },
+            ],
             name: 'aggregators',
-            outputs: [{ internalType: 'contract AggregatorV2V3Interface', name: '', type: 'address' }],
+            outputs: [
+                {
+                    internalType: 'contract AggregatorV2V3Interface',
+                    name: '',
+                    type: 'address',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: '',
+                    type: 'bytes32',
+                },
+            ],
             name: 'currencyKeyDecimals',
-            outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+            outputs: [
+                {
+                    internalType: 'uint8',
+                    name: '',
+                    type: 'uint8',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -103,7 +190,13 @@ export const priceFeedContract = {
             constant: true,
             inputs: [],
             name: 'getCurrencies',
-            outputs: [{ internalType: 'bytes32[]', name: '', type: 'bytes32[]' }],
+            outputs: [
+                {
+                    internalType: 'bytes32[]',
+                    name: '',
+                    type: 'bytes32[]',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -112,14 +205,26 @@ export const priceFeedContract = {
             constant: true,
             inputs: [],
             name: 'getRates',
-            outputs: [{ internalType: 'uint256[]', name: 'rates', type: 'uint256[]' }],
+            outputs: [
+                {
+                    internalType: 'uint256[]',
+                    name: 'rates',
+                    type: 'uint256[]',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: false,
-            inputs: [{ internalType: 'address', name: '_owner', type: 'address' }],
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
             name: 'nominateNewOwner',
             outputs: [],
             payable: false,
@@ -130,7 +235,13 @@ export const priceFeedContract = {
             constant: true,
             inputs: [],
             name: 'nominatedOwner',
-            outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -139,23 +250,73 @@ export const priceFeedContract = {
             constant: true,
             inputs: [],
             name: 'owner',
-            outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: true,
-            inputs: [{ internalType: 'bytes32', name: 'currencyKey', type: 'bytes32' }],
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'currencyKey',
+                    type: 'bytes32',
+                },
+            ],
+            name: 'rateAndUpdatedTime',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'rate',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'time',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'currencyKey',
+                    type: 'bytes32',
+                },
+            ],
             name: 'rateForCurrency',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
             payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
             constant: false,
-            inputs: [{ internalType: 'bytes32', name: 'currencyKey', type: 'bytes32' }],
+            inputs: [
+                {
+                    internalType: 'bytes32',
+                    name: 'currencyKey',
+                    type: 'bytes32',
+                },
+            ],
             name: 'removeAggregator',
             outputs: [],
             payable: false,

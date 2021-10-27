@@ -513,6 +513,26 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
+            name: 'oraclePriceAndTimestamp',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'price',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: 'updatedAt',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'owner',
             outputs: [
                 {
