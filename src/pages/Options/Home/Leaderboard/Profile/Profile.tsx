@@ -1,14 +1,6 @@
-import {
-    Paper,
-    Table,
-    TableBody,
-    TableContainer,
-    TableFooter,
-    TableHead,
-    TableRow,
-    withStyles,
-} from '@material-ui/core';
+import { Paper, TableContainer, TableRow, withStyles } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import useProfilesQuery from 'queries/options/useProfilesQuery';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,16 +10,14 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRow, Text } from 'theme/common';
-import { TableHeaderLabel } from '../../MarketsTable/components';
-import { PaginationWrapper } from '../../MarketsTable/MarketsTable';
-import Pagination from '../../MarketsTable/Pagination';
 import { SearchInput, SearchWrapper } from '../../SearchMarket/SearchMarket';
-import { StyledTableCell } from '../LeaderboardTable/LeaderboardTable';
+import { marketHeading } from '../Trades/Trades';
 import './media.scss';
-import UsersExercises from './UsersExcercises';
-import UsersMints from './UsersMints';
-import UsersTrades from './UsersTrades';
-import UsersUnclaimed from './UsersUnclaimed';
+import UserAllTxTable from './UserAllTxTable';
+import UserExercisesTable from './UserExercisesTable';
+import UserMintsTable from './UserMintsTable';
+import UserTradesTable from './UserTradesTable';
+import UserUnclaimedTable from './UserUnclaimedTable';
 
 export enum Filters {
     Mints = 'mints',
@@ -35,6 +25,12 @@ export enum Filters {
     Excercises = 'excercises',
     Unclaimed = 'unclaimed',
     All = 'all',
+}
+
+export enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
 }
 
 type ProfileProps = {
@@ -49,6 +45,12 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     const [userFilter, setUserFilter] = useState<string>('');
     const [filter, setFilter] = useState<string>(Filters.All);
     const [displayAddress, setDisplayAddress] = useState<string>(walletAddress);
+
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
+        enabled: isAppReady,
+    });
+
+    const marketsData = useMemo(() => (marketsQuery.data ? marketsQuery.data : []), [marketsQuery]);
 
     const profilesQuery = useProfilesQuery(networkId, {
         enabled: isAppReady,
@@ -73,7 +75,7 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
     }, [displayNamesMap]);
 
     const profile = useMemo(() => {
-        if (profiles && walletAddress) {
+        if (profiles) {
             if (userFilter) {
                 const filteredDisplayNames = Array.from(invertedDisplayNamesMap.keys()).filter((key) =>
                     key.toLowerCase().includes(userFilter.toLowerCase())
@@ -103,50 +105,39 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
         }
     }, [profiles, walletAddress, userFilter]);
 
-    const extractMintsProfileData = useMemo(() => {
-        const mintsMap = new Map();
-        profile?.mints.map((mint: any) => {
-            if (mintsMap.get(mint.market.address)) {
-                const txsPerMarket = mintsMap.get(mint.market.address);
-                const txHashes = txsPerMarket.map((tx: any) => tx.hash);
-                if (txHashes.filter((hash: string) => hash === mint.tx.hash).length === 0) {
-                    txsPerMarket.push(mint.tx);
-                    mintsMap.set(mint.market.address, txsPerMarket);
-                }
-            } else {
-                mintsMap.set(mint.market.address, [mint.tx]);
-            }
-        });
-        return mintsMap;
+    const extractedMintsProfileData = useMemo(() => {
+        if (profile) {
+            return Array.from(new Set(profile.mints.map((mint: any) => mint.tx))).filter((value: any, index, self) => {
+                return self.findIndex((mint: any) => mint.hash === value.hash) === index;
+            });
+        }
+
+        return [];
     }, [userFilter, profilesQuery]);
 
-    const extractTradesProfileData = useMemo(() => {
-        const tradesMap = new Map();
-        profile?.trades.map((trade: any) => {
-            if (tradesMap.get(trade.market.address)) {
-                const tradesPerMarket = tradesMap.get(trade.market.address);
-                tradesPerMarket.push(trade.trade);
-                tradesMap.set(trade.market.address, tradesPerMarket);
-            } else {
-                tradesMap.set(trade.market.address, [trade.trade]);
-            }
-        });
-        return tradesMap;
+    const extractedTradesProfileData = useMemo(() => {
+        if (profile) {
+            return Array.from(
+                new Set(
+                    profile.trades.map((trade: any) => {
+                        return { market: trade.market.address, ...trade.trade };
+                    })
+                )
+            ).filter((value: any, index, self) => {
+                return self.findIndex((trade: any) => trade.hash === value.hash) === index;
+            });
+        }
+
+        return [];
     }, [userFilter, profilesQuery]);
 
-    const extractExercisesProfileData = useMemo(() => {
-        const exercisesMap = new Map();
-        profile?.excercises.map((exercise: any) => {
-            if (exercisesMap.get(exercise.market.address)) {
-                const txsPerMarket = exercisesMap.get(exercise.market.address);
-                txsPerMarket.push(exercise.tx);
-                exercisesMap.set(exercise.market.address, txsPerMarket);
-            } else {
-                exercisesMap.set(exercise.market.address, [exercise.tx]);
-            }
-        });
-
-        return exercisesMap;
+    const extractedExercisesProfileData = useMemo(() => {
+        if (profile) {
+            return Array.from(new Set(profile.excercises.map((ex: any) => ex.tx))).filter((value: any, index, self) => {
+                return self.findIndex((ex: any) => ex.hash === value.hash) === index;
+            });
+        }
+        return [];
     }, [userFilter, profilesQuery]);
 
     const filterUnclaimedData = (unclaimed: any) => {
@@ -159,113 +150,12 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
         }
     };
 
-    const extractUnclaimedProfileData = useMemo(() => {
-        const unclaimedMap = new Map();
-        profile?.unclaimed.filter(filterUnclaimedData).map((unclaimed: any) => {
-            if (unclaimedMap.get(unclaimed.market.address)) {
-                const txsPerMarket = unclaimedMap.get(unclaimed.market.address);
-                txsPerMarket.push(unclaimed);
-                unclaimedMap.set(unclaimed.market.address, txsPerMarket);
-            } else {
-                unclaimedMap.set(unclaimed.market.address, [unclaimed]);
-            }
-        });
-
-        return unclaimedMap;
+    const extractedUnclaimedProfileData = useMemo(() => {
+        if (profile) {
+            return profile.unclaimed.filter(filterUnclaimedData);
+        }
+        return [];
     }, [userFilter, profilesQuery]);
-
-    const [page, setPage] = useState(0);
-
-    const handleChangePage = (_event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-    const numberOfPages = useMemo(() => {
-        let pages;
-        switch (filter) {
-            case Filters.Mints:
-                pages = Math.ceil(Array.from(extractMintsProfileData.keys()).length / rowsPerPage) || 1;
-                break;
-            case Filters.Trades:
-                pages = Math.ceil(Array.from(extractTradesProfileData.keys()).length / rowsPerPage) || 1;
-                break;
-            case Filters.Excercises:
-                pages = Math.ceil(Array.from(extractExercisesProfileData.keys()).length / rowsPerPage) || 1;
-                break;
-            case Filters.Unclaimed:
-                pages = Math.ceil(Array.from(extractUnclaimedProfileData.keys()).length / rowsPerPage) || 1;
-                break;
-            case Filters.All:
-                pages =
-                    Math.ceil(
-                        (Array.from(extractMintsProfileData.keys()).length +
-                            Array.from(extractTradesProfileData.keys()).length +
-                            Array.from(extractExercisesProfileData.keys()).length +
-                            Array.from(extractUnclaimedProfileData.keys()).length) /
-                            rowsPerPage
-                    ) || 1;
-                break;
-            default:
-                pages = 0;
-        }
-        return pages;
-    }, [filter, rowsPerPage]);
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(event.target.value));
-        setPage(0);
-    };
-
-    const memoizedPage = useMemo(() => {
-        if (page > numberOfPages - 1) {
-            return numberOfPages - 1;
-        }
-        return page;
-    }, [page, numberOfPages, filter, userFilter]);
-
-    const profileDataMarketKeys = useMemo(() => {
-        let data;
-        switch (filter) {
-            case Filters.Mints:
-                data = Array.from(extractMintsProfileData.keys());
-                break;
-            case Filters.Trades:
-                data = Array.from(extractTradesProfileData.keys());
-                break;
-            case Filters.Excercises:
-                data = Array.from(extractExercisesProfileData.keys());
-                break;
-            case Filters.Unclaimed:
-                data = Array.from(extractUnclaimedProfileData.keys());
-                break;
-            default:
-                data = [];
-        }
-
-        if (filter === Filters.All) {
-            data = Array.from(extractMintsProfileData.keys())
-                .map((key) => {
-                    return { type: Filters.Mints, market: key };
-                })
-                .concat(
-                    Array.from(extractTradesProfileData.keys()).map((key) => {
-                        return { type: Filters.Trades, market: key };
-                    }),
-                    Array.from(extractExercisesProfileData.keys()).map((key) => {
-                        return { type: Filters.Excercises, market: key };
-                    }),
-                    Array.from(extractUnclaimedProfileData.keys()).map((key) => {
-                        return { type: Filters.Unclaimed, market: key };
-                    })
-                );
-        }
-
-        return data.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
-    }, [rowsPerPage, memoizedPage, userFilter, filter, profiles]);
-
-    const headCells: HeadCell[] = [{ id: 1, label: '', sortable: false }];
 
     return (
         <FlexDivColumnCentered className="leaderboard__profile">
@@ -343,231 +233,64 @@ const Profile: React.FC<ProfileProps> = ({ displayNamesMap }) => {
             </FlexDivRow>
             <DataWrapper>
                 <TableContainer
-                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: 0 }}
+                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: '23px 23px 0 0' }}
                     component={Paper}
                 >
-                    <Table aria-label="customized table">
-                        <TableHead style={{ display: 'none' }}>
-                            <TableRow>
-                                {headCells.map((cell: HeadCell, index) => {
-                                    return (
-                                        <StyledTableCell key={index}>
-                                            <TableHeaderLabel>{cell.label}</TableHeaderLabel>
-                                        </StyledTableCell>
-                                    );
-                                })}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {profileDataMarketKeys.length === 0 && (
-                                <StyledTableRow>
-                                    <FlexDiv
-                                        className="leaderboard__profile__rowBorder"
-                                        style={{
-                                            height: 269,
-                                        }}
-                                    >
-                                        <FlexDivColumnCentered
-                                            className="white leaderboard__profile__rowBackground"
-                                            style={{
-                                                paddingLeft: 15,
-                                                fontSize: 31,
-                                                borderRadius: 23,
-                                                height: '99.3%',
-                                                margin: 1,
-                                            }}
-                                        >
-                                            <Text
-                                                className="bold white"
-                                                style={{
-                                                    alignSelf: 'center',
-                                                    paddingLeft: 15,
-                                                }}
-                                            >
-                                                {t('options.leaderboard.profile.no-transactions')}
-                                            </Text>
-                                        </FlexDivColumnCentered>
-                                    </FlexDiv>
-                                </StyledTableRow>
-                            )}
-                            {filter === Filters.Mints &&
-                                profileDataMarketKeys.map((key, index) => {
-                                    return (
-                                        <StyledTableRow key={index}>
-                                            <UsersMints
-                                                key={index}
-                                                market={
-                                                    profile?.mints
-                                                        .filter((mint: any) => mint.market.address === key)
-                                                        .map((mint: any) => mint.market)[0]
-                                                }
-                                                usersMints={extractMintsProfileData.get(key)}
-                                            />
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            {filter === Filters.Trades &&
-                                profileDataMarketKeys.map((key, index) => {
-                                    return (
-                                        <StyledTableRow key={index}>
-                                            <UsersTrades
-                                                key={index}
-                                                market={
-                                                    profile?.trades
-                                                        .filter((trade: any) => trade.market.address === key)
-                                                        .map((trade: any) => trade.market)[0]
-                                                }
-                                                usersTrades={extractTradesProfileData.get(key)}
-                                            />
-                                        </StyledTableRow>
-                                    );
-                                })}
+                    {filter === Filters.All && (
+                        <UserAllTxTable
+                            profile={profile}
+                            marketsData={marketsData}
+                            usersMints={extractedMintsProfileData}
+                            usersTrades={extractedTradesProfileData}
+                            usersExercises={extractedExercisesProfileData}
+                            usersUnclaimed={extractedUnclaimedProfileData}
+                            userDisplay={walletAddress.toLowerCase() === displayAddress}
+                            isLoading={marketsQuery.isLoading}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
+                        />
+                    )}
+                    {filter === Filters.Mints && (
+                        <UserMintsTable
+                            marketsData={marketsData}
+                            usersMints={extractedMintsProfileData}
+                            sortByField={sortByField}
+                        />
+                    )}
 
-                            {filter === Filters.Excercises &&
-                                profileDataMarketKeys.map((key, index) => {
-                                    return (
-                                        <StyledTableRow key={index}>
-                                            <UsersExercises
-                                                key={index}
-                                                market={
-                                                    profile?.excercises
-                                                        .filter((excercise: any) => excercise.market.address === key)
-                                                        .map((excercise: any) => excercise.market)[0]
-                                                }
-                                                usersExercises={extractExercisesProfileData.get(key)}
-                                            />
-                                        </StyledTableRow>
-                                    );
-                                })}
+                    {filter === Filters.Trades && (
+                        <UserTradesTable
+                            marketsData={marketsData}
+                            usersTrades={extractedTradesProfileData}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
+                        />
+                    )}
 
-                            {filter === Filters.Unclaimed &&
-                                profileDataMarketKeys.map((key, index) => {
-                                    return (
-                                        <StyledTableRow key={index}>
-                                            <UsersUnclaimed
-                                                key={index}
-                                                market={
-                                                    profile?.unclaimed
-                                                        .filter((unclaimed: any) => unclaimed.market.address === key)
-                                                        .map((unclaimed: any) => unclaimed.market)[0]
-                                                }
-                                                usersUnclaimed={extractUnclaimedProfileData.get(key)}
-                                                userDisplay={walletAddress.toLowerCase() === displayAddress}
-                                            />
-                                        </StyledTableRow>
-                                    );
-                                })}
-                            {filter === Filters.All &&
-                                profileDataMarketKeys
-                                    .filter((key) => key.type === Filters.Mints)
-                                    .map((key, index) => {
-                                        return (
-                                            <StyledTableRow key={index}>
-                                                <UsersMints
-                                                    key={index}
-                                                    market={
-                                                        profile?.mints
-                                                            .filter((mint: any) => mint.market.address === key.market)
-                                                            .map((mint: any) => mint.market)[0]
-                                                    }
-                                                    usersMints={extractMintsProfileData.get(key.market)}
-                                                />
-                                            </StyledTableRow>
-                                        );
-                                    })}
-                            {filter === Filters.All &&
-                                profileDataMarketKeys
-                                    .filter((key) => key.type === Filters.Trades)
-                                    .map((key, index) => {
-                                        return (
-                                            <StyledTableRow key={index}>
-                                                <UsersTrades
-                                                    key={index}
-                                                    market={
-                                                        profile?.trades
-                                                            .filter((trade: any) => trade.market.address === key.market)
-                                                            .map((trade: any) => trade.market)[0]
-                                                    }
-                                                    usersTrades={extractTradesProfileData.get(key.market)}
-                                                />
-                                            </StyledTableRow>
-                                        );
-                                    })}
-                            {filter === Filters.All &&
-                                profileDataMarketKeys
-                                    .filter((key) => key.type === Filters.Excercises)
-                                    .map((key, index) => {
-                                        return (
-                                            <StyledTableRow key={index}>
-                                                <UsersExercises
-                                                    key={index}
-                                                    market={
-                                                        profile?.excercises
-                                                            .filter(
-                                                                (excercise: any) =>
-                                                                    excercise.market.address === key.market
-                                                            )
-                                                            .map((excercise: any) => excercise.market)[0]
-                                                    }
-                                                    usersExercises={extractExercisesProfileData.get(key.market)}
-                                                />
-                                            </StyledTableRow>
-                                        );
-                                    })}
-
-                            {filter === Filters.All &&
-                                profileDataMarketKeys
-                                    .filter((key) => key.type === Filters.Unclaimed)
-                                    .map((key, index) => {
-                                        return (
-                                            <StyledTableRow key={index}>
-                                                <UsersUnclaimed
-                                                    key={index}
-                                                    market={
-                                                        profile?.unclaimed
-                                                            .filter(
-                                                                (unclaimed: any) =>
-                                                                    unclaimed.market.address === key.market
-                                                            )
-                                                            .map((unclaimed: any) => unclaimed.market)[0]
-                                                    }
-                                                    usersUnclaimed={extractUnclaimedProfileData.get(key.market)}
-                                                    userDisplay={walletAddress.toLowerCase() === displayAddress}
-                                                />
-                                            </StyledTableRow>
-                                        );
-                                    })}
-                        </TableBody>
-                        {profileDataMarketKeys.length !== 0 && (
-                            <TableFooter>
-                                <TableRow>
-                                    <PaginationWrapper
-                                        rowsPerPageOptions={[5, 10, 15, 20, 30, 50]}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
-                                        labelRowsPerPage={t(`common.pagination.rows-per-page`)}
-                                        count={profileDataMarketKeys.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={memoizedPage}
-                                        onPageChange={handleChangePage}
-                                        ActionsComponent={() => (
-                                            <Pagination
-                                                page={memoizedPage}
-                                                numberOfPages={numberOfPages}
-                                                setPage={setPage}
-                                            />
-                                        )}
-                                    />
-                                </TableRow>
-                            </TableFooter>
-                        )}
-                    </Table>
+                    {filter === Filters.Excercises && (
+                        <UserExercisesTable
+                            marketsData={marketsData}
+                            usersExercises={extractedExercisesProfileData}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
+                        />
+                    )}
+                    {filter === Filters.Unclaimed && (
+                        <UserUnclaimedTable
+                            marketsData={marketsData}
+                            usersUnclaimed={extractedUnclaimedProfileData}
+                            userDisplay={walletAddress.toLowerCase() === displayAddress}
+                            sortByField={sortByField}
+                            sortByMarketHeading={sortByMarketHeading}
+                        />
+                    )}
                 </TableContainer>
             </DataWrapper>
         </FlexDivColumnCentered>
     );
 };
 
-interface HeadCell {
+export interface HeadCell {
     id: number;
     label: string;
     sortable: boolean;
@@ -673,5 +396,32 @@ const SearchAutoCompleteInput = styled(Autocomplete)`
         opacity: 0.7;
     }
 `;
+
+const sortByMarketHeading = (a: any, b: any, direction: OrderDirection) => {
+    const aMarket = marketHeading(a, a.optionSide);
+    const bMarket = marketHeading(b, b.optionSide);
+    if (direction === OrderDirection.ASC) {
+        return aMarket < bMarket ? -1 : 1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aMarket < bMarket ? 1 : -1;
+    }
+
+    return 0;
+};
+
+const sortByField = (a: any, b: any, direction: OrderDirection, field: any) => {
+    const aField = a[field] ? (a[field] as any) : '';
+    const bField = b[field] ? (b[field] as any) : '';
+
+    if (direction === OrderDirection.ASC) {
+        return aField > bField ? 1 : -1;
+    }
+    if (direction === OrderDirection.DESC) {
+        return aField > bField ? -1 : 1;
+    }
+
+    return 0;
+};
 
 export default Profile;

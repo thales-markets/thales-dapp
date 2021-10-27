@@ -144,7 +144,7 @@ const StyledLoader = styled(CircularProgress)`
     width: 16px !important;
 `;
 
-const Card = styled(FlexDivColumnCentered)`
+export const Card = styled(FlexDivColumnCentered)`
     position: relative;
     background-color: #1c1a71;
     background-clip: padding-box;

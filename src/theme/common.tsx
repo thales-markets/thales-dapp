@@ -139,13 +139,13 @@ export const MainWrapper = styled.div`
 
 export const Wrapper = styled(FlexDivColumn)`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
+    margin: auto;
     max-width: 1440px;
     min-height: 100vh;
-    flex-direction: column;
-    margin: auto;
     padding-left: 120px;
     padding-right: 30px;
     padding-bottom: 50px;
@@ -177,6 +177,14 @@ export const Side = styled(FlexDivColumnCentered)`
     @media (max-width: 468px) {
         padding: 30px !important;
     }
+`;
+
+export const LoaderContainer = styled(GridDivCenteredRow)`
+    grid-gap: 10px;
+    position: absolute;
+    left: 45%;
+    top: 45%;
+    transform: translate(-50%, -50%);
 `;
 
 export const Button = styled.button`

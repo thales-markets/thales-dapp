@@ -11,13 +11,13 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { isMainNet, normalizeGasLimit } from 'utils/network';
+import { isMainNet, formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import {
@@ -30,7 +30,6 @@ import {
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import {
     Container,
     InputLabel,
@@ -95,7 +94,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
@@ -145,7 +143,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove: string = contractAddresses0x.exchangeProxy;
+    const addressToApprove = get0xExchangeProxyAddress(networkId);
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
@@ -221,7 +219,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
             setIsAllowing(true);
             const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
             const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                gasLimit: formatGasLimit(gasEstimate, networkId),
             })) as ethers.ContractTransaction;
 
             const txResult = await tx.wait();

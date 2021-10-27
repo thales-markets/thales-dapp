@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { OptionSide, OrderItem } from 'types/options';
-import { normalizeGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { IZeroExEvents } from '@0x/contract-wrappers';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
@@ -68,7 +68,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 const gasEstimate = await exchangeProxy
                     .cancelLimitOrder(order.rawOrder)
                     .estimateGasAsync({ from: walletAddress });
-                setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);

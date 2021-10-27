@@ -792,6 +792,7 @@
                 "tab-title": "Trading competition",
                 "competition-period": "Selected period",
                 "disqualified": "Disqualified",
+                "unverified": "Unverified",
                 "current-rank": "Your current rank"
             },
             "board": {
@@ -809,6 +810,7 @@
                     "market-col": "market",
                     "asset-col": "asset",
                     "type-col": "type",
+                    "tx-type-col": "tx type",
                     "amount-col": "amount",
                     "price-col": "price",
                     "tx-status-col": "tx status"
@@ -819,6 +821,7 @@
                 "search-placeholder": "Search other profiles by typing display name",
                 "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
+                "go-to-redeem": "Click to redeem",
                 "filters": {
                     "all": "All",
                     "mints": "Mints",
@@ -852,8 +855,26 @@
                 },
                 "unclaimed": {
                     "redeem": "Redeem"
+                },
+                "table": {
+                    "types": {
+                        "mint": "mint",
+                        "trade": "trade",
+                        "exercise": "exercise",
+                        "redeemable": "redeemable",
+                        "buy": "buy",
+                        "sell": "sell"
+                    }
                 }
             }
+        },
+        "swap": {
+            "button-text": "Get sUSD",
+            "select-token": "Select a token",
+            "enter-amount": "Enter amount",
+            "approve": "Give permission to swap {{currency}}",
+            "swap": "Swap",
+            "insufficient-balance": "Insufficient balance"
         },
         "common": {
             "time-remaining": {

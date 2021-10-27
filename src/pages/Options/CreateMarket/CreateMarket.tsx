@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { normalizeGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
+import { formatGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
 import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -54,11 +54,10 @@ import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { getContractAddressesForChainOrThrow } from '@0x/contract-addresses';
 import { toBigNumber } from 'utils/formatters/number';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
-import { get0xBaseURL } from 'utils/0x';
+import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import axios from 'axios';
@@ -74,7 +73,7 @@ import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
 
-const MIN_FUNDING_AMOUNT_ROPSTEN = 100;
+const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
 const roundMinutes = (date: Date) => {
@@ -103,7 +102,6 @@ export const CreateMarket: React.FC = () => {
         const [shortAmount, setShortAmount] = useState<number | string>('');
         const [sellLong, setSellLong] = useState<boolean>(false);
         const [sellShort, setSellShort] = useState<boolean>(false);
-        const contractAddresses0x = getContractAddressesForChainOrThrow(networkId);
         const { t } = useTranslation();
         const { synthsMap: synths } = snxJSConnector;
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
@@ -146,7 +144,7 @@ export const CreateMarket: React.FC = () => {
 
         const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-        const addressToApprove: string = contractAddresses0x.exchangeProxy;
+        const addressToApprove = get0xExchangeProxyAddress(networkId);
         let isCurrencySelected = false;
 
         const marketQuery = useBinaryOptionsMarketQuery(market, {
@@ -274,13 +272,14 @@ export const CreateMarket: React.FC = () => {
                 BOMMContractWithSigner.estimateGas
                     .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
                     .then((gasEstimate: any) => {
-                        setGasLimit(normalizeGasLimit(Number(gasEstimate)));
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
                     })
                     .catch((e: any) => {
-                        if (e.data?.originalError.code === 3) {
+                        if (e.data?.originalError?.code === 3) {
                             setUserHasEnoughFunds(false);
                         }
+                        console.log(e);
                         setGasLimit(null);
                     });
             } catch (e) {}
@@ -314,7 +313,7 @@ export const CreateMarket: React.FC = () => {
                     binaryOptionsMarketManagerContract.address,
                     ethers.constants.MaxUint256,
                     {
-                        gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                        gasLimit: formatGasLimit(gasEstimate, networkId),
                     }
                 )) as ethers.ContractTransaction;
                 await tx.wait();
@@ -335,7 +334,7 @@ export const CreateMarket: React.FC = () => {
                     ethers.constants.MaxUint256
                 );
                 const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
                 await tx.wait();
                 setLongAllowance(true);
@@ -355,7 +354,7 @@ export const CreateMarket: React.FC = () => {
                     ethers.constants.MaxUint256
                 );
                 const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: normalizeGasLimit(Number(gasEstimate)),
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
                 })) as ethers.ContractTransaction;
                 await tx.wait();
                 setShortAllowance(true);

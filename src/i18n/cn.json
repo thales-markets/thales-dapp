@@ -809,6 +809,7 @@
                     "market-col": "市场",
                     "asset-col": "资产",
                     "type-col": "类别",
+                    "tx-type-col": "发送类型",
                     "amount-col": "金额",
                     "price-col": "价格",
                     "tx-status-col": "交易状态"
@@ -819,6 +820,7 @@
                 "search-placeholder": "输入名称来搜索其他账户信息",
                 "transaction-details": "用户的交易明细：",
                 "no-transactions": "无任何交易",
+                "go-to-redeem": "点击兑换",
                 "filters": {
                     "all": "全部",
                     "mints": "铸造",
@@ -852,6 +854,16 @@
                 },
                 "unclaimed": {
                     "redeem": "赎回"
+                },
+                "table": {
+                    "types": {
+                        "mint": "铸造",
+                        "trade": "交易",
+                        "exercise": "行权",
+                        "redeemable": "可赎回",
+                        "buy": "买",
+                        "sell": "出售"
+                    }
                 }
             }
         },
