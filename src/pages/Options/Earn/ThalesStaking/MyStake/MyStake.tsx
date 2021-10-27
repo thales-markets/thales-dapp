@@ -74,9 +74,10 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
-    const myStakedShare = useMemo(() => (100 * Number(thalesStaked)) / totalThalesStaked, [
+    const myStakedShare = useMemo(() => (100 * (Number(thalesStaked) + Number(escrowedBalance))) / totalThalesStaked, [
         thalesStaked,
         totalThalesStaked,
+        escrowedBalance,
     ]);
 
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * WEEKLY_REWARDS_THALES, [myStakedShare]);
