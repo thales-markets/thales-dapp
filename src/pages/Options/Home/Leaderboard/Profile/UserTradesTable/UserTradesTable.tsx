@@ -227,7 +227,7 @@ const UserTradesTable: React.FC<UserTradesTableProps> = ({
                                     </StyledTableCell>
                                     <StyledTableCell>
                                         <Cell orderSide={trade.type} style={{ textTransform: 'uppercase' }}>
-                                            {trade.type}
+                                            {t(`options.leaderboard.profile.table.types.${trade.type}`)}
                                         </Cell>
                                     </StyledTableCell>
                                     <StyledTableCell>
