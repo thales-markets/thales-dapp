@@ -1,8 +1,10 @@
+import { SYNTHS_MAP } from 'constants/currency';
 import { MarketWidgetKey } from 'constants/ui';
 import orderBy from 'lodash/orderBy';
 import { SynthsMap } from 'types/synthetix';
 import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
+import { synthToAsset } from './currency';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthsMap) =>
     orderBy(
@@ -12,7 +14,11 @@ export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthsMap
             return {
                 ...optionsMarket,
                 phase,
-                asset: synthsMap[optionsMarket.currencyKey]?.asset || optionsMarket.currencyKey,
+                asset:
+                    synthsMap[optionsMarket.currencyKey]?.asset ||
+                    (SYNTHS_MAP[optionsMarket.currencyKey]
+                        ? synthToAsset(SYNTHS_MAP[optionsMarket.currencyKey])
+                        : optionsMarket.currencyKey),
                 timeRemaining,
                 phaseNum: PHASE[phase],
             };

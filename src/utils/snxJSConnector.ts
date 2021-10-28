@@ -10,8 +10,9 @@ import escrowThales from './contracts/escrowThales';
 import priceFeedContract from './contracts/priceFeedContract';
 import { synthetix, Synth, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 import { SynthsMap } from 'types/synthetix';
-import { currencyKeyToNameMap, CurrencyKey } from 'constants/currency';
+import { currencyKeyToNameMap, CurrencyKey, SYNTHS_MAP } from 'constants/currency';
 import { parseBytes32String } from './formatters/ethers';
+import { synthToAsset } from './currency';
 
 type SnxJSConnector = {
     initialized: boolean;
@@ -64,9 +65,9 @@ const loadSynths = async () => {
         currencies.forEach((currency: CurrencyKey) => {
             const currencyName = parseBytes32String(currency);
             snxJSConnector.synthsMap[currencyName] = {
-                asset: currencyName,
+                asset: getSynthAsset(currencyName),
                 name: currencyName,
-                description: currencyName,
+                description: getSynthName(currencyName),
             };
         });
     }
@@ -87,4 +88,6 @@ const conditionalInitializeContract = (contract: any, contractSettings: Config) 
 export const getSynthName = (currencyKey: string) =>
     currencyKeyToNameMap[currencyKey] || currencyKeyToNameMap[`s${currencyKey}`] || currencyKey;
 
+export const getSynthAsset = (currencyKey: string) =>
+    SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 export default snxJSConnector;

@@ -18,6 +18,12 @@ export const binaryOptionMarketContract = {
                 {
                     indexed: false,
                     internalType: 'uint256',
+                    name: 'oracleTimestamp',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
                     name: 'deposited',
                     type: 'uint256',
                 },
