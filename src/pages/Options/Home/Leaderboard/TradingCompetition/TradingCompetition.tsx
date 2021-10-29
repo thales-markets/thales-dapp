@@ -131,10 +131,10 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
                 }
 
                 if (verifiedTwitterAccounts.has(leader.walletAddress.toLowerCase().trim())) {
-                    if (leader.investment > 0) verifiedWithInv.push(leader);
+                    if (leader.investment > 0 || leader.trades > 0) verifiedWithInv.push(leader);
                     else verifiedWithoutInvOrTrades.push(leader);
                 } else {
-                    if (leader.investment > 0) {
+                    if (leader.investment > 0 || leader.trades > 0) {
                         unverified.push(leader);
                         unverifiedWallets.add(leader.walletAddress);
                     }
@@ -154,6 +154,21 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
             const cheatersArr = dataRdy[3];
             verifiedWithInv = verifiedWithInv
                 .sort((a: any, b: any) => {
+                    if (
+                        a.netProfit === 0 &&
+                        a.investment === 0 &&
+                        a.gain === 0 &&
+                        b.netProfit === 0 &&
+                        b.investment === 0 &&
+                        b.gain === 0
+                    ) {
+                        return b.volume - a.volume;
+                    }
+
+                    if (a.netProfit === 0 && a.investment === 0 && a.gain === 0) return 1;
+
+                    if (b.netProfit === 0 && b.investment === 0 && b.gain === 0) return -1;
+
                     if (orderBy === 5) {
                         if (a.netProfit !== b.netProfit) return b.netProfit - a.netProfit;
 
@@ -215,8 +230,6 @@ const TradingCompetition: React.FC<TradingCompetitionProps> = ({ displayNamesMap
             return [];
         }
     }, [rowsPerPage, memoizedPage, searchString, sortedData]);
-
-    console.log(leaderboardData);
 
     const userLeaderboardData = useMemo(() => {
         const userData = leaderboardData.filter(

@@ -486,7 +486,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         <SlippageLabel>
                             {t('options.market.trade-options.place-order.slippage-label')}
                             <LightTooltip title={t('options.market.trade-options.place-order.slippage-tooltip')}>
-                                <StyledQuestionMarkIcon />
+                                <QuestionMarkIcon />
                             </LightTooltip>
                         </SlippageLabel>
                     </FlexDivColumn>
@@ -602,6 +602,12 @@ const Price = styled(SummaryContent)<{ color: string }>`
     white-space: nowrap;
     width: 200px;
     text-align: end;
+`;
+
+const QuestionMarkIcon = styled(StyledQuestionMarkIcon)`
+    @media (max-width: 767px) {
+        display: none;
+    }
 `;
 
 export default TokenSwap;

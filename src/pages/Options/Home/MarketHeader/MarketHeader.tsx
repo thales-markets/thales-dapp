@@ -33,6 +33,8 @@ import { Overlay } from 'components/Header/Header';
 import LanguageSelector from 'components/LanguageSelector';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { buildHref } from '../../../../utils/routes';
+import { Modal } from '@material-ui/core';
+import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
 
 type MarketHeaderProps = {
@@ -58,6 +60,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
 }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const [showSwap, setShowSwap] = useState(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
@@ -96,7 +99,22 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     />
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                <FlexDiv>
+                <FlexDiv className="dapp-header__buttonsWrapper">
+                    {isWalletConnected && (
+                        <Button className="tertiary" style={{ padding: '6px 24px' }} onClick={() => setShowSwap(true)}>
+                            {t('options.swap.button-text')}
+                        </Button>
+                    )}
+                    <Modal
+                        open={showSwap}
+                        onClose={(_, reason) => {
+                            if (reason !== 'backdropClick') setShowSwap(false);
+                        }}
+                    >
+                        <div style={{ height: 0 }}>
+                            <Swap handleClose={setShowSwap}></Swap>
+                        </div>
+                    </Modal>
                     <DesktopLanguageSelectorContainer>
                         <LanguageSelector />
                     </DesktopLanguageSelectorContainer>

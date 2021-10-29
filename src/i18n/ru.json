@@ -809,6 +809,7 @@
                     "market-col": "рыночнный",
                     "asset-col": "aктив",
                     "type-col": "тип",
+                    "tx-type-col": "тип tx",
                     "amount-col": "сумма",
                     "price-col": "цена",
                     "tx-status-col": "статус tx"
@@ -819,6 +820,7 @@
                 "search-placeholder": "Поиск в других профилях по отображаемому имени",
                 "transaction-details": "Сведения о транзакции для пользователя:",
                 "no-transactions": "Транзакции недоступны",
+                "go-to-redeem": "Нажмите, чтобы выкупить",
                 "filters": {
                     "all": "Все",
                     "mints": "Монетные дворы",
@@ -852,8 +854,26 @@
                 },
                 "unclaimed": {
                     "redeem": "Выкупить"
+                },
+                "table": {
+                    "types": {
+                        "mint": "Чеканить",
+                        "trade": "Торговля",
+                        "exercise": "Исполнить",
+                        "redeemable": "Подлежащие погашению",
+                        "buy": "Купить",
+                        "sell": "Продать"
+                    }
                 }
             }
+        },
+        "swap": {
+            "button-text": "Приобрести sUSD",
+            "select-token": "Выберите токен",
+            "enter-amount": "Введите сумму",
+            "approve": "Дать разрешение на обмен {{currency}}",
+            "swap": "Обмен",
+            "insufficient-balance": "Недостаточно средств"
         },
         "common": {
             "time-remaining": {
