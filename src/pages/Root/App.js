@@ -23,12 +23,12 @@ import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
 import { loadProvider } from '@synthetixio/providers';
+import ThalesRoyal from 'pages/Options/Royal/ThalesRoyal';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
-
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -227,6 +227,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.Home}>
                             <MainLayout>
                                 <OptionsHome />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.Royal}>
+                            <MainLayout>
+                                <ThalesRoyal />
                             </MainLayout>
                         </Route>
 
