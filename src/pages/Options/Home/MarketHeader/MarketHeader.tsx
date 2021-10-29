@@ -184,6 +184,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
+                        <SidebarItem
+                            imgSrc={marketOverviewDefaultIcon}
+                            imgSrcHoverSelected={marketOverviewSelectedIcon}
+                            className={route === ROUTES.Options.Royal ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.royal-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                     {!isL2 && (
                         <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
                             <SidebarItem
