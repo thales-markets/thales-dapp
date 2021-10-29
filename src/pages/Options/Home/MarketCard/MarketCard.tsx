@@ -10,12 +10,12 @@ import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
 import SPAAnchor from '../../../../components/SPAAnchor';
+import { getSynthName } from 'utils/currency';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;

@@ -23,7 +23,6 @@ import { DisplayOrder, ExtendedOrderItem, HistoricalOptionsMarketInfo } from 'ty
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import UserFilter from '../Home/ExploreMarkets/UserFilters';
 import { useTranslation } from 'react-i18next';
-import { getSynthName } from 'utils/snxJSConnector';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import customMarkets from 'assets/images/filters/custom-markets.svg';
@@ -42,6 +41,7 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import QuickTradingCompetitionMobile from './QuickTradingMobileCompetition';
 import './media.scss';
 import Loader from 'components/Loader';
+import { getSynthName } from 'utils/currency';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',

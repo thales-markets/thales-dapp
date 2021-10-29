@@ -5,6 +5,7 @@ import { parseBytes32String } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { NetworkId } from 'utils/network';
 import { SynthsMap } from 'types/synthetix';
+import { getSynthAsset, getSynthName } from 'utils/currency';
 
 export type Rates = Record<CurrencyKey, number>;
 
@@ -18,9 +19,9 @@ const useSynthsMapQuery = (networkId: NetworkId, options?: UseQueryOptions<Synth
                 currencies.forEach((currency: CurrencyKey) => {
                     const currencyName = parseBytes32String(currency);
                     synthsMap[currencyName] = {
-                        asset: currencyName,
                         name: currencyName,
-                        description: currencyName,
+                        asset: getSynthAsset(currencyName),
+                        description: getSynthName(currencyName),
                     };
                 });
             }

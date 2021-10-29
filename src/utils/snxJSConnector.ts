@@ -8,17 +8,11 @@ import stakingThales from './contracts/stakingThales';
 import thalesContract from './contracts/thalesContract';
 import escrowThales from './contracts/escrowThales';
 import priceFeedContract from './contracts/priceFeedContract';
-import { synthetix, Synth, SynthetixJS, Config } from '@synthetixio/contracts-interface';
-import { SynthsMap } from 'types/synthetix';
-import { currencyKeyToNameMap, CurrencyKey, SYNTHS_MAP } from 'constants/currency';
-import { parseBytes32String } from './formatters/ethers';
-import { synthToAsset } from './currency';
+import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 
 type SnxJSConnector = {
     initialized: boolean;
     snxJS: SynthetixJS | null;
-    synths: Synth[];
-    synthsMap: SynthsMap;
     provider: ethers.providers.Provider | undefined;
     signer: Signer | undefined;
     binaryOptionsMarketDataContract: ethers.Contract;
@@ -54,23 +48,7 @@ const snxJSConnector: SnxJSConnector = {
         this.thalesTokenContract = conditionalInitializeContract(thalesContract, contractSettings);
         this.escrowThalesContract = conditionalInitializeContract(escrowThales, contractSettings);
         this.priceFeedContract = conditionalInitializeContract(priceFeedContract, contractSettings);
-        loadSynths();
     },
-};
-
-const loadSynths = async () => {
-    snxJSConnector.synthsMap = {};
-    if (snxJSConnector.priceFeedContract) {
-        const currencies = await snxJSConnector.priceFeedContract.getCurrencies();
-        currencies.forEach((currency: CurrencyKey) => {
-            const currencyName = parseBytes32String(currency);
-            snxJSConnector.synthsMap[currencyName] = {
-                asset: getSynthAsset(currencyName),
-                name: currencyName,
-                description: getSynthName(currencyName),
-            };
-        });
-    }
 };
 
 const initializeContract = (contract: any, contractSettings: Config) =>
@@ -85,9 +63,4 @@ const conditionalInitializeContract = (contract: any, contractSettings: Config) 
           )
         : undefined;
 
-export const getSynthName = (currencyKey: string) =>
-    currencyKeyToNameMap[currencyKey] || currencyKeyToNameMap[`s${currencyKey}`] || currencyKey;
-
-export const getSynthAsset = (currencyKey: string) =>
-    SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
 export default snxJSConnector;

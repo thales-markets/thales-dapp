@@ -10,7 +10,7 @@ import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constant
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
 import { formatGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import { RootState } from 'redux/rootReducer';
@@ -63,6 +63,7 @@ import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import axios from 'axios';
 import { refetchOrderbook } from 'utils/queryConnector';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
+import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
 import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
@@ -72,6 +73,8 @@ import { MetamaskSubprovider } from '@0x/subproviders';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
+import { SynthsMap } from 'types/synthetix';
+import { getSynthName } from 'utils/currency';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -103,7 +106,6 @@ export const CreateMarket: React.FC = () => {
         const [sellLong, setSellLong] = useState<boolean>(false);
         const [sellShort, setSellShort] = useState<boolean>(false);
         const { t } = useTranslation();
-        const { synthsMap: synths } = snxJSConnector;
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
         const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
         const [isCurrencyKeyValid, setIsCurrencyKeyValid] = useState(true);
@@ -154,19 +156,23 @@ export const CreateMarket: React.FC = () => {
         const optionsMarket: OptionsMarketInfo | null =
             marketQuery.isSuccess && marketQuery.data ? marketQuery.data : null;
 
+        const synthsMapQuery = useSynthsMapQuery(networkId, {
+            enabled: isAppReady,
+        });
+
+        const synthsMap: SynthsMap = synthsMapQuery.isSuccess && synthsMapQuery.data ? synthsMapQuery.data : {};
+
         const assetsOptions = useMemo(
             () =>
                 orderBy(
-                    Object.values(synths)
-                        .filter((synth) => synth.name !== SYNTHS_MAP.sUSD)
-                        .map((synth) => ({
-                            label: synth.asset,
-                            value: synth.name,
-                        })),
+                    Object.values(synthsMap).map((synth) => ({
+                        label: synth.asset,
+                        value: synth.name,
+                    })),
                     'label',
                     'asc'
                 ),
-            [synths]
+            [synthsMap]
         );
         const isButtonDisabled =
             !hasAllowance ||
