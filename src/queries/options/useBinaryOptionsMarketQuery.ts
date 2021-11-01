@@ -5,6 +5,7 @@ import { OptionsMarketInfo } from 'types/options';
 import { bigNumberFormatter, parseBytes32String } from 'utils/formatters/ethers';
 import { SIDE } from 'constants/options';
 import { getPhaseAndEndDate } from 'utils/options';
+import { getSynthAsset } from 'utils/currency';
 
 const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOptions<OptionsMarketInfo>) => {
     return useQuery<OptionsMarketInfo>(
@@ -31,10 +32,7 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                 priceUpdatedAt: Number(oraclePriceAndTimestamp.updatedAt) * 1000,
                 currentPrice: bigNumberFormatter(oraclePriceAndTimestamp.price),
                 finalPrice: bigNumberFormatter(oracleDetails.finalPrice),
-                asset:
-                    snxJSConnector.synthsMap != null
-                        ? snxJSConnector.synthsMap[currencyKey]?.asset || currencyKey
-                        : null,
+                asset: getSynthAsset(currencyKey),
                 strikePrice: bigNumberFormatter(oracleDetails.strikePrice),
                 maturityDate,
                 expiryDate,

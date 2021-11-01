@@ -1,5 +1,5 @@
 import { Overlay } from 'components/Header/Header';
-import { SYNTHS_MAP } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import ROUTES from 'constants/routes';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import queryString from 'query-string';
@@ -12,10 +12,10 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
+import { getSynthName } from 'utils/currency';
 import { getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { history, navigateTo } from 'utils/routes';
-import { getSynthName } from 'utils/snxJSConnector';
 import SearchMarket from '../SearchMarket';
 import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
@@ -208,15 +208,22 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                     const isCustomMarketsEmpty =
                                         allMarkets.filter(({ customMarket }) => customMarket).length === 0;
                                     const isBtcMarketsEmpty =
-                                        allMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
-                                            .length === 0;
+                                        allMarkets.filter(
+                                            ({ currencyKey }) =>
+                                                currencyKey === SYNTHS_MAP.sBTC ||
+                                                currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                                        ).length === 0;
                                     const isEthMarketsEmpty =
-                                        allMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
-                                            .length === 0;
+                                        allMarkets.filter(
+                                            ({ currencyKey }) =>
+                                                currencyKey === SYNTHS_MAP.sETH ||
+                                                currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                                        ).length === 0;
                                     const assetSearchNoBtc =
                                         allMarkets.filter(({ asset, currencyKey }) => {
                                             return (
-                                                currencyKey === SYNTHS_MAP.sBTC &&
+                                                (currencyKey === SYNTHS_MAP.sBTC ||
+                                                    currencyKey === CRYPTO_CURRENCY_MAP.BTC) &&
                                                 (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                                     getSynthName(currencyKey)
                                                         ?.toLowerCase()
@@ -228,7 +235,8 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                     const assetSearchNoEth =
                                         allMarkets.filter(({ asset, currencyKey }) => {
                                             return (
-                                                currencyKey === SYNTHS_MAP.sETH &&
+                                                (currencyKey === SYNTHS_MAP.sETH ||
+                                                    currencyKey === CRYPTO_CURRENCY_MAP.ETH) &&
                                                 (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                                     getSynthName(currencyKey)
                                                         ?.toLowerCase()
