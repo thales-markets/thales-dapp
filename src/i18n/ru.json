@@ -516,14 +516,14 @@
                 "strike-burn-label": "Ожог удара",
                 "rank-label": "Ранг",
                 "total-burned": "Общий ожог",
-                "burned-last-houry": "Ожог за последний час"
+                "burned-last-hour": "Ожог за последний час"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",
                 "maturity-phase-widget": "Использовать опционы",
                 "orderbook-widget": "Таблица заказов",
                 "trade-widget": "Торговля",
-                "chart-trading-view-widget  ": "Торговая точка зрения",
+                "chart-trading-view-widget": "Торговая точка зрения",
                 "chart-options-price-widget": "Цена опционов",
                 "recent-transactions-widget": "Недавняя торговля на рынке",
                 "your-transactions-widget": "Ваша торговля",
@@ -792,7 +792,8 @@
                 "tab-title": "Торговая конкуренция",
                 "competition-period": "Выбранный период",
                 "disqualified": "Дисквалифицирован",
-                "current-rank": "Ваше текущее звание"
+                "current-rank": "Ваше текущее звание",
+                "unverified": "Непроверенный"
             },
             "board": {
                 "tab-title": "Таблица лидеров"

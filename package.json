@@ -33,6 +33,7 @@
         "memoize-one": "^5.1.1",
         "node-sass": "4.14.1",
         "numbro": "^2.3.2",
+        "@google-cloud/translate": "^6.3.0",
         "query-string": "^7.0.1",
         "react": "^17.0.1",
         "react-country-flag": "^2.3.1",
@@ -89,7 +90,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "prepare":  "husky install"
     },
     "eslintConfig": {
         "extends": [
