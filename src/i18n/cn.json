@@ -316,7 +316,7 @@
                     "cooldown-started-text": "您可以取消{{amount}}的质押",
                     "cooldown-ended-text": "您现在可以领取{{amount}}",
                     "start-unstaking": "开始取消质押",
-                    "cooldown-confirmation-messag": "取消质押成功启动",
+                    "cooldown-confirmation-message": "取消质押成功启动",
                     "unstake-confirmation-message": "代币成功取消质押",
                     "unstaking": "取消质押",
                     "amount-to-unstake": "未兑现金额",
@@ -325,8 +325,7 @@
                     "canceling": "取消抵押",
                     "cancel-confirmation-message": "取消抵押成功取消",
                     "network-fee-cancel": "取消",
-                    "network-fee-unstake": "取消质押",
-                    "cooldown-confirmation-message": "成功啟動"
+                    "network-fee-unstake": "取消质押"
                 },
                 "staking-rewards": {
                     "title": "质押奖励",
