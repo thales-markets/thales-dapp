@@ -21,6 +21,9 @@ async function translateMissingValues(originLanguage, targetLanguage, languageKe
         await Promise.all(
             Object.keys(originLanguage).map(async (key) => {
                 if (_.isObject(originLanguage[key])) {
+                    if (!targetLanguage[key]) {
+                        targetLanguage[key] = {};
+                    }
                     await translateMissingValues(originLanguage[key], targetLanguage[key], languageKey);
                 } else if (!targetLanguage[key]) {
                     console.log(`Translating '${originLanguage[key]}' to ${languageNamesMap[languageKey]}`);
