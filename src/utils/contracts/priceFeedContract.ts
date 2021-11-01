@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const priceFeedContract = {
     addresses: {
         [NetworkId.Mainnet]: 'TBD',
-        [NetworkId.Ropsten]: 'TBD',
+        [NetworkId.Ropsten]: '0x3c929BeF3f8886Ceac0a35Abd14849bc846ed0a2',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x1521ed0AE5B8e6d34A7Fe2E22cA8Cd4aAbc354b8',
         // added to resolve error with typings

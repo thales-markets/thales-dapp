@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const binaryOptionsMarketDataContract = {
     addresses: {
         [NetworkId.Mainnet]: '0x5ed98Ebb66A929758C7Fe5Ac60c979aDF0F4040a',
-        [NetworkId.Ropsten]: '0x4E48FA3638939D2B8e0acE9ceed724c606FEf608',
+        [NetworkId.Ropsten]: '0x260DFAb14c6A1EE37621AeB9a177C5B223D82b0c',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x7ef54B7aF71D9F491D9735d8Cb093fFc4A51d01d',
         // added to resolve error with typings
@@ -164,6 +164,12 @@ export const binaryOptionsMarketDataContract = {
                     indexed: false,
                     internalType: 'address',
                     name: 'customOracle',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'zeroExAddress',
                     type: 'address',
                 },
             ],
@@ -948,6 +954,21 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_zeroExAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'setZeroExAddress',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'totalDeposited',
@@ -985,6 +1006,21 @@ export const binaryOptionsMarketDataContract = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'zeroExAddress',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
     ],
