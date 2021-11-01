@@ -151,6 +151,16 @@ table {
     src: local('Inter'), url(../assets/fonts/Inter/Inter-Regular.ttf) format('truetype');
 }
 
+@font-face {
+    font-family: 'SansationLight';
+    src: local('SansationLight'), url(../assets/fonts/SansationLight/Sansation-Light.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'VT323';
+    src: local('VT323'), url(../assets/fonts/VT323/VT323-Regular.ttf) format('truetype');
+}
+
 * {
     box-sizing: border-box;
     font-family: 'Roboto' !important;
