@@ -53,11 +53,10 @@ import { COLORS } from 'constants/ui';
 import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
-import erc20Contract from 'utils/contracts/erc20Contract';
 import { toBigNumber } from 'utils/formatters/number';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { Web3Wrapper } from '@0x/web3-wrapper';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
+import { get0xBaseURL } from 'utils/0x';
 import { LimitOrder, SignatureType } from '@0x/protocol-utils';
 import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
 import axios from 'axios';
@@ -129,12 +128,8 @@ export const CreateMarket: React.FC = () => {
         const [market, setMarket] = useState<string>('');
         const [longAddress, setLong] = useState('');
         const [shortAddress, setShort] = useState('');
-        const [hasLongAllowance, setLongAllowance] = useState<boolean>(false);
-        const [isLongAllowing, setIsLongAllowing] = useState<boolean>(false);
         const [isLongSubmitting, setIsLongSubmitting] = useState<boolean>(false);
         const [isLongSubmitted, setIsLongSubmitted] = useState<boolean>(false);
-        const [hasShortAllowance, setShortAllowance] = useState<boolean>(false);
-        const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
         const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
         const [isShortSubmitted, setIsShortSubmitted] = useState<boolean>(false);
         const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
@@ -146,7 +141,6 @@ export const CreateMarket: React.FC = () => {
 
         const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-        const addressToApprove = get0xExchangeProxyAddress(networkId);
         let isCurrencySelected = false;
 
         const marketQuery = useBinaryOptionsMarketQuery(market, {
@@ -321,46 +315,6 @@ export const CreateMarket: React.FC = () => {
             }
         };
 
-        const handleLongAllowance = async () => {
-            const erc20Instance = new ethers.Contract(longAddress, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsLongAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                })) as ethers.ContractTransaction;
-                await tx.wait();
-                setLongAllowance(true);
-                setIsLongAllowing(false);
-            } catch (e) {
-                console.log(e);
-                setIsLongAllowing(false);
-            }
-        };
-
-        const handleShortAllowance = async () => {
-            const erc20Instance = new ethers.Contract(shortAddress, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsShortAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                })) as ethers.ContractTransaction;
-                await tx.wait();
-                setShortAllowance(true);
-                setIsShortAllowing(false);
-            } catch (e) {
-                console.log(e);
-                setIsShortAllowing(false);
-            }
-        };
-
         const getSubmitButton = () => {
             if (!hasAllowance) {
                 return (
@@ -390,40 +344,7 @@ export const CreateMarket: React.FC = () => {
                     </Button>
                 );
             }
-            if (sellLong && !hasLongAllowance) {
-                return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary  button-div-responsive__upper"
-                        disabled={isLongAllowing}
-                        onClick={handleLongAllowance}
-                    >
-                        {!isLongAllowing
-                            ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
-                            : t('common.enable-wallet-access.approve-progress-label', {
-                                  currencyKey: SYNTHS_MAP.sLONG,
-                              })}
-                    </Button>
-                );
-            }
-
-            if (sellShort && !hasShortAllowance) {
-                return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary  button-div-responsive__upper"
-                        disabled={isShortAllowing}
-                        onClick={handleShortAllowance}
-                    >
-                        {!isShortAllowing
-                            ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
-                            : t('common.enable-wallet-access.approve-progress-label', {
-                                  currencyKey: SYNTHS_MAP.sSHORT,
-                              })}
-                    </Button>
-                );
-            }
-            if (sellLong && hasLongAllowance && !isLongSubmitted) {
+            if (sellLong && !isLongSubmitted) {
                 return (
                     <Button
                         style={{ padding: '8px 24px' }}
@@ -438,7 +359,7 @@ export const CreateMarket: React.FC = () => {
                 );
             }
 
-            if (sellShort && hasShortAllowance && !isShortSubmitted) {
+            if (sellShort && !isShortSubmitted) {
                 return (
                     <Button
                         style={{ padding: '8px 24px' }}
@@ -1097,10 +1018,6 @@ export const CreateMarket: React.FC = () => {
                         isAllowing={isAllowing}
                         isMarketCreated={isMarketCreated}
                         isCreating={isCreatingMarket}
-                        isLongApproved={hasLongAllowance}
-                        isLongAllowing={isLongAllowing}
-                        isShortApproved={hasShortAllowance}
-                        isShortAllowing={isShortAllowing}
                         isLongSubmitted={isLongSubmitted}
                         isLongSubmitting={isLongSubmitting}
                         isShortSubmitted={isShortSubmitted}
