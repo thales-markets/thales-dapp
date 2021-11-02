@@ -55,7 +55,7 @@ to a locally stored json provided by Google.
 
 Full Guide: https://github.com/googleapis/nodejs-translate#before-you-begin
 
-In the check_translations.js script the projectId variable needs to be set to the project id provided by Google.
+The translation script is located in check_translations.js.example. Create a new file called check_translations.js identical to check_translations.js.example and set the projectId variable to the project id provided by Google.
 
 ### Run
 
