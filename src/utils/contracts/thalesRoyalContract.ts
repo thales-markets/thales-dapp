@@ -567,6 +567,27 @@ export const thalesRoyal = {
         },
         {
             constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_round',
+                    type: 'uint256',
+                },
+            ],
+            name: 'targetPricePerRound',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
             inputs: [],
             name: 'rounds',
             outputs: [
