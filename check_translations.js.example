@@ -13,7 +13,7 @@ const translate = new Translate({ projectId });
 
 //Args
 const destinationLanguages = ['ru', 'cn'];
-const languageGoogleAPICodes = { ru: 'ru', cn: 'zh-TW' };
+const languageGoogleAPICodes = { ru: 'ru', cn: 'zh-CN' };
 const languageNamesMap = { ru: 'Russian', cn: 'Chinese' };
 
 async function translateMissingValues(originLanguage, targetLanguage, languageKey) {

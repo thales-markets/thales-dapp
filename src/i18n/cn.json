@@ -316,7 +316,6 @@
                     "cooldown-started-text": "您可以取消{{amount}}的质押",
                     "cooldown-ended-text": "您现在可以领取{{amount}}",
                     "start-unstaking": "开始取消质押",
-                    "cooldown-confirmation-message": "取消质押成功启动",
                     "unstake-confirmation-message": "代币成功取消质押",
                     "unstaking": "取消质押",
                     "amount-to-unstake": "未兑现金额",
@@ -325,7 +324,8 @@
                     "canceling": "取消抵押",
                     "cancel-confirmation-message": "取消抵押成功取消",
                     "network-fee-cancel": "取消",
-                    "network-fee-unstake": "取消质押"
+                    "network-fee-unstake": "取消质押",
+                    "cooldown-confirmation-message": "Unstaking 成功启动"
                 },
                 "staking-rewards": {
                     "title": "质押奖励",
@@ -793,7 +793,7 @@
                 "competition-period": "选定时间",
                 "disqualified": "取消资格",
                 "current-rank": "您目前的排名",
-                "unverified": "未經證實"
+                "unverified": "未经证实"
             },
             "board": {
                 "tab-title": "排行榜"
@@ -914,12 +914,12 @@
             "ratio": "比率"
         },
         "swap": {
-            "swap": "交換",
-            "select-token": "選擇一個令牌",
-            "enter-amount": "輸入金額",
-            "approve": "授予交換 {{currency}} 的權限",
-            "insufficient-balance": "餘額不足",
-            "button-text": "獲得 sUSD"
+            "swap": "交换",
+            "button-text": "获得 sUSD",
+            "insufficient-balance": "余额不足",
+            "select-token": "选择一个令牌",
+            "enter-amount": "输入金额",
+            "approve": "授予交换 {{currency}} 的权限"
         }
     }
 }
