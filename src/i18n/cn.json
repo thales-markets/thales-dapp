@@ -920,6 +920,13 @@
             "approve": "授予交換 {{currency}} 的權限",
             "insufficient-balance": "餘額不足",
             "button-text": "獲得 sUSD"
+        },
+        "royale": {
+            "battle": {
+                "will-be": "将会",
+                "round": "圆形的",
+                "time-left": "回合剩余时间"
+            }
         }
     }
 }

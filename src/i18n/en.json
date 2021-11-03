@@ -920,6 +920,13 @@
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue."
             },
             "ratio": "Ratio"
+        },
+        "royale": {
+            "battle": {
+                "round": "Round",
+                "will-be": "Will Be",
+                "time-left": "Time left in round"
+            }
         }
     }
 }
