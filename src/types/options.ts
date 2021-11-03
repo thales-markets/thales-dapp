@@ -83,8 +83,8 @@ export type OptionsMarketInfo = {
     creator: string;
     // options: OptionValue;
     fees: {
-        creatorFee: number;
-        poolFee: number;
+        creator: number;
+        pool: number;
     };
     // creatorLimits: {
     //     capitalRequirement: number;

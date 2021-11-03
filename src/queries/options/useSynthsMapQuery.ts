@@ -26,8 +26,6 @@ const useSynthsMapQuery = (networkId: NetworkId, options?: UseQueryOptions<Synth
                 });
             }
 
-            console.log(synthsMap);
-
             return synthsMap;
         },
         options

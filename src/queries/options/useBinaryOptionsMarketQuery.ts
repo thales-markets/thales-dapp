@@ -52,8 +52,8 @@ const useBinaryOptionsMarketQuery = (marketAddress: string, options?: UseQueryOp
                 //     short: bigNumberFormatter(options.short),
                 // },
                 fees: {
-                    creatorFee: bigNumberFormatter(fees.creatorFee),
-                    poolFee: bigNumberFormatter(fees.poolFee),
+                    creator: bigNumberFormatter(fees.creatorFee),
+                    pool: bigNumberFormatter(fees.poolFee),
                 },
                 // creatorLimits: {
                 //     capitalRequirement: bigNumberFormatter(creatorLimits.capitalRequirement),

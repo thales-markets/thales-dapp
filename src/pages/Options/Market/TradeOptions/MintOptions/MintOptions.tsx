@@ -38,7 +38,6 @@ import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
-import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
 import {
     formatCurrency,
     formatCurrencyWithSign,
@@ -64,7 +63,6 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import { MetamaskSubprovider } from '@0x/subproviders';
-import { INCLUDE_MINTING_FEES } from 'constants/options';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -81,7 +79,6 @@ const MintOptions: React.FC = () => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [longPrice, setLongPrice] = useState<number | string>(1);
     const [shortPrice, setShortPrice] = useState<number | string>(1);
     const [longAmount, setLongAmount] = useState<number | string>('');
@@ -101,6 +98,7 @@ const MintOptions: React.FC = () => {
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const [mintedAmount, setMintedAmount] = useState<number | string>('');
     const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
+    const marketFees = optionsMarket.fees;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -134,15 +132,8 @@ const MintOptions: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const [allowance, fees] = await Promise.all([
-                    SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address),
-                    binaryOptionsMarketManagerContract.fees(),
-                ]);
+                const allowance = await SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address);
                 setAllowance(!!bigNumberFormatter(allowance));
-                setMarketFees({
-                    creator: fees.creatorFee / 1e18,
-                    pool: fees.poolFee / 1e18,
-                });
             } catch (e) {
                 console.log(e);
             }
@@ -541,12 +532,7 @@ const MintOptions: React.FC = () => {
 
     useEffect(() => {
         setMintedAmount(
-            marketFees
-                ? Number(
-                      Number(amount) -
-                          (INCLUDE_MINTING_FEES ? Number(amount) * (marketFees.creator + marketFees.pool) : 0)
-                  )
-                : 0
+            marketFees ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)) : 0
         );
     }, [amount, marketFees]);
 
@@ -781,7 +767,7 @@ const MintOptions: React.FC = () => {
             <Divider style={{ marginTop: 4 }} />
 
             <FeeSummaryContainer className="mintTab__summary">
-                {INCLUDE_MINTING_FEES && (
+                {marketFees && (marketFees.creator > 0 || marketFees.pool > 0) && (
                     <>
                         <MintingSummaryItem>
                             <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>

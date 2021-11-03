@@ -5,7 +5,7 @@ export const priceFeedContract = {
         [NetworkId.Mainnet]: 'TBD',
         [NetworkId.Ropsten]: '0x4a1e5AF88f39Ad09BC3fAc3563B77F4f8A55F3Da',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x1521ed0AE5B8e6d34A7Fe2E22cA8Cd4aAbc354b8',
+        [NetworkId.Kovan]: '0x750dCAdcA8e9e7f9702c85383119ea8034450993',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
