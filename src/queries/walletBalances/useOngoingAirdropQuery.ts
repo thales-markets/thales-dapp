@@ -6,6 +6,8 @@ import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { StakingReward } from 'types/token';
 import { getOngoingAirdropHashesURL } from 'utils/token';
 
+const BALANCE_THRESHOLD = 0.0001;
+
 const useOngoingAirdropQuery = (
     walletAddress: string,
     networkId: NetworkId,
@@ -41,15 +43,19 @@ const useOngoingAirdropQuery = (
                 closingDate: Number(lastPeriodTimeStamp) * 1000 + Number(durationPeriod) * 1000,
             };
             if (ongoingAirdropHash) {
+                const balance = bigNumberFormatter(ongoingAirdropHash.balance);
+                const previousBalance = bigNumberFormatter(ongoingAirdropHash.previousBalance || 0);
+                const stakingBalance = bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0);
+                const snxBalance =
+                    bigNumberFormatter(ongoingAirdropHash.balance) -
+                    bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0) -
+                    bigNumberFormatter(ongoingAirdropHash.previousBalance || 0);
                 airdrop.reward = {
                     rawBalance: ongoingAirdropHash.balance,
-                    balance: bigNumberFormatter(ongoingAirdropHash.balance),
-                    previousBalance: bigNumberFormatter(ongoingAirdropHash.previousBalance || 0),
-                    stakingBalance: bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0),
-                    snxBalance:
-                        bigNumberFormatter(ongoingAirdropHash.balance) -
-                        bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0) -
-                        bigNumberFormatter(ongoingAirdropHash.previousBalance || 0),
+                    balance,
+                    previousBalance,
+                    stakingBalance,
+                    snxBalance: snxBalance < BALANCE_THRESHOLD ? 0 : BALANCE_THRESHOLD,
                     index: ongoingAirdropHash.index,
                     proof: ongoingAirdropHash.proof,
                 };
