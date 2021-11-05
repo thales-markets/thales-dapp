@@ -922,10 +922,17 @@
             "ratio": "Ratio"
         },
         "royale": {
+            "footer": {
+                "price": "Price",
+                "reward-per-player": "Reward per player",
+                "players-alive": "Players alive"
+            },
             "battle": {
                 "round": "Round",
                 "will-be": "Will Be",
-                "time-left": "Time left in round"
+                "time-left-for-positioning": "Time left for positioning",
+                "time-left-in-round": "Time left in round",
+                "close-round": "Close round"
             }
         }
     }

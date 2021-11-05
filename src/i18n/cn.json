@@ -925,7 +925,15 @@
             "battle": {
                 "will-be": "将会",
                 "round": "圆形的",
-                "time-left": "回合剩余时间"
+                "time-left": "回合剩余时间",
+                "time-left-in-round": "回合剩余时间",
+                "time-left-for-positioning": "定位剩余时间",
+                "close-round": "关闭回合"
+            },
+            "footer": {
+                "price": "价钱",
+                "players-alive": "活着的玩家",
+                "reward-per-player": "每位玩家的奖励"
             }
         }
     }
