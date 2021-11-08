@@ -58,16 +58,18 @@ const ThalesRoyal: React.FC = () => {
 
                 <InfoSection>
                     <div>
-                        <span>ETH {t('options.royale.footer.price')}:</span>
+                        <span>
+                            {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                        </span>
                         <span>{ethPrice}$</span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.reward-per-player')}:</span>
-                        <span>10000 THALES</span>
+                        <span>{10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)} THALES</span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.players-alive')}:</span>
-                        <span>1/2</span>
+                        <span>{thalesRoyalData?.alivePlayers?.length + ' / ' + thalesRoyalData?.players?.length}</span>
                     </div>
                 </InfoSection>
             </Footer>

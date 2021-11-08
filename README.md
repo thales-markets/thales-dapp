@@ -50,7 +50,7 @@ This step is needed only if you wish to contribute to the project.
 
 On every commit a pre-commit hook is triggered to translate missing values from the en.json located in src/i18n.
 
-In order for this to work a Google Cloud account is needed and a system environment variable needs to be set pointing 
+In order for this to work a Google Cloud account is needed and a system environment variable needs to be set pointing
 to a locally stored json provided by Google.
 
 Full Guide: https://github.com/googleapis/nodejs-translate#before-you-begin

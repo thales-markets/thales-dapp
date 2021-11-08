@@ -79,7 +79,7 @@ const renderRounds = (
                           <CurrentRoundText>{index}</CurrentRoundText>
                       </div>
                       <div>
-                          <CurrentRoundTitle>{`${token} ${t('options.royale.battle.will-be')}`}</CurrentRoundTitle>
+                          <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
                           <CurrentRoundText>{`${targetPrice}$`}</CurrentRoundText>
                       </div>
                       <div>
@@ -283,7 +283,7 @@ const LongButton = styled.button<{ selected?: boolean }>`
     border: ${(props) => (props.selected ? '5px solid #59cda3' : '5px solid #e5e5e5')};
     box-sizing: border-box;
     box-shadow: inset 0 4px 30px #137b9b;
-    color: white;
+    color: ${(props) => (props.selected ? '#59cda3' : 'white')};
     font-size: 55px;
     cursor: pointer;
     &:disabled {
@@ -315,14 +315,14 @@ const ShortButton = styled.button<{ selected?: boolean }>`
     }
 `;
 
-const Circle = styled.div<{ disabled?: boolean }>`
+const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
     width: 40px;
     height: 40px;
     border-radius: 50px;
     background: transparent;
     border: 4px solid #e5e5e5;
     box-sizing: border-box;
-    color: white;
+    color: ${(props) => (props.selected ? '#e5e5e5' : 'white')};
 `;
 
 export default BattleRoyale;

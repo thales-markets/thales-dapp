@@ -933,7 +933,20 @@
             "footer": {
                 "price": "价钱",
                 "players-alive": "活着的玩家",
-                "reward-per-player": "每位玩家的奖励"
+                "reward-per-player": "每位玩家的奖励",
+                "current": "当前的"
+            },
+            "scoreboard": {
+                "player-no": "玩家编号：",
+                "starts": "Thales Royale 开始于：",
+                "info4": "猜对的人晋级下一轮。进入最后一轮的玩家平分奖金。",
+                "info6": "<bold>祝你好运，让战斗开始！</bold>",
+                "blog": "[泰雷兹皇家博文]",
+                "info2": "Thales Royale 是一个 <bold>连续 7 轮的猜谜游戏。</bold>注册期结束后，第一轮开始，参与者会看到 3 个参数：资产、执行价格和非常限时罢工日期。",
+                "question": "您有能力击败比赛并进入最后一轮吗？",
+                "info1": "在这场史诗般的预测大战中向我们展示：<bold>Thales Royale</bold>",
+                "info5": "所有<bold>信息、规则以及详细的回合和奖品结构</bold>都可以在这里找到：",
+                "info3": "根据这些信息，参与者<bold>必须选择他们认为当前价格会高于（<triangle />）还是低于（<circle />）</bold> 执行日期的执行价格。"
             }
         }
     }
