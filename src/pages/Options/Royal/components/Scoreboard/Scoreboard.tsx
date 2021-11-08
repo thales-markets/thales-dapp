@@ -147,14 +147,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         </FlexDivCentered>
                     ))}
             </TableWrapper>
-            <Text className="text-m white">
-                Alive players:{' '}
-                {royaleData ? royaleData.alivePlayers.length + ' / ' + royaleData.players.length : 0 + ' / ' + 0}
-            </Text>
-
-            <Text className="text-m white">
-                Round: {royaleData ? royaleData.round + ' / ' + royaleData.rounds : 0 + ' / ' + 0}{' '}
-            </Text>
         </Wrapper>
     );
 };
