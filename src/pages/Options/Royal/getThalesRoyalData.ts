@@ -54,7 +54,7 @@ export const getIsPlayerSignedUp = async (walletAddress: string) => {
 };
 
 export const getDiscordData = async () => {
-    const baseUrl = 'http://localhost:3002/thales-royale/';
+    const baseUrl = 'https://api.thales.market/thales-royale/';
     const response = await fetch(baseUrl);
     const result = JSON.parse(await response.text());
     return result;

@@ -65,7 +65,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                                 : avatar
                         }
                     />
-                    <InfoText>{t('options.royale.scoreboard.player-no')}</InfoText>
+                    <InfoText>
+                        {t('options.royale.scoreboard.player-no')}
+                        {' #'}
+                        {(royaleData.players as any).indexOf(walletAddress) + 1}
+                    </InfoText>
                 </FlexDiv>
                 <FlexDivColumn style={{ margin: '20px 0' }}>
                     <FlexContainer>
