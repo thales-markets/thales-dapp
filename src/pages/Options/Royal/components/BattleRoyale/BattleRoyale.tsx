@@ -41,7 +41,7 @@ const renderRounds = (
     useEffect(() => {
         const wrapper = document.getElementById('battle-royale-wrapper');
         if (wrapper && round > 2) {
-            wrapper.scrollLeft = (round - 2) * 339;
+            wrapper.scrollLeft = (round - 2) * 367;
         }
     }, [round]);
 
@@ -97,7 +97,7 @@ const renderRounds = (
                       <ShortButton
                           selected={roundsInformation[index - 1].positionInRound === 1}
                           onClick={vote(1)}
-                          disabled={!timeLeftForPositioning}
+                          disabled={!timeLeftForPositioning || !isPlayerAlive}
                       >
                           <Circle disabled={!timeLeftForPositioning || !isPlayerAlive} />
                       </ShortButton>
@@ -174,7 +174,12 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
                     <></>
                 )}
             </CardWrapper>
-            <Button disabled={closeRoundButtonDisabled} className="primary" onClick={closeRound}>
+            <Button
+                style={{ zIndex: 1000 }}
+                disabled={closeRoundButtonDisabled}
+                className="primary"
+                onClick={closeRound}
+            >
                 {t('options.royale.battle.close-round')}
             </Button>
         </>
