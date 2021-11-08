@@ -937,6 +937,8 @@
             },
             "scoreboard": {
                 "starts": "Thales Royale Starts In:",
+                "round-starts": "Next round starts in:",
+                "ends": "Thales Royale Ends In:",
                 "question": "Do you have what it takes to beat the competition and reach the final round?",
                 "info1": "Show us in this epic predictions battle: <bold>Thales Royale</bold>",
                 "info2": "Thales Royale is a <bold>sequential guessing game played in 7 rounds.</bold> After the sign-up period ends, the first round starts, and participants are presented with 3 parameters: An asset, a strike price, and a very close-in-time strike date.",

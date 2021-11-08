@@ -1,5 +1,5 @@
-import { ThalesRoyalData } from '../../getThalesRoyalData';
-import React from 'react';
+import { getDiscordData, getIsPlayerSignedUp, signUp, startRoyale, ThalesRoyalData } from '../../getThalesRoyalData';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv } from 'theme/common';
 import styled from 'styled-components';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -19,6 +19,38 @@ type ScoreboardProps = {
 
 const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const [discordUsers, setDiscordUsers] = useState(new Map());
+    const [isPlayerSignedUp, setIsPlayerSignedUp] = useState(false);
+
+    useEffect(() => {
+        getDiscordData().then((data) => setDiscordUsers(new Map(data)));
+    }, []);
+
+    useEffect(() => {
+        if (walletAddress) {
+            getIsPlayerSignedUp(walletAddress).then((data) => {
+                if (Number(data) !== 0) {
+                    setIsPlayerSignedUp(true);
+                }
+            });
+        }
+    }, [walletAddress]);
+
+    const { verifiedPlayers, unverifiedPlayers } = useMemo(() => {
+        const verifiedPlayers: any = [];
+        const unverifiedPlayers: any = [];
+        if (discordUsers.size > 0 && walletAddress) {
+            royaleData.players.map((player: any) => {
+                if (discordUsers.has(player.toLowerCase())) {
+                    verifiedPlayers.push(player.toLowerCase());
+                } else {
+                    unverifiedPlayers.push(player.toLowerCase());
+                }
+            });
+        }
+        return { verifiedPlayers, unverifiedPlayers };
+    }, [discordUsers, walletAddress]);
+
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
     return (
@@ -26,13 +58,23 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             <Intro royaleData={royaleData} />
             <UserWrapper>
                 <FlexDiv style={{ alignItems: 'center' }}>
-                    <UserAvatar src={avatar} />
+                    <UserAvatar
+                        src={
+                            discordUsers.get(walletAddress?.toLowerCase())
+                                ? discordUsers.get(walletAddress?.toLowerCase()).avatar
+                                : avatar
+                        }
+                    />
                     <InfoText>{t('options.royale.scoreboard.player-no')}</InfoText>
                 </FlexDiv>
                 <FlexDivColumn style={{ margin: '20px 0' }}>
                     <FlexContainer>
                         <InfoText>{t('options.leaderboard.display-name')}:</InfoText>
-                        <InputWrapper>Titan</InputWrapper>
+                        <InputWrapper>
+                            {discordUsers.get(walletAddress?.toLowerCase())
+                                ? discordUsers.get(walletAddress?.toLowerCase()).name
+                                : ''}
+                        </InputWrapper>
                     </FlexContainer>
                     <FlexContainer>
                         <InfoText>{t('options.leaderboard.address')}:</InfoText>
@@ -46,12 +88,65 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     </FlexContainer>
                 </FlexDivColumn>
                 <FlexDivCentered>
-                    <Button>
-                        Verify <Discord src={discord} />
-                    </Button>
+                    {!discordUsers.get(walletAddress?.toLowerCase()) ? (
+                        <Button>
+                            Verify <Discord src={discord} />
+                        </Button>
+                    ) : isPlayerSignedUp ? (
+                        <div></div>
+                    ) : royaleData.signUpPeriod < new Date() ? (
+                        <span style={{ color: 'white' }}>Sign Up has expired</span>
+                    ) : (
+                        <Button onClick={signUp.bind(this, setIsPlayerSignedUp)}>Sign Up</Button>
+                    )}
                 </FlexDivCentered>
             </UserWrapper>
-            <TableWrapper></TableWrapper>
+            <TableWrapper>
+                {verifiedPlayers.map((user: string, key: number) => (
+                    <FlexDivCentered key={key} style={{ marginBottom: 12 }}>
+                        <UserAvatar src={discordUsers.get(user.toLowerCase()).avatar} />
+                        <InputWrapper style={{ marginRight: 6 }}>
+                            {discordUsers.get(user.toLowerCase()).name}
+                        </InputWrapper>
+                        <InputWrapper style={{ marginLeft: 6 }}>
+                            {truncateAddress(
+                                user,
+                                truncateAddressNumberOfCharacters,
+                                truncateAddressNumberOfCharacters
+                            )}
+                        </InputWrapper>
+                    </FlexDivCentered>
+                ))}
+
+                {unverifiedPlayers.map((user: string, key: number) => (
+                    <FlexDivCentered key={key} style={{ marginBottom: 12, opacity: 0.7 }}>
+                        <UserAvatar src={avatar} />
+                        <InputWrapper style={{ marginRight: 6 }}>Unnamed</InputWrapper>
+                        <InputWrapper style={{ marginLeft: 6 }}>
+                            {truncateAddress(
+                                user,
+                                truncateAddressNumberOfCharacters,
+                                truncateAddressNumberOfCharacters
+                            )}
+                        </InputWrapper>
+                    </FlexDivCentered>
+                ))}
+                {Array.from(discordUsers)
+                    .filter((user) => !isUserSignedUp(royaleData.players, user[0]))
+                    .map((user: any, key: number) => (
+                        <FlexDivCentered key={key} style={{ marginBottom: 12, opacity: 0.3 }}>
+                            <UserAvatar src={user[1].avatar} />
+                            <InputWrapper style={{ marginRight: 6 }}>{user[1].name}</InputWrapper>
+                            <InputWrapper style={{ marginLeft: 6 }}>
+                                {truncateAddress(
+                                    user[0],
+                                    truncateAddressNumberOfCharacters,
+                                    truncateAddressNumberOfCharacters
+                                )}
+                            </InputWrapper>
+                        </FlexDivCentered>
+                    ))}
+            </TableWrapper>
             <Text className="text-m white">
                 Alive players:{' '}
                 {royaleData ? royaleData.alivePlayers.length + ' / ' + royaleData.players.length : 0 + ' / ' + 0}
@@ -62,6 +157,10 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             </Text>
         </Wrapper>
     );
+};
+
+const isUserSignedUp = (players: [], user: string) => {
+    return players.filter((player: any) => player.toLowerCase() === user).length > 0;
 };
 
 const UserWrapper = styled.div`
@@ -80,6 +179,7 @@ const UserWrapper = styled.div`
 
 const Button = styled.button`
     align-items: center;
+    cursor: pointer;
     display: flex;
     font-family: Sansation Light !important;
     font-style: normal;
@@ -99,6 +199,7 @@ const UserAvatar = styled(Image)`
     width: 44px;
     height: 44px;
     margin-right: 14px;
+    border-radius: 50%50%;
 `;
 
 const Discord = styled(Image)`
@@ -141,12 +242,48 @@ const TableWrapper = styled.div`
 
 const Intro: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const { t } = useTranslation();
+
+    const getTitle = () => {
+        if (royaleData.round === 0) {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.starts')}</Title>
+                    {royaleData.signUpPeriod < new Date() ? (
+                        <Button onClick={startRoyale} style={{ margin: '30px auto', fontSize: 30, lineHeight: '30px' }}>
+                            Start Thales Royale
+                        </Button>
+                    ) : (
+                        <SubTitle>
+                            <TimeRemaining end={royaleData.signUpPeriod} showFullCounter />
+                        </SubTitle>
+                    )}
+                </>
+            );
+        } else if (royaleData.round === royaleData.rounds) {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.ends')}</Title>
+                    <SubTitle>
+                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
+                    </SubTitle>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.round-starts')}</Title>
+                    <SubTitle>
+                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
+                        <span> RD{royaleData.round + 1}</span>
+                    </SubTitle>
+                </>
+            );
+        }
+    };
+
     return (
         <>
-            <Title>{t('options.royale.scoreboard.starts')}</Title>
-            <SubTitle>
-                <TimeRemaining end={royaleData.signUpPeriod} showFullCounter />
-            </SubTitle>
+            {getTitle()}
             <Question> {t('options.royale.scoreboard.question')} </Question>
             <InfoText style={{ margin: '14px 0px' }}>
                 <Trans i18nKey="options.royale.scoreboard.info1" components={{ bold: <strong /> }} />

@@ -45,7 +45,50 @@ export const getThalesRoyalData = async (walletAddress: string) => {
     return data;
 };
 
-export const signUp = async () => {};
+export const getIsPlayerSignedUp = async (walletAddress: string) => {
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+    const signer = provider.getSigner();
+    const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, signer);
+    const data = await RoyalContract.playerSignedUp(walletAddress);
+    return data;
+};
+
+export const getDiscordData = async () => {
+    const baseUrl = 'http://localhost:3002/thales-royale/';
+    const response = await fetch(baseUrl);
+    const result = JSON.parse(await response.text());
+    return result;
+};
+
+export const signUp = async (setSignedUp: any) => {
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+    const signer = provider.getSigner();
+    const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, signer);
+    try {
+        const tx = await RoyalContract.signUp();
+        console.log(tx);
+        const res = await tx.wait();
+        console.log(res);
+        setSignedUp(true);
+    } catch (e) {
+        console.log(e);
+        setSignedUp(false);
+    }
+};
+
+export const startRoyale = async () => {
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+    const signer = provider.getSigner();
+    const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, signer);
+    try {
+        const tx = await RoyalContract.startRoyale();
+        console.log(tx);
+        const res = await tx.wait();
+        console.log(res);
+    } catch (e) {
+        console.log(e);
+    }
+};
 
 const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: string) => {
     const [
@@ -104,6 +147,6 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         token: parseBytes32String(token),
         roundsInformation,
         creationTime: new Date(Number(creationTime) * 1000),
-        signUpPeriod: new Date(Number(creationTime) + Number(signUpPeriod) * 1000),
+        signUpPeriod: new Date((Number(creationTime) + Number(signUpPeriod)) * 1000),
     };
 };
