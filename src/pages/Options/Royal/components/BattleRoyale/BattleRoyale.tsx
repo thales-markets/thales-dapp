@@ -147,7 +147,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
     useInterval(async () => {
         setTimeLeftForPositioning(getTimeLeft(roundStartTime, roundChoosingLength));
         setTimeLeftInRound(getTimeLeft(roundStartTime, (roundEndTime.getTime() - roundStartTime.getTime()) / 1000));
-        setCloseRoundButtonDisabled(new Date().getTime() < roundEndTime.getTime());
+        setCloseRoundButtonDisabled(new Date().getTime() < roundEndTime.getTime() || !royaleData.round);
     }, 1000);
 
     const closeRound = async () => {
