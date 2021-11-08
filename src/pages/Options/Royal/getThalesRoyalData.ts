@@ -20,6 +20,8 @@ export type ThalesRoyalData = {
     roundEndTime: Date;
     token: string;
     roundsInformation: RoundInformation[];
+    creationTime: Date;
+    signUpPeriod: Date;
 };
 
 let priceFeedContractAddress: string;
@@ -58,6 +60,8 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         roundEndTime,
         token,
         priceFeedAddress,
+        creationTime,
+        signUpPeriod,
     ] = await Promise.all([
         RoyalContract.getPlayers(),
         RoyalContract.getAlivePlayers(),
@@ -70,6 +74,8 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         RoyalContract.roundEndTime(),
         RoyalContract.oracleKey(),
         RoyalContract.priceFeed(),
+        RoyalContract.creationTime(),
+        RoyalContract.signUpPeriod(),
     ]);
 
     priceFeedContractAddress = priceFeedAddress;
@@ -97,5 +103,7 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         roundEndTime: new Date(Number(roundEndTime) * 1000),
         token: parseBytes32String(token),
         roundsInformation,
+        creationTime: new Date(Number(creationTime) * 1000),
+        signUpPeriod: new Date(Number(creationTime) + Number(signUpPeriod) * 1000),
     };
 };
