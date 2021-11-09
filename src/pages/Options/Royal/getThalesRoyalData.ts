@@ -1,11 +1,27 @@
 import { ethers } from 'ethers';
 import thalesRoyal from 'utils/contracts/thalesRoyalContract';
 import priceFeed from 'utils/contracts/priceFeed';
+import thalesData from 'thales-data';
 import { parseBytes32String } from 'utils/formatters/ethers';
 
 type RoundInformation = {
     positionInRound: number;
     targetPriceInRound: string;
+};
+
+export enum UserStatus {
+    RDY,
+    NOTVERIFIED,
+    NOTSIGNED,
+}
+
+export type User = {
+    isAlive: boolean;
+    address: string;
+    number: number;
+    name: string;
+    avatar: string;
+    status: UserStatus;
 };
 
 export type ThalesRoyalData = {
@@ -53,14 +69,64 @@ export const getIsPlayerSignedUp = async (walletAddress: string) => {
     return data;
 };
 
-export const getDiscordData = async () => {
+export const getUsers = async (walletAddress: string | null, setUsers: any, setUser: any) => {
     const baseUrl = 'https://api.thales.market/thales-royale/';
     const response = await fetch(baseUrl);
     const result = JSON.parse(await response.text());
-    return result;
+    const map = new Map(result);
+    const data = await thalesData.binaryOptions.thalesRoyalePlayers({ network: 69 });
+    const verified: User[] = [];
+    const unverified: User[] = [];
+    const unasigned: User[] = [];
+    data.map((player: any, key: number) => {
+        if (map.has(player.id.toLowerCase())) {
+            const discordUser: any = map.get(player.id.toLowerCase());
+            const user = {
+                isAlive: player.isAlive,
+                address: player.id,
+                number: key + 1,
+                name: discordUser.name,
+                avatar: discordUser.avatar,
+                status: UserStatus.RDY,
+            };
+            verified.push(user);
+            if (walletAddress && user.address === walletAddress.toLowerCase()) {
+                setUser(user);
+            }
+            map.delete(player.id.toLowerCase());
+        } else {
+            const user = {
+                isAlive: player.isAlive,
+                address: player.id,
+                name: '',
+                number: key + 1,
+                avatar: '',
+                status: UserStatus.NOTVERIFIED,
+            };
+            if (walletAddress && user.address === walletAddress.toLowerCase()) {
+                setUser(user);
+            }
+            unverified.push(user);
+        }
+    });
+    Array.from(map).map((player: any) => {
+        const user = {
+            isAlive: true,
+            address: player[0],
+            number: 0,
+            name: player[1].name,
+            avatar: player[1].avatar,
+            status: UserStatus.NOTSIGNED,
+        };
+        if (walletAddress && user.address === walletAddress.toLowerCase()) {
+            setUser(user);
+        }
+        unasigned.push(user);
+    });
+    setUsers([...verified, ...unverified, ...unasigned]);
 };
 
-export const signUp = async (setSignedUp: any) => {
+export const signUp = async () => {
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
     const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, signer);
@@ -69,10 +135,8 @@ export const signUp = async (setSignedUp: any) => {
         console.log(tx);
         const res = await tx.wait();
         console.log(res);
-        setSignedUp(true);
     } catch (e) {
         console.log(e);
-        setSignedUp(false);
     }
 };
 

@@ -947,7 +947,13 @@
                 "info5": "All the <bold>information, rules, and detailed rounds & prize structure</bold> can be found here:",
                 "info6": "<bold>Good luck and let the battle begin!</bold>",
                 "blog": "[Thales Royale blog post]",
-                "player-no": "Player №: "
+                "player-no": "Player №: ",
+                "table-header": {
+                    "status": "Status",
+                    "avatar": "Avatar",
+                    "name": "Display name",
+                    "number": "Player №"
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 import ROUTES from 'constants/routes';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -24,10 +24,10 @@ const ThalesRoyal: React.FC = () => {
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
 
-    useMemo(async () => {
+    useEffect(() => {
         if (walletAddress && networkId === 69) {
-            setData(await getThalesRoyalData(walletAddress));
-            setEthPrice(await getEthPrice());
+            getThalesRoyalData(walletAddress).then((data) => setData(data));
+            getEthPrice().then((data) => setEthPrice(data));
         }
     }, [walletAddress, networkId, fetchNewData]);
 
@@ -78,7 +78,7 @@ const ThalesRoyal: React.FC = () => {
 };
 
 const Footer = styled.div`
-    position: absolute;
+    position: fixed;
     bottom: 0;
     display: flex;
     justify-content: space-between;
@@ -102,7 +102,7 @@ const NavButton = styled(FlexDivCentered)`
     line-height: 22px;
     color: #64d9fe;
     > * {
-        font-family: Sansation Light !important;
+        font-family: SansationLight !important;
     }
     &.disabled {
         cursor: not-allowed;
@@ -121,7 +121,7 @@ const InfoSection = styled.div`
     line-height: 30px;
     > * {
         > * {
-            font-family: Sansation Light !important;
+            font-family: SansationLight !important;
             &:nth-child(1) {
                 padding-right: 7px;
             }

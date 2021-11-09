@@ -1,5 +1,5 @@
-import { getDiscordData, getIsPlayerSignedUp, signUp, startRoyale, ThalesRoyalData } from '../../getThalesRoyalData';
-import React, { useEffect, useMemo, useState } from 'react';
+import { getUsers, signUp, startRoyale, ThalesRoyalData, User, UserStatus } from '../../getThalesRoyalData';
+import React, { useEffect, useState } from 'react';
 import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv } from 'theme/common';
 import styled from 'styled-components';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -8,80 +8,83 @@ import triangle from 'assets/images/royale/triangle.svg';
 import circle from 'assets/images/royale/circle.svg';
 import avatar from 'assets/images/royale/avatar.svg';
 import discord from 'assets/images/royale/discord.svg';
+import notVerified from 'assets/images/royale/not-verified.svg';
+import notSigned from 'assets/images/royale/not-signed.svg';
+import dead from 'assets/images/royale/dead.svg';
+import alive from 'assets/images/royale/alive.svg';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { truncateAddress } from 'utils/formatters/string';
+import { LightTooltip } from 'pages/Options/Market/components';
+import { Arrow, ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
+import down from 'assets/images/down.svg';
+import up from 'assets/images/up.svg';
 
 type ScoreboardProps = {
     royaleData: ThalesRoyalData;
 };
 
 const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
+    console.log(royaleData);
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const [discordUsers, setDiscordUsers] = useState(new Map());
-    const [isPlayerSignedUp, setIsPlayerSignedUp] = useState(false);
-
-    useEffect(() => {
-        getDiscordData().then((data) => setDiscordUsers(new Map(data)));
-    }, []);
-
-    useEffect(() => {
-        if (walletAddress) {
-            getIsPlayerSignedUp(walletAddress).then((data) => {
-                if (Number(data) !== 0) {
-                    setIsPlayerSignedUp(true);
-                }
-            });
-        }
-    }, [walletAddress]);
-
-    const { verifiedPlayers, unverifiedPlayers } = useMemo(() => {
-        const verifiedPlayers: any = [];
-        const unverifiedPlayers: any = [];
-        if (discordUsers.size > 0 && walletAddress) {
-            royaleData.players.map((player: any) => {
-                if (discordUsers.has(player.toLowerCase())) {
-                    verifiedPlayers.push(player.toLowerCase());
-                } else {
-                    unverifiedPlayers.push(player.toLowerCase());
-                }
-            });
-        }
-        return { verifiedPlayers, unverifiedPlayers };
-    }, [discordUsers, walletAddress]);
-
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
+    const [user, setUser] = useState<User>();
+    const [users, setUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        getUsers(walletAddress, setUsers, setUser);
+    }, []);
+
+    const getFooter = (user: User | undefined) => {
+        if (user) {
+            if (user.status == UserStatus.RDY) {
+                if (user.isAlive) {
+                    return <></>;
+                } else {
+                    return <DeadText>You have been eliminated</DeadText>;
+                }
+            }
+            if (user.status === UserStatus.NOTSIGNED) {
+                return <Button onClick={signUp}>Sign Up</Button>;
+            }
+            if (user.status === UserStatus.NOTVERIFIED) {
+                return (
+                    <Button>
+                        Verify <Discord src={discord} />
+                    </Button>
+                );
+            }
+        }
+    };
+
+    const HeadCells = [
+        { id: 1, text: t('options.royale.scoreboard.table-header.status'), sortable: true },
+        { id: 2, text: t('options.royale.scoreboard.table-header.avatar'), sortable: false },
+        { id: 3, text: t('options.royale.scoreboard.table-header.name'), sortable: true },
+        { id: 4, text: t('options.royale.scoreboard.table-header.number'), sortable: true },
+    ];
+
     return (
         <Wrapper>
             <Intro royaleData={royaleData} />
             <UserWrapper>
                 <FlexDiv style={{ alignItems: 'center' }}>
-                    <UserAvatar
-                        src={
-                            discordUsers.get(walletAddress?.toLowerCase())
-                                ? discordUsers.get(walletAddress?.toLowerCase()).avatar
-                                : avatar
-                        }
-                    />
-                    <InfoText>
+                    <UserAvatar src={user?.avatar ?? avatar} style={{ marginRight: 14 }} />
+                    <UserLabel>
                         {t('options.royale.scoreboard.player-no')}
                         {' #'}
-                        {(royaleData.players as any).indexOf(walletAddress) + 1}
-                    </InfoText>
+                        {user?.number}
+                    </UserLabel>
                 </FlexDiv>
                 <FlexDivColumn style={{ margin: '20px 0' }}>
                     <FlexContainer>
-                        <InfoText>{t('options.leaderboard.display-name')}:</InfoText>
-                        <InputWrapper>
-                            {discordUsers.get(walletAddress?.toLowerCase())
-                                ? discordUsers.get(walletAddress?.toLowerCase()).name
-                                : ''}
-                        </InputWrapper>
+                        <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
+                        <InputWrapper>{user?.name}</InputWrapper>
                     </FlexContainer>
                     <FlexContainer>
-                        <InfoText>{t('options.leaderboard.address')}:</InfoText>
+                        <UserLabel>{t('options.leaderboard.address')}:</UserLabel>
                         <InputWrapper>
                             {truncateAddress(
                                 walletAddress as any,
@@ -91,73 +94,79 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         </InputWrapper>
                     </FlexContainer>
                 </FlexDivColumn>
-                <FlexDivCentered>
-                    {!discordUsers.get(walletAddress?.toLowerCase()) ? (
-                        <Button>
-                            Verify <Discord src={discord} />
-                        </Button>
-                    ) : isPlayerSignedUp ? (
-                        <div></div>
-                    ) : royaleData.signUpPeriod < new Date() ? (
-                        <span style={{ color: 'white' }}>Sign Up has expired</span>
-                    ) : (
-                        <Button onClick={signUp.bind(this, setIsPlayerSignedUp)}>Sign Up</Button>
-                    )}
-                </FlexDivCentered>
+                {getFooter(user)}
             </UserWrapper>
             <TableWrapper>
-                {verifiedPlayers.map((user: string, key: number) => (
-                    <FlexDivCentered key={key} style={{ marginBottom: 12 }}>
-                        <UserAvatar src={discordUsers.get(user.toLowerCase()).avatar} />
-                        <InputWrapper style={{ marginRight: 6 }}>
-                            {discordUsers.get(user.toLowerCase()).name}
-                        </InputWrapper>
-                        <InputWrapper style={{ marginLeft: 6 }}>
-                            {truncateAddress(
-                                user,
-                                truncateAddressNumberOfCharacters,
-                                truncateAddressNumberOfCharacters
+                <TableRow>
+                    {HeadCells.map((cell, key) => (
+                        <HeadCell key={key}>
+                            {cell.text}{' '}
+                            {cell.sortable ? (
+                                <ArrowsWrapper>
+                                    {false ? (
+                                        <Arrow src={down} />
+                                    ) : (
+                                        <>
+                                            <Arrow src={up} />
+                                            <Arrow src={down} />
+                                        </>
+                                    )}
+                                </ArrowsWrapper>
+                            ) : (
+                                ''
                             )}
-                        </InputWrapper>
-                    </FlexDivCentered>
-                ))}
-
-                {unverifiedPlayers.map((user: string, key: number) => (
-                    <FlexDivCentered key={key} style={{ marginBottom: 12, opacity: 0.7 }}>
-                        <UserAvatar src={avatar} />
-                        <InputWrapper style={{ marginRight: 6 }}>Unnamed</InputWrapper>
-                        <InputWrapper style={{ marginLeft: 6 }}>
-                            {truncateAddress(
-                                user,
-                                truncateAddressNumberOfCharacters,
-                                truncateAddressNumberOfCharacters
-                            )}
-                        </InputWrapper>
-                    </FlexDivCentered>
-                ))}
-                {Array.from(discordUsers)
-                    .filter((user) => !isUserSignedUp(royaleData.players, user[0]))
-                    .map((user: any, key: number) => (
-                        <FlexDivCentered key={key} style={{ marginBottom: 12, opacity: 0.3 }}>
-                            <UserAvatar src={user[1].avatar} />
-                            <InputWrapper style={{ marginRight: 6 }}>{user[1].name}</InputWrapper>
-                            <InputWrapper style={{ marginLeft: 6 }}>
-                                {truncateAddress(
-                                    user[0],
-                                    truncateAddressNumberOfCharacters,
-                                    truncateAddressNumberOfCharacters
-                                )}
-                            </InputWrapper>
-                        </FlexDivCentered>
+                        </HeadCell>
                     ))}
+                </TableRow>
+                {users.map((user: User, key: number) => (
+                    <TableRow key={key} style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}>
+                        <HeadCell>
+                            <Status>
+                                <StatusAvatar src={user.isAlive ? alive : dead} />
+                                <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                            </Status>
+                        </HeadCell>
+                        <HeadCell>{getAvatar(user)}</HeadCell>
+                        <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
+                        <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
+                    </TableRow>
+                ))}
             </TableWrapper>
         </Wrapper>
     );
 };
 
-const isUserSignedUp = (players: [], user: string) => {
-    return players.filter((player: any) => player.toLowerCase() === user).length > 0;
+const getAvatar = (user: User) => {
+    if (user.status === UserStatus.RDY) {
+        return <UserAvatar src={user.avatar} />;
+    }
+    if (user.status === UserStatus.NOTVERIFIED) {
+        return (
+            <LightTooltip title="User is not verified on Discord">
+                <UserAvatar src={notVerified} />
+            </LightTooltip>
+        );
+    }
+
+    if (user.status === UserStatus.NOTSIGNED) {
+        return (
+            <LightTooltip title="User is not registered for Thales Royale">
+                <UserAvatar src={notSigned} />
+            </LightTooltip>
+        );
+    }
 };
+
+const DeadText = styled(Text)`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 26px;
+    color: #64d9fe;
+    text-shadow: 0px 0px 30px #64d9fe;
+    text-align: center;
+`;
 
 const UserWrapper = styled.div`
     display: flex;
@@ -173,11 +182,18 @@ const UserWrapper = styled.div`
     margin-bottom: 14px;
 `;
 
+const UserLabel = styled.p`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    color: #64d9fe;
+`;
+
 const Button = styled.button`
     align-items: center;
     cursor: pointer;
     display: flex;
-    font-family: Sansation Light !important;
+    font-family: SansationLight !important;
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
@@ -194,8 +210,28 @@ const Button = styled.button`
 const UserAvatar = styled(Image)`
     width: 44px;
     height: 44px;
-    margin-right: 14px;
     border-radius: 50%50%;
+`;
+
+const StatusAvatar = styled(Image)`
+    width: 35px;
+    height: 35px;
+    border-radius: 0;
+`;
+
+const Status = styled.span`
+    cursor: default;
+    span {
+        display: none;
+    }
+    &:hover {
+        img {
+            display: none;
+        }
+        span {
+            display: block;
+        }
+    }
 `;
 
 const Discord = styled(Image)`
@@ -212,7 +248,7 @@ const InputWrapper = styled.div`
     height: 28px;
     white-space: nowrap;
     overflow: hidden;
-    font-family: Sansation Light !important;
+    font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
     line-height: 24px;
@@ -234,6 +270,36 @@ const TableWrapper = styled.div`
     box-sizing: border-box;
     border-radius: 5px;
     padding: 30px;
+`;
+
+const TableRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    & > * {
+        text-align: center;
+        margin: 0 !important;
+        min-width: 88px;
+        &:first-child {
+            flex: 1;
+        }
+        &:nth-child(2) {
+            flex: 1;
+        }
+        &:nth-child(3) {
+            flex: 2;
+        }
+        &:last-child {
+            flex: 1;
+        }
+    }
+`;
+
+const HeadCell = styled(Text)`
+    font-family: Sansation !important;
+    font-size: 20px;
+    color: #64d9fe;
 `;
 
 const Intro: React.FC<ScoreboardProps> = ({ royaleData }) => {
@@ -329,12 +395,13 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 510px;
+    width: 570px;
+    z-index: 1;
 `;
 
 const Title = styled(Text)`
     align-self: center;
-    font-family: Sansation Light !important;
+    font-family: SansationLight !important;
     font-style: normal;
     font-weight: 300;
     font-size: 24px;
@@ -363,17 +430,17 @@ const SubTitle = styled(Text)`
 const Question = styled(Text)`
     font-family: VT323 !important;
     font-style: normal;
-    font-weight: bold;
+    font-weight: 400;
     font-size: 25px;
-    line-height: 24px;
+    line-height: 20px;
     text-align: justify;
-    letter-spacing: 2.1px;
+    letter-spacing: -0.4px;
     color: #64d9fe;
 `;
 
 const InfoText = styled(Text)`
     font-weight: 400;
-    font-family: Sansation Light !important;
+    font-family: SansationLight !important;
     text-overflow: ellipsis;
     &,
     strong {
