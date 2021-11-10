@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
 import { LightTooltip } from '../../components';
+import { getSynthName } from 'utils/snxJSConnector';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -22,7 +23,6 @@ import ReactCountryFlag from 'react-country-flag';
 import { getIsAppReady } from 'redux/modules/app';
 import useFlippeningQuery from 'queries/options/useFlippeningQuery';
 import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
-import { getSynthName } from 'utils/currency';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;

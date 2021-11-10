@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
+import snxJSConnector from 'utils/snxJSConnector';
 import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
 import ExploreMarkets from './ExploreMarkets';
@@ -25,6 +26,7 @@ export const Home: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const { synthsMap } = snxJSConnector;
     const openOrdersMap = useMemo(() => {
         if (openOrdersQuery.isSuccess) {
             return openOrdersQuery.data;
@@ -35,10 +37,10 @@ export const Home: React.FC = () => {
             const markets = openOrdersMap
                 ? marketsQuery.data.map((m) => ({ ...m, openOrders: (openOrdersMap as any).get(m.address) }))
                 : marketsQuery.data;
-            return sortOptionsMarkets(markets);
+            return sortOptionsMarkets(markets, synthsMap);
         }
         return [];
-    }, [marketsQuery, openOrdersMap]);
+    }, [marketsQuery, synthsMap, openOrdersMap]);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,

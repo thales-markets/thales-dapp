@@ -17,12 +17,13 @@ import {
 import SearchMarket from '../Home/SearchMarket/SearchMarket';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from 'constants/routes';
-import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
+import { SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsOrders from 'queries/options/useBinaryOptionsOrders';
 import { DisplayOrder, ExtendedOrderItem, HistoricalOptionsMarketInfo } from 'types/options';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import UserFilter from '../Home/ExploreMarkets/UserFilters';
 import { useTranslation } from 'react-i18next';
+import { getSynthName } from 'utils/snxJSConnector';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
@@ -39,7 +40,6 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 import QuickTradingMobile from './QuickTradingMobile';
 import './media.scss';
 import Loader from 'components/Loader';
-import { getSynthName } from 'utils/currency';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',
@@ -220,18 +220,10 @@ const QuickTradingPage: React.FC<any> = () => {
             }
             switch (coinFilter) {
                 case CoinFilterEnum.Bitcoin:
-                    filteredOrders = filteredOrders.filter(
-                        (order) =>
-                            order.market.currencyKey === SYNTHS_MAP.sBTC ||
-                            order.market.currencyKey === CRYPTO_CURRENCY_MAP.BTC
-                    );
+                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sBTC);
                     break;
                 case CoinFilterEnum.Ethereum:
-                    filteredOrders = filteredOrders.filter(
-                        (order) =>
-                            order.market.currencyKey === SYNTHS_MAP.sETH ||
-                            order.market.currencyKey === CRYPTO_CURRENCY_MAP.ETH
-                    );
+                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sETH);
                     break;
             }
             switch (optionFilter) {

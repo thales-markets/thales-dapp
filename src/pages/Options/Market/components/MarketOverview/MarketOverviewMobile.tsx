@@ -5,6 +5,7 @@ import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { LightTooltip } from '../../components';
 import { Content, GreenText, RedText, StyledLink, Title, PriceArrow, Result } from './MarketOverview';
 import { getEtherscanAddressLink } from 'utils/etherscan';
+import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -22,7 +23,6 @@ import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTab
 import { getIsAppReady } from 'redux/modules/app';
 import useFlippeningQuery from 'queries/options/useFlippeningQuery';
 import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
-import { getSynthName } from 'utils/currency';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;

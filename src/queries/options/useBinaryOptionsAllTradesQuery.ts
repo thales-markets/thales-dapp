@@ -71,7 +71,7 @@ const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOpt
                 })
             );
 
-            const optionsMarketsMap = keyBy(sortOptionsMarkets(optionsMarkets), 'address');
+            const optionsMarketsMap = keyBy(sortOptionsMarkets(optionsMarkets, snxJSConnector.synthsMap), 'address');
 
             trades.forEach((trade: ExtendedTrade) => {
                 trade.marketItem = optionsMarketsMap[trade.market];

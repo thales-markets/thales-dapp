@@ -35,9 +35,9 @@ export type Feed = {
 export type Synth = {
     name: string;
     asset: string;
+    category: string;
+    sign: string;
     description: string;
-    category?: string;
-    sign?: string;
     aggregator?: string;
     subclass?: string;
     inverted?: {

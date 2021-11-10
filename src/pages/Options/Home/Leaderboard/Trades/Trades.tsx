@@ -11,12 +11,12 @@ import useBinaryOptionsAllTradesQuery from 'queries/options/useBinaryOptionsAllT
 import TradesTable from './TradesTable';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
+import { getSynthName } from 'utils/snxJSConnector';
 import { USD_SIGN } from 'constants/currency';
 import SearchMarket from '../../SearchMarket';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import Checkbox from 'components/Checkbox';
-import { getSynthName } from 'utils/currency';
 
 enum OrderDirection {
     NONE,

@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow, Image, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
+import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
@@ -22,7 +23,6 @@ import tennis from 'assets/images/tennis.svg';
 import xyz from 'assets/images/xyz.png';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
-import { getSynthName } from 'utils/currency';
 
 type MarketCardMobileProps = {
     optionsMarkets: HistoricalOptionsMarketInfo[];

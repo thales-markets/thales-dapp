@@ -4,7 +4,7 @@ import {
     CRYPTO_CURRENCY_MAP,
     FIAT_CURRENCY_MAP,
     SYNTHS_MAP,
-    currencyKeyToNameMap,
+    currencyKeyToSynthIconMap,
 } from 'constants/currency';
 
 export const isSynth = (currencyKey: CurrencyKey) => !!SYNTHS_MAP[currencyKey];
@@ -18,11 +18,6 @@ export const toInverseSynth = (currencyKey: CurrencyKey) => currencyKey.replace(
 export const toStandardSynth = (currencyKey: CurrencyKey) => currencyKey.replace(/^i/i, 's');
 export const synthToAsset = (currencyKey: CurrencyKey) => currencyKey.replace(/^(i|s)/i, '');
 
-export const getAssetIcon = (currencyKey: CurrencyKey) =>
-    currencyKeyToAssetIconMap[currencyKey] || currencyKeyToAssetIconMap[`s${currencyKey}`];
+export const getAssetIcon = (currencyKey: CurrencyKey) => currencyKeyToAssetIconMap[currencyKey];
 
-export const getSynthName = (currencyKey: string) =>
-    currencyKeyToNameMap[currencyKey] || currencyKeyToNameMap[`s${currencyKey}`] || currencyKey;
-
-export const getSynthAsset = (currencyKey: string) =>
-    SYNTHS_MAP[currencyKey] ? synthToAsset(SYNTHS_MAP[currencyKey]) : currencyKey;
+export const getSynthIcon = (currencyKey: CurrencyKey) => currencyKeyToSynthIconMap[currencyKey];

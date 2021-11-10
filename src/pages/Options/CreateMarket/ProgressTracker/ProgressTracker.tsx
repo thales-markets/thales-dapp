@@ -13,6 +13,10 @@ type ProgressTrackerProps = {
     isAllowing?: boolean;
     isMarketCreated?: boolean;
     isCreating?: boolean;
+    isLongApproved?: boolean;
+    isLongAllowing?: boolean;
+    isShortApproved?: boolean;
+    isShortAllowing?: boolean;
     isLongSubmitted?: boolean;
     isLongSubmitting?: boolean;
     isShortSubmitted?: boolean;
@@ -65,6 +69,61 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     </Label>
                 </FlexDiv>
             )}
+            {props.showLongProcess && (
+                <FlexDiv
+                    className="progress-tracker-step"
+                    style={{ alignItems: 'center', position: 'relative', flex: 1 }}
+                >
+                    <Image
+                        className={props.isLongAllowing ? 'blob' : ''}
+                        src={!props.isMarketCreated ? stateEmpty : props.isLongApproved ? stateComplete : stateCurrent}
+                    ></Image>
+                    <Line
+                        className={
+                            (!props.isMarketCreated && !props.isLongApproved && !props.showShortProcess
+                                ? 'responsive-hide'
+                                : '') +
+                            ' ' +
+                            (props.isLongApproved ? 'fill' : '')
+                        }
+                    ></Line>
+                    <Label className="text-s pale-grey">
+                        {t('options.create-market.progress-tracker.approving', {
+                            currencyKey: SYNTHS_MAP.sLONG,
+                        })}
+                    </Label>
+                </FlexDiv>
+            )}
+
+            {props.showShortProcess && (
+                <FlexDiv
+                    className="progress-tracker-step"
+                    style={{ alignItems: 'center', position: 'relative', flex: 1 }}
+                >
+                    <Image
+                        className={props.isShortAllowing ? 'blob' : ''}
+                        src={
+                            (props.showLongProcess && !props.isLongApproved) || !props.isMarketCreated
+                                ? stateEmpty
+                                : props.isShortApproved
+                                ? stateComplete
+                                : stateCurrent
+                        }
+                    ></Image>
+                    <Line
+                        className={
+                            (!props.isMarketCreated && !props.isShortApproved ? 'responsive-hide' : '') +
+                            ' ' +
+                            (props.isShortApproved ? 'fill' : '')
+                        }
+                    ></Line>
+                    <Label className="text-s pale-grey">
+                        {t('options.create-market.progress-tracker.approving', {
+                            currencyKey: SYNTHS_MAP.sSHORT,
+                        })}
+                    </Label>
+                </FlexDiv>
+            )}
 
             {props.showLongProcess && (
                 <FlexDiv
@@ -73,7 +132,13 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                 >
                     <Image
                         className={props.isLongSubmitting ? 'blob' : ''}
-                        src={!props.isMarketCreated ? stateEmpty : props.isLongSubmitted ? stateComplete : stateCurrent}
+                        src={
+                            props.showShortProcess && !props.isShortApproved
+                                ? stateEmpty
+                                : props.isLongSubmitted
+                                ? stateComplete
+                                : stateCurrent
+                        }
                     ></Image>
                     {props.showShortProcess && <Line className={props.isLongSubmitted ? 'fill' : ''}></Line>}
                     <Label className="text-s pale-grey">
@@ -92,7 +157,7 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = (props) => {
                     <Image
                         className={props.isShortSubmitting ? 'blob' : ''}
                         src={
-                            (props.showLongProcess && !props.isLongSubmitted) || !props.isMarketCreated
+                            (props.showLongProcess && !props.isLongSubmitted) || !props.isShortApproved
                                 ? stateEmpty
                                 : props.isShortSubmitted
                                 ? stateComplete

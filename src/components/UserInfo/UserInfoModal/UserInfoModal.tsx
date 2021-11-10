@@ -7,6 +7,7 @@ import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
+import snxJSConnector from 'utils/snxJSConnector';
 import { sortOptionsMarkets } from 'utils/options';
 import { RootState } from 'redux/rootReducer';
 import { truncateAddress } from 'utils/formatters/string';
@@ -63,10 +64,14 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const [displayName, setName] = useState(currentDisplayName);
 
     const [filter, setFilter] = useState(Filters.MARKETS);
+    const { synthsMap } = snxJSConnector;
 
     const optionsMarkets = useMemo(
-        () => (marketsQuery.isSuccess && Array.isArray(marketsQuery.data) ? sortOptionsMarkets(marketsQuery.data) : []),
-        [marketsQuery]
+        () =>
+            marketsQuery.isSuccess && Array.isArray(marketsQuery.data)
+                ? sortOptionsMarkets(marketsQuery.data, synthsMap)
+                : [],
+        [marketsQuery, synthsMap]
     );
 
     const usersMarkets = useMemo(
