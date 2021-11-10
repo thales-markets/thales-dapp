@@ -55,7 +55,7 @@ const useOngoingAirdropQuery = (
                     balance,
                     previousBalance,
                     stakingBalance,
-                    snxBalance: snxBalance < BALANCE_THRESHOLD ? 0 : BALANCE_THRESHOLD,
+                    snxBalance: snxBalance < BALANCE_THRESHOLD ? 0 : snxBalance,
                     index: ongoingAirdropHash.index,
                     proof: ongoingAirdropHash.proof,
                 };
