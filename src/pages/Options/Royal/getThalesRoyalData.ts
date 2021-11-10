@@ -78,13 +78,17 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
     const verified: User[] = [];
     const unverified: User[] = [];
     const unasigned: User[] = [];
-    data.map((player: any, key: number) => {
+    data.reverse().map((player: any, key: number) => {
+        const isAlive = player.isAlive;
+        const address = player.id;
+        const number = key + 1;
+
         if (map.has(player.id.toLowerCase())) {
             const discordUser: any = map.get(player.id.toLowerCase());
             const user = {
-                isAlive: player.isAlive,
-                address: player.id,
-                number: key + 1,
+                isAlive,
+                address,
+                number,
                 name: discordUser.name,
                 avatar: discordUser.avatar,
                 status: UserStatus.RDY,
@@ -96,10 +100,10 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
             map.delete(player.id.toLowerCase());
         } else {
             const user = {
-                isAlive: player.isAlive,
-                address: player.id,
+                isAlive,
+                address,
                 name: '',
-                number: key + 1,
+                number,
                 avatar: '',
                 status: UserStatus.NOTVERIFIED,
             };
@@ -123,7 +127,7 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
         }
         unasigned.push(user);
     });
-    setUsers([...verified, ...unverified, ...unasigned]);
+    setUsers([...verified, ...unasigned, ...unverified]);
 };
 
 export const signUp = async () => {

@@ -1,5 +1,5 @@
 import { getUsers, signUp, startRoyale, ThalesRoyalData, User, UserStatus } from '../../getThalesRoyalData';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv } from 'theme/common';
 import styled from 'styled-components';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -12,6 +12,8 @@ import notVerified from 'assets/images/royale/not-verified.svg';
 import notSigned from 'assets/images/royale/not-signed.svg';
 import dead from 'assets/images/royale/dead.svg';
 import alive from 'assets/images/royale/alive.svg';
+import next from 'assets/images/royale/next.svg';
+import previous from 'assets/images/royale/previous.svg';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -26,16 +28,25 @@ type ScoreboardProps = {
 };
 
 const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
-    console.log(royaleData);
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
     const [user, setUser] = useState<User>();
     const [users, setUsers] = useState<User[]>([]);
+    const [page, setPage] = useState(1);
+    const showPerPage = 15;
 
     useEffect(() => {
         getUsers(walletAddress, setUsers, setUser);
     }, []);
+
+    const dataForUi = useMemo(() => {
+        if (users.length > 0) {
+            const maxPages = Math.ceil(users.length / showPerPage);
+            const usersToDisplay = users.slice((page - 1) * showPerPage, showPerPage * page);
+            return { maxPages, usersToDisplay };
+        }
+    }, [users, page]);
 
     const getFooter = (user: User | undefined) => {
         if (user) {
@@ -49,14 +60,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             if (user.status === UserStatus.NOTSIGNED) {
                 return <Button onClick={signUp}>Sign Up</Button>;
             }
-            if (user.status === UserStatus.NOTVERIFIED) {
-                return (
-                    <Button>
-                        Verify <Discord src={discord} />
-                    </Button>
-                );
-            }
         }
+        return (
+            <Button>
+                Verify <Discord src={discord} />
+            </Button>
+        );
     };
 
     const HeadCells = [
@@ -118,7 +127,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         </HeadCell>
                     ))}
                 </TableRow>
-                {users.map((user: User, key: number) => (
+                {dataForUi?.usersToDisplay.map((user: User, key: number) => (
                     <TableRow key={key} style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}>
                         <HeadCell>
                             <Status>
@@ -131,6 +140,31 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
                     </TableRow>
                 ))}
+                {dataForUi?.usersToDisplay ? (
+                    <Pagination>
+                        <Image
+                            src={previous}
+                            className={page <= 1 ? 'disabled' : ''}
+                            onClick={() => {
+                                if (page <= 1) return;
+                                setPage(page - 1);
+                            }}
+                        />
+                        <Text>
+                            {page}/{dataForUi?.maxPages}
+                        </Text>
+                        <Image
+                            className={dataForUi && dataForUi.maxPages === page ? 'disabled' : ''}
+                            src={next}
+                            onClick={() => {
+                                if (dataForUi && dataForUi.maxPages === page) return;
+                                setPage(page + 1);
+                            }}
+                        />
+                    </Pagination>
+                ) : (
+                    ''
+                )}
             </TableWrapper>
         </Wrapper>
     );
@@ -156,6 +190,31 @@ const getAvatar = (user: User) => {
         );
     }
 };
+
+const Pagination = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+        width: 28px;
+        height: 24px;
+        &.disabled {
+            opacity: 0.5;
+        }
+    }
+
+    p {
+        font-family: Sansation !important;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 330%;
+        text-align: center;
+        letter-spacing: -0.4px;
+        color: #a1e1b4;
+        margin: 0 10px;
+    }
+`;
 
 const DeadText = styled(Text)`
     font-family: Sansation !important;
@@ -205,6 +264,7 @@ const Button = styled.button`
     border-radius: 20px;
     padding: 6px 15px 6px 20px;
     color: #04045a;
+    margin: auto;
 `;
 
 const UserAvatar = styled(Image)`
