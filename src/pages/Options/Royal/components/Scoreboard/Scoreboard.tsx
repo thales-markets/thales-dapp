@@ -14,6 +14,7 @@ import dead from 'assets/images/royale/dead.svg';
 import alive from 'assets/images/royale/alive.svg';
 import next from 'assets/images/royale/next.svg';
 import previous from 'assets/images/royale/previous.svg';
+import important from 'assets/images/royale/important.svg';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -24,6 +25,7 @@ import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
+import { Modal } from '@material-ui/core';
 
 type ScoreboardProps = {
     royaleData: ThalesRoyalData;
@@ -52,6 +54,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+    const [showPopup, setShowPopup] = useState(false);
     const showPerPage = 15;
 
     useEffect(() => {
@@ -128,7 +131,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             }
         }
         return (
-            <Button>
+            <Button onClick={setShowPopup.bind(this, true)}>
                 Verify <Discord src={discord} />
             </Button>
         );
@@ -137,6 +140,19 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     return (
         <Wrapper>
             <Intro royaleData={royaleData} />
+            <Modal
+                open={showPopup}
+                onClose={() => {
+                    setShowPopup(false);
+                }}
+            >
+                <Popup>
+                    <PopupTitle>To Complete Verification!</PopupTitle>
+                    <PopupImage src={important}></PopupImage>
+                    <PopupDescription>Go to Thales discord and type !verify 0x...</PopupDescription>
+                </Popup>
+            </Modal>
+
             <UserWrapper>
                 <FlexDiv style={{ alignItems: 'center' }}>
                     <UserAvatar src={user?.avatar ?? avatar} style={{ marginRight: 14 }} />
@@ -229,6 +245,48 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     );
 };
 
+const Popup = styled.div`
+    display: flex;
+    position: relative;
+    top: 300px;
+    width: 420px;
+    margin: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #64d9fe;
+    border: 5px solid #64d9fe;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 24px;
+`;
+
+const PopupTitle = styled(Text)`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    line-height: 28px;
+    color: #133326;
+`;
+
+const PopupImage = styled(Image)`
+    width: 60px;
+    height: 60px;
+    margin: 10px 0;
+`;
+
+const PopupDescription = styled(Text)`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 22px;
+    text-align: center;
+    letter-spacing: -0.402542px;
+    color: #133326;
+`;
+
 const getAvatar = (user: User) => {
     if (user.status === UserStatus.RDY) {
         return <UserAvatar src={user.avatar} />;
@@ -270,7 +328,7 @@ const Pagination = styled.div`
         line-height: 330%;
         text-align: center;
         letter-spacing: -0.4px;
-        color: #a1e1b4;
+        color: #64d9fe;
         margin: 0 10px;
     }
 `;
