@@ -20,12 +20,28 @@ import { useSelector } from 'react-redux';
 import { truncateAddress } from 'utils/formatters/string';
 import { LightTooltip } from 'pages/Options/Market/components';
 import { Arrow, ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
+import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
+import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
 
 type ScoreboardProps = {
     royaleData: ThalesRoyalData;
 };
+
+type HeadCell = {
+    id: number;
+    text: string;
+    sortable: boolean;
+};
+
+enum OrderDirection {
+    NONE,
+    ASC,
+    DESC,
+}
+
+const defaultOrderBy = 4;
 
 const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -34,19 +50,69 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const [user, setUser] = useState<User>();
     const [users, setUsers] = useState<User[]>([]);
     const [page, setPage] = useState(1);
+    const [orderBy, setOrderBy] = useState(defaultOrderBy);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const showPerPage = 15;
 
     useEffect(() => {
         getUsers(walletAddress, setUsers, setUser);
     }, []);
 
-    const dataForUi = useMemo(() => {
-        if (users.length > 0) {
+    const usersForUi = useMemo(() => {
+        if (users) {
             const maxPages = Math.ceil(users.length / showPerPage);
-            const usersToDisplay = users.slice((page - 1) * showPerPage, showPerPage * page);
+            let usersToShow: any = [];
+            switch (orderBy) {
+                case 1:
+                    usersToShow = users.sort((a: any, b: any) => {
+                        return orderDirection === OrderDirection.ASC ? a.status - b.status : b.status - a.status;
+                    });
+                    break;
+                case 3:
+                    usersToShow = users.sort((a: any, b: any) => {
+                        return orderDirection === OrderDirection.ASC
+                            ? a.name.localeCompare(b.name)
+                            : b.name.localeCompare(a.name);
+                    });
+                    break;
+
+                case 4:
+                    usersToShow = users.sort((a: any, b: any) => {
+                        return orderDirection === OrderDirection.ASC ? a.number - b.number : b.number - a.number;
+                    });
+                    break;
+            }
+            const usersToDisplay = usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
             return { maxPages, usersToDisplay };
         }
-    }, [users, page]);
+    }, [page, orderBy, orderDirection, users]);
+
+    const HeadCells = [
+        { id: 1, text: t('options.royale.scoreboard.table-header.status'), sortable: true },
+        { id: 2, text: t('options.royale.scoreboard.table-header.avatar'), sortable: false },
+        { id: 3, text: t('options.royale.scoreboard.table-header.name'), sortable: true },
+        { id: 4, text: t('options.royale.scoreboard.table-header.number'), sortable: true },
+    ];
+    const calcDirection = (cell: HeadCell) => {
+        if (orderBy === cell.id) {
+            switch (orderDirection) {
+                case OrderDirection.NONE:
+                    setOrderDirection(OrderDirection.DESC);
+                    break;
+                case OrderDirection.DESC:
+                    setOrderDirection(OrderDirection.ASC);
+                    break;
+                case OrderDirection.ASC:
+                    setOrderDirection(OrderDirection.DESC);
+                    setOrderBy(defaultOrderBy);
+                    break;
+            }
+        } else {
+            setOrderBy(parseInt(cell.id.toString()));
+            setOrderDirection(OrderDirection.DESC);
+            setPage(1);
+        }
+    };
 
     const getFooter = (user: User | undefined) => {
         if (user) {
@@ -67,13 +133,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             </Button>
         );
     };
-
-    const HeadCells = [
-        { id: 1, text: t('options.royale.scoreboard.table-header.status'), sortable: true },
-        { id: 2, text: t('options.royale.scoreboard.table-header.avatar'), sortable: false },
-        { id: 3, text: t('options.royale.scoreboard.table-header.name'), sortable: true },
-        { id: 4, text: t('options.royale.scoreboard.table-header.number'), sortable: true },
-    ];
 
     return (
         <Wrapper>
@@ -108,12 +167,14 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             <TableWrapper>
                 <TableRow>
                     {HeadCells.map((cell, key) => (
-                        <HeadCell key={key}>
+                        <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
                             {cell.text}{' '}
-                            {cell.sortable ? (
+                            {cell.sortable && (
                                 <ArrowsWrapper>
-                                    {false ? (
-                                        <Arrow src={down} />
+                                    {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                        <Arrow
+                                            src={orderDirection === OrderDirection.ASC ? upSelected : downSelected}
+                                        />
                                     ) : (
                                         <>
                                             <Arrow src={up} />
@@ -121,13 +182,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                                         </>
                                     )}
                                 </ArrowsWrapper>
-                            ) : (
-                                ''
                             )}
                         </HeadCell>
                     ))}
                 </TableRow>
-                {dataForUi?.usersToDisplay.map((user: User, key: number) => (
+                {usersForUi?.usersToDisplay.map((user: User, key: number) => (
                     <TableRow key={key} style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}>
                         <HeadCell>
                             <Status>
@@ -140,7 +199,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
                     </TableRow>
                 ))}
-                {dataForUi?.usersToDisplay ? (
+                {usersForUi?.usersToDisplay ? (
                     <Pagination>
                         <Image
                             src={previous}
@@ -151,13 +210,13 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                             }}
                         />
                         <Text>
-                            {page}/{dataForUi?.maxPages}
+                            {page}/{usersForUi?.maxPages}
                         </Text>
                         <Image
-                            className={dataForUi && dataForUi.maxPages === page ? 'disabled' : ''}
+                            className={usersForUi && usersForUi.maxPages === page ? 'disabled' : ''}
                             src={next}
                             onClick={() => {
-                                if (dataForUi && dataForUi.maxPages === page) return;
+                                if (usersForUi && usersForUi.maxPages === page) return;
                                 setPage(page + 1);
                             }}
                         />
