@@ -203,7 +203,7 @@ const Card = styled.div`
     justify-content: center;
     min-width: 339px;
     height: 504px;
-    border: 4.36032px solid #64d9fe;
+    border: 4.36032px solid var(--color);
     box-sizing: border-box;
     border-radius: 4.36032px;
     margin: 15px;
@@ -214,19 +214,19 @@ const Card = styled.div`
 const CurrentRound = styled(Card)`
     background: linear-gradient(180.36deg, #04045a -25.81%, #030344 52.02%, #000000 153.83%);
     box-shadow: 0px 0px 80.4482px rgba(161, 225, 180, 0.8);
-    color: #64d9fe;
+    color: var(--color);
     justify-content: space-evenly;
 `;
 
 const PrevRound = styled(Card)`
     filter: drop-shadow(0px 0px 80.4482px rgba(161, 225, 180, 0.8));
     opacity: 0.15;
-    color: #64d9fe;
+    color: var(--color);
 `;
 
 const NextRound = styled(Card)`
-    background: #64d9fe;
-    border: 4.36032px solid #64d9fe;
+    background: var(--color);
+    border: 4.36032px solid var(--color);
     box-sizing: border-box;
     box-shadow: 0px 0px 80.4482px rgba(161, 225, 180, 0.8);
     border-radius: 4.36032px;

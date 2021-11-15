@@ -1,0 +1,10 @@
+.icon {
+    display: inline-block;
+    font-family: Icons !important;
+    color: white;
+    font-size: 20px;
+}
+
+.icon_logo:before {
+    content: '\f004';
+}

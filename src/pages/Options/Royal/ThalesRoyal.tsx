@@ -13,6 +13,11 @@ import useInterval from '../../../hooks/useInterval';
 import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 
+export enum Theme {
+    Light,
+    Dark,
+}
+
 const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
 
@@ -22,6 +27,7 @@ const ThalesRoyal: React.FC = () => {
     const [showBattle, setShowBattle] = useState<boolean>(false);
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
+    const [theme, setTheme] = useState(Theme.Light);
 
     useEffect(() => {
         if (walletAddress && networkId === 69) {
@@ -35,9 +41,9 @@ const ThalesRoyal: React.FC = () => {
     }, 10000);
 
     return (
-        <Background>
+        <RoyaleBackground className={theme === Theme.Light ? 'light-theme' : 'dark-theme'} id="royale-background">
             <Wrapper style={{ position: 'relative', paddingLeft: 30 }}>
-                <Header></Header>
+                <Header theme={theme} setTheme={setTheme}></Header>
                 {!showBattle && thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
                 {showBattle && thalesRoyalData && (
                     <BattleRoyale royaleData={thalesRoyalData} setFetchNewData={setFetchNewData}></BattleRoyale>
@@ -72,9 +78,23 @@ const ThalesRoyal: React.FC = () => {
                     </div>
                 </InfoSection>
             </Footer>
-        </Background>
+        </RoyaleBackground>
     );
 };
+
+const RoyaleBackground = styled(Background)`
+    &.light-theme {
+        --color-background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+        --color-wrapper: #04045a;
+        --color: #64d9fe;
+    }
+    &.dark-theme {
+        --color-background: linear-gradient(180deg, #1e4c39 0%, #07150f 117.72%);
+        --color-wrapper: #133326;
+        --color: #a1e1b4;
+    }
+    background: var(--color-background);
+`;
 
 const Footer = styled.div`
     position: fixed;
@@ -99,7 +119,7 @@ const NavButton = styled(FlexDivCentered)`
     font-weight: 300;
     font-size: 20px;
     line-height: 22px;
-    color: #64d9fe;
+    color: var(--color);
     > * {
         font-family: SansationLight !important;
     }
@@ -113,7 +133,7 @@ const NavButton = styled(FlexDivCentered)`
 `;
 
 const InfoSection = styled.div`
-    color: #64d9fe;
+    color: var(--color);
     font-style: normal;
     font-weight: 300;
     font-size: 20px;

@@ -152,6 +152,11 @@ table {
 }
 
 @font-face {
+    font-family: 'Icons';
+    src: local('Icons'), url(../assets/fonts/ThalesIcons/icons.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'SansationLight';
     src: local('SansationLight'), url(../assets/fonts/SansationLight/Sansation-Light.ttf) format('truetype');
 }
@@ -221,3 +226,4 @@ a {
 @import './hero.css';
 @import './medias/market-options.css';
 @import './medias/landing-page.css';
+@import './icons.css';

@@ -8,8 +8,14 @@ import avatar from 'assets/images/royale/avatar.svg';
 import logo from 'assets/images/royale/logo.svg';
 import royaleLogo from 'assets/images/royale/royale-logo.svg';
 import { truncateAddress } from 'utils/formatters/string';
+import { Theme } from '../../ThalesRoyal';
 
-const RoyaleHeader: React.FC = () => {
+type RoyaleHeaderInput = {
+    theme: Theme;
+    setTheme: (data: any) => void;
+};
+
+const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const [balance, setBalance] = useState(0);
     useEffect(() => {
@@ -28,13 +34,24 @@ const RoyaleHeader: React.FC = () => {
         <Header>
             <ThalesLogo src={logo} />
             <InfoWrapper>
-                <UserWrapper>
+                <BorderedWrapper>
                     <UserAvatar src={avatar} />
                     <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
                     <UserText> {balance} Eth </UserText>
-                </UserWrapper>
+                </BorderedWrapper>
                 <UtilWrapper>
                     <RoyaleLogo src={royaleLogo} />
+                    <BorderedWrapper
+                        style={{
+                            flexDirection: theme === Theme.Light ? 'row' : 'row-reverse',
+                            cursor: 'pointer',
+                            maxWidth: 70,
+                        }}
+                        onClick={setTheme.bind(this, theme === Theme.Light ? Theme.Dark : Theme.Light)}
+                    >
+                        <ThemeSelector> {theme === Theme.Light ? 'B' : 'G'}</ThemeSelector>
+                        <ThemeText>Theme</ThemeText>
+                    </BorderedWrapper>
                 </UtilWrapper>
             </InfoWrapper>
         </Header>
@@ -48,6 +65,27 @@ const Header = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+`;
+
+const ThemeSelector = styled.div`
+    background: var(--color);
+    color: var(--color-wrapper);
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+`;
+
+const ThemeText = styled.p`
+    font-family: SensationLight !important;
+    font-size: 10px;
+    color: var(--color);
+    text-transform: uppercase;
+    letter-spacing: -0.4px;
+    font-weight: 300;
 `;
 
 const UtilWrapper = styled.div`
@@ -73,11 +111,11 @@ const RoyaleLogo = styled.img`
     height: 25px;
     object-fit: contain;
 `;
-const UserWrapper = styled.div`
+const BorderedWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--color);
     box-sizing: border-box;
     border-radius: 20px;
     height: 28px;
@@ -95,12 +133,12 @@ const UserText = styled.p`
     font-weight: normal;
     font-size: 12px;
     line-height: 14px;
-    color: #64d9fe;
+    color: var(--color);
 
     margin: 0 4px;
 
     &:last-child {
-        border-left: 1px solid #64d9fe;
+        border-left: 1px solid var(--color);
         padding-left: 8px;
     }
 `;

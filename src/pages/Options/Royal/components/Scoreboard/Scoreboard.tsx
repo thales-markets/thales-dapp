@@ -254,8 +254,8 @@ const Popup = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #64d9fe;
-    border: 5px solid #64d9fe;
+    background: var(--color);
+    border: 5px solid var(--color);
     box-sizing: border-box;
     border-radius: 5px;
     padding: 24px;
@@ -267,7 +267,7 @@ const PopupTitle = styled(Text)`
     font-weight: bold;
     font-size: 25px;
     line-height: 28px;
-    color: #133326;
+    color: var(--color-wrapper); ;
 `;
 
 const PopupImage = styled(Image)`
@@ -284,7 +284,7 @@ const PopupDescription = styled(Text)`
     line-height: 22px;
     text-align: center;
     letter-spacing: -0.402542px;
-    color: #133326;
+    color: var(--color-wrapper);
 `;
 
 const getAvatar = (user: User) => {
@@ -328,7 +328,7 @@ const Pagination = styled.div`
         line-height: 330%;
         text-align: center;
         letter-spacing: -0.4px;
-        color: #64d9fe;
+        color: var(--color);
         margin: 0 10px;
     }
 `;
@@ -339,8 +339,8 @@ const DeadText = styled(Text)`
     font-weight: bold;
     font-size: 23px;
     line-height: 26px;
-    color: #64d9fe;
-    text-shadow: 0px 0px 30px #64d9fe;
+    color: var(--color);
+    text-shadow: 0px 0px 30px var(--color);
     text-align: center;
 `;
 
@@ -350,8 +350,8 @@ const UserWrapper = styled.div`
     height: 295px;
     width: 100%;
     padding: 34px 70px;
-    background: linear-gradient(181.32deg, #04045a 1.13%, #000000 205.66%);
-    border: 5px solid #64d9fe;
+    background: var(--color-wrapper);
+    border: 5px solid var(--color);
     box-sizing: border-box;
     border-radius: 5px;
     margin-top: 4px;
@@ -362,7 +362,7 @@ const UserLabel = styled.p`
     font-family: Sansation !important;
     font-style: normal;
     font-size: 20px;
-    color: #64d9fe;
+    color: var(--color);
 `;
 
 const Button = styled.button`
@@ -374,13 +374,13 @@ const Button = styled.button`
     font-weight: bold;
     font-size: 20px;
     line-height: 22px;
-    background: #64d9fe;
-    border: 1px solid #64d9fe;
+    background: var(--color);
+    border: 1px solid var(--color);
     box-sizing: border-box;
     box-shadow: 0px 0px 30px rgba(161, 224, 180, 0.5);
     border-radius: 20px;
     padding: 6px 15px 6px 20px;
-    color: #04045a;
+    color: var(--color-wrapper);
     margin: auto;
 `;
 
@@ -419,7 +419,7 @@ const Discord = styled(Image)`
 
 const InputWrapper = styled.div`
     width: 220px;
-    border: 1.30233px solid #64d9fe;
+    border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
     height: 28px;
@@ -431,7 +431,7 @@ const InputWrapper = styled.div`
     line-height: 24px;
     text-align: center;
     letter-spacing: -0.4px;
-    color: #64d9fe;
+    color: var(--color);
 `;
 
 const FlexContainer = styled(FlexDivCentered)`
@@ -442,8 +442,8 @@ const FlexContainer = styled(FlexDivCentered)`
 const TableWrapper = styled.div`
     width: 100%;
     min-height: 300px;
-    background: linear-gradient(179.55deg, #04045a 0.39%, #000000 187.39%);
-    border: 5px solid #64d9fe;
+    background: var(--color-wrapper);
+    border: 5px solid var(--color);
     box-sizing: border-box;
     border-radius: 5px;
     padding: 30px;
@@ -476,7 +476,7 @@ const TableRow = styled.div`
 const HeadCell = styled(Text)`
     font-family: Sansation !important;
     font-size: 20px;
-    color: #64d9fe;
+    color: var(--color);
 `;
 
 const Intro: React.FC<ScoreboardProps> = ({ royaleData }) => {
@@ -585,7 +585,7 @@ const Title = styled(Text)`
     line-height: 18px;
     text-align: center;
     letter-spacing: -0.4px;
-    color: #64d9fe;
+    color: var(--color);
 `;
 
 const SubTitle = styled(Text)`
@@ -600,7 +600,7 @@ const SubTitle = styled(Text)`
         line-height: 56px;
         text-align: justify;
         letter-spacing: -0.4px;
-        color: #64d9fe;
+        color: var(--color);
     }
 `;
 
@@ -612,7 +612,7 @@ const Question = styled(Text)`
     line-height: 20px;
     text-align: justify;
     letter-spacing: -0.4px;
-    color: #64d9fe;
+    color: var(--color);
 `;
 
 const InfoText = styled(Text)`
@@ -627,7 +627,7 @@ const InfoText = styled(Text)`
         line-height: 20px;
         text-align: justify;
         letter-spacing: -0.4px;
-        color: #64d9fe;
+        color: var(--color);
     }
 
     strong {
@@ -648,7 +648,7 @@ const Link = styled.a`
     line-height: 20px;
     text-align: justify;
     letter-spacing: -0.4px;
-    color: #64d9fe;
+    color: var(--color);
     &:hover {
         font-weight: bold;
         text-decoration: underline;
