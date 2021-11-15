@@ -43,7 +43,7 @@ enum OrderDirection {
     DESC,
 }
 
-const defaultOrderBy = 4;
+const defaultOrderBy = 1;
 
 const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -68,12 +68,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             switch (orderBy) {
                 case 1:
                     usersToShow = users.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.ASC ? a.status - b.status : b.status - a.status;
+                        return orderDirection === OrderDirection.DESC ? a.status - b.status : b.status - a.status;
                     });
                     break;
                 case 3:
                     usersToShow = users.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.ASC
+                        return orderDirection === OrderDirection.DESC
                             ? a.name.localeCompare(b.name)
                             : b.name.localeCompare(a.name);
                     });
@@ -81,7 +81,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
 
                 case 4:
                     usersToShow = users.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.ASC ? a.number - b.number : b.number - a.number;
+                        return orderDirection === OrderDirection.DESC ? a.number - b.number : b.number - a.number;
                     });
                     break;
             }

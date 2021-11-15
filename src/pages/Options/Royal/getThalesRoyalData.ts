@@ -69,6 +69,12 @@ export const getIsPlayerSignedUp = async (walletAddress: string) => {
     return data;
 };
 
+export const getEthBalance = async (walletAddress: string) => {
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+    const balance = await provider.getBalance(walletAddress);
+    return Number(ethers.utils.formatEther(balance)).toFixed(4);
+};
+
 export const getUsers = async (walletAddress: string | null, setUsers: any, setUser: any) => {
     const baseUrl = 'https://api.thales.market/thales-royale/';
     const response = await fetch(baseUrl);

@@ -1,11 +1,9 @@
-import ROUTES from 'constants/routes';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, FlexDivCentered, Wrapper, Text } from 'theme/common';
-import MarketHeader from '../Home/MarketHeader';
 import BattleRoyale from './components/BattleRoyale';
 import Scoreboard from './components/Scoreboard';
 import { getEthPrice, getThalesRoyalData, ThalesRoyalData } from './getThalesRoyalData';
@@ -13,6 +11,7 @@ import leftArrow from 'assets/images/royale/left.svg';
 import rightArrow from 'assets/images/royale/right.svg';
 import useInterval from '../../../hooks/useInterval';
 import { useTranslation } from 'react-i18next';
+import Header from './components/Header';
 
 const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
@@ -37,8 +36,8 @@ const ThalesRoyal: React.FC = () => {
 
     return (
         <Background>
-            <Wrapper style={{ position: 'relative' }}>
-                <MarketHeader route={ROUTES.Options.Royal} />
+            <Wrapper style={{ position: 'relative', paddingLeft: 30 }}>
+                <Header></Header>
                 {!showBattle && thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
                 {showBattle && thalesRoyalData && (
                     <BattleRoyale royaleData={thalesRoyalData} setFetchNewData={setFetchNewData}></BattleRoyale>
