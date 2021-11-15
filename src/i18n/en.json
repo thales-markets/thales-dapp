@@ -926,14 +926,23 @@
                 "current": "Current",
                 "price": "Price",
                 "reward-per-player": "Current reward per player",
-                "players-alive": "Players alive"
+                "players-alive": "Players alive",
+                "up": "UP",
+                "down": "DOWN",
+                "vs": "vs",
+                "you-were-eliminated-in": "You were eliminated in",
+                "rd": "RD"
             },
             "battle": {
                 "round": "Round",
-                "will-be": "Will {{token}} Be",
+                "will-be": "Will {{token}} be more than",
+                "in": "in",
                 "time-left-for-positioning": "Time left for positioning",
                 "time-left-in-round": "Time left in round",
-                "close-round": "Close round"
+                "close-round": "Close round",
+                "was": "Was",
+                "eliminated": "Eliminated",
+                "players": "Players"
             },
             "scoreboard": {
                 "starts": "Thales Royale Starts In:",

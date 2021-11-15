@@ -59,7 +59,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
 
     useEffect(() => {
         getUsers(walletAddress, setUsers, setUser);
-    }, []);
+    }, [walletAddress]);
 
     const usersForUi = useMemo(() => {
         if (users) {

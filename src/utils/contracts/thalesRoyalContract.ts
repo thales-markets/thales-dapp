@@ -1,5 +1,5 @@
 export const thalesRoyal = {
-    address: '0xb15d3070b829c542c72356eeb7157364a77fee63',
+    address: '0xDc18688A4c9d802683cf1f6508612a624cE03bfc',
     abi: [
         {
             inputs: [
@@ -31,6 +31,21 @@ export const thalesRoyal = {
                 {
                     internalType: 'uint256',
                     name: '_rounds',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_signUpPeriod',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_roundChoosingLength',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_roundLength',
                     type: 'uint256',
                 },
             ],
@@ -174,6 +189,27 @@ export const thalesRoyal = {
             constant: true,
             inputs: [],
             name: 'creationTime',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            name: 'finalPricePerRound',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -567,27 +603,6 @@ export const thalesRoyal = {
         },
         {
             constant: true,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_round',
-                    type: 'uint256',
-                },
-            ],
-            name: 'targetPricePerRound',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
             inputs: [],
             name: 'rounds',
             outputs: [
@@ -611,6 +626,21 @@ export const thalesRoyal = {
                 },
             ],
             name: 'setPaused',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'contract IPriceFeed',
+                    name: '_priceFeed',
+                    type: 'address',
+                },
+            ],
+            name: 'setPriceFeed',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -686,6 +716,21 @@ export const thalesRoyal = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'newSignee',
+                    type: 'address',
+                },
+            ],
+            name: 'signUpOnBehalf',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'signUpPeriod',
@@ -737,6 +782,27 @@ export const thalesRoyal = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            name: 'targetPricePerRound',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
     ],

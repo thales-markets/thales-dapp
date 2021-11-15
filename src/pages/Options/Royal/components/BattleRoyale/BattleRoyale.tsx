@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import format from 'date-fns/format';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
-import { ThalesRoyalData } from '../../getThalesRoyalData';
+import { getRounds, ThalesRoyalData } from '../../getThalesRoyalData';
 import useInterval from '../../../../../hooks/useInterval';
-import { Button } from '../../../../../theme/common';
 import { BigNumber, ethers } from 'ethers';
 import thalesRoyal from '../../../../../utils/contracts/thalesRoyalContract';
 import { dispatchMarketNotification } from '../../../../../utils/options';
+import { FlexDiv, FlexDivCentered } from '../../../../../theme/common';
 
 type BattleRoyaleProps = {
     royaleData: ThalesRoyalData;
@@ -38,10 +38,23 @@ const renderRounds = (
     const { round, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
     const cards = [];
 
+    const [roundsGraphInfo, setRoundsGraphInfo] = useState<
+        {
+            eliminatedPerRound: string;
+            totalPlayersPerRound: string;
+        }[]
+    >([]);
+
+    useEffect(() => {
+        getRounds().then((graphRounds) => {
+            setRoundsGraphInfo(graphRounds);
+        });
+    }, []);
+
     useEffect(() => {
         const wrapper = document.getElementById('battle-royale-wrapper');
         if (wrapper && round > 2) {
-            wrapper.scrollLeft = (round - 2) * 367;
+            wrapper.scrollLeft = (round - 2) * 368 - 45;
         }
     }, [round]);
 
@@ -78,9 +91,15 @@ const renderRounds = (
                           <CurrentRoundTitle>{t('options.royale.battle.round')}</CurrentRoundTitle>
                           <CurrentRoundText>{index}</CurrentRoundText>
                       </div>
-                      <div>
+                      <div style={{ marginTop: '25px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
                           <CurrentRoundText>{`${targetPrice}$`}</CurrentRoundText>
+                      </div>
+                      <div style={{ marginBottom: '25px' }}>
+                          <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
+                          <CurrentRoundText>
+                              {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : 'Ended'}
+                          </CurrentRoundText>
                       </div>
                       <div>
                           <CurrentRoundTitle>{t('options.royale.battle.time-left-for-positioning')}</CurrentRoundTitle>
@@ -88,18 +107,15 @@ const renderRounds = (
                               {timeLeftForPositioning ? format(timeLeftForPositioning, 'HH:mm:ss') : 'Ended'}
                           </CurrentRoundText>
                       </div>
-                      <div>
-                          <CurrentRoundTitle>{t('options.royale.battle.time-left-in-round')}</CurrentRoundTitle>
-                          <CurrentRoundText>
-                              {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : 'Ended'}
-                          </CurrentRoundText>
-                      </div>
                       <ShortButton
                           selected={roundsInformation[index - 1].positionInRound === 1}
                           onClick={vote(1)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
                       >
-                          <Circle disabled={!timeLeftForPositioning || !isPlayerAlive} />
+                          <Circle
+                              selected={roundsInformation[index - 1].positionInRound === 1}
+                              disabled={!timeLeftForPositioning || !isPlayerAlive}
+                          />
                       </ShortButton>
                   </CurrentRound>
               )
@@ -109,14 +125,31 @@ const renderRounds = (
                       <LongButton selected={roundsInformation[index - 1].positionInRound === 2} disabled={true}>
                           △
                       </LongButton>
-                      <RoundTitle>{t('options.royale.battle.round')}</RoundTitle>
-                      <RoundText style={{ textDecoration: 'line-through' }}>{index}</RoundText>
                       <div>
+                          <RoundTitle>{t('options.royale.battle.round')}</RoundTitle>
+                          <RoundText style={{ textDecoration: 'line-through' }}>{index}</RoundText>
+                      </div>
+                      <div style={{ textDecoration: 'line-through' }}>
                           <CurrentRoundTitle>{`${token} ${t('options.royale.battle.will-be')}`}</CurrentRoundTitle>
                           <CurrentRoundText>{`${roundsInformation[index - 1].targetPriceInRound}$`}</CurrentRoundText>
                       </div>
+                      <RoundHistoryInfo>
+                          <FlexDiv>
+                              <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
+                              <PrevRoundText>{`${roundsInformation[index - 1].finalPriceInRound}$`}</PrevRoundText>
+                          </FlexDiv>
+                          <FlexDiv>
+                              <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
+                              <PrevRoundText>{`${roundsGraphInfo[index - 1]?.eliminatedPerRound || 0}/${
+                                  roundsGraphInfo[index - 1]?.totalPlayersPerRound || 0
+                              } ${t('options.royale.battle.players')}`}</PrevRoundText>
+                          </FlexDiv>
+                      </RoundHistoryInfo>
                       <ShortButton selected={roundsInformation[index - 1].positionInRound === 1} disabled={true}>
-                          <Circle disabled={!timeLeftForPositioning || !isPlayerAlive} />
+                          <Circle
+                              selected={roundsInformation[index - 1].positionInRound === 1}
+                              disabled={!timeLeftForPositioning || !isPlayerAlive}
+                          />
                       </ShortButton>
                   </PrevRound>
               )
@@ -168,23 +201,24 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
     return (
         <>
             <CardWrapper id="battle-royale-wrapper">
-                {royaleData ? (
-                    renderRounds(royaleData, setFetchNewData, timeLeftForPositioning, timeLeftInRound)
-                ) : (
-                    <></>
-                )}
+                <ScrollWrapper>
+                    {royaleData ? (
+                        renderRounds(royaleData, setFetchNewData, timeLeftForPositioning, timeLeftInRound)
+                    ) : (
+                        <></>
+                    )}
+                </ScrollWrapper>
             </CardWrapper>
-            <Button
-                style={{ zIndex: 1000 }}
-                disabled={closeRoundButtonDisabled}
-                className="primary"
-                onClick={closeRound}
-            >
+            <Button style={{ zIndex: 1000 }} disabled={closeRoundButtonDisabled} onClick={closeRound}>
                 {t('options.royale.battle.close-round')}
             </Button>
         </>
     );
 };
+
+const ScrollWrapper = styled.div`
+    display: flex;
+`;
 
 const CardWrapper = styled.div`
     display: flex;
@@ -212,7 +246,7 @@ const Card = styled.div`
 `;
 
 const CurrentRound = styled(Card)`
-    background: linear-gradient(180.36deg, #04045a -25.81%, #030344 52.02%, #000000 153.83%);
+    background: var(--color-background);
     box-shadow: 0px 0px 80.4482px rgba(161, 225, 180, 0.8);
     color: var(--color);
     justify-content: space-evenly;
@@ -220,8 +254,9 @@ const CurrentRound = styled(Card)`
 
 const PrevRound = styled(Card)`
     filter: drop-shadow(0px 0px 80.4482px rgba(161, 225, 180, 0.8));
-    opacity: 0.15;
+    opacity: 0.25;
     color: var(--color);
+    justify-content: space-evenly;
 `;
 
 const NextRound = styled(Card)`
@@ -238,7 +273,7 @@ const RoundText = styled.p`
     font-family: VT323 !important;
     font-weight: 400;
     font-size: 90px;
-    line-height: 90px;
+    line-height: 70px;
     text-align: center;
 `;
 
@@ -268,6 +303,26 @@ const CurrentRoundTitle = styled.p`
     line-height: 22px;
     text-align: center;
     text-shadow: 0px 0px 53.6424px rgba(161, 224, 180, 0.5);
+`;
+
+const PrevRoundText = styled.p`
+    font-family: VT323 !important;
+    font-size: 34px;
+    line-height: 22px;
+    text-align: center;
+`;
+
+const PrevRoundTitle = styled.p`
+    font-family: SansationLight !important;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 22px;
+    text-align: center;
+    text-shadow: 0px 0px 53.6424px rgba(161, 224, 180, 0.5);
+    font-family: Sansation Light;
+    font-style: normal;
+    margin-right: 5px;
 `;
 
 const LongButton = styled.button<{ selected?: boolean }>`
@@ -320,9 +375,39 @@ const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
     height: 40px;
     border-radius: 50px;
     background: transparent;
-    border: 4px solid #e5e5e5;
     box-sizing: border-box;
-    color: ${(props) => (props.selected ? '#e5e5e5' : 'white')};
+    border: ${(props) => (props.selected ? '4px solid #c92d52' : '4px solid #e5e5e5')};
+`;
+
+const Button = styled.button`
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    font-family: SansationLight !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    background: var(--color);
+    border: 1px solid var(--color);
+    box-sizing: border-box;
+    box-shadow: 0px 0px 30px rgba(161, 224, 180, 0.5);
+    border-radius: 20px;
+    padding: 6px 15px 6px 20px;
+    color: var(--color-wrapper);
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+`;
+
+const RoundHistoryInfo = styled(FlexDivCentered)`
+    flex-direction: column;
+    > * {
+        &:first-child {
+            padding-bottom: 7px;
+        }
+    }
 `;
 
 export default BattleRoyale;

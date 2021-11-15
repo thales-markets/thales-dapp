@@ -5,6 +5,7 @@ import thalesData from 'thales-data';
 import { parseBytes32String } from 'utils/formatters/ethers';
 
 type RoundInformation = {
+    finalPriceInRound: string;
     positionInRound: number;
     targetPriceInRound: string;
 };
@@ -22,6 +23,7 @@ export type User = {
     name: string;
     avatar: string;
     status: UserStatus;
+    deathRound?: string;
 };
 
 export type ThalesRoyalData = {
@@ -136,6 +138,30 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
     setUsers([...verified, ...unasigned, ...unverified]);
 };
 
+export const getRounds = async () => {
+    return await thalesData.binaryOptions.thalesRoyaleRounds({ network: 69 });
+};
+
+export const getPositions = async (round: number) => {
+    const positions = await thalesData.binaryOptions.thalesRoyalePositions({ network: 69 });
+    return (
+        positions.reduce(
+            // @ts-ignore
+            (prev, curr) => {
+                if (curr.round === round) {
+                    if (curr.position === 2) {
+                        prev.up++;
+                    } else if (curr.position === 1) {
+                        prev.down++;
+                    }
+                    return prev;
+                }
+            },
+            { up: 0, down: 0 }
+        ) || { up: 0, down: 0 }
+    );
+};
+
 export const signUp = async () => {
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
@@ -202,9 +228,11 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
     for (let i = 1; i <= Number(round); i++) {
         const positionInRound = await RoyalContract.positionInARound(walletAddress, i);
         const targetPriceInRound = await RoyalContract.targetPricePerRound(i);
+        const finalPriceInRound = await RoyalContract.finalPricePerRound(i);
         roundsInformation.push({
             positionInRound: Number(positionInRound),
             targetPriceInRound: ethers.utils.formatEther(targetPriceInRound),
+            finalPriceInRound: ethers.utils.formatEther(finalPriceInRound),
         });
     }
 

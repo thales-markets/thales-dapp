@@ -928,13 +928,22 @@
                 "time-left": "回合剩余时间",
                 "time-left-in-round": "回合剩余时间",
                 "time-left-for-positioning": "定位剩余时间",
-                "close-round": "关闭回合"
+                "close-round": "关闭回合",
+                "was": "曾是",
+                "in": "在",
+                "eliminated": "淘汰",
+                "players": "球员"
             },
             "footer": {
                 "price": "价钱",
                 "players-alive": "活着的玩家",
                 "reward-per-player": "每位玩家的奖励",
-                "current": "当前的"
+                "current": "当前的",
+                "up": "向上",
+                "down": "下",
+                "vs": "对比",
+                "you-were-eliminated-in": "你被淘汰了",
+                "rd": "RD"
             },
             "scoreboard": {
                 "player-no": "玩家编号：",
@@ -946,7 +955,15 @@
                 "question": "您有能力击败比赛并进入最后一轮吗？",
                 "info1": "在这场史诗般的预测大战中向我们展示：<bold>Thales Royale</bold>",
                 "info5": "所有<bold>信息、规则以及详细的回合和奖品结构</bold>都可以在这里找到：",
-                "info3": "根据这些信息，参与者<bold>必须选择他们认为当前价格会高于（<triangle />）还是低于（<circle />）</bold> 执行日期的执行价格。"
+                "info3": "根据这些信息，参与者<bold>必须选择他们认为当前价格会高于（<triangle />）还是低于（<circle />）</bold> 执行日期的执行价格。",
+                "table-header": {
+                    "status": "地位",
+                    "name": "显示名称",
+                    "avatar": "头像",
+                    "number": "玩家编号"
+                },
+                "ends": "泰雷兹皇家结束于：",
+                "round-starts": "下一轮开始于："
             }
         }
     }

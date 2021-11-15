@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Background, FlexDivCentered, Wrapper, Text } from 'theme/common';
 import BattleRoyale from './components/BattleRoyale';
 import Scoreboard from './components/Scoreboard';
-import { getEthPrice, getThalesRoyalData, ThalesRoyalData } from './getThalesRoyalData';
+import { getEthPrice, getPositions, getThalesRoyalData, getUsers, ThalesRoyalData, User } from './getThalesRoyalData';
 import leftArrow from 'assets/images/royale/left.svg';
 import rightArrow from 'assets/images/royale/right.svg';
 import useInterval from '../../../hooks/useInterval';
@@ -28,13 +28,22 @@ const ThalesRoyal: React.FC = () => {
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
     const [theme, setTheme] = useState(Theme.Light);
+    const [positions, setPositions] = useState({ up: 0, down: 0 });
+    const [user, setUser] = useState<User>();
 
     useEffect(() => {
         if (walletAddress && networkId === 69) {
-            getThalesRoyalData(walletAddress).then((data) => setData(data));
-            getEthPrice().then((data) => setEthPrice(data));
+            getThalesRoyalData(walletAddress).then((data) => {
+                setData(data);
+                getEthPrice().then((data) => setEthPrice(data));
+                getPositions(data.round).then((data) => setPositions(data));
+            });
         }
     }, [walletAddress, networkId, fetchNewData]);
+
+    useEffect(() => {
+        getUsers(walletAddress, () => {}, setUser);
+    }, [walletAddress]);
 
     useInterval(async () => {
         setEthPrice(await getEthPrice());
@@ -46,7 +55,7 @@ const ThalesRoyal: React.FC = () => {
                 <Header theme={theme} setTheme={setTheme}></Header>
                 {!showBattle && thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
                 {showBattle && thalesRoyalData && (
-                    <BattleRoyale royaleData={thalesRoyalData} setFetchNewData={setFetchNewData}></BattleRoyale>
+                    <BattleRoyale royaleData={thalesRoyalData} setFetchNewData={setFetchNewData} />
                 )}
             </Wrapper>
             <Footer>
@@ -62,6 +71,20 @@ const ThalesRoyal: React.FC = () => {
                 </Nav>
 
                 <InfoSection>
+                    {user?.deathRound && (
+                        <div>
+                            <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                            <span>
+                                {`${t('options.royale.footer.rd')} `}
+                                {user.deathRound}
+                            </span>
+                        </div>
+                    )}
+                    <div>
+                        <span>{t('options.royale.footer.up')}</span>
+                        <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
+                        <span>{t('options.royale.footer.down')}</span>
+                    </div>
                     <div>
                         <span>
                             {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
@@ -70,7 +93,7 @@ const ThalesRoyal: React.FC = () => {
                     </div>
                     <div>
                         <span>{t('options.royale.footer.reward-per-player')}:</span>
-                        <span>{10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)} THALES</span>
+                        <span>{(10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.players-alive')}:</span>
@@ -146,6 +169,9 @@ const InfoSection = styled.div`
             }
             &:nth-child(2) {
                 font-weight: bold;
+            }
+            &:nth-child(3) {
+                padding-left: 7px;
             }
         }
     }
