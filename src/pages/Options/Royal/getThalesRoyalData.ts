@@ -86,11 +86,11 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
     const unasigned: User[] = [];
     data.reverse().map((player: any, key: number) => {
         const isAlive = player.isAlive;
-        const address = player.id;
+        const address = player.address;
         const number = key + 1;
 
-        if (map.has(player.id.toLowerCase())) {
-            const discordUser: any = map.get(player.id.toLowerCase());
+        if (map.has(player.address.toLowerCase())) {
+            const discordUser: any = map.get(player.address.toLowerCase());
             const user = {
                 isAlive,
                 address,
@@ -103,7 +103,7 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
             if (walletAddress && user.address === walletAddress.toLowerCase()) {
                 setUser(user);
             }
-            map.delete(player.id.toLowerCase());
+            map.delete(player.address.toLowerCase());
         } else {
             const user = {
                 isAlive,
