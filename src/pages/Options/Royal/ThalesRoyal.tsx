@@ -12,6 +12,8 @@ import rightArrow from 'assets/images/royale/right.svg';
 import useInterval from '../../../hooks/useInterval';
 import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
+import { navigateTo } from '../../../utils/routes';
+import ROUTES from '../../../constants/routes';
 
 export enum Theme {
     Light,
@@ -60,14 +62,24 @@ const ThalesRoyal: React.FC = () => {
             </Wrapper>
             <Footer>
                 <Nav>
-                    <NavButton className={!showBattle ? 'disabled' : ''} onClick={() => setShowBattle(false)}>
-                        <img src={leftArrow} />
-                        <Text> Scoreboard </Text>
-                    </NavButton>
-                    <NavButton className={showBattle ? 'disabled' : ''} onClick={() => setShowBattle(true)}>
-                        <Text> Battle </Text>
-                        <img src={rightArrow} />
-                    </NavButton>
+                    {!showBattle && (
+                        <NavButton onClick={() => navigateTo(ROUTES.Options.Home)}>
+                            <img src={leftArrow} />
+                            <Text> Thales dApp </Text>
+                        </NavButton>
+                    )}
+                    {showBattle && (
+                        <NavButton onClick={() => setShowBattle(false)}>
+                            <img src={leftArrow} />
+                            <Text> Scoreboard </Text>
+                        </NavButton>
+                    )}
+                    {!showBattle && (
+                        <NavButton onClick={() => setShowBattle(true)}>
+                            <Text> Battle </Text>
+                            <img src={rightArrow} />
+                        </NavButton>
+                    )}
                 </Nav>
 
                 <InfoSection>

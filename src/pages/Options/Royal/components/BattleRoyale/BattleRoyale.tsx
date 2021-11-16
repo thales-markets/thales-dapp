@@ -218,6 +218,11 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
 
 const ScrollWrapper = styled.div`
     display: flex;
+    height: 680px;
+    align-items: center;
+    overflow: auto;
+    height: 100%;
+    margin-bottom: -40px;
 `;
 
 const CardWrapper = styled.div`
@@ -226,7 +231,7 @@ const CardWrapper = styled.div`
     justify-content: flex-start;
     width: 100%;
     overflow: hidden;
-    padding: 75px 0 75px 90px;
+    height: 680px;
 `;
 
 const Card = styled.div`
