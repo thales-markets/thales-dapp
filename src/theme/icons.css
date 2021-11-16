@@ -5,6 +5,14 @@
     font-size: 20px;
 }
 
-.icon_logo:before {
+.icon--logo:before {
     content: '\f004';
+}
+
+.icon--right:before {
+    content: '\006B';
+}
+
+.icon--left:before {
+    content: '\0068';
 }
