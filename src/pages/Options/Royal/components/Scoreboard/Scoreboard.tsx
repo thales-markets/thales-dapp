@@ -41,6 +41,8 @@ enum OrderDirection {
 
 const defaultOrderBy = 1;
 
+const PerPageOption = [15, 25, 50, 100];
+
 const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
@@ -51,15 +53,16 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const [showPopup, setShowPopup] = useState(false);
-    const showPerPage = 15;
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showPerPage, setShowPerPage] = useState(15);
+    const [searchString, setSearchString] = useState('');
 
     useEffect(() => {
         getUsers(walletAddress, setUsers, setUser);
     }, [walletAddress]);
 
     const usersForUi = useMemo(() => {
-        if (users) {
-            const maxPages = Math.ceil(users.length / showPerPage);
+        if (users.length > 0) {
             let usersToShow: any = [];
             switch (orderBy) {
                 case 1:
@@ -87,10 +90,19 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     });
                     break;
             }
+            if (searchString !== '') {
+                usersToShow = usersToShow.filter((user: any) => {
+                    return (
+                        user.name.toLowerCase().includes(searchString.toLowerCase()) ||
+                        user.number.toString().toLowerCase().includes(searchString.toLowerCase())
+                    );
+                });
+            }
+            const maxPages = Math.ceil(usersToShow.length / showPerPage);
             const usersToDisplay = usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
             return { maxPages, usersToDisplay };
         }
-    }, [page, orderBy, orderDirection, users]);
+    }, [page, orderBy, orderDirection, users, showPerPage, searchString]);
 
     const HeadCells = [
         { id: 1, text: t('options.royale.scoreboard.table-header.status'), sortable: true },
@@ -183,6 +195,14 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                 {getFooter(user)}
             </UserWrapper>
             <TableWrapper>
+                <TableRow style={{ justifyContent: 'flex-end' }}>
+                    <SearchWrapper
+                        onChange={(e) => setSearchString(e.target.value)}
+                        value={searchString}
+                        placeholder={t('options.leaderboard.display-name')}
+                    ></SearchWrapper>
+                </TableRow>
+
                 <TableRow>
                     {HeadCells.map((cell, key) => (
                         <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
@@ -205,7 +225,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     ))}
                 </TableRow>
                 {usersForUi?.usersToDisplay.map((user: User, key: number) => (
-                    <TableRow key={key} style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}>
+                    <TableRow
+                        key={key}
+                        className={user.isAlive ? 'alive' : 'dead'}
+                        style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
+                    >
                         <HeadCell>
                             <Status>
                                 <StatusAvatar className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'} />
@@ -233,7 +257,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                                 setPage(page - 1);
                             }}
                         />
-                        <Text>
+                        <Text className="max-pages">
                             {page}/{usersForUi?.maxPages}
                         </Text>
                         <PaginationIcon
@@ -254,6 +278,25 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                                 setPage(usersForUi.maxPages);
                             }}
                         />
+
+                        <PaginationUsers>
+                            <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
+                            {showDropdown &&
+                                PerPageOption.filter((number) => number !== showPerPage).map(
+                                    (option: number, key: number) => (
+                                        <Text
+                                            onClick={() => {
+                                                setShowPerPage(option);
+                                                setShowDropdown(false);
+                                            }}
+                                            key={key}
+                                        >
+                                            {option}
+                                        </Text>
+                                    )
+                                )}
+                        </PaginationUsers>
+                        <UsersPerPageText>Users per page</UsersPerPageText>
                     </Pagination>
                 ) : (
                     ''
@@ -262,6 +305,26 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
         </Wrapper>
     );
 };
+
+const SearchWrapper = styled.input`
+    max-width: 275px;
+    height: 28px;
+    border: 2px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 20px;
+    font-family: SansationLight !important;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 78.34%;
+    letter-spacing: -0.4px;
+    background: var(--color-wrapper);
+    color: var(--coior);
+    outline: none !important;
+    &::placeholder {
+        color: var(--coior);
+    }
+`;
 
 const PaginationIcon = styled.i`
     font-size: 28px;
@@ -336,12 +399,49 @@ const getAvatar = (user: User) => {
     }
 };
 
+const UsersPerPageText = styled.p`
+    position: absolute;
+    right: 13px;
+    top: 12px;
+    width: 86px;
+    text-align: center;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 13px;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    background: var(--color-wrapper);
+`;
+
+const PaginationUsers = styled.div`
+    position: absolute;
+    right: 6px;
+    top: 20px;
+    width: 100px;
+    border: 2px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 20px;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    text-align: center;
+    background: var(--color-wrapper);
+`;
+
 const Pagination = styled.div`
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    p {
+    .max-pages {
         font-family: Sansation !important;
         font-style: normal;
         font-weight: bold;
@@ -473,6 +573,10 @@ const TableRow = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    color: var(--color);
+    &.dead {
+        text-decoration: line-through;
+    }
     & > * {
         text-align: center;
         margin: 0 !important;
