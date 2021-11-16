@@ -152,7 +152,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     };
 
     return (
-        <Wrapper>
+        <Wrapper className="scoreboard">
             <Intro royaleData={royaleData} />
             <Modal
                 open={showPopup}

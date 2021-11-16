@@ -9,7 +9,7 @@ import useInterval from '../../../../../hooks/useInterval';
 import { BigNumber, ethers } from 'ethers';
 import thalesRoyal from '../../../../../utils/contracts/thalesRoyalContract';
 import { dispatchMarketNotification } from '../../../../../utils/options';
-import { FlexDiv, FlexDivCentered } from '../../../../../theme/common';
+import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
 
 type BattleRoyaleProps = {
     royaleData: ThalesRoyalData;
@@ -208,7 +208,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
     };
 
     return (
-        <>
+        <Wrapper className="battle">
             <CardWrapper id="battle-royale-wrapper">
                 <ScrollWrapper>
                     {royaleData ? (
@@ -228,7 +228,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
             <Button style={{ zIndex: 1000 }} disabled={closeRoundButtonDisabled} onClick={closeRound}>
                 {t('options.royale.battle.close-round')}
             </Button>
-        </>
+        </Wrapper>
     );
 };
 

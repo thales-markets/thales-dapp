@@ -57,10 +57,13 @@ const ThalesRoyal: React.FC = () => {
 
     return (
         <RoyaleBackground className={theme === Theme.Light ? 'light-theme' : 'dark-theme'} id="royale-background">
-            <Wrapper style={{ position: 'relative', paddingLeft: 30 }}>
+            <Wrapper
+                className={showBattle ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
+                style={{ position: 'relative', paddingLeft: 30 }}
+            >
                 <Header theme={theme} setTheme={setTheme}></Header>
-                {!showBattle && thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
-                {showBattle && thalesRoyalData && (
+                {thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
+                {thalesRoyalData && (
                     <BattleRoyale
                         positions={positions}
                         setPositions={setPositions}
@@ -142,6 +145,16 @@ export const RoyaleBackground = styled(Background)`
         --color: #a1e1b4;
     }
     background: var(--color-background);
+    .wrapper--showBattle {
+        .scoreboard {
+            display: none;
+        }
+    }
+    .wrapper--showScoreboard {
+        .battle {
+            display: none;
+        }
+    }
 `;
 
 const Footer = styled.div`
