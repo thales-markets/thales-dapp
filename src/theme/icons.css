@@ -3,8 +3,65 @@
     font-family: Icons !important;
     color: white;
     font-size: 20px;
+    color: var(--color);
 }
 
-.icon_logo:before {
-    content: '\f004';
+.icon--royale-logo:before {
+    content: '\0061';
+}
+
+.icon--thales-logo:before {
+    content: '\0062';
+}
+
+.icon--logo:before {
+    content: '\0063';
+}
+
+.icon--ex-mark:before {
+    content: '\0064';
+}
+
+.icon--warning:before {
+    content: '\0065';
+}
+
+.icon--alive:before {
+    content: '\0066';
+}
+
+.icon--dead:before {
+    content: '\0067';
+}
+
+.icon--left:before {
+    content: '\0068';
+}
+
+.icon--double-left:before {
+    content: '\0069';
+}
+
+.icon--double-right:before {
+    content: '\006A';
+}
+
+.icon--right:before {
+    content: '\006B';
+}
+
+.icon--x-sign:before {
+    content: '\006C';
+}
+
+.icon--dead-avatar:before {
+    content: '\006D';
+}
+
+.icon--unverified:before {
+    content: '\006E';
+}
+
+.icon--unsigned:before {
+    content: '\006F';
 }

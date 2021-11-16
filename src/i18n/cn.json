@@ -154,7 +154,8 @@
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
             "quick-trading-label-competition": "竞赛订单",
-            "earn-label": "泰雷兹"
+            "earn-label": "泰雷兹",
+            "royale-label": "Thales Royale"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -964,6 +965,10 @@
                 },
                 "ends": "泰雷兹皇家结束于：",
                 "round-starts": "下一轮开始于："
+            },
+            "redirect-dialog": {
+                "title": "您在 Kovan 网络上",
+                "message": "回到泰雷兹皇家"
             }
         }
     }

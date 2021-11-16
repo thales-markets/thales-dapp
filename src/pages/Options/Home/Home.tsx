@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -17,6 +17,8 @@ import useExchangeRatesMarketDataQuery from '../../../queries/rates/useExchangeR
 import { getIsAppReady } from '../../../redux/modules/app';
 import { useLocation } from 'react-router-dom';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { getIsOVM } from 'utils/network';
+import { RedirectDialog } from '../Royal/components/RedirectDialog/RedirectDialog';
 
 const MAX_HOT_MARKETS = 9;
 
@@ -41,6 +43,8 @@ export const Home: React.FC = () => {
         }
         return [];
     }, [marketsQuery, synthsMap, openOrdersMap]);
+    const isL2 = getIsOVM(networkId);
+    const [openRedirectDialog, setOpenRedirectDialog] = useState(false);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
@@ -67,6 +71,12 @@ export const Home: React.FC = () => {
         }
     }, [location]);
 
+    useEffect(() => {
+        if (isL2 && location.pathname !== ROUTES.Options.Royal) {
+            setOpenRedirectDialog(true);
+        }
+    }, [location]);
+
     return (
         <>
             {marketsQuery.isSuccess ? (
@@ -89,6 +99,7 @@ export const Home: React.FC = () => {
                         <MarketCreation />
 
                         <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
+                        <RedirectDialog open={openRedirectDialog} setOpen={setOpenRedirectDialog}></RedirectDialog>
                     </Wrapper>
                 </Background>
             ) : (
