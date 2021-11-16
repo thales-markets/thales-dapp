@@ -154,7 +154,8 @@
             "leaderboard-label": "Лидеры",
             "quick-trading-label": "Быстрая торговля",
             "quick-trading-label-competition": "Kонк. быстрая торговля",
-            "earn-label": "THALES"
+            "earn-label": "THALES",
+            "royale-label": "Thales Royale"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -964,6 +965,10 @@
                 },
                 "round-starts": "Следующий раунд начинается через:",
                 "ends": "Thales Royale заканчивается:"
+            },
+            "redirect-dialog": {
+                "title": "Вы в сети Kovan",
+                "message": "Вернитесь на Thales Royale"
             }
         }
     }
