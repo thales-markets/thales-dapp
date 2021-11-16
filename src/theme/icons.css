@@ -1,7 +1,7 @@
 .icon {
     display: inline-block;
     font-family: Icons !important;
-    color: white;
+    vertical-align: middle;
     font-size: 20px;
     color: var(--color);
 }

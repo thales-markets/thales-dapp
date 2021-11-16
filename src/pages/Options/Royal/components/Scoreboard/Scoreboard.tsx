@@ -10,10 +10,6 @@ import avatar from 'assets/images/royale/avatar.svg';
 import discord from 'assets/images/royale/discord.svg';
 import notVerified from 'assets/images/royale/not-verified.svg';
 import notSigned from 'assets/images/royale/not-signed.svg';
-import dead from 'assets/images/royale/dead.svg';
-import alive from 'assets/images/royale/alive.svg';
-import next from 'assets/images/royale/next.svg';
-import previous from 'assets/images/royale/previous.svg';
 import important from 'assets/images/royale/important.svg';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
@@ -68,7 +64,13 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             switch (orderBy) {
                 case 1:
                     usersToShow = users.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.DESC ? a.status - b.status : b.status - a.status;
+                        return orderDirection === OrderDirection.DESC
+                            ? a.status === b.status
+                                ? a.isAlive
+                                    ? -1
+                                    : 1
+                                : a.status - b.status
+                            : b.status - a.status;
                     });
                     break;
                 case 3:
@@ -206,7 +208,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     <TableRow key={key} style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}>
                         <HeadCell>
                             <Status>
-                                <StatusAvatar src={user.isAlive ? alive : dead} />
+                                <StatusAvatar className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'} />
                                 <span>{user.isAlive ? 'alive' : 'dead'}</span>
                             </Status>
                         </HeadCell>
@@ -217,9 +219,15 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                 ))}
                 {usersForUi?.usersToDisplay ? (
                     <Pagination>
-                        <Image
-                            src={previous}
-                            className={page <= 1 ? 'disabled' : ''}
+                        <PaginationIcon
+                            className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
+                            onClick={() => {
+                                if (page <= 1) return;
+                                setPage(1);
+                            }}
+                        />
+                        <PaginationIcon
+                            className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
                             onClick={() => {
                                 if (page <= 1) return;
                                 setPage(page - 1);
@@ -228,12 +236,22 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         <Text>
                             {page}/{usersForUi?.maxPages}
                         </Text>
-                        <Image
-                            className={usersForUi && usersForUi.maxPages === page ? 'disabled' : ''}
-                            src={next}
+                        <PaginationIcon
+                            className={`icon icon--right ${
+                                usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                            }`}
                             onClick={() => {
                                 if (usersForUi && usersForUi.maxPages === page) return;
                                 setPage(page + 1);
+                            }}
+                        />
+                        <PaginationIcon
+                            className={`icon icon--double-right ${
+                                usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                            }`}
+                            onClick={() => {
+                                if (usersForUi && usersForUi.maxPages === page) return;
+                                setPage(usersForUi.maxPages);
                             }}
                         />
                     </Pagination>
@@ -244,6 +262,16 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
         </Wrapper>
     );
 };
+
+const PaginationIcon = styled.i`
+    font-size: 28px;
+    line-height: 24px;
+    cursor: pointer;
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+`;
 
 const Popup = styled.div`
     display: flex;
@@ -312,13 +340,6 @@ const Pagination = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    img {
-        width: 28px;
-        height: 24px;
-        &.disabled {
-            opacity: 0.5;
-        }
-    }
 
     p {
         font-family: Sansation !important;
@@ -390,10 +411,8 @@ const UserAvatar = styled(Image)`
     border-radius: 50%50%;
 `;
 
-const StatusAvatar = styled(Image)`
-    width: 35px;
-    height: 35px;
-    border-radius: 0;
+const StatusAvatar = styled.i`
+    font-size: 35px;
 `;
 
 const Status = styled.span`
@@ -402,7 +421,7 @@ const Status = styled.span`
         display: none;
     }
     &:hover {
-        img {
+        i {
             display: none;
         }
         span {
