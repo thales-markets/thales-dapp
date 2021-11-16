@@ -1,9 +1,8 @@
 import { DialogTitle } from '@material-ui/core';
-import styled from 'styled-components';
-import warning from 'assets/images/warning-triangle-white.svg';
 import { StyledModal } from 'pages/Options/Market/TradeOptions/Orderbook/components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import { Text } from 'theme/common';
 import './media.scss';
 
@@ -15,7 +14,6 @@ type RedirectDialogProps = {
 export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen }) => {
     const { t } = useTranslation();
     const onClose = () => {
-        console.log('closed');
         setOpen(false);
     };
 
@@ -23,6 +21,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
         <StyledModal
             open={open}
             onClose={onClose}
+            disableBackdropClick
             PaperProps={{
                 style: {
                     backgroundColor: '#64D9FE',
@@ -59,7 +58,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         fontSize: 60,
                     }}
                 />
-                <LinkImage
+                <Link
                     className="redirect-modal-font"
                     style={{
                         textAlign: 'center',
@@ -80,17 +79,13 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                             marginLeft: 59,
                         }}
                     />
-                </LinkImage>
+                </Link>
             </DialogTitle>
         </StyledModal>
     );
 };
 
-export const LinkImage = styled.a`
-    &:after {
-        // content: url(${warning});
-        // margin-left: 60px;
-    }
+export const Link = styled.a`
     &:visited {
         color: rgba(0, 0, 0, 0.87);
     }

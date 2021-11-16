@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import format from 'date-fns/format';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
-import { getRounds, ThalesRoyalData } from '../../getThalesRoyalData';
+import { getRounds, Positions, ThalesRoyalData } from '../../getThalesRoyalData';
 import useInterval from '../../../../../hooks/useInterval';
 import { BigNumber, ethers } from 'ethers';
 import thalesRoyal from '../../../../../utils/contracts/thalesRoyalContract';
@@ -14,6 +14,8 @@ import { FlexDiv, FlexDivCentered } from '../../../../../theme/common';
 type BattleRoyaleProps = {
     royaleData: ThalesRoyalData;
     setFetchNewData: (id: number) => void;
+    setPositions: (positions: Positions) => void;
+    positions: Positions;
 };
 
 const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
@@ -32,7 +34,9 @@ const renderRounds = (
     royaleData: ThalesRoyalData,
     setFetchNewData: (id: number) => void,
     timeLeftForPositioning: Date | null,
-    timeLeftInRound: Date | null
+    timeLeftInRound: Date | null,
+    setPositions: (positions: Positions) => void,
+    positions: Positions
 ) => {
     const { t } = useTranslation();
     const { round, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
@@ -71,8 +75,13 @@ const renderRounds = (
         const txResult = await tx.wait();
 
         if (txResult && txResult.events) {
+            const isUp = option === 2;
             dispatchMarketNotification('Successfully submitted');
             setFetchNewData(Date.now());
+            setPositions({
+                up: isUp ? positions.up + 1 : Math.max(positions.up - 1, 0),
+                down: !isUp ? positions.down + 1 : Math.max(positions.down - 1, 0),
+            });
         }
     };
 
@@ -163,7 +172,7 @@ const renderRounds = (
     return cards;
 };
 
-const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData }) => {
+const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData, setPositions, positions }) => {
     const { t } = useTranslation();
     const { roundStartTime, roundEndTime, roundChoosingLength } = royaleData;
 
@@ -203,7 +212,14 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
             <CardWrapper id="battle-royale-wrapper">
                 <ScrollWrapper>
                     {royaleData ? (
-                        renderRounds(royaleData, setFetchNewData, timeLeftForPositioning, timeLeftInRound)
+                        renderRounds(
+                            royaleData,
+                            setFetchNewData,
+                            timeLeftForPositioning,
+                            timeLeftInRound,
+                            setPositions,
+                            positions
+                        )
                     ) : (
                         <></>
                     )}

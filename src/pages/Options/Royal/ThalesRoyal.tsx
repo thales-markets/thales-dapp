@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 import { navigateTo } from '../../../utils/routes';
 import ROUTES from '../../../constants/routes';
+import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
 
 export enum Theme {
     Light,
@@ -30,6 +31,7 @@ const ThalesRoyal: React.FC = () => {
     const [theme, setTheme] = useState(Theme.Light);
     const [positions, setPositions] = useState({ up: 0, down: 0 });
     const [user, setUser] = useState<User>();
+    const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
 
     useEffect(() => {
         if (walletAddress && networkId === 69) {
@@ -45,6 +47,10 @@ const ThalesRoyal: React.FC = () => {
         getUsers(walletAddress, () => {}, setUser);
     }, [walletAddress]);
 
+    useEffect(() => {
+        networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+    }, [networkId]);
+
     useInterval(async () => {
         setEthPrice(await getEthPrice());
     }, 10000);
@@ -55,7 +61,12 @@ const ThalesRoyal: React.FC = () => {
                 <Header theme={theme} setTheme={setTheme}></Header>
                 {!showBattle && thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
                 {showBattle && thalesRoyalData && (
-                    <BattleRoyale royaleData={thalesRoyalData} setFetchNewData={setFetchNewData} />
+                    <BattleRoyale
+                        positions={positions}
+                        setPositions={setPositions}
+                        royaleData={thalesRoyalData}
+                        setFetchNewData={setFetchNewData}
+                    />
                 )}
             </Wrapper>
             <Footer>
@@ -111,11 +122,15 @@ const ThalesRoyal: React.FC = () => {
                     </div>
                 </InfoSection>
             </Footer>
+            <WrongNetworkDialog
+                open={openNetworkWarningDialog}
+                setOpen={setOpenNetworkWarningDialog}
+            ></WrongNetworkDialog>
         </RoyaleBackground>
     );
 };
 
-const RoyaleBackground = styled(Background)`
+export const RoyaleBackground = styled(Background)`
     &.light-theme {
         --color-background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         --color-wrapper: #04045a;
