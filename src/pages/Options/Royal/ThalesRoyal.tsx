@@ -57,7 +57,12 @@ const ThalesRoyal: React.FC = () => {
                 <Header theme={theme} setTheme={setTheme}></Header>
                 {!showBattle && thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
                 {showBattle && thalesRoyalData && (
-                    <BattleRoyale royaleData={thalesRoyalData} setFetchNewData={setFetchNewData} />
+                    <BattleRoyale
+                        positions={positions}
+                        setPositions={setPositions}
+                        royaleData={thalesRoyalData}
+                        setFetchNewData={setFetchNewData}
+                    />
                 )}
             </Wrapper>
             <Footer>

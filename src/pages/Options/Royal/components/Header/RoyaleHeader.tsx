@@ -28,8 +28,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
         return undefined;
     }, [walletAddress]);
 
-    console.log('ignore', balance);
-
     return (
         <Header>
             <ThalesLogo src={logo} />

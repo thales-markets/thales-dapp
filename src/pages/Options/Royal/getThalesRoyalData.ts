@@ -4,10 +4,24 @@ import priceFeed from 'utils/contracts/priceFeed';
 import thalesData from 'thales-data';
 import { parseBytes32String } from 'utils/formatters/ethers';
 
+type GraphPosition = {
+    game: string;
+    id: string;
+    player: string;
+    position: number;
+    round: number;
+    timestamp: number;
+};
+
 type RoundInformation = {
     finalPriceInRound: string;
     positionInRound: number;
     targetPriceInRound: string;
+};
+
+export type Positions = {
+    up: number;
+    down: number;
 };
 
 export enum UserStatus {
@@ -146,16 +160,15 @@ export const getPositions = async (round: number) => {
     const positions = await thalesData.binaryOptions.thalesRoyalePositions({ network: 69 });
     return (
         positions.reduce(
-            // @ts-ignore
-            (prev, curr) => {
+            (prev: Positions, curr: GraphPosition) => {
                 if (curr.round === round) {
                     if (curr.position === 2) {
                         prev.up++;
                     } else if (curr.position === 1) {
                         prev.down++;
                     }
-                    return prev;
                 }
+                return prev;
             },
             { up: 0, down: 0 }
         ) || { up: 0, down: 0 }
