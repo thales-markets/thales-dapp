@@ -967,8 +967,13 @@
                 "ends": "Thales Royale заканчивается:"
             },
             "redirect-dialog": {
-                "title": "Вы в сети Kovan",
+                "title": "Вы в сети Optimistic Kovan",
                 "message": "Вернитесь на Thales Royale"
+            },
+            "wrong-network-dialog": {
+                "title": "Неправильная сеть!",
+                "message": "Чтобы продолжить, переключитесь на Optimistic Kovan",
+                "button": "Переключиться на Optimistic Kovan"
             }
         }
     }

@@ -966,8 +966,13 @@
                 }
             },
             "redirect-dialog": {
-                "title": "You are on Kovan Network",
+                "title": "You are on Optimistic Kovan Network",
                 "message": "Go back on Thales Royale"
+            },
+            "wrong-network-dialog": {
+                "title": "Wrong network!",
+                "message": "Please switch to Optimistic Kovan to continue",
+                "button": "Switch to Optimistic Kovan"
             }
         }
     }
