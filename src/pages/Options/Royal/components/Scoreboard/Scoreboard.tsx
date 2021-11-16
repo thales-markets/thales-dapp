@@ -6,8 +6,6 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { useTranslation, Trans } from 'react-i18next';
 import triangle from 'assets/images/royale/triangle.svg';
 import circle from 'assets/images/royale/circle.svg';
-import avatar from 'assets/images/royale/avatar.svg';
-import discord from 'assets/images/royale/discord.svg';
 import notVerified from 'assets/images/royale/not-verified.svg';
 import notSigned from 'assets/images/royale/not-signed.svg';
 import important from 'assets/images/royale/important.svg';
@@ -21,7 +19,6 @@ import downSelected from 'assets/images/down-selected.svg';
 import down from 'assets/images/down.svg';
 import upSelected from 'assets/images/up-selected.svg';
 import up from 'assets/images/up.svg';
-import { Modal } from '@material-ui/core';
 
 type ScoreboardProps = {
     royaleData: ThalesRoyalData;
@@ -131,7 +128,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
         }
     };
 
-    const getFooter = (user: User | undefined) => {
+    const getFooter = (user: User | undefined, royaleData: ThalesRoyalData) => {
+        console.log(user);
         if (user) {
             if (user.status == UserStatus.RDY) {
                 if (user.isAlive) {
@@ -140,13 +138,21 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     return <DeadText>You have been eliminated</DeadText>;
                 }
             }
+            if (royaleData.signUpPeriod < new Date()) return;
             if (user.status === UserStatus.NOTSIGNED) {
                 return <Button onClick={signUp}>Sign Up</Button>;
+            }
+            if (user.status === UserStatus.NOTVERIFIED) {
+                return (
+                    <Button onClick={setShowPopup.bind(this, true)}>
+                        Verify <Discord className="icon icon--discord" />
+                    </Button>
+                );
             }
         }
         return (
             <Button onClick={setShowPopup.bind(this, true)}>
-                Verify <Discord src={discord} />
+                Verify <Discord className="icon icon--discord" />
             </Button>
         );
     };
@@ -154,22 +160,31 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     return (
         <Wrapper className="scoreboard">
             <Intro royaleData={royaleData} />
-            <Modal
-                open={showPopup}
-                onClose={() => {
+
+            <ModalOverlay
+                style={{ display: showPopup ? 'block' : 'none' }}
+                onClick={() => {
                     setShowPopup(false);
                 }}
             >
-                <Popup>
-                    <PopupTitle>To Complete Verification!</PopupTitle>
-                    <PopupImage src={important}></PopupImage>
-                    <PopupDescription>Go to Thales discord and type !verify 0x...</PopupDescription>
-                </Popup>
-            </Modal>
+                {' '}
+                <ModalWrapper></ModalWrapper>
+            </ModalOverlay>
+
+            <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
+                <PopupTitle>To Complete Verification!</PopupTitle>
+                <PopupImage src={important}></PopupImage>
+                <PopupDescription>Go to Thales discord and type !verify 0x...</PopupDescription>
+            </Popup>
 
             <UserWrapper>
                 <FlexDiv style={{ alignItems: 'center' }}>
-                    <UserAvatar src={user?.avatar ?? avatar} style={{ marginRight: 14 }} />
+                    {user?.avatar ? (
+                        <UserAvatar src={user.avatar} />
+                    ) : (
+                        <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
+                    )}
+
                     <UserLabel>
                         {t('options.royale.scoreboard.player-no')}
                         {' #'}
@@ -192,7 +207,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                         </InputWrapper>
                     </FlexContainer>
                 </FlexDivColumn>
-                {getFooter(user)}
+                {getFooter(user, royaleData)}
             </UserWrapper>
             <TableWrapper>
                 <TableRow style={{ justifyContent: 'flex-end' }}>
@@ -336,11 +351,33 @@ const PaginationIcon = styled.i`
     }
 `;
 
+const ModalWrapper = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-background);
+    mix-blend-mode: multiply;
+`;
+
+const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-wrapper);
+    opacity: 0.9;
+    mix-blend-mode: multiply;
+`;
+
 const Popup = styled.div`
     display: flex;
-    position: relative;
+    position: fixed;
     top: 300px;
     width: 420px;
+    left: calc(50% - 200px);
     margin: auto;
     flex-direction: column;
     justify-content: center;
@@ -350,6 +387,7 @@ const Popup = styled.div`
     box-sizing: border-box;
     border-radius: 5px;
     padding: 24px;
+    box-shadow: 0px 4px 50px var(--color); ;
 `;
 
 const PopupTitle = styled(Text)`
@@ -490,7 +528,7 @@ const Button = styled.button`
     align-items: center;
     cursor: pointer;
     display: flex;
-    font-family: SansationLight !important;
+    font-family: Sansation !important;
     font-style: normal;
     font-weight: bold;
     font-size: 20px;
@@ -498,7 +536,7 @@ const Button = styled.button`
     background: var(--color);
     border: 1px solid var(--color);
     box-sizing: border-box;
-    box-shadow: 0px 0px 30px rgba(161, 224, 180, 0.5);
+    box-shadow: 0px 0px 30px var(--color);
     border-radius: 20px;
     padding: 6px 15px 6px 20px;
     color: var(--color-wrapper);
@@ -530,10 +568,11 @@ const Status = styled.span`
     }
 `;
 
-const Discord = styled(Image)`
-    width: 24px;
-    height: 18px;
-    margin-left: 10px;
+const Discord = styled.i`
+    font-size: 24px;
+    line-height: 18px;
+    color: var(--color-wrapper);
+    margin-left: 14px;
 `;
 
 const InputWrapper = styled.div`

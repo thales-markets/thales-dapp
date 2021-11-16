@@ -65,3 +65,46 @@
 .icon--unsigned:before {
     content: '\006F';
 }
+
+.icon--double-arrow:before {
+    content: '\0070';
+}
+
+.icon--arrow-up:before {
+    content: '\0071';
+}
+
+.icon--arrow-down:before {
+    content: '\0072';
+}
+
+.icon--user-avatar:before {
+    content: '\0073';
+}
+
+.icon--wallet:before {
+    content: '\0074';
+}
+
+.icon--discord:before {
+    content: '\0075';
+}
+
+.icon--b-theme:before {
+    content: '\0076';
+}
+
+.icon--g-theme:before {
+    content: '\0077';
+}
+
+.icon--chn:before {
+    content: '\0078';
+}
+.icon--eng:before {
+    content: '\0079';
+}
+
+.icon--rus:before {
+    content: '\007A';
+}

@@ -4,7 +4,6 @@ import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { getEthBalance } from '../../getThalesRoyalData';
-import avatar from 'assets/images/royale/avatar.svg';
 import { truncateAddress } from 'utils/formatters/string';
 import { Theme } from '../../ThalesRoyal';
 
@@ -31,7 +30,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
             <ThalesLogo className="icon icon--logo" />
             <InfoWrapper>
                 <BorderedWrapper>
-                    <UserAvatar src={avatar} />
+                    <UserAvatar className="icon icon--user-avatar" />
                     <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
                     <UserText> {balance} Eth </UserText>
                 </BorderedWrapper>
@@ -45,7 +44,14 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                         }}
                         onClick={setTheme.bind(this, theme === Theme.Light ? Theme.Dark : Theme.Light)}
                     >
-                        <ThemeSelector> {theme === Theme.Light ? 'B' : 'G'}</ThemeSelector>
+                        <ThemeSelector>
+                            {' '}
+                            {theme === Theme.Light ? (
+                                <ThemeIcon className="icon icon--b-theme" />
+                            ) : (
+                                <ThemeIcon className="icon icon--g-theme" />
+                            )}
+                        </ThemeSelector>
                         <ThemeText>Theme</ThemeText>
                     </BorderedWrapper>
                 </UtilWrapper>
@@ -84,6 +90,9 @@ const ThemeText = styled.p`
     font-weight: 300;
 `;
 
+const ThemeIcon = styled.i`
+    background: var(--color-wrapper);
+`;
 const UtilWrapper = styled.div`
     display: flex;
     flex: 1;
@@ -118,9 +127,8 @@ const BorderedWrapper = styled.div`
     padding: 4px 6px;
     flex: 1;
 `;
-const UserAvatar = styled.img`
-    height: 19px;
-    object-fit: contain;
+const UserAvatar = styled.i`
+    font-size: 20px;
 `;
 
 const UserText = styled.p`
