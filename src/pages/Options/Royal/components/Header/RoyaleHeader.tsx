@@ -5,8 +5,6 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { getEthBalance } from '../../getThalesRoyalData';
 import avatar from 'assets/images/royale/avatar.svg';
-import logo from 'assets/images/royale/logo.svg';
-import royaleLogo from 'assets/images/royale/royale-logo.svg';
 import { truncateAddress } from 'utils/formatters/string';
 import { Theme } from '../../ThalesRoyal';
 
@@ -32,7 +30,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
 
     return (
         <Header>
-            <ThalesLogo src={logo} />
+            <ThalesLogo className="icon icon--logo" />
             <InfoWrapper>
                 <BorderedWrapper>
                     <UserAvatar src={avatar} />
@@ -40,7 +38,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                     <UserText> {balance} Eth </UserText>
                 </BorderedWrapper>
                 <UtilWrapper>
-                    <RoyaleLogo src={royaleLogo} />
+                    <RoyaleLogo className="icon icon--royale-logo" />
                     <BorderedWrapper
                         style={{
                             flexDirection: theme === Theme.Light ? 'row' : 'row-reverse',
@@ -90,16 +88,16 @@ const ThemeText = styled.p`
 
 const UtilWrapper = styled.div`
     display: flex;
-    justify-content: center;
     flex: 1;
-    align-items: center;
+    justify-content: space-around;
+    align-items: flex-start;
     width: 100%;
     margin-top: 8px;
 `;
 
-const ThalesLogo = styled.img`
-    height: 30px;
-    object-fit: contain;
+const ThalesLogo = styled.i`
+    font-size: 127px;
+    line-height: 30px;
 `;
 const InfoWrapper = styled.div`
     display: flex;
@@ -107,9 +105,9 @@ const InfoWrapper = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
 `;
-const RoyaleLogo = styled.img`
-    height: 25px;
-    object-fit: contain;
+const RoyaleLogo = styled.i`
+    line-height: 36px;
+    font-size: 78px;
 `;
 const BorderedWrapper = styled.div`
     display: flex;

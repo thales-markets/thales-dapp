@@ -952,7 +952,7 @@
                 "question": "Do you have what it takes to beat the competition and reach the final round?",
                 "info1": "Show us in this epic predictions battle: <bold>Thales Royale</bold>",
                 "info2": "Thales Royale is a <bold>sequential guessing game played in 7 rounds.</bold> After the sign-up period ends, the first round starts, and participants are presented with 3 parameters: An asset, a strike price, and a very close-in-time strike date.",
-                "info3": "Based on this information participants <bold>must choose if they think the current price it's gonna be higher (<triangle />) or lower (<circle />)</bold> than the strike price at the strike date.",
+                "info3": "Based on this information participants <bold>must choose if they think the current price it's gonna be higher (△) or lower (◯)</bold> than the strike price at the strike date.",
                 "info4": "Those who guessed correctly advance to the next round. Players who reach the final round split the prize.",
                 "info5": "All the <bold>information, rules, and detailed rounds & prize structure</bold> can be found here:",
                 "info6": "<bold>Good luck and let the battle begin!</bold>",

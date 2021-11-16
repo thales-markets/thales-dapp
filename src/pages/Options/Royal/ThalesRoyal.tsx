@@ -7,8 +7,6 @@ import { Background, FlexDivCentered, Wrapper, Text } from 'theme/common';
 import BattleRoyale from './components/BattleRoyale';
 import Scoreboard from './components/Scoreboard';
 import { getEthPrice, getPositions, getThalesRoyalData, getUsers, ThalesRoyalData, User } from './getThalesRoyalData';
-import leftArrow from 'assets/images/royale/left.svg';
-import rightArrow from 'assets/images/royale/right.svg';
 import useInterval from '../../../hooks/useInterval';
 import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
@@ -64,20 +62,20 @@ const ThalesRoyal: React.FC = () => {
                 <Nav>
                     {!showBattle && (
                         <NavButton onClick={() => navigateTo(ROUTES.Options.Home)}>
-                            <img src={leftArrow} />
+                            <i className="icon icon--left" />
                             <Text> Thales dApp </Text>
                         </NavButton>
                     )}
                     {showBattle && (
                         <NavButton onClick={() => setShowBattle(false)}>
-                            <img src={leftArrow} />
+                            <i className="icon icon--left" />
                             <Text> Scoreboard </Text>
                         </NavButton>
                     )}
                     {!showBattle && (
                         <NavButton onClick={() => setShowBattle(true)}>
                             <Text> Battle </Text>
-                            <img src={rightArrow} />
+                            <i className="icon icon--right" />
                         </NavButton>
                     )}
                 </Nav>
@@ -155,7 +153,7 @@ const NavButton = styled(FlexDivCentered)`
     font-size: 20px;
     line-height: 22px;
     color: var(--color);
-    > * {
+    > span {
         font-family: SansationLight !important;
     }
     &.disabled {

@@ -78,88 +78,94 @@ export const getEthBalance = async (walletAddress: string) => {
 };
 
 export const getUsers = async (walletAddress: string | null, setUsers: any, setUser: any) => {
-    const baseUrl = 'https://api.thales.market/thales-royale/';
-    const response = await fetch(baseUrl);
-    const result = JSON.parse(await response.text());
-    const map = new Map(result);
-    const data = await thalesData.binaryOptions.thalesRoyalePlayers({ network: 69 });
-    const verified: User[] = [];
-    const unverified: User[] = [];
-    const unasigned: User[] = [];
-    data.reverse().map((player: any, key: number) => {
-        const isAlive = player.isAlive;
-        const address = player.address;
-        const number = key + 1;
+    try {
+        const baseUrl = 'https://api.thales.market/thales-royale/';
+        const response = await fetch(baseUrl);
+        const result = JSON.parse(await response.text());
+        const map = new Map(result);
+        const data = await thalesData.binaryOptions.thalesRoyalePlayers({ network: 69 });
+        const verified: User[] = [];
+        const unverified: User[] = [];
+        const unasigned: User[] = [];
+        data.reverse().map((player: any, key: number) => {
+            const isAlive = player.isAlive;
+            const address = player.address;
+            const number = key + 1;
 
-        if (map.has(player.address.toLowerCase())) {
-            const discordUser: any = map.get(player.address.toLowerCase());
+            if (map.has(player.address.toLowerCase())) {
+                const discordUser: any = map.get(player.address.toLowerCase());
+                const user = {
+                    isAlive,
+                    address,
+                    number,
+                    name: discordUser.name,
+                    avatar: discordUser.avatar,
+                    status: UserStatus.RDY,
+                };
+                verified.push(user);
+                if (walletAddress && user.address === walletAddress.toLowerCase()) {
+                    setUser(user);
+                }
+                map.delete(player.address.toLowerCase());
+            } else {
+                const user = {
+                    isAlive,
+                    address,
+                    name: '',
+                    number,
+                    avatar: '',
+                    status: UserStatus.NOTVERIFIED,
+                };
+                if (walletAddress && user.address === walletAddress.toLowerCase()) {
+                    setUser(user);
+                }
+                unverified.push(user);
+            }
+        });
+        Array.from(map).map((player: any) => {
             const user = {
-                isAlive,
-                address,
-                number,
-                name: discordUser.name,
-                avatar: discordUser.avatar,
-                status: UserStatus.RDY,
+                isAlive: true,
+                address: player[0],
+                number: 0,
+                name: player[1].name,
+                avatar: player[1].avatar,
+                status: UserStatus.NOTSIGNED,
             };
-            verified.push(user);
             if (walletAddress && user.address === walletAddress.toLowerCase()) {
                 setUser(user);
             }
-            map.delete(player.address.toLowerCase());
-        } else {
-            const user = {
-                isAlive,
-                address,
-                name: '',
-                number,
-                avatar: '',
-                status: UserStatus.NOTVERIFIED,
-            };
-            if (walletAddress && user.address === walletAddress.toLowerCase()) {
-                setUser(user);
-            }
-            unverified.push(user);
-        }
-    });
-    Array.from(map).map((player: any) => {
-        const user = {
-            isAlive: true,
-            address: player[0],
-            number: 0,
-            name: player[1].name,
-            avatar: player[1].avatar,
-            status: UserStatus.NOTSIGNED,
-        };
-        if (walletAddress && user.address === walletAddress.toLowerCase()) {
-            setUser(user);
-        }
-        unasigned.push(user);
-    });
-    setUsers([...verified, ...unasigned, ...unverified]);
+            unasigned.push(user);
+        });
+        setUsers([...verified, ...unasigned, ...unverified]);
+    } catch {}
 };
 
 export const getRounds = async () => {
-    return await thalesData.binaryOptions.thalesRoyaleRounds({ network: 69 });
+    try {
+        return await thalesData.binaryOptions.thalesRoyaleRounds({ network: 69 });
+    } catch {}
 };
 
 export const getPositions = async (round: number) => {
-    const positions = await thalesData.binaryOptions.thalesRoyalePositions({ network: 69 });
-    return (
-        positions.reduce(
-            // @ts-ignore
-            (prev, curr) => {
-                if (curr.round === round) {
-                    if (curr.position === 2) {
-                        prev.up++;
-                    } else if (curr.position === 1) {
-                        prev.down++;
+    try {
+        const positions = await thalesData.binaryOptions.thalesRoyalePositions({ network: 69 });
+        return (
+            positions.reduce(
+                // @ts-ignore
+                (prev, curr) => {
+                    if (curr.round === round) {
+                        if (curr.position === 2) {
+                            prev.up++;
+                        } else if (curr.position === 1) {
+                            prev.down++;
+                        }
+                        return prev;
                     }
-                    return prev;
-                }
-            },
-            { up: 0, down: 0 }
-        ) || { up: 0, down: 0 }
-    );
+                },
+                { up: 0, down: 0 }
+            ) || { up: 0, down: 0 }
+        );
+    } catch {}
 };
 
 export const signUp = async () => {
