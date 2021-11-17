@@ -362,6 +362,7 @@ const LongButton = styled.button<{ selected?: boolean }>`
     color: ${(props) => (props.selected ? '#59cda3' : 'white')};
     font-size: 55px;
     cursor: pointer;
+    line-height: 55px;
     &:disabled {
         background: #b9c7c2;
         cursor: not-allowed;
