@@ -48,7 +48,7 @@ const ThalesRoyal: React.FC = () => {
     }, [walletAddress]);
 
     useEffect(() => {
-        networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+        walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
     }, [networkId]);
 
     useInterval(async () => {
