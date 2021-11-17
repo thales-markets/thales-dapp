@@ -13,6 +13,7 @@ import Header from './components/Header';
 import { navigateTo } from '../../../utils/routes';
 import ROUTES from '../../../constants/routes';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
+import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 
 export enum Theme {
     Light,
@@ -32,6 +33,7 @@ const ThalesRoyal: React.FC = () => {
     const [positions, setPositions] = useState({ up: 0, down: 0 });
     const [user, setUser] = useState<User>();
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
+    const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
 
     useEffect(() => {
         if (walletAddress && networkId === 69) {
@@ -41,6 +43,7 @@ const ThalesRoyal: React.FC = () => {
                 getPositions(data.round).then((data) => setPositions(data));
             });
         }
+        !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
     }, [walletAddress, networkId, fetchNewData]);
 
     useEffect(() => {
@@ -49,7 +52,7 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
-    }, [networkId]);
+    }, [networkId, walletAddress]);
 
     useInterval(async () => {
         setEthPrice(await getEthPrice());
@@ -129,6 +132,10 @@ const ThalesRoyal: React.FC = () => {
                 open={openNetworkWarningDialog}
                 setOpen={setOpenNetworkWarningDialog}
             ></WrongNetworkDialog>
+            <WalletNotConnectedDialog
+                open={openWalletNotConnectedDialog}
+                setOpen={setOpenWalletNotConnectedDialog}
+            ></WalletNotConnectedDialog>
         </RoyaleBackground>
     );
 };

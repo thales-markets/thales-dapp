@@ -6,6 +6,10 @@ import styled from 'styled-components';
 import { getEthBalance } from '../../getThalesRoyalData';
 import { truncateAddress } from 'utils/formatters/string';
 import { Theme } from '../../ThalesRoyal';
+import { useTranslation } from 'react-i18next';
+import onboardConnector from 'utils/onboardConnector';
+import './media.scss';
+import UserInfoModal from 'components/UserInfo/UserInfoModal';
 
 type RoyaleHeaderInput = {
     theme: Theme;
@@ -13,8 +17,10 @@ type RoyaleHeaderInput = {
 };
 
 const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
+    const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const [balance, setBalance] = useState(0);
+    const [openUserInfo, setOpenUserInfo] = useState(false);
     useEffect(() => {
         if (walletAddress) {
             getEthBalance(walletAddress).then((balance: any) => {
@@ -26,37 +32,53 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
     }, [walletAddress]);
 
     return (
-        <Header>
-            <ThalesLogo className="icon icon--logo" />
-            <InfoWrapper>
-                <BorderedWrapper>
-                    <UserAvatar className="icon icon--user-avatar" />
-                    <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
-                    <UserText> {balance} Eth </UserText>
-                </BorderedWrapper>
-                <UtilWrapper>
-                    <RoyaleLogo className="icon icon--royale-logo" />
-                    <BorderedWrapper
-                        style={{
-                            flexDirection: theme === Theme.Light ? 'row' : 'row-reverse',
-                            cursor: 'pointer',
-                            maxWidth: 70,
-                        }}
-                        onClick={setTheme.bind(this, theme === Theme.Light ? Theme.Dark : Theme.Light)}
-                    >
-                        <ThemeSelector>
-                            {' '}
-                            {theme === Theme.Light ? (
-                                <ThemeIcon className="icon icon--b-theme" />
-                            ) : (
-                                <ThemeIcon className="icon icon--g-theme" />
-                            )}
-                        </ThemeSelector>
-                        <ThemeText>Theme</ThemeText>
-                    </BorderedWrapper>
-                </UtilWrapper>
-            </InfoWrapper>
-        </Header>
+        <>
+            <Header>
+                <ThalesLogo className="icon icon--logo" />
+                <InfoWrapper>
+                    {!walletAddress && (
+                        <HeaderButton onClick={onboardConnector.connectWallet}>
+                            <WalletIcon className="icon icon--wallet" />
+                            <InfoText>{t('common.wallet.connect-your-wallet')}</InfoText>
+                        </HeaderButton>
+                    )}
+                    {walletAddress && (
+                        <HeaderButton onClick={() => setOpenUserInfo(true)}>
+                            <UserAvatar className="icon icon--user-avatar" />
+                            <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
+                            <UserText> {balance} Eth </UserText>
+                        </HeaderButton>
+                    )}
+                    <UtilWrapper>
+                        <RoyaleLogo className="icon icon--royale-logo" />
+                        <BorderedWrapper
+                            style={{
+                                flexDirection: theme === Theme.Light ? 'row' : 'row-reverse',
+                                cursor: 'pointer',
+                                maxWidth: 70,
+                            }}
+                            onClick={setTheme.bind(this, theme === Theme.Light ? Theme.Dark : Theme.Light)}
+                        >
+                            <ThemeSelector>
+                                {' '}
+                                {theme === Theme.Light ? (
+                                    <ThemeIcon className="icon icon--b-theme" />
+                                ) : (
+                                    <ThemeIcon className="icon icon--g-theme" />
+                                )}
+                            </ThemeSelector>
+                            <ThemeText>Theme</ThemeText>
+                        </BorderedWrapper>
+                    </UtilWrapper>
+                </InfoWrapper>
+            </Header>
+            <UserInfoModal
+                walletAddress={walletAddress}
+                network={'Optimistic Kovan'}
+                open={openUserInfo}
+                handleClose={setOpenUserInfo.bind(this, false)}
+            />
+        </>
     );
 };
 
@@ -145,6 +167,39 @@ const UserText = styled.p`
         border-left: 1px solid var(--color);
         padding-left: 8px;
     }
+`;
+
+const WalletIcon = styled.i`
+    font-size: 17px;
+`;
+
+const InfoText = styled.p`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: var(--color);
+
+    margin: 0 4px;
+
+    &:last-child {
+        padding-left: 8px;
+    }
+`;
+
+const HeaderButton = styled.button`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 20px;
+    height: 28px;
+    padding: 4px 6px;
+    flex: 1;
+    background: var(--color-wrapper);
+    cursor: pointer;
 `;
 
 export default RoyaleHeader;

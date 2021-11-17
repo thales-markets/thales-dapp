@@ -6,7 +6,7 @@ import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
 import ExploreMarkets from './ExploreMarkets';
 import Loader from 'components/Loader';
-import { getNetworkId } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { Background, Wrapper } from 'theme/common';
@@ -19,10 +19,12 @@ import { useLocation } from 'react-router-dom';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import { getIsOVM } from 'utils/network';
 import { RedirectDialog } from '../Royal/components/RedirectDialog/RedirectDialog';
+import WalletNotConnectedDialog from '../Royal/components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const location = useLocation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -45,6 +47,7 @@ export const Home: React.FC = () => {
     }, [marketsQuery, synthsMap, openOrdersMap]);
     const isL2 = getIsOVM(networkId);
     const [openRedirectDialog, setOpenRedirectDialog] = useState(false);
+    const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
 
     const exchangeRatesMarketDataQuery = useExchangeRatesMarketDataQuery(networkId, optionsMarkets, {
         enabled: isAppReady && optionsMarkets.length > 0,
@@ -72,10 +75,15 @@ export const Home: React.FC = () => {
     }, [location]);
 
     useEffect(() => {
-        if (isL2 && location.pathname !== ROUTES.Options.Royal) {
-            setOpenRedirectDialog(true);
+        if (!walletAddress && isL2) {
+            setOpenWalletNotConnectedDialog(true);
+        } else {
+            setOpenWalletNotConnectedDialog(false);
+            if (isL2 && location.pathname !== ROUTES.Options.Royal) {
+                setOpenRedirectDialog(true);
+            }
         }
-    }, [location]);
+    }, [location, walletAddress]);
 
     return (
         <>
@@ -100,6 +108,10 @@ export const Home: React.FC = () => {
 
                         <ExploreMarkets optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />
                         <RedirectDialog open={openRedirectDialog} setOpen={setOpenRedirectDialog}></RedirectDialog>
+                        <WalletNotConnectedDialog
+                            open={openWalletNotConnectedDialog}
+                            setOpen={setOpenWalletNotConnectedDialog}
+                        ></WalletNotConnectedDialog>
                     </Wrapper>
                 </Background>
             ) : (
