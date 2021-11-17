@@ -156,7 +156,9 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
 
 export const getRounds = async () => {
     try {
-        return await thalesData.binaryOptions.thalesRoyaleRounds({ network: 69 });
+        return (await thalesData.binaryOptions.thalesRoyaleRounds({ network: 69 })).sort((a: any, b: any) =>
+            a.round > b.round ? 1 : -1
+        );
     } catch {}
 };
 
