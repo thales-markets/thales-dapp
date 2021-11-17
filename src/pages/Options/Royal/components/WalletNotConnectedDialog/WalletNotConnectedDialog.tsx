@@ -1,7 +1,7 @@
 import { DialogTitle } from '@material-ui/core';
 import { StyledModal } from 'pages/Options/Market/TradeOptions/Orderbook/components';
 import React from 'react';
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Text } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
@@ -14,7 +14,7 @@ type WalletNotConnectedDialogProps = {
 };
 
 export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> = ({ open, setOpen }) => {
-    // const { t } = useTranslation();
+    const { t } = useTranslation();
     const onClose = () => {
         setOpen(false);
     };
@@ -49,7 +49,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                             lineHeight: '28px',
                         }}
                     >
-                        {'Wallet not connected'}
+                        {t('options.royale.wallet-not-connected-dialog.title')}
                     </Text>
                     <Text
                         className="wrong-network-modal-font"
@@ -60,7 +60,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                             lineHeight: '22px',
                         }}
                     >
-                        {'Please connect your wallet to continue'}
+                        {t('options.royale.wallet-not-connected-dialog.message')}
                     </Text>
 
                     <i
@@ -84,7 +84,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                         }}
                         onClick={onboardConnector.connectWallet}
                     >
-                        {'ConnectWallet'}
+                        {t('options.royale.wallet-not-connected-dialog.button')}
                         <i
                             className="icon icon--right"
                             style={{

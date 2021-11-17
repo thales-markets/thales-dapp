@@ -974,6 +974,11 @@
                 "title": "网络不对",
                 "message": "请切换到 Optimistic Kovan 继续",
                 "button": "切换到 Optimistic Kovan"
+            },
+            "wallet-not-connected-dialog": {
+                "title": "钱包未连接",
+                "button": "连接钱包",
+                "message": "请连接您的钱包以继续"
             }
         }
     }

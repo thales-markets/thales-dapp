@@ -973,6 +973,11 @@
                 "title": "Wrong network!",
                 "message": "Please switch to Optimistic Kovan to continue",
                 "button": "Switch to Optimistic Kovan"
+            },
+            "wallet-not-connected-dialog": {
+                "title": "Wallet not connected",
+                "message": "Please connect your wallet to continue",
+                "button": "Connect wallet"
             }
         }
     }
