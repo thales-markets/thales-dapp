@@ -70,11 +70,11 @@
     content: '\0070';
 }
 
-.icon--arrow-up:before {
+.icon--arrow-down:before {
     content: '\0071';
 }
 
-.icon--arrow-down:before {
+.icon--arrow-up:before {
     content: '\0072';
 }
 

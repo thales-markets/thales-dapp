@@ -206,7 +206,9 @@ const InfoSection = styled.div`
                 padding-right: 7px;
             }
             &:nth-child(2) {
+                font-family: VT323 !important;
                 font-weight: bold;
+                font-size: 28px;
             }
             &:nth-child(3) {
                 padding-left: 7px;

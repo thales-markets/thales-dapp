@@ -14,11 +14,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { truncateAddress } from 'utils/formatters/string';
 import { LightTooltip } from 'pages/Options/Market/components';
-import { Arrow, ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
-import downSelected from 'assets/images/down-selected.svg';
-import down from 'assets/images/down.svg';
-import upSelected from 'assets/images/up-selected.svg';
-import up from 'assets/images/up.svg';
+import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
 
 type ScoreboardProps = {
     royaleData: ThalesRoyalData;
@@ -138,9 +134,20 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     return <DeadText>You have been eliminated</DeadText>;
                 }
             }
+
             if (royaleData.signUpPeriod < new Date()) return;
             if (user.status === UserStatus.NOTSIGNED) {
-                return <Button onClick={signUp}>Sign Up</Button>;
+                return (
+                    <Button
+                        onClick={() => {
+                            signUp()
+                                .then(() => getUsers(walletAddress, setUsers, setUser))
+                                .catch((e) => console.log(e));
+                        }}
+                    >
+                        Sign Up
+                    </Button>
+                );
             }
             if (user.status === UserStatus.NOTVERIFIED) {
                 return (
@@ -150,6 +157,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                 );
             }
         }
+
+        if (royaleData.signUpPeriod < new Date()) return;
         return (
             <Button onClick={setShowPopup.bind(this, true)}>
                 Verify <Discord className="icon icon--discord" />
@@ -158,9 +167,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     };
 
     return (
-        <Wrapper className="scoreboard">
-            <Intro royaleData={royaleData} />
-
+        <>
             <ModalOverlay
                 style={{ display: showPopup ? 'block' : 'none' }}
                 onClick={() => {
@@ -170,154 +177,159 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                 {' '}
                 <ModalWrapper></ModalWrapper>
             </ModalOverlay>
-
             <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
                 <PopupTitle>To Complete Verification!</PopupTitle>
                 <PopupImage src={important}></PopupImage>
                 <PopupDescription>Go to Thales discord and type !verify 0x...</PopupDescription>
             </Popup>
+            <Wrapper className="scoreboard">
+                <Intro royaleData={royaleData} />
 
-            <UserWrapper>
-                <FlexDiv style={{ alignItems: 'center' }}>
-                    {user?.avatar ? (
-                        <UserAvatar src={user.avatar} />
-                    ) : (
-                        <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
-                    )}
+                <UserWrapper>
+                    <FlexDiv style={{ alignItems: 'center' }}>
+                        {user?.avatar ? (
+                            <UserAvatar src={user.avatar} style={{ marginRight: 14 }} />
+                        ) : (
+                            <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
+                        )}
 
-                    <UserLabel>
-                        {t('options.royale.scoreboard.player-no')}
-                        {' #'}
-                        {user?.number}
-                    </UserLabel>
-                </FlexDiv>
-                <FlexDivColumn style={{ margin: '20px 0' }}>
-                    <FlexContainer>
-                        <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
-                        <InputWrapper>{user?.name}</InputWrapper>
-                    </FlexContainer>
-                    <FlexContainer>
-                        <UserLabel>{t('options.leaderboard.address')}:</UserLabel>
-                        <InputWrapper>
-                            {truncateAddress(
-                                walletAddress as any,
-                                truncateAddressNumberOfCharacters,
-                                truncateAddressNumberOfCharacters
-                            )}
-                        </InputWrapper>
-                    </FlexContainer>
-                </FlexDivColumn>
-                {getFooter(user, royaleData)}
-            </UserWrapper>
-            <TableWrapper>
-                <TableRow style={{ justifyContent: 'flex-end' }}>
-                    <SearchWrapper
-                        onChange={(e) => setSearchString(e.target.value)}
-                        value={searchString}
-                        placeholder={t('options.leaderboard.display-name')}
-                    ></SearchWrapper>
-                </TableRow>
-
-                <TableRow>
-                    {HeadCells.map((cell, key) => (
-                        <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
-                            {cell.text}{' '}
-                            {cell.sortable && (
-                                <ArrowsWrapper>
-                                    {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                        <Arrow
-                                            src={orderDirection === OrderDirection.ASC ? upSelected : downSelected}
-                                        />
-                                    ) : (
-                                        <>
-                                            <Arrow src={up} />
-                                            <Arrow src={down} />
-                                        </>
-                                    )}
-                                </ArrowsWrapper>
-                            )}
-                        </HeadCell>
-                    ))}
-                </TableRow>
-                {usersForUi?.usersToDisplay.map((user: User, key: number) => (
-                    <TableRow
-                        key={key}
-                        className={user.isAlive ? 'alive' : 'dead'}
-                        style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
-                    >
-                        <HeadCell>
-                            <Status>
-                                <StatusAvatar className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'} />
-                                <span>{user.isAlive ? 'alive' : 'dead'}</span>
-                            </Status>
-                        </HeadCell>
-                        <HeadCell>{getAvatar(user)}</HeadCell>
-                        <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
-                        <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
-                    </TableRow>
-                ))}
-                {usersForUi?.usersToDisplay ? (
-                    <Pagination>
-                        <PaginationIcon
-                            className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
-                            onClick={() => {
-                                if (page <= 1) return;
-                                setPage(1);
-                            }}
-                        />
-                        <PaginationIcon
-                            className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
-                            onClick={() => {
-                                if (page <= 1) return;
-                                setPage(page - 1);
-                            }}
-                        />
-                        <Text className="max-pages">
-                            {page}/{usersForUi?.maxPages}
-                        </Text>
-                        <PaginationIcon
-                            className={`icon icon--right ${
-                                usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
-                            }`}
-                            onClick={() => {
-                                if (usersForUi && usersForUi.maxPages === page) return;
-                                setPage(page + 1);
-                            }}
-                        />
-                        <PaginationIcon
-                            className={`icon icon--double-right ${
-                                usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
-                            }`}
-                            onClick={() => {
-                                if (usersForUi && usersForUi.maxPages === page) return;
-                                setPage(usersForUi.maxPages);
-                            }}
-                        />
-
-                        <PaginationUsers>
-                            <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
-                            {showDropdown &&
-                                PerPageOption.filter((number) => number !== showPerPage).map(
-                                    (option: number, key: number) => (
-                                        <Text
-                                            onClick={() => {
-                                                setShowPerPage(option);
-                                                setShowDropdown(false);
-                                            }}
-                                            key={key}
-                                        >
-                                            {option}
-                                        </Text>
-                                    )
+                        <UserLabel>
+                            {t('options.royale.scoreboard.player-no')}
+                            {' #'}
+                            {user?.number}
+                        </UserLabel>
+                    </FlexDiv>
+                    <FlexDivColumn style={{ margin: '20px 0' }}>
+                        <FlexContainer>
+                            <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
+                            <InputWrapper>{user?.name}</InputWrapper>
+                        </FlexContainer>
+                        <FlexContainer>
+                            <UserLabel>{t('options.leaderboard.address')}:</UserLabel>
+                            <InputWrapper>
+                                {truncateAddress(
+                                    walletAddress as any,
+                                    truncateAddressNumberOfCharacters,
+                                    truncateAddressNumberOfCharacters
                                 )}
-                        </PaginationUsers>
-                        <UsersPerPageText>Users per page</UsersPerPageText>
-                    </Pagination>
-                ) : (
-                    ''
-                )}
-            </TableWrapper>
-        </Wrapper>
+                            </InputWrapper>
+                        </FlexContainer>
+                    </FlexDivColumn>
+                    {getFooter(user, royaleData)}
+                </UserWrapper>
+                <TableWrapper>
+                    <TableRow style={{ justifyContent: 'flex-end' }}>
+                        <SearchWrapper
+                            onChange={(e) => setSearchString(e.target.value)}
+                            value={searchString}
+                            placeholder={t('options.leaderboard.display-name')}
+                        ></SearchWrapper>
+                    </TableRow>
+
+                    <TableRow>
+                        {HeadCells.map((cell, key) => (
+                            <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
+                                {cell.text}{' '}
+                                {cell.sortable && (
+                                    <ArrowsWrapper>
+                                        {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                            <Arrow
+                                                className={`icon ${
+                                                    orderDirection === OrderDirection.ASC
+                                                        ? 'icon--arrow-up'
+                                                        : 'icon--arrow-down'
+                                                }`}
+                                            />
+                                        ) : (
+                                            <>
+                                                <Arrow className="icon icon--double-arrow" />
+                                            </>
+                                        )}
+                                    </ArrowsWrapper>
+                                )}
+                            </HeadCell>
+                        ))}
+                    </TableRow>
+                    {usersForUi?.usersToDisplay.map((user: User, key: number) => (
+                        <TableRow
+                            key={key}
+                            className={user.isAlive ? 'alive' : 'dead'}
+                            style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
+                        >
+                            <HeadCell>
+                                <Status>
+                                    <StatusAvatar className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'} />
+                                    <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                                </Status>
+                            </HeadCell>
+                            <HeadCell>{getAvatar(user)}</HeadCell>
+                            <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
+                            <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
+                        </TableRow>
+                    ))}
+                    {usersForUi?.usersToDisplay ? (
+                        <Pagination>
+                            <PaginationIcon
+                                className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
+                                onClick={() => {
+                                    if (page <= 1) return;
+                                    setPage(1);
+                                }}
+                            />
+                            <PaginationIcon
+                                className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
+                                onClick={() => {
+                                    if (page <= 1) return;
+                                    setPage(page - 1);
+                                }}
+                            />
+                            <Text className="max-pages">
+                                {page}/{usersForUi?.maxPages}
+                            </Text>
+                            <PaginationIcon
+                                className={`icon icon--right ${
+                                    usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                                }`}
+                                onClick={() => {
+                                    if (usersForUi && usersForUi.maxPages === page) return;
+                                    setPage(page + 1);
+                                }}
+                            />
+                            <PaginationIcon
+                                className={`icon icon--double-right ${
+                                    usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                                }`}
+                                onClick={() => {
+                                    if (usersForUi && usersForUi.maxPages === page) return;
+                                    setPage(usersForUi.maxPages);
+                                }}
+                            />
+
+                            <PaginationUsers>
+                                <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
+                                {showDropdown &&
+                                    PerPageOption.filter((number) => number !== showPerPage).map(
+                                        (option: number, key: number) => (
+                                            <Text
+                                                onClick={() => {
+                                                    setShowPerPage(option);
+                                                    setShowDropdown(false);
+                                                }}
+                                                key={key}
+                                            >
+                                                {option}
+                                            </Text>
+                                        )
+                                    )}
+                            </PaginationUsers>
+                            <UsersPerPageText>Users per page</UsersPerPageText>
+                        </Pagination>
+                    ) : (
+                        ''
+                    )}
+                </TableWrapper>
+            </Wrapper>
+        </>
     );
 };
 
@@ -368,7 +380,9 @@ const ModalOverlay = styled.div`
     width: 100%;
     height: 100%;
     background: var(--color-wrapper);
-    opacity: 0.9;
+    opacity: 0.95;
+    z-index: 999;
+    backdrop-filter: blur(20px);
     mix-blend-mode: multiply;
 `;
 
@@ -387,7 +401,8 @@ const Popup = styled.div`
     box-sizing: border-box;
     border-radius: 5px;
     padding: 24px;
-    box-shadow: 0px 4px 50px var(--color); ;
+    box-shadow: 0px 4px 50px var(--color);
+    z-index: 1000;
 `;
 
 const PopupTitle = styled(Text)`
@@ -436,6 +451,12 @@ const getAvatar = (user: User) => {
         );
     }
 };
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 8px;
+    display: block;
+`;
 
 const UsersPerPageText = styled.p`
     position: absolute;
@@ -513,7 +534,7 @@ const UserWrapper = styled.div`
     border: 5px solid var(--color);
     box-sizing: border-box;
     border-radius: 5px;
-    margin-top: 4px;
+    margin-top: 14px;
     margin-bottom: 14px;
 `;
 
@@ -770,8 +791,8 @@ const Question = styled(Text)`
     font-family: VT323 !important;
     font-style: normal;
     font-weight: 400;
-    font-size: 25px;
-    line-height: 20px;
+    font-size: 38.455px;
+    line-height: 30px;
     text-align: justify;
     letter-spacing: -0.4px;
     color: var(--color);
@@ -795,6 +816,9 @@ const InfoText = styled(Text)`
     strong {
         font-family: VT323 !important;
         font-weight: bold;
+        font-size: 26px;
+        line-height: 24px;
+        letter-spacing: 1.6px;
     }
 
     img {
