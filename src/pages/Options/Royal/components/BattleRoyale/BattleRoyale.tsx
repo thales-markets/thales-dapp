@@ -74,9 +74,14 @@ const renderRounds = (
             const isUp = option === 2;
             dispatchMarketNotification('Successfully submitted');
             setFetchNewData(Date.now());
+            const subtractOppositePosition = roundsInformation[round - 1].positionInRound !== 0;
             setPositions({
-                up: isUp ? positions.up + 1 : Math.max(positions.up - 1, 0),
-                down: !isUp ? positions.down + 1 : Math.max(positions.down - 1, 0),
+                up: isUp ? positions.up + 1 : subtractOppositePosition ? Math.max(positions.up - 1, 0) : positions.up,
+                down: !isUp
+                    ? positions.down + 1
+                    : subtractOppositePosition
+                    ? Math.max(positions.down - 1, 0)
+                    : positions.down,
             });
         }
     };
@@ -393,6 +398,7 @@ const ShortButton = styled.button<{ selected?: boolean }>`
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    z-index: 100;
     &:disabled {
         background: #977980;
         cursor: not-allowed;
