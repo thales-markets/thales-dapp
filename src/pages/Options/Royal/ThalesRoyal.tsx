@@ -54,6 +54,12 @@ const ThalesRoyal: React.FC = () => {
         walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
     }, [networkId, walletAddress]);
 
+    useEffect(() => {
+        const body = document.getElementsByTagName('body')[0];
+        body.classList.remove(theme === Theme.Light ? 'dark-theme' : 'light-theme');
+        body.classList.add(theme !== Theme.Light ? 'dark-theme' : 'light-theme');
+    }, [theme]);
+
     useInterval(async () => {
         setEthPrice(await getEthPrice());
     }, 10000);

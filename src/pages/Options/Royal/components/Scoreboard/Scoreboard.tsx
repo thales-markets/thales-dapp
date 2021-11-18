@@ -13,7 +13,7 @@ import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { truncateAddress } from 'utils/formatters/string';
-import { LightTooltip } from 'pages/Options/Market/components';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
 
 type ScoreboardProps = {
@@ -437,17 +437,17 @@ const getAvatar = (user: User) => {
     }
     if (user.status === UserStatus.NOTVERIFIED) {
         return (
-            <LightTooltip title="User is not verified on Discord">
+            <RoyaleTooltip title="User is not verified on Discord">
                 <UserAvatar src={notVerified} />
-            </LightTooltip>
+            </RoyaleTooltip>
         );
     }
 
     if (user.status === UserStatus.NOTSIGNED) {
         return (
-            <LightTooltip title="User is not registered for Thales Royale">
+            <RoyaleTooltip title="User is not registered for Thales Royale">
                 <UserAvatar src={notSigned} />
-            </LightTooltip>
+            </RoyaleTooltip>
         );
     }
 };

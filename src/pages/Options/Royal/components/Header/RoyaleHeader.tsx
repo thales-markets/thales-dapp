@@ -198,7 +198,7 @@ const HeaderButton = styled.button`
     height: 28px;
     padding: 4px 6px;
     flex: 1;
-    background: var(--color-wrapper);
+    background: transparent;
     cursor: pointer;
 `;
 
