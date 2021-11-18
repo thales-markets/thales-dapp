@@ -13,6 +13,7 @@ import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
 
 type BattleRoyaleProps = {
     royaleData: ThalesRoyalData;
+    fetchNewData: number;
     setFetchNewData: (id: number) => void;
     setPositions: (positions: Positions) => void;
     positions: Positions;
@@ -37,7 +38,8 @@ const renderRounds = (
     timeLeftForPositioning: Date | null,
     timeLeftInRound: Date | null,
     setPositions: (positions: Positions) => void,
-    positions: Positions
+    positions: Positions,
+    fetchNewData: number
 ) => {
     const { t } = useTranslation();
     const { round, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
@@ -54,7 +56,7 @@ const renderRounds = (
         getRounds().then((graphRounds) => {
             setRoundsGraphInfo(graphRounds);
         });
-    }, []);
+    }, [fetchNewData]);
 
     const vote = (option: number) => async () => {
         if (option === roundsInformation[round - 1].positionInRound) {
@@ -172,9 +174,10 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
     setPositions,
     positions,
     showBattle,
+    fetchNewData,
 }) => {
     const { t } = useTranslation();
-    const { roundStartTime, roundEndTime, roundChoosingLength, round } = royaleData;
+    const { roundStartTime, roundEndTime, roundChoosingLength, round, canCloseRound } = royaleData;
 
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
         getTimeLeft(roundStartTime, roundChoosingLength)
@@ -182,14 +185,10 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
     const [timeLeftInRound, setTimeLeftInRound] = useState<Date | null>(
         getTimeLeft(roundStartTime, (roundEndTime.getTime() - roundStartTime.getTime()) / 1000)
     );
-    const [closeRoundButtonDisabled, setCloseRoundButtonDisabled] = useState<boolean>(
-        new Date().getTime() < roundEndTime.getTime()
-    );
 
     useInterval(async () => {
         setTimeLeftForPositioning(getTimeLeft(roundStartTime, roundChoosingLength));
         setTimeLeftInRound(getTimeLeft(roundStartTime, (roundEndTime.getTime() - roundStartTime.getTime()) / 1000));
-        setCloseRoundButtonDisabled(new Date().getTime() < roundEndTime.getTime() || !royaleData.round);
     }, 1000);
 
     const closeRound = async () => {
@@ -225,14 +224,15 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
                             timeLeftForPositioning,
                             timeLeftInRound,
                             setPositions,
-                            positions
+                            positions,
+                            fetchNewData
                         )
                     ) : (
                         <></>
                     )}
                 </ScrollWrapper>
             </CardWrapper>
-            <Button style={{ zIndex: 1000 }} disabled={closeRoundButtonDisabled} onClick={closeRound}>
+            <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
                 {t('options.royale.battle.close-round')}
             </Button>
         </Wrapper>

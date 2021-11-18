@@ -18,6 +18,7 @@ import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
 import { Modal } from '@material-ui/core';
 
 type ScoreboardProps = {
+    fetchNewData: number;
     royaleData: ThalesRoyalData;
 };
 
@@ -37,7 +38,7 @@ const defaultOrderBy = 1;
 
 const PerPageOption = [15, 25, 50, 100];
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
+const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
@@ -53,7 +54,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
 
     useEffect(() => {
         getUsers(walletAddress, setUsers, setUser);
-    }, [walletAddress]);
+    }, [walletAddress, fetchNewData]);
 
     const usersForUi = useMemo(() => {
         if (users.length > 0) {
@@ -185,7 +186,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
             >
                 <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
                     <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
-                    <PopupImage src={important}></PopupImage>
+                    <PopupImage src={important} />
                     <PopupDescription>{t('options.royale.scoreboard.verify')}</PopupDescription>
                 </Popup>
             </Modal>
@@ -231,8 +232,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                             onChange={(e) => setSearchString(e.target.value)}
                             value={searchString}
                             placeholder={t('options.royale.scoreboard.search')}
-                        ></SearchWrapper>
-                        <SearchIcon className="icon icon--search"></SearchIcon>
+                        />
+                        <SearchIcon className="icon icon--search" />
                     </TableRow>
 
                     <TableRow>
@@ -342,7 +343,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     );
 };
 
-const Intro: React.FC<ScoreboardProps> = ({ royaleData }) => {
+const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     const { t } = useTranslation();
 
     const getTitle = () => {

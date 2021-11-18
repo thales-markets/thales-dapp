@@ -48,7 +48,7 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         getUsers(walletAddress, () => {}, setUser);
-    }, [walletAddress]);
+    }, [walletAddress, fetchNewData]);
 
     useEffect(() => {
         walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
@@ -78,14 +78,15 @@ const ThalesRoyal: React.FC = () => {
                 className={showBattle ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
-                <Header theme={theme} setTheme={setTheme}></Header>
-                {thalesRoyalData && <Scoreboard royaleData={thalesRoyalData}></Scoreboard>}
+                <Header theme={theme} setTheme={setTheme} />
+                {thalesRoyalData && <Scoreboard fetchNewData={fetchNewData} royaleData={thalesRoyalData} />}
                 {thalesRoyalData && (
                     <BattleRoyale
                         positions={positions}
                         setPositions={setPositions}
                         royaleData={thalesRoyalData}
                         setFetchNewData={setFetchNewData}
+                        fetchNewData={fetchNewData}
                         showBattle={showBattle}
                     />
                 )}
@@ -105,7 +106,14 @@ const ThalesRoyal: React.FC = () => {
                         </NavButton>
                     )}
                     {!showBattle && (
-                        <NavButton onClick={() => setShowBattle(true)}>
+                        <NavButton
+                            className={thalesRoyalData && thalesRoyalData.signUpPeriod > new Date() ? 'disabled' : ''}
+                            onClick={() => {
+                                if (thalesRoyalData && thalesRoyalData.signUpPeriod < new Date()) {
+                                    setShowBattle(true);
+                                }
+                            }}
+                        >
                             <Text> Battle </Text>
                             <i className="icon icon--right" />
                         </NavButton>
@@ -143,14 +151,8 @@ const ThalesRoyal: React.FC = () => {
                     </div>
                 </InfoSection>
             </Footer>
-            <WrongNetworkDialog
-                open={openNetworkWarningDialog}
-                setOpen={setOpenNetworkWarningDialog}
-            ></WrongNetworkDialog>
-            <WalletNotConnectedDialog
-                open={openWalletNotConnectedDialog}
-                setOpen={setOpenWalletNotConnectedDialog}
-            ></WalletNotConnectedDialog>
+            <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />
+            <WalletNotConnectedDialog open={openWalletNotConnectedDialog} setOpen={setOpenWalletNotConnectedDialog} />
         </RoyaleBackground>
     );
 };
