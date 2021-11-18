@@ -16,6 +16,7 @@ type BattleRoyaleProps = {
     setFetchNewData: (id: number) => void;
     setPositions: (positions: Positions) => void;
     positions: Positions;
+    showBattle: boolean;
 };
 
 const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
@@ -54,13 +55,6 @@ const renderRounds = (
             setRoundsGraphInfo(graphRounds);
         });
     }, []);
-
-    useEffect(() => {
-        const wrapper = document.getElementById('battle-royale-wrapper');
-        if (wrapper && round > 2) {
-            wrapper.scrollLeft = (round - 2) * 368 - 45;
-        }
-    }, [round]);
 
     const vote = (option: number) => async () => {
         if (option === roundsInformation[round - 1].positionInRound) {
@@ -172,9 +166,15 @@ const renderRounds = (
     return cards;
 };
 
-const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData, setPositions, positions }) => {
+const BattleRoyale: React.FC<BattleRoyaleProps> = ({
+    royaleData,
+    setFetchNewData,
+    setPositions,
+    positions,
+    showBattle,
+}) => {
     const { t } = useTranslation();
-    const { roundStartTime, roundEndTime, roundChoosingLength } = royaleData;
+    const { roundStartTime, roundEndTime, roundChoosingLength, round } = royaleData;
 
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
         getTimeLeft(roundStartTime, roundChoosingLength)
@@ -207,10 +207,17 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, setFetchNewData
         }
     };
 
+    useEffect(() => {
+        const wrapper = document.getElementById('battle-royale-wrapper');
+        if (wrapper && round > 2) {
+            wrapper.scrollLeft = (round - 2) * 362 - 45;
+        }
+    }, [round, showBattle]);
+
     return (
-        <Wrapper className="battle">
-            <CardWrapper id="battle-royale-wrapper">
-                <ScrollWrapper>
+        <Wrapper style={{ minHeight: '100%' }} className="battle">
+            <CardWrapper>
+                <ScrollWrapper id="battle-royale-wrapper">
                     {royaleData ? (
                         renderRounds(
                             royaleData,

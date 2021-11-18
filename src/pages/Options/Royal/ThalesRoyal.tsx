@@ -86,6 +86,7 @@ const ThalesRoyal: React.FC = () => {
                         setPositions={setPositions}
                         royaleData={thalesRoyalData}
                         setFetchNewData={setFetchNewData}
+                        showBattle={showBattle}
                     />
                 )}
             </Wrapper>
