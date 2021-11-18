@@ -964,7 +964,12 @@
                     "number": "玩家编号"
                 },
                 "ends": "泰雷兹皇家结束于：",
-                "round-starts": "下一轮开始于："
+                "round-starts": "下一轮开始于：",
+                "sign-up": "报名",
+                "verify": "转到 Thales discord 并输入 !verify 0x...",
+                "verification": "完成验证！",
+                "start-royale": "开始泰雷兹皇家",
+                "search": "搜索球员/号码"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",

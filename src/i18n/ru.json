@@ -964,7 +964,12 @@
                     "avatar": "Аватар"
                 },
                 "round-starts": "Следующий раунд начинается через:",
-                "ends": "Thales Royale заканчивается:"
+                "ends": "Thales Royale заканчивается:",
+                "sign-up": "Зарегистрироваться",
+                "search": "Поиск игрока / числа",
+                "verification": "Для завершения проверки!",
+                "start-royale": "Запустить Thales Royale",
+                "verify": "Зайдите в Discord Thales и введите! Verify 0x ..."
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",
