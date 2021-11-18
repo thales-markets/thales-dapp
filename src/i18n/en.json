@@ -43,9 +43,9 @@
         "use-app": "Use dApp",
         "launch": "Launch app",
         "who-is-thales": "Who is Thales?",
-        "thales-is1": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena but was taunted by others with the uselessness of philosophy because of his poverty.",
-        "thales-is2": "One year, Thales discerned the olive harvest will be bountiful next season by his study of the heavenly bodies. Armed with his knowledge he bets on this with a small sum of money by paying deposits for the whole of the olive presses in Miletus, which he hired at a very low price as nobody else was bidding.",
-        "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms when demand grew, becoming the <strong>first known person to exercise an options contract.</strong>",
+        "thales-is1": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena, but others taunted him about the uselessness of philosophy due to his poverty.",
+        "thales-is2": "One year, Thales used his studies of the heavenly bodies to predict that next season's harvest would be bountiful. Armed with his knowledge, he placed a small bet by paying deposits for all of the olive presses in Miletus. This cost him very little, as nobody else was bidding.",
+        "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms. Through growing demand, he became the <strong>first known person to exercise an options contract.</strong>",
         "markets": {
             "title": "Binary Markets",
             "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
@@ -165,8 +165,8 @@
             "rows-per-page": "Rows per page:"
         },
         "unsupported-network": {
-            "title": "Oops! You are on wrong network!",
-            "description": "You have selected wrong network in your wallet. Please switch to Ethereum network from wallet to continue.",
+            "title": "Oops! You are on the wrong network!",
+            "description": "You have selected the wrong network in your wallet. To continue, please switch to the Ethereum network in your wallet.",
             "button": "Switch to Mainnet"
         }
     },
@@ -272,7 +272,7 @@
                     "not-eligible-message": "You are not eligible for this distribution.",
                     "learn-more-text": "Rewards are unlocked linearly over 2 years. There is no penalty for claiming currently unlocked rewards.",
                     "learn-more": "Learn more",
-                    "info-tooltip": "<0>15 million THALES has been allocated on pro rata basis to all SNX stakers since staking started until Sep 06, 2021 10:00 AM UTC.</0><0>There was a minimum of 24 THALES allocated through this algorithim to be eligible.</0> <1>You can check if you met the threshold </1><2 />."
+                    "info-tooltip": "<0>15 million THALES has been allocated on a pro rata basis to all SNX stakers since staking started until Sep 06, 2021 10:00 AM UTC.</0><0>There was a minimum of 24 THALES allocated through this algorithim to be eligible.</0> <1>You can check if you met the threshold </1><2 />."
                 },
                 "airdropped-amount": "Airdropped amount",
                 "claim": "Claim",
@@ -320,7 +320,7 @@
                     "unstake-confirmation-message": "Tokens successfully unstaked",
                     "unstaking": "Unstaking",
                     "amount-to-unstake": "Amount to unstake",
-                    "start-unstaking-tooltip": "During the 7 days unstaking cooldown you will not be able to stake or unstake more THALES.",
+                    "start-unstaking-tooltip": "During the 7-day unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",
                     "cancel-confirmation-message": "Unstaking successfully canceled",
@@ -343,7 +343,7 @@
                     "confirmation-message": "Tokens successfully claimed",
                     "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
                     "learn-more": "Learn more",
-                    "button-tooltip": "Claimed rewards are subject to a 10 weeks vesting period."
+                    "button-tooltip": "Claimed rewards are subject to a 10-week vesting period."
                 }
             },
             "vesting": {
@@ -433,7 +433,7 @@
             "discord-link": "Discord",
             "discord-tip": "Ask our Discord community for help",
             "docs-link": "Docs",
-            "docs-tip": "Find answer in our docs",
+            "docs-tip": "Find the answer in our docs",
             "discord-button": "Ask in our Discord",
             "submit-answers": "Submit answers",
             "next-page": "Next page",
@@ -763,12 +763,12 @@
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
             "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10AM UTC",
-            "trading-comp-subtitle-3": "Click here to see markets eligible for trading competition",
-            "trading-comp-subtitle-4": "For more information and guide on how to participate, please visit: ",
-            "profile-subtitle": "Tab shows you all your transactions as well as transactions of other users.",
+            "trading-comp-subtitle-3": "Click here to see markets eligible for the trading competition",
+            "trading-comp-subtitle-4": "For more information and a guide on how to participate, please visit: ",
+            "profile-subtitle": "This tab shows you all of your transactions, as well as the transactions of other users.",
             "trading-comp-countdown": "Countdown until the end of the competition: ",
             "profile-title": "Profile",
-            "trades-subtitle": "The tab shows you all trades sorted by latest timestamp.",
+            "trades-subtitle": "This tab shows you all trades sorted by latest timestamp.",
             "trades-title": "Trades",
             "verify-twitter-account": "Verify account",
             "verify": "Verify",
@@ -781,7 +781,7 @@
                 "display-name-col": "Display Name",
                 "trades-col": "Trades",
                 "volume-col": "Volume",
-                "netprofit-col": "Netprofit",
+                "netprofit-col": "Net Profit",
                 "netprofit-col-tooltip": "Profit is only calculated on the matured markets",
                 "investment-col": "Investment",
                 "gain-col": "Gain",
@@ -818,7 +818,7 @@
             },
             "profile": {
                 "tab-title": "Profile",
-                "search-placeholder": "Search other profiles by typing display name",
+                "search-placeholder": "Search other profiles by display name",
                 "transaction-details": "Transaction details for user:",
                 "no-transactions": "No transactions available",
                 "go-to-redeem": "Click to redeem",
@@ -917,7 +917,7 @@
             },
             "legacy-signing": {
                 "label": "Use legacy signing",
-                "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing and selecting this option can resolve the issue."
+                "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing, and selecting this option can resolve the issue."
             },
             "ratio": "Ratio"
         }
