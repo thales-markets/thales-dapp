@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { truncateAddress } from 'utils/formatters/string';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
+import { Modal } from '@material-ui/core';
 
 type ScoreboardProps = {
     royaleData: ThalesRoyalData;
@@ -171,20 +172,24 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
 
     return (
         <>
-            <ModalOverlay
-                style={{ display: showPopup ? 'block' : 'none' }}
-                onClick={() => {
+            <Modal
+                open={showPopup}
+                onClose={() => {
                     setShowPopup(false);
                 }}
+                BackdropProps={{
+                    style: {
+                        backdropFilter: 'blur(20px)',
+                    },
+                }}
             >
-                {' '}
-                <ModalWrapper></ModalWrapper>
-            </ModalOverlay>
-            <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
-                <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
-                <PopupImage src={important}></PopupImage>
-                <PopupDescription>{t('options.royale.scoreboard.verify')}</PopupDescription>
-            </Popup>
+                <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
+                    <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
+                    <PopupImage src={important}></PopupImage>
+                    <PopupDescription>{t('options.royale.scoreboard.verify')}</PopupDescription>
+                </Popup>
+            </Modal>
+
             <Wrapper className="scoreboard">
                 <Intro royaleData={royaleData} />
 
@@ -480,29 +485,6 @@ const PaginationIcon = styled.i`
         opacity: 0.5;
         cursor: not-allowed;
     }
-`;
-
-const ModalWrapper = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color-background);
-    mix-blend-mode: multiply;
-`;
-
-const ModalOverlay = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color-wrapper);
-    opacity: 0.95;
-    z-index: 999;
-    backdrop-filter: blur(20px);
-    mix-blend-mode: multiply;
 `;
 
 const Popup = styled.div`
