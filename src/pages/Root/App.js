@@ -22,6 +22,7 @@ import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import GovernancePage from 'pages/Governance';
 import { loadProvider } from '@synthetixio/providers';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
@@ -195,6 +196,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Governance}>
+                            <MainLayout>
+                                <GovernancePage />
                             </MainLayout>
                         </Route>
 

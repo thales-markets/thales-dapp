@@ -13,5 +13,6 @@ export const ROUTES = {
         QuickTradingCompetition: '/markets/competition-orders',
         Token: '/token',
     },
+    Governance: '/governance',
 };
 export default ROUTES;
