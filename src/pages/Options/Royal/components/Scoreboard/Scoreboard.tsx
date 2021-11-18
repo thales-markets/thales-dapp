@@ -830,8 +830,9 @@ const Link = styled.a`
     font-family: VT323 !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 20px;
+    font-size: 26px;
+    line-height: 24px;
+    margin-left: 4px;
     text-align: justify;
     letter-spacing: -0.4px;
     color: var(--color);
