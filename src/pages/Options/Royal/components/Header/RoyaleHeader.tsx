@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { getEthBalance } from '../../getThalesRoyalData';
 import { truncateAddress } from 'utils/formatters/string';
-import { Theme } from '../../ThalesRoyal';
-import { useTranslation } from 'react-i18next';
 import onboardConnector from 'utils/onboardConnector';
+import { getEthBalance } from '../../getThalesRoyalData';
+import { Theme } from '../../ThalesRoyal';
+import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 import './media.scss';
-import UserInfoModal from 'components/UserInfo/UserInfoModal';
 
 type RoyaleHeaderInput = {
     theme: Theme;
@@ -71,13 +71,14 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                         </BorderedWrapper>
                     </UtilWrapper>
                 </InfoWrapper>
+                <UserInfoRoyaleDialog
+                    walletAddress={walletAddress}
+                    network={'Optimistic Kovan'}
+                    open={openUserInfo}
+                    handleClose={setOpenUserInfo.bind(this, false)}
+                    theme={theme}
+                />
             </Header>
-            <UserInfoModal
-                walletAddress={walletAddress}
-                network={'Optimistic Kovan'}
-                open={openUserInfo}
-                handleClose={setOpenUserInfo.bind(this, false)}
-            />
         </>
     );
 };

@@ -41,7 +41,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
             >
                 <DialogTitle>
                     <Text
-                        className="wrong-network-modal-font"
+                        className="wallet-not-connected-modal-font"
                         style={{
                             textAlign: 'center',
                             fontWeight: 'bold',
@@ -52,7 +52,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                         {t('options.royale.wallet-not-connected-dialog.title')}
                     </Text>
                     <Text
-                        className="wrong-network-modal-font"
+                        className="wallet-not-connected-modal-font"
                         style={{
                             textAlign: 'center',
                             fontWeight: 'bold',
@@ -74,7 +74,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                         }}
                     />
                     <Link
-                        className="wrong-network-modal-font"
+                        className="wallet-not-connected-modal-font"
                         style={{
                             textAlign: 'center',
                             fontWeight: 'bold',
