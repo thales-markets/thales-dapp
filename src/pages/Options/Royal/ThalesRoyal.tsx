@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, Wrapper, Text } from 'theme/common';
-import BattleRoyale from './components/BattleRoyale';
-import Scoreboard from './components/Scoreboard';
-import { getEthPrice, getPositions, getThalesRoyalData, getUsers, ThalesRoyalData, User } from './getThalesRoyalData';
-import useInterval from '../../../hooks/useInterval';
-import { useTranslation } from 'react-i18next';
-import Header from './components/Header';
-import { navigateTo } from '../../../utils/routes';
+import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
 import ROUTES from '../../../constants/routes';
-import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
+import useInterval from '../../../hooks/useInterval';
+import { navigateTo } from '../../../utils/routes';
+import BattleRoyale from './components/BattleRoyale';
+import Header from './components/Header';
+import Scoreboard from './components/Scoreboard';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
+import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
+import { getEthPrice, getPositions, getThalesRoyalData, getUsers, ThalesRoyalData, User } from './getThalesRoyalData';
 
 export enum Theme {
     Light,
@@ -43,12 +43,19 @@ const ThalesRoyal: React.FC = () => {
                 getPositions(data.round).then((data) => setPositions(data));
             });
         }
-        !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
     }, [walletAddress, networkId, fetchNewData]);
 
     useEffect(() => {
         getUsers(walletAddress, () => {}, setUser);
     }, [walletAddress, fetchNewData]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
+        }, 3000);
+
+        return () => clearTimeout(timeout);
+    }, [walletAddress]);
 
     useEffect(() => {
         walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
