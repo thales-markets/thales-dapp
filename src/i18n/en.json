@@ -948,6 +948,7 @@
             "scoreboard": {
                 "starts": "Thales Royale Starts In:",
                 "round-starts": "Next round starts in:",
+                "start-royale": "Start Thales Royale",
                 "ends": "Thales Royale Ends In:",
                 "question": "Do you have what it takes to beat the competition and reach the final round?",
                 "info1": "Show us in this epic predictions battle: <bold>Thales Royale</bold>",
@@ -963,7 +964,11 @@
                     "avatar": "Avatar",
                     "name": "Display name",
                     "number": "Player №"
-                }
+                },
+                "search": "Search player / Number",
+                "verification": "To Complete Verification!",
+                "verify": "Go to Thales discord and type !verify 0x...",
+                "sign-up": "Sign Up"
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",

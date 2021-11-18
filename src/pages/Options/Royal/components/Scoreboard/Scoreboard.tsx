@@ -56,10 +56,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
 
     const usersForUi = useMemo(() => {
         if (users.length > 0) {
-            let usersToShow: any = [];
+            let usersToShow: any =
+                royaleData.signUpPeriod < new Date() ? users.filter((user) => user.status === UserStatus.RDY) : users;
+
             switch (orderBy) {
                 case 1:
-                    usersToShow = users.sort((a: any, b: any) => {
+                    usersToShow = usersToShow.sort((a: any, b: any) => {
                         return orderDirection === OrderDirection.DESC
                             ? a.status === b.status
                                 ? a.isAlive
@@ -70,7 +72,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     });
                     break;
                 case 3:
-                    usersToShow = users.sort((a: any, b: any) => {
+                    usersToShow = usersToShow.sort((a: any, b: any) => {
                         return orderDirection === OrderDirection.DESC
                             ? a.name.localeCompare(b.name)
                             : b.name.localeCompare(a.name);
@@ -78,7 +80,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     break;
 
                 case 4:
-                    usersToShow = users.sort((a: any, b: any) => {
+                    usersToShow = usersToShow.sort((a: any, b: any) => {
                         return orderDirection === OrderDirection.DESC ? a.number - b.number : b.number - a.number;
                     });
                     break;
@@ -91,7 +93,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     );
                 });
             }
-            const maxPages = Math.ceil(usersToShow.length / showPerPage);
+            const maxPages =
+                Math.ceil(usersToShow.length / showPerPage) < 1 ? 1 : Math.ceil(usersToShow.length / showPerPage);
             const usersToDisplay = usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
             return { maxPages, usersToDisplay };
         }
@@ -145,14 +148,14 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                                 .catch((e) => console.log(e));
                         }}
                     >
-                        Sign Up
+                        {t('options.royale.scoreboard.sign-up')}
                     </Button>
                 );
             }
             if (user.status === UserStatus.NOTVERIFIED) {
                 return (
                     <Button onClick={setShowPopup.bind(this, true)}>
-                        Verify <Discord className="icon icon--discord" />
+                        {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
                     </Button>
                 );
             }
@@ -161,7 +164,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
         if (royaleData.signUpPeriod < new Date()) return;
         return (
             <Button onClick={setShowPopup.bind(this, true)}>
-                Verify <Discord className="icon icon--discord" />
+                {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
             </Button>
         );
     };
@@ -178,9 +181,9 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                 <ModalWrapper></ModalWrapper>
             </ModalOverlay>
             <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
-                <PopupTitle>To Complete Verification!</PopupTitle>
+                <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
                 <PopupImage src={important}></PopupImage>
-                <PopupDescription>Go to Thales discord and type !verify 0x...</PopupDescription>
+                <PopupDescription>{t('options.royale.scoreboard.verify')}</PopupDescription>
             </Popup>
             <Wrapper className="scoreboard">
                 <Intro royaleData={royaleData} />
@@ -218,12 +221,13 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
                     {getFooter(user, royaleData)}
                 </UserWrapper>
                 <TableWrapper>
-                    <TableRow style={{ justifyContent: 'flex-end' }}>
+                    <TableRow style={{ justifyContent: 'flex-end', position: 'relative' }}>
                         <SearchWrapper
                             onChange={(e) => setSearchString(e.target.value)}
                             value={searchString}
-                            placeholder={t('options.leaderboard.display-name')}
+                            placeholder={t('options.royale.scoreboard.search')}
                         ></SearchWrapper>
+                        <SearchIcon className="icon icon--search"></SearchIcon>
                     </TableRow>
 
                     <TableRow>
@@ -333,6 +337,112 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData }) => {
     );
 };
 
+const Intro: React.FC<ScoreboardProps> = ({ royaleData }) => {
+    const { t } = useTranslation();
+
+    const getTitle = () => {
+        if (royaleData.round === 0) {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.starts')}</Title>
+                    {royaleData.signUpPeriod < new Date() ? (
+                        <Button onClick={startRoyale} style={{ margin: '30px auto', fontSize: 30, lineHeight: '30px' }}>
+                            <Title>{t('options.royale.scoreboard.start-royale')}</Title>
+                        </Button>
+                    ) : (
+                        <SubTitle>
+                            <TimeRemaining end={royaleData.signUpPeriod} showFullCounter />
+                        </SubTitle>
+                    )}
+                </>
+            );
+        } else if (royaleData.round === royaleData.rounds) {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.ends')}</Title>
+                    <SubTitle>
+                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
+                    </SubTitle>
+                </>
+            );
+        } else {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.round-starts')}</Title>
+                    <SubTitle>
+                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
+                        <span> RD{royaleData.round + 1}</span>
+                    </SubTitle>
+                </>
+            );
+        }
+    };
+
+    return (
+        <>
+            {getTitle()}
+            <Question> {t('options.royale.scoreboard.question')} </Question>
+            <InfoText style={{ margin: '14px 0px' }}>
+                <Trans i18nKey="options.royale.scoreboard.info1" components={{ bold: <strong /> }} />
+            </InfoText>
+            <InfoText>
+                <Trans i18nKey="options.royale.scoreboard.info2" components={{ bold: <strong /> }} />
+            </InfoText>
+            <InfoText>
+                <Trans
+                    i18nKey="options.royale.scoreboard.info3"
+                    components={{
+                        bold: <strong />,
+                        circle: <img src={circle} width="20" height="20" />,
+                        triangle: <img src={triangle} width="20" height="20" />,
+                    }}
+                />
+            </InfoText>
+            <InfoText style={{ margin: '14px 0px' }}>{t('options.royale.scoreboard.info4')}</InfoText>
+            <InfoText>
+                <Trans
+                    i18nKey="options.royale.scoreboard.info5"
+                    components={{
+                        bold: <strong />,
+                    }}
+                />
+                <Link href="" target="_blank" rel="noreferrer">
+                    {t('options.royale.scoreboard.blog')}
+                </Link>
+            </InfoText>
+            <InfoText>
+                <Trans
+                    i18nKey="options.royale.scoreboard.info6"
+                    components={{
+                        bold: <strong />,
+                    }}
+                />
+            </InfoText>
+        </>
+    );
+};
+
+const getAvatar = (user: User) => {
+    if (user.status === UserStatus.RDY) {
+        return <UserAvatar src={user.avatar} />;
+    }
+    if (user.status === UserStatus.NOTVERIFIED) {
+        return (
+            <RoyaleTooltip title="User is not verified on Discord">
+                <UserAvatar src={notVerified} />
+            </RoyaleTooltip>
+        );
+    }
+
+    if (user.status === UserStatus.NOTSIGNED) {
+        return (
+            <RoyaleTooltip title="User is not registered for Thales Royale">
+                <UserAvatar src={notSigned} />
+            </RoyaleTooltip>
+        );
+    }
+};
+
 const SearchWrapper = styled.input`
     max-width: 275px;
     height: 28px;
@@ -351,6 +461,15 @@ const SearchWrapper = styled.input`
     &::placeholder {
         color: var(--coior);
     }
+`;
+
+const SearchIcon = styled.i`
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    font-size: 17px;
+    line-height: 20px;
+    min-width: 17px !important;
 `;
 
 const PaginationIcon = styled.i`
@@ -430,27 +549,6 @@ const PopupDescription = styled(Text)`
     letter-spacing: -0.402542px;
     color: var(--color-wrapper);
 `;
-
-const getAvatar = (user: User) => {
-    if (user.status === UserStatus.RDY) {
-        return <UserAvatar src={user.avatar} />;
-    }
-    if (user.status === UserStatus.NOTVERIFIED) {
-        return (
-            <RoyaleTooltip title="User is not verified on Discord">
-                <UserAvatar src={notVerified} />
-            </RoyaleTooltip>
-        );
-    }
-
-    if (user.status === UserStatus.NOTSIGNED) {
-        return (
-            <RoyaleTooltip title="User is not registered for Thales Royale">
-                <UserAvatar src={notSigned} />
-            </RoyaleTooltip>
-        );
-    }
-};
 
 const Arrow = styled.i`
     font-size: 12px;
@@ -661,95 +759,6 @@ const HeadCell = styled(Text)`
     font-size: 20px;
     color: var(--color);
 `;
-
-const Intro: React.FC<ScoreboardProps> = ({ royaleData }) => {
-    const { t } = useTranslation();
-
-    const getTitle = () => {
-        if (royaleData.round === 0) {
-            return (
-                <>
-                    <Title>{t('options.royale.scoreboard.starts')}</Title>
-                    {royaleData.signUpPeriod < new Date() ? (
-                        <Button onClick={startRoyale} style={{ margin: '30px auto', fontSize: 30, lineHeight: '30px' }}>
-                            Start Thales Royale
-                        </Button>
-                    ) : (
-                        <SubTitle>
-                            <TimeRemaining end={royaleData.signUpPeriod} showFullCounter />
-                        </SubTitle>
-                    )}
-                </>
-            );
-        } else if (royaleData.round === royaleData.rounds) {
-            return (
-                <>
-                    <Title>{t('options.royale.scoreboard.ends')}</Title>
-                    <SubTitle>
-                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
-                    </SubTitle>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <Title>{t('options.royale.scoreboard.round-starts')}</Title>
-                    <SubTitle>
-                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
-                        <span> RD{royaleData.round + 1}</span>
-                    </SubTitle>
-                </>
-            );
-        }
-    };
-
-    return (
-        <>
-            {getTitle()}
-            <Question> {t('options.royale.scoreboard.question')} </Question>
-            <InfoText style={{ margin: '14px 0px' }}>
-                <Trans i18nKey="options.royale.scoreboard.info1" components={{ bold: <strong /> }} />
-            </InfoText>
-            <InfoText>
-                <Trans i18nKey="options.royale.scoreboard.info2" components={{ bold: <strong /> }} />
-            </InfoText>
-            <InfoText>
-                <Trans
-                    i18nKey="options.royale.scoreboard.info3"
-                    components={{
-                        bold: <strong />,
-                        circle: <img src={circle} width="20" height="20" />,
-                        triangle: <img src={triangle} width="20" height="20" />,
-                    }}
-                />
-            </InfoText>
-            <InfoText style={{ margin: '14px 0px' }}>{t('options.royale.scoreboard.info4')}</InfoText>
-            <InfoText>
-                <Trans
-                    i18nKey="options.royale.scoreboard.info5"
-                    components={{
-                        bold: <strong />,
-                    }}
-                />
-                <Link
-                    href="https://thales-market-board.atlassian.net/browse/THALES-21"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    {t('options.royale.scoreboard.blog')}
-                </Link>
-            </InfoText>
-            <InfoText>
-                <Trans
-                    i18nKey="options.royale.scoreboard.info6"
-                    components={{
-                        bold: <strong />,
-                    }}
-                />
-            </InfoText>
-        </>
-    );
-};
 
 const Wrapper = styled.div`
     display: flex;

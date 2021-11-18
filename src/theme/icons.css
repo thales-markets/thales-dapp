@@ -6,6 +6,22 @@
     color: var(--color);
 }
 
+.icon--triangle:before {
+    content: '\0030';
+}
+
+.icon--circle:before {
+    content: '\0031';
+}
+
+.icon--three-dots:before {
+    content: '\0032';
+}
+
+.icon--search:before {
+    content: '\0033';
+}
+
 .icon--royale-logo:before {
     content: '\0061';
 }
