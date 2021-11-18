@@ -154,16 +154,6 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
 };
 
 const ModalWrapper = styled(FlexDivColumn)`
-    &.light-theme {
-        --color-background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-        --color-wrapper: #04045a;
-        --color: #64d9fe;
-    }
-    &.dark-theme {
-        --color-background: linear-gradient(180deg, #1e4c39 0%, #07150f 117.72%);
-        --color-wrapper: #133326;
-        --color: #a1e1b4;
-    }
     width: 600px;
     max-height: min(90%, 800px);
     overflow-y: auto;

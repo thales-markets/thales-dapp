@@ -1,8 +1,76 @@
-.bn-onboard-custom.bn-onboard-dark-mode {
-    background: red;
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode {
+    background: var(--color-wrapper) !important;
+    border: 3.26154px solid var(--color);
+    border-radius: 5px;
 }
 
-.bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
-.bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
-    background: green !important;
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode {
+    box-shadow: 0px 3.26154px 57.0769px rgba(100, 217, 254, 0.7);
+}
+
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode {
+    box-shadow: 0px 2.6188px 45.8291px rgba(161, 225, 180, 0.5);
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header {
+    &::after {
+        content: 'Select a Wallet to connect to Thales Royale';
+        font-size: 20px;
+        font-family: Sansation !important;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-icon,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-icon,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-description,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-info,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-info,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-definition,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-select-wallet-definition,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-close,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-close {
+    display: none;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-content-header-heading,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
+    font-family: Sansation !important;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button {
+    justify-content: center;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
+    font-weight: normal;
+}
+
+.light-theme
+    .bn-onboard-custom.bn-onboard-dark-mode
+    .bn-onboard-modal-select-wallets:nth-child(odd)
+    .bn-onboard-icon-button,
+.dark-theme
+    .bn-onboard-custom.bn-onboard-dark-mode
+    .bn-onboard-modal-select-wallets:nth-child(odd)
+    .bn-onboard-icon-button {
+    justify-content: start;
+    padding-left: 90px;
+}
+
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
+    background: none !important;
 }

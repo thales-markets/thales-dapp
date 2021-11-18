@@ -64,6 +64,14 @@ const ThalesRoyal: React.FC = () => {
         setEthPrice(await getEthPrice());
     }, 10000);
 
+    useEffect(() => {
+        return () => {
+            const body = document.getElementsByTagName('body')[0];
+            body.classList.remove('dark-theme');
+            body.classList.remove('light-theme');
+        };
+    }, []);
+
     return (
         <RoyaleBackground className={theme === Theme.Light ? 'light-theme' : 'dark-theme'} id="royale-background">
             <Wrapper
