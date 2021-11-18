@@ -1,5 +1,5 @@
 export const thalesRoyal = {
-    address: '0x61C7f4643DA0506ea9aA10f70Eec0d6B63488820',
+    address: '0xFD4fD1AA23325592cEA9b9D83d1aE64FbC56611B',
     abi: [
         {
             inputs: [
@@ -75,6 +75,15 @@ export const thalesRoyal = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'canCloseRound',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [],
             name: 'closeRound',
@@ -130,27 +139,9 @@ export const thalesRoyal = {
         },
         {
             constant: true,
-            inputs: [{ internalType: 'uint256', name: '_round', type: 'uint256' }],
-            name: 'getEliminatedPerRound',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
             inputs: [],
             name: 'getPlayers',
             outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [{ internalType: 'uint256', name: '_round', type: 'uint256' }],
-            name: 'getTotalPlayersPerRound',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
@@ -254,19 +245,7 @@ export const thalesRoyal = {
                 { internalType: 'uint256', name: '', type: 'uint256' },
                 { internalType: 'uint256', name: '', type: 'uint256' },
             ],
-            name: 'positionsOverPricePerRound',
-            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [
-                { internalType: 'uint256', name: '', type: 'uint256' },
-                { internalType: 'uint256', name: '', type: 'uint256' },
-            ],
-            name: 'positionsUnderPricePerRound',
+            name: 'positionsPerRound',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
@@ -411,6 +390,15 @@ export const thalesRoyal = {
             constant: false,
             inputs: [{ internalType: 'uint256', name: '_roundLength', type: 'uint256' }],
             name: 'setRoundLength',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [{ internalType: 'uint256', name: '_rounds', type: 'uint256' }],
+            name: 'setRoundNumber',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
