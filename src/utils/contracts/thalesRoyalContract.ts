@@ -1,5 +1,5 @@
 export const thalesRoyal = {
-    address: '0xEf60Ac2186827fF57b3561571CB3cf8DBD0AC9e1',
+    address: '0xe95C975ae8e37ab0bA6b9F78262977A59FcAABEB',
     abi: [
         {
             inputs: [
@@ -142,6 +142,18 @@ export const thalesRoyal = {
             inputs: [],
             name: 'getPlayers',
             outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                { internalType: 'uint256', name: '_round', type: 'uint256' },
+                { internalType: 'uint256', name: '_position', type: 'uint256' },
+            ],
+            name: 'getPositionsPerRound',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             payable: false,
             stateMutability: 'view',
             type: 'function',
