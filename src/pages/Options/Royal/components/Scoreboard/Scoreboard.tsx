@@ -1,6 +1,6 @@
 import { getUsers, signUp, startRoyale, ThalesRoyalData, User, UserStatus } from '../../getThalesRoyalData';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv } from 'theme/common';
+import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv, LoaderContainer } from 'theme/common';
 import styled from 'styled-components';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { useTranslation, Trans } from 'react-i18next';
@@ -16,6 +16,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
 import { Modal } from '@material-ui/core';
+import SimpleLoader from 'components/SimpleLoader';
 
 type ScoreboardProps = {
     fetchNewData: number;
@@ -57,6 +58,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
     }, [walletAddress, fetchNewData]);
 
     const usersForUi = useMemo(() => {
+        if (!royaleData) return;
         if (users.length > 0) {
             let usersToShow: any =
                 royaleData.signUpPeriod < new Date() ? users.filter((user) => user.status === UserStatus.RDY) : users;
@@ -104,7 +106,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
             const usersToDisplay = usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
             return { maxPages, usersToDisplay };
         }
-    }, [page, orderBy, orderDirection, users, showPerPage, searchString]);
+    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData]);
 
     const HeadCells = [
         { id: 1, text: t('options.royale.scoreboard.table-header.status'), sortable: true },
@@ -134,7 +136,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
     };
 
     const getFooter = (user: User | undefined, royaleData: ThalesRoyalData) => {
-        console.log(user);
+        if (!royaleData) return;
+        if (royaleData.signUpPeriod < new Date()) return;
         if (user) {
             if (user.status == UserStatus.RDY) {
                 if (user.isAlive) {
@@ -144,7 +147,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
                 }
             }
 
-            if (royaleData.signUpPeriod < new Date()) return;
             if (user.status === UserStatus.NOTSIGNED) {
                 return (
                     <Button
@@ -167,7 +169,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
             }
         }
 
-        if (royaleData.signUpPeriod < new Date()) return;
         return (
             <Button onClick={setShowPopup.bind(this, true)}>
                 {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
@@ -264,23 +265,31 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
                             </HeadCell>
                         ))}
                     </TableRow>
-                    {usersForUi?.usersToDisplay.map((user: User, key: number) => (
-                        <TableRow
-                            key={key}
-                            className={user.isAlive ? 'alive' : 'dead'}
-                            style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
-                        >
-                            <HeadCell>
-                                <Status>
-                                    <StatusAvatar className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'} />
-                                    <span>{user.isAlive ? 'alive' : 'dead'}</span>
-                                </Status>
-                            </HeadCell>
-                            <HeadCell>{getAvatar(user)}</HeadCell>
-                            <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
-                            <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
-                        </TableRow>
-                    ))}
+                    {usersForUi ? (
+                        usersForUi.usersToDisplay.map((user: User, key: number) => (
+                            <TableRow
+                                key={key}
+                                className={user.isAlive ? 'alive' : 'dead'}
+                                style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
+                            >
+                                <HeadCell>
+                                    <Status>
+                                        <StatusAvatar
+                                            className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
+                                        />
+                                        <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                                    </Status>
+                                </HeadCell>
+                                <HeadCell>{getAvatar(user)}</HeadCell>
+                                <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
+                                <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
+                            <SimpleLoader />
+                        </LoaderContainer>
+                    )}
                     {usersForUi?.usersToDisplay ? (
                         <Pagination>
                             <PaginationIcon
@@ -351,6 +360,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     const { t } = useTranslation();
 
     const getTitle = () => {
+        if (!royaleData) return;
         if (royaleData.round === 0) {
             return (
                 <>
@@ -704,6 +714,7 @@ const FlexContainer = styled(FlexDivCentered)`
 `;
 
 const TableWrapper = styled.div`
+    position: relative;
     width: 100%;
     min-height: 300px;
     background: var(--color-wrapper);

@@ -86,7 +86,7 @@ const ThalesRoyal: React.FC = () => {
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
                 <Header theme={theme} setTheme={setTheme} />
-                {thalesRoyalData && <Scoreboard fetchNewData={fetchNewData} royaleData={thalesRoyalData} />}
+                <Scoreboard fetchNewData={fetchNewData} royaleData={thalesRoyalData as any} />
                 {thalesRoyalData && (
                     <BattleRoyale
                         positions={positions}
