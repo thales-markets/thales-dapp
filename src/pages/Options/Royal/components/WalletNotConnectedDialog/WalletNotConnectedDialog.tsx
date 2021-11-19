@@ -27,7 +27,7 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
                 disableBackdropClick
                 PaperProps={{
                     style: {
-                        backgroundColor: '#64D9FE',
+                        backgroundColor: 'var(--color)',
                         boxShadow: '0px 4px 50px rgba(100, 217, 254, 0.5)',
                         borderRadius: 5,
                         border: '5px solid #EFEFEF',

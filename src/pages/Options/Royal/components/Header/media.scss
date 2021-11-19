@@ -46,23 +46,48 @@
     font-family: Sansation !important;
 }
 
-.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button,
-.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button {
-    justify-content: center;
-}
-
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button span {
     font-weight: normal;
 }
 
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div {
+    width: 70px;
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div img {
+    max-width: 70px;
+    max-height: 70px;
+}
+
+.bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-icon-button div svg {
+    max-width: 70px;
+    max-height: 70px;
+}
+
 .light-theme
     .bn-onboard-custom.bn-onboard-dark-mode
-    .bn-onboard-modal-select-wallets:nth-child(odd)
+    .bn-onboard-modal-select-wallets
+    li:nth-child(2n + 0)
     .bn-onboard-icon-button,
 .dark-theme
     .bn-onboard-custom.bn-onboard-dark-mode
-    .bn-onboard-modal-select-wallets:nth-child(odd)
+    .bn-onboard-modal-select-wallets
+    li:nth-child(2n + 0)
+    .bn-onboard-icon-button {
+    justify-content: start;
+    padding-left: 30px;
+}
+
+.light-theme
+    .bn-onboard-custom.bn-onboard-dark-mode
+    .bn-onboard-modal-select-wallets
+    li:nth-child(odd)
+    .bn-onboard-icon-button,
+.dark-theme
+    .bn-onboard-custom.bn-onboard-dark-mode
+    .bn-onboard-modal-select-wallets
+    li:nth-child(odd)
     .bn-onboard-icon-button {
     justify-content: start;
     padding-left: 90px;
@@ -73,4 +98,6 @@
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover,
 .dark-theme .bn-onboard-custom.bn-onboard-dark-mode-background-hover:hover {
     background: none !important;
+    box-shadow: none !important;
+    color: var(--color);
 }
