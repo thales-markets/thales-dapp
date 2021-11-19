@@ -176,19 +176,19 @@ table {
     font-family: 'Roboto' !important;
     font-style: normal;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: #355dff #04045a;
+    scrollbar-color: var(--color, #355dff) var(--color-wrapper, #04045a);
     scrollbar-width: thin;
 }
 
 *::-webkit-scrollbar {
-    width: 10px;
+    width: var(--scrollbar-width, 10px);
 }
 *::-webkit-scrollbar-track {
-    background: #04045a;
+    background: var(--color-wrapper, #04045a);
 }
 *::-webkit-scrollbar-thumb {
     border-radius: 15px;
-    background: #355dff;
+    background: var(--color, #355dff);
 }
 *::-webkit-scrollbar-thumb:active {
     background: #44e1e2;
@@ -217,11 +217,17 @@ input[type='number'] {
 
 body {
     &.light-theme {
+        --scrollbar-width: 6px;
+        --color-low: #141874;
+        --color-high: #04045a;
         --color-background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         --color-wrapper: #04045a;
         --color: #64d9fe;
     }
     &.dark-theme {
+        --scrollbar-width: 6px;
+        --color-low: #07150f;
+        --color-high: #1e4c39;
         --color-background: linear-gradient(180deg, #1e4c39 0%, #07150f 117.72%);
         --color-wrapper: #133326;
         --color: #a1e1b4;
