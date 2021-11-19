@@ -5,6 +5,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
+import Cookies from 'universal-cookie';
 import ROUTES from '../../../constants/routes';
 import useInterval from '../../../hooks/useInterval';
 import { navigateTo } from '../../../utils/routes';
@@ -20,6 +21,8 @@ export enum Theme {
     Dark,
 }
 
+const cookies = new Cookies();
+
 const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
 
@@ -29,7 +32,7 @@ const ThalesRoyal: React.FC = () => {
     const [showBattle, setShowBattle] = useState<boolean>(false);
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
-    const [theme, setTheme] = useState(Theme.Light);
+    const [theme, setTheme] = useState(cookies.get('theme') ?? Theme.Light);
     const [positions, setPositions] = useState({ up: 0, down: 0 });
     const [user, setUser] = useState<User>();
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);

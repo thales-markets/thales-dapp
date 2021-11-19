@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import Cookies from 'universal-cookie';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
 import { getEthBalance } from '../../getThalesRoyalData';
@@ -15,6 +16,8 @@ type RoyaleHeaderInput = {
     theme: Theme;
     setTheme: (data: any) => void;
 };
+
+const cookies = new Cookies();
 
 const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
     const { t } = useTranslation();
@@ -57,7 +60,10 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                                 cursor: 'pointer',
                                 maxWidth: 70,
                             }}
-                            onClick={setTheme.bind(this, theme === Theme.Light ? Theme.Dark : Theme.Light)}
+                            onClick={() => {
+                                cookies.set('theme', theme);
+                                setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
+                            }}
                         >
                             <ThemeSelector>
                                 {' '}

@@ -366,8 +366,17 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
                     {royaleData.signUpPeriod < new Date() ? (
-                        <Button onClick={startRoyale} style={{ margin: '30px auto', fontSize: 30, lineHeight: '30px' }}>
-                            <Title>{t('options.royale.scoreboard.start-royale')}</Title>
+                        <Button
+                            onClick={startRoyale}
+                            style={{
+                                margin: '30px auto',
+                                fontSize: 30,
+                                lineHeight: '30px',
+                            }}
+                        >
+                            <Title style={{ color: 'var(--color-wrapper)' }}>
+                                {t('options.royale.scoreboard.start-royale')}
+                            </Title>
                         </Button>
                     ) : (
                         <SubTitle>
