@@ -20,6 +20,17 @@ type BattleRoyaleProps = {
     showBattle: boolean;
 };
 
+const getOnArrowClick = (scrollAmount: number) => () => {
+    const wrapper = document.getElementById('battle-royale-wrapper');
+    if (wrapper) {
+        wrapper.scrollTo({
+            top: 0,
+            left: wrapper.scrollLeft + scrollAmount,
+            behavior: 'smooth',
+        });
+    }
+};
+
 const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
     const beginningOfTime = new Date(0);
     beginningOfTime.setHours(0);
@@ -214,12 +225,17 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
     useEffect(() => {
         const wrapper = document.getElementById('battle-royale-wrapper');
         if (wrapper && round > 2) {
-            wrapper.scrollLeft = (round - 2) * 362 - 45;
+            wrapper.scrollTo({
+                top: 0,
+                left: (round - 2) * 362 - 45,
+                behavior: 'smooth',
+            });
         }
     }, [round, showBattle]);
 
     return (
         <Wrapper style={{ minHeight: '100%' }} className="battle">
+            <ArrowLeft onMouseDown={getOnArrowClick(-680)} className="icon icon--left" />
             <CardWrapper>
                 <ScrollWrapper id="battle-royale-wrapper">
                     {royaleData ? (
@@ -237,12 +253,31 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
                     )}
                 </ScrollWrapper>
             </CardWrapper>
+            <ArrowRight onMouseDown={getOnArrowClick(680)} className="icon icon--right" />
             <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
                 {t('options.royale.battle.close-round')}
             </Button>
         </Wrapper>
     );
 };
+
+const ArrowLeft = styled.i`
+    position: absolute;
+    left: 90px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 50px;
+`;
+
+const ArrowRight = styled.i`
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 50px;
+`;
 
 const ScrollWrapper = styled.div`
     display: flex;
