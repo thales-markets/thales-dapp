@@ -10,7 +10,7 @@ type ProposalCardProps = {
 
 const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
     return (
-        <Card className="cardWrapper" isClosed={proposal.state === 'closed'} onClick={onClick}>
+        <Card className="cardWrapper" status={proposal.state} onClick={onClick}>
             <Container>
                 <Status>{proposal.state}</Status>
                 <Title>{proposal.title}</Title>
@@ -20,19 +20,30 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
     );
 };
 
-export const Card = styled(FlexDivColumnCentered)<{ isClosed: boolean }>`
+const getBackgroundColor = (status: string) => {
+    switch (status) {
+        case 'pending':
+            return 'linear-gradient(rgba(202, 145, 220, 1), rgba(106, 193, 213, 1))';
+        case 'closed':
+            return 'linear-gradient(rgba(202, 145, 220, 0.3), rgba(106, 193, 213, 0.3))';
+
+        default:
+            return '#64D9FE';
+    }
+};
+
+export const Card = styled(FlexDivColumnCentered)<{ status: string }>`
     width: 100%;
     max-width: 362px;
     align-items: center;
     position: relative;
-    background: ${(props) =>
-        props.isClosed ? 'linear-gradient(rgba(202, 145, 220, 0.3), rgba(106, 193, 213, 0.3))' : '#64D9FE'};
+    background: ${(props) => getBackgroundColor(props.status)};
     height: 320px;
     padding: 2px;
     border-radius: 15px;
     color: #f6f6fe;
     cursor: pointer;
-    opacity: ${(props) => (props.isClosed ? 0.6 : 1)};
+    opacity: ${(props) => (props.status === 'closed' ? 0.6 : 1)};
     @media (max-width: 767px) {
         max-width: 400px;
         @supports (-webkit-touch-callout: none) {

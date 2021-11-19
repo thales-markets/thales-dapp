@@ -4,6 +4,7 @@ import { snapshotEndpoint, SpaceKey } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import ProposalCard from '../ProposalCard';
 import styled from 'styled-components';
+import { navigateTo } from 'utils/routes';
 
 type ProposalListProps = {
     spaceKey: SpaceKey;
@@ -17,7 +18,14 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, setSelectedPropos
     return (
         <Wrapper>
             {proposals.map((proposal: Proposal) => (
-                <ProposalCard key={proposal.id} proposal={proposal} onClick={() => setSelectedProposal(proposal)} />
+                <ProposalCard
+                    key={proposal.id}
+                    proposal={proposal}
+                    onClick={() => {
+                        navigateTo(`/governance/${proposal.space.id}/${proposal.id}`, true);
+                        setSelectedProposal(proposal);
+                    }}
+                />
             ))}
         </Wrapper>
     );

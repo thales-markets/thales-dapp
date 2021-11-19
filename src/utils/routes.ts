@@ -6,6 +6,7 @@ const ifIpfsDeployment = process.env.REACT_APP_IPFS_DEPLOYMENT === 'true';
 const history = ifIpfsDeployment ? createHashHistory() : createBrowserHistory();
 
 export const navigateTo = (path: string, replacePath = false, scrollToTop = false, state = '') => {
+    console.log('path', path);
     if (scrollToTop) {
         window.scrollTo(0, 0);
     }

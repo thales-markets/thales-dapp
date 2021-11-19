@@ -1,23 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
+import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivEnd, FlexDivCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { getWalletAddress } from 'redux/modules/wallet';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import useProposalQuery from 'queries/governance/useProposalQuery';
+import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
+import { navigateTo } from 'utils/routes';
 // import externalLink from 'remarkable-external-link';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
+    onClose: any;
 };
 
-const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-
+const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal, onClose }) => {
     const getRawMarkup = (value?: string | null) => {
         const remarkable = new Remarkable({
             html: false,
@@ -31,14 +28,23 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
         return { __html: remarkable.render(value) };
     };
 
-    const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
-    const proposalResults =
-        proposalResultsQuery.isSuccess && proposalResultsQuery.data ? proposalResultsQuery.data : {};
-    console.log(proposalResults);
-
     return (
-        <FlexDivColumnCentered style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <FlexDivColumnCentered>
+            <FlexDivEnd style={{ marginBottom: 20 }}>
+                <CloseIconContainer
+                    onClick={() => {
+                        onClose();
+                        navigateTo(`/governance/${proposal.space.id}`, true);
+                    }}
+                />
+            </FlexDivEnd>
             <Title>{proposal.title}</Title>
+            <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 30 }}>
+                <Label>Status</Label>
+                <StatusWrapper status={proposal.state}>
+                    <Status status={proposal.state}>{proposal.state}</Status>
+                </StatusWrapper>
+            </FlexDivColumnCentered>
             <FlexDivRow style={{ marginBottom: 35 }}>
                 <FlexDivColumnCentered>
                     <Label>Status</Label>
@@ -54,6 +60,18 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
             <Body dangerouslySetInnerHTML={getRawMarkup(proposal?.body)}></Body>
         </FlexDivColumnCentered>
     );
+};
+
+const getBackgroundColor = (status: string) => {
+    switch (status) {
+        case 'pending':
+            return '#c991db';
+        case 'closed':
+            return '#3f2e80';
+
+        default:
+            return '#64D9FE';
+    }
 };
 
 const Title = styled(FlexDivColumnCentered)`
@@ -79,6 +97,58 @@ const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 1px solid #748bc6;
+    margin-bottom: 20px;
+`;
+
+const Label = styled.span`
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #b8c6e5;
+    margin-bottom: 5px;
+`;
+
+const Text = styled.span`
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #f6f6fe;
+    text-transform: uppercase;
+`;
+
+const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
+    padding: 1px;
+    border-radius: 10px;
+    width: 200px;
+    background: ${(props) => getBackgroundColor(props.status)};
+`;
+
+const Status = styled(FlexDivColumnCentered)<{ status: string }>`
+    padding: 15px 0;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: 2px;
+    color: ${(props) => getBackgroundColor(props.status)};
+    background: #04045a;
+    border-radius: 10px;
+    text-transform: uppercase;
+    width: 198px;
+`;
+
+const CloseIconContainer = styled(CloseIcon)`
+    :hover {
+        cursor: pointer;
+    }
+    @media (max-width: 512px) {
+        margin-top: 4px;
+        height: 12px;
+        width: 12px;
+    }
 `;
 
 const Body = styled(FlexDivColumn)`
@@ -112,25 +182,6 @@ const Body = styled(FlexDivColumn)`
         margin-top: 24px;
         margin-bottom: 16px;
     }
-`;
-
-const Label = styled.span`
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-    color: #b8c6e5;
-    margin-bottom: 10px;
-`;
-
-const Text = styled.span`
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    color: #f6f6fe;
-    text-transform: uppercase;
 `;
 
 export default ProposalDetails;

@@ -1,10 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
-import { useLocation } from 'react-router-dom';
-import { history } from 'utils/routes';
-import queryString from 'query-string';
+import { navigateTo } from 'utils/routes';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -12,32 +10,82 @@ import { isNetworkSupported } from 'utils/network';
 import MarketHeader from 'pages/Options/Home/MarketHeader';
 import Loader from 'components/Loader';
 import { Background, FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
-import { SpaceKey } from 'constants/governance';
+import { snapshotEndpoint, SpaceKey } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
+import History from './ProposalDetails/History';
+import Results from './ProposalDetails/Results';
 import { Proposal } from 'types/governance';
 import CouncilMembers from './CouncilMembers';
+import { RouteComponentProps } from 'react-router-dom';
+import request, { gql } from 'graphql-request';
 
-const GovernancePage: React.FC = () => {
+type GovernancePageProps = RouteComponentProps<{
+    space: string;
+    id: string;
+}>;
+
+const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
+    const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
 
-    const location = useLocation();
-    const paramTab = queryString.parse(location.search).tab;
-    const [selectedTab, setSelectedTab] = useState(paramTab ?? 'tips');
+    console.log(location);
+
+    const fetchPreloadedProposal = useCallback(() => {
+        const fetch = async () => {
+            const { params } = props.match;
+            const hash = params.id;
+            const { proposal }: { proposal: Proposal } = await request(
+                snapshotEndpoint,
+                gql`
+                    query Proposals($id: String) {
+                        proposal(id: $id) {
+                            id
+                            title
+                            body
+                            choices
+                            start
+                            end
+                            snapshot
+                            state
+                            author
+                            space {
+                                id
+                                name
+                            }
+                        }
+                    }
+                `,
+                { id: hash }
+            );
+            setSelectedProposal(proposal);
+        };
+        fetch();
+    }, [props.match]);
+
+    useEffect(() => {
+        const { params } = props.match;
+
+        if (params && params.space && (params.space === SpaceKey.TIPS || params.space === SpaceKey.COUNCIL)) {
+            if (params.id) {
+                fetchPreloadedProposal();
+            }
+        }
+    }, [props.match]);
 
     const optionsTabContent: Array<{
-        id: string;
+        id: SpaceKey;
         name: string;
     }> = useMemo(
         () => [
             {
-                id: 'tips',
+                id: SpaceKey.TIPS,
                 name: 'TIPS',
             },
             {
-                id: 'council',
+                id: SpaceKey.COUNCIL,
                 name: 'Council',
             },
         ],
@@ -50,7 +98,7 @@ const GovernancePage: React.FC = () => {
                 <>
                     <Container>
                         <FlexDivColumn style={{ width: '100%' }} className="earn">
-                            <MarketHeader route={ROUTES.Governance} />
+                            <MarketHeader route={ROUTES.Governance.Home} />
                         </FlexDivColumn>
                     </Container>
                     <Container>
@@ -58,44 +106,62 @@ const GovernancePage: React.FC = () => {
                             <Title style={{ alignSelf: 'flex-start' }}>Governance</Title>
                             <FlexDiv>
                                 <MainContentContainer>
-                                    <OptionsTabContainer>
-                                        {optionsTabContent.map((tab, index) => (
-                                            <OptionsTab
-                                                isActive={tab.id === selectedTab}
-                                                key={index}
-                                                index={index}
-                                                onClick={() => {
-                                                    history.push({
-                                                        pathname: location.pathname,
-                                                        search: queryString.stringify({
-                                                            tab: tab.id,
-                                                        }),
-                                                    });
-                                                    setSelectedTab(tab.id);
-                                                }}
-                                                className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                                            >
-                                                {tab.name}
-                                            </OptionsTab>
-                                        ))}
-                                    </OptionsTabContainer>
-                                    {selectedTab === 'tips' && (
-                                        <ProposalList
-                                            spaceKey={SpaceKey.TIPS}
-                                            setSelectedProposal={setSelectedProposal}
-                                        />
+                                    {!selectedProposal && (
+                                        <>
+                                            <OptionsTabContainer>
+                                                {optionsTabContent.map((tab, index) => (
+                                                    <OptionsTab
+                                                        isActive={tab.id === selectedTab}
+                                                        key={index}
+                                                        index={index}
+                                                        onClick={() => {
+                                                            navigateTo(`/governance/${tab.id}`, true);
+                                                            setSelectedTab(tab.id);
+                                                        }}
+                                                        className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                                                    >
+                                                        {tab.name}
+                                                    </OptionsTab>
+                                                ))}
+                                            </OptionsTabContainer>
+                                            {selectedTab === SpaceKey.TIPS && (
+                                                <ProposalList
+                                                    spaceKey={SpaceKey.TIPS}
+                                                    setSelectedProposal={setSelectedProposal}
+                                                />
+                                            )}
+                                            {selectedTab === SpaceKey.COUNCIL && (
+                                                <ProposalList
+                                                    spaceKey={SpaceKey.COUNCIL}
+                                                    setSelectedProposal={setSelectedProposal}
+                                                />
+                                            )}
+                                        </>
                                     )}
-                                    {selectedTab === 'council' && (
-                                        <ProposalList
-                                            spaceKey={SpaceKey.COUNCIL}
-                                            setSelectedProposal={setSelectedProposal}
+                                    {selectedProposal && (
+                                        <ProposalDetails
+                                            proposal={selectedProposal}
+                                            onClose={() => {
+                                                setSelectedProposal(undefined);
+                                            }}
                                         />
                                     )}
                                 </MainContentContainer>
-                                <SidebarContainer>
-                                    {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
-                                    {!selectedProposal && <CouncilMembers />}
-                                </SidebarContainer>
+                                {!selectedProposal && (
+                                    <SidebarContainer>
+                                        <CouncilMembers />
+                                    </SidebarContainer>
+                                )}
+                                {selectedProposal && (
+                                    <FlexDivColumn>
+                                        <SidebarContainer style={{ marginBottom: 20 }}>
+                                            <Results proposal={selectedProposal} />
+                                        </SidebarContainer>
+                                        <SidebarContainer>
+                                            <History proposal={selectedProposal} />
+                                        </SidebarContainer>
+                                    </FlexDivColumn>
+                                )}
                             </FlexDiv>
                         </FlexDivColumn>
                     </Container>

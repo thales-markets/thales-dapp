@@ -253,11 +253,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
-                    <SPAAnchor href={buildHref(ROUTES.Governance)}>
+                    <SPAAnchor href={buildHref(ROUTES.Governance.Home)}>
                         <SidebarItem
                             imgSrc={governanceDefaultIcon}
                             imgSrcHoverSelected={governanceSelectedIcon}
-                            className={route === ROUTES.Governance ? 'selected' : ''}
+                            className={route === ROUTES.Governance.Home ? 'selected' : ''}
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>

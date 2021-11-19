@@ -199,11 +199,15 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Governance}>
-                            <MainLayout>
-                                <GovernancePage />
-                            </MainLayout>
-                        </Route>
+                        <Route
+                            exact
+                            path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                            render={(routeProps) => (
+                                <MainLayout>
+                                    <GovernancePage {...routeProps} />
+                                </MainLayout>
+                            )}
+                        />
 
                         {!isL2 && (
                             <Route exact path={ROUTES.Options.QuickTradingCompetition}>
