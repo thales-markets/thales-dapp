@@ -8,13 +8,14 @@ import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
 import ROUTES from '../../../constants/routes';
 import useInterval from '../../../hooks/useInterval';
-import { navigateTo } from '../../../utils/routes';
+import { history, navigateTo } from '../../../utils/routes';
 import BattleRoyale from './components/BattleRoyale';
 import Header from './components/Header';
 import Scoreboard from './components/Scoreboard';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
 import { getEthPrice, getPositions, getThalesRoyalData, getUsers, ThalesRoyalData, User } from './getThalesRoyalData';
+import queryString from 'query-string';
 
 export enum Theme {
     Light,
@@ -29,7 +30,6 @@ const ThalesRoyal: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [thalesRoyalData, setData] = useState<undefined | ThalesRoyalData>(undefined);
-    const [showBattle, setShowBattle] = useState<boolean>(false);
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
     const [theme, setTheme] = useState(cookies.get('theme') ?? Theme.Light);
@@ -37,6 +37,26 @@ const ThalesRoyal: React.FC = () => {
     const [user, setUser] = useState<User>();
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
+    const [selectedPage, setSelectedPage] = useState('');
+
+    useEffect(() => {
+        const selectedPageParameter = queryString.parse(location.search).page;
+
+        if (!selectedPageParameter) {
+            setSelectedPage('scoreboard');
+        } else {
+            setSelectedPage(selectedPageParameter);
+        }
+    }, []);
+
+    useEffect(() => {
+        history.push({
+            pathname: location.pathname,
+            search: queryString.stringify({
+                page: selectedPage,
+            }),
+        });
+    }, [selectedPage]);
 
     useEffect(() => {
         if (walletAddress && networkId === 69) {
@@ -85,7 +105,7 @@ const ThalesRoyal: React.FC = () => {
     return (
         <RoyaleBackground className={theme === Theme.Light ? 'light-theme' : 'dark-theme'} id="royale-background">
             <Wrapper
-                className={showBattle ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
+                className={selectedPage === 'battle' ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
                 <Header theme={theme} setTheme={setTheme} />
@@ -97,30 +117,30 @@ const ThalesRoyal: React.FC = () => {
                         royaleData={thalesRoyalData}
                         setFetchNewData={setFetchNewData}
                         fetchNewData={fetchNewData}
-                        showBattle={showBattle}
+                        showBattle={selectedPage === 'battle'}
                     />
                 )}
             </Wrapper>
             <Footer>
                 <Nav>
-                    {!showBattle && (
+                    {selectedPage !== 'battle' && (
                         <NavButton onClick={() => navigateTo(ROUTES.Options.Home)}>
                             <i className="icon icon--left" />
                             <Text> Thales dApp </Text>
                         </NavButton>
                     )}
-                    {showBattle && (
-                        <NavButton onClick={() => setShowBattle(false)}>
+                    {selectedPage === 'battle' && (
+                        <NavButton onClick={() => setSelectedPage('scoreboard')}>
                             <i className="icon icon--left" />
                             <Text> Scoreboard </Text>
                         </NavButton>
                     )}
-                    {!showBattle && (
+                    {selectedPage !== 'battle' && (
                         <NavButton
                             className={thalesRoyalData && thalesRoyalData.signUpPeriod > new Date() ? 'disabled' : ''}
                             onClick={() => {
                                 if (thalesRoyalData && thalesRoyalData.signUpPeriod < new Date()) {
-                                    setShowBattle(true);
+                                    setSelectedPage('battle');
                                 }
                             }}
                         >
