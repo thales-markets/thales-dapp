@@ -64,13 +64,17 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
             switch (orderBy) {
                 case 1:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.DESC
-                            ? a.status === b.status
-                                ? a.isAlive
+                        if (a.status !== b.status) {
+                            return orderDirection === OrderDirection.DESC ? a.status - b.status : b.status - a.status;
+                        } else {
+                            return a.isAlive
+                                ? orderDirection === OrderDirection.DESC
                                     ? -1
                                     : 1
-                                : a.status - b.status
-                            : b.status - a.status;
+                                : orderDirection === OrderDirection.DESC
+                                ? 1
+                                : -1;
+                        }
                     });
                     break;
                 case 3:
