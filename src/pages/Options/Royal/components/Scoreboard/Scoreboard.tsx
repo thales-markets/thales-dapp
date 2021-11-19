@@ -143,7 +143,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
                 if (user.isAlive) {
                     return <></>;
                 } else {
-                    return <DeadText>You have been eliminated</DeadText>;
+                    return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
                 }
             }
 
@@ -278,6 +278,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
                                             className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
                                         />
                                         <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                                        <span>{!user.isAlive ? 'rd: ' + user.deathRound : ''}</span>
                                     </Status>
                                 </HeadCell>
                                 <HeadCell>{getAvatar(user)}</HeadCell>
