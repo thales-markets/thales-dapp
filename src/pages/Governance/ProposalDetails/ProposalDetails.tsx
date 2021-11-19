@@ -6,7 +6,6 @@ import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
-import { navigateTo } from 'utils/routes';
 // import externalLink from 'remarkable-external-link';
 
 type ProposalDetailsProps = {
@@ -31,12 +30,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal, onClose }) 
     return (
         <FlexDivColumnCentered>
             <FlexDivEnd style={{ marginBottom: 20 }}>
-                <CloseIconContainer
-                    onClick={() => {
-                        onClose();
-                        navigateTo(`/governance/${proposal.space.id}`, true);
-                    }}
-                />
+                <CloseIconContainer onClick={onClose} />
             </FlexDivEnd>
             <Title>{proposal.title}</Title>
             <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 30 }}>
@@ -141,13 +135,11 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
 `;
 
 const CloseIconContainer = styled(CloseIcon)`
+    padding: 9px;
+    height: 30px;
+    width: 30px;
     :hover {
         cursor: pointer;
-    }
-    @media (max-width: 512px) {
-        margin-top: 4px;
-        height: 12px;
-        width: 12px;
     }
 `;
 

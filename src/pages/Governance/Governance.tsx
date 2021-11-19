@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import ROUTES from 'constants/routes';
-import { navigateTo } from 'utils/routes';
+import { navigateToGovernance } from 'utils/routes';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -31,12 +31,9 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
 
-    console.log(location);
-
     const fetchPreloadedProposal = useCallback(() => {
         const fetch = async () => {
             const { params } = props.match;
-            const hash = params.id;
             const { proposal }: { proposal: Proposal } = await request(
                 snapshotEndpoint,
                 gql`
@@ -58,9 +55,12 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                         }
                     }
                 `,
-                { id: hash }
+                { id: params.id }
             );
             setSelectedProposal(proposal);
+            if (!proposal) {
+                setSelectedTab(params.space as SpaceKey);
+            }
         };
         fetch();
     }, [props.match]);
@@ -71,7 +71,11 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         if (params && params.space && (params.space === SpaceKey.TIPS || params.space === SpaceKey.COUNCIL)) {
             if (params.id) {
                 fetchPreloadedProposal();
+            } else {
+                setSelectedTab(params.space as SpaceKey);
             }
+        } else {
+            setSelectedTab(SpaceKey.TIPS);
         }
     }, [props.match]);
 
@@ -115,7 +119,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                                         key={index}
                                                         index={index}
                                                         onClick={() => {
-                                                            navigateTo(`/governance/${tab.id}`, true);
+                                                            navigateToGovernance(tab.id);
                                                             setSelectedTab(tab.id);
                                                         }}
                                                         className={`${tab.id === selectedTab ? 'selected' : ''}`}
@@ -127,13 +131,13 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                             {selectedTab === SpaceKey.TIPS && (
                                                 <ProposalList
                                                     spaceKey={SpaceKey.TIPS}
-                                                    setSelectedProposal={setSelectedProposal}
+                                                    onItemClick={setSelectedProposal}
                                                 />
                                             )}
                                             {selectedTab === SpaceKey.COUNCIL && (
                                                 <ProposalList
                                                     spaceKey={SpaceKey.COUNCIL}
-                                                    setSelectedProposal={setSelectedProposal}
+                                                    onItemClick={setSelectedProposal}
                                                 />
                                             )}
                                         </>
@@ -143,6 +147,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                             proposal={selectedProposal}
                                             onClose={() => {
                                                 setSelectedProposal(undefined);
+                                                navigateToGovernance(selectedProposal.space.id);
                                             }}
                                         />
                                     )}

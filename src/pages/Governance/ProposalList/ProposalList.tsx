@@ -4,14 +4,14 @@ import { snapshotEndpoint, SpaceKey } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import ProposalCard from '../ProposalCard';
 import styled from 'styled-components';
-import { navigateTo } from 'utils/routes';
+import { navigateToGovernance } from 'utils/routes';
 
 type ProposalListProps = {
     spaceKey: SpaceKey;
-    setSelectedProposal: any;
+    onItemClick: any;
 };
 
-const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, setSelectedProposal }) => {
+const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick }) => {
     const proposalsQuery = useProposalsQuery(snapshotEndpoint, spaceKey);
     const proposals = proposalsQuery.isSuccess && proposalsQuery.data ? proposalsQuery.data : [];
 
@@ -22,8 +22,8 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, setSelectedPropos
                     key={proposal.id}
                     proposal={proposal}
                     onClick={() => {
-                        navigateTo(`/governance/${proposal.space.id}/${proposal.id}`, true);
-                        setSelectedProposal(proposal);
+                        navigateToGovernance(proposal.space.id, proposal.id);
+                        onItemClick(proposal);
                     }}
                 />
             ))}

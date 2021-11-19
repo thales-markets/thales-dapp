@@ -1,3 +1,4 @@
+import { SpaceKey } from 'constants/governance';
 import ROUTES from 'constants/routes';
 import { createBrowserHistory } from 'history';
 import { createHashHistory } from 'history';
@@ -20,5 +21,8 @@ export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${rou
 
 export const navigateToOptionsMarket = (marketAddress: string, option?: string, replacePath = false) =>
     navigateTo(buildOptionsMarketLink(marketAddress, option), replacePath);
+
+export const navigateToGovernance = (spaceKey?: SpaceKey, id?: string, replacePath = true) =>
+    navigateTo(`${ROUTES.Governance.Home}/${spaceKey ? spaceKey : ''}/${id ? id : ''}`, replacePath);
 
 export { history };
