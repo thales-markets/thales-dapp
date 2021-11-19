@@ -79,7 +79,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                     <i
                         className="icon icon--warning"
                         style={{
-                            color: 'black',
+                            color: '#04045a',
                             textAlign: 'center',
                             display: 'block',
                             position: 'relative',
@@ -101,7 +101,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                         <i
                             className="icon icon--right"
                             style={{
-                                color: 'black',
+                                color: '#04045a',
                                 fontSize: 28,
                                 position: 'absolute',
                                 marginLeft: 59,

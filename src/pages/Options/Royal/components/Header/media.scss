@@ -3,6 +3,7 @@
     background: var(--color-wrapper) !important;
     border: 3.26154px solid var(--color);
     border-radius: 5px;
+    padding: 35px 21px;
 }
 
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode {
@@ -65,32 +66,17 @@
     max-height: 70px;
 }
 
-.light-theme
-    .bn-onboard-custom.bn-onboard-dark-mode
-    .bn-onboard-modal-select-wallets
-    li:nth-child(2n + 0)
-    .bn-onboard-icon-button,
-.dark-theme
-    .bn-onboard-custom.bn-onboard-dark-mode
-    .bn-onboard-modal-select-wallets
-    li:nth-child(2n + 0)
-    .bn-onboard-icon-button {
-    justify-content: start;
-    padding-left: 30px;
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets {
+    margin-bottom: 0px;
+    display: grid;
+    grid: 2;
+    grid-template-columns: repeat(2, 1fr);
 }
 
-.light-theme
-    .bn-onboard-custom.bn-onboard-dark-mode
-    .bn-onboard-modal-select-wallets
-    li:nth-child(odd)
-    .bn-onboard-icon-button,
-.dark-theme
-    .bn-onboard-custom.bn-onboard-dark-mode
-    .bn-onboard-modal-select-wallets
-    li:nth-child(odd)
-    .bn-onboard-icon-button {
-    justify-content: start;
-    padding-left: 90px;
+.light-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets .bn-onboard-icon-button,
+.dark-theme .bn-onboard-custom.bn-onboard-dark-mode .bn-onboard-modal-select-wallets .bn-onboard-icon-button {
+    width: 100%;
 }
 
 .light-theme .bn-onboard-custom.bn-onboard-dark-mode-background.bn-onboard-custom,
