@@ -61,7 +61,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                                 maxWidth: 70,
                             }}
                             onClick={() => {
-                                cookies.set('theme', theme);
+                                cookies.set('theme', theme === Theme.Light ? Theme.Dark : Theme.Light);
                                 setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
                             }}
                         >

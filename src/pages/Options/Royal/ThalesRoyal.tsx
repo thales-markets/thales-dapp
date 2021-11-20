@@ -26,13 +26,12 @@ const cookies = new Cookies();
 
 const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
-
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [thalesRoyalData, setData] = useState<undefined | ThalesRoyalData>(undefined);
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
-    const [theme, setTheme] = useState(cookies.get('theme') ?? Theme.Light);
+    const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
     const [positions, setPositions] = useState({ up: 0, down: 0 });
     const [user, setUser] = useState<User>();
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
