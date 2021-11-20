@@ -1,5 +1,5 @@
 export const thalesRoyal = {
-    address: '0xe95C975ae8e37ab0bA6b9F78262977A59FcAABEB',
+    address: '0x27aAdff477FB85855A7a753d02C44cEF3ec25BF9',
     abi: [
         {
             inputs: [
@@ -78,6 +78,15 @@ export const thalesRoyal = {
             constant: true,
             inputs: [],
             name: 'canCloseRound',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'canStartRoyale',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             payable: false,
             stateMutability: 'view',
