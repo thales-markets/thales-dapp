@@ -148,7 +148,7 @@ const ThalesRoyal: React.FC = () => {
                 </Nav>
 
                 <InfoSection>
-                    {user?.deathRound && (
+                    {!!user?.deathRound && (
                         <div>
                             <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
                             <span>
