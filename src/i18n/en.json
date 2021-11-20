@@ -959,6 +959,7 @@
                 "info6": "<bold>Good luck and let the battle begin!</bold>",
                 "blog": "[Thales Royale blog post]",
                 "player-no": "Player №: ",
+                "eliminated": "You have been eliminated",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -972,7 +973,7 @@
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",
-                "message": "Go back on Thales Royale"
+                "message": "Go back to Thales Royale"
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",

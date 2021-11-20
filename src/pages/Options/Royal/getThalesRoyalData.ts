@@ -106,6 +106,7 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
             const isAlive = player.isAlive;
             const address = player.address;
             const number = key + 1;
+            const deathRound = player.deathRound;
 
             if (map.has(player.address.toLowerCase())) {
                 const discordUser: any = map.get(player.address.toLowerCase());
@@ -113,6 +114,7 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
                     isAlive,
                     address,
                     number,
+                    deathRound,
                     name: discordUser.name,
                     avatar: discordUser.avatar,
                     status: UserStatus.RDY,
@@ -126,6 +128,7 @@ export const getUsers = async (walletAddress: string | null, setUsers: any, setU
                 const user = {
                     isAlive,
                     address,
+                    deathRound,
                     name: '',
                     number,
                     avatar: '',

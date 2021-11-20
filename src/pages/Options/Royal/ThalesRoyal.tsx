@@ -5,6 +5,7 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
+import Cookies from 'universal-cookie';
 import ROUTES from '../../../constants/routes';
 import useInterval from '../../../hooks/useInterval';
 import { history, navigateTo } from '../../../utils/routes';
@@ -21,15 +22,16 @@ export enum Theme {
     Dark,
 }
 
+const cookies = new Cookies();
+
 const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
-
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [thalesRoyalData, setData] = useState<undefined | ThalesRoyalData>(undefined);
     const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
     const [ethPrice, setEthPrice] = useState<string | undefined>('');
-    const [theme, setTheme] = useState(Theme.Light);
+    const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
     const [positions, setPositions] = useState({ up: 0, down: 0 });
     const [user, setUser] = useState<User>();
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
@@ -72,7 +74,7 @@ const ThalesRoyal: React.FC = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
-        }, 3000);
+        }, 2000);
 
         return () => clearTimeout(timeout);
     }, [walletAddress]);

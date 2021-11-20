@@ -143,7 +143,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
                 if (user.isAlive) {
                     return <></>;
                 } else {
-                    return <DeadText>You have been eliminated</DeadText>;
+                    return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
                 }
             }
 
@@ -278,6 +278,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
                                             className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
                                         />
                                         <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                                        <span>{!user.isAlive ? 'rd: ' + user.deathRound : ''}</span>
                                     </Status>
                                 </HeadCell>
                                 <HeadCell>{getAvatar(user)}</HeadCell>
@@ -366,8 +367,17 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
                     {royaleData.signUpPeriod < new Date() ? (
-                        <Button onClick={startRoyale} style={{ margin: '30px auto', fontSize: 30, lineHeight: '30px' }}>
-                            <Title>{t('options.royale.scoreboard.start-royale')}</Title>
+                        <Button
+                            onClick={startRoyale}
+                            style={{
+                                margin: '30px auto',
+                                fontSize: 30,
+                                lineHeight: '30px',
+                            }}
+                        >
+                            <Title style={{ color: 'var(--color-wrapper)' }}>
+                                {t('options.royale.scoreboard.start-royale')}
+                            </Title>
                         </Button>
                     ) : (
                         <SubTitle>

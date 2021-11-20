@@ -969,7 +969,8 @@
                 "verify": "转到 Thales discord 并输入 !verify 0x...",
                 "verification": "完成验证！",
                 "start-royale": "开始泰雷兹皇家",
-                "search": "搜索球员/号码"
+                "search": "搜索球员/号码",
+                "eliminated": "你被淘汰了"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",

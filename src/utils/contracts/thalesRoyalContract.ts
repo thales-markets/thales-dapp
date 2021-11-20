@@ -84,6 +84,15 @@ export const thalesRoyal = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'canStartRoyale',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [],
             name: 'closeRound',

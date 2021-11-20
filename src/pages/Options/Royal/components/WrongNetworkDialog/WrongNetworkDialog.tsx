@@ -18,7 +18,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
         setOpen(false);
     };
 
-    const switchNetwork = async () => {
+    const switchOrAddKovanOptimisticNetwork = async () => {
         if (typeof window.ethereum !== 'undefined') {
             try {
                 await (window.ethereum as any).request({
@@ -26,8 +26,38 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                     params: [{ chainId: '0x45' }],
                 });
                 onClose();
-            } catch (switchError) {
+            } catch (switchError: any) {
+                console.log(switchError.code === 4902);
                 console.log(switchError);
+                if (switchError.code === 4902) {
+                    try {
+                        await (window.ethereum as any).request({
+                            method: 'wallet_addEthereumChain',
+                            params: [
+                                {
+                                    chainId: '0x45',
+                                    chainName: 'Optimistic Ethereum Testnet Kovan',
+                                    rpcUrls: ['https://kovan.optimism.io/'],
+                                    nativeCurrency: {
+                                        name: 'Ether',
+                                        symbol: 'ETH',
+                                        decimals: 18,
+                                    },
+                                    blockExplorerUrls: ['https://kovan-optimistic.etherscan.io/'],
+                                },
+                            ],
+                        });
+                        await (window.ethereum as any).request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x45' }],
+                        });
+                        onClose();
+                    } catch (addError) {
+                        console.log(addError);
+                    }
+                } else {
+                    console.log(switchError);
+                }
             }
         }
     };
@@ -79,7 +109,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                     <i
                         className="icon icon--warning"
                         style={{
-                            color: 'black',
+                            color: '#04045a',
                             textAlign: 'center',
                             display: 'block',
                             position: 'relative',
@@ -95,13 +125,13 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                             lineHeight: '22px',
                             display: 'block',
                         }}
-                        onClick={switchNetwork}
+                        onClick={switchOrAddKovanOptimisticNetwork}
                     >
                         {t('options.royale.wrong-network-dialog.button')}
                         <i
                             className="icon icon--right"
                             style={{
-                                color: 'black',
+                                color: '#04045a',
                                 fontSize: 28,
                                 position: 'absolute',
                                 marginLeft: 59,
