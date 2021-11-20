@@ -973,7 +973,7 @@
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",
-                "message": "Go back on Thales Royale"
+                "message": "Go back to Thales Royale"
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",

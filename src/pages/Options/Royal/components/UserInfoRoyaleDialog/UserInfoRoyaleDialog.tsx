@@ -128,7 +128,9 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
                 </WalletWrapper>
                 <FlexDivCentered style={{ justifyContent: 'space-around', margin: 25 }}>
                     <ShortInputContainer style={{ margin: 0, width: '45%' }}>
-                        <InputLabel className="font-sansation">{t(`user-info.wallet.display-name`)}</InputLabel>
+                        <InputLabel className="font-sansation" style={{ color: 'var(--color)' }}>
+                            {t(`user-info.wallet.display-name`)}
+                        </InputLabel>
                         <InputField
                             className="font-sansation"
                             onChange={(event) => {
@@ -198,6 +200,8 @@ const DialogButton = styled(Button)`
 const InputField = styled(Input)`
     border: 1px solid var(--color);
     background: var(--color-wrapper) !important;
+    border-radius: 5px;
+    color: var(--color);
 `;
 
 export default UserInfoRoyaleDialog;

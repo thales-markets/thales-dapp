@@ -969,11 +969,12 @@
                 "search": "Поиск игрока / числа",
                 "verification": "Для завершения проверки!",
                 "start-royale": "Запустить Thales Royale",
-                "verify": "Зайдите в Discord Thales и введите! Verify 0x ..."
+                "verify": "Зайдите в Discord Thales и введите! Verify 0x ...",
+                "eliminated": "Вы были исключены"
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",
-                "message": "Вернитесь на Thales Royale"
+                "message": "Вернитесь в Thales Royale"
             },
             "wrong-network-dialog": {
                 "title": "Неправильная сеть!",
