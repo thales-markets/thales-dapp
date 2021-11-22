@@ -363,6 +363,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                     {royaleData.signUpPeriod < new Date() ? (
                         <Button
                             onClick={startRoyale}
+                            disabled={!royaleData.canStartRoyale}
                             style={{
                                 margin: '30px auto',
                                 fontSize: 30,
