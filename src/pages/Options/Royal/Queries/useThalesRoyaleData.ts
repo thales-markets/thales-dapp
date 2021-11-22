@@ -21,6 +21,7 @@ export type ThalesRoyalData = {
     canCloseRound: boolean;
     canStartRoyale: boolean;
     priceFeedAddress: string;
+    playerSignedUp: boolean;
 };
 
 type RoundInformation = {
@@ -55,6 +56,7 @@ export default useThalesRoyaleData;
 
 const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: string) => {
     const isPlayerAlive = walletAddress ? await RoyalContract.isPlayerAlive(walletAddress) : false;
+    const playerSignedUp = walletAddress ? await RoyalContract.playerSignedUp(walletAddress) : false;
     const [
         players,
         alivePlayers,
@@ -119,5 +121,6 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         canCloseRound,
         priceFeedAddress,
         canStartRoyale,
+        playerSignedUp,
     };
 };
