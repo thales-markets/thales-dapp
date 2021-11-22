@@ -193,7 +193,7 @@ const MeatballsIcon = styled.i<{ position: string }>`
     right: 15px;
     @media (max-width: 1024px) {
         position: absolute;
-        z-index: 2;
+        z-index: 5;
     }
 `;
 
@@ -272,7 +272,7 @@ const BurgerMenu = styled.div`
     right: -20px;
     background: var(--color-background);
     padding: 15px;
-    z-index: 2;
+    z-index: 5;
     @media (max-width: 1024px) {
         left: 0;
         right: 0;
@@ -285,7 +285,7 @@ const Overlay = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 4;
 `;
 
 export default RoyaleHeader;
