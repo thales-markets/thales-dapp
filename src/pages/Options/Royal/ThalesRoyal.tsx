@@ -216,7 +216,7 @@ const Footer = styled.div`
     @media (max-width: 1024px) {
         position: absolute;
         top: 0;
-        padding: 10px;
+        padding: 17px;
         > * {
             &:nth-child(1) {
                 justify-content: flex-start;

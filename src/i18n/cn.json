@@ -971,7 +971,8 @@
                 "verification": "完成验证！",
                 "start-royale": "开始泰雷兹皇家",
                 "search": "搜索球员/号码",
-                "eliminated": "你被淘汰了"
+                "eliminated": "你被淘汰了",
+                "position-period": "回合定位剩余时间"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",

@@ -971,7 +971,8 @@
                 "verification": "Для завершения проверки!",
                 "start-royale": "Запустить Thales Royale",
                 "verify": "Зайдите в Discord Thales и введите! Verify 0x ...",
-                "eliminated": "Вы были исключены"
+                "eliminated": "Вы были исключены",
+                "position-period": "Время, оставшееся до места в Раунде"
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",

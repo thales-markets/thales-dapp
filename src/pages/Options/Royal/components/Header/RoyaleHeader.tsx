@@ -99,6 +99,9 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                         </BorderedWrapper>
                         <LanguageSelectorRoyale />
                     </BurgerMenu>
+                    {showBurgerMenu === BurgerState.Show && (
+                        <Overlay onClick={() => setShowBurgerMenu(BurgerState.Hide)} />
+                    )}
                 </InfoWrapper>
                 <UserInfoRoyaleDialog
                     walletAddress={walletAddress}
@@ -169,7 +172,6 @@ const InfoWrapper = styled.div`
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    position: relative;
 `;
 const RoyaleLogo = styled.i`
     line-height: 36px;
@@ -189,6 +191,10 @@ const MeatballsIcon = styled.i<{ position: string }>`
     position: ${(props) => props.position};
     top: 15px;
     right: 15px;
+    @media (max-width: 1024px) {
+        position: absolute;
+        z-index: 2;
+    }
 `;
 
 const BorderedWrapper = styled.div`
@@ -201,9 +207,6 @@ const BorderedWrapper = styled.div`
     height: 28px;
     padding: 4px 6px;
     flex: 1;
-    @media (max-width: 1024px) {
-        display: none;
-    }
 `;
 const UserAvatar = styled.i`
     font-size: 20px;
@@ -257,9 +260,6 @@ const HeaderButton = styled.button`
     background: transparent;
     cursor: pointer;
     margin-bottom: 10px;
-    @media (max-width: 1024px) {
-        display: none;
-    }
 `;
 
 const BurgerMenu = styled.div`
@@ -268,11 +268,24 @@ const BurgerMenu = styled.div`
     box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     position: absolute;
-    top: -12px;
+    top: 23px;
     right: -20px;
     background: var(--color-background);
     padding: 15px;
     z-index: 2;
+    @media (max-width: 1024px) {
+        left: 0;
+        right: 0;
+    }
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
 `;
 
 export default RoyaleHeader;
