@@ -69,13 +69,17 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, users, user }) => {
                         if (a.status !== b.status) {
                             return orderDirection === OrderDirection.DESC ? a.status - b.status : b.status - a.status;
                         } else {
-                            return a.isAlive
-                                ? orderDirection === OrderDirection.DESC
+                            if (a.isAlive && b.isAlive) {
+                                orderDirection === OrderDirection.DESC ? a.number - b.number : b.number - a.number;
+                            } else {
+                                return a.isAlive
+                                    ? orderDirection === OrderDirection.DESC
+                                        ? 1
+                                        : -1
+                                    : orderDirection === OrderDirection.ASC
                                     ? -1
-                                    : 1
-                                : orderDirection === OrderDirection.DESC
-                                ? 1
-                                : -1;
+                                    : 1;
+                            }
                         }
                     });
                     break;
