@@ -944,7 +944,8 @@
                 "up": "ВВЕРХ",
                 "down": "ВНИЗ",
                 "rd": "RD",
-                "you-were-eliminated-in": "Вы были исключены в"
+                "you-were-eliminated-in": "Вы были исключены в",
+                "current-reward-per-player": "Текущая награда на игрока"
             },
             "scoreboard": {
                 "player-no": "№ игрока:",

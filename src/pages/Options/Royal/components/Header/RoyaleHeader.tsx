@@ -43,6 +43,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                     <UtilWrapper>
                         <RoyaleLogo className="icon icon--royale-logo" />
                         <MeatballsIcon
+                            position="initial"
                             className="icon icon--three-dots"
                             onClick={() =>
                                 setShowBurgerMenu(
@@ -54,6 +55,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                     <BurgerMenu style={{ visibility: showBurgerMenu === BurgerState.Show ? 'visible' : 'hidden' }}>
                         <RoyaleLogo className="icon icon--royale-logo" />
                         <MeatballsIcon
+                            position="absolute"
                             className="icon icon--three-dots"
                             onClick={() =>
                                 setShowBurgerMenu(
@@ -117,6 +119,9 @@ const Header = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    @media (max-width: 1024px) {
+        justify-content: center;
+    }
 `;
 
 const ThemeSelector = styled.div`
@@ -155,22 +160,35 @@ const UtilWrapper = styled.div`
 const ThalesLogo = styled.i`
     font-size: 127px;
     line-height: 30px;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;
 const InfoWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    position: relative;
 `;
 const RoyaleLogo = styled.i`
     line-height: 36px;
     font-size: 78px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    @media (max-width: 1024px) {
+        line-height: 140px;
+        font-size: 164px;
+    }
 `;
 
-const MeatballsIcon = styled.i`
+const MeatballsIcon = styled.i<{ position: string }>`
     line-height: 25px;
     font-size: 25px;
     cursor: pointer;
+    position: ${(props) => props.position};
+    top: 15px;
+    right: 15px;
 `;
 
 const BorderedWrapper = styled.div`
@@ -183,6 +201,9 @@ const BorderedWrapper = styled.div`
     height: 28px;
     padding: 4px 6px;
     flex: 1;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;
 const UserAvatar = styled.i`
     font-size: 20px;
@@ -235,6 +256,10 @@ const HeaderButton = styled.button`
     flex: 1;
     background: transparent;
     cursor: pointer;
+    margin-bottom: 10px;
+    @media (max-width: 1024px) {
+        display: none;
+    }
 `;
 
 const BurgerMenu = styled.div`
@@ -242,6 +267,12 @@ const BurgerMenu = styled.div`
     box-sizing: border-box;
     box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
+    position: absolute;
+    top: -12px;
+    right: -20px;
+    background: var(--color-background);
+    padding: 15px;
+    z-index: 2;
 `;
 
 export default RoyaleHeader;

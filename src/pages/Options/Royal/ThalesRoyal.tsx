@@ -104,7 +104,13 @@ const ThalesRoyal: React.FC = () => {
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
                 <Header theme={theme} setTheme={setTheme} />
-                <Scoreboard royaleData={thalesRoyalData as any} user={user} users={users} />
+                <Scoreboard
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleData={thalesRoyalData as any}
+                    user={user}
+                    users={users}
+                />
                 {thalesRoyalData && (
                     <BattleRoyale royaleData={thalesRoyalData} showBattle={selectedPage === 'battle'} />
                 )}
@@ -132,12 +138,13 @@ const ThalesRoyal: React.FC = () => {
                                 }
                             }}
                         >
-                            <Text> Battle </Text>
+                            <Separator>|</Separator>
+                            <Text>Battle </Text>
                             <i className="icon icon--right" />
                         </NavButton>
                     )}
                 </Nav>
-
+                <div />
                 <InfoSection>
                     {!!user?.deathRound && (
                         <div>
@@ -160,7 +167,7 @@ const ThalesRoyal: React.FC = () => {
                         <span>{ethPrice}$</span>
                     </div>
                     <div>
-                        <span>{t('options.royale.footer.reward-per-player')}:</span>
+                        <span>{t('options.royale.footer.current-reward-per-player')}:</span>
                         <span>{(10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
                     </div>
                     <div>
@@ -201,18 +208,49 @@ export const RoyaleBackground = styled(Background)`
 
 const Footer = styled.div`
     position: fixed;
-    bottom: 0;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 2fr 5fr 2fr;
     width: 100%;
-    padding: 50px 120px;
+    padding: 50px 30px 50px 50px;
     align-items: flex-end;
+    @media (max-width: 1024px) {
+        position: absolute;
+        top: 0;
+        padding: 10px;
+        > * {
+            &:nth-child(1) {
+                justify-content: flex-start;
+            }
+            &:nth-child(2) {
+                display: none;
+            }
+            &:nth-child(3) {
+                display: none;
+            }
+        }
+    }
+    @media (min-width: 1024px) {
+        bottom: 0;
+    }
+`;
+
+const Separator = styled.span`
+    padding: 0px 10px;
+    @media (min-width: 1024px) {
+        display: none;
+    }
 `;
 
 const Nav = styled.div`
     display: flex;
     justify-content: space-between;
     width: 275px;
+    @media (max-width: 1200px) {
+        width: auto;
+    }
+    @media (max-width: 1024px) {
+        width: 275px;
+    }
 `;
 
 const NavButton = styled(FlexDivCentered)`
@@ -235,7 +273,7 @@ const NavButton = styled(FlexDivCentered)`
     }
 `;
 
-const InfoSection = styled.div`
+export const InfoSection = styled.div`
     color: var(--color);
     font-style: normal;
     font-weight: 300;

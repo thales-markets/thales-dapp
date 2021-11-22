@@ -944,7 +944,8 @@
                 "down": "下",
                 "vs": "对比",
                 "you-were-eliminated-in": "你被淘汰了",
-                "rd": "RD"
+                "rd": "RD",
+                "current-reward-per-player": "当前每位玩家的奖励"
             },
             "scoreboard": {
                 "player-no": "玩家编号：",

@@ -19,8 +19,11 @@ import { Modal } from '@material-ui/core';
 import SimpleLoader from 'components/SimpleLoader';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
+import { Positions } from '../../Queries/usePositionsQuery';
 
 type ScoreboardProps = {
+    ethPrice: string;
+    positions: Positions;
     royaleData: ThalesRoyalData;
     users: User[];
     user: User;
@@ -42,7 +45,7 @@ const defaultOrderBy = 1;
 
 const PerPageOption = [15, 25, 50, 100];
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, users, user }) => {
+const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData, users, user }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
@@ -191,161 +194,198 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, users, user }) => {
             </Modal>
 
             <Wrapper className="scoreboard">
-                <Intro royaleData={royaleData} />
+                <div />
+                <div style={{ maxWidth: '100%', padding: '5px' }}>
+                    <Intro royaleData={royaleData} />
+                    <UserWrapper>
+                        <FlexDiv style={{ alignItems: 'center' }}>
+                            {user?.avatar ? (
+                                <UserAvatar src={user.avatar} style={{ marginRight: 14 }} />
+                            ) : (
+                                <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
+                            )}
 
-                <UserWrapper>
-                    <FlexDiv style={{ alignItems: 'center' }}>
-                        {user?.avatar ? (
-                            <UserAvatar src={user.avatar} style={{ marginRight: 14 }} />
-                        ) : (
-                            <i className="icon icon--user-avatar" style={{ fontSize: 44, marginRight: 14 }} />
-                        )}
-
-                        <UserLabel>
-                            {t('options.royale.scoreboard.player-no')}
-                            {' #'}
-                            {user?.number}
-                        </UserLabel>
-                    </FlexDiv>
-                    <FlexDivColumn style={{ margin: '20px 0' }}>
-                        <FlexContainer>
-                            <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
-                            <InputWrapper>{user?.name}</InputWrapper>
-                        </FlexContainer>
-                        <FlexContainer>
-                            <UserLabel>{t('options.leaderboard.address')}:</UserLabel>
-                            <InputWrapper>
-                                {truncateAddress(
-                                    walletAddress as any,
-                                    truncateAddressNumberOfCharacters,
-                                    truncateAddressNumberOfCharacters
-                                )}
-                            </InputWrapper>
-                        </FlexContainer>
-                    </FlexDivColumn>
-                    {getFooter(user, royaleData)}
-                </UserWrapper>
-                <TableWrapper>
-                    <TableRow style={{ justifyContent: 'flex-end', position: 'relative' }}>
-                        <SearchWrapper
-                            onChange={(e) => setSearchString(e.target.value)}
-                            value={searchString}
-                            placeholder={t('options.royale.scoreboard.search')}
-                        />
-                        <SearchIcon className="icon icon--search" />
-                    </TableRow>
-
-                    <TableRow>
-                        {HeadCells.map((cell, key) => (
-                            <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
-                                {cell.text}{' '}
-                                {cell.sortable && (
-                                    <ArrowsWrapper>
-                                        {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
-                                            <Arrow
-                                                className={`icon ${
-                                                    orderDirection === OrderDirection.ASC
-                                                        ? 'icon--arrow-up'
-                                                        : 'icon--arrow-down'
-                                                }`}
-                                            />
-                                        ) : (
-                                            <>
-                                                <Arrow className="icon icon--double-arrow" />
-                                            </>
-                                        )}
-                                    </ArrowsWrapper>
-                                )}
-                            </HeadCell>
-                        ))}
-                    </TableRow>
-                    {usersForUi ? (
-                        usersForUi.usersToDisplay.map((user: User, key: number) => (
-                            <TableRow
-                                key={key}
-                                className={user.isAlive ? 'alive' : 'dead'}
-                                style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
-                            >
-                                <HeadCell>
-                                    <Status>
-                                        <StatusAvatar
-                                            className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
-                                        />
-                                        <span>{user.isAlive ? 'alive' : 'dead'}</span>
-                                        <span>{!user.isAlive ? 'rd: ' + user.deathRound : ''}</span>
-                                    </Status>
-                                </HeadCell>
-                                <HeadCell>{getAvatar(user)}</HeadCell>
-                                <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
-                                <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
-                            </TableRow>
-                        ))
-                    ) : (
-                        <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
-                            <SimpleLoader />
-                        </LoaderContainer>
-                    )}
-                    {usersForUi?.usersToDisplay ? (
-                        <Pagination>
-                            <PaginationIcon
-                                className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
-                                onClick={() => {
-                                    if (page <= 1) return;
-                                    setPage(1);
-                                }}
-                            />
-                            <PaginationIcon
-                                className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
-                                onClick={() => {
-                                    if (page <= 1) return;
-                                    setPage(page - 1);
-                                }}
-                            />
-                            <Text className="max-pages">
-                                {page}/{usersForUi?.maxPages}
-                            </Text>
-                            <PaginationIcon
-                                className={`icon icon--right ${
-                                    usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
-                                }`}
-                                onClick={() => {
-                                    if (usersForUi && usersForUi.maxPages === page) return;
-                                    setPage(page + 1);
-                                }}
-                            />
-                            <PaginationIcon
-                                className={`icon icon--double-right ${
-                                    usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
-                                }`}
-                                onClick={() => {
-                                    if (usersForUi && usersForUi.maxPages === page) return;
-                                    setPage(usersForUi.maxPages);
-                                }}
-                            />
-
-                            <PaginationUsers>
-                                <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
-                                {showDropdown &&
-                                    PerPageOption.filter((number) => number !== showPerPage).map(
-                                        (option: number, key: number) => (
-                                            <Text
-                                                onClick={() => {
-                                                    setShowPerPage(option);
-                                                    setShowDropdown(false);
-                                                }}
-                                                key={key}
-                                            >
-                                                {option}
-                                            </Text>
-                                        )
+                            <UserLabel>
+                                {t('options.royale.scoreboard.player-no')}
+                                {' #'}
+                                {user?.number}
+                            </UserLabel>
+                        </FlexDiv>
+                        <FlexDivColumn style={{ margin: '20px 0' }}>
+                            <FlexContainer>
+                                <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
+                                <InputWrapper>{user?.name}</InputWrapper>
+                            </FlexContainer>
+                            <FlexContainer>
+                                <UserLabel>{t('options.leaderboard.address')}:</UserLabel>
+                                <InputWrapper>
+                                    {truncateAddress(
+                                        walletAddress as any,
+                                        truncateAddressNumberOfCharacters,
+                                        truncateAddressNumberOfCharacters
                                     )}
-                            </PaginationUsers>
-                            <UsersPerPageText>Users per page</UsersPerPageText>
-                        </Pagination>
-                    ) : (
-                        ''
-                    )}
-                </TableWrapper>
+                                </InputWrapper>
+                            </FlexContainer>
+                            <ScoreboardInfoSection style={{ paddingTop: '15px' }}>
+                                <div>
+                                    <span>{t('options.royale.footer.up')}</span>
+                                    <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
+                                    <span>{t('options.royale.footer.down')}</span>
+                                </div>
+                                {!!user?.deathRound && (
+                                    <div>
+                                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                                        <span>
+                                            {`${t('options.royale.footer.rd')} `}
+                                            {user.deathRound}
+                                        </span>
+                                    </div>
+                                )}
+                                <div>
+                                    <span>
+                                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                                    </span>
+                                    <span>{ethPrice}$</span>
+                                </div>
+                                <div>
+                                    <span>{t('options.royale.footer.reward-per-player')}:</span>
+                                    <span>
+                                        {(10000 / (Number(royaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES
+                                    </span>
+                                </div>
+                                <div>
+                                    <span>{t('options.royale.footer.players-alive')}:</span>
+                                    <span>
+                                        {royaleData?.alivePlayers?.length + ' / ' + royaleData?.players?.length}
+                                    </span>
+                                </div>
+                            </ScoreboardInfoSection>
+                        </FlexDivColumn>
+                        {getFooter(user, royaleData)}
+                    </UserWrapper>
+                    <TableWrapper>
+                        <TableRow style={{ justifyContent: 'flex-end', position: 'relative' }}>
+                            <SearchWrapper
+                                onChange={(e) => setSearchString(e.target.value)}
+                                value={searchString}
+                                placeholder={t('options.royale.scoreboard.search')}
+                            />
+                            <SearchIcon className="icon icon--search" />
+                        </TableRow>
+
+                        <TableRow>
+                            {HeadCells.map((cell, key) => (
+                                <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
+                                    {cell.text}{' '}
+                                    {cell.sortable && (
+                                        <ArrowsWrapper>
+                                            {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
+                                                <Arrow
+                                                    className={`icon ${
+                                                        orderDirection === OrderDirection.ASC
+                                                            ? 'icon--arrow-up'
+                                                            : 'icon--arrow-down'
+                                                    }`}
+                                                />
+                                            ) : (
+                                                <>
+                                                    <Arrow className="icon icon--double-arrow" />
+                                                </>
+                                            )}
+                                        </ArrowsWrapper>
+                                    )}
+                                </HeadCell>
+                            ))}
+                        </TableRow>
+                        {usersForUi ? (
+                            usersForUi.usersToDisplay.map((user: User, key: number) => (
+                                <TableRow
+                                    key={key}
+                                    className={user.isAlive ? 'alive' : 'dead'}
+                                    style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
+                                >
+                                    <HeadCell>
+                                        <Status>
+                                            <StatusAvatar
+                                                className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
+                                            />
+                                            <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                                            <span>{!user.isAlive ? 'rd: ' + user.deathRound : ''}</span>
+                                        </Status>
+                                    </HeadCell>
+                                    <HeadCell>{getAvatar(user)}</HeadCell>
+                                    <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
+                                    <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
+                                <SimpleLoader />
+                            </LoaderContainer>
+                        )}
+                        {usersForUi?.usersToDisplay ? (
+                            <Pagination>
+                                <PaginationIcon
+                                    className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
+                                    onClick={() => {
+                                        if (page <= 1) return;
+                                        setPage(1);
+                                    }}
+                                />
+                                <PaginationIcon
+                                    className={`icon icon--left ${page <= 1 ? 'disabled' : ''}`}
+                                    onClick={() => {
+                                        if (page <= 1) return;
+                                        setPage(page - 1);
+                                    }}
+                                />
+                                <Text className="max-pages">
+                                    {page}/{usersForUi?.maxPages}
+                                </Text>
+                                <PaginationIcon
+                                    className={`icon icon--right ${
+                                        usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                                    }`}
+                                    onClick={() => {
+                                        if (usersForUi && usersForUi.maxPages === page) return;
+                                        setPage(page + 1);
+                                    }}
+                                />
+                                <PaginationIcon
+                                    className={`icon icon--double-right ${
+                                        usersForUi && usersForUi.maxPages === page ? 'disabled' : ''
+                                    }`}
+                                    onClick={() => {
+                                        if (usersForUi && usersForUi.maxPages === page) return;
+                                        setPage(usersForUi.maxPages);
+                                    }}
+                                />
+
+                                <PaginationUsers>
+                                    <Text onClick={setShowDropdown.bind(this, true)}>{showPerPage}</Text>
+                                    {showDropdown &&
+                                        PerPageOption.filter((number) => number !== showPerPage).map(
+                                            (option: number, key: number) => (
+                                                <Text
+                                                    onClick={() => {
+                                                        setShowPerPage(option);
+                                                        setShowDropdown(false);
+                                                    }}
+                                                    key={key}
+                                                >
+                                                    {option}
+                                                </Text>
+                                            )
+                                        )}
+                                </PaginationUsers>
+                                <UsersPerPageText>Users per page</UsersPerPageText>
+                            </Pagination>
+                        ) : (
+                            ''
+                        )}
+                    </TableWrapper>
+                </div>
+                <div />
             </Wrapper>
         </>
     );
@@ -608,6 +648,11 @@ const Pagination = styled.div`
         color: var(--color);
         margin: 0 10px;
     }
+
+    @media (max-width: 1024px) {
+        justify-content: flex-start;
+        margin-left: 10px;
+    }
 `;
 
 const DeadText = styled(Text)`
@@ -633,6 +678,10 @@ const UserWrapper = styled.div`
     border-radius: 5px;
     margin-top: 14px;
     margin-bottom: 14px;
+    @media (max-width: 1024px) {
+        padding: 15px;
+        height: auto;
+    }
 `;
 
 const UserLabel = styled.p`
@@ -665,10 +714,17 @@ const UserAvatar = styled(Image)`
     width: 44px;
     height: 44px;
     border-radius: 50%50%;
+    @media (max-width: 1024px) {
+        width: 40px;
+        height: 40px;
+    }
 `;
 
 const StatusAvatar = styled.i`
     font-size: 35px;
+    @media (max-width: 1024px) {
+        font-size: 30px;
+    }
 `;
 
 const Status = styled.span`
@@ -708,6 +764,9 @@ const InputWrapper = styled.div`
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
+    @media (max-width: 1024px) {
+        width: 150px;
+    }
 `;
 
 const FlexContainer = styled(FlexDivCentered)`
@@ -724,6 +783,9 @@ const TableWrapper = styled.div`
     box-sizing: border-box;
     border-radius: 5px;
     padding: 30px;
+    @media (max-width: 1024px) {
+        padding: 5px;
+    }
 `;
 
 const TableRow = styled.div`
@@ -751,6 +813,9 @@ const TableRow = styled.div`
         &:last-child {
             flex: 1;
         }
+        @media (max-width: 1024px) {
+            min-width: 67px;
+        }
     }
 `;
 
@@ -758,6 +823,9 @@ const HeadCell = styled(Text)`
     font-family: Sansation !important;
     font-size: 20px;
     color: var(--color);
+    @media (max-width: 1024px) {
+        font-size: 15px;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -766,6 +834,10 @@ const Wrapper = styled.div`
     align-items: flex-start;
     width: 570px;
     z-index: 1;
+    text-align: center;
+    @media (max-width: 1024px) {
+        width: 100%;
+    }
 `;
 
 const Title = styled(Text)`
@@ -848,6 +920,33 @@ const Link = styled.a`
     &:hover {
         font-weight: bold;
         text-decoration: underline;
+    }
+`;
+
+const ScoreboardInfoSection = styled.div`
+    color: var(--color);
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 30px;
+    > * {
+        > * {
+            font-family: SansationLight !important;
+            &:nth-child(1) {
+                padding-right: 7px;
+            }
+            &:nth-child(2) {
+                font-family: VT323 !important;
+                font-weight: bold;
+                font-size: 28px;
+            }
+            &:nth-child(3) {
+                padding-left: 7px;
+            }
+        }
+    }
+    @media (min-width: 1024px) {
+        display: none;
     }
 `;
 

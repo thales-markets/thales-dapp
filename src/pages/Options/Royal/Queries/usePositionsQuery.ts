@@ -5,7 +5,7 @@ import thalesData from 'thales-data';
 import { ethers } from 'ethers';
 import thalesRoyal from 'utils/contracts/thalesRoyalContract';
 
-type Positions = {
+export type Positions = {
     up: number;
     down: number;
 };

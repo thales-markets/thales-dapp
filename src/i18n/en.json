@@ -926,7 +926,8 @@
             "footer": {
                 "current": "Current",
                 "price": "Price",
-                "reward-per-player": "Current reward per player",
+                "current-reward-per-player": "Current reward per player",
+                "reward-per-player": "Reward per player",
                 "players-alive": "Players alive",
                 "up": "UP",
                 "down": "DOWN",

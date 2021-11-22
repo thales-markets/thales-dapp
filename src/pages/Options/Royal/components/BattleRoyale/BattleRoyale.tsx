@@ -203,7 +203,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle }) =
     }, [round, showBattle]);
 
     return (
-        <Wrapper style={{ minHeight: '100%' }} className="battle">
+        <Wrapper style={{ minHeight: '100%', justifyContent: 'center' }} className="battle">
             <ArrowLeft onMouseDown={getOnArrowClick(-680)} className="icon icon--left" />
             <CardWrapper>
                 <ScrollWrapper id="battle-royale-wrapper">
