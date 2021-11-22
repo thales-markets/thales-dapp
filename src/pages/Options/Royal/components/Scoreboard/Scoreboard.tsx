@@ -842,6 +842,7 @@ const Wrapper = styled.div`
     text-align: center;
     @media (max-width: 1024px) {
         width: 100%;
+        padding-bottom: 60px;
     }
 `;
 

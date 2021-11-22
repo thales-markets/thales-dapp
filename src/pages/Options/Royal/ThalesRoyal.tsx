@@ -131,9 +131,18 @@ const ThalesRoyal: React.FC = () => {
                     )}
                     {selectedPage !== 'battle' && (
                         <NavButton
-                            className={thalesRoyalData && thalesRoyalData.signUpPeriod > new Date() ? 'disabled' : ''}
+                            className={
+                                (thalesRoyalData && thalesRoyalData.signUpPeriod > new Date()) ||
+                                thalesRoyalData?.canStartRoyale
+                                    ? 'disabled'
+                                    : ''
+                            }
                             onClick={() => {
-                                if (thalesRoyalData && thalesRoyalData.signUpPeriod < new Date()) {
+                                if (
+                                    thalesRoyalData &&
+                                    thalesRoyalData.signUpPeriod < new Date() &&
+                                    !thalesRoyalData?.canStartRoyale
+                                ) {
                                     setSelectedPage('battle');
                                 }
                             }}
