@@ -823,11 +823,7 @@ const InfoText = styled(Text)`
     }
 
     strong {
-        font-family: VT323 !important;
         font-weight: bold;
-        font-size: 26px;
-        line-height: 24px;
-        letter-spacing: 1.6px;
     }
 
     i {
