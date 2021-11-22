@@ -12,7 +12,7 @@ export const ROUTES = {
         QuickTrading: '/markets/quick-trading',
         QuickTradingCompetition: '/markets/competition-orders',
         Token: '/token',
-        Royal: '/thales-royal',
+        Royal: '/royale',
     },
 };
 export default ROUTES;

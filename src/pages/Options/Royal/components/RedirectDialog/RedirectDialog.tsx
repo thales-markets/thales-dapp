@@ -67,7 +67,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         lineHeight: '22px',
                         display: 'block',
                     }}
-                    href="/thales-royal"
+                    href="/royale"
                 >
                     {t('options.royale.redirect-dialog.message')}
                     <i
