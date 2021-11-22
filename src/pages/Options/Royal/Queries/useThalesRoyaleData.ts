@@ -54,7 +54,7 @@ const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Th
 export default useThalesRoyaleData;
 
 const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: string) => {
-    const isPlayerAlive = walletAddress ? RoyalContract.isPlayerAlive(walletAddress) : false;
+    const isPlayerAlive = walletAddress ? await RoyalContract.isPlayerAlive(walletAddress) : false;
     const [
         players,
         alivePlayers,
