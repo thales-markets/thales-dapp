@@ -155,11 +155,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
             }
 
             if (user.status === UserStatus.NOTSIGNED) {
-                return royaleData.playerSignedUp ? (
-                    <></>
-                ) : (
-                    <Button onClick={signUp}>{t('options.royale.scoreboard.sign-up')}</Button>
-                );
+                return <Button onClick={signUp}>{t('options.royale.scoreboard.sign-up')}</Button>;
             }
             if (user.status === UserStatus.NOTVERIFIED) {
                 return (
