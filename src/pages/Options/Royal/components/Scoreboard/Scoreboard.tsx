@@ -664,7 +664,7 @@ const Button = styled.button`
     padding: 6px 15px 6px 20px;
     color: var(--color-wrapper);
     margin: auto;
-    .disabled {
+    &.disabled {
         opacity: 0.7;
         cursor: not-allowed;
     }
