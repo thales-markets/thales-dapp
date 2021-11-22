@@ -816,7 +816,7 @@ const InfoText = styled(Text)`
         font-style: normal;
 
         font-size: 20px;
-        line-height: 20px;
+        line-height: 24px;
         text-align: justify;
         letter-spacing: -0.4px;
         color: var(--color);
