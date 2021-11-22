@@ -7,62 +7,50 @@
 }
 
 .icon--triangle:before {
-    content: '\0030';
-}
-
-.icon--circle:before {
-    content: '\0031';
-}
-
-.icon--three-dots:before {
-    content: '\0032';
-}
-
-.icon--search:before {
-    content: '\0033';
-}
-
-.icon--royale-logo:before {
     content: '\0061';
 }
 
-.icon--thales-logo:before {
+.icon--alive:before {
+    content: '\0061';
+}
+
+.icon--circle:before {
     content: '\0062';
 }
 
-.icon--logo:before {
+.icon--three-dots:before {
     content: '\0063';
 }
 
-.icon--ex-mark:before {
+.icon--search:before {
     content: '\0064';
 }
 
-.icon--warning:before {
+.icon--thales-logo:before {
     content: '\0065';
 }
 
-.icon--alive:before {
+.icon--logo:before {
     content: '\0066';
 }
 
-.icon--dead:before {
+.icon--royale-logo:before {
     content: '\0067';
 }
 
-.icon--left:before {
+.icon--ex-mark:before {
     content: '\0068';
 }
 
-.icon--double-left:before {
+.icon--warning:before {
     content: '\0069';
 }
 
-.icon--double-right:before {
+.icon--left:before {
     content: '\006A';
 }
 
-.icon--right:before {
+.icon--double-left:before {
     content: '\006B';
 }
 
@@ -70,57 +58,69 @@
     content: '\006C';
 }
 
-.icon--dead-avatar:before {
+.icon--double-right:before {
     content: '\006D';
 }
 
-.icon--unverified:before {
+.icon--right:before {
     content: '\006E';
 }
 
-.icon--unsigned:before {
+.icon--dead:before {
     content: '\006F';
 }
 
-.icon--double-arrow:before {
+.icon--dead-avatar:before {
     content: '\0070';
 }
 
-.icon--arrow-down:before {
+.icon--unverified:before {
     content: '\0071';
 }
 
-.icon--arrow-up:before {
+.icon--unsigned:before {
     content: '\0072';
 }
 
-.icon--user-avatar:before {
+.icon--arrow-down:before {
     content: '\0073';
 }
 
-.icon--wallet:before {
+.icon--arrow-up:before {
     content: '\0074';
 }
 
-.icon--discord:before {
+.icon--double-arrow:before {
     content: '\0075';
 }
 
-.icon--b-theme:before {
+.icon--g-theme:before {
     content: '\0076';
 }
 
-.icon--g-theme:before {
+.icon--b-theme:before {
     content: '\0077';
 }
 
-.icon--cn:before {
+.icon--user-avatar:before {
     content: '\0078';
 }
-.icon--en:before {
+
+.icon--discord:before {
     content: '\0079';
 }
 
-.icon--ru:before {
+.icon--wallet:before {
     content: '\007A';
+}
+
+.icon--cn:before {
+    content: '\0030';
+}
+.icon--en:before {
+    content: '\0031';
+}
+
+.icon--ru:before {
+    content: '\0032';
 }
