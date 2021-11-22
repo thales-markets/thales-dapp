@@ -407,9 +407,6 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
             {getTitle()}
             <Question> {t('options.royale.scoreboard.question')} </Question>
             <InfoText style={{ margin: '14px 0px' }}>
-                <Trans i18nKey="options.royale.scoreboard.info1" components={{ bold: <strong /> }} />
-            </InfoText>
-            <InfoText>
                 <Trans i18nKey="options.royale.scoreboard.info2" components={{ bold: <strong /> }} />
             </InfoText>
             <InfoText>
@@ -434,11 +431,11 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                     {t('options.royale.scoreboard.blog')}
                 </Link>
             </InfoText>
-            <InfoText>
+            <InfoText style={{ marginTop: '8px' }}>
                 <Trans
                     i18nKey="options.royale.scoreboard.info6"
                     components={{
-                        bold: <strong />,
+                        italic: <i />,
                     }}
                 />
             </InfoText>
@@ -830,6 +827,10 @@ const InfoText = styled(Text)`
         font-size: 26px;
         line-height: 24px;
         letter-spacing: 1.6px;
+    }
+
+    i {
+        font-style: italic;
     }
 
     img {
