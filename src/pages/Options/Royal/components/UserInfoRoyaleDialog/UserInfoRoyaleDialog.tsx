@@ -1,15 +1,12 @@
 import { Modal } from '@material-ui/core';
 import metamask from 'assets/images/metamask.svg';
-import axios from 'axios';
-import { Input, InputLabel, ShortInputContainer } from 'pages/Options/Market/components';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, XButton } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
-import Web3 from 'web3';
 import { Theme } from '../../ThalesRoyal';
 import './media.scss';
 
@@ -20,16 +17,6 @@ type UserInfoRoyaleDialogProps = {
     network: any;
     theme: any;
 };
-
-const ethEnabled = () => {
-    if (window.ethereum) {
-        window.web3 = new Web3(Web3.givenProvider) as any;
-        return true;
-    }
-    return false;
-};
-
-const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
 
 const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
     open,
@@ -43,37 +30,6 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
 
     const currentDisplayName = displayNameQuery.isSuccess ? displayNameQuery.data.name : '';
-
-    useEffect(() => {
-        if (currentDisplayName !== '') {
-            setName(currentDisplayName);
-        }
-    }, [currentDisplayName]);
-
-    const [displayName, setName] = useState(currentDisplayName);
-
-    const isNameValid = useMemo(() => {
-        return DISPLAY_NAME_REGEX.test(displayName);
-    }, [displayName]);
-
-    const setDisplayName = async (walletAddress: string, displayName: string) => {
-        if (!ethEnabled()) {
-            alert('Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!');
-        }
-
-        (window.web3?.eth as any).personal.sign(displayName, walletAddress, async (_test: any, signature: any) => {
-            try {
-                await axios.post('https://api.thales.market/display-name', {
-                    walletAddress,
-                    displayName,
-                    signature,
-                });
-                displayNameQuery.refetch();
-            } catch (e) {
-                console.log(e);
-            }
-        });
-    };
 
     return (
         <Modal
@@ -126,30 +82,6 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
                         </DialogButton>
                     </FlexDivColumn>
                 </WalletWrapper>
-                <FlexDivCentered style={{ justifyContent: 'space-around', margin: 25 }}>
-                    <ShortInputContainer style={{ margin: 0, width: '45%' }}>
-                        <InputLabel className="font-sansation" style={{ color: 'var(--color)' }}>
-                            {t(`user-info.wallet.display-name`)}
-                        </InputLabel>
-                        <InputField
-                            className="font-sansation"
-                            onChange={(event) => {
-                                setName(event.target.value);
-                            }}
-                            value={displayName}
-                        />
-                    </ShortInputContainer>
-                    <DialogButton
-                        style={{ height: 40, maxWidth: 220 }}
-                        onClick={() => {
-                            setDisplayName(walletAddress, displayName);
-                        }}
-                        disabled={!isNameValid}
-                        className="primary"
-                    >
-                        {t(`user-info.wallet.change-display-name`)}
-                    </DialogButton>
-                </FlexDivCentered>
             </ModalWrapper>
         </Modal>
     );
@@ -177,7 +109,7 @@ const Header = styled(FlexDiv)`
 
 const WalletWrapper = styled(FlexDiv)`
     border-radius: 23px;
-    padding: 15px 35px;
+    padding: 20px 35px;
     margin: 0 25px;
     align-items: center;
     font-family: Sansation !important;
@@ -195,13 +127,6 @@ const DialogButton = styled(Button)`
     color: var(--color) !important;
     cursor: pointer;
     font-family: Sansation !important;
-`;
-
-const InputField = styled(Input)`
-    border: 1px solid var(--color);
-    background: var(--color-wrapper) !important;
-    border-radius: 5px;
-    color: var(--color);
 `;
 
 export default UserInfoRoyaleDialog;
