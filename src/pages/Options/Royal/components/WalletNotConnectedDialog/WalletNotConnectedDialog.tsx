@@ -24,7 +24,6 @@ export const WalletNotConnectedDialog: React.FC<WalletNotConnectedDialogProps> =
             <StyledModal
                 open={open}
                 onClose={onClose}
-                disableBackdropClick
                 PaperProps={{
                     style: {
                         backgroundColor: '#64D9FE',
