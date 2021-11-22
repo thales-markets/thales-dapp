@@ -114,13 +114,13 @@
     content: '\0077';
 }
 
-.icon--chn:before {
+.icon--cn:before {
     content: '\0078';
 }
-.icon--eng:before {
+.icon--en:before {
     content: '\0079';
 }
 
-.icon--rus:before {
+.icon--ru:before {
     content: '\007A';
 }

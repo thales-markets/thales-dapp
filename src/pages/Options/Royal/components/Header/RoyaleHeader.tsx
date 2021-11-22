@@ -10,12 +10,19 @@ import onboardConnector from 'utils/onboardConnector';
 import useEthBalanceQuery from '../../Queries/useEthBalanceQuery';
 import { Theme } from '../../ThalesRoyal';
 import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
+import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
 
 type RoyaleHeaderInput = {
     theme: Theme;
     setTheme: (data: any) => void;
 };
+
+enum BurgerState {
+    Init,
+    Show,
+    Hide,
+}
 
 const cookies = new Cookies();
 
@@ -26,26 +33,47 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
     const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
 
+    const [showBurgerMenu, setShowBurgerMenu] = useState<BurgerState>(BurgerState.Init);
+
     return (
         <>
             <Header>
                 <ThalesLogo className="icon icon--logo" />
                 <InfoWrapper>
-                    {!walletAddress && (
-                        <HeaderButton onClick={onboardConnector.connectWallet}>
-                            <WalletIcon className="icon icon--wallet" />
-                            <InfoText>{t('common.wallet.connect-your-wallet')}</InfoText>
-                        </HeaderButton>
-                    )}
-                    {walletAddress && (
-                        <HeaderButton onClick={() => setOpenUserInfo(true)}>
-                            <UserAvatar className="icon icon--user-avatar" />
-                            <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
-                            <UserText> {balance} Eth </UserText>
-                        </HeaderButton>
-                    )}
                     <UtilWrapper>
                         <RoyaleLogo className="icon icon--royale-logo" />
+                        <MeatballsIcon
+                            className="icon icon--three-dots"
+                            onClick={() =>
+                                setShowBurgerMenu(
+                                    showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
+                                )
+                            }
+                        />
+                    </UtilWrapper>
+                    <BurgerMenu style={{ visibility: showBurgerMenu === BurgerState.Show ? 'visible' : 'hidden' }}>
+                        <RoyaleLogo className="icon icon--royale-logo" />
+                        <MeatballsIcon
+                            className="icon icon--three-dots"
+                            onClick={() =>
+                                setShowBurgerMenu(
+                                    showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
+                                )
+                            }
+                        />
+                        {!walletAddress && (
+                            <HeaderButton onClick={onboardConnector.connectWallet}>
+                                <WalletIcon className="icon icon--wallet" />
+                                <InfoText>{t('common.wallet.connect-your-wallet')}</InfoText>
+                            </HeaderButton>
+                        )}
+                        {walletAddress && (
+                            <HeaderButton onClick={() => setOpenUserInfo(true)}>
+                                <UserAvatar className="icon icon--user-avatar" />
+                                <UserText>{truncateAddress(walletAddress as any, 5, 5)}</UserText>
+                                <UserText> {balance} Eth </UserText>
+                            </HeaderButton>
+                        )}
                         <BorderedWrapper
                             style={{
                                 flexDirection: theme === Theme.Light ? 'row' : 'row-reverse',
@@ -67,7 +95,8 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                             </ThemeSelector>
                             <ThemeText>Theme</ThemeText>
                         </BorderedWrapper>
-                    </UtilWrapper>
+                        <LanguageSelectorRoyale />
+                    </BurgerMenu>
                 </InfoWrapper>
                 <UserInfoRoyaleDialog
                     walletAddress={walletAddress}
@@ -137,6 +166,13 @@ const RoyaleLogo = styled.i`
     line-height: 36px;
     font-size: 78px;
 `;
+
+const MeatballsIcon = styled.i`
+    line-height: 25px;
+    font-size: 25px;
+    cursor: pointer;
+`;
+
 const BorderedWrapper = styled.div`
     display: flex;
     justify-content: space-between;
@@ -199,6 +235,13 @@ const HeaderButton = styled.button`
     flex: 1;
     background: transparent;
     cursor: pointer;
+`;
+
+const BurgerMenu = styled.div`
+    border: 5px solid var(--color);
+    box-sizing: border-box;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
 `;
 
 export default RoyaleHeader;
