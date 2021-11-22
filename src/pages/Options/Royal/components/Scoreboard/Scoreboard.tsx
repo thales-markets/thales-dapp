@@ -1,5 +1,5 @@
-import { getUsers, signUp, startRoyale, ThalesRoyalData, User, UserStatus } from '../../getThalesRoyalData';
-import React, { useEffect, useMemo, useState } from 'react';
+import { signUp, startRoyale } from '../../getThalesRoyalData';
+import React, { useMemo, useState } from 'react';
 import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv, LoaderContainer } from 'theme/common';
 import styled from 'styled-components';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -17,10 +17,13 @@ import { RoyaleTooltip } from 'pages/Options/Market/components';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
 import { Modal } from '@material-ui/core';
 import SimpleLoader from 'components/SimpleLoader';
+import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
+import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 
 type ScoreboardProps = {
-    fetchNewData: number;
     royaleData: ThalesRoyalData;
+    users: User[];
+    user: User;
 };
 
 type HeadCell = {
@@ -39,12 +42,11 @@ const defaultOrderBy = 1;
 
 const PerPageOption = [15, 25, 50, 100];
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => {
+const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, users, user }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
-    const [user, setUser] = useState<User>();
-    const [users, setUsers] = useState<User[]>([]);
+
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
@@ -53,15 +55,13 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
 
-    useEffect(() => {
-        getUsers(walletAddress, setUsers, setUser);
-    }, [walletAddress, fetchNewData]);
-
     const usersForUi = useMemo(() => {
         if (!royaleData) return;
         if (users.length > 0) {
             let usersToShow: any =
-                royaleData.signUpPeriod < new Date() ? users.filter((user) => user.status === UserStatus.RDY) : users;
+                royaleData.signUpPeriod < new Date()
+                    ? users.filter((user: User) => user.status === UserStatus.RDY)
+                    : users;
 
             switch (orderBy) {
                 case 1:
@@ -148,17 +148,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, fetchNewData }) => 
             }
 
             if (user.status === UserStatus.NOTSIGNED) {
-                return (
-                    <Button
-                        onClick={() => {
-                            signUp()
-                                .then(() => getUsers(walletAddress, setUsers, setUser))
-                                .catch((e) => console.log(e));
-                        }}
-                    >
-                        {t('options.royale.scoreboard.sign-up')}
-                    </Button>
-                );
+                return <Button onClick={signUp}>{t('options.royale.scoreboard.sign-up')}</Button>;
             }
             if (user.status === UserStatus.NOTVERIFIED) {
                 return (

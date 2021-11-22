@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import Cookies from 'universal-cookie';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
-import { getEthBalance } from '../../getThalesRoyalData';
+import useEthBalanceQuery from '../../Queries/useEthBalanceQuery';
 import { Theme } from '../../ThalesRoyal';
 import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 import './media.scss';
@@ -22,17 +22,9 @@ const cookies = new Cookies();
 const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const [balance, setBalance] = useState(0);
     const [openUserInfo, setOpenUserInfo] = useState(false);
-    useEffect(() => {
-        if (walletAddress) {
-            getEthBalance(walletAddress).then((balance: any) => {
-                console.log(balance);
-                setBalance(balance);
-            });
-        }
-        return undefined;
-    }, [walletAddress]);
+    const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
+    const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
 
     return (
         <>

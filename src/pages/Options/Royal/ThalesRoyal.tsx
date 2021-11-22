@@ -7,15 +7,17 @@ import styled from 'styled-components';
 import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
 import ROUTES from '../../../constants/routes';
-import useInterval from '../../../hooks/useInterval';
 import { history, navigateTo } from '../../../utils/routes';
 import BattleRoyale from './components/BattleRoyale';
 import Header from './components/Header';
 import Scoreboard from './components/Scoreboard';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
-import { getEthPrice, getPositions, getThalesRoyalData, getUsers, ThalesRoyalData, User } from './getThalesRoyalData';
 import queryString from 'query-string';
+import usePositionsQuery from './Queries/usePositionsQuery';
+import useThalesRoyaleData from './Queries/useThalesRoyaleData';
+import useEthPriceQuery from './Queries/useEthPriceQuery';
+import useRoyalePlayersQuery, { User } from './Queries/useRoyalePlayersQuery';
 
 export enum Theme {
     Light,
@@ -28,15 +30,27 @@ const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const [thalesRoyalData, setData] = useState<undefined | ThalesRoyalData>(undefined);
-    const [fetchNewData, setFetchNewData] = useState<number>(Date.now());
-    const [ethPrice, setEthPrice] = useState<string | undefined>('');
     const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
-    const [positions, setPositions] = useState({ up: 0, down: 0 });
-    const [user, setUser] = useState<User>();
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
+
+    const royaleDataQuery = useThalesRoyaleData(walletAddress as any, { enabled: networkId === 69 });
+    const thalesRoyalData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
+
+    const usersQuery = useRoyalePlayersQuery({ enabled: networkId === 69 });
+    const users = usersQuery.isSuccess ? usersQuery.data : [];
+    const user = users.filter(
+        (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
+    )[0];
+
+    const positionsQuery = usePositionsQuery(networkId, { enabled: networkId !== undefined });
+    const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
+
+    const ethPriceQuery = useEthPriceQuery(thalesRoyalData?.priceFeedAddress as any, {
+        enabled: thalesRoyalData !== undefined,
+    });
+    const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
 
     useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
@@ -58,20 +72,6 @@ const ThalesRoyal: React.FC = () => {
     }, [selectedPage]);
 
     useEffect(() => {
-        if (walletAddress && networkId === 69) {
-            getThalesRoyalData(walletAddress).then((data) => {
-                setData(data);
-                getEthPrice().then((data) => setEthPrice(data));
-                getPositions(data.round).then((data) => setPositions(data));
-            });
-        }
-    }, [walletAddress, networkId, fetchNewData]);
-
-    useEffect(() => {
-        getUsers(walletAddress, () => {}, setUser);
-    }, [walletAddress, fetchNewData]);
-
-    useEffect(() => {
         const timeout = setTimeout(() => {
             !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
         }, 2000);
@@ -89,10 +89,6 @@ const ThalesRoyal: React.FC = () => {
         body.classList.add(theme !== Theme.Light ? 'dark-theme' : 'light-theme');
     }, [theme]);
 
-    useInterval(async () => {
-        setEthPrice(await getEthPrice());
-    }, 10000);
-
     useEffect(() => {
         return () => {
             const body = document.getElementsByTagName('body')[0];
@@ -108,16 +104,9 @@ const ThalesRoyal: React.FC = () => {
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
                 <Header theme={theme} setTheme={setTheme} />
-                <Scoreboard fetchNewData={fetchNewData} royaleData={thalesRoyalData as any} />
+                <Scoreboard royaleData={thalesRoyalData as any} user={user} users={users} />
                 {thalesRoyalData && (
-                    <BattleRoyale
-                        positions={positions}
-                        setPositions={setPositions}
-                        royaleData={thalesRoyalData}
-                        setFetchNewData={setFetchNewData}
-                        fetchNewData={fetchNewData}
-                        showBattle={selectedPage === 'battle'}
-                    />
+                    <BattleRoyale royaleData={thalesRoyalData} showBattle={selectedPage === 'battle'} />
                 )}
             </Wrapper>
             <Footer>

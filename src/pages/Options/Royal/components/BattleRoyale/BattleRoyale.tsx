@@ -4,19 +4,19 @@ import styled from 'styled-components';
 import format from 'date-fns/format';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
-import { getRounds, Positions, ThalesRoyalData } from '../../getThalesRoyalData';
 import useInterval from '../../../../../hooks/useInterval';
 import { BigNumber, ethers } from 'ethers';
 import thalesRoyal from '../../../../../utils/contracts/thalesRoyalContract';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
+import useRoundsQuery from '../../Queries/useRoundsQuery';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
+import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 
 type BattleRoyaleProps = {
     royaleData: ThalesRoyalData;
-    fetchNewData: number;
-    setFetchNewData: (id: number) => void;
-    setPositions: (positions: Positions) => void;
-    positions: Positions;
     showBattle: boolean;
 };
 
@@ -45,29 +45,17 @@ const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
 
 const renderRounds = (
     royaleData: ThalesRoyalData,
-    setFetchNewData: (id: number) => void,
     timeLeftForPositioning: Date | null,
-    timeLeftInRound: Date | null,
-    setPositions: (positions: Positions) => void,
-    positions: Positions,
-    fetchNewData: number
+    timeLeftInRound: Date | null
 ) => {
     const { t } = useTranslation();
     const { round, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
     const cards = [];
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const [roundsGraphInfo, setRoundsGraphInfo] = useState<
-        {
-            eliminatedPerRound: string;
-            totalPlayersPerRound: string;
-        }[]
-    >([]);
+    const roundsQuery = useRoundsQuery(networkId, { enabled: networkId !== undefined });
 
-    useEffect(() => {
-        getRounds().then((graphRounds) => {
-            setRoundsGraphInfo(graphRounds);
-        });
-    }, [fetchNewData]);
+    const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
     const vote = (option: number) => async () => {
         if (option === roundsInformation[round - 1].positionInRound) {
@@ -82,18 +70,7 @@ const renderRounds = (
         const txResult = await tx.wait();
 
         if (txResult && txResult.events) {
-            const isUp = option === 2;
             dispatchMarketNotification('Successfully submitted');
-            setFetchNewData(Date.now());
-            const subtractOppositePosition = roundsInformation[round - 1].positionInRound !== 0;
-            setPositions({
-                up: isUp ? positions.up + 1 : subtractOppositePosition ? Math.max(positions.up - 1, 0) : positions.up,
-                down: !isUp
-                    ? positions.down + 1
-                    : subtractOppositePosition
-                    ? Math.max(positions.down - 1, 0)
-                    : positions.down,
-            });
         }
     };
 
@@ -184,14 +161,7 @@ const renderRounds = (
     return cards;
 };
 
-const BattleRoyale: React.FC<BattleRoyaleProps> = ({
-    royaleData,
-    setFetchNewData,
-    setPositions,
-    positions,
-    showBattle,
-    fetchNewData,
-}) => {
+const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle }) => {
     const { t } = useTranslation();
     const { roundStartTime, roundEndTime, roundChoosingLength, round, canCloseRound } = royaleData;
 
@@ -218,7 +188,6 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
 
         if (txResult && txResult.events) {
             dispatchMarketNotification('Round closed');
-            setFetchNewData(Date.now());
         }
     };
 
@@ -238,19 +207,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
             <ArrowLeft onMouseDown={getOnArrowClick(-680)} className="icon icon--left" />
             <CardWrapper>
                 <ScrollWrapper id="battle-royale-wrapper">
-                    {royaleData ? (
-                        renderRounds(
-                            royaleData,
-                            setFetchNewData,
-                            timeLeftForPositioning,
-                            timeLeftInRound,
-                            setPositions,
-                            positions,
-                            fetchNewData
-                        )
-                    ) : (
-                        <></>
-                    )}
+                    {royaleData ? renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound) : <></>}
                 </ScrollWrapper>
             </CardWrapper>
             <ArrowRight onMouseDown={getOnArrowClick(680)} className="icon icon--right" />
