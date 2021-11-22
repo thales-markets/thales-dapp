@@ -28,10 +28,11 @@ const usePositionsQuery = (networkId: NetworkId, options?: UseQueryOptions<Posit
             const provider = new ethers.providers.Web3Provider((window as any).ethereum);
             const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, provider);
             const round = await RoyalContract.round();
+            console.log(round);
             return (
                 positions.reduce(
                     (prev: Positions, curr: GraphPosition) => {
-                        if (curr.round === round) {
+                        if (curr.round === Number(round)) {
                             if (curr.position === 2) {
                                 prev.up++;
                             } else if (curr.position === 1) {
