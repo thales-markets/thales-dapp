@@ -353,7 +353,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ royaleData, users, user }) => {
 
 const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     const { t } = useTranslation();
-
     const getTitle = () => {
         if (!royaleData) return;
         if (royaleData.round === 0) {
@@ -364,6 +363,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                         <Button
                             onClick={startRoyale}
                             disabled={!royaleData.canStartRoyale}
+                            className={!royaleData.canStartRoyale ? 'disabled' : ''}
                             style={{
                                 margin: '30px auto',
                                 fontSize: 30,
@@ -393,10 +393,11 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
         } else {
             return (
                 <>
-                    <Title>{t('options.royale.scoreboard.round-starts')}</Title>
+                    <Title>
+                        {t('options.royale.scoreboard.position-period')} {royaleData.round}:
+                    </Title>
                     <SubTitle>
                         <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
-                        <span> RD{royaleData.round + 1}</span>
                     </SubTitle>
                 </>
             );
@@ -659,6 +660,10 @@ const Button = styled.button`
     padding: 6px 15px 6px 20px;
     color: var(--color-wrapper);
     margin: auto;
+    .disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
 `;
 
 const UserAvatar = styled(Image)`
