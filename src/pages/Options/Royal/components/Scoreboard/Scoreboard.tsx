@@ -201,7 +201,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                 <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
                     <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
                     <PopupImage src={important} />
-                    <PopupDescription>{t('options.royale.scoreboard.verify')}</PopupDescription>
+                    <PopupDescription>
+                        <PopupLink href="https://discord.gg/thales" target="_blank">
+                            {t('options.royale.scoreboard.go-to')}
+                        </PopupLink>
+                        {t('options.royale.scoreboard.verify')}
+                    </PopupDescription>
                 </Popup>
             </Modal>
 
@@ -634,6 +639,17 @@ const PopupDescription = styled(Text)`
     text-align: center;
     letter-spacing: -0.402542px;
     color: var(--color-wrapper);
+`;
+
+const PopupLink = styled.a`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: -0.402542px;
+    color: var(--color-wrapper);
+    text-decoration: underline var(--color-wrapper) from-font;
 `;
 
 const Arrow = styled.i`

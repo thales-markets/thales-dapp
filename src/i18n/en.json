@@ -974,7 +974,8 @@
                 },
                 "search": "Search player / Number",
                 "verification": "To Complete Verification!",
-                "verify": "Go to Thales discord and type !verify 0x...",
+                "go-to": "Go to Thales discord ",
+                "verify": "channel #thales-royale-verify and type: !verify 0x<your_address>",
                 "sign-up": "Sign Up"
             },
             "redirect-dialog": {
