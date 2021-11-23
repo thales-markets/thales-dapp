@@ -63,12 +63,31 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        history.push({
-            pathname: location.pathname,
-            search: queryString.stringify({
-                page: selectedPage,
-            }),
-        });
+        if (selectedPage === 'battle') {
+            if (thalesRoyalData && thalesRoyalData.signUpPeriod < new Date() && !thalesRoyalData?.canStartRoyale) {
+                history.push({
+                    pathname: location.pathname,
+                    search: queryString.stringify({
+                        page: selectedPage,
+                    }),
+                });
+            } else {
+                history.push({
+                    pathname: location.pathname,
+                    search: queryString.stringify({
+                        page: 'scoreboard',
+                    }),
+                });
+                setSelectedPage('scoreboard');
+            }
+        } else {
+            history.push({
+                pathname: location.pathname,
+                search: queryString.stringify({
+                    page: selectedPage,
+                }),
+            });
+        }
     }, [selectedPage]);
 
     useEffect(() => {
