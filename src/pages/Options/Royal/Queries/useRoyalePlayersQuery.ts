@@ -31,10 +31,10 @@ const useRoyalePlayersQuery = (options?: UseQueryOptions<User[]>) => {
             const verified: User[] = [];
             const unverified: User[] = [];
             const unasigned: User[] = [];
-            data.reverse().map((player: any, key: number) => {
+            data.map((player: any) => {
                 const isAlive = player.isAlive;
                 const address = player.address;
-                const number = key + 1;
+                const number = player.number;
                 const deathRound = player.deathRound;
 
                 if (map.has(player.address.toLowerCase())) {
