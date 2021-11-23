@@ -22,6 +22,12 @@ export const getEtherscanAddressLink = (networkId: NetworkId, address: string) =
     return `${baseURL}/address/${address}`;
 };
 
+export const getEtherscanBlockLink = (networkId: NetworkId, block: string) => {
+    const baseURL = getEtherScanBaseURL(networkId);
+
+    return `${baseURL}/block/${block}`;
+};
+
 export const getEtherscanTokenLink = (networkId: NetworkId, address: string) => {
     const baseURL = getEtherScanBaseURL(networkId);
 

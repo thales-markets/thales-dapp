@@ -9,7 +9,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { isNetworkSupported } from 'utils/network';
 import MarketHeader from 'pages/Options/Home/MarketHeader';
 import Loader from 'components/Loader';
-import { Background, FlexDivCentered, FlexDivColumn, FlexDiv } from 'theme/common';
+import { Background, FlexDivCentered, FlexDivColumn, FlexDiv, Wrapper, FlexDivRow } from 'theme/common';
 import { snapshotEndpoint, SpaceKey } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
@@ -19,6 +19,7 @@ import { Proposal } from 'types/governance';
 import CouncilMembers from './CouncilMembers';
 import { RouteComponentProps } from 'react-router-dom';
 import request, { gql } from 'graphql-request';
+import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -48,9 +49,11 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             snapshot
                             state
                             author
+                            type
                             space {
                                 id
                                 name
+                                symbol
                             }
                         }
                     }
@@ -97,118 +100,103 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     );
 
     return (
-        <Background style={{ minHeight: '100vh' }}>
-            {networkId && isNetworkSupported(networkId) ? (
-                <>
-                    <Container>
-                        <FlexDivColumn style={{ width: '100%' }} className="earn">
-                            <MarketHeader route={ROUTES.Governance.Home} />
-                        </FlexDivColumn>
-                    </Container>
-                    <Container>
-                        <FlexDivColumn>
-                            <Title style={{ alignSelf: 'flex-start' }}>Governance</Title>
-                            <FlexDiv>
-                                <MainContentContainer>
-                                    {!selectedProposal && (
-                                        <>
-                                            <OptionsTabContainer>
-                                                {optionsTabContent.map((tab, index) => (
-                                                    <OptionsTab
-                                                        isActive={tab.id === selectedTab}
-                                                        key={index}
-                                                        index={index}
-                                                        onClick={() => {
-                                                            navigateToGovernance(tab.id);
-                                                            setSelectedTab(tab.id);
-                                                        }}
-                                                        className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                                                    >
-                                                        {tab.name}
-                                                    </OptionsTab>
-                                                ))}
-                                            </OptionsTabContainer>
-                                            {selectedTab === SpaceKey.TIPS && (
-                                                <ProposalList
-                                                    spaceKey={SpaceKey.TIPS}
-                                                    onItemClick={setSelectedProposal}
-                                                />
-                                            )}
-                                            {selectedTab === SpaceKey.COUNCIL && (
-                                                <ProposalList
-                                                    spaceKey={SpaceKey.COUNCIL}
-                                                    onItemClick={setSelectedProposal}
-                                                />
-                                            )}
-                                        </>
-                                    )}
-                                    {selectedProposal && (
-                                        <ProposalDetails
-                                            proposal={selectedProposal}
-                                            onClose={() => {
-                                                setSelectedProposal(undefined);
-                                                navigateToGovernance(selectedProposal.space.id);
-                                            }}
-                                        />
-                                    )}
-                                </MainContentContainer>
+        <Background>
+            <Wrapper>
+                {networkId && isNetworkSupported(networkId) ? (
+                    <>
+                        <MarketHeader route={ROUTES.Governance.Home} />
+                        <Title style={{ alignSelf: 'flex-start' }}>Governance</Title>
+                        <BackLinkWrapper>
+                            {selectedProposal && (
+                                <BackLink
+                                    onClick={() => {
+                                        setSelectedProposal(undefined);
+                                        navigateToGovernance(selectedProposal.space.id);
+                                    }}
+                                >
+                                    <ArrowIcon />
+                                    Back to proposals overview
+                                </BackLink>
+                            )}
+                        </BackLinkWrapper>
+                        <FlexDivRow style={{ width: '100%' }}>
+                            <MainContentContainer>
                                 {!selectedProposal && (
-                                    <SidebarContainer>
+                                    <>
+                                        <OptionsTabContainer>
+                                            {optionsTabContent.map((tab, index) => (
+                                                <OptionsTab
+                                                    isActive={tab.id === selectedTab}
+                                                    key={index}
+                                                    index={index}
+                                                    onClick={() => {
+                                                        navigateToGovernance(tab.id);
+                                                        setSelectedTab(tab.id);
+                                                    }}
+                                                    className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                                                >
+                                                    {tab.name}
+                                                </OptionsTab>
+                                            ))}
+                                        </OptionsTabContainer>
+                                        {selectedTab === SpaceKey.TIPS && (
+                                            <ProposalList spaceKey={SpaceKey.TIPS} onItemClick={setSelectedProposal} />
+                                        )}
+                                        {selectedTab === SpaceKey.COUNCIL && (
+                                            <ProposalList
+                                                spaceKey={SpaceKey.COUNCIL}
+                                                onItemClick={setSelectedProposal}
+                                            />
+                                        )}
+                                    </>
+                                )}
+                                {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
+                            </MainContentContainer>
+                            {!selectedProposal && (
+                                <SidebarContainer>
+                                    <Sidebar>
                                         <CouncilMembers />
-                                    </SidebarContainer>
-                                )}
-                                {selectedProposal && (
-                                    <FlexDivColumn>
-                                        <SidebarContainer style={{ marginBottom: 20 }}>
-                                            <Results proposal={selectedProposal} />
-                                        </SidebarContainer>
-                                        <SidebarContainer>
-                                            <History proposal={selectedProposal} />
-                                        </SidebarContainer>
-                                    </FlexDivColumn>
-                                )}
-                            </FlexDiv>
-                        </FlexDivColumn>
-                    </Container>
-                </>
-            ) : (
-                <Loader />
-            )}
+                                    </Sidebar>
+                                </SidebarContainer>
+                            )}
+                            {selectedProposal && (
+                                <SidebarContainer>
+                                    <Sidebar style={{ marginBottom: 20 }}>
+                                        <Results proposal={selectedProposal} />
+                                    </Sidebar>
+                                    <Sidebar>
+                                        <History proposal={selectedProposal} />
+                                    </Sidebar>
+                                </SidebarContainer>
+                            )}
+                        </FlexDivRow>
+                    </>
+                ) : (
+                    <Loader />
+                )}
+            </Wrapper>
         </Background>
     );
 };
 
-const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: min(100%, 1440px);
-    margin: auto;
-    padding-left: 120px;
-    padding-right: 30px;
-    @media (max-width: 1024px) {
-        flex-direction: column;
-        width: 100%;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-`;
-
 const MainContentContainer = styled.div`
-    width: 808px;
+    width: 66%;
     background: #04045a;
     border: 2px solid rgba(202, 145, 220, 0.2);
     border-radius: 5px;
     padding: 25px 30px;
 `;
 
-const SidebarContainer = styled.div`
+const SidebarContainer = styled(FlexDivColumn)`
+    width: 33%;
+    margin-left: 10px;
+`;
+
+const Sidebar = styled.div`
     background: #04045a;
     border: 2px solid rgba(202, 145, 220, 0.2);
     border-radius: 5px;
-    padding: 35px 0px;
-    width: 470px;
-    margin-left: 10px;
+    padding: 10px 0px 0px 0px;
 `;
 
 const OptionsTabContainer = styled(FlexDiv)`
@@ -241,13 +229,43 @@ const Title = styled.p`
     line-height: 64px;
     letter-spacing: -1px;
     font-size: 39px;
-    padding-bottom: 65px;
+    padding-bottom: 25px;
     color: #f6f6fe;
     @media (max-width: 1024px) {
         font-size: 31px;
         padding-top: 30px;
         padding-bottom: 0;
     }
+`;
+
+const BackLinkWrapper = styled(FlexDiv)`
+    height: 36px;
+    align-self: start;
+    margin-bottom: 10px;
+`;
+
+const BackLink = styled(FlexDivCentered)`
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 36px;
+    color: #b8c6e5;
+    &path {
+        fill: #b8c6e5;
+    }
+    &:hover {
+        cursor: pointer;
+        color: #00f9ff;
+        & path {
+            fill: #00f9ff;
+        }
+    }
+`;
+
+const ArrowIcon = styled(ArrowBackIcon)`
+    height: 20px;
+    width: 24px;
+    margin-right: 6px;
+    margin-left: 4px;
 `;
 
 export default GovernancePage;

@@ -12,7 +12,6 @@ const CouncilMembers: React.FC = () => {
 
     const councilMembersQuery = useCouncilMembersQuery({ enabled: isAppReady });
     const councilMembers = councilMembersQuery.isSuccess && councilMembersQuery.data ? councilMembersQuery.data : [];
-    console.log(councilMembers);
 
     return (
         <FlexDivColumnCentered>

@@ -1,19 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivEnd, FlexDivCentered } from 'theme/common';
+import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { ReactComponent as CloseIcon } from 'assets/images/close.svg';
+import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
+import { truncateAddress } from 'utils/formatters/string';
+import { formatShortDateWithTime } from 'utils/formatters/date';
+import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
+import { formatCurrency } from 'utils/formatters/number';
 // import externalLink from 'remarkable-external-link';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
-    onClose: any;
 };
 
-const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal, onClose }) => {
+const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
     const getRawMarkup = (value?: string | null) => {
         const remarkable = new Remarkable({
             html: false,
@@ -28,10 +30,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal, onClose }) 
     };
 
     return (
-        <FlexDivColumnCentered>
-            <FlexDivEnd style={{ marginBottom: 20 }}>
-                <CloseIconContainer onClick={onClose} />
-            </FlexDivEnd>
+        <FlexDivColumnCentered style={{ padding: 10 }}>
             <Title>{proposal.title}</Title>
             <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 30 }}>
                 <Label>Status</Label>
@@ -39,15 +38,35 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal, onClose }) 
                     <Status status={proposal.state}>{proposal.state}</Status>
                 </StatusWrapper>
             </FlexDivColumnCentered>
-            <FlexDivRow style={{ marginBottom: 35 }}>
-                <FlexDivColumnCentered>
-                    <Label>Status</Label>
-                    <Text>{proposal.state}</Text>
-                </FlexDivColumnCentered>
-                <FlexDivColumnCentered>
-                    <Label>Time remaining</Label>
-                    <TimeRemaining end={proposal.end * 1000} fontSize={20} />
-                </FlexDivColumnCentered>
+            <FlexDivRow style={{ marginBottom: 40 }}>
+                <DetailsContainer style={{ marginRight: 40 }}>
+                    <FlexDivRowCentered>
+                        <Text>Author</Text>
+                        <StyledLink href={getEtherscanAddressLink(1, proposal.author)} target="_blank" rel="noreferrer">
+                            <Text>{truncateAddress(proposal.author)}</Text>
+                            <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                        </StyledLink>
+                    </FlexDivRowCentered>
+                    <Divider />
+                    <FlexDivRowCentered>
+                        <Text>Snapshot</Text>
+                        <StyledLink href={getEtherscanBlockLink(1, proposal.snapshot)} target="_blank" rel="noreferrer">
+                            <Text>{formatCurrency(proposal.snapshot, 0)}</Text>
+                            <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                        </StyledLink>
+                    </FlexDivRowCentered>
+                </DetailsContainer>
+                <DetailsContainer>
+                    <FlexDivRowCentered>
+                        <Text>Start date</Text>
+                        <Text>{formatShortDateWithTime(proposal.start * 1000)}</Text>
+                    </FlexDivRowCentered>
+                    <Divider />
+                    <FlexDivRowCentered>
+                        <Text>End date</Text>
+                        <Text>{formatShortDateWithTime(proposal.end * 1000)}</Text>
+                    </FlexDivRowCentered>
+                </DetailsContainer>
             </FlexDivRow>
             <BodyTitle>Details</BodyTitle>
             <Divider />
@@ -59,10 +78,9 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal, onClose }) 
 const getBackgroundColor = (status: string) => {
     switch (status) {
         case 'pending':
-            return '#c991db';
+            return '#748BC6';
         case 'closed':
-            return '#3f2e80';
-
+            return '#8208FC';
         default:
             return '#64D9FE';
     }
@@ -75,7 +93,15 @@ const Title = styled(FlexDivColumnCentered)`
     line-height: 24px;
     text-align: center;
     color: #f6f6fe;
-    margin-bottom: 25px;
+    margin-bottom: 40px;
+`;
+
+const DetailsContainer = styled(FlexDivColumnCentered)`
+    padding: 15px;
+    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
+    border-radius: 5px;
+    border: 2px solid #242371;
+    color: #f6f6fe;
 `;
 
 const BodyTitle = styled(FlexDivRow)`
@@ -91,7 +117,6 @@ const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 1px solid #748bc6;
-    margin-bottom: 20px;
 `;
 
 const Label = styled.span`
@@ -103,14 +128,26 @@ const Label = styled.span`
     margin-bottom: 5px;
 `;
 
-const Text = styled.span`
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
+const StyledLink = styled.a`
     color: #f6f6fe;
-    text-transform: uppercase;
+    &path {
+        fill: #f6f6fe;
+    }
+    &:hover {
+        color: #00f9ff;
+        & path {
+            fill: #00f9ff;
+        }
+    }
+`;
+
+const ArrowIcon = styled(ArrowHyperlinkIcon)``;
+
+const Text = styled.span`
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
 `;
 
 const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
@@ -121,7 +158,7 @@ const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
 `;
 
 const Status = styled(FlexDivColumnCentered)<{ status: string }>`
-    padding: 15px 0;
+    height: 48px;
     font-weight: bold;
     font-size: 20px;
     line-height: 24px;
@@ -134,16 +171,8 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     width: 198px;
 `;
 
-const CloseIconContainer = styled(CloseIcon)`
-    padding: 9px;
-    height: 30px;
-    width: 30px;
-    :hover {
-        cursor: pointer;
-    }
-`;
-
 const Body = styled(FlexDivColumn)`
+    margin-top: 15px;
     font-weight: 300;
     font-size: 16px;
     line-height: 24px;

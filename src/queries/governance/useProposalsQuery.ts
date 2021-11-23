@@ -25,6 +25,7 @@ const useProposalsQuery = (snapshotEndpoint: string, spaceKey: SpaceKey, options
                             space {
                                 id
                                 name
+                                symbol
                             }
                         }
                     }

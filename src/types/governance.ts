@@ -39,6 +39,7 @@ export type Proposal = {
     end: number;
     snapshot: string;
     state: string;
+    type: string;
 };
 
 export type Vote = {
@@ -50,13 +51,16 @@ export type Vote = {
     choice: any;
     metadata: any;
 };
+export interface MappedVotes extends Vote {
+    // profile: {
+    //     ens: string;
+    //     address: string;
+    // };
+    scores: number[];
+    balance: number;
+}
 
 export type ProposalResults = {
-    totalBalances: number[];
-    totalScores: any;
-    totalVotes: number[];
-    totalVotesBalances: number;
-    choices: string[];
-    spaceSymbol: string;
-    voteList: any[];
+    votes: any;
+    results: any;
 };

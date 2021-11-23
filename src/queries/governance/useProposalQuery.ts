@@ -4,8 +4,9 @@ import { ethers } from 'ethers';
 import { uniqBy } from 'lodash';
 import request, { gql } from 'graphql-request';
 import { snapshotEndpoint, SpaceKey } from 'constants/governance';
-import { Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
+import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
+import voting from 'utils/voting';
 
 // export function getENSForAddresses(addresses: any[]) {
 //     return new Promise((resolve, reject) => {
@@ -82,6 +83,7 @@ const useProposalQuery = (
                             snapshot
                             state
                             author
+                            type
                             space {
                                 id
                                 name
@@ -136,21 +138,11 @@ const useProposalQuery = (
 
             const block = parseInt(proposal.snapshot);
 
-            console.log(spaceKey, space.strategies, space.network, voterAddresses, block);
             const [scores /*, profiles*/] = await Promise.all([
                 snapshot.utils.getScores(spaceKey, space.strategies, space.network, voterAddresses, block),
                 /* Get scores and ENS/3Box profiles */
                 // getProfiles(voterAddresses),
             ]);
-
-            interface MappedVotes extends Vote {
-                // profile: {
-                //     ens: string;
-                //     address: string;
-                // };
-                scores: number[];
-                balance: number;
-            }
 
             let mappedVotes = votes as MappedVotes[];
 
@@ -168,6 +160,15 @@ const useProposalQuery = (
                     .sort((a, b) => b.balance - a.balance),
                 (a) => getAddress(a.voter)
             );
+
+            /* Get results */
+            //@ts-ignore
+            const votingClass = new voting[proposal.type](proposal, mappedVotes, space.strategies);
+            const results = {
+                resultsByVoteBalance: votingClass.resultsByVoteBalance(),
+                resultsByStrategyScore: votingClass.resultsByStrategyScore(),
+                sumOfResultsBalance: votingClass.sumOfResultsBalance(),
+            };
 
             /* Apply dilution penalties for SIP/SCCP pages */
             // if (spaceKey === SPACE_KEY.PROPOSAL) {
@@ -199,25 +200,12 @@ const useProposalQuery = (
 
             const voteList = returnVoteHistory();
 
-            const results = {
-                totalVotes: proposal.choices.map(
-                    (_: string, i: number) => mappedVotes.filter((vote) => vote.choice === i + 1).length
-                ),
-                totalBalances: proposal.choices.map((_: string, i: number) =>
-                    mappedVotes.filter((vote) => vote.choice === i + 1).reduce((a, b) => a + b.balance, 0)
-                ),
-                totalScores: proposal.choices.map((_: string, i: number) =>
-                    space.strategies.map((_, sI) =>
-                        mappedVotes.filter((vote) => vote.choice === i + 1).reduce((a, b) => a + b.scores[sI], 0)
-                    )
-                ),
-                totalVotesBalances: mappedVotes.reduce((a, b) => a + b.balance, 0),
-                choices: proposal.choices,
-                spaceSymbol: space.symbol,
-                voteList: voteList,
+            const proposalResults = {
+                results,
+                votes: voteList,
             };
 
-            return results;
+            return proposalResults;
         },
         {
             ...options,
