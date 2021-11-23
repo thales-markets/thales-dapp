@@ -933,7 +933,9 @@
                 "down": "DOWN",
                 "vs": "vs",
                 "you-were-eliminated-in": "You were eliminated in",
-                "rd": "RD"
+                "rd": "Round",
+                "royale": "Royale",
+                "scoreboard": "Scoreboard"
             },
             "battle": {
                 "round": "Round",

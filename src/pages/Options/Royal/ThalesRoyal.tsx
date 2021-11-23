@@ -126,7 +126,7 @@ const ThalesRoyal: React.FC = () => {
                     {selectedPage === 'battle' && (
                         <NavButton onClick={() => setSelectedPage('scoreboard')}>
                             <i className="icon icon--left" />
-                            <Text> Scoreboard </Text>
+                            <Text>{t('options.royale.footer.scoreboard')}</Text>
                         </NavButton>
                     )}
                     {selectedPage !== 'battle' && (
@@ -148,7 +148,7 @@ const ThalesRoyal: React.FC = () => {
                             }}
                         >
                             <Separator>|</Separator>
-                            <Text>Battle </Text>
+                            <Text>{t('options.royale.footer.royale')}</Text>
                             <i className="icon icon--right" />
                         </NavButton>
                     )}

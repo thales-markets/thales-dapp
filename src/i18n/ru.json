@@ -943,7 +943,9 @@
                 "vs": "против",
                 "up": "ВВЕРХ",
                 "down": "ВНИЗ",
-                "rd": "RD",
+                "rd": "Круглый",
+                "scoreboard": "Табло",
+                "royale": "Рояль",
                 "you-were-eliminated-in": "Вы были исключены в",
                 "current-reward-per-player": "Текущая награда на игрока"
             },

@@ -944,7 +944,9 @@
                 "down": "下",
                 "vs": "对比",
                 "you-were-eliminated-in": "你被淘汰了",
-                "rd": "RD",
+                "rd": "圆形的",
+                "royale": "皇家",
+                "scoreboard": "记分牌",
                 "current-reward-per-player": "当前每位玩家的奖励"
             },
             "scoreboard": {
