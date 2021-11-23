@@ -310,7 +310,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                                 className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
                                             />
                                             <span>{user.isAlive ? 'alive' : 'dead'}</span>
-                                            <span>{!user.isAlive ? 'rd: ' + user.deathRound : ''}</span>
+                                            <span>
+                                                {!user.isAlive
+                                                    ? t('options.royale.footer.rd') + ': ' + user.deathRound
+                                                    : ''}
+                                            </span>
                                         </Status>
                                     </HeadCell>
                                     <HeadCell>{getAvatar(user)}</HeadCell>
@@ -735,7 +739,10 @@ const StatusAvatar = styled.i`
 const Status = styled.span`
     cursor: default;
     span {
+        font-family: Sansation !important;
         display: none;
+        text-transform: lowercase;
+        font-size: 20px;
     }
     &:hover {
         i {
