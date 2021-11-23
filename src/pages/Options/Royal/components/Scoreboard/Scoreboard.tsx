@@ -287,7 +287,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
                         <TableRow>
                             {HeadCells.map((cell, key) => (
-                                <HeadCell onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}} key={key}>
+                                <HeadCell
+                                    style={{ cursor: cell.sortable ? 'pointer' : 'arrow' }}
+                                    onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
+                                    key={key}
+                                >
                                     {cell.text}{' '}
                                     {cell.sortable && (
                                         <ArrowsWrapper>
