@@ -947,7 +947,8 @@
                 "rd": "圆形的",
                 "royale": "皇家",
                 "scoreboard": "记分牌",
-                "current-reward-per-player": "当前每位玩家的奖励"
+                "current-reward-per-player": "当前每位玩家的奖励",
+                "current-positions": "目前职位"
             },
             "scoreboard": {
                 "player-no": "玩家编号：",
@@ -974,7 +975,9 @@
                 "start-royale": "开始泰雷兹皇家",
                 "search": "搜索球员/号码",
                 "eliminated": "你被淘汰了",
-                "position-period": "回合定位剩余时间"
+                "position-period": "回合定位剩余时间",
+                "period-expired": "注册期已过",
+                "round-period": "回合{{round}}结束于"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",

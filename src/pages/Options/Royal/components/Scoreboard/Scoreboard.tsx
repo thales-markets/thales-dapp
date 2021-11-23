@@ -298,7 +298,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                             {orderBy === cell.id && orderDirection !== OrderDirection.NONE ? (
                                                 <Arrow
                                                     className={`icon ${
-                                                        orderDirection === OrderDirection.ASC
+                                                        orderDirection === OrderDirection.DESC
                                                             ? 'icon--arrow-up'
                                                             : 'icon--arrow-down'
                                                     }`}

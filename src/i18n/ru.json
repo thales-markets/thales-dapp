@@ -947,7 +947,8 @@
                 "scoreboard": "Табло",
                 "royale": "Рояль",
                 "you-were-eliminated-in": "Вы были исключены в",
-                "current-reward-per-player": "Текущая награда на игрока"
+                "current-reward-per-player": "Текущая награда на игрока",
+                "current-positions": "Текущие должности"
             },
             "scoreboard": {
                 "player-no": "№ игрока:",
@@ -974,7 +975,9 @@
                 "start-royale": "Запустить Thales Royale",
                 "verify": "Зайдите в Discord Thales и введите! Verify 0x ...",
                 "eliminated": "Вы были исключены",
-                "position-period": "Время, оставшееся до места в Раунде"
+                "position-period": "Время, оставшееся до места в Раунде",
+                "round-period": "Раунд {{round}} заканчивается через",
+                "period-expired": "Срок регистрации истек"
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",
