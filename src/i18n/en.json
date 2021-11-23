@@ -964,6 +964,7 @@
                 "blog": "[Thales Royale blog post]",
                 "player-no": "Player №: ",
                 "eliminated": "You have been eliminated",
+                "period-expired": "Sign up period has expired",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",

@@ -144,33 +144,42 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
     const getFooter = (user: User | undefined, royaleData: ThalesRoyalData) => {
         if (!royaleData) return;
-        if (royaleData.signUpPeriod < new Date()) return;
-        if (user) {
-            if (user.status == UserStatus.RDY) {
-                if (user.isAlive) {
-                    return <></>;
-                } else {
-                    return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
+        if (royaleData.signUpPeriod > new Date()) {
+            if (user) {
+                if (user.status === UserStatus.NOTSIGNED) {
+                    return <Button onClick={signUp}>{t('options.royale.scoreboard.sign-up')}</Button>;
                 }
-            }
-
-            if (user.status === UserStatus.NOTSIGNED) {
-                return <Button onClick={signUp}>{t('options.royale.scoreboard.sign-up')}</Button>;
-            }
-            if (user.status === UserStatus.NOTVERIFIED) {
+                if (user.status === UserStatus.NOTVERIFIED) {
+                    return (
+                        <Button onClick={setShowPopup.bind(this, true)}>
+                            {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
+                        </Button>
+                    );
+                }
+            } else {
                 return (
                     <Button onClick={setShowPopup.bind(this, true)}>
                         {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
                     </Button>
                 );
             }
+        } else {
+            if (user) {
+                if (user.status === UserStatus.RDY) {
+                    if (user.isAlive) {
+                        return <></>;
+                    } else {
+                        return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
+                    }
+                }
+            }
+            return (
+                <DeadText>
+                    <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                    {t('options.royale.scoreboard.period-expired')}
+                </DeadText>
+            );
         }
-
-        return (
-            <Button onClick={setShowPopup.bind(this, true)}>
-                {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
-            </Button>
-        );
     };
 
     return (

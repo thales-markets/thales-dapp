@@ -124,3 +124,7 @@
 .icon--ru:before {
     content: '\0032';
 }
+
+.icon--clock:before {
+    content: '\0033';
+}
