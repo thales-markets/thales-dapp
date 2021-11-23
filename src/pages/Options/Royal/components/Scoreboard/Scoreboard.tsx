@@ -245,7 +245,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                     <span>
                                         {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
                                     </span>
-                                    <span>{ethPrice}$</span>
+                                    <span>${ethPrice}</span>
                                 </div>
                                 <div>
                                     <span>{t('options.royale.footer.reward-per-player')}:</span>

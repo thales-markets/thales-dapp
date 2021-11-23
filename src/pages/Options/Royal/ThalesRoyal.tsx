@@ -192,7 +192,7 @@ const ThalesRoyal: React.FC = () => {
                         <span>
                             {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
                         </span>
-                        <span>{ethPrice}$</span>
+                        <span>${ethPrice}</span>
                     </div>
                     <div>
                         <span>{t('options.royale.footer.current-reward-per-player')}:</span>
