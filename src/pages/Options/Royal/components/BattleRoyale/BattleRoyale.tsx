@@ -31,7 +31,7 @@ const getOnArrowClick = (scrollAmount: number) => () => {
     }
 };
 
-const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
+export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
     const beginningOfTime = new Date(0);
     beginningOfTime.setHours(0);
     const roundEndTime = addSeconds(startTime, roundLengthInSeconds);

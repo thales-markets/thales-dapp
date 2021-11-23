@@ -20,6 +20,9 @@ import SimpleLoader from 'components/SimpleLoader';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 import { Positions } from '../../Queries/usePositionsQuery';
+import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
+import useInterval from 'hooks/useInterval';
+import format from 'date-fns/format';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -406,6 +409,29 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
 const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     const { t } = useTranslation();
+    const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
+        royaleData ? getTimeLeft(royaleData.roundStartTime, royaleData.roundChoosingLength) : null
+    );
+
+    const [timeLeftInRound, setTimeLeftInRound] = useState<Date | null>(
+        royaleData
+            ? getTimeLeft(
+                  royaleData.roundStartTime,
+                  (royaleData.roundEndTime.getTime() - royaleData.roundStartTime.getTime()) / 1000
+              )
+            : null
+    );
+
+    useInterval(async () => {
+        if (!royaleData) return;
+        setTimeLeftForPositioning(getTimeLeft(royaleData.roundStartTime, royaleData.roundChoosingLength));
+        setTimeLeftInRound(
+            getTimeLeft(
+                royaleData.roundStartTime,
+                (royaleData.roundEndTime.getTime() - royaleData.roundStartTime.getTime()) / 1000
+            )
+        );
+    }, 1000);
     const getTitle = () => {
         if (!royaleData) return;
         if (royaleData.round === 0) {
@@ -444,14 +470,17 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                 </>
             );
         } else {
-            return (
+            return timeLeftForPositioning ? (
                 <>
                     <Title>
                         {t('options.royale.scoreboard.position-period')} {royaleData.round}:
                     </Title>
-                    <SubTitle>
-                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
-                    </SubTitle>
+                    <SubTitle>{timeLeftForPositioning ? format(timeLeftForPositioning, 'HH:mm:ss') : 'Ended'}</SubTitle>
+                </>
+            ) : (
+                <>
+                    <Title>{t('options.royale.scoreboard.round-period', { round: royaleData.round })}:</Title>
+                    <SubTitle>{timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : 'Ended'}</SubTitle>
                 </>
             );
         }
@@ -878,16 +907,14 @@ const SubTitle = styled(Text)`
     margin-top: 4px;
     margin-bottom: 14px;
     align-self: center;
-    span {
-        font-family: VT323 !important;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 80px;
-        line-height: 56px;
-        text-align: justify;
-        letter-spacing: -0.4px;
-        color: var(--color);
-    }
+    font-family: VT323 !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 80px;
+    line-height: 56px;
+    text-align: center;
+    letter-spacing: -0.4px;
+    color: var(--color);
 `;
 
 const Question = styled(Text)`
