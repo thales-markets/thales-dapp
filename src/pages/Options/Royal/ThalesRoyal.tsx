@@ -184,8 +184,9 @@ const ThalesRoyal: React.FC = () => {
                         </div>
                     )}
                     <div>
+                        <span>{t('options.royale.footer.current-positions')}:</span>
                         <span>{t('options.royale.footer.up')}</span>
-                        <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
+                        <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
                         <span>{t('options.royale.footer.down')}</span>
                     </div>
                     <div>
@@ -310,15 +311,16 @@ export const InfoSection = styled.div`
     > * {
         > * {
             font-family: SansationLight !important;
-            &:nth-child(1) {
+            &:nth-child(2),
+            &:first-child {
                 padding-right: 7px;
             }
-            &:nth-child(2) {
+            &:nth-child(3) {
                 font-family: VT323 !important;
                 font-weight: bold;
                 font-size: 28px;
             }
-            &:nth-child(3) {
+            &:nth-child(4) {
                 padding-left: 7px;
             }
         }
