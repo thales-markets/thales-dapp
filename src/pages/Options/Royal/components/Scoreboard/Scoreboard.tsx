@@ -80,11 +80,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                             } else {
                                 return a.isAlive
                                     ? orderDirection === OrderDirection.DESC
-                                        ? 1
-                                        : -1
+                                        ? -1
+                                        : 1
                                     : orderDirection === OrderDirection.ASC
-                                    ? -1
-                                    : 1;
+                                    ? 1
+                                    : -1;
                             }
                         }
                     });
@@ -304,8 +304,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                                 <Arrow
                                                     className={`icon ${
                                                         orderDirection === OrderDirection.DESC
-                                                            ? 'icon--arrow-up'
-                                                            : 'icon--arrow-down'
+                                                            ? 'icon--arrow-down'
+                                                            : 'icon--arrow-up'
                                                     }`}
                                                 />
                                             ) : (
