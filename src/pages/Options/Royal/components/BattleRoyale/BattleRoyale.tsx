@@ -269,8 +269,8 @@ const ArrowLeft = styled.i`
     font-size: 50px;
     z-index: 2;
     @media (max-width: 1024px) {
-        left: 0;
-        font-size: 30px;
+        left: -10px;
+        font-size: 1.5em;
     }
 `;
 
@@ -283,8 +283,8 @@ const ArrowRight = styled.i`
     font-size: 50px;
     z-index: 2;
     @media (max-width: 1024px) {
-        right: 0;
-        font-size: 30px;
+        right: -10px;
+        font-size: 1.5em;
     }
 `;
 
@@ -294,6 +294,7 @@ const ScrollWrapper = styled.div`
     overflow: auto;
     height: 100%;
     margin-bottom: -40px;
+    padding: 0 440px;
     @media (max-width: 1024px) {
         padding-left: 20px;
         padding-right: 20px;
@@ -323,6 +324,9 @@ const Card = styled.div`
     margin: 15px;
     padding: 50px 0;
     position: relative;
+    @media (max-width: 340px) {
+        min-width: 280px;
+    }
 `;
 
 const CurrentRound = styled(Card)`
