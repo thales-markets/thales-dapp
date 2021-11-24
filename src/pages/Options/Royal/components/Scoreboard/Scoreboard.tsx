@@ -401,6 +401,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                                     onClick={() => {
                                                         setShowPerPage(option);
                                                         setShowDropdown(false);
+                                                        setPage(1);
                                                     }}
                                                     key={key}
                                                 >
