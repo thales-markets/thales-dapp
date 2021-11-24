@@ -27,8 +27,6 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                 });
                 onClose();
             } catch (switchError: any) {
-                console.log(switchError.code === 4902);
-                console.log(switchError);
                 if (switchError.code === 4902) {
                     try {
                         await (window.ethereum as any).request({
@@ -116,28 +114,56 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                             fontSize: 60,
                         }}
                     />
-                    <Link
-                        className="wrong-network-modal-font"
-                        style={{
-                            textAlign: 'center',
-                            fontWeight: 'bold',
-                            fontSize: '20px',
-                            lineHeight: '22px',
-                            display: 'block',
-                        }}
-                        onClick={switchOrAddKovanOptimisticNetwork}
-                    >
-                        {t('options.royale.wrong-network-dialog.button')}
-                        <i
-                            className="icon icon--right"
+                    {window.innerWidth < 900 && (
+                        <Link
+                            className="wrong-network-modal-font"
                             style={{
-                                color: '#04045a',
-                                fontSize: 28,
-                                position: 'absolute',
-                                marginLeft: 59,
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                                fontSize: '20px',
+                                lineHeight: '22px',
+                                display: 'block',
+                                color: 'var(--color-wrapper)',
                             }}
-                        />
-                    </Link>
+                            href="https://community.optimism.io/docs/infra/networks.html#optimistic-kovan"
+                            target="_blank"
+                        >
+                            {t('options.royale.wrong-network-dialog.parameters')}
+                            <i
+                                className="icon icon--right"
+                                style={{
+                                    color: 'var(--color-wrapper)',
+                                    fontSize: 28,
+                                    position: 'absolute',
+                                    marginLeft: 59,
+                                }}
+                            />
+                        </Link>
+                    )}
+                    {window.innerWidth > 900 && (
+                        <Link
+                            className="wrong-network-modal-font"
+                            style={{
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                                fontSize: '20px',
+                                lineHeight: '22px',
+                                display: 'block',
+                            }}
+                            onClick={switchOrAddKovanOptimisticNetwork}
+                        >
+                            {t('options.royale.wrong-network-dialog.button')}
+                            <i
+                                className="icon icon--right"
+                                style={{
+                                    color: '#04045a',
+                                    fontSize: 28,
+                                    position: 'absolute',
+                                    marginLeft: 59,
+                                }}
+                            />
+                        </Link>
+                    )}
                 </DialogTitle>
             </StyledModal>
         </RoyaleBackground>
