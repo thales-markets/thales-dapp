@@ -935,6 +935,16 @@ const SubTitle = styled(Text)`
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
+    span {
+        font-family: VT323 !important;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 80px;
+        line-height: 56px;
+        text-align: justify;
+        letter-spacing: -0.4px;
+        color: var(--color);
+    }
 `;
 
 const Question = styled(Text)`
