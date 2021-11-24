@@ -211,7 +211,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                 </Popup>
             </Modal>
 
-            <Wrapper className="scoreboard">
+            <Wrapper
+                onClick={() => {
+                    if (showDropdown) setShowDropdown(false);
+                }}
+                className="scoreboard"
+            >
                 <div />
                 <div style={{ maxWidth: '100%', padding: '5px' }}>
                     <Intro royaleData={royaleData} />
@@ -682,10 +687,9 @@ const PaginationUsers = styled.div`
     width: 100px;
     border: 2px solid var(--color);
     box-sizing: border-box;
-    border-radius: 20px;
+    border-radius: 18px;
     font-family: Sansation !important;
     font-style: normal;
-    font-weight: bold;
     font-size: 20px;
     line-height: 26px;
     letter-spacing: -0.4px;
@@ -693,6 +697,10 @@ const PaginationUsers = styled.div`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
+    p:first-child {
+        font-weight: bold;
+        font-size: 20px;
+    }
 `;
 
 const Pagination = styled.div`
