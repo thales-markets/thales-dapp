@@ -14,21 +14,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
+import { Positions } from '../../Queries/usePositionsQuery';
+import { User } from '../../Queries/useRoyalePlayersQuery';
 
 type BattleRoyaleProps = {
+    ethPrice: string;
+    positions: Positions;
     royaleData: ThalesRoyalData;
     showBattle: boolean;
-};
-
-const getOnArrowClick = (scrollAmount: number) => () => {
-    const wrapper = document.getElementById('battle-royale-wrapper');
-    if (wrapper) {
-        wrapper.scrollTo({
-            top: 0,
-            left: wrapper.scrollLeft + scrollAmount,
-            behavior: 'smooth',
-        });
-    }
+    user: User;
 };
 
 export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
@@ -77,7 +71,7 @@ const renderRounds = (
     for (let index = 1; index <= rounds; index++) {
         index === round
             ? cards.push(
-                  <CurrentRound key={index}>
+                  <CurrentRound id={`round${index}`} key={index}>
                       <LongButton
                           selected={roundsInformation[index - 1].positionInRound === 2}
                           onClick={vote(2)}
@@ -119,7 +113,7 @@ const renderRounds = (
               )
             : index < round
             ? cards.push(
-                  <PrevRound key={index}>
+                  <PrevRound id={`round${index}`} key={index}>
                       <LongButton selected={roundsInformation[index - 1].positionInRound === 2} disabled={true}>
                           △
                       </LongButton>
@@ -152,7 +146,7 @@ const renderRounds = (
                   </PrevRound>
               )
             : cards.push(
-                  <NextRound key={index}>
+                  <NextRound id={`round${index}`} key={index}>
                       <RoundTitle>{t('options.royale.battle.round')}</RoundTitle>
                       <RoundText>{index}</RoundText>
                   </NextRound>
@@ -161,10 +155,11 @@ const renderRounds = (
     return cards;
 };
 
-const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle }) => {
+const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, user, positions, ethPrice }) => {
     const { t } = useTranslation();
     const { roundStartTime, roundEndTime, roundChoosingLength, round, canCloseRound } = royaleData;
 
+    const [currentScrollRound, setCurrentScrollRound] = useState<number>(0);
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
         getTimeLeft(roundStartTime, roundChoosingLength)
     );
@@ -192,57 +187,117 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle }) =
     };
 
     useEffect(() => {
-        const wrapper = document.getElementById('battle-royale-wrapper');
-        if (wrapper && round > 2) {
-            wrapper.scrollTo({
-                top: 0,
-                left: (round - 2) * 362 - 45,
-                behavior: 'smooth',
-            });
+        if (!currentScrollRound) {
+            setCurrentScrollRound(round);
+            return;
         }
-    }, [round, showBattle]);
+        const currentRoundElement = document.getElementById(`round${currentScrollRound}`);
+        if (currentRoundElement) {
+            currentRoundElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+        }
+    }, [round, currentScrollRound, showBattle]);
 
     return (
-        <Wrapper style={{ minHeight: '100%', justifyContent: 'center' }} className="battle">
-            <ArrowLeft onMouseDown={getOnArrowClick(-680)} className="icon icon--left" />
-            <CardWrapper>
-                <ScrollWrapper id="battle-royale-wrapper">
-                    {royaleData ? renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound) : <></>}
-                </ScrollWrapper>
-            </CardWrapper>
-            <ArrowRight onMouseDown={getOnArrowClick(680)} className="icon icon--right" />
-            <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
-                {t('options.royale.battle.close-round')}
-            </Button>
-        </Wrapper>
+        <>
+            <StyledWrapper className="battle">
+                <ArrowLeft
+                    onMouseDown={() => setCurrentScrollRound(Math.max(currentScrollRound - 1, 1))}
+                    className="icon icon--left"
+                />
+                <CardWrapper>
+                    <ScrollWrapper id="battle-royale-wrapper">
+                        {royaleData ? renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound) : <></>}
+                    </ScrollWrapper>
+                </CardWrapper>
+                <ArrowRight
+                    onMouseDown={() => setCurrentScrollRound(Math.min(currentScrollRound + 1, royaleData.rounds))}
+                    className="icon icon--right"
+                />
+                <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
+                    {t('options.royale.battle.close-round')}
+                </Button>
+            </StyledWrapper>
+            <BattleInfoSection className="battle">
+                <div>
+                    <span>{t('options.royale.footer.up')}</span>
+                    <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
+                    <span>{t('options.royale.footer.down')}</span>
+                </div>
+                {!!user?.deathRound && (
+                    <div>
+                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                        <span>
+                            {`${t('options.royale.footer.rd')} `}
+                            {user.deathRound}
+                        </span>
+                    </div>
+                )}
+                <div>
+                    <span>
+                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                    </span>
+                    <span>${ethPrice}</span>
+                </div>
+                <div>
+                    <span>{t('options.royale.footer.reward-per-player')}:</span>
+                    <span>{(10000 / (Number(royaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
+                </div>
+                <div>
+                    <span>{t('options.royale.footer.players-alive')}:</span>
+                    <span>{royaleData?.alivePlayers?.length + ' / ' + royaleData?.players?.length}</span>
+                </div>
+            </BattleInfoSection>
+        </>
     );
 };
 
+const StyledWrapper = styled(Wrapper)`
+    min-height: 100%;
+    justify-content: center;
+    position: relative;
+    @media (max-width: 1024px) {
+        padding: 0 !important;
+    }
+`;
+
 const ArrowLeft = styled.i`
     position: absolute;
-    left: 90px;
-    top: 50%;
+    left: calc(90px - 2%);
+    top: calc(50% - 36px);
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 50px;
+    z-index: 2;
+    @media (max-width: 1024px) {
+        left: 0;
+        font-size: 30px;
+    }
 `;
 
 const ArrowRight = styled.i`
     position: absolute;
-    right: 0;
-    top: 50%;
+    right: -2%;
+    top: calc(50% - 36px);
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 50px;
+    z-index: 2;
+    @media (max-width: 1024px) {
+        right: 0;
+        font-size: 30px;
+    }
 `;
 
 const ScrollWrapper = styled.div`
     display: flex;
-    height: 680px;
     align-items: center;
     overflow: auto;
     height: 100%;
     margin-bottom: -40px;
+    @media (max-width: 1024px) {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 `;
 
 const CardWrapper = styled.div`
@@ -260,7 +315,7 @@ const Card = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 339px;
+    min-width: 320px;
     height: 504px;
     border: 4.36032px solid var(--color);
     box-sizing: border-box;
@@ -434,6 +489,35 @@ const RoundHistoryInfo = styled(FlexDivCentered)`
         &:first-child {
             padding-bottom: 7px;
         }
+    }
+`;
+
+const BattleInfoSection = styled.div`
+    color: var(--color);
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    padding: 30px 0;
+    > * {
+        > * {
+            font-family: SansationLight !important;
+            &:nth-child(1) {
+                padding-right: 7px;
+            }
+            &:nth-child(2) {
+                font-family: VT323 !important;
+                font-weight: bold;
+                font-size: 28px;
+            }
+            &:nth-child(3) {
+                padding-left: 7px;
+            }
+        }
+    }
+    @media (min-width: 1024px) {
+        display: none;
     }
 `;
 

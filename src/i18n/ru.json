@@ -948,7 +948,8 @@
                 "royale": "Рояль",
                 "you-were-eliminated-in": "Вы были исключены в",
                 "current-reward-per-player": "Текущая награда на игрока",
-                "current-positions": "Текущие должности"
+                "current-positions": "Текущие должности",
+                "stats": "Статистика"
             },
             "scoreboard": {
                 "player-no": "№ игрока:",

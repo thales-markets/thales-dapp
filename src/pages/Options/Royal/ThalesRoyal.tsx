@@ -34,6 +34,7 @@ const ThalesRoyal: React.FC = () => {
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
+    const [showStats, setShowStats] = useState(false);
 
     const royaleDataQuery = useThalesRoyaleData(walletAddress as any, { enabled: networkId === 69 });
     const thalesRoyalData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
@@ -131,7 +132,13 @@ const ThalesRoyal: React.FC = () => {
                     users={users}
                 />
                 {thalesRoyalData && (
-                    <BattleRoyale royaleData={thalesRoyalData} showBattle={selectedPage === 'battle'} />
+                    <BattleRoyale
+                        ethPrice={ethPrice}
+                        positions={positions}
+                        royaleData={thalesRoyalData}
+                        showBattle={selectedPage === 'battle'}
+                        user={user}
+                    />
                 )}
             </Wrapper>
             <Footer>
@@ -173,38 +180,42 @@ const ThalesRoyal: React.FC = () => {
                     )}
                 </Nav>
                 <div />
-                <InfoSection>
-                    {!!user?.deathRound && (
-                        <div>
-                            <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
-                            <span>
-                                {`${t('options.royale.footer.rd')} `}
-                                {user.deathRound}
-                            </span>
-                        </div>
-                    )}
-                    <div>
-                        <span>{t('options.royale.footer.current-positions')}:</span>
-                        <span>{t('options.royale.footer.up')}</span>
-                        <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
-                        <span>{t('options.royale.footer.down')}</span>
-                    </div>
-                    <div>
-                        <span>
-                            {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                        </span>
-                        <span>${ethPrice}</span>
-                    </div>
-                    <div>
-                        <span>{t('options.royale.footer.current-reward-per-player')}:</span>
-                        <span>{(10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
-                    </div>
-                    <div>
-                        <span>{t('options.royale.footer.players-alive')}:</span>
-                        <span>{thalesRoyalData?.alivePlayers?.length + ' / ' + thalesRoyalData?.players?.length}</span>
-                    </div>
-                </InfoSection>
+                <StatsButtonWrapper>
+                    <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
+                </StatsButtonWrapper>
             </Footer>
+            <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
+                <CloseStats onClick={() => setShowStats(false)}>✖</CloseStats>
+                {!!user?.deathRound && (
+                    <div>
+                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                        <span>
+                            {`${t('options.royale.footer.rd')} `}
+                            {user.deathRound}
+                        </span>
+                    </div>
+                )}
+                <div>
+                    <span>{t('options.royale.footer.current-positions')}:</span>
+                    <span>{t('options.royale.footer.up')}</span>
+                    <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
+                    <span>{t('options.royale.footer.down')}</span>
+                </div>
+                <div>
+                    <span>
+                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                    </span>
+                    <span>${ethPrice}</span>
+                </div>
+                <div>
+                    <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                    <span>{(10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
+                </div>
+                <div>
+                    <span>{t('options.royale.footer.players-alive')}:</span>
+                    <span>{thalesRoyalData?.alivePlayers?.length + ' / ' + thalesRoyalData?.players?.length}</span>
+                </div>
+            </InfoSection>
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />
             <WalletNotConnectedDialog open={openWalletNotConnectedDialog} setOpen={setOpenWalletNotConnectedDialog} />
         </RoyaleBackground>
@@ -302,13 +313,45 @@ const NavButton = styled(FlexDivCentered)`
     }
 `;
 
+const StatsButtonWrapper = styled.div`
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 22px;
+    color: var(--color);
+    display: flex;
+    justify-content: flex-end;
+`;
+
+const StatsButton = styled.span`
+    cursor: pointer;
+`;
+
+const CloseStats = styled.span`
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+`;
+
 export const InfoSection = styled.div`
     color: var(--color);
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
     line-height: 30px;
+    border: 5px solid var(--color);
+    box-sizing: border-box;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 1.5em;
+    position: fixed;
+    z-index: 100;
+    right: 30px;
+    bottom: 30px;
+    background: var(--color-background);
     > * {
+        margin-bottom: 0.1em;
         > * {
             font-family: SansationLight !important;
             &:nth-child(2),
