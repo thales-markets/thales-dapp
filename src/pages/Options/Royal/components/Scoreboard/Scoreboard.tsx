@@ -55,7 +55,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
-    const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
+    const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [showPerPage, setShowPerPage] = useState(15);
@@ -73,16 +73,16 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                 case 1:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
                         if (a.status !== b.status) {
-                            return orderDirection === OrderDirection.DESC ? a.status - b.status : b.status - a.status;
+                            return orderDirection === OrderDirection.ASC ? a.status - b.status : b.status - a.status;
                         } else {
                             if (a.isAlive && b.isAlive) {
-                                orderDirection === OrderDirection.DESC ? a.number - b.number : b.number - a.number;
+                                orderDirection === OrderDirection.ASC ? a.number - b.number : b.number - a.number;
                             } else {
                                 return a.isAlive
-                                    ? orderDirection === OrderDirection.DESC
+                                    ? orderDirection === OrderDirection.ASC
                                         ? -1
                                         : 1
-                                    : orderDirection === OrderDirection.ASC
+                                    : orderDirection === OrderDirection.DESC
                                     ? 1
                                     : -1;
                             }
@@ -91,7 +91,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                     break;
                 case 3:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.DESC
+                        return orderDirection === OrderDirection.ASC
                             ? a.name.localeCompare(b.name)
                             : b.name.localeCompare(a.name);
                     });
@@ -99,7 +99,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
                 case 4:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
-                        return orderDirection === OrderDirection.DESC ? a.number - b.number : b.number - a.number;
+                        return orderDirection === OrderDirection.ASC ? a.number - b.number : b.number - a.number;
                     });
                     break;
             }
@@ -128,19 +128,19 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
         if (orderBy === cell.id) {
             switch (orderDirection) {
                 case OrderDirection.NONE:
-                    setOrderDirection(OrderDirection.DESC);
-                    break;
-                case OrderDirection.DESC:
                     setOrderDirection(OrderDirection.ASC);
                     break;
                 case OrderDirection.ASC:
                     setOrderDirection(OrderDirection.DESC);
+                    break;
+                case OrderDirection.DESC:
+                    setOrderDirection(OrderDirection.ASC);
                     setOrderBy(defaultOrderBy);
                     break;
             }
         } else {
             setOrderBy(parseInt(cell.id.toString()));
-            setOrderDirection(OrderDirection.DESC);
+            setOrderDirection(OrderDirection.ASC);
             setPage(1);
         }
     };
