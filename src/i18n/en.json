@@ -922,5 +922,28 @@
             },
             "ratio": "Ratio"
         }
+    },
+    "governance": {
+        "title": "Governance",
+        "status": {
+            "pending": "draft",
+            "active": "voting",
+            "closed": "closed"
+        },
+        "sidebar": {
+            "title": {
+                "results": "Results",
+                "history": "Votes"
+            }
+        },
+        "proposal": {
+            "status-label": "Status",
+            "author-label": "Author",
+            "snapshot-label": "Snapshot",
+            "start-date-label": "Start date",
+            "end-date-label": "End date",
+            "details-label": "Details"
+        },
+        "no-votes": "No votes on this proposal"
     }
 }

@@ -922,5 +922,28 @@
             "enter-amount": "输入金额",
             "approve": "授予交换 {{currency}} 的权限"
         }
+    },
+    "governance": {
+        "status": {
+            "active": "表决",
+            "pending": "草案",
+            "closed": "关闭"
+        },
+        "sidebar": {
+            "title": {
+                "results": "结果",
+                "history": "投票"
+            }
+        },
+        "proposal": {
+            "end-date-label": "结束日期",
+            "details-label": "细节",
+            "author-label": "作者",
+            "status-label": "地位",
+            "start-date-label": "开始日期",
+            "snapshot-label": "快照"
+        },
+        "title": "治理",
+        "no-votes": "没有对该提案的投票"
     }
 }

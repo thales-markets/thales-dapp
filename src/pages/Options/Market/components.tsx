@@ -403,6 +403,13 @@ const StyledLightTooltip = withStyles(() => ({
     },
 }))(MaterialTooltip);
 
+const StyledLightMediumTooltip = withStyles(() => ({
+    tooltip: {
+        padding: '8px 12px',
+        fontSize: '12px',
+    },
+}))(StyledLightTooltip);
+
 export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
     <StyledLightTooltip
         disableHoverListener={disableHoverListener}
@@ -412,6 +419,17 @@ export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disa
     >
         {children}
     </StyledLightTooltip>
+);
+
+export const LightMediumTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLightMediumTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
+        {children}
+    </StyledLightMediumTooltip>
 );
 
 export const DarkTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (

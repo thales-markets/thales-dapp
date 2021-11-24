@@ -10,16 +10,16 @@ import { isNetworkSupported } from 'utils/network';
 import MarketHeader from 'pages/Options/Home/MarketHeader';
 import Loader from 'components/Loader';
 import { Background, FlexDivCentered, FlexDivColumn, FlexDiv, Wrapper, FlexDivRow } from 'theme/common';
-import { snapshotEndpoint, SpaceKey } from 'constants/governance';
+import { snapshotEndpoint, SpaceKey, StatusEnum } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
-import History from './ProposalDetails/History';
-import Results from './ProposalDetails/Results';
 import { Proposal } from 'types/governance';
 import CouncilMembers from './CouncilMembers';
 import { RouteComponentProps } from 'react-router-dom';
 import request, { gql } from 'graphql-request';
 import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
+import StatusDropdown from './components/StatusDropdown';
+import SidebarDetails from './ProposalDetails/SidebarDetails';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -31,6 +31,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
+    const [statusFilter, setStatusFilter] = useState<StatusEnum>(StatusEnum.All);
 
     const fetchPreloadedProposal = useCallback(() => {
         const fetch = async () => {
@@ -123,22 +124,25 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             <MainContentContainer>
                                 {!selectedProposal && (
                                     <>
-                                        <OptionsTabContainer>
-                                            {optionsTabContent.map((tab, index) => (
-                                                <OptionsTab
-                                                    isActive={tab.id === selectedTab}
-                                                    key={index}
-                                                    index={index}
-                                                    onClick={() => {
-                                                        navigateToGovernance(tab.id);
-                                                        setSelectedTab(tab.id);
-                                                    }}
-                                                    className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                                                >
-                                                    {tab.name}
-                                                </OptionsTab>
-                                            ))}
-                                        </OptionsTabContainer>
+                                        <FlexDivRow>
+                                            <OptionsTabContainer>
+                                                {optionsTabContent.map((tab, index) => (
+                                                    <OptionsTab
+                                                        isActive={tab.id === selectedTab}
+                                                        key={index}
+                                                        index={index}
+                                                        onClick={() => {
+                                                            navigateToGovernance(tab.id);
+                                                            setSelectedTab(tab.id);
+                                                        }}
+                                                        className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                                                    >
+                                                        {tab.name}
+                                                    </OptionsTab>
+                                                ))}
+                                            </OptionsTabContainer>
+                                            <StatusDropdown activeStatus={statusFilter} onSelect={setStatusFilter} />
+                                        </FlexDivRow>
                                         {selectedTab === SpaceKey.TIPS && (
                                             <ProposalList spaceKey={SpaceKey.TIPS} onItemClick={setSelectedProposal} />
                                         )}
@@ -154,19 +158,25 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             </MainContentContainer>
                             {!selectedProposal && (
                                 <SidebarContainer>
-                                    <Sidebar>
-                                        <CouncilMembers />
-                                    </Sidebar>
+                                    <SidebarWrapper>
+                                        <Sidebar>
+                                            <CouncilMembers />
+                                        </Sidebar>
+                                    </SidebarWrapper>
                                 </SidebarContainer>
                             )}
                             {selectedProposal && (
                                 <SidebarContainer>
-                                    <Sidebar style={{ marginBottom: 20 }}>
-                                        <Results proposal={selectedProposal} />
-                                    </Sidebar>
-                                    <Sidebar>
-                                        <History proposal={selectedProposal} />
-                                    </Sidebar>
+                                    <SidebarWrapper style={{ marginBottom: 20 }}>
+                                        <Sidebar>
+                                            <SidebarDetails proposal={selectedProposal} type="results" />
+                                        </Sidebar>
+                                    </SidebarWrapper>
+                                    <SidebarWrapper>
+                                        <Sidebar>
+                                            <SidebarDetails proposal={selectedProposal} type="history" />
+                                        </Sidebar>
+                                    </SidebarWrapper>
                                 </SidebarContainer>
                             )}
                         </FlexDivRow>
@@ -182,7 +192,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
 const MainContentContainer = styled.div`
     width: 66%;
     background: #04045a;
-    border: 2px solid rgba(202, 145, 220, 0.2);
+    border: 1px solid rgba(202, 145, 220, 0.2);
     border-radius: 5px;
     padding: 25px 30px;
 `;
@@ -192,9 +202,14 @@ const SidebarContainer = styled(FlexDivColumn)`
     margin-left: 10px;
 `;
 
+const SidebarWrapper = styled.div`
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    border-radius: 5px;
+    padding: 1px;
+`;
+
 const Sidebar = styled.div`
     background: #04045a;
-    border: 2px solid rgba(202, 145, 220, 0.2);
     border-radius: 5px;
     padding: 10px 0px 0px 0px;
 `;

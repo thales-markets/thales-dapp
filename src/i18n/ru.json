@@ -922,5 +922,28 @@
             },
             "ratio": "Соотношение"
         }
+    },
+    "governance": {
+        "status": {
+            "pending": "проект",
+            "closed": "закрыто",
+            "active": "голосование"
+        },
+        "sidebar": {
+            "title": {
+                "results": "Полученные результаты",
+                "history": "Голоса"
+            }
+        },
+        "proposal": {
+            "status-label": "Положение дел",
+            "details-label": "Подробности",
+            "start-date-label": "Дата начала",
+            "snapshot-label": "Снимок",
+            "end-date-label": "Дата окончания",
+            "author-label": "Автор"
+        },
+        "title": "Управление",
+        "no-votes": "Нет голосов по этому предложению"
     }
 }

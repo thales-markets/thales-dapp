@@ -1,83 +1,71 @@
 import React from 'react';
-import { FlexDiv, FlexDivColumnCentered } from 'theme/common';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { FlexDivCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
-import useProposalQuery from 'queries/governance/useProposalQuery';
-import { formatCurrencyWithKey } from 'utils/formatters/number';
+import { formatNumberShort } from 'utils/formatters/number';
 import voting from 'utils/voting';
-import { truncateAddress } from 'utils/formatters/string';
+import { truncateAddress, truncateText } from 'utils/formatters/string';
 import {
-    Label,
-    LoaderContainer,
+    Blockie,
+    VoteLabel,
     Percentage,
-    SidebarContainer,
-    SidebarRow,
+    VoteRow,
     SidebarRowData,
-    SidebarScrollWrapper,
-    SidebarTitle,
-    SidebarWrapper,
     Votes,
+    StyledLink,
+    NoVotes,
 } from 'pages/Governance/components';
-import SimpleLoader from 'components/SimpleLoader';
-// import externalLink from 'remarkable-external-link';
+import makeBlockie from 'ethereum-blockies-base64';
+import { getEtherscanAddressLink } from 'utils/etherscan';
+import { NetworkId } from '@synthetixio/contracts-interface';
+import { ProposalTypeEnum } from 'constants/governance';
+import { useTranslation } from 'react-i18next';
+import { LightMediumTooltip } from 'pages/Options/Market/components';
 
 type HistoryProps = {
     proposal: Proposal;
+    votes: any;
 };
 
-const History: React.FC<HistoryProps> = ({ proposal }) => {
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
-
-    const isWeightedChoice = proposal.type === 'weighted';
-    const isLoading = proposalResultsQuery.isLoading;
+const History: React.FC<HistoryProps> = ({ proposal, votes }) => {
+    const { t } = useTranslation();
+    const spaceSymbol = proposal.space.symbol;
+    const isWeightedChoice = proposal.type === ProposalTypeEnum.Weighted;
+    const hasVotes = votes.length > 0;
 
     return (
         <>
-            {proposalResultsQuery.isSuccess && proposalResultsQuery.data && (
-                <FlexDivColumnCentered>
-                    <SidebarTitle>History</SidebarTitle>
-                    <SidebarWrapper>
-                        {!isLoading && (
-                            <SidebarScrollWrapper>
-                                <SidebarContainer>
-                                    {proposalResultsQuery.data.votes.map((vote: any) => {
-                                        return (
-                                            <SidebarRow key={vote.voter}>
-                                                <SidebarRowData>
-                                                    <FlexDiv>
-                                                        <Label>{truncateAddress(vote.voter)}</Label>
-                                                        <Votes>
-                                                            {isWeightedChoice
-                                                                ? new voting['weighted'](
-                                                                      proposal,
-                                                                      [],
-                                                                      [],
-                                                                      vote.choice
-                                                                  ).getChoiceString()
-                                                                : proposal.choices[vote.choice - 1]}
-                                                        </Votes>
-                                                    </FlexDiv>
-                                                    <Percentage>
-                                                        {formatCurrencyWithKey(proposal.space.symbol, vote.balance)}
-                                                    </Percentage>
-                                                </SidebarRowData>
-                                            </SidebarRow>
-                                        );
-                                    })}
-                                </SidebarContainer>
-                            </SidebarScrollWrapper>
-                        )}
-                        {isLoading && (
-                            <LoaderContainer>
-                                <SimpleLoader />
-                            </LoaderContainer>
-                        )}
-                    </SidebarWrapper>
-                </FlexDivColumnCentered>
-            )}
+            {!hasVotes && <NoVotes>{t(`governance.no-votes`)}</NoVotes>}
+            {hasVotes &&
+                votes.map((vote: any) => {
+                    const votes = isWeightedChoice
+                        ? new voting[ProposalTypeEnum.Weighted](proposal, [], [], vote.choice).getChoiceString()
+                        : proposal.choices[vote.choice - 1];
+
+                    const formattedVotes = truncateText(votes, 12);
+
+                    return (
+                        <VoteRow key={vote.voter}>
+                            <SidebarRowData>
+                                <FlexDivCentered>
+                                    <StyledLink
+                                        href={getEtherscanAddressLink(NetworkId.Mainnet, vote.voter)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <FlexDivCentered>
+                                            <Blockie src={makeBlockie(vote.voter)} />
+                                            <VoteLabel>{truncateAddress(vote.voter)}</VoteLabel>
+                                        </FlexDivCentered>
+                                    </StyledLink>
+                                    <LightMediumTooltip title={votes}>
+                                        <Votes>{formattedVotes}</Votes>
+                                    </LightMediumTooltip>
+                                </FlexDivCentered>
+                                <Percentage>{`${formatNumberShort(vote.balance)} ${spaceSymbol}`}</Percentage>
+                            </SidebarRowData>
+                        </VoteRow>
+                    );
+                })}
         </>
     );
 };

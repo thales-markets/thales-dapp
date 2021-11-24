@@ -4,25 +4,27 @@ import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, Flex
 import { Proposal } from 'types/governance';
 import { Remarkable } from 'remarkable';
 import { linkify } from 'remarkable/linkify';
-import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { truncateAddress } from 'utils/formatters/string';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
 import { formatCurrency } from 'utils/formatters/number';
-// import externalLink from 'remarkable-external-link';
+import { useTranslation } from 'react-i18next';
+import { ArrowIcon, getColor, StyledLink } from '../components';
+import { NetworkId } from '@synthetixio/contracts-interface';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
 };
 
 const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
+    const { t } = useTranslation();
+
     const getRawMarkup = (value?: string | null) => {
         const remarkable = new Remarkable({
             html: false,
             breaks: true,
             typographer: false,
         }).use(linkify);
-        //.use(externalLink);
 
         if (!value) return { __html: '' };
 
@@ -30,61 +32,67 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
     };
 
     return (
-        <FlexDivColumnCentered style={{ padding: 10 }}>
+        <Container>
             <Title>{proposal.title}</Title>
-            <FlexDivColumnCentered style={{ alignItems: 'center', marginBottom: 30 }}>
-                <Label>Status</Label>
+            <StatusContainer>
+                <Label>{t(`governance.proposal.status-label`)}</Label>
                 <StatusWrapper status={proposal.state}>
-                    <Status status={proposal.state}>{proposal.state}</Status>
+                    <Status status={proposal.state}>{t(`governance.status.${proposal.state}`)}</Status>
                 </StatusWrapper>
-            </FlexDivColumnCentered>
-            <FlexDivRow style={{ marginBottom: 40 }}>
-                <DetailsContainer style={{ marginRight: 40 }}>
+            </StatusContainer>
+            <FlexDivRow>
+                <DetailsContainer>
                     <FlexDivRowCentered>
-                        <Text>Author</Text>
-                        <StyledLink href={getEtherscanAddressLink(1, proposal.author)} target="_blank" rel="noreferrer">
+                        <Text>{t(`governance.proposal.author-label`)}</Text>
+                        <StyledLink
+                            href={getEtherscanAddressLink(NetworkId.Mainnet, proposal.author)}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             <Text>{truncateAddress(proposal.author)}</Text>
-                            <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                            <ArrowIcon />
                         </StyledLink>
                     </FlexDivRowCentered>
                     <Divider />
                     <FlexDivRowCentered>
-                        <Text>Snapshot</Text>
-                        <StyledLink href={getEtherscanBlockLink(1, proposal.snapshot)} target="_blank" rel="noreferrer">
+                        <Text>{t(`governance.proposal.snapshot-label`)}</Text>
+                        <StyledLink
+                            href={getEtherscanBlockLink(NetworkId.Mainnet, proposal.snapshot)}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
                             <Text>{formatCurrency(proposal.snapshot, 0)}</Text>
-                            <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
+                            <ArrowIcon />
                         </StyledLink>
                     </FlexDivRowCentered>
                 </DetailsContainer>
                 <DetailsContainer>
                     <FlexDivRowCentered>
-                        <Text>Start date</Text>
+                        <Text>{t(`governance.proposal.start-date-label`)}</Text>
                         <Text>{formatShortDateWithTime(proposal.start * 1000)}</Text>
                     </FlexDivRowCentered>
                     <Divider />
                     <FlexDivRowCentered>
-                        <Text>End date</Text>
+                        <Text>{t(`governance.proposal.end-date-label`)}</Text>
                         <Text>{formatShortDateWithTime(proposal.end * 1000)}</Text>
                     </FlexDivRowCentered>
                 </DetailsContainer>
             </FlexDivRow>
-            <BodyTitle>Details</BodyTitle>
+            <BodyTitle>{t(`governance.proposal.details-label`)}</BodyTitle>
             <Divider />
-            <Body dangerouslySetInnerHTML={getRawMarkup(proposal?.body)}></Body>
-        </FlexDivColumnCentered>
+            <Body dangerouslySetInnerHTML={getRawMarkup(proposal.body)}></Body>
+        </Container>
     );
 };
 
-const getBackgroundColor = (status: string) => {
-    switch (status) {
-        case 'pending':
-            return '#748BC6';
-        case 'closed':
-            return '#8208FC';
-        default:
-            return '#64D9FE';
-    }
-};
+const Container = styled(FlexDivColumnCentered)`
+    padding: 10px;
+`;
+
+const StatusContainer = styled(FlexDivColumnCentered)`
+    margin-bottom: 30px;
+    align-items: center;
+`;
 
 const Title = styled(FlexDivColumnCentered)`
     font-style: normal;
@@ -102,6 +110,9 @@ const DetailsContainer = styled(FlexDivColumnCentered)`
     border-radius: 5px;
     border: 2px solid #242371;
     color: #f6f6fe;
+    &:first-child {
+        margin-right: 40px;
+    }
 `;
 
 const BodyTitle = styled(FlexDivRow)`
@@ -111,6 +122,7 @@ const BodyTitle = styled(FlexDivRow)`
     text-align: center;
     color: #ffffff;
     margin-bottom: 10px;
+    margin-top: 40px;
 `;
 
 const Divider = styled.hr`
@@ -128,21 +140,6 @@ const Label = styled.span`
     margin-bottom: 5px;
 `;
 
-const StyledLink = styled.a`
-    color: #f6f6fe;
-    &path {
-        fill: #f6f6fe;
-    }
-    &:hover {
-        color: #00f9ff;
-        & path {
-            fill: #00f9ff;
-        }
-    }
-`;
-
-const ArrowIcon = styled(ArrowHyperlinkIcon)``;
-
 const Text = styled.span`
     font-weight: 500;
     font-size: 14px;
@@ -154,7 +151,7 @@ const StatusWrapper = styled(FlexDivCentered)<{ status: string }>`
     padding: 1px;
     border-radius: 10px;
     width: 200px;
-    background: ${(props) => getBackgroundColor(props.status)};
+    background: ${(props) => getColor(props.status)};
 `;
 
 const Status = styled(FlexDivColumnCentered)<{ status: string }>`
@@ -164,7 +161,7 @@ const Status = styled(FlexDivColumnCentered)<{ status: string }>`
     line-height: 24px;
     text-align: center;
     letter-spacing: 2px;
-    color: ${(props) => getBackgroundColor(props.status)};
+    color: ${(props) => getColor(props.status)};
     background: #04045a;
     border-radius: 10px;
     text-transform: uppercase;

@@ -30,7 +30,7 @@ export type Proposal = {
     created: number;
     space: SpaceData;
     network: string;
-    strategies: SpaceStrategy;
+    strategies: SpaceStrategy[];
     plugins: any;
     title: string;
     body: string;

@@ -84,6 +84,10 @@ const useProposalQuery = (
                             state
                             author
                             type
+                            strategies {
+                                name
+                                params
+                            }
                             space {
                                 id
                                 name
@@ -138,8 +142,10 @@ const useProposalQuery = (
 
             const block = parseInt(proposal.snapshot);
 
+            console.log(proposal.strategies, block, voterAddresses.length);
+
             const [scores /*, profiles*/] = await Promise.all([
-                snapshot.utils.getScores(spaceKey, space.strategies, space.network, voterAddresses, block),
+                snapshot.utils.getScores(spaceKey, proposal.strategies, space.network, voterAddresses, block),
                 /* Get scores and ENS/3Box profiles */
                 // getProfiles(voterAddresses),
             ]);
