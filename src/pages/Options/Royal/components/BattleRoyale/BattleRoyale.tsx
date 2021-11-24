@@ -362,7 +362,7 @@ const NextRound = styled(Card)`
 `;
 
 const RoundText = styled.p`
-    font-family: VT323 !important;
+    font-family: basis33 !important;
     font-weight: 400;
     font-size: 90px;
     line-height: 70px;
@@ -380,7 +380,7 @@ const RoundTitle = styled.p`
 `;
 
 const CurrentRoundText = styled.p`
-    font-family: VT323 !important;
+    font-family: basis33 !important;
     font-weight: normal;
     font-size: 53.4351px;
     line-height: 53px;
@@ -398,7 +398,7 @@ const CurrentRoundTitle = styled.p`
 `;
 
 const PrevRoundText = styled.p`
-    font-family: VT323 !important;
+    font-family: basis33 !important;
     font-size: 34px;
     line-height: 22px;
     text-align: center;
@@ -519,7 +519,7 @@ const BattleInfoSection = styled.div`
                 padding-right: 7px;
             }
             &:nth-child(2) {
-                font-family: VT323 !important;
+                font-family: basis33 !important;
                 font-weight: bold;
                 font-size: 28px;
             }

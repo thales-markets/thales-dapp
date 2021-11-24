@@ -65,14 +65,7 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         if (selectedPage === 'battle') {
-            if (thalesRoyalData && thalesRoyalData.signUpPeriod < new Date() && !thalesRoyalData?.canStartRoyale) {
-                history.push({
-                    pathname: location.pathname,
-                    search: queryString.stringify({
-                        page: selectedPage,
-                    }),
-                });
-            } else {
+            if ((thalesRoyalData && thalesRoyalData.signUpPeriod > new Date()) || thalesRoyalData?.canStartRoyale) {
                 history.push({
                     pathname: location.pathname,
                     search: queryString.stringify({
@@ -80,6 +73,13 @@ const ThalesRoyal: React.FC = () => {
                     }),
                 });
                 setSelectedPage('scoreboard');
+            } else {
+                history.push({
+                    pathname: location.pathname,
+                    search: queryString.stringify({
+                        page: selectedPage,
+                    }),
+                });
             }
         } else {
             history.push({
@@ -363,7 +363,7 @@ export const InfoSection = styled.div`
                 padding-right: 7px;
             }
             &:nth-child(3) {
-                font-family: VT323 !important;
+                font-family: basis33 !important;
                 font-weight: bold;
                 font-size: 28px;
             }
