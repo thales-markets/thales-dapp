@@ -202,10 +202,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                     <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
                     <PopupImage src={important} />
                     <PopupDescription>
-                        <PopupLink href="https://discord.gg/thales" target="_blank">
-                            {t('options.royale.scoreboard.go-to')}
+                        <PopupLink href="https://discord.gg/kMKCJ2xFmG" target="_blank">
+                            {t('options.royale.scoreboard.go-to')} <br />
                         </PopupLink>
-                        {t('options.royale.scoreboard.verify')}
+                        {t('options.royale.scoreboard.verify')} <br />
+                        {t('options.royale.scoreboard.placeholder')} <br />
                     </PopupDescription>
                 </Popup>
             </Modal>
@@ -635,7 +636,7 @@ const PopupDescription = styled(Text)`
     font-style: normal;
     font-weight: normal;
     font-size: 20px;
-    line-height: 22px;
+    line-height: 25px;
     text-align: center;
     letter-spacing: -0.402542px;
     color: var(--color-wrapper);
