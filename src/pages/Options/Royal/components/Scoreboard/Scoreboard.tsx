@@ -927,7 +927,7 @@ const SubTitle = styled(Text)`
     margin-top: 4px;
     margin-bottom: 14px;
     align-self: center;
-    font-family: VT323 !important;
+    font-family: basis33 !important;
     font-style: normal;
     font-weight: 400;
     font-size: 80px;
@@ -936,7 +936,7 @@ const SubTitle = styled(Text)`
     letter-spacing: -0.4px;
     color: var(--color);
     span {
-        font-family: VT323 !important;
+        font-family: basis33 !important;
         font-style: normal;
         font-weight: 400;
         font-size: 80px;
@@ -948,7 +948,7 @@ const SubTitle = styled(Text)`
 `;
 
 const Question = styled(Text)`
-    font-family: VT323 !important;
+    font-family: basis33 !important;
     font-style: normal;
     font-weight: 400;
     font-size: 38.455px;
@@ -987,7 +987,7 @@ const InfoText = styled(Text)`
 `;
 
 const Link = styled.a`
-    font-family: VT323 !important;
+    font-family: basis33 !important;
     font-style: normal;
     font-weight: bold;
     font-size: 26px;
@@ -1015,7 +1015,7 @@ const ScoreboardInfoSection = styled.div`
                 padding-right: 7px;
             }
             &:nth-child(2) {
-                font-family: VT323 !important;
+                font-family: basis33 !important;
                 font-weight: bold;
                 font-size: 28px;
             }

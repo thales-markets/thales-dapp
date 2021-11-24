@@ -1,0 +1,39 @@
+@font-face {
+    font-family: 'Roboto';
+    src: local('Roboto'), url(../assets/fonts/Roboto/Roboto-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: local('Open Sans'), url(../assets/fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: local('Inter'), url(../assets/fonts/Inter/Inter-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Icons';
+    src: local('Icons'), url(../assets/fonts/ThalesIcons/icons.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'SansationLight';
+    src: local('SansationLight'), url(../assets/fonts/SansationLight/Sansation-Light.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Sansation';
+    src: local('Sansation'), url(../assets/fonts/SansationLight/Sansation-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'VT323';
+    src: local('VT323'), url(../assets/fonts/VT323/VT323-Regular.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'basis33';
+    src: local('basis33'), url(../assets/fonts/Basis33/basis33.ttf) format('truetype');
+}

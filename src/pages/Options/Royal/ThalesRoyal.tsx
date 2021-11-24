@@ -363,7 +363,7 @@ export const InfoSection = styled.div`
                 padding-right: 7px;
             }
             &:nth-child(3) {
-                font-family: VT323 !important;
+                font-family: basis33 !important;
                 font-weight: bold;
                 font-size: 28px;
             }
