@@ -64,32 +64,34 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedPage === 'royale') {
-            if (thalesRoyalData && thalesRoyalData.round > 0) {
+        if (thalesRoyalData) {
+            if (selectedPage === 'royale') {
+                if (thalesRoyalData.round > 0) {
+                    history.push({
+                        pathname: location.pathname,
+                        search: queryString.stringify({
+                            page: selectedPage,
+                        }),
+                    });
+                } else {
+                    history.push({
+                        pathname: location.pathname,
+                        search: queryString.stringify({
+                            page: 'scoreboard',
+                        }),
+                    });
+                    setSelectedPage('scoreboard');
+                }
+            } else {
                 history.push({
                     pathname: location.pathname,
                     search: queryString.stringify({
                         page: selectedPage,
                     }),
                 });
-            } else {
-                history.push({
-                    pathname: location.pathname,
-                    search: queryString.stringify({
-                        page: 'scoreboard',
-                    }),
-                });
-                setSelectedPage('scoreboard');
             }
-        } else {
-            history.push({
-                pathname: location.pathname,
-                search: queryString.stringify({
-                    page: selectedPage,
-                }),
-            });
         }
-    }, [selectedPage]);
+    }, [selectedPage, thalesRoyalData]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {

@@ -154,9 +154,9 @@ const renderRounds = (
               );
     }
     cards.push(
-        <CurrentRound>
-            <img style={{ position: 'relative', top: 4 }} src={winnerCard} />
-        </CurrentRound>
+        <WinnerCard>
+            <img style={{ height: '100%' }} src={winnerCard} />
+        </WinnerCard>
     );
     return cards;
 };
@@ -355,6 +355,12 @@ const PrevRound = styled(Card)`
     opacity: 0.25;
     color: var(--color);
     justify-content: space-evenly;
+`;
+
+const WinnerCard = styled(Card)`
+    padding: 0;
+    border: none;
+    filter: drop-shadow(0px 4px 70px rgba(161, 224, 180, 0.6));
 `;
 
 const NextRound = styled(Card)`
