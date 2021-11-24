@@ -16,6 +16,7 @@ import { getNetworkId } from 'redux/modules/wallet';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User } from '../../Queries/useRoyalePlayersQuery';
+import winnerCard from 'assets/images/royale/winner-card.svg';
 
 type BattleRoyaleProps = {
     ethPrice: string;
@@ -152,6 +153,11 @@ const renderRounds = (
                   </NextRound>
               );
     }
+    cards.push(
+        <CurrentRound>
+            <img style={{ position: 'relative', top: 4 }} src={winnerCard} />
+        </CurrentRound>
+    );
     return cards;
 };
 
