@@ -986,7 +986,8 @@
             "wrong-network-dialog": {
                 "title": "Wrong network!",
                 "message": "Please switch to Optimistic Kovan to continue",
-                "button": "Switch to Optimistic Kovan"
+                "button": "Switch to Optimistic Kovan",
+                "parameters": "OP Kovan parameters"
             },
             "wallet-not-connected-dialog": {
                 "title": "Wallet not connected",

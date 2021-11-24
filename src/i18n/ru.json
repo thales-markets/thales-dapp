@@ -988,7 +988,8 @@
             "wrong-network-dialog": {
                 "title": "Неправильная сеть!",
                 "message": "Чтобы продолжить, переключитесь на Optimistic Kovan",
-                "button": "Переключиться на Optimistic Kovan"
+                "button": "Переключиться на Optimistic Kovan",
+                "parameters": "Параметры ОП Кован"
             },
             "wallet-not-connected-dialog": {
                 "button": "Подключить кошелек",

@@ -988,7 +988,8 @@
             "wrong-network-dialog": {
                 "title": "网络不对",
                 "message": "请切换到 Optimistic Kovan 继续",
-                "button": "切换到 Optimistic Kovan"
+                "button": "切换到 Optimistic Kovan",
+                "parameters": "OP Kovan 参数"
             },
             "wallet-not-connected-dialog": {
                 "title": "钱包未连接",
