@@ -975,8 +975,9 @@
                 },
                 "search": "Search player / Number",
                 "verification": "To Complete Verification!",
-                "go-to": "Go to Thales discord ",
-                "verify": "channel #thales-royale-verify and type: !verify 0x<your_address>",
+                "go-to": "Go to Thales discord channel ",
+                "verify": "#thales-royale-verify and type: ",
+                "placeholder": "!verify <Your Ethereum Address>",
                 "sign-up": "Sign Up"
             },
             "redirect-dialog": {

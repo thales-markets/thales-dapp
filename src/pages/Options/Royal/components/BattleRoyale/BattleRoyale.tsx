@@ -201,7 +201,15 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
         if (currentRoundElement) {
             currentRoundElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
         }
-    }, [round, currentScrollRound, showBattle]);
+    }, [round, currentScrollRound]);
+
+    useEffect(() => {
+        const currentRoundElement = document.getElementById(`round${round}`);
+        if (currentRoundElement) {
+            currentRoundElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+            setCurrentScrollRound(round);
+        }
+    }, [round, showBattle]);
 
     return (
         <>
