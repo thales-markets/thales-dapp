@@ -64,8 +64,15 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedPage === 'battle') {
-            if ((thalesRoyalData && thalesRoyalData.signUpPeriod > new Date()) || thalesRoyalData?.canStartRoyale) {
+        if (selectedPage === 'royale') {
+            if (thalesRoyalData && thalesRoyalData.round > 0) {
+                history.push({
+                    pathname: location.pathname,
+                    search: queryString.stringify({
+                        page: selectedPage,
+                    }),
+                });
+            } else {
                 history.push({
                     pathname: location.pathname,
                     search: queryString.stringify({
@@ -73,13 +80,6 @@ const ThalesRoyal: React.FC = () => {
                     }),
                 });
                 setSelectedPage('scoreboard');
-            } else {
-                history.push({
-                    pathname: location.pathname,
-                    search: queryString.stringify({
-                        page: selectedPage,
-                    }),
-                });
             }
         } else {
             history.push({
@@ -124,7 +124,7 @@ const ThalesRoyal: React.FC = () => {
     return (
         <RoyaleBackground className={theme === Theme.Light ? 'light-theme' : 'dark-theme'} id="royale-background">
             <Wrapper
-                className={selectedPage === 'battle' ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
+                className={selectedPage === 'royale' ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
                 <Header theme={theme} setTheme={setTheme} />
@@ -140,40 +140,31 @@ const ThalesRoyal: React.FC = () => {
                         ethPrice={ethPrice}
                         positions={positions}
                         royaleData={thalesRoyalData}
-                        showBattle={selectedPage === 'battle'}
+                        showBattle={selectedPage === 'royale'}
                         user={user}
                     />
                 )}
             </Wrapper>
             <Footer>
                 <Nav>
-                    {selectedPage !== 'battle' && (
+                    {selectedPage !== 'royale' && (
                         <NavButton onClick={() => navigateTo(ROUTES.Options.Home)}>
                             <i className="icon icon--left" />
                             <Text> Thales dApp </Text>
                         </NavButton>
                     )}
-                    {selectedPage === 'battle' && (
+                    {selectedPage === 'royale' && (
                         <NavButton onClick={() => setSelectedPage('scoreboard')}>
                             <i className="icon icon--left" />
                             <Text>{t('options.royale.footer.scoreboard')}</Text>
                         </NavButton>
                     )}
-                    {selectedPage !== 'battle' && (
+                    {selectedPage !== 'royale' && (
                         <NavButton
-                            className={
-                                (thalesRoyalData && thalesRoyalData.signUpPeriod > new Date()) ||
-                                thalesRoyalData?.canStartRoyale
-                                    ? 'disabled'
-                                    : ''
-                            }
+                            className={thalesRoyalData?.round === 0 ? 'disabled' : ''}
                             onClick={() => {
-                                if (
-                                    thalesRoyalData &&
-                                    thalesRoyalData.signUpPeriod < new Date() &&
-                                    !thalesRoyalData?.canStartRoyale
-                                ) {
-                                    setSelectedPage('battle');
+                                if (thalesRoyalData && thalesRoyalData.round > 0) {
+                                    setSelectedPage('royale');
                                 }
                             }}
                         >
