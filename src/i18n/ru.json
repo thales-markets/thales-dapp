@@ -949,7 +949,8 @@
                 "you-were-eliminated-in": "Вы были исключены в",
                 "current-reward-per-player": "Текущая награда на игрока",
                 "current-positions": "Текущие должности",
-                "stats": "Статистика"
+                "stats": "Статистика",
+                "price-source": "Источник: канал Optimism Chainlink ETH"
             },
             "scoreboard": {
                 "player-no": "№ игрока:",

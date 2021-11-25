@@ -949,7 +949,8 @@
                 "scoreboard": "记分牌",
                 "current-reward-per-player": "当前每位玩家的奖励",
                 "current-positions": "目前职位",
-                "stats": "统计数据"
+                "stats": "统计数据",
+                "price-source": "资料来源：乐观 Chainlink ETH 提要"
             },
             "scoreboard": {
                 "player-no": "玩家编号：",
