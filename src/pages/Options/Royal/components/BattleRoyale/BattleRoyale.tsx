@@ -360,7 +360,7 @@ const PrevRound = styled(Card)`
 const WinnerCard = styled(Card)`
     padding: 0;
     border: none;
-    filter: drop-shadow(0px 4px 70px rgba(161, 224, 180, 0.6));
+    filter: drop-shadow(0px 4px 35.6889px rgba(161, 224, 180, 0.6));
 `;
 
 const NextRound = styled(Card)`
