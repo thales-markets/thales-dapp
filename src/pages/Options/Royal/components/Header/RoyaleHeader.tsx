@@ -88,7 +88,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                             }}
                         >
                             <ThemeSelector>
-                                {' '}
                                 {theme === Theme.Light ? (
                                     <ThemeIcon className="icon icon--b-theme" />
                                 ) : (
@@ -140,7 +139,13 @@ const ThemeText = styled.p`
 `;
 
 const ThemeIcon = styled.i`
-    margin-right: -2px;
+    &.icon--b-theme {
+        margin-left: -2px;
+    }
+
+    &.icon--g-theme {
+        margin-right: -2px;
+    }
 `;
 const UtilWrapper = styled.div`
     display: flex;
