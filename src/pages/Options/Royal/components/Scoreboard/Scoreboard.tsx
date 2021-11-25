@@ -531,7 +531,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                     {t('options.royale.scoreboard.blog')}
                 </Link>
             </InfoText>
-            <InfoText style={{ marginTop: '8px' }}>
+            <InfoText style={{ marginTop: '8px', textAlign: 'center' }}>
                 <Trans
                     i18nKey="options.royale.scoreboard.info6"
                     components={{
@@ -931,6 +931,7 @@ const Title = styled(Text)`
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
+    padding-bottom: 10px;
 `;
 
 const SubTitle = styled(Text)`

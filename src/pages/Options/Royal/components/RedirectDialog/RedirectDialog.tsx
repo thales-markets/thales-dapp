@@ -17,6 +17,20 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
         setOpen(false);
     };
 
+    const switchToMainnetEthNetwork = async () => {
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                await (window.ethereum as any).request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x1' }],
+                });
+                location.reload();
+            } catch (switchError) {
+                console.log(switchError);
+            }
+        }
+    };
+
     return (
         <StyledModal
             open={open}
@@ -76,7 +90,42 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                             color: '#04045a',
                             fontSize: 28,
                             position: 'absolute',
-                            marginLeft: 59,
+                            marginLeft: '12%',
+                        }}
+                    />
+                </Link>
+                <Text
+                    className="redirect-modal-font"
+                    style={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: '20px',
+                        lineHeight: '30px',
+                        display: 'block',
+                    }}
+                >
+                    or
+                </Text>
+                <Link
+                    className="redirect-modal-font"
+                    style={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: '20px',
+                        lineHeight: '22px',
+                        display: 'block',
+                        cursor: 'pointer',
+                    }}
+                    onClick={switchToMainnetEthNetwork}
+                >
+                    Switch to Ethereum Mainnet
+                    <i
+                        className="icon icon--right"
+                        style={{
+                            color: '#04045a',
+                            fontSize: 28,
+                            position: 'absolute',
+                            marginLeft: '12%',
                         }}
                     />
                 </Link>
