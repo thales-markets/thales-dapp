@@ -178,6 +178,7 @@ const ThalesRoyal: React.FC = () => {
                 </Nav>
                 <div />
                 <StatsButtonWrapper>
+                    <StatsIcon onClick={() => setShowStats(true)} className="icon icon--stats" />
                     <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
                 </StatsButtonWrapper>
             </Footer>
@@ -248,7 +249,7 @@ const Footer = styled.div`
     display: grid;
     grid-template-columns: 2fr 5fr 2fr;
     width: 100%;
-    padding: 50px 30px 50px 50px;
+    padding: 50px;
     align-items: flex-end;
     @media (max-width: 1024px) {
         position: absolute;
@@ -322,6 +323,8 @@ const StatsButtonWrapper = styled.div`
 
 const StatsButton = styled.span`
     cursor: pointer;
+    padding-left: 10px;
+    line-height: 27px;
 `;
 
 const CloseStats = styled.span`
@@ -329,6 +332,10 @@ const CloseStats = styled.span`
     position: absolute;
     top: 5px;
     right: 10px;
+`;
+
+const StatsIcon = styled.i`
+    cursor: pointer;
 `;
 
 export const InfoSection = styled.div`

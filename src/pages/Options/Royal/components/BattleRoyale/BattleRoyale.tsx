@@ -154,7 +154,7 @@ const renderRounds = (
               );
     }
     cards.push(
-        <WinnerCard>
+        <WinnerCard id={`round${rounds + 1}`}>
             <img style={{ height: '100%' }} src={winnerCard} />
         </WinnerCard>
     );
@@ -224,7 +224,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     </ScrollWrapper>
                 </CardWrapper>
                 <ArrowRight
-                    onMouseDown={() => setCurrentScrollRound(Math.min(currentScrollRound + 1, royaleData.rounds))}
+                    onMouseDown={() => setCurrentScrollRound(Math.min(currentScrollRound + 1, royaleData.rounds + 1))}
                     className="icon icon--right"
                 />
                 <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
