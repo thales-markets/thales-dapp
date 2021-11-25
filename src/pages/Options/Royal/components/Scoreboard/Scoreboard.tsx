@@ -187,6 +187,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
     return (
         <>
+            <OverlayForDropDown
+                onClick={() => {
+                    if (showDropdown) setShowDropdown(false);
+                }}
+            ></OverlayForDropDown>
             <Modal
                 open={showPopup}
                 onClose={() => {
@@ -563,6 +568,15 @@ const getAvatar = (user: User) => {
         );
     }
 };
+
+const OverlayForDropDown = styled.div`
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+`;
 
 const SearchWrapper = styled.input`
     max-width: 275px;
