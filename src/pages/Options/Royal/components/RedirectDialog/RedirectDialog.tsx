@@ -90,7 +90,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                             color: '#04045a',
                             fontSize: 28,
                             position: 'absolute',
-                            marginLeft: '12%',
+                            marginLeft: '5%',
                         }}
                     />
                 </Link>
@@ -104,7 +104,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         display: 'block',
                     }}
                 >
-                    or
+                    {t('options.royale.redirect-dialog.or')}
                 </Text>
                 <Link
                     className="redirect-modal-font"
@@ -118,14 +118,14 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                     }}
                     onClick={switchToMainnetEthNetwork}
                 >
-                    Switch to Ethereum Mainnet
+                    {t('options.royale.redirect-dialog.switch-to-mainnet')}
                     <i
                         className="icon icon--right"
                         style={{
                             color: '#04045a',
                             fontSize: 28,
                             position: 'absolute',
-                            marginLeft: '12%',
+                            marginLeft: '2.5%',
                         }}
                     />
                 </Link>

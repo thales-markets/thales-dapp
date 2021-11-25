@@ -982,7 +982,9 @@
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",
-                "message": "Go back to Thales Royale"
+                "message": "Go back to Thales Royale",
+                "or": "or",
+                "switch-to-mainnet": "Switch to Ethereum Mainnet"
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",

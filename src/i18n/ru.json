@@ -984,7 +984,9 @@
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",
-                "message": "Вернитесь в Thales Royale"
+                "message": "Вернитесь в Thales Royale",
+                "or": "или",
+                "switch-to-mainnet": "Переключитесь на основную сеть Ethereum"
             },
             "wrong-network-dialog": {
                 "title": "Неправильная сеть!",
