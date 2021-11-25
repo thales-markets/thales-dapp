@@ -18,6 +18,8 @@ import usePositionsQuery from './Queries/usePositionsQuery';
 import useThalesRoyaleData from './Queries/useThalesRoyaleData';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
 import useRoyalePlayersQuery, { User } from './Queries/useRoyalePlayersQuery';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { RoyaleTooltip } from '../Market/components';
 
 export enum Theme {
     Light,
@@ -204,6 +206,11 @@ const ThalesRoyal: React.FC = () => {
                         {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
                     </span>
                     <span>${ethPrice}</span>
+                    <InfoIconContainer>
+                        <RoyaleTooltip title={t('options.royale.footer.price-source')}>
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                    </InfoIconContainer>
                 </div>
                 <div>
                     <span>{t('options.royale.footer.current-reward-per-player')}:</span>
@@ -219,6 +226,19 @@ const ThalesRoyal: React.FC = () => {
         </RoyaleBackground>
     );
 };
+
+const InfoIconContainer = styled.span`
+    display: inline-flex;
+    align-items: center;
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    width: 15px;
+    height: 15px;
+    path {
+        fill: var(--color);
+    }
+`;
 
 export const RoyaleBackground = styled(Background)`
     &.light-theme {

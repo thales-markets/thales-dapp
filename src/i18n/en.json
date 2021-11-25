@@ -937,7 +937,8 @@
                 "rd": "Round",
                 "royale": "Royale",
                 "scoreboard": "Scoreboard",
-                "stats": "Stats"
+                "stats": "Stats",
+                "price-source": "Source: Optimism Chainlink ETH feed"
             },
             "battle": {
                 "round": "Round",
