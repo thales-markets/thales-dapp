@@ -116,6 +116,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
 };
 
 const Header = styled.div`
+    z-index: 10;
     position: relative;
     padding-top: 35px;
     width: 100%;
