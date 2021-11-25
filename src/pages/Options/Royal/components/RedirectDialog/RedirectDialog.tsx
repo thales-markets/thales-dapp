@@ -79,20 +79,22 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         fontWeight: 'bold',
                         fontSize: '20px',
                         lineHeight: '22px',
-                        display: 'block',
+                        display: 'flex',
+                        flexDirection: 'row',
                     }}
                     href="/royale"
                 >
-                    {t('options.royale.redirect-dialog.message')}
                     <i
                         className="icon icon--left"
                         style={{
                             color: '#04045a',
-                            fontSize: 28,
+                            fontSize: 20,
                             position: 'absolute',
-                            marginLeft: '5%',
+                            display: 'block',
+                            marginRight: '59%',
                         }}
                     />
+                    {t('options.royale.redirect-dialog.message')}
                 </Link>
                 <Text
                     className="redirect-modal-font"
@@ -113,8 +115,9 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         fontWeight: 'bold',
                         fontSize: '20px',
                         lineHeight: '22px',
-                        display: 'block',
+                        display: 'flex',
                         cursor: 'pointer',
+                        flexDirection: 'row',
                     }}
                     onClick={switchToMainnetEthNetwork}
                 >
@@ -123,9 +126,10 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         className="icon icon--right"
                         style={{
                             color: '#04045a',
-                            fontSize: 28,
+                            fontSize: 20,
                             position: 'absolute',
-                            marginLeft: '2.5%',
+                            display: 'block',
+                            marginLeft: '62%',
                         }}
                     />
                 </Link>

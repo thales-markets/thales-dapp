@@ -77,6 +77,7 @@ const renderRounds = (
                           selected={roundsInformation[index - 1].positionInRound === 2}
                           onClick={vote(2)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
+                          notSelected={roundsInformation[index - 1].positionInRound === 1}
                       >
                           △
                       </LongButton>
@@ -104,6 +105,7 @@ const renderRounds = (
                           selected={roundsInformation[index - 1].positionInRound === 1}
                           onClick={vote(1)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
+                          notSelected={roundsInformation[index - 1].positionInRound === 2}
                       >
                           <Circle
                               selected={roundsInformation[index - 1].positionInRound === 1}
@@ -429,7 +431,7 @@ const PrevRoundTitle = styled.p`
     margin-right: 5px;
 `;
 
-const LongButton = styled.button<{ selected?: boolean }>`
+const LongButton = styled.button<{ selected?: boolean; notSelected?: boolean }>`
     position: absolute;
     top: 0;
     left: 50%;
@@ -438,11 +440,12 @@ const LongButton = styled.button<{ selected?: boolean }>`
     width: 90px;
     height: 90px;
     border-radius: 50px;
+    background: ${(props) => (props.notSelected ? '#b9c7c2' : '#59cda3')};
     background: #59cda3;
     border: ${(props) => (props.selected ? '5px solid #59cda3' : '5px solid #e5e5e5')};
     box-sizing: border-box;
     box-shadow: inset 0 4px 30px #137b9b;
-    color: ${(props) => (props.selected ? '#59cda3' : 'white')};
+    color: white;
     font-size: 55px;
     cursor: pointer;
     line-height: 55px;
@@ -452,7 +455,7 @@ const LongButton = styled.button<{ selected?: boolean }>`
     }
 `;
 
-const ShortButton = styled.button<{ selected?: boolean }>`
+const ShortButton = styled.button<{ selected?: boolean; notSelected?: boolean }>`
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -461,8 +464,8 @@ const ShortButton = styled.button<{ selected?: boolean }>`
     width: 90px;
     height: 90px;
     border-radius: 50px;
-    background: #8e1d38;
-    border: ${(props) => (props.selected ? '5px solid #c92d52' : '5px solid #e5e5e5')};
+    background: ${(props) => (props.notSelected ? '#977980' : '#8e1d38')};
+    border: ${(props) => (props.selected ? '4px solid #e5e5e5' : '5px solid #e5e5e5')};
     box-sizing: border-box;
     color: white;
     display: flex;
@@ -482,7 +485,7 @@ const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
     border-radius: 50px;
     background: transparent;
     box-sizing: border-box;
-    border: ${(props) => (props.selected ? '4px solid #c92d52' : '4px solid #e5e5e5')};
+    border: ${(props) => (props.selected ? '4px solid #e5e5e5' : '4px solid #e5e5e5')};
 `;
 
 const Button = styled.button`
