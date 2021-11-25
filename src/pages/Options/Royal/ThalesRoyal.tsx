@@ -34,7 +34,7 @@ const ThalesRoyal: React.FC = () => {
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
-    const [showStats, setShowStats] = useState(false);
+    const [showStats, setShowStats] = useState(true);
 
     const royaleDataQuery = useThalesRoyaleData(walletAddress as any, { enabled: networkId === 69 });
     const thalesRoyalData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
