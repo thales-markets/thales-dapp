@@ -86,7 +86,7 @@ const renderRounds = (
                       </div>
                       <div style={{ marginTop: '25px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`${targetPrice}$`}</CurrentRoundText>
+                          <CurrentRoundText>{`$${targetPrice}`}</CurrentRoundText>
                       </div>
                       <div style={{ marginBottom: '25px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
@@ -124,12 +124,12 @@ const renderRounds = (
                       </div>
                       <div style={{ textDecoration: 'line-through' }}>
                           <CurrentRoundTitle>{`${token} ${t('options.royale.battle.will-be')}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`${roundsInformation[index - 1].targetPriceInRound}$`}</CurrentRoundText>
+                          <CurrentRoundText>{`$${roundsInformation[index - 1].targetPriceInRound}`}</CurrentRoundText>
                       </div>
                       <RoundHistoryInfo>
                           <FlexDiv>
                               <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`${roundsInformation[index - 1].finalPriceInRound}$`}</PrevRoundText>
+                              <PrevRoundText>{`$${roundsInformation[index - 1].finalPriceInRound}`}</PrevRoundText>
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
