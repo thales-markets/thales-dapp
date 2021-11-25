@@ -85,7 +85,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                 >
                     {t('options.royale.redirect-dialog.message')}
                     <i
-                        className="icon icon--right"
+                        className="icon icon--left"
                         style={{
                             color: '#04045a',
                             fontSize: 28,
