@@ -1,5 +1,5 @@
 export const thalesRoyal = {
-    address: '0xE3F45271A87F409569890412C99f560002839d0e',
+    address: '0x8d5B0DF7E6DA70151728c3130C56A3dAe48E4846',
     abi: [
         {
             inputs: [
