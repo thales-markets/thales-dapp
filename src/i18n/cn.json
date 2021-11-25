@@ -944,7 +944,9 @@
             "start-date-label": "开始日期",
             "snapshot-label": "快照",
             "starts-in-label": "开始于",
-            "ends-in-label": "结束于"
+            "ends-in-label": "结束于",
+            "no-proposals-found": "未找到任何提案",
+            "view-all-proposals": "查看所有提案"
         },
         "title": "治理",
         "no-votes": "没有对该提案的投票",
@@ -960,8 +962,10 @@
             "total-staked-col": "总质押金额",
             "view-all-stakers": "查看所有前锋",
             "tooltip-staked-directly": "直接质押",
-            "staker-col": "斯塔克"
+            "staker-col": "斯塔克",
+            "search-placeholder": "搜索质押者..."
         },
-        "back-to-proposals": "返回提案概览"
+        "back-to-proposals": "返回提案概览",
+        "you": "你"
     }
 }

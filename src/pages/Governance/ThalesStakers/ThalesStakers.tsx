@@ -10,8 +10,8 @@ import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
 import { Staker } from 'types/governance';
-import SearchMarket from 'pages/Options/Home/SearchMarket';
 import ThalesStakersTable from './ThalesStakersTable';
+import SearchStakers from '../components/SearchStakers';
 
 enum OrderDirection {
     NONE,
@@ -69,7 +69,7 @@ const ThalesStakers: React.FC = () => {
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>
-                <SearchMarket assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
+                <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
             </FlexDivRowCentered>
             <ThalesStakersTable
                 stakers={addressSearch ? searchFilteredStakers : filteredStakers}

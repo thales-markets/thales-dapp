@@ -1,6 +1,7 @@
 import snapshot from '@snapshot-labs/snapshot.js';
 // import { getCurrentTimestampSeconds } from 'utils/formatters/date';
 import { ethers } from 'ethers';
+import { truncateAddress, truncateText } from './formatters/string';
 
 export function getENSForAddresses(addresses: any[]) {
     return new Promise((resolve, reject) => {
@@ -56,20 +57,17 @@ export async function getProfiles(addresses: any) {
     );
 }
 
-// export const expired = (end?: number) => {
-//     if (!end) return true;
-//     if (getCurrentTimestampSeconds() > end) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// };
+export function getUsername(address: string, youText: string, profile: any, walletAddress: string, short = true) {
+    if (address.toLowerCase() === walletAddress.toLowerCase()) {
+        return youText;
+    }
 
-// export const pending = (start?: number) => {
-//     if (!start) return true;
-//     if (getCurrentTimestampSeconds() < start) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// };
+    if (profile) {
+        if (profile.ens) {
+            return short ? truncateText(profile.ens, 12) : profile.ens;
+        }
+        return short ? truncateAddress(address) : address;
+    }
+
+    return short ? truncateAddress(address) : address;
+}

@@ -3,7 +3,7 @@ import { FlexDivCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { formatNumberShort } from 'utils/formatters/number';
 import voting from 'utils/voting';
-import { truncateAddress, truncateText } from 'utils/formatters/string';
+import { truncateText } from 'utils/formatters/string';
 import {
     Blockie,
     VoteLabel,
@@ -20,6 +20,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 import { ProposalTypeEnum } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
+import { getUsername } from 'utils/governance';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getWalletAddress } from 'redux/modules/wallet';
 
 type HistoryProps = {
     proposal: Proposal;
@@ -28,6 +32,7 @@ type HistoryProps = {
 
 const History: React.FC<HistoryProps> = ({ proposal, votes }) => {
     const { t } = useTranslation();
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const spaceSymbol = proposal.space.symbol;
     const isWeightedChoice = proposal.type === ProposalTypeEnum.Weighted;
     const hasVotes = votes.length > 0;
@@ -54,7 +59,24 @@ const History: React.FC<HistoryProps> = ({ proposal, votes }) => {
                                     >
                                         <FlexDivCentered>
                                             <Blockie src={makeBlockie(vote.voter)} />
-                                            <VoteLabel>{truncateAddress(vote.voter)}</VoteLabel>
+                                            <LightMediumTooltip
+                                                title={getUsername(
+                                                    vote.voter,
+                                                    t(`governance.you`),
+                                                    vote.profile,
+                                                    walletAddress,
+                                                    false
+                                                )}
+                                            >
+                                                <VoteLabel>
+                                                    {getUsername(
+                                                        vote.voter,
+                                                        t(`governance.you`),
+                                                        vote.profile,
+                                                        walletAddress
+                                                    )}
+                                                </VoteLabel>
+                                            </LightMediumTooltip>
                                         </FlexDivCentered>
                                     </StyledLink>
                                     <LightMediumTooltip title={votes}>

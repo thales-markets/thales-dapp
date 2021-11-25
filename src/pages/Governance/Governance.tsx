@@ -164,6 +164,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                                 spaceKey={SpaceKey.TIPS}
                                                 onItemClick={setSelectedProposal}
                                                 statusFilter={statusFilter}
+                                                resetFilters={() => setStatusFilter(StatusEnum.All)}
                                             />
                                         )}
                                         {selectedTab === SpaceKey.COUNCIL && (
@@ -171,6 +172,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                                 spaceKey={SpaceKey.COUNCIL}
                                                 onItemClick={setSelectedProposal}
                                                 statusFilter={statusFilter}
+                                                resetFilters={() => setStatusFilter(StatusEnum.All)}
                                             />
                                         )}
                                         {selectedTab === SpaceKey.THALES_STAKERS && <ThalesStakers />}

@@ -925,6 +925,7 @@
     },
     "governance": {
         "title": "Governance",
+        "you": "You",
         "tabs": {
             "tips": "TIPS",
             "council": "Council",
@@ -951,7 +952,9 @@
             "end-date-label": "End date",
             "details-label": "Details",
             "starts-in-label": "Starts in",
-            "ends-in-label": "Ends in"
+            "ends-in-label": "Ends in",
+            "no-proposals-found": "No proposals found",
+            "view-all-proposals": "View all proposals"
         },
         "no-votes": "No votes on this proposal",
         "stakers": {
@@ -961,7 +964,8 @@
             "tooltip-escrowed-amount": "escrowed amount",
             "no-stakers-found": "No stakers found",
             "view-all-stakers": "View all stakers",
-            "number-of-stakers": "Total number of stakers"
+            "number-of-stakers": "Total number of stakers",
+            "search-placeholder": "Search stakers..."
         }
     }
 }

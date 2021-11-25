@@ -53,10 +53,10 @@ export type Vote = {
 };
 
 export interface MappedVotes extends Vote {
-    // profile: {
-    //     ens: string;
-    //     address: string;
-    // };
+    profile: {
+        ens: string;
+        address: string;
+    };
     scores: number[];
     balance: number;
 }

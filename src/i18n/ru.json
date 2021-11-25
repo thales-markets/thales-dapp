@@ -944,7 +944,9 @@
             "end-date-label": "Дата окончания",
             "author-label": "Автор",
             "ends-in-label": "Заканчивается через",
-            "starts-in-label": "Начинается в"
+            "starts-in-label": "Начинается в",
+            "view-all-proposals": "Просмотреть все предложения",
+            "no-proposals-found": "Предложений не найдено"
         },
         "title": "Управление",
         "no-votes": "Нет голосов по этому предложению",
@@ -960,8 +962,10 @@
             "tooltip-staked-directly": "поставил прямо",
             "tooltip-escrowed-amount": "депонированная сумма",
             "staker-col": "Стейкер",
-            "view-all-stakers": "Посмотреть всех нападающих"
+            "view-all-stakers": "Посмотреть всех нападающих",
+            "search-placeholder": "Искать стейкеров ..."
         },
-        "back-to-proposals": "Назад к обзору предложений"
+        "back-to-proposals": "Назад к обзору предложений",
+        "you": "Ты"
     }
 }

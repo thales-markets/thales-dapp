@@ -7,56 +7,7 @@ import { snapshotEndpoint, SpaceKey } from 'constants/governance';
 import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import voting from 'utils/voting';
-
-// export function getENSForAddresses(addresses: any[]) {
-//     return new Promise((resolve, reject) => {
-//         snapshot.utils
-//             .subgraphRequest('https://api.thegraph.com/subgraphs/name/ensdomains/ens', {
-//                 accounts: {
-//                     __args: {
-//                         first: 1000,
-//                         where: {
-//                             id_in: addresses.map((addresses: string) => addresses.toLowerCase()),
-//                         },
-//                     },
-//                     id: true,
-//                     domains: {
-//                         __args: {
-//                             first: 2,
-//                         },
-//                         name: true,
-//                         labelName: true,
-//                     },
-//                 },
-//             })
-//             .then(({ accounts }: { accounts: any }) => {
-//                 const ensNames = {} as any;
-//                 accounts.forEach((profile: any) => {
-//                     ensNames[ethers.utils.getAddress(profile.id)] = profile.domains[0] ? profile.domains[0].name : null;
-//                 });
-//                 resolve(ensNames);
-//             })
-//             .catch((error: any) => {
-//                 reject(error);
-//             });
-//     });
-// }
-
-// export async function getProfiles(addresses: any) {
-//     let ensNames = [] as any;
-
-//     [ensNames] = await Promise.all([getENSForAddresses(addresses)]);
-
-//     const profiles = Object.fromEntries(addresses.map((address: any) => [address, {}]));
-
-//     return Object.fromEntries(
-//         Object.entries(profiles).map(([address, profile]) => {
-//             profile.ens = ensNames[ethers.utils.getAddress(address)] || '';
-//             profile.address = ethers.utils.getAddress(address);
-//             return [address, profile];
-//         })
-//     );
-// }
+import { getProfiles } from 'utils/governance';
 
 const useProposalQuery = (
     spaceKey: SpaceKey,
@@ -144,10 +95,10 @@ const useProposalQuery = (
 
             console.log(proposal.strategies, block, voterAddresses.length);
 
-            const [scores /*, profiles*/] = await Promise.all([
+            const [scores, profiles] = await Promise.all([
                 snapshot.utils.getScores(spaceKey, proposal.strategies, space.network, voterAddresses, block),
                 /* Get scores and ENS/3Box profiles */
-                // getProfiles(voterAddresses),
+                getProfiles(voterAddresses),
             ]);
 
             let mappedVotes = votes as MappedVotes[];
@@ -159,7 +110,7 @@ const useProposalQuery = (
                             (_: SpaceStrategy, key: number) => scores[key][getAddress(vote.voter)] || 0
                         );
                         vote.balance = vote.scores.reduce((a: number, b: number) => a + b, 0);
-                        // vote.profile = profiles[getAddress(vote.voter)];
+                        vote.profile = profiles[getAddress(vote.voter)];
                         return vote;
                     })
                     .filter((vote) => vote.balance > 0)
@@ -175,24 +126,6 @@ const useProposalQuery = (
                 resultsByStrategyScore: votingClass.resultsByStrategyScore(),
                 sumOfResultsBalance: votingClass.sumOfResultsBalance(),
             };
-
-            /* Apply dilution penalties for SIP/SCCP pages */
-            // if (spaceKey === SPACE_KEY.PROPOSAL) {
-            //     const contract = new ethers.Contract(CouncilDilution.address, CouncilDilution.abi, ctx.provider as any);
-            //     mappedVotes = await Promise.all(
-            //         mappedVotes.map(async (vote) => {
-            //             const dilutedValueBN = await contract.getDilutedWeightForProposal(hash, getAddress(vote.voter));
-            //             const diluteValueNumber = Number(ethers.utils.formatEther(dilutedValueBN));
-
-            //             const dilutedResult = vote.balance * diluteValueNumber;
-            //             return {
-            //                 ...vote,
-            //                 balance: dilutedResult,
-            //                 scores: [dilutedResult],
-            //             };
-            //         })
-            //     );
-            // }
 
             const returnVoteHistory = () => {
                 if (walletAddress && voterAddresses.includes(getAddress(walletAddress))) {
