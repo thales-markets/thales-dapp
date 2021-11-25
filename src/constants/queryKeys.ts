@@ -124,6 +124,7 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         CouncilMembers: () => ['governance', 'councilMembers'],
+        ThalesStakers: (networkId: NetworkId) => ['governance', 'thalesStakers', networkId],
     },
 };
 

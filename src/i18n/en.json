@@ -925,7 +925,14 @@
     },
     "governance": {
         "title": "Governance",
+        "tabs": {
+            "tips": "TIPS",
+            "council": "Council",
+            "thales-stakers": "Thales stakers"
+        },
+        "back-to-proposals": "Back to proposals overview",
         "status": {
+            "all": "all",
             "pending": "draft",
             "active": "voting",
             "closed": "closed"
@@ -942,8 +949,19 @@
             "snapshot-label": "Snapshot",
             "start-date-label": "Start date",
             "end-date-label": "End date",
-            "details-label": "Details"
+            "details-label": "Details",
+            "starts-in-label": "Starts in",
+            "ends-in-label": "Ends in"
         },
-        "no-votes": "No votes on this proposal"
+        "no-votes": "No votes on this proposal",
+        "stakers": {
+            "staker-col": "Staker",
+            "total-staked-col": "Total staked amount",
+            "tooltip-staked-directly": "staked directly",
+            "tooltip-escrowed-amount": "escrowed amount",
+            "no-stakers-found": "No stakers found",
+            "view-all-stakers": "View all stakers",
+            "number-of-stakers": "Total number of stakers"
+        }
     }
 }

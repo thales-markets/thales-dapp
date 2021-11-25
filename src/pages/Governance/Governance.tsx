@@ -20,6 +20,7 @@ import request, { gql } from 'graphql-request';
 import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
 import StatusDropdown from './components/StatusDropdown';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
+import ThalesStakers from './ThalesStakers';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -72,7 +73,13 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     useEffect(() => {
         const { params } = props.match;
 
-        if (params && params.space && (params.space === SpaceKey.TIPS || params.space === SpaceKey.COUNCIL)) {
+        if (
+            params &&
+            params.space &&
+            (params.space === SpaceKey.TIPS ||
+                params.space === SpaceKey.COUNCIL ||
+                params.space === SpaceKey.THALES_STAKERS)
+        ) {
             if (params.id) {
                 fetchPreloadedProposal();
             } else {
@@ -90,11 +97,15 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         () => [
             {
                 id: SpaceKey.TIPS,
-                name: 'TIPS',
+                name: t(`governance.tabs.tips`),
             },
             {
                 id: SpaceKey.COUNCIL,
-                name: 'Council',
+                name: t(`governance.tabs.council`),
+            },
+            {
+                id: SpaceKey.THALES_STAKERS,
+                name: t(`governance.tabs.thales-stakers`),
             },
         ],
         [t]
@@ -106,7 +117,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                 {networkId && isNetworkSupported(networkId) ? (
                     <>
                         <MarketHeader route={ROUTES.Governance.Home} />
-                        <Title style={{ alignSelf: 'flex-start' }}>Governance</Title>
+                        <Title>{t(`governance.title`)}</Title>
                         <BackLinkWrapper>
                             {selectedProposal && (
                                 <BackLink
@@ -116,15 +127,15 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                     }}
                                 >
                                     <ArrowIcon />
-                                    Back to proposals overview
+                                    {t(`governance.back-to-proposals`)}
                                 </BackLink>
                             )}
                         </BackLinkWrapper>
-                        <FlexDivRow style={{ width: '100%' }}>
+                        <Container>
                             <MainContentContainer>
                                 {!selectedProposal && (
                                     <>
-                                        <FlexDivRow>
+                                        <OptionsTabWrapper>
                                             <OptionsTabContainer>
                                                 {optionsTabContent.map((tab, index) => (
                                                     <OptionsTab
@@ -141,17 +152,28 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                                     </OptionsTab>
                                                 ))}
                                             </OptionsTabContainer>
-                                            <StatusDropdown activeStatus={statusFilter} onSelect={setStatusFilter} />
-                                        </FlexDivRow>
+                                            {selectedTab !== SpaceKey.THALES_STAKERS && (
+                                                <StatusDropdown
+                                                    activeStatus={statusFilter}
+                                                    onSelect={setStatusFilter}
+                                                />
+                                            )}
+                                        </OptionsTabWrapper>
                                         {selectedTab === SpaceKey.TIPS && (
-                                            <ProposalList spaceKey={SpaceKey.TIPS} onItemClick={setSelectedProposal} />
+                                            <ProposalList
+                                                spaceKey={SpaceKey.TIPS}
+                                                onItemClick={setSelectedProposal}
+                                                statusFilter={statusFilter}
+                                            />
                                         )}
                                         {selectedTab === SpaceKey.COUNCIL && (
                                             <ProposalList
                                                 spaceKey={SpaceKey.COUNCIL}
                                                 onItemClick={setSelectedProposal}
+                                                statusFilter={statusFilter}
                                             />
                                         )}
+                                        {selectedTab === SpaceKey.THALES_STAKERS && <ThalesStakers />}
                                     </>
                                 )}
                                 {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
@@ -167,7 +189,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             )}
                             {selectedProposal && (
                                 <SidebarContainer>
-                                    <SidebarWrapper style={{ marginBottom: 20 }}>
+                                    <SidebarWrapper>
                                         <Sidebar>
                                             <SidebarDetails proposal={selectedProposal} type="results" />
                                         </Sidebar>
@@ -179,7 +201,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                     </SidebarWrapper>
                                 </SidebarContainer>
                             )}
-                        </FlexDivRow>
+                        </Container>
                     </>
                 ) : (
                     <Loader />
@@ -189,12 +211,16 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     );
 };
 
+const Container = styled(FlexDivRow)`
+    width: 100%;
+`;
+
 const MainContentContainer = styled.div`
     width: 66%;
     background: #04045a;
     border: 1px solid rgba(202, 145, 220, 0.2);
     border-radius: 5px;
-    padding: 25px 30px;
+    padding: 25px 0px;
 `;
 
 const SidebarContainer = styled(FlexDivColumn)`
@@ -206,12 +232,19 @@ const SidebarWrapper = styled.div`
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     border-radius: 5px;
     padding: 1px;
+    &:first-child {
+        margin-bottom: 20px;
+    }
 `;
 
 const Sidebar = styled.div`
     background: #04045a;
     border-radius: 5px;
     padding: 10px 0px 0px 0px;
+`;
+
+const OptionsTabWrapper = styled(FlexDivRow)`
+    padding: 0 30px;
 `;
 
 const OptionsTabContainer = styled(FlexDiv)`
@@ -246,6 +279,7 @@ const Title = styled.p`
     font-size: 39px;
     padding-bottom: 25px;
     color: #f6f6fe;
+    align-self: flex-start;
     @media (max-width: 1024px) {
         font-size: 31px;
         padding-top: 30px;

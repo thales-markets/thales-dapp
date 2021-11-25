@@ -1,6 +1,7 @@
 export enum SpaceKey {
     COUNCIL = 'thalescouncil.eth',
     TIPS = 'thalesgov.eth',
+    THALES_STAKERS = 'thales-stakers',
 }
 
 export const snapshotEndpoint = 'https://hub.snapshot.org/graphql';

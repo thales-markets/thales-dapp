@@ -51,6 +51,7 @@ export type Vote = {
     choice: any;
     metadata: any;
 };
+
 export interface MappedVotes extends Vote {
     // profile: {
     //     ens: string;
@@ -64,3 +65,14 @@ export type ProposalResults = {
     votes: any;
     results: any;
 };
+
+export type Staker = {
+    id: string;
+    timestamp: number;
+    stakedAmount: number;
+    escrowedAmount: number;
+    totalStakedAmount: number;
+    unstakingAmount: number;
+};
+
+export type Stakers = Staker[];

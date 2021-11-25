@@ -86,7 +86,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
 };
 
 const Container = styled(FlexDivColumnCentered)`
-    padding: 10px;
+    padding: 10px 40px;
 `;
 
 const StatusContainer = styled(FlexDivColumnCentered)`

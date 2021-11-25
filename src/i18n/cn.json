@@ -927,7 +927,8 @@
         "status": {
             "active": "表决",
             "pending": "草案",
-            "closed": "关闭"
+            "closed": "关闭",
+            "all": "全部"
         },
         "sidebar": {
             "title": {
@@ -941,9 +942,26 @@
             "author-label": "作者",
             "status-label": "地位",
             "start-date-label": "开始日期",
-            "snapshot-label": "快照"
+            "snapshot-label": "快照",
+            "starts-in-label": "开始于",
+            "ends-in-label": "结束于"
         },
         "title": "治理",
-        "no-votes": "没有对该提案的投票"
+        "no-votes": "没有对该提案的投票",
+        "tabs": {
+            "tips": "提示",
+            "council": "理事会",
+            "thales-stakers": "泰雷兹前锋"
+        },
+        "stakers": {
+            "tooltip-escrowed-amount": "托管金额",
+            "number-of-stakers": "质押者总数",
+            "no-stakers-found": "没有找到质押者",
+            "total-staked-col": "总质押金额",
+            "view-all-stakers": "查看所有前锋",
+            "tooltip-staked-directly": "直接质押",
+            "staker-col": "斯塔克"
+        },
+        "back-to-proposals": "返回提案概览"
     }
 }

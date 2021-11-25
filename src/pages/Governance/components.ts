@@ -123,6 +123,13 @@ export const ArrowIcon = styled(ArrowHyperlinkIcon)`
     margin-left: 4px;
 `;
 
+export const ArrowIconMedium = styled(ArrowHyperlinkIcon)`
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+    margin-top: 5px;
+`;
+
 export const getColor = (status: string) => {
     switch (status) {
         case StatusEnum.Pending:

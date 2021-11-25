@@ -4,6 +4,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { StatusEnum } from 'constants/governance';
 import { ReactComponent as DownIcon } from 'assets/images/down.svg';
+import { useTranslation } from 'react-i18next';
 
 type StatusDropdownProps = {
     activeStatus: StatusEnum;
@@ -11,6 +12,7 @@ type StatusDropdownProps = {
 };
 
 export const StatusDropdown: React.FC<StatusDropdownProps> = ({ activeStatus, onSelect }) => {
+    const { t } = useTranslation();
     const [statusDropdownIsOpen, setStatusDropdownIsOpen] = useState(false);
     const setDropdownIsOpen = (isOpen: boolean) => {
         if (!isOpen && !statusDropdownIsOpen) {
@@ -23,17 +25,17 @@ export const StatusDropdown: React.FC<StatusDropdownProps> = ({ activeStatus, on
         <>
             <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
                 <Container>
-                    <LanguageButton
+                    <StatusButton
                         onClick={() => {
                             setDropdownIsOpen(!statusDropdownIsOpen);
                         }}
                         isActive={statusDropdownIsOpen}
                     >
                         <InnerButton>
-                            <FlexDiv>{activeStatus}</FlexDiv>
+                            <FlexDiv>{t(`governance.status.${activeStatus}`)}</FlexDiv>
                             <StyledDownIcon />
                         </InnerButton>
-                    </LanguageButton>
+                    </StatusButton>
                     {statusDropdownIsOpen && (
                         <DropdownContainer>
                             <DropDown>
@@ -46,7 +48,7 @@ export const StatusDropdown: React.FC<StatusDropdownProps> = ({ activeStatus, on
                                         }}
                                     >
                                         <FlexDivCentered>
-                                            <LanguageName>{status}</LanguageName>
+                                            <StatusName>{t(`governance.status.${status}`)}</StatusName>
                                         </FlexDivCentered>
                                     </DropDownItem>
                                 ))}
@@ -63,7 +65,7 @@ const Container = styled(FlexDivColumnCentered)`
     width: 140px;
 `;
 
-const LanguageButton = styled.button<{ isActive: boolean }>`
+const StatusButton = styled.button<{ isActive: boolean }>`
     position: relative;
     width: 140px;
     height: 40px;
@@ -114,7 +116,7 @@ const DropDownItem = styled(FlexDiv)`
     }
 `;
 
-const LanguageName = styled.div`
+const StatusName = styled.div`
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
