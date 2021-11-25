@@ -34,7 +34,7 @@ type ScoreboardProps = {
 
 type HeadCell = {
     id: number;
-    text: string;
+    text: any;
     sortable: boolean;
 };
 
@@ -118,11 +118,20 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
         }
     }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData]);
 
-    const HeadCells = [
-        { id: 1, text: t('options.royale.scoreboard.table-header.status'), sortable: true },
-        { id: 2, text: t('options.royale.scoreboard.table-header.avatar'), sortable: false },
-        { id: 3, text: t('options.royale.scoreboard.table-header.name'), sortable: true },
-        { id: 4, text: t('options.royale.scoreboard.table-header.number'), sortable: true },
+    const HeadCells: HeadCell[] = [
+        { id: 1, text: <Trans i18nKey="options.royale.scoreboard.table-header.status" />, sortable: true },
+        { id: 2, text: <Trans i18nKey="options.royale.scoreboard.table-header.avatar" />, sortable: false },
+        { id: 3, text: <Trans i18nKey="options.royale.scoreboard.table-header.name" />, sortable: true },
+        {
+            id: 4,
+            text: (
+                <Trans
+                    i18nKey="options.royale.scoreboard.table-header.number"
+                    components={{ sans: <span style={{ fontFamily: 'sans-serif !important' }} /> }}
+                />
+            ),
+            sortable: true,
+        },
     ];
     const calcDirection = (cell: HeadCell) => {
         if (orderBy === cell.id) {
@@ -234,7 +243,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                             )}
 
                             <UserLabel>
-                                {t('options.royale.scoreboard.player-no')}
+                                <Trans
+                                    i18nKey="options.royale.scoreboard.player-no"
+                                    components={{ sans: <span style={{ fontFamily: 'sans-serif !important' }} /> }}
+                                />
+
                                 {' #'}
                                 {user?.number}
                             </UserLabel>
@@ -303,7 +316,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
 
                         <TableRow>
                             {HeadCells.map((cell, key) => (
-                                <HeadCell
+                                <HeadCellUi
                                     style={{ cursor: cell.sortable ? 'pointer' : 'arrow' }}
                                     onClick={cell.sortable ? calcDirection.bind(this, cell) : () => {}}
                                     key={key}
@@ -326,7 +339,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                             )}
                                         </ArrowsWrapper>
                                     )}
-                                </HeadCell>
+                                </HeadCellUi>
                             ))}
                         </TableRow>
                         {usersForUi ? (
@@ -336,7 +349,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                     className={user.isAlive ? 'alive' : 'dead'}
                                     style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
                                 >
-                                    <HeadCell>
+                                    <HeadCellUi>
                                         <Status>
                                             <StatusAvatar
                                                 className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
@@ -348,10 +361,10 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                                     : ''}
                                             </span>
                                         </Status>
-                                    </HeadCell>
-                                    <HeadCell>{getAvatar(user)}</HeadCell>
-                                    <HeadCell style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCell>
-                                    <HeadCell style={{ marginLeft: 6 }}>#{user.number}</HeadCell>
+                                    </HeadCellUi>
+                                    <HeadCellUi>{getAvatar(user)}</HeadCellUi>
+                                    <HeadCellUi style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCellUi>
+                                    <HeadCellUi style={{ marginLeft: 6 }}>#{user.number}</HeadCellUi>
                                 </TableRow>
                             ))
                         ) : (
@@ -913,7 +926,9 @@ const TableRow = styled.div`
     }
 `;
 
-const HeadCell = styled(Text)`
+const HeadCellUi = styled(Text)`
+    cursor: pointer;
+    white-space: pre;
     font-family: Sansation !important;
     font-size: 20px;
     color: var(--color);
@@ -1000,6 +1015,7 @@ const InfoText = styled(Text)`
 
     strong {
         font-weight: bold;
+        font-family: SansationBold !important;
     }
 
     i {
@@ -1012,11 +1028,11 @@ const InfoText = styled(Text)`
 `;
 
 const Link = styled.a`
-    font-family: basis33 !important;
+    font-family: SansationBold !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 26px;
-    line-height: 24px;
+    font-size: 20px;
+    line-height: 20px;
     margin-left: 4px;
     text-align: justify;
     letter-spacing: -0.4px;

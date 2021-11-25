@@ -29,6 +29,11 @@
 }
 
 @font-face {
+    font-family: 'SansationBold';
+    src: local('SansationBold'), url(../assets/fonts/SansationLight/Sansation-Bold.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'VT323';
     src: local('VT323'), url(../assets/fonts/VT323/VT323-Regular.ttf) format('truetype');
 }

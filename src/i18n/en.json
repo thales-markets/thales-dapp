@@ -964,14 +964,14 @@
                 "info5": "All the information, rules, and detailed rounds & prize structure can be found here: ",
                 "info6": "<italic>Good luck and let the battle begin!</italic>",
                 "blog": "[Thales Royale blog post]",
-                "player-no": "Player №: ",
+                "player-no": "Player  <sans>№<sans>: ",
                 "eliminated": "You have been eliminated",
                 "period-expired": "Sign up period has expired",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
                     "name": "Display name",
-                    "number": "Player №"
+                    "number": "Player <sans>№<sans>"
                 },
                 "search": "Search player / Number",
                 "verification": "To Complete Verification!",
