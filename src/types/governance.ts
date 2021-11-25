@@ -62,6 +62,8 @@ export interface MappedVotes extends Vote {
 }
 
 export type ProposalResults = {
+    choices: any;
+    spaceSymbol: any;
     votes: any;
     results: any;
 };

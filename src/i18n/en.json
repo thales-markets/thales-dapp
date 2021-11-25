@@ -941,7 +941,8 @@
         "sidebar": {
             "title": {
                 "results": "Results",
-                "history": "Votes"
+                "history": "Votes",
+                "council-members": "Current council members"
             }
         },
         "proposal": {

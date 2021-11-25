@@ -933,7 +933,8 @@
         "sidebar": {
             "title": {
                 "results": "Полученные результаты",
-                "history": "Голоса"
+                "history": "Голоса",
+                "council-members": "Действующие члены совета"
             }
         },
         "proposal": {

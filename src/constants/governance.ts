@@ -19,3 +19,5 @@ export enum ProposalTypeEnum {
     Single = 'single-choice',
     Weighted = 'weighted',
 }
+
+export const COUNCIL_PROPOSAL_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';

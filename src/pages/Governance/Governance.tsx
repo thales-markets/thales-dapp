@@ -242,7 +242,7 @@ const SidebarWrapper = styled.div`
 const Sidebar = styled.div`
     background: #04045a;
     border-radius: 5px;
-    padding: 10px 0px 0px 0px;
+    padding: 15px 0px 0px 0px;
 `;
 
 const OptionsTabWrapper = styled(FlexDivRow)`

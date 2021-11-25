@@ -933,7 +933,8 @@
         "sidebar": {
             "title": {
                 "results": "结果",
-                "history": "投票"
+                "history": "投票",
+                "council-members": "现任理事会成员"
             }
         },
         "proposal": {

@@ -93,8 +93,6 @@ const useProposalQuery = (
 
             const block = parseInt(proposal.snapshot);
 
-            console.log(proposal.strategies, block, voterAddresses.length);
-
             const [scores, profiles] = await Promise.all([
                 snapshot.utils.getScores(spaceKey, proposal.strategies, space.network, voterAddresses, block),
                 /* Get scores and ENS/3Box profiles */
@@ -140,6 +138,8 @@ const useProposalQuery = (
             const voteList = returnVoteHistory();
 
             const proposalResults = {
+                choices: proposal.choices,
+                spaceSymbol: space.symbol,
                 results,
                 votes: voteList,
             };

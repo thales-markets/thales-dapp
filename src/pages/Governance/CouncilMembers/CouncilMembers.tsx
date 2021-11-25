@@ -1,56 +1,62 @@
-import React from 'react';
-import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivRow } from 'theme/common';
+import React, { useEffect, useState } from 'react';
+import { FlexDivColumnCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import useCouncilMembersQuery from 'queries/governance/useCouncilMembersQuery';
-import { getIsAppReady } from 'redux/modules/app';
-// import externalLink from 'remarkable-external-link';
+import { getWalletAddress } from 'redux/modules/wallet';
+import { ProposalResults } from 'types/governance';
+import useProposalQuery from 'queries/governance/useProposalQuery';
+import SimpleLoader from 'components/SimpleLoader';
+import {
+    LoaderContainer,
+    SidebarContent,
+    SidebarContentScrollWrapper,
+    SidebarTitle,
+    SidebarContentWrapper,
+} from 'pages/Governance/components';
+import { useTranslation } from 'react-i18next';
+import { COUNCIL_PROPOSAL_ID, SpaceKey } from 'constants/governance';
+import Results from '../ProposalDetails/Results';
 
 const CouncilMembers: React.FC = () => {
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const { t } = useTranslation();
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const proposalResultsQuery = useProposalQuery(SpaceKey.COUNCIL, COUNCIL_PROPOSAL_ID, walletAddress);
+    const [proposalResults, setProposalResults] = useState<ProposalResults | undefined>(undefined);
 
-    const councilMembersQuery = useCouncilMembersQuery({ enabled: isAppReady });
-    const councilMembers = councilMembersQuery.isSuccess && councilMembersQuery.data ? councilMembersQuery.data : [];
+    useEffect(() => {
+        if (proposalResultsQuery.isSuccess && proposalResultsQuery.data) {
+            setProposalResults(proposalResultsQuery.data);
+        }
+    }, [proposalResultsQuery.isSuccess, proposalResultsQuery.data]);
+
+    const isLoading = proposalResultsQuery.isLoading;
 
     return (
         <FlexDivColumnCentered>
-            <Title>Current council members</Title>
-            <Wrapper>
-                <Container>
-                    {councilMembers.map((member: any) => (
-                        <Row key={member.address}>{member.address}</Row>
-                    ))}
-                </Container>
-            </Wrapper>
+            <SidebarTitle>{t(`governance.sidebar.title.council-members`)}</SidebarTitle>
+            <SidebarContentWrapper>
+                {!isLoading && (
+                    <SidebarContentScrollWrapper maxHeight={1100}>
+                        <SidebarContent>
+                            {proposalResults && (
+                                <Results
+                                    proposalChoices={proposalResults.choices}
+                                    results={proposalResults.results}
+                                    spaceSymbol={proposalResults.spaceSymbol}
+                                    isCouncilResults={true}
+                                />
+                            )}
+                        </SidebarContent>
+                    </SidebarContentScrollWrapper>
+                )}
+                {isLoading && (
+                    <LoaderContainer>
+                        <SimpleLoader />
+                    </LoaderContainer>
+                )}
+            </SidebarContentWrapper>
         </FlexDivColumnCentered>
     );
 };
-
-const Title = styled(FlexDivColumnCentered)`
-    font-weight: 500;
-    font-size: 25px;
-    line-height: 48px;
-    color: #f6f6fe;
-    margin-bottom: 25px;
-    text-align: center;
-`;
-
-const Wrapper = styled(FlexDivColumn)`
-    background: linear-gradient(rgba(202, 145, 220, 0.3), rgba(106, 193, 213, 0.3));
-    padding: 1px 0;
-`;
-
-const Container = styled(FlexDivColumn)`
-    background-color: #04045a;
-`;
-
-const Row = styled(FlexDivRow)`
-    margin: 20px;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 36px;
-    color: #f6f6fe;
-`;
 
 export default CouncilMembers;

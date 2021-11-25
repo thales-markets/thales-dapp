@@ -44,10 +44,14 @@ const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
             <SidebarTitle>{t(`governance.sidebar.title.${type}`)}</SidebarTitle>
             <SidebarContentWrapper>
                 {!isLoading && (
-                    <SidebarContentScrollWrapper>
+                    <SidebarContentScrollWrapper maxHeight={type === 'results' ? 490 : 510}>
                         <SidebarContent type={type}>
                             {proposalResults && type === 'results' && (
-                                <Results proposal={proposal} results={proposalResults.results} />
+                                <Results
+                                    proposalChoices={proposalResults.choices}
+                                    results={proposalResults.results}
+                                    spaceSymbol={proposalResults.spaceSymbol}
+                                />
                             )}
                             {proposalResults && type === 'history' && (
                                 <History proposal={proposal} votes={proposalResults.votes} />

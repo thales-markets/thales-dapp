@@ -8,7 +8,7 @@ export const SidebarTitle = styled(FlexDivColumnCentered)`
     font-size: 25px;
     line-height: 48px;
     color: #f6f6fe;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     text-align: center;
 `;
 
@@ -18,20 +18,30 @@ export const SidebarContentWrapper = styled(FlexDivColumn)`
     border-radius: 0 0 5px 5px;
 `;
 
-export const SidebarContentScrollWrapper = styled(FlexDivColumn)`
-    max-height: 490px;
+export const SidebarContentScrollWrapper = styled(FlexDivColumn)<{ maxHeight?: number }>`
+    max-height: ${(props) => (props.maxHeight ? props.maxHeight : 490)}px;
     overflow: auto;
     border-radius: 0 0 5px 5px;
 `;
 
-export const SidebarContent = styled(FlexDivColumn)<{ type: string }>`
+export const SidebarContent = styled(FlexDivColumn)<{ type?: string }>`
     padding: ${(props) => (props.type === 'results' ? '10px 0 20px 0' : '0')};
     background-color: #04045a;
     border-radius: 0 0 5px 5px;
 `;
 
-export const ResultRow = styled(FlexDivColumnCentered)`
+export const ResultRow = styled(FlexDivColumnCentered)<{
+    backgroundColor?: string;
+    opacity?: number;
+    borderColor?: string;
+    paddingBottom?: number;
+    paddingTop?: number;
+}>`
     padding: 10px 20px;
+    background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : '#04045a')};
+    opacity: ${(props) => (props.opacity ? props.opacity : 1)};
+    border-bottom: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : 'none')};
+    padding-bottom: ${(props) => (props.paddingBottom ? props.paddingBottom : '10')}px;
 `;
 
 export const VoteRow = styled(FlexDivColumnCentered)`
