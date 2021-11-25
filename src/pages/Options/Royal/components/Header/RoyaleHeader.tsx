@@ -115,7 +115,6 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
 };
 
 const Header = styled.div`
-    z-index: 10;
     position: relative;
     padding-top: 35px;
     width: 100%;
@@ -181,6 +180,7 @@ const RoyaleLogo = styled.i`
 `;
 
 const MeatballsIcon = styled.i<{ position: string }>`
+    z-index: 5;
     line-height: 25px;
     font-size: 25px;
     cursor: pointer;
@@ -189,7 +189,6 @@ const MeatballsIcon = styled.i<{ position: string }>`
     right: 15px;
     @media (max-width: 1024px) {
         position: absolute;
-        z-index: 5;
     }
 `;
 
