@@ -81,6 +81,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         lineHeight: '22px',
                         display: 'flex',
                         flexDirection: 'row',
+                        justifyContent: 'center',
                     }}
                     href="/royale"
                 >
@@ -118,6 +119,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                         display: 'flex',
                         cursor: 'pointer',
                         flexDirection: 'row',
+                        justifyContent: 'center',
                     }}
                     onClick={switchToMainnetEthNetwork}
                 >
