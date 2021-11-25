@@ -128,20 +128,10 @@ const Header = styled.div`
     }
 `;
 
-const ThemeSelector = styled.div`
-    background: var(--color);
-    color: var(--color-wrapper);
-    border-radius: 50%;
-    font-size: 18px;
-    line-height: 20px;
-    font-weight: bold;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-`;
+const ThemeSelector = styled.div``;
 
 const ThemeText = styled.p`
-    font-family: SensationLight !important;
+    font-family: sans-serif !important;
     font-size: 10px;
     color: var(--color);
     text-transform: uppercase;
@@ -150,7 +140,7 @@ const ThemeText = styled.p`
 `;
 
 const ThemeIcon = styled.i`
-    background: var(--color-wrapper);
+    margin-right: -2px;
 `;
 const UtilWrapper = styled.div`
     display: flex;
