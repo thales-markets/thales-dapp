@@ -948,7 +948,10 @@
             "ends-in-label": "结束于",
             "no-proposals-found": "未找到任何提案",
             "view-all-proposals": "查看所有提案",
-            "vote-label": "投票"
+            "vote-label": "投票",
+            "vote-progress-label": "投票进行中...",
+            "vote-confirmation-message": "投票成功",
+            "vote-confirmation": "您确定要投票给“{{choice}}”吗？此操作无法撤消。"
         },
         "title": "治理",
         "no-votes": "没有对该提案的投票",

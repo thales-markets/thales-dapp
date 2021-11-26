@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import useProposalsQuery from 'queries/governance/useProposalsQuery';
-import { snapshotEndpoint, SpaceKey, StatusEnum } from 'constants/governance';
+import { SpaceKey, StatusEnum } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import ProposalCard from '../ProposalCard';
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ type ProposalListProps = {
 
 const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, statusFilter, resetFilters }) => {
     const { t } = useTranslation();
-    const proposalsQuery = useProposalsQuery(snapshotEndpoint, spaceKey);
+    const proposalsQuery = useProposalsQuery(spaceKey);
     const proposals = proposalsQuery.isSuccess && proposalsQuery.data ? proposalsQuery.data : [];
 
     const filteredProposals = useMemo(() => {

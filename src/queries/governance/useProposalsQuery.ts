@@ -1,15 +1,15 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import request, { gql } from 'graphql-request';
-import { SpaceKey } from 'constants/governance';
+import { SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 
-const useProposalsQuery = (snapshotEndpoint: string, spaceKey: SpaceKey, options?: UseQueryOptions<Proposal[]>) => {
+const useProposalsQuery = (spaceKey: SpaceKey, options?: UseQueryOptions<Proposal[]>) => {
     return useQuery<Proposal[]>(
         QUERY_KEYS.Governance.Proposals(spaceKey),
         async () => {
             const { proposals }: { proposals: Proposal[] } = await request(
-                snapshotEndpoint,
+                SNAPSHOT_GRAPHQL_URL,
                 gql`
                     query ProposalsForSpace($spaceKey: String) {
                         proposals(first: 10, where: { space: $spaceKey }, orderBy: "created", orderDirection: desc) {

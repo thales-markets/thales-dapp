@@ -3,7 +3,7 @@ import snapshot from '@snapshot-labs/snapshot.js';
 import { ethers } from 'ethers';
 import { uniqBy } from 'lodash';
 import request, { gql } from 'graphql-request';
-import { snapshotEndpoint, SpaceKey } from 'constants/governance';
+import { SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
 import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import voting from 'utils/voting';
@@ -21,7 +21,7 @@ const useProposalQuery = (
             const { getAddress } = ethers.utils;
 
             const { proposal }: { proposal: Proposal } = await request(
-                snapshotEndpoint,
+                SNAPSHOT_GRAPHQL_URL,
                 gql`
                     query Proposal($id: String) {
                         proposal(id: $id) {
@@ -50,7 +50,7 @@ const useProposalQuery = (
             );
 
             const { space }: { space: SpaceData } = await request(
-                snapshotEndpoint,
+                SNAPSHOT_GRAPHQL_URL,
                 gql`
                     query Space($spaceKey: String) {
                         space(id: $spaceKey) {
@@ -76,7 +76,7 @@ const useProposalQuery = (
             );
 
             const { votes }: { votes: Vote[] } = await request(
-                snapshotEndpoint,
+                SNAPSHOT_GRAPHQL_URL,
                 gql`
                     query Votes($proposal: String) {
                         votes(first: 1000, where: { proposal: $proposal }) {

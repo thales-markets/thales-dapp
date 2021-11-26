@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { StatusEnum } from 'constants/governance';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
 export const SidebarTitle = styled(FlexDivColumnCentered)`
     font-weight: 500;
@@ -165,4 +166,24 @@ export const Divider = styled.hr`
     width: 100%;
     border: none;
     border-top: 1px solid #748bc6;
+`;
+
+export const VoteContainer = styled(FlexDivColumnCentered)`
+    margin-top: 15px;
+`;
+
+export const VoteButton = styled(DefaultSubmitButton)`
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 264px;
+    height: 48px;
+`;
+
+export const VoteConfirmation = styled(FlexDiv)`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 34px;
+    color: #f6f6fe;
+    padding: 0 10px;
+    justify-content: center;
 `;

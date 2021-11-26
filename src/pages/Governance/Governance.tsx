@@ -10,7 +10,7 @@ import { isNetworkSupported } from 'utils/network';
 import MarketHeader from 'pages/Options/Home/MarketHeader';
 import Loader from 'components/Loader';
 import { Background, FlexDivCentered, FlexDivColumn, FlexDiv, Wrapper, FlexDivRow } from 'theme/common';
-import { snapshotEndpoint, SpaceKey, StatusEnum } from 'constants/governance';
+import { SNAPSHOT_GRAPHQL_URL, SpaceKey, StatusEnum } from 'constants/governance';
 import ProposalList from './ProposalList';
 import ProposalDetails from './ProposalDetails';
 import { Proposal } from 'types/governance';
@@ -38,7 +38,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         const fetch = async () => {
             const { params } = props.match;
             const { proposal }: { proposal: Proposal } = await request(
-                snapshotEndpoint,
+                SNAPSHOT_GRAPHQL_URL,
                 gql`
                     query Proposals($id: String) {
                         proposal(id: $id) {

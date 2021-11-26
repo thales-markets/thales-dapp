@@ -956,7 +956,10 @@
             "ends-in-label": "Ends in",
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
-            "vote-label": "Vote"
+            "vote-label": "Vote",
+            "vote-progress-label": "Voting in progress...",
+            "vote-confirmation-message": "Successfully voted",
+            "vote-confirmation": "Are you sure you want to vote \"{{choice}}\"? This action cannot be undone."
         },
         "no-votes": "No votes on this proposal",
         "stakers": {
