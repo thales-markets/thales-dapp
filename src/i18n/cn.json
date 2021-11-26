@@ -981,7 +981,9 @@
                 "eliminated": "你被淘汰了",
                 "position-period": "回合定位剩余时间",
                 "period-expired": "注册期已过",
-                "round-period": "回合{{round}}结束于"
+                "round-period": "回合{{round}}结束于",
+                "round-positioning": "定位结束于: ",
+                "thales-suffix": " | Thales"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",

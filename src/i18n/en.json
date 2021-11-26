@@ -979,7 +979,9 @@
                 "go-to": "Go to Thales discord channel ",
                 "verify": "#thales-royale-verify and type: ",
                 "placeholder": "!verify <Your Ethereum Address>",
-                "sign-up": "Sign Up"
+                "sign-up": "Sign Up",
+                "round-positioning": "Positioning ends in: ",
+                "thales-suffix": " | Thales"
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",

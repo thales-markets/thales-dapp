@@ -981,7 +981,9 @@
                 "eliminated": "Вы были исключены",
                 "position-period": "Время, оставшееся до места в Раунде",
                 "round-period": "Раунд {{round}} заканчивается через",
-                "period-expired": "Срок регистрации истек"
+                "period-expired": "Срок регистрации истек",
+                "round-positioning": "Позиционирование заканчивается через: ",
+                "thales-suffix": " | Thales"
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",

@@ -1,5 +1,5 @@
 import { signUp, startRoyale } from '../../getThalesRoyalData';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv, LoaderContainer } from 'theme/common';
 import styled from 'styled-components';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
@@ -456,6 +456,12 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
             : null
     );
 
+    const [counter, setCounter] = useState(0);
+
+    useInterval(async () => {
+        setCounter(counter + 1);
+    }, 1000);
+
     useInterval(async () => {
         if (!royaleData) return;
         setTimeLeftForPositioning(getTimeLeft(royaleData.roundStartTime, royaleData.roundChoosingLength));
@@ -466,6 +472,20 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
             )
         );
     }, 1000);
+
+    useEffect(() => {
+        const round = royaleData?.round;
+        timeLeftForPositioning
+            ? (document.title =
+                  t('options.royale.scoreboard.positioning-period') + format(timeLeftForPositioning, 'HH:mm:ss')) +
+              t('options.royale.scoreboard.thales-suffix')
+            : timeLeftInRound
+            ? (document.title =
+                  t('options.royale.scoreboard.round-period', { round }) + format(timeLeftInRound, 'HH:mm:ss')) +
+              t('options.royale.scoreboard.thales-suffix')
+            : '';
+    }, [timeLeftInRound, timeLeftForPositioning]);
+
     const getTitle = () => {
         if (!royaleData) return;
         if (royaleData.round === 0) {
