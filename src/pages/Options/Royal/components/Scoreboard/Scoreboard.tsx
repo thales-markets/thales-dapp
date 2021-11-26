@@ -370,7 +370,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                     </HeadCellUi>
                                     <HeadCellUi
                                         winner={user.isAlive && royaleData.finished}
-                                        style={{ marginRight: 6, textDecoration: '' }}
+                                        style={{
+                                            marginRight: 6,
+                                            textDecoration: '',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}
                                     >
                                         {user.name}
                                     </HeadCellUi>
