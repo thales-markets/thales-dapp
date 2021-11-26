@@ -1,28 +1,28 @@
-import { signUp, startRoyale } from '../../getThalesRoyalData';
-import React, { useEffect, useMemo, useState } from 'react';
-import { FlexDivCentered, FlexDivColumn, Text, Image, FlexDiv, LoaderContainer } from 'theme/common';
-import styled from 'styled-components';
-import TimeRemaining from 'pages/Options/components/TimeRemaining';
-import { useTranslation, Trans } from 'react-i18next';
-import triangle from 'assets/images/royale/triangle.svg';
+import { Modal } from '@material-ui/core';
 import circle from 'assets/images/royale/circle.svg';
-import notVerified from 'assets/images/royale/not-verified.svg';
-import notSigned from 'assets/images/royale/not-signed.svg';
 import important from 'assets/images/royale/important.svg';
+import notSigned from 'assets/images/royale/not-signed.svg';
+import notVerified from 'assets/images/royale/not-verified.svg';
+import triangle from 'assets/images/royale/triangle.svg';
+import SimpleLoader from 'components/SimpleLoader';
+import format from 'date-fns/format';
+import useInterval from 'hooks/useInterval';
+import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
-import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, LoaderContainer, Text } from 'theme/common';
 import { truncateAddress } from 'utils/formatters/string';
-import { RoyaleTooltip } from 'pages/Options/Market/components';
-import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
-import { Modal } from '@material-ui/core';
-import SimpleLoader from 'components/SimpleLoader';
+import { signUp, startRoyale } from '../../getThalesRoyalData';
+import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
-import { Positions } from '../../Queries/usePositionsQuery';
 import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
-import useInterval from 'hooks/useInterval';
-import format from 'date-fns/format';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -475,15 +475,17 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
 
     useEffect(() => {
         const round = royaleData?.round;
-        timeLeftForPositioning
+        timeLeftForPositioning && timeLeftForPositioning?.getHours() === 0
             ? (document.title =
-                  t('options.royale.scoreboard.positioning-period') + format(timeLeftForPositioning, 'HH:mm:ss')) +
-              t('options.royale.scoreboard.thales-suffix')
-            : timeLeftInRound
+                  format(timeLeftForPositioning, 'mm:ss') +
+                  t('options.royale.scoreboard.round-positioning') +
+                  t('options.royale.scoreboard.thales-suffix'))
+            : timeLeftInRound && timeLeftInRound.getHours() === 0
             ? (document.title =
-                  t('options.royale.scoreboard.round-period', { round }) + format(timeLeftInRound, 'HH:mm:ss')) +
-              t('options.royale.scoreboard.thales-suffix')
-            : '';
+                  format(timeLeftInRound, 'mm:ss') +
+                  t('options.royale.scoreboard.round-ending', { round }) +
+                  t('options.royale.scoreboard.thales-suffix'))
+            : 'Thales: Binary options trading powered by Synthetix.';
     }, [timeLeftInRound, timeLeftForPositioning]);
 
     const getTitle = () => {

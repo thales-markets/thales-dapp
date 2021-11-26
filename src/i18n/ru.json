@@ -982,8 +982,10 @@
                 "position-period": "Время, оставшееся до места в Раунде",
                 "round-period": "Раунд {{round}} заканчивается через",
                 "period-expired": "Срок регистрации истек",
-                "round-positioning": "Позиционирование заканчивается через: ",
-                "thales-suffix": " | Thales"
+                "round-positioning": " пока не закончится позиционирование",
+                "round-ending": " до конца раунда {{round}}",
+                "thales-suffix": " | Thales",
+                "thales-default": "Thales: Торговля бинарными опционами на платформе Synthetix."
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",
