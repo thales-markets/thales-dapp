@@ -9,8 +9,11 @@ import { formatShortDateWithTime } from 'utils/formatters/date';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
 import { formatCurrency } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
-import { ArrowIcon, getColor, StyledLink } from '../components';
+import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink } from '../components';
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { ProposalTypeEnum, StatusEnum } from 'constants/governance';
+import SingleChoiceVoting from './Voting/SingleChoiceVoting';
+import WeightedVoting from './Voting/WeightedVoting';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
@@ -78,13 +81,18 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                     </FlexDivRowCentered>
                 </DetailsContainer>
             </FlexDivRow>
-            <BodyTitle>{t(`governance.proposal.details-label`)}</BodyTitle>
+            <DetailsTitle>{t(`governance.proposal.details-label`)}</DetailsTitle>
             <Divider />
             <Body dangerouslySetInnerHTML={getRawMarkup(proposal.body)}></Body>
+            {proposal.state === StatusEnum.Active && proposal.type === ProposalTypeEnum.Single && (
+                <SingleChoiceVoting proposal={proposal} />
+            )}
+            {proposal.state === StatusEnum.Active && proposal.type === ProposalTypeEnum.Weighted && (
+                <WeightedVoting proposal={proposal} />
+            )}
         </Container>
     );
 };
-
 const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
 `;
@@ -113,22 +121,6 @@ const DetailsContainer = styled(FlexDivColumnCentered)`
     &:first-child {
         margin-right: 40px;
     }
-`;
-
-const BodyTitle = styled(FlexDivRow)`
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    color: #ffffff;
-    margin-bottom: 10px;
-    margin-top: 40px;
-`;
-
-const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 1px solid #748bc6;
 `;
 
 const Label = styled.span`

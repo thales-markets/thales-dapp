@@ -955,7 +955,8 @@
             "starts-in-label": "Starts in",
             "ends-in-label": "Ends in",
             "no-proposals-found": "No proposals found",
-            "view-all-proposals": "View all proposals"
+            "view-all-proposals": "View all proposals",
+            "vote-label": "Vote"
         },
         "no-votes": "No votes on this proposal",
         "stakers": {

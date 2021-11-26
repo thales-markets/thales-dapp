@@ -150,3 +150,19 @@ export const getColor = (status: string) => {
             return '#64D9FE';
     }
 };
+
+export const DetailsTitle = styled(FlexDivRow)`
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 5px;
+    margin-top: 40px;
+`;
+
+export const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 1px solid #748bc6;
+`;

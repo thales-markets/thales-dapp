@@ -947,7 +947,8 @@
             "starts-in-label": "开始于",
             "ends-in-label": "结束于",
             "no-proposals-found": "未找到任何提案",
-            "view-all-proposals": "查看所有提案"
+            "view-all-proposals": "查看所有提案",
+            "vote-label": "投票"
         },
         "title": "治理",
         "no-votes": "没有对该提案的投票",
