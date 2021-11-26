@@ -85,16 +85,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                     }}
                     href="/royale"
                 >
-                    <i
-                        className="icon icon--left"
-                        style={{
-                            color: '#04045a',
-                            fontSize: 20,
-                            position: 'absolute',
-                            display: 'block',
-                            marginRight: '59%',
-                        }}
-                    />
+                    <i className="icon icon--left redirect-dialog-icon redirect-dialog-icon--left" />
                     {t('options.royale.redirect-dialog.message')}
                 </Link>
                 <Text
@@ -124,16 +115,7 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
                     onClick={switchToMainnetEthNetwork}
                 >
                     {t('options.royale.redirect-dialog.switch-to-mainnet')}
-                    <i
-                        className="icon icon--right"
-                        style={{
-                            color: '#04045a',
-                            fontSize: 20,
-                            position: 'absolute',
-                            display: 'block',
-                            marginLeft: '62%',
-                        }}
-                    />
+                    <i className="icon icon--right redirect-dialog-icon redirect-dialog-icon--right" />
                 </Link>
             </DialogTitle>
         </StyledModal>
