@@ -979,7 +979,11 @@
                 "go-to": "Go to Thales discord channel ",
                 "verify": "#thales-royale-verify and type: ",
                 "placeholder": "!verify <Your Ethereum Address>",
-                "sign-up": "Sign Up"
+                "sign-up": "Sign Up",
+                "round-positioning": " until positioning ends",
+                "round-ending": " until round {{round}} ends",
+                "thales-suffix": " | Thales",
+                "thales-default": "Thales: Binary options trading powered by Synthetix."
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",

@@ -98,7 +98,7 @@ const ThalesRoyal: React.FC = () => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
-        }, 2000);
+        }, 2500);
 
         return () => clearTimeout(timeout);
     }, [walletAddress]);
