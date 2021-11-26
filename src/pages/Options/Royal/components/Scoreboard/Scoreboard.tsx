@@ -349,12 +349,15 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                     className={user.isAlive ? 'alive' : 'dead'}
                                     style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
                                 >
-                                    <HeadCellUi>
+                                    <HeadCellUi winner={user.isAlive && royaleData.finished}>
                                         <Status>
                                             <StatusAvatar
+                                                winner={user.isAlive && royaleData.finished}
                                                 className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
                                             />
-                                            <span>{user.isAlive ? 'alive' : 'dead'}</span>
+                                            <span>
+                                                {user.isAlive ? (royaleData.finished ? 'winner' : 'alive') : 'dead'}
+                                            </span>
                                             <span>
                                                 {!user.isAlive
                                                     ? t('options.royale.footer.rd') + ': ' + user.deathRound
@@ -362,9 +365,18 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                             </span>
                                         </Status>
                                     </HeadCellUi>
-                                    <HeadCellUi>{getAvatar(user)}</HeadCellUi>
-                                    <HeadCellUi style={{ marginRight: 6, textDecoration: '' }}>{user.name}</HeadCellUi>
-                                    <HeadCellUi style={{ marginLeft: 6 }}>#{user.number}</HeadCellUi>
+                                    <HeadCellUi winner={user.isAlive && royaleData.finished}>
+                                        {getAvatar(user, royaleData)}
+                                    </HeadCellUi>
+                                    <HeadCellUi
+                                        winner={user.isAlive && royaleData.finished}
+                                        style={{ marginRight: 6, textDecoration: '' }}
+                                    >
+                                        {user.name}
+                                    </HeadCellUi>
+                                    <HeadCellUi winner={user.isAlive && royaleData.finished} style={{ marginLeft: 6 }}>
+                                        #{user.number}
+                                    </HeadCellUi>
                                 </TableRow>
                             ))
                         ) : (
@@ -561,9 +573,9 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     );
 };
 
-const getAvatar = (user: User) => {
+const getAvatar = (user: User, royaleData: ThalesRoyalData) => {
     if (user.status === UserStatus.RDY) {
-        return <UserAvatar src={user.avatar} />;
+        return <UserAvatar winner={user.isAlive && royaleData.finished} src={user.avatar} />;
     }
     if (user.status === UserStatus.NOTVERIFIED) {
         return (
@@ -814,17 +826,20 @@ const Button = styled.button`
     }
 `;
 
-const UserAvatar = styled(Image)`
+const UserAvatar = styled(Image)<{ winner?: boolean }>`
     width: 44px;
     height: 44px;
     border-radius: 50%50%;
+    border: ${(props) => (props.winner ? '2px solid #FFE489' : 'none')};
+    filter: ${(props) => (props.winner ? 'drop-shadow(0px 0px 15px rgba(255, 232, 155, 0.7))' : 'none')};
     @media (max-width: 1024px) {
         width: 40px;
         height: 40px;
     }
 `;
 
-const StatusAvatar = styled.i`
+const StatusAvatar = styled.i<{ winner?: boolean }>`
+    color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
     font-size: 35px;
     @media (max-width: 1024px) {
         font-size: 30px;
@@ -926,12 +941,12 @@ const TableRow = styled.div`
     }
 `;
 
-const HeadCellUi = styled(Text)`
+const HeadCellUi = styled(Text)<{ winner?: boolean }>`
     cursor: pointer;
     white-space: pre;
     font-family: Sansation !important;
     font-size: 20px;
-    color: var(--color);
+    color: ${(props) => (props.winner ? '#FFE489' : 'var(--color)')};
     @media (max-width: 1024px) {
         font-size: 15px;
     }

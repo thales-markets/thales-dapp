@@ -22,6 +22,7 @@ export type ThalesRoyalData = {
     canStartRoyale: boolean;
     priceFeedAddress: string;
     playerSignedUp: boolean;
+    finished: boolean;
 };
 
 type RoundInformation = {
@@ -72,6 +73,7 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         signUpPeriod,
         canCloseRound,
         canStartRoyale,
+        finished,
     ] = await Promise.all([
         RoyalContract.getPlayers(),
         RoyalContract.getAlivePlayers(),
@@ -87,6 +89,7 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         RoyalContract.signUpPeriod(),
         RoyalContract.canCloseRound(),
         RoyalContract.canStartRoyale(),
+        RoyalContract.finished(),
     ]);
 
     const roundsInformation = [];
@@ -122,5 +125,6 @@ const getFromContract = async (RoyalContract: ethers.Contract, walletAddress: st
         priceFeedAddress,
         canStartRoyale,
         playerSignedUp,
+        finished,
     };
 };

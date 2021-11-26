@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import format from 'date-fns/format';
@@ -68,6 +68,8 @@ const renderRounds = (
             dispatchMarketNotification('Successfully submitted');
         }
     };
+
+    const isWinner = isPlayerAlive && royaleData.finished;
 
     for (let index = 1; index <= rounds; index++) {
         index === round
@@ -155,11 +157,13 @@ const renderRounds = (
                   </NextRound>
               );
     }
-    cards.push(
-        <WinnerCard id={`round${rounds + 1}`}>
-            <img style={{ height: '100%' }} src={winnerCard} />
-        </WinnerCard>
-    );
+    if (isWinner) {
+        cards.push(
+            <WinnerCard id={`round${rounds + 1}`} key={'winner'}>
+                <img style={{ height: '100%' }} src={winnerCard} />
+            </WinnerCard>
+        );
+    }
     return cards;
 };
 
@@ -174,6 +178,7 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
     const [timeLeftInRound, setTimeLeftInRound] = useState<Date | null>(
         getTimeLeft(roundStartTime, (roundEndTime.getTime() - roundStartTime.getTime()) / 1000)
     );
+    const isWinner = useMemo(() => royaleData.isPlayerAlive && royaleData.finished, [royaleData]);
 
     useInterval(async () => {
         setTimeLeftForPositioning(getTimeLeft(roundStartTime, roundChoosingLength));
@@ -206,12 +211,13 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
     }, [round, currentScrollRound]);
 
     useEffect(() => {
-        const currentRoundElement = document.getElementById(`round${round}`);
+        const roundToJumpTo = isWinner ? 7 : round;
+        const currentRoundElement = document.getElementById(`round${roundToJumpTo}`);
         if (currentRoundElement) {
             currentRoundElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
-            setCurrentScrollRound(round);
+            setCurrentScrollRound(roundToJumpTo);
         }
-    }, [round, showBattle]);
+    }, [round, showBattle, isWinner]);
 
     return (
         <>
@@ -226,7 +232,9 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     </ScrollWrapper>
                 </CardWrapper>
                 <ArrowRight
-                    onMouseDown={() => setCurrentScrollRound(Math.min(currentScrollRound + 1, royaleData.rounds + 1))}
+                    onMouseDown={() =>
+                        setCurrentScrollRound(Math.min(currentScrollRound + 1, royaleData.rounds + (isWinner ? 1 : 0)))
+                    }
                     className="icon icon--right"
                 />
                 <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
