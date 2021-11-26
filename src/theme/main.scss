@@ -161,7 +161,7 @@ table {
     background: #44e1e2;
 }
 *::-webkit-scrollbar-thumb:hover {
-    background: rgb(67, 116, 255);
+    background: var(--color-scrollbar-hover, rgb(67, 116, 255));
 }
 
 input::-webkit-outer-spin-button,
@@ -190,6 +190,7 @@ body {
         --color-background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
         --color-wrapper: #04045a;
         --color: #64d9fe;
+        --color-scrollbar-hover: #3995b3;
     }
     &.dark-theme {
         --scrollbar-width: 6px;
@@ -198,6 +199,7 @@ body {
         --color-background: linear-gradient(180deg, #1e4c39 0%, #07150f 117.72%);
         --color-wrapper: #133326;
         --color: #a1e1b4;
+        --color-scrollbar-hover: #6e967a;
     }
 }
 
