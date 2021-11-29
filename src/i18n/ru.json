@@ -154,7 +154,8 @@
             "leaderboard-label": "Лидеры",
             "quick-trading-label": "Быстрая торговля",
             "quick-trading-label-competition": "Kонк. быстрая торговля",
-            "earn-label": "THALES"
+            "earn-label": "THALES",
+            "royale-label": "Thales Royale"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -516,14 +517,14 @@
                 "strike-burn-label": "Ожог удара",
                 "rank-label": "Ранг",
                 "total-burned": "Общий ожог",
-                "burned-last-houry": "Ожог за последний час"
+                "burned-last-hour": "Ожог за последний час"
             },
             "widgets": {
                 "trading-phase-widget": "Востребовать опционы",
                 "maturity-phase-widget": "Использовать опционы",
                 "orderbook-widget": "Таблица заказов",
                 "trade-widget": "Торговля",
-                "chart-trading-view-widget  ": "Торговая точка зрения",
+                "chart-trading-view-widget": "Торговая точка зрения",
                 "chart-options-price-widget": "Цена опционов",
                 "recent-transactions-widget": "Недавняя торговля на рынке",
                 "your-transactions-widget": "Ваша торговля",
@@ -792,7 +793,8 @@
                 "tab-title": "Торговая конкуренция",
                 "competition-period": "Выбранный период",
                 "disqualified": "Дисквалифицирован",
-                "current-rank": "Ваше текущее звание"
+                "current-rank": "Ваше текущее звание",
+                "unverified": "Непроверенный"
             },
             "board": {
                 "tab-title": "Таблица лидеров"
@@ -919,6 +921,96 @@
                 "tooltip": "Если у вас возникли проблемы с размещением заказа, отметьте эту опцию, чтобы попробовать устаревшую подпись. У некоторых кошельков (например Trezor) возникают проблемы с подписью, и выбор этой опции может решить проблему."
             },
             "ratio": "Соотношение"
+        },
+        "royale": {
+            "battle": {
+                "round": "Круглый",
+                "will-be": "Будет",
+                "time-left": "Время до конца раунда",
+                "close-round": "Закрыть раунд",
+                "time-left-in-round": "Время до конца раунда",
+                "time-left-for-positioning": "Осталось время для позиционирования",
+                "in": "в",
+                "was": "Было",
+                "players": "Игроки",
+                "eliminated": "Устранено",
+                "ended": "Закончено"
+            },
+            "header": {
+                "theme": "Тема"
+            },
+            "footer": {
+                "price": "Цена",
+                "reward-per-player": "Награда на игрока",
+                "players-alive": "Игроки живы",
+                "current": "Текущий",
+                "vs": "против",
+                "up": "ВВЕРХ",
+                "down": "ВНИЗ",
+                "rd": "Круглый",
+                "scoreboard": "Табло",
+                "royale": "Рояль",
+                "you-were-eliminated-in": "Вы были исключены в",
+                "current-reward-per-player": "Текущая награда на игрока",
+                "current-positions": "Текущие должности",
+                "stats": "Статистика",
+                "price-source": "Источник: канал Optimism Chainlink ETH"
+            },
+            "scoreboard": {
+                "player-no": "№ игрока:",
+                "blog": "[Сообщение в блоге Thales Royale]",
+                "starts": "Thales Royale начинается в:",
+                "info2": "Thales Royale - это <bold> последовательная игра в угадывание, в которую играют в 7 раундов. </bold> После окончания периода регистрации начинается первый раунд, и участникам предоставляются 3 параметра: актив, цена исполнения и очень дата закрытия забастовки.",
+                "info5": "Всю <bold> информацию, правила, подробную информацию о раундах и структуре призов </bold> можно найти здесь:",
+                "info6": "<italic> Удачи и пусть битва начнется! </italic>",
+                "info1": "Покажи нам в этой эпической битве предсказаний: <bold> Thales Royale </bold>",
+                "question": "Есть ли у вас все необходимое, чтобы победить в соревновании и выйти в финальный раунд?",
+                "info3": "На основе этой информации участники <bold> должны выбрать, будут ли они думать, что текущая цена будет выше (△) или ниже (◯) </bold>, чем цена исполнения на дату исполнения.",
+                "info4": "Те, кто угадали правильно, переходят в следующий раунд. Игроки, вышедшие в финальный раунд, делят приз.",
+                "table-header": {
+                    "status": "Положение дел",
+                    "name": "Отображаемое имя",
+                    "number": "№ игрока",
+                    "avatar": "Аватар"
+                },
+                "round-starts": "Следующий раунд начинается через:",
+                "ends": "Thales Royale заканчивается:",
+                "sign-up": "Зарегистрироваться",
+                "search": "Поиск игрока / числа",
+                "verification": "Для завершения проверки!",
+                "start-royale": "Запустить Thales Royale",
+                "go-to": "Перейдите на канал Thales Discord ",
+                "verify": "#thales-royale-verify и введите:",
+                "placeholder": "!verify <Ваш адрес Ethereum>",
+                "eliminated": "Вы были исключены",
+                "position-period": "Время, оставшееся до места в Раунде",
+                "round-period": "Раунд {{round}} заканчивается через",
+                "period-expired": "Срок регистрации истек",
+                "round-positioning": " пока не закончится позиционирование",
+                "round-ending": " до конца раунда {{round}}",
+                "thales-suffix": " | Thales",
+                "thales-default": "Thales: Торговля бинарными опционами на платформе Synthetix.",
+                "dead": "мертвых",
+                "winner": "победитель",
+                "alive": "в живых"
+            },
+            "redirect-dialog": {
+                "title": "Вы в сети Optimistic Kovan",
+                "message": "Вернитесь в Thales Royale",
+                "or": "или",
+                "switch-to-mainnet": "Переключитесь на основную сеть Ethereum"
+            },
+            "wrong-network-dialog": {
+                "title": "Неправильная сеть!",
+                "message": "Чтобы продолжить, переключитесь на Optimistic Kovan",
+                "button": "Переключиться на Optimistic Kovan",
+                "parameters": "Параметры ОП Кован"
+            },
+            "wallet-not-connected-dialog": {
+                "button": "Подключить кошелек",
+                "title": "Кошелек не подключен",
+                "message": "Пожалуйста, подключите свой кошелек, чтобы продолжить"
+            }
         }
     }
 }

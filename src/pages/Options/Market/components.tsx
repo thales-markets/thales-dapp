@@ -372,18 +372,26 @@ type TooltipIconProps = {
     children: any;
 };
 
-const StyledDarkTooltip = withStyles(() => ({
+const StyledRoyaleTooltip = withStyles(() => ({
     arrow: {
-        color: '#0A2E66',
+        color: 'var(--color-wrapper)',
+        width: '20px !important',
+        height: '16px !important',
+        marginLeft: '0 !important',
+        marginBottom: '-14px !important',
+        '&::before': {
+            border: '2px solid var(--color)',
+        },
     },
     tooltip: {
-        background: '#0A2E66',
+        background: 'var(--color-wrapper)',
         borderRadius: '10px',
+        border: '2px solid var(--color)',
         padding: '10px',
-        fontSize: '10px',
+        fontSize: '12px',
         lineHeight: '16px',
         letterSpacing: '0.4px',
-        color: '#F6F6FE',
+        color: 'var(--color)',
     },
 }))(MaterialTooltip);
 
@@ -414,10 +422,10 @@ export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disa
     </StyledLightTooltip>
 );
 
-export const DarkTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
-    <StyledDarkTooltip title={<span>{title}</span>} placement="top" arrow={true}>
+export const RoyaleTooltip: React.FC<TooltipIconProps> = ({ title, children }) => (
+    <StyledRoyaleTooltip title={<span>{title}</span>} placement="top" arrow={true}>
         {children}
-    </StyledDarkTooltip>
+    </StyledRoyaleTooltip>
 );
 
 export const ProtocolFeeContainer = styled(FlexDivRow)`
