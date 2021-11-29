@@ -129,6 +129,8 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                                                     ? cell.id === 1
                                                         ? { cursor: 'pointer', textAlign: 'left', paddingLeft: '70px' }
                                                         : { cursor: 'pointer' }
+                                                    : cell.id === 1
+                                                    ? { textAlign: 'left', paddingLeft: '80px' }
                                                     : {}
                                             }
                                         >

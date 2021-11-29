@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -9,9 +9,10 @@ import styled from 'styled-components';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import useThalesStakersQuery from 'queries/governance/useThalesStakersQuery';
-import { Staker } from 'types/governance';
+import { EnsNames, Staker, Stakers } from 'types/governance';
 import ThalesStakersTable from './ThalesStakersTable';
 import SearchStakers from '../components/SearchStakers';
+import snxJSConnector from 'utils/snxJSConnector';
 
 enum OrderDirection {
     NONE,
@@ -28,11 +29,27 @@ const ThalesStakers: React.FC = () => {
     const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
     const [addressSearch, setAddressSearch] = useState<string>('');
+    const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
 
     const stakersQuery = useThalesStakersQuery(networkId, {
         enabled: isAppReady,
     });
     const stakers: Staker[] = stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : [];
+
+    useEffect(() => {
+        const getEnsNames = async (stakers: Stakers) => {
+            const records: EnsNames = {};
+            const names = await Promise.all(
+                stakers.map((staker: Staker) => (snxJSConnector as any).provider.lookupAddress(staker.id))
+            );
+            for (let index = 0; index < stakers.length; index++) {
+                records[stakers[index].id] = names[index];
+            }
+            setEnsNames(records);
+        };
+
+        getEnsNames(stakers);
+    }, [stakers]);
 
     const filteredStakers = useMemo(() => {
         return stakers.sort((a, b) => {
@@ -47,15 +64,23 @@ const ThalesStakers: React.FC = () => {
         });
     }, [stakers, orderBy, orderDirection]);
 
+    const findByEnsName = (address: string) => {
+        if (ensNames && ensNames[address]) {
+            const ensName = ensNames[address];
+            return ensName !== null && ensName.toLowerCase().includes(addressSearch.toLowerCase());
+        }
+        return false;
+    };
+
     const searchFilteredStakers = useDebouncedMemo(
         () => {
             return addressSearch
                 ? filteredStakers.filter((staker: Staker) => {
-                      return staker.id.toLowerCase().includes(addressSearch.toLowerCase());
+                      return staker.id.toLowerCase().includes(addressSearch.toLowerCase()) || findByEnsName(staker.id);
                   })
                 : filteredStakers;
         },
-        [filteredStakers, addressSearch],
+        [filteredStakers, addressSearch, orderBy, orderDirection],
         DEFAULT_SEARCH_DEBOUNCE_MS
     );
 

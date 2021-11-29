@@ -76,3 +76,5 @@ export type Staker = {
 };
 
 export type Stakers = Staker[];
+
+export type EnsNames = Record<string, string | null>;

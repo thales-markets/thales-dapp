@@ -29,9 +29,7 @@ type ResultsProps = {
 
 const Results: React.FC<ResultsProps> = ({ proposalResults, isCouncilResults, isLoading, showAll }) => {
     const { t } = useTranslation();
-    const [viewCount, setViewCount] = useState<number>(
-        showAll && proposalResults ? proposalResults.choices.length : 10
-    );
+    const [viewCount, setViewCount] = useState<number>(showAll ? 1000 : 10);
 
     const choices = useMemo(() => {
         if (proposalResults) {
