@@ -923,6 +923,9 @@
             "ratio": "Ratio"
         },
         "royale": {
+            "header": {
+                "theme": "Theme"
+            },
             "footer": {
                 "current": "Current",
                 "price": "Price",

@@ -94,7 +94,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                                     <ThemeIcon className="icon icon--g-theme" />
                                 )}
                             </ThemeSelector>
-                            <ThemeText>Theme</ThemeText>
+                            <ThemeText>{t('options.royale.header.theme')}</ThemeText>
                         </BorderedWrapper>
                         <LanguageSelectorRoyale />
                     </BurgerMenu>

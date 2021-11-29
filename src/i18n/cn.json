@@ -935,6 +935,9 @@
                 "eliminated": "淘汰",
                 "players": "球员"
             },
+            "header": {
+                "theme": "主题"
+            },
             "footer": {
                 "price": "价钱",
                 "players-alive": "活着的玩家",
@@ -956,7 +959,7 @@
                 "player-no": "玩家编号：",
                 "starts": "Thales Royale 开始于：",
                 "info4": "猜对的人晋级下一轮。进入最后一轮的玩家平分奖金。",
-                "info6": "<bold>祝你好运，让战斗开始！</bold>",
+                "info6": "<italic> 祝你好运，让战斗开始！</italic>",
                 "blog": "[泰雷兹皇家博文]",
                 "info2": "Thales Royale 是一个 <bold>连续 7 轮的猜谜游戏。</bold>注册期结束后，第一轮开始，参与者会看到 3 个参数：资产、执行价格和非常限时罢工日期。",
                 "question": "您有能力击败比赛并进入最后一轮吗？",
