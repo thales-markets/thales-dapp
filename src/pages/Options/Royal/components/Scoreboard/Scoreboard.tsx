@@ -23,6 +23,7 @@ import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
+import DiscordImage from 'assets/images/royale/discord.png';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -594,7 +595,11 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                         bold: <strong />,
                     }}
                 />
-                <Link href="" target="_blank" rel="noreferrer">
+                <Link
+                    href="https://thalesmarket.medium.com/thales-royale-a-predictions-game-where-the-winner-s-takes-all-a268f9ec6ec8"
+                    target="_blank"
+                    rel="noreferrer"
+                >
                     {t('options.royale.scoreboard.blog')}
                 </Link>
             </InfoText>
@@ -612,7 +617,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
 
 const getAvatar = (user: User, royaleData: ThalesRoyalData) => {
     if (user.status === UserStatus.RDY) {
-        return <UserAvatar winner={user.isAlive && royaleData.finished} src={user.avatar} />;
+        return <UserAvatar winner={user.isAlive && royaleData.finished} src={user.avatar || DiscordImage} />;
     }
     if (user.status === UserStatus.NOTVERIFIED) {
         return (
