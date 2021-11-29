@@ -113,6 +113,9 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+        html.classList.remove(theme === Theme.Light ? 'dark-theme' : 'light-theme');
+        html.classList.add(theme !== Theme.Light ? 'dark-theme' : 'light-theme');
         body.classList.remove(theme === Theme.Light ? 'dark-theme' : 'light-theme');
         body.classList.add(theme !== Theme.Light ? 'dark-theme' : 'light-theme');
     }, [theme]);
