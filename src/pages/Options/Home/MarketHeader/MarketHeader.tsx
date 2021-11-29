@@ -23,6 +23,8 @@ import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-defau
 import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
 import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
+import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
+import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -188,8 +190,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     )}
                     <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
                         <SidebarItem
-                            imgSrc={marketOverviewDefaultIcon}
-                            imgSrcHoverSelected={marketOverviewSelectedIcon}
+                            imgSrc={royaleDefaultIcon}
+                            imgSrcHoverSelected={royaleSelectedIcon}
                             className={route === ROUTES.Options.Royal ? 'selected' : ''}
                         >
                             <SidebarIcon />
