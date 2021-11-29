@@ -145,6 +145,9 @@ table {
     -webkit-tap-highlight-color: transparent;
     scrollbar-color: var(--color, #355dff) var(--color-wrapper, #04045a);
     scrollbar-width: thin;
+    &.dark-theme {
+        scrollbar-color: #a1e1b4 #133326;
+    }
 }
 
 *::-webkit-scrollbar {
