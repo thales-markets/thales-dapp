@@ -1,7 +1,3 @@
-import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import axios from 'axios';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
@@ -11,24 +7,18 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
+import { get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { isMainNet, formatGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import {
-    AMOUNT_PERCENTAGE,
-    OrderPeriod,
-    OrderPeriodItem,
-    ORDER_PERIOD_IN_SECONDS,
-    ORDER_PERIOD_ITEMS_MAP,
-} from 'constants/options';
+import { AMOUNT_PERCENTAGE, OrderPeriod, OrderPeriodItem, ORDER_PERIOD_ITEMS_MAP } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import {
     Container,
@@ -49,7 +39,7 @@ import {
     StyledQuestionMarkIcon,
     LightTooltip,
 } from 'pages/Options/Market/components';
-import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
@@ -57,11 +47,11 @@ import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
 import { COLORS } from 'constants/ui';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
-import { dispatchMarketNotification } from '../../../../../utils/options';
 import ExpirationDropdown from '../components/ExpirationDropdown';
-import { MetamaskSubprovider } from '@0x/subproviders';
+
 import Checkbox from 'components/Checkbox';
 import styled from 'styled-components';
+import { createOneInchLimitOrder, getAllBuyOrdersForToken, getAllSellOrdersForToken } from 'utils/1inch';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -80,7 +70,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     defaultOrderSide,
     defaultPrice,
     defaultAmount,
-    onPlaceOrder,
 }) => {
     const { t } = useTranslation();
     const optionsMarket = market || useMarketContext();
@@ -171,20 +160,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         insufficientBalance ||
         !isPriceValid;
 
-    const getOrderEndDate = () => {
-        let orderEndDate = 0;
-        if (expiration) {
-            orderEndDate =
-                expiration === OrderPeriod.TRADING_END
-                    ? Math.round(optionsMarket.timeRemaining / 1000)
-                    : expiration === OrderPeriod.CUSTOM
-                    ? Math.round(new Date().getTime() / 1000) +
-                      Math.round(Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])
-                    : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
-        }
-        return toBigNumber(orderEndDate);
-    };
-
     useEffect(() => {
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
@@ -237,81 +212,77 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         setTxErrorMessage(null);
         setIsSubmitting(true);
 
-        const baseUrl = get0xBaseURL(networkId);
-        const placeOrderUrl = `${baseUrl}sra/v4/order`;
+        const newMakerAmount = isBuy ? Number(amount) * Number(price) : amount;
+        const newTakerAmount = isBuy ? amount : Number(amount) * Number(price);
 
-        const makerAmount = Web3Wrapper.toBaseUnitAmount(
-            toBigNumber(isBuy ? Number(amount) * Number(price) : amount),
-            DEFAULT_TOKEN_DECIMALS
-        );
-        const takerAmount = Web3Wrapper.toBaseUnitAmount(
-            toBigNumber(isBuy ? amount : Number(amount) * Number(price)),
-            DEFAULT_TOKEN_DECIMALS
-        );
-        const expiry = getOrderEndDate();
-        const salt = generatePseudoRandomSalt();
-        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        if (isMainNet(networkId)) {
-            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
-        }
+        console.log(newMakerAmount.toString(), newTakerAmount.toString());
 
-        try {
-            const createSignedOrderV4Async = async () => {
-                const order = new LimitOrder({
-                    makerToken,
-                    takerToken,
-                    makerAmount,
-                    takerAmount,
-                    maker: walletAddress,
-                    sender: NULL_ADDRESS,
-                    pool,
-                    expiry,
-                    salt,
-                    chainId: networkId,
-                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                    feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-                });
+        // const amountMaker = isBuy ? Number(amount) * Number(price) : amount;
+        // const amountTaker = isBuy ? amount : Number(amount) * Number(price);
+        console.log('maker: ', makerToken, takerToken);
 
-                try {
-                    const signature = useLegacySigning
-                        ? await order.getSignatureWithProviderAsync(
-                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-                          )
-                        : await order.getSignatureWithProviderAsync(
-                              (snxJSConnector.signer?.provider as any).provider,
-                              SignatureType.EIP712
-                          );
-                    return { ...order, signature };
-                } catch (e) {
-                    console.log(e);
-                }
-            };
+        getAllSellOrdersForToken(networkId, '0x8a40a97A0F92Bb48398A769D6038e1EfaA172f20');
+        getAllBuyOrdersForToken(networkId, '0x8a40a97A0F92Bb48398A769D6038e1EfaA172f20');
 
-            const signedOrder = await createSignedOrderV4Async();
+        await createOneInchLimitOrder(walletAddress, networkId, makerToken, takerToken, newMakerAmount, newTakerAmount);
 
-            try {
-                await axios({
-                    method: 'POST',
-                    url: placeOrderUrl,
-                    data: signedOrder,
-                });
-                dispatchMarketNotification(
-                    t('options.market.trade-options.place-order.confirm-button.confirmation-message')
-                );
-                refetchOrderbook(baseToken);
-                refetchOrders(networkId);
-                resetForm();
-                onPlaceOrder && onPlaceOrder();
-            } catch (err) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsSubmitting(false);
-            }
-            setIsSubmitting(false);
-        } catch (e) {
-            console.error(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            setIsSubmitting(false);
-        }
+        // try {
+        //     const createSignedOrderV4Async = async () => {
+        //         const order = new LimitOrder({
+        //             makerToken,
+        //             takerToken,
+        //             makerAmount,
+        //             takerAmount,
+        //             maker: walletAddress,
+        //             sender: NULL_ADDRESS,
+        //             pool,
+        //             expiry,
+        //             salt,
+        //             chainId: networkId,
+        //             verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
+        //             feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
+        //         });
+
+        //         try {
+        //             const signature = useLegacySigning
+        //                 ? await order.getSignatureWithProviderAsync(
+        //                       new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
+        //                   )
+        //                 : await order.getSignatureWithProviderAsync(
+        //                       (snxJSConnector.signer?.provider as any).provider,
+        //                       SignatureType.EIP712
+        //                   );
+        //             return { ...order, signature };
+        //         } catch (e) {
+        //             console.log(e);
+        //         }
+        //     };
+
+        //     const signedOrder = await createSignedOrderV4Async();
+
+        //     try {
+        //         await axios({
+        //             method: 'POST',
+        //             url: placeOrderUrl,
+        //             data: signedOrder,
+        //         });
+        //         dispatchMarketNotification(
+        //             t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+        //         );
+        //         refetchOrderbook(baseToken);
+        //         refetchOrders(networkId);
+        //         resetForm();
+        //         onPlaceOrder && onPlaceOrder();
+        //     } catch (err) {
+        //         setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+        //         setIsSubmitting(false);
+        //     }
+        //     setIsSubmitting(false);
+        // } catch (e) {
+        //     console.error(e);
+        //     setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+        //     setIsSubmitting(false);
+        // }
     };
 
     const calculateAmount = (percentage: number) => {
