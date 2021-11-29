@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered, FlexDiv, FlexDivSpaceBetween } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { DetailsTitle, Divider, VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
+import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -18,9 +18,10 @@ import voting from 'utils/voting';
 
 type WeightedVotingProps = {
     proposal: Proposal;
+    hasVotingRights: boolean;
 };
 
-const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal }) => {
+const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRights }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number[]>(new Array(proposal.choices.length + 1).fill(0));
@@ -63,8 +64,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal }) => {
                 }),
             };
 
-            console.log(msg);
-
             msg.sig = await (snxJSConnector as any).signer.signMessage(msg.msg);
 
             await axios.post(SNAPSHOT_MESSAGE_API_URL, msg, {
@@ -95,8 +94,6 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal }) => {
 
     return (
         <>
-            <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
-            <Divider />
             <VoteContainer>
                 {proposal.choices.map((choice: any, i: number) => {
                     const selectedChoiceValue = selectedChoices[i + 1] ?? 0;
@@ -147,14 +144,14 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal }) => {
                         </Weighted>
                     );
                 })}
-                {isOptionSelected && (
+                {isOptionSelected && hasVotingRights && (
                     <VoteConfirmation>
                         {t(`governance.proposal.vote-confirmation`, { choice: formattedChoiceString })}
                     </VoteConfirmation>
                 )}
             </VoteContainer>
             <FlexDivCentered>
-                <VoteButton disabled={!isOptionSelected || isVoting} onClick={handleVote}>
+                <VoteButton disabled={!isOptionSelected || isVoting || !hasVotingRights} onClick={handleVote}>
                     {!isVoting ? t(`governance.proposal.vote-label`) : t(`governance.proposal.vote-progress-label`)}
                 </VoteButton>
             </FlexDivCentered>

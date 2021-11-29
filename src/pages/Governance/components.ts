@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDiv, FlexDivRow, FlexDivCentered } from 'theme/common';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { StatusEnum } from 'constants/governance';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
@@ -17,12 +17,7 @@ export const SidebarContentWrapper = styled(FlexDivColumn)`
     background: linear-gradient(270deg, #516aff 0%, #8208fc 100%);
     padding: 1px 0 0 0;
     border-radius: 0 0 5px 5px;
-`;
-
-export const SidebarContentScrollWrapper = styled(FlexDivColumn)<{ maxHeight?: number }>`
-    max-height: ${(props) => (props.maxHeight ? props.maxHeight : 490)}px;
-    overflow: auto;
-    border-radius: 0 0 5px 5px;
+    height: 100%;
 `;
 
 export const SidebarContent = styled(FlexDivColumn)<{ type?: string }>`
@@ -43,6 +38,7 @@ export const ResultRow = styled(FlexDivColumnCentered)<{
     opacity: ${(props) => (props.opacity ? props.opacity : 1)};
     border-bottom: ${(props) => (props.borderColor ? `1px solid ${props.borderColor}` : 'none')};
     padding-bottom: ${(props) => (props.paddingBottom ? props.paddingBottom : '10')}px;
+    border-radius: ${(props) => (props.borderColor ? 0 : 5)}px;
 `;
 
 export const VoteRow = styled(FlexDivColumnCentered)`
@@ -89,11 +85,12 @@ export const VoteLabel = styled.div`
 
 export const Votes = styled.div``;
 
-export const LoaderContainer = styled(FlexDivColumn)`
-    min-height: 400px;
+export const LoaderContainer = styled(FlexDivColumn)<{ height?: number }>`
+    min-height: ${(props) => (props.height ? props.height : 400)}px;
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
+    border-radius: 0 0 5px 5px;
 `;
 
 export const NoVotes = styled(FlexDivColumn)`
@@ -106,6 +103,7 @@ export const NoVotes = styled(FlexDivColumn)`
     line-height: 24px;
     text-align: center;
     color: #f6f6fe;
+    border-radius: 5px;
 `;
 
 export const Blockie = styled.img`
@@ -186,4 +184,32 @@ export const VoteConfirmation = styled(FlexDiv)`
     color: #f6f6fe;
     padding: 0 10px;
     justify-content: center;
+`;
+
+export const ViewMore = styled(FlexDivCentered)<{ padding?: string }>`
+    width: 100px;
+    padding: ${(props) => (props.padding ? props.padding : '10px')};
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 36px;
+    color: #f6f6fe;
+    &:hover {
+        cursor: pointer;
+        color: #00f9ff;
+    }
+`;
+
+export const VotesCount = styled(FlexDivColumnCentered)`
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 48px;
+    color: #f6f6fe;
+    margin-bottom: 12px;
+    text-align: center;
+    background: #4564ae;
+    border-radius: 9999px;
+    height: 30px;
+    min-width: 30px;
+    padding: 8px 8px 6px 8px;
+    margin-left: 8px;
 `;

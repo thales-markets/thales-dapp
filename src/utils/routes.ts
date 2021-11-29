@@ -21,7 +21,7 @@ export const buildHref = (route: string) => `${ifIpfsDeployment ? '#' : ''}${rou
 export const navigateToOptionsMarket = (marketAddress: string, option?: string, replacePath = false) =>
     navigateTo(buildOptionsMarketLink(marketAddress, option), replacePath);
 
-export const navigateToGovernance = (spaceKey?: SpaceKey, id?: string, replacePath = true) =>
+export const navigateToGovernance = (spaceKey?: SpaceKey, id?: string, replacePath = false) =>
     navigateTo(`${ROUTES.Governance.Home}/${spaceKey ? spaceKey : ''}/${id ? id : ''}`, replacePath);
 
 export { history };

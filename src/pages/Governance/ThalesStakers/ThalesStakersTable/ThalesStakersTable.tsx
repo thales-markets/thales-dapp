@@ -22,6 +22,7 @@ import { FlexDiv } from 'theme/common';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
+import snxJSConnector from 'utils/snxJSConnector';
 
 interface HeadCell {
     id: keyof Staker[];
@@ -178,7 +179,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                                             >
                                                 <FlexDiv style={{ textAlign: 'left' }}>
                                                     <Blockie src={makeBlockie(staker.id)} style={{ marginBottom: 2 }} />
-                                                    <Address>{truncateAddress(staker.id)}</Address>
+                                                    <StakerCell staker={staker} />
                                                     <ArrowIconMedium />
                                                 </FlexDiv>
                                             </StyledLink>
@@ -228,6 +229,24 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
             {sortedStakers.length === 0 && !isLoading && children}
         </>
     );
+};
+
+type StakerCellProps = {
+    staker: Staker;
+};
+
+const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
+    const [stakerEns, setStakerEns] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchStakerEns = async () => {
+            const stakerEns = await (snxJSConnector as any).provider.lookupAddress(staker.id);
+            setStakerEns(stakerEns);
+        };
+        fetchStakerEns();
+    }, [staker]);
+
+    return <Address>{stakerEns != null ? stakerEns : truncateAddress(staker.id)}</Address>;
 };
 
 const Address = styled.span`

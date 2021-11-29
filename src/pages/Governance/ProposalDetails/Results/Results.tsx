@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { FlexDiv } from 'theme/common';
+import React, { useMemo, useState } from 'react';
+import { FlexDiv, FlexDivCentered, FlexDivColumn } from 'theme/common';
 import { formatPercentage, formatNumberShort } from 'utils/formatters/number';
 import {
     ResultLabel,
@@ -9,74 +9,111 @@ import {
     ResultRow,
     SidebarRowData,
     Votes,
+    LoaderContainer,
+    ViewMore,
 } from 'pages/Governance/components';
 import { truncateText } from 'utils/formatters/string';
 import styled from 'styled-components';
 import { NUMBER_OF_COUNCIL_MEMBERS } from 'constants/governance';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
+import SimpleLoader from 'components/SimpleLoader';
+import { ProposalResults } from 'types/governance';
+import { useTranslation } from 'react-i18next';
 
 type ResultsProps = {
-    proposalChoices: any;
-    results: any;
-    spaceSymbol: any;
+    proposalResults?: ProposalResults;
     isCouncilResults?: boolean;
+    isLoading: boolean;
+    showAll?: boolean;
 };
 
-const Results: React.FC<ResultsProps> = ({ proposalChoices, results, spaceSymbol, isCouncilResults }) => {
+const Results: React.FC<ResultsProps> = ({ proposalResults, isCouncilResults, isLoading, showAll }) => {
+    const { t } = useTranslation();
+    const [viewCount, setViewCount] = useState<number>(
+        showAll && proposalResults ? proposalResults.choices.length : 10
+    );
+
     const choices = useMemo(() => {
-        const choices = proposalChoices.map((choice: any, i: number) => ({
-            choice,
-            i,
-        }));
-        if (results && results.resultsByVoteBalance) {
-            return choices.sort(
-                (a: any, b: any) => results.resultsByVoteBalance[b.i] - results.resultsByVoteBalance[a.i]
-            );
+        if (proposalResults) {
+            const choices = proposalResults.choices.map((choice: any, i: number) => ({
+                choice,
+                i,
+            }));
+            if (proposalResults.results && proposalResults.results.resultsByVoteBalance) {
+                return choices.sort(
+                    (a: any, b: any) =>
+                        proposalResults.results.resultsByVoteBalance[b.i] -
+                        proposalResults.results.resultsByVoteBalance[a.i]
+                );
+            }
+            return choices;
         }
-        return choices;
-    }, [results, proposalChoices]);
+        return [];
+    }, [proposalResults]);
 
     return (
         <>
-            {choices.map((choice: any, index: number) => {
-                const label = truncateText(choice.choice, 12);
-                const percentage = results.sumOfResultsBalance
-                    ? results.resultsByVoteBalance[choice.i] / results.sumOfResultsBalance
-                    : 0;
+            {!isLoading && proposalResults && (
+                <FlexDivColumn>
+                    {choices.slice(0, viewCount).map((choice: any, index: number) => {
+                        const results = proposalResults.results;
+                        const label = truncateText(choice.choice, 12);
+                        const percentage = results.sumOfResultsBalance
+                            ? results.resultsByVoteBalance[choice.i] / results.sumOfResultsBalance
+                            : 0;
 
-                return (
-                    <ResultRow
-                        key={label}
-                        backgroundColor={isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS ? '#03044e' : '#04045a'}
-                        opacity={isCouncilResults && index >= NUMBER_OF_COUNCIL_MEMBERS ? 0.5 : 1}
-                        borderColor={
-                            isCouncilResults && index === NUMBER_OF_COUNCIL_MEMBERS - 1 ? '#3f1fb4' : undefined
-                        }
-                        paddingBottom={
-                            isCouncilResults &&
-                            (index === NUMBER_OF_COUNCIL_MEMBERS - 1 || index === choices.length - 1)
-                                ? 20
-                                : 10
-                        }
-                    >
-                        <SidebarRowData>
-                            <FlexDiv>
-                                <LightMediumTooltip title={choice.choice}>
-                                    <ResultLabel>{label}</ResultLabel>
-                                </LightMediumTooltip>
-                                <Votes>{`${formatNumberShort(
-                                    results.resultsByVoteBalance[choice.i]
-                                )} ${spaceSymbol}`}</Votes>
-                            </FlexDiv>
-                            <Percentage>{formatPercentage(percentage)}</Percentage>
-                        </SidebarRowData>
-                        <RowPercentageContainer>
-                            <RowPercentage />
-                            <RowPercentageIndicator width={percentage * 100}></RowPercentageIndicator>
-                        </RowPercentageContainer>
-                    </ResultRow>
-                );
-            })}
+                        return (
+                            <ResultRow
+                                key={label}
+                                backgroundColor={
+                                    isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS ? '#03044e' : '#04045a'
+                                }
+                                opacity={isCouncilResults && index >= NUMBER_OF_COUNCIL_MEMBERS ? 0.5 : 1}
+                                borderColor={
+                                    isCouncilResults && index === NUMBER_OF_COUNCIL_MEMBERS - 1 ? '#3f1fb4' : undefined
+                                }
+                                paddingBottom={
+                                    isCouncilResults &&
+                                    (index === NUMBER_OF_COUNCIL_MEMBERS - 1 || index === choices.length - 1)
+                                        ? 20
+                                        : 10
+                                }
+                            >
+                                <SidebarRowData>
+                                    <FlexDiv>
+                                        <LightMediumTooltip title={choice.choice}>
+                                            <ResultLabel>{label}</ResultLabel>
+                                        </LightMediumTooltip>
+                                        <Votes>{`${formatNumberShort(results.resultsByVoteBalance[choice.i])} ${
+                                            proposalResults.spaceSymbol
+                                        }`}</Votes>
+                                    </FlexDiv>
+                                    <Percentage>{formatPercentage(percentage)}</Percentage>
+                                </SidebarRowData>
+                                <RowPercentageContainer>
+                                    <RowPercentage />
+                                    <RowPercentageIndicator width={percentage * 100}></RowPercentageIndicator>
+                                </RowPercentageContainer>
+                            </ResultRow>
+                        );
+                    })}
+                    {choices.length > viewCount && (
+                        <FlexDivCentered>
+                            <ViewMore
+                                onClick={() => setViewCount(viewCount + 10)}
+                                padding={isCouncilResults ? '10px' : '10px 10px 0px 10px'}
+                            >
+                                {t(`governance.view-more`)}
+                            </ViewMore>
+                        </FlexDivCentered>
+                    )}
+                </FlexDivColumn>
+            )}
+            {isLoading && (
+                <LoaderContainer height={200}>
+                    <SimpleLoader />
+                </LoaderContainer>
+            )}
         </>
     );
 };

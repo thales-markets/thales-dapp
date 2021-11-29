@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
 import { useTranslation } from 'react-i18next';
-import { DetailsTitle, Divider, VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
+import { VoteContainer, VoteButton, VoteConfirmation } from 'pages/Governance/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -17,9 +17,10 @@ import voting from 'utils/voting';
 
 type SingleChoiceVotingProps = {
     proposal: Proposal;
+    hasVotingRights: boolean;
 };
 
-const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal }) => {
+const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVotingRights }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [selectedChoices, setSelectedChoices] = useState<number | undefined>(undefined);
@@ -40,8 +41,6 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal }) => 
                     payload: { proposal: proposal.id, choice: selectedChoices, metadata: {} },
                 }),
             };
-
-            console.log(msg);
 
             msg.sig = await (snxJSConnector as any).signer.signMessage(msg.msg);
 
@@ -72,8 +71,6 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal }) => 
 
     return (
         <>
-            <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
-            <Divider />
             <VoteContainer>
                 {proposal.choices.map((choice: any, i: number) => {
                     return (
@@ -86,14 +83,14 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal }) => 
                         </SingleChoice>
                     );
                 })}
-                {selectedChoices && (
+                {selectedChoices && hasVotingRights && (
                     <VoteConfirmation>
                         {t(`governance.proposal.vote-confirmation`, { choice: formattedChoiceString })}
                     </VoteConfirmation>
                 )}
             </VoteContainer>
             <FlexDivCentered>
-                <VoteButton disabled={!selectedChoices || isVoting} onClick={handleVote}>
+                <VoteButton disabled={!selectedChoices || isVoting || !hasVotingRights} onClick={handleVote}>
                     {!isVoting ? t(`governance.proposal.vote-label`) : t(`governance.proposal.vote-progress-label`)}
                 </VoteButton>
             </FlexDivCentered>

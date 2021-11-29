@@ -7,7 +7,6 @@ import { SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
 import { MappedVotes, Proposal, ProposalResults, SpaceData, SpaceStrategy, Vote } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import voting from 'utils/voting';
-import { getProfiles } from 'utils/governance';
 
 const useProposalQuery = (
     spaceKey: SpaceKey,
@@ -42,6 +41,7 @@ const useProposalQuery = (
                             space {
                                 id
                                 name
+                                network
                             }
                         }
                     }
@@ -93,22 +93,23 @@ const useProposalQuery = (
 
             const block = parseInt(proposal.snapshot);
 
-            const [scores, profiles] = await Promise.all([
-                snapshot.utils.getScores(spaceKey, proposal.strategies, space.network, voterAddresses, block),
-                /* Get scores and ENS/3Box profiles */
-                getProfiles(voterAddresses),
-            ]);
+            const scores = await snapshot.utils.getScores(
+                spaceKey,
+                proposal.strategies,
+                space.network,
+                voterAddresses,
+                block
+            );
 
             let mappedVotes = votes as MappedVotes[];
 
             mappedVotes = uniqBy(
                 mappedVotes
                     .map((vote) => {
-                        vote.scores = space.strategies.map(
+                        vote.scores = proposal.strategies.map(
                             (_: SpaceStrategy, key: number) => scores[key][getAddress(vote.voter)] || 0
                         );
                         vote.balance = vote.scores.reduce((a: number, b: number) => a + b, 0);
-                        vote.profile = profiles[getAddress(vote.voter)];
                         return vote;
                     })
                     .filter((vote) => vote.balance > 0)
@@ -118,7 +119,7 @@ const useProposalQuery = (
 
             /* Get results */
             //@ts-ignore
-            const votingClass = new voting[proposal.type](proposal, mappedVotes, space.strategies);
+            const votingClass = new voting[proposal.type](proposal, mappedVotes, proposal.strategies);
             const results = {
                 resultsByVoteBalance: votingClass.resultsByVoteBalance(),
                 resultsByStrategyScore: votingClass.resultsByStrategyScore(),

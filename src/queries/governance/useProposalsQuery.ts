@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import request, { gql } from 'graphql-request';
-import { SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
+import { EXCLUDED_PROPOSALS, SNAPSHOT_GRAPHQL_URL, SpaceKey } from 'constants/governance';
 import { Proposal } from 'types/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 
@@ -12,7 +12,7 @@ const useProposalsQuery = (spaceKey: SpaceKey, options?: UseQueryOptions<Proposa
                 SNAPSHOT_GRAPHQL_URL,
                 gql`
                     query ProposalsForSpace($spaceKey: String) {
-                        proposals(first: 10, where: { space: $spaceKey }, orderBy: "created", orderDirection: desc) {
+                        proposals(first: 100, where: { space: $spaceKey }, orderBy: "created", orderDirection: desc) {
                             id
                             title
                             body
@@ -22,10 +22,16 @@ const useProposalsQuery = (spaceKey: SpaceKey, options?: UseQueryOptions<Proposa
                             snapshot
                             state
                             author
+                            type
                             space {
                                 id
                                 name
                                 symbol
+                                network
+                            }
+                            strategies {
+                                name
+                                params
                             }
                         }
                     }
@@ -33,7 +39,7 @@ const useProposalsQuery = (spaceKey: SpaceKey, options?: UseQueryOptions<Proposa
                 { spaceKey: spaceKey }
             );
 
-            return proposals;
+            return proposals.filter((proposal: Proposal) => !EXCLUDED_PROPOSALS.includes(proposal.id));
         },
         {
             ...options,

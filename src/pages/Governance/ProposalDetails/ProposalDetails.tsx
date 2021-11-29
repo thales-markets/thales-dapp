@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivRow, FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered } from 'theme/common';
 import { Proposal } from 'types/governance';
@@ -7,13 +7,21 @@ import { linkify } from 'remarkable/linkify';
 import { truncateAddress } from 'utils/formatters/string';
 import { formatShortDateWithTime } from 'utils/formatters/date';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
-import { formatCurrency } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
-import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink } from '../components';
+import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie } from '../components';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import { ProposalTypeEnum, StatusEnum } from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
+import snxJSConnector from 'utils/snxJSConnector';
+import makeBlockie from 'ethereum-blockies-base64';
+import { getProposalUrl } from 'utils/governance';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsAppReady } from 'redux/modules/app';
+import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
 
 type ProposalDetailsProps = {
     proposal: Proposal;
@@ -21,6 +29,15 @@ type ProposalDetailsProps = {
 
 const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
     const { t } = useTranslation();
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+    const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const [authorEns, setAuthorEns] = useState<string | null>(null);
+
+    const votingPowerQuery = useVotingPowerQuery(proposal, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
+    const votingPower: number = votingPowerQuery.isSuccess && votingPowerQuery.data ? votingPowerQuery.data : 0;
 
     const getRawMarkup = (value?: string | null) => {
         const remarkable = new Remarkable({
@@ -33,6 +50,14 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
 
         return { __html: remarkable.render(value) };
     };
+
+    useEffect(() => {
+        const fetchAuthorEns = async () => {
+            const authorEns = await (snxJSConnector as any).provider.lookupAddress(proposal.author);
+            setAuthorEns(authorEns);
+        };
+        fetchAuthorEns();
+    }, [proposal]);
 
     return (
         <Container>
@@ -52,9 +77,41 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            <Text>{truncateAddress(proposal.author)}</Text>
+                            <Blockie
+                                src={makeBlockie(proposal.author)}
+                                style={{ width: '16px', height: '16px', marginBottom: '-3px' }}
+                            />
+                            <Text>{authorEns != null ? authorEns : truncateAddress(proposal.author)}</Text>
                             <ArrowIcon />
                         </StyledLink>
+                    </FlexDivRowCentered>
+                    <Divider />
+                    <FlexDivRowCentered>
+                        <Text>{t(`governance.proposal.proposal-label`)}</Text>
+                        <StyledLink
+                            href={getProposalUrl(proposal.space.id, proposal.id)}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <Text>{truncateAddress(proposal.id)}</Text>
+                            <ArrowIcon />
+                        </StyledLink>
+                    </FlexDivRowCentered>
+                    <Divider />
+                    <FlexDivRowCentered>
+                        <Text>{t(`governance.proposal.voting-system-label`)}</Text>
+                        <Text>{t(`governance.proposal.type.${proposal.type}`)}</Text>
+                    </FlexDivRowCentered>
+                </DetailsContainer>
+                <DetailsContainer>
+                    <FlexDivRowCentered>
+                        <Text>{t(`governance.proposal.start-date-label`)}</Text>
+                        <Text>{formatShortDateWithTime(proposal.start * 1000)}</Text>
+                    </FlexDivRowCentered>
+                    <Divider />
+                    <FlexDivRowCentered>
+                        <Text>{t(`governance.proposal.end-date-label`)}</Text>
+                        <Text>{formatShortDateWithTime(proposal.end * 1000)}</Text>
                     </FlexDivRowCentered>
                     <Divider />
                     <FlexDivRowCentered>
@@ -69,26 +126,28 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                         </StyledLink>
                     </FlexDivRowCentered>
                 </DetailsContainer>
-                <DetailsContainer>
-                    <FlexDivRowCentered>
-                        <Text>{t(`governance.proposal.start-date-label`)}</Text>
-                        <Text>{formatShortDateWithTime(proposal.start * 1000)}</Text>
-                    </FlexDivRowCentered>
-                    <Divider />
-                    <FlexDivRowCentered>
-                        <Text>{t(`governance.proposal.end-date-label`)}</Text>
-                        <Text>{formatShortDateWithTime(proposal.end * 1000)}</Text>
-                    </FlexDivRowCentered>
-                </DetailsContainer>
             </FlexDivRow>
             <DetailsTitle>{t(`governance.proposal.details-label`)}</DetailsTitle>
             <Divider />
             <Body dangerouslySetInnerHTML={getRawMarkup(proposal.body)}></Body>
+            {proposal.state === StatusEnum.Active && (
+                <>
+                    <FlexDivRowCentered>
+                        <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
+                        <DetailsTitle>{`${t(`governance.proposal.voting-power-label`)}: ${
+                            isWalletConnected && !votingPowerQuery.isLoading
+                                ? formatCurrencyWithKey(proposal.space.symbol, votingPower)
+                                : '-'
+                        }`}</DetailsTitle>
+                    </FlexDivRowCentered>
+                    <Divider />
+                </>
+            )}
             {proposal.state === StatusEnum.Active && proposal.type === ProposalTypeEnum.Single && (
-                <SingleChoiceVoting proposal={proposal} />
+                <SingleChoiceVoting proposal={proposal} hasVotingRights={votingPower > 0} />
             )}
             {proposal.state === StatusEnum.Active && proposal.type === ProposalTypeEnum.Weighted && (
-                <WeightedVoting proposal={proposal} />
+                <WeightedVoting proposal={proposal} hasVotingRights={votingPower > 0} />
             )}
         </Container>
     );

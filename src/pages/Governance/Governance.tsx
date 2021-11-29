@@ -56,6 +56,11 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                 id
                                 name
                                 symbol
+                                network
+                            }
+                            strategies {
+                                name
+                                params
                             }
                         }
                     }
@@ -222,7 +227,8 @@ const MainContentContainer = styled.div`
     background: #04045a;
     border: 1px solid rgba(202, 145, 220, 0.2);
     border-radius: 5px;
-    padding: 25px 0px;
+    padding: 25px 0px 30px 0px;
+    height: 100%;
 `;
 
 const SidebarContainer = styled(FlexDivColumn)`

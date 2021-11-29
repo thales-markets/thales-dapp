@@ -7,6 +7,11 @@ import styled from 'styled-components';
 import { navigateToGovernance } from 'utils/routes';
 import { Button, FlexDivColumn, Text } from 'theme/common';
 import { useTranslation } from 'react-i18next';
+import { LoaderContainer } from '../components';
+import SimpleLoader from 'components/SimpleLoader';
+import { RootState } from 'redux/rootReducer';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 
 type ProposalListProps = {
     spaceKey: SpaceKey;
@@ -17,7 +22,9 @@ type ProposalListProps = {
 
 const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, statusFilter, resetFilters }) => {
     const { t } = useTranslation();
-    const proposalsQuery = useProposalsQuery(spaceKey);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const proposalsQuery = useProposalsQuery(spaceKey, { enabled: isAppReady });
     const proposals = proposalsQuery.isSuccess && proposalsQuery.data ? proposalsQuery.data : [];
 
     const filteredProposals = useMemo(() => {
@@ -27,10 +34,11 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
     }, [proposals, statusFilter]);
 
     const hasProposals = filteredProposals.length > 0;
+    const isLoading = proposalsQuery.isLoading;
 
     return (
         <>
-            {hasProposals && (
+            {hasProposals && !isLoading && (
                 <Wrapper>
                     {filteredProposals.map((proposal: Proposal) => (
                         <ProposalCard
@@ -44,7 +52,7 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
                     ))}
                 </Wrapper>
             )}
-            {!hasProposals && (
+            {!hasProposals && !isLoading && (
                 <NoProposals>
                     <>
                         <Text className="text-l bold pale-grey">{t('governance.proposal.no-proposals-found')}</Text>
@@ -53,6 +61,11 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
                         </Button>
                     </>
                 </NoProposals>
+            )}
+            {isLoading && (
+                <LoaderContainer>
+                    <SimpleLoader />
+                </LoaderContainer>
             )}
         </>
     );
@@ -65,6 +78,7 @@ const NoProposals = styled(FlexDivColumn)`
     justify-content: space-evenly;
     align-items: center;
     align-self: center;
+    border-radius: 5px;
 `;
 
 const Wrapper = styled.div`

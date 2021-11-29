@@ -1,4 +1,5 @@
 import snapshot from '@snapshot-labs/snapshot.js';
+import { SpaceKey } from 'constants/governance';
 // import { getCurrentTimestampSeconds } from 'utils/formatters/date';
 import { ethers } from 'ethers';
 import { truncateAddress, truncateText } from './formatters/string';
@@ -71,3 +72,5 @@ export function getUsername(address: string, youText: string, profile: any, wall
 
     return short ? truncateAddress(address) : address;
 }
+
+export const getProposalUrl = (spaceKey: SpaceKey, id: string) => `https://snapshot.org/#/${spaceKey}/proposal/${id}`;

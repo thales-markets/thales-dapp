@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { FlexDivColumnCentered } from 'theme/common';
+import React from 'react';
+import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getWalletAddress } from 'redux/modules/wallet';
-import { Proposal, ProposalResults } from 'types/governance';
+import { Proposal } from 'types/governance';
 import useProposalQuery from 'queries/governance/useProposalQuery';
-import SimpleLoader from 'components/SimpleLoader';
-import {
-    LoaderContainer,
-    SidebarContent,
-    SidebarContentScrollWrapper,
-    SidebarTitle,
-    SidebarContentWrapper,
-} from 'pages/Governance/components';
+import { SidebarContent, SidebarTitle, SidebarContentWrapper, VotesCount } from 'pages/Governance/components';
 import Results from '../Results';
 import History from '../History';
 import { useTranslation } from 'react-i18next';
@@ -28,42 +21,34 @@ type SidebarDetailsProps = {
 const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
+
     const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
-    const [proposalResults, setProposalResults] = useState<ProposalResults | undefined>(undefined);
-
-    useEffect(() => {
-        if (proposalResultsQuery.isSuccess && proposalResultsQuery.data) {
-            setProposalResults(proposalResultsQuery.data);
-        }
-    }, [proposalResultsQuery.isSuccess, proposalResultsQuery.data]);
-
-    const isLoading = proposalResultsQuery.isLoading;
+    const proposalResults =
+        proposalResultsQuery.isSuccess && proposalResultsQuery.data ? proposalResultsQuery.data : undefined;
 
     return (
         <FlexDivColumnCentered>
-            <SidebarTitle>{t(`governance.sidebar.title.${type}`)}</SidebarTitle>
+            <FlexDivCentered>
+                <FlexDivCentered>
+                    <SidebarTitle>{t(`governance.sidebar.title.${type}`)}</SidebarTitle>
+                    {type === 'history' && proposalResults && proposalResults.votes.length > 0 && (
+                        <VotesCount>{proposalResults.votes.length}</VotesCount>
+                    )}
+                </FlexDivCentered>
+            </FlexDivCentered>
             <SidebarContentWrapper>
-                {!isLoading && (
-                    <SidebarContentScrollWrapper maxHeight={type === 'results' ? 490 : 510}>
-                        <SidebarContent type={type}>
-                            {proposalResults && type === 'results' && (
-                                <Results
-                                    proposalChoices={proposalResults.choices}
-                                    results={proposalResults.results}
-                                    spaceSymbol={proposalResults.spaceSymbol}
-                                />
-                            )}
-                            {proposalResults && type === 'history' && (
-                                <History proposal={proposal} votes={proposalResults.votes} />
-                            )}
-                        </SidebarContent>
-                    </SidebarContentScrollWrapper>
-                )}
-                {isLoading && (
-                    <LoaderContainer>
-                        <SimpleLoader />
-                    </LoaderContainer>
-                )}
+                <SidebarContent type={type}>
+                    {type === 'results' && (
+                        <Results proposalResults={proposalResults} isLoading={proposalResultsQuery.isLoading} />
+                    )}
+                    {type === 'history' && (
+                        <History
+                            proposal={proposal}
+                            proposalResults={proposalResults}
+                            isLoading={proposalResultsQuery.isLoading}
+                        />
+                    )}
+                </SidebarContent>
             </SidebarContentWrapper>
         </FlexDivColumnCentered>
     );

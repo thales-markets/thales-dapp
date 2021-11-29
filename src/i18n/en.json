@@ -948,20 +948,28 @@
         "proposal": {
             "status-label": "Status",
             "author-label": "Author",
-            "snapshot-label": "Snapshot",
+            "proposal-label": "Proposal",
+            "voting-system-label": "Voting system",
             "start-date-label": "Start date",
             "end-date-label": "End date",
+            "snapshot-label": "Snapshot",
             "details-label": "Details",
             "starts-in-label": "Starts in",
             "ends-in-label": "Ends in",
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
             "vote-label": "Vote",
+            "voting-power-label": "Your voting power",
             "vote-progress-label": "Voting in progress...",
             "vote-confirmation-message": "Successfully voted",
-            "vote-confirmation": "Are you sure you want to vote \"{{choice}}\"? This action cannot be undone."
+            "vote-confirmation": "Are you sure you want to vote \"{{choice}}\"? This action cannot be undone.",
+            "type": {
+                "single-choice": "Single choice voting",
+                "weighted": "Weighted voting"
+            }
         },
         "no-votes": "No votes on this proposal",
+        "view-more": "View more",
         "stakers": {
             "staker-col": "Staker",
             "total-staked-col": "Total staked amount",

@@ -53,10 +53,6 @@ export type Vote = {
 };
 
 export interface MappedVotes extends Vote {
-    profile: {
-        ens: string;
-        address: string;
-    };
     scores: number[];
     balance: number;
 }
@@ -75,6 +71,7 @@ export type Staker = {
     escrowedAmount: number;
     totalStakedAmount: number;
     unstakingAmount: number;
+    ensName: string | null;
 };
 
 export type Stakers = Staker[];
