@@ -115,54 +115,98 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                         }}
                     />
                     {window.innerWidth < 900 && (
-                        <Link
-                            className="wrong-network-modal-font"
-                            style={{
-                                textAlign: 'center',
-                                fontWeight: 'bold',
-                                fontSize: '20px',
-                                lineHeight: '22px',
-                                display: 'block',
-                                color: 'var(--color-wrapper)',
-                            }}
-                            href="https://community.optimism.io/docs/infra/networks.html#optimistic-kovan"
-                            target="_blank"
-                        >
-                            {t('options.royale.wrong-network-dialog.parameters')}
-                            <i
-                                className="icon icon--right"
+                        <>
+                            <Link
+                                className="wrong-network-modal-font"
                                 style={{
-                                    color: 'var(--color-wrapper)',
-                                    fontSize: 28,
-                                    position: 'absolute',
-                                    marginLeft: 59,
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: '20px',
+                                    lineHeight: '22px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
                                 }}
-                            />
-                        </Link>
+                                href="/markets"
+                            >
+                                <i className="icon icon--left wrong-network-dialog-icon wrong-network-dialog-icon--left" />
+                                {t('options.royale.wrong-network-dialog.return-to-dapp')}
+                            </Link>
+                            <Text
+                                className="wrong-network-modal-font"
+                                style={{
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: '20px',
+                                    lineHeight: '30px',
+                                    display: 'block',
+                                }}
+                            >
+                                {t('options.royale.redirect-dialog.or')}
+                            </Text>
+                            <Link
+                                className="wrong-network-modal-font"
+                                style={{
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: '20px',
+                                    lineHeight: '22px',
+                                    display: 'block',
+                                    color: 'var(--color-wrapper)',
+                                }}
+                                href="https://community.optimism.io/docs/infra/networks.html#optimistic-kovan"
+                                target="_blank"
+                            >
+                                {t('options.royale.wrong-network-dialog.parameters')}
+                                <i className="icon icon--right wrong-network-dialog-icon wrong-network-dialog-icon--params" />
+                            </Link>
+                        </>
                     )}
                     {window.innerWidth > 900 && (
-                        <Link
-                            className="wrong-network-modal-font"
-                            style={{
-                                textAlign: 'center',
-                                fontWeight: 'bold',
-                                fontSize: '20px',
-                                lineHeight: '22px',
-                                display: 'block',
-                            }}
-                            onClick={switchOrAddKovanOptimisticNetwork}
-                        >
-                            {t('options.royale.wrong-network-dialog.button')}
-                            <i
-                                className="icon icon--right"
+                        <>
+                            <Link
+                                className="wrong-network-modal-font"
                                 style={{
-                                    color: '#04045a',
-                                    fontSize: 28,
-                                    position: 'absolute',
-                                    marginLeft: 59,
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: '20px',
+                                    lineHeight: '22px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
                                 }}
-                            />
-                        </Link>
+                                href="/markets"
+                            >
+                                <i className="icon icon--left wrong-network-dialog-icon wrong-network-dialog-icon--left" />
+                                {t('options.royale.wrong-network-dialog.return-to-dapp')}
+                            </Link>
+                            <Text
+                                className="wrong-network-modal-font"
+                                style={{
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: '20px',
+                                    lineHeight: '30px',
+                                    display: 'block',
+                                }}
+                            >
+                                {t('options.royale.redirect-dialog.or')}
+                            </Text>
+                            <Link
+                                className="wrong-network-modal-font"
+                                style={{
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    fontSize: '20px',
+                                    lineHeight: '22px',
+                                    display: 'block',
+                                }}
+                                onClick={switchOrAddKovanOptimisticNetwork}
+                            >
+                                {t('options.royale.wrong-network-dialog.button')}
+                                <i className="icon icon--right wrong-network-dialog-icon wrong-network-dialog-icon--right" />
+                            </Link>
+                        </>
                     )}
                 </DialogTitle>
             </StyledModal>

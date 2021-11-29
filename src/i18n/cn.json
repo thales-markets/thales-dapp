@@ -1004,7 +1004,8 @@
                 "title": "网络不对",
                 "message": "请切换到 Optimistic Kovan 继续",
                 "button": "切换到 Optimistic Kovan",
-                "parameters": "OP Kovan 参数"
+                "parameters": "OP Kovan 参数",
+                "return-to-dapp": "回到 Thales dApp"
             },
             "wallet-not-connected-dialog": {
                 "title": "钱包未连接",
