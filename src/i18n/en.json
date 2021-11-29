@@ -952,7 +952,8 @@
                 "close-round": "Close round",
                 "was": "Was",
                 "eliminated": "Eliminated",
-                "players": "Players"
+                "players": "Players",
+                "ended": "Ended"
             },
             "scoreboard": {
                 "starts": "Thales Royale Starts In:",
@@ -986,7 +987,10 @@
                 "round-positioning": " until positioning ends",
                 "round-ending": " until round {{round}} ends",
                 "thales-suffix": " | Thales",
-                "thales-default": "Thales: Binary options trading powered by Synthetix."
+                "thales-default": "Thales: Binary options trading powered by Synthetix.",
+                "dead": "dead",
+                "alive": "alive",
+                "winner": "winner"
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",

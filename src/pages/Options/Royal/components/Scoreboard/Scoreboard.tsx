@@ -356,7 +356,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                                 className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
                                             />
                                             <span>
-                                                {user.isAlive ? (royaleData.finished ? 'winner' : 'alive') : 'dead'}
+                                                {user.isAlive
+                                                    ? royaleData.finished
+                                                        ? t('options.royale.scoreboard.winner')
+                                                        : t('options.royale.scoreboard.alive')
+                                                    : t('options.royale.scoreboard.dead')}
                                             </span>
                                             <span>
                                                 {!user.isAlive
@@ -548,12 +552,18 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                     <Title>
                         {t('options.royale.scoreboard.position-period')} {royaleData.round}:
                     </Title>
-                    <SubTitle>{timeLeftForPositioning ? format(timeLeftForPositioning, 'HH:mm:ss') : 'Ended'}</SubTitle>
+                    <SubTitle>
+                        {timeLeftForPositioning
+                            ? format(timeLeftForPositioning, 'HH:mm:ss')
+                            : t('options.royale.battle.ended')}
+                    </SubTitle>
                 </>
             ) : (
                 <>
                     <Title>{t('options.royale.scoreboard.round-period', { round: royaleData.round })}:</Title>
-                    <SubTitle>{timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : 'Ended'}</SubTitle>
+                    <SubTitle>
+                        {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
+                    </SubTitle>
                 </>
             );
         }

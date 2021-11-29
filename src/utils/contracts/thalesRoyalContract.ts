@@ -1,12 +1,12 @@
 export const thalesRoyal = {
-    address: '0x6F1A7d0Dc472Aa24f5636b348c6116787FcD249A',
+    address: '0x9EE65877dE8658e95f5c893581a76CCd5bc6d35B',
     abi: [
         {
             inputs: [
                 { internalType: 'address', name: '_owner', type: 'address' },
                 { internalType: 'bytes32', name: '_oracleKey', type: 'bytes32' },
                 { internalType: 'contract IPriceFeed', name: '_priceFeed', type: 'address' },
-                { internalType: 'uint256', name: 'reward', type: 'uint256' },
+                { internalType: 'uint256', name: '_reward', type: 'uint256' },
                 { internalType: 'address', name: '_rewardToken', type: 'address' },
                 { internalType: 'uint256', name: '_rounds', type: 'uint256' },
                 { internalType: 'uint256', name: '_signUpPeriod', type: 'uint256' },

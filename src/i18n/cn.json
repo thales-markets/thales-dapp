@@ -933,7 +933,8 @@
                 "was": "曾是",
                 "in": "在",
                 "eliminated": "淘汰",
-                "players": "球员"
+                "players": "球员",
+                "ended": "结束"
             },
             "header": {
                 "theme": "主题"
@@ -965,7 +966,7 @@
                 "question": "您有能力击败比赛并进入最后一轮吗？",
                 "info1": "在这场史诗般的预测大战中向我们展示：<bold>Thales Royale</bold>",
                 "info5": "所有<bold>信息、规则以及详细的回合和奖品结构</bold>都可以在这里找到：",
-                "info3": "根据这些信息，参与者<bold>必须选择他们认为当前价格会高于（<triangle />）还是低于（<circle />）</bold> 执行日期的执行价格。",
+                "info3": "根据这些信息，参与者<bold>必须选择他们认为当前价格会高于（△）还是低于（◯）</bold> 执行日期的执行价格。",
                 "table-header": {
                     "status": "地位",
                     "name": "显示名称",
@@ -988,7 +989,10 @@
                 "round-positioning": " 直到定位结束",
                 "round-ending": " 直到回合{{round}}结束",
                 "thales-suffix": " | Thales",
-                "thales-default": "Thales：由 Synthetix 提供支持的二元期权交易。"
+                "thales-default": "Thales：由 Synthetix 提供支持的二元期权交易。",
+                "alive": "活",
+                "winner": "优胜者",
+                "dead": "死的"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",

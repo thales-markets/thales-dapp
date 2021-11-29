@@ -94,13 +94,15 @@ const renderRounds = (
                       <div style={{ marginBottom: '25px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
                           <CurrentRoundText>
-                              {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : 'Ended'}
+                              {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
                           </CurrentRoundText>
                       </div>
                       <div>
                           <CurrentRoundTitle>{t('options.royale.battle.time-left-for-positioning')}</CurrentRoundTitle>
                           <CurrentRoundText>
-                              {timeLeftForPositioning ? format(timeLeftForPositioning, 'HH:mm:ss') : 'Ended'}
+                              {timeLeftForPositioning
+                                  ? format(timeLeftForPositioning, 'HH:mm:ss')
+                                  : t('options.royale.battle.ended')}
                           </CurrentRoundText>
                       </div>
                       <ShortButton
