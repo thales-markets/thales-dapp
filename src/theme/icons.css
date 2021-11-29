@@ -1,0 +1,134 @@
+.icon {
+    display: inline-block;
+    font-family: Icons !important;
+    vertical-align: middle;
+    font-size: 20px;
+    color: var(--color);
+}
+
+.icon--triangle:before {
+    content: '\0034';
+}
+
+.icon--alive:before {
+    content: '\0034';
+}
+
+.icon--circle:before {
+    content: '\0035';
+}
+
+.icon--three-dots:before {
+    content: '\0036';
+}
+
+.icon--search:before {
+    content: '\0037';
+}
+
+.icon--thales-logo:before {
+    content: '\0044';
+}
+
+.icon--logo:before {
+    content: '\005A';
+}
+
+.icon--royale-logo:before {
+    content: '\0032';
+}
+
+.icon--ex-mark:before {
+    content: '\0071';
+}
+
+.icon--warning:before {
+    content: '\0072';
+}
+
+.icon--left:before {
+    content: '\0074';
+}
+
+.icon--double-left:before {
+    content: '\0075';
+}
+
+.icon--x-sign:before {
+    content: '\0076';
+}
+
+.icon--double-right:before {
+    content: '\0079';
+}
+
+.icon--right:before {
+    content: '\007A';
+}
+
+.icon--dead:before {
+    content: '\0077';
+}
+
+.icon--dead-avatar:before {
+    content: '\0078';
+}
+
+.icon--unverified:before {
+    content: '\0030';
+}
+
+.icon--unsigned:before {
+    content: '\0031';
+}
+
+.icon--arrow-down:before {
+    content: '\006B';
+}
+
+.icon--arrow-up:before {
+    content: '\0068';
+}
+
+.icon--double-arrow:before {
+    content: '\006A';
+}
+
+.icon--g-theme:before {
+    content: '\006F';
+}
+
+.icon--b-theme:before {
+    content: '\0070';
+}
+
+.icon--user-avatar:before {
+    content: '\0069';
+}
+
+.icon--discord:before {
+    content: '\0067';
+}
+
+.icon--wallet:before {
+    content: '\0066';
+}
+
+.icon--cn:before {
+    content: '\006C';
+}
+.icon--en:before {
+    content: '\006D';
+}
+
+.icon--ru:before {
+    content: '\006E';
+}
+
+.icon--clock:before {
+    content: '\0062';
+}
+
+.icon--stats:before {
+    content: '\0041';
+}

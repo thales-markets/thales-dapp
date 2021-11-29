@@ -113,6 +113,14 @@ export const QUERY_KEYS = {
         Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
         Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },
+    Royale: {
+        Data: (walletAddress: string) => ['royale', 'data', walletAddress],
+        Players: () => ['royale', 'layers'],
+        Rounds: (networkId: NetworkId) => ['royale', 'rounds', networkId],
+        Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
+        EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
+        EthPrice: (contractAddress: string) => ['royale', 'ethBalance', contractAddress],
+    },
 };
 
 export default QUERY_KEYS;
