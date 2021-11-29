@@ -77,7 +77,7 @@ const Header: React.FC<HeaderProps> = ({ isAnimationAvailable }) => {
                 >
                     {t('header.links.partners')}
                 </CommunityLink>
-                <CommunityLink target="_blank" rel="noreferrer" href="https://discord.gg/cFGv5zyVEj">
+                <CommunityLink target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
                     {t('header.links.community')}
                 </CommunityLink>
 

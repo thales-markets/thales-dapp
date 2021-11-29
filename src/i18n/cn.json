@@ -794,7 +794,7 @@
                 "competition-period": "选定时间",
                 "disqualified": "取消资格",
                 "current-rank": "您目前的排名",
-                "unverified": "未經證實"
+                "unverified": "未经证实"
             },
             "board": {
                 "tab-title": "排行榜"
@@ -920,7 +920,7 @@
             "enter-amount": "輸入金額",
             "approve": "授予交換 {{currency}} 的權限",
             "insufficient-balance": "餘額不足",
-            "button-text": "獲得 sUSD"
+            "button-text": "获得 sUSD"
         },
         "royale": {
             "battle": {

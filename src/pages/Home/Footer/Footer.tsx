@@ -26,7 +26,7 @@ const Footer: React.FC<FooterProps> = ({ isAnimationAvailable }) => (
                     <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                         <StyledTwitterIcon />
                     </IconLink>
-                    <IconLink target="_blank" rel="noreferrer" href="https://discord.gg/cFGv5zyVEj">
+                    <IconLink target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
                         <StyledDiscordIcon />
                     </IconLink>
                 </FlexDiv>
