@@ -47,6 +47,7 @@ const ProposalList: React.FC<ProposalListProps> = ({ spaceKey, onItemClick, stat
                             onClick={() => {
                                 navigateToGovernance(proposal.space.id, proposal.id);
                                 onItemClick(proposal);
+                                window.scrollTo(0, 0);
                             }}
                         />
                     ))}

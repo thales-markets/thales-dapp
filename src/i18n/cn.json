@@ -924,61 +924,62 @@
         }
     },
     "governance": {
+        "tabs": {
+            "thales-stakers": "泰雷兹前锋",
+            "council": "理事会",
+            "tips": "提示"
+        },
         "status": {
-            "active": "表决",
             "pending": "草案",
-            "closed": "关闭",
-            "all": "全部"
+            "active": "表决",
+            "all": "全部",
+            "closed": "关闭"
         },
         "sidebar": {
             "title": {
-                "results": "结果",
+                "council-members": "现任理事会成员",
                 "history": "投票",
-                "council-members": "现任理事会成员"
+                "results": "结果"
             }
         },
         "proposal": {
-            "end-date-label": "结束日期",
-            "details-label": "细节",
-            "author-label": "作者",
-            "status-label": "地位",
-            "start-date-label": "开始日期",
-            "snapshot-label": "快照",
-            "starts-in-label": "开始于",
-            "ends-in-label": "结束于",
-            "no-proposals-found": "未找到任何提案",
-            "view-all-proposals": "查看所有提案",
-            "vote-label": "投票",
-            "vote-progress-label": "投票进行中...",
-            "vote-confirmation-message": "投票成功",
-            "vote-confirmation": "您确定要投票给“{{choice}}”吗？此操作无法撤消。",
             "type": {
                 "weighted": "加权投票",
                 "single-choice": "单选投票"
             },
-            "proposal-label": "提议",
+            "start-date-label": "开始日期",
+            "final-result-label": "最后结果",
+            "voting-power-label": "你的投票权",
+            "snapshot-label": "快照",
+            "author-label": "作者",
+            "status-label": "地位",
+            "no-proposals-found": "未找到任何提案",
             "voting-system-label": "投票系统",
-            "voting-power-label": "你的投票权"
-        },
-        "title": "治理",
-        "no-votes": "没有对该提案的投票",
-        "tabs": {
-            "tips": "提示",
-            "council": "理事会",
-            "thales-stakers": "泰雷兹前锋"
+            "details-label": "细节",
+            "vote-confirmation": "您确定要投票给“{{choice}}”吗？此操作无法撤消。",
+            "end-date-label": "结束日期",
+            "vote-label": "投票",
+            "proposal-label": "提议",
+            "starts-in-label": "开始于",
+            "ends-in-label": "结束于",
+            "vote-progress-label": "投票进行中...",
+            "view-all-proposals": "查看所有提案",
+            "vote-confirmation-message": "投票成功"
         },
         "stakers": {
+            "staker-col": "斯塔克",
+            "no-stakers-found": "没有找到质押者",
+            "tooltip-staked-directly": "直接质押",
+            "total-staked-col": "总质押金额",
             "tooltip-escrowed-amount": "托管金额",
             "number-of-stakers": "质押者总数",
-            "no-stakers-found": "没有找到质押者",
-            "total-staked-col": "总质押金额",
-            "view-all-stakers": "查看所有前锋",
-            "tooltip-staked-directly": "直接质押",
-            "staker-col": "斯塔克",
-            "search-placeholder": "搜索质押者..."
+            "search-placeholder": "搜索质押者...",
+            "view-all-stakers": "查看所有前锋"
         },
-        "back-to-proposals": "返回提案概览",
+        "title": "治理",
+        "view-more": "查看更多",
         "you": "你",
-        "view-more": "查看更多"
+        "back-to-proposals": "返回提案概览",
+        "no-votes": "没有对该提案的投票"
     }
 }

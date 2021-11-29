@@ -34,6 +34,7 @@ const useProposalQuery = (
                             state
                             author
                             type
+                            scores
                             strategies {
                                 name
                                 params

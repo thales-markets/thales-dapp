@@ -52,6 +52,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             state
                             author
                             type
+                            scores
                             space {
                                 id
                                 name

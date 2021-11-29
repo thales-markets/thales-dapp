@@ -23,6 +23,7 @@ const useProposalsQuery = (spaceKey: SpaceKey, options?: UseQueryOptions<Proposa
                             state
                             author
                             type
+                            scores
                             space {
                                 id
                                 name

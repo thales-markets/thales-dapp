@@ -924,61 +924,62 @@
         }
     },
     "governance": {
-        "status": {
-            "pending": "проект",
-            "closed": "закрыто",
-            "active": "голосование",
-            "all": "все"
-        },
-        "sidebar": {
-            "title": {
-                "results": "Полученные результаты",
-                "history": "Голоса",
-                "council-members": "Действующие члены совета"
-            }
-        },
-        "proposal": {
-            "status-label": "Положение дел",
-            "details-label": "Подробности",
-            "start-date-label": "Дата начала",
-            "snapshot-label": "Снимок",
-            "end-date-label": "Дата окончания",
-            "author-label": "Автор",
-            "ends-in-label": "Заканчивается через",
-            "starts-in-label": "Начинается в",
-            "view-all-proposals": "Просмотреть все предложения",
-            "no-proposals-found": "Предложений не найдено",
-            "vote-label": "Голосование",
-            "vote-confirmation-message": "Успешно проголосовали",
-            "vote-progress-label": "Идет голосование ...",
-            "vote-confirmation": "Вы уверены, что хотите проголосовать за \"{{choice}}\"? Это действие не может быть отменено.",
-            "type": {
-                "single-choice": "Голосование по выбору",
-                "weighted": "Взвешенное голосование"
-            },
-            "proposal-label": "Предложение",
-            "voting-power-label": "Ваше право голоса",
-            "voting-system-label": "Система голосования"
-        },
-        "title": "Управление",
-        "no-votes": "Нет голосов по этому предложению",
         "tabs": {
             "tips": "ЧАЕВЫЕ",
             "council": "Совет",
             "thales-stakers": "Нападающие Thales"
         },
+        "status": {
+            "closed": "закрыто",
+            "all": "все",
+            "pending": "проект",
+            "active": "голосование"
+        },
+        "sidebar": {
+            "title": {
+                "council-members": "Действующие члены совета",
+                "results": "Полученные результаты",
+                "history": "Голоса"
+            }
+        },
+        "proposal": {
+            "type": {
+                "single-choice": "Голосование по выбору",
+                "weighted": "Взвешенное голосование"
+            },
+            "final-result-label": "Конечный результат",
+            "details-label": "Подробности",
+            "start-date-label": "Дата начала",
+            "proposal-label": "Предложение",
+            "status-label": "Положение дел",
+            "end-date-label": "Дата окончания",
+            "snapshot-label": "Снимок",
+            "voting-power-label": "Ваше право голоса",
+            "author-label": "Автор",
+            "vote-confirmation": "Вы уверены, что хотите проголосовать за \"{{choice}}\"? Это действие не может быть отменено.",
+            "vote-label": "Голосование",
+            "starts-in-label": "Начинается в",
+            "no-proposals-found": "Предложений не найдено",
+            "ends-in-label": "Заканчивается через",
+            "vote-confirmation-message": "Успешно проголосовали",
+            "view-all-proposals": "Просмотреть все предложения",
+            "voting-system-label": "Система голосования",
+            "vote-progress-label": "Идет голосование ..."
+        },
         "stakers": {
             "number-of-stakers": "Общее количество стейкеров",
+            "staker-col": "Стейкер",
+            "tooltip-staked-directly": "поставил прямо",
+            "search-placeholder": "Искать стейкеров ...",
             "total-staked-col": "Общая сумма ставки",
             "no-stakers-found": "Стейкеров не найдено",
-            "tooltip-staked-directly": "поставил прямо",
             "tooltip-escrowed-amount": "депонированная сумма",
-            "staker-col": "Стейкер",
-            "view-all-stakers": "Посмотреть всех нападающих",
-            "search-placeholder": "Искать стейкеров ..."
+            "view-all-stakers": "Посмотреть всех нападающих"
         },
-        "back-to-proposals": "Назад к обзору предложений",
+        "no-votes": "Нет голосов по этому предложению",
+        "title": "Управление",
         "you": "Ты",
-        "view-more": "Посмотреть больше"
+        "view-more": "Посмотреть больше",
+        "back-to-proposals": "Назад к обзору предложений"
     }
 }

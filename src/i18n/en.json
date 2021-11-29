@@ -956,6 +956,7 @@
             "details-label": "Details",
             "starts-in-label": "Starts in",
             "ends-in-label": "Ends in",
+            "final-result-label": "Final result",
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
             "vote-label": "Vote",

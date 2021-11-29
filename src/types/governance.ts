@@ -40,6 +40,7 @@ export type Proposal = {
     snapshot: string;
     state: string;
     type: string;
+    scores: number[];
 };
 
 export type Vote = {

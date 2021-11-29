@@ -57,7 +57,10 @@ const Results: React.FC<ResultsProps> = ({ proposalResults, isCouncilResults, is
                 <FlexDivColumn>
                     {choices.slice(0, viewCount).map((choice: any, index: number) => {
                         const results = proposalResults.results;
-                        const label = truncateText(choice.choice, 12);
+                        const label = truncateText(
+                            choice.choice,
+                            isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS ? 18 : 12
+                        );
                         const percentage = results.sumOfResultsBalance
                             ? results.resultsByVoteBalance[choice.i] / results.sumOfResultsBalance
                             : 0;

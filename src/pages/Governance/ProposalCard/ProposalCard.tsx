@@ -1,4 +1,5 @@
 import { StatusEnum } from 'constants/governance';
+import { indexOf, max } from 'lodash';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,8 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
     const closed = proposal.state === StatusEnum.Closed;
     const pending = proposal.state === StatusEnum.Pending;
 
+    const finalChoice = proposal.choices[indexOf(proposal.scores, max(proposal.scores))];
+
     return (
         <CardContainer onClick={onClick}>
             <Card>
@@ -28,6 +31,11 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
                             <span>{t(`governance.proposal.${pending ? 'starts-in-label' : 'ends-in-label'}`)}: </span>
                             <TimeRemaining end={(pending ? proposal.start : proposal.end) * 1000} fontSize={16} />
                         </div>
+                    )}
+                    {!!closed && (
+                        <Result>
+                            {t(`governance.proposal.final-result-label`)}: {finalChoice}
+                        </Result>
                     )}
                 </FlexDivRowCentered>
                 <Title status={proposal.state}>{proposal.title}</Title>
@@ -93,6 +101,10 @@ const Body = styled(FlexDivRow)<{ status: string }>`
     font-size: 16px;
     line-height: 24px;
     color: ${(props) => (props.status === StatusEnum.Closed ? '#B8C6E5' : '#F6F6FE')};
+`;
+
+const Result = styled.div`
+    color: #b8c6e5;
 `;
 
 export default ProposalCard;

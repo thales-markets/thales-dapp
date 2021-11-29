@@ -76,7 +76,7 @@ export const RowPercentageIndicator = styled(FlexDiv)<{ width: number }>`
 `;
 
 export const ResultLabel = styled.div`
-    width: 140px;
+    width: 160px;
 `;
 
 export const VoteLabel = styled.div`
@@ -201,7 +201,7 @@ export const ViewMore = styled(FlexDivCentered)<{ padding?: string }>`
 
 export const VotesCount = styled(FlexDivColumnCentered)`
     font-weight: 500;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 48px;
     color: #f6f6fe;
     margin-bottom: 12px;
@@ -210,6 +210,6 @@ export const VotesCount = styled(FlexDivColumnCentered)`
     border-radius: 9999px;
     height: 30px;
     min-width: 30px;
-    padding: 8px 8px 6px 8px;
+    padding: 8px;
     margin-left: 8px;
 `;
