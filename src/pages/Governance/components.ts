@@ -99,7 +99,9 @@ export const LoaderContainer = styled(FlexDivColumn)<{ height?: number }>`
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
-    border-radius: 0 0 5px 5px;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 `;
 
 export const NoVotes = styled(FlexDivColumn)`

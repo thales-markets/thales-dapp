@@ -964,6 +964,7 @@
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
             "vote-label": "Vote",
+            "vote-note": "{{percentage}}% needed for approval",
             "voting-power-label": "Your voting power",
             "vote-progress-label": "Voting in progress...",
             "vote-confirmation-message": "Successfully voted",

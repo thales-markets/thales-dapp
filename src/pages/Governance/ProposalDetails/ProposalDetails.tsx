@@ -11,7 +11,7 @@ import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie } from '../components';
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { ProposalTypeEnum, StatusEnum } from 'constants/governance';
+import { ProposalTypeEnum, PROPOSAL_APPROVAL_PERECENTAGE, SpaceKey, StatusEnum } from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -133,7 +133,15 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
             {proposal.state === StatusEnum.Active && (
                 <>
                     <FlexDivRowCentered>
-                        <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
+                        <FlexDivRow>
+                            <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
+                            {proposal.space.id === SpaceKey.TIPS && (
+                                <VoteNote>
+                                    ({t(`governance.proposal.vote-note`, { percentage: PROPOSAL_APPROVAL_PERECENTAGE })}
+                                    )
+                                </VoteNote>
+                            )}
+                        </FlexDivRow>
                         <DetailsTitle>{`${t(`governance.proposal.voting-power-label`)}: ${
                             isWalletConnected && !votingPowerQuery.isLoading
                                 ? formatCurrencyWithKey(proposal.space.symbol, votingPower)
@@ -266,6 +274,17 @@ const Body = styled(FlexDivColumn)`
         margin-top: 24px;
         margin-bottom: 16px;
     }
+`;
+
+const VoteNote = styled(FlexDivRow)`
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    color: #b8c6e5;
+    text-transform: uppercase;
+    margin-top: 42px;
+    margin-left: 5px;
 `;
 
 export default ProposalDetails;

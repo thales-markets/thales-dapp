@@ -970,7 +970,8 @@
             "ends-in-label": "结束于",
             "vote-progress-label": "投票进行中...",
             "view-all-proposals": "查看所有提案",
-            "vote-confirmation-message": "投票成功"
+            "vote-confirmation-message": "投票成功",
+            "vote-note": "{{percentage}}% 需要批准"
         },
         "stakers": {
             "staker-col": "斯塔克",

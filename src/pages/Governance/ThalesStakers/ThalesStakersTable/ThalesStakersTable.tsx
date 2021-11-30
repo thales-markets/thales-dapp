@@ -57,6 +57,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
     children,
 }) => {
     const { t } = useTranslation();
+    const [isMobile, setIsMobile] = useState(false);
 
     const [page, setPage] = useState(0);
     const handleChangePage = (_event: unknown, newPage: number) => {
@@ -109,6 +110,22 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
         { id: 2, label: t('governance.stakers.total-staked-col'), sortable: true },
     ];
 
+    const handleResize = () => {
+        if (window.innerWidth <= 767) {
+            setIsMobile(true);
+        } else {
+            setIsMobile(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
         <>
             {!isLoading && (
@@ -127,10 +144,14 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                                             style={
                                                 cell.sortable
                                                     ? cell.id === 1
-                                                        ? { cursor: 'pointer', textAlign: 'left', paddingLeft: '70px' }
+                                                        ? {
+                                                              cursor: 'pointer',
+                                                              textAlign: 'left',
+                                                              paddingLeft: `${isMobile ? 50 : 70}px`,
+                                                          }
                                                         : { cursor: 'pointer' }
                                                     : cell.id === 1
-                                                    ? { textAlign: 'left', paddingLeft: '80px' }
+                                                    ? { textAlign: 'left', paddingLeft: `${isMobile ? 60 : 80}px` }
                                                     : {}
                                             }
                                         >
@@ -173,7 +194,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                                 )} (${t('governance.stakers.tooltip-escrowed-amount')})`;
                                 return (
                                     <StakerRow key={index}>
-                                        <StyledTableCell style={{ padding: '10px 10px 10px 30px' }}>
+                                        <StyledTableCell style={{ padding: `10px 10px 10px ${isMobile ? 10 : 30}px` }}>
                                             <StyledLink
                                                 href={getEtherscanAddressLink(NetworkId.Mainnet, staker.id)}
                                                 target="_blank"
@@ -215,7 +236,7 @@ const ThalesStakersTable: React.FC<ThalesStakersTableProps> = ({
                                                 setPage={setPage}
                                             />
                                         )}
-                                        style={{ padding: '0 20px 0 30px' }}
+                                        style={isMobile ? { padding: '0 5px 0 10px' } : { padding: '0 20px 0 30px' }}
                                     />
                                 </TableRow>
                             </TableFooter>

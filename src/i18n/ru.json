@@ -970,7 +970,8 @@
             "vote-confirmation-message": "Успешно проголосовали",
             "view-all-proposals": "Просмотреть все предложения",
             "voting-system-label": "Система голосования",
-            "vote-progress-label": "Идет голосование ..."
+            "vote-progress-label": "Идет голосование ...",
+            "vote-note": "{{процент}}% необходимо для утверждения"
         },
         "stakers": {
             "number-of-stakers": "Общее количество стейкеров",
