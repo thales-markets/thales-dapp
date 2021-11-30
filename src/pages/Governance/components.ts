@@ -171,6 +171,12 @@ export const DetailsTitle = styled(FlexDivRow)`
     margin-top: 40px;
 `;
 
+export const VotingPowerTitle = styled(DetailsTitle)`
+    @media (max-width: 767px) {
+        margin-top: 0;
+    }
+`;
+
 export const Divider = styled.hr`
     width: 100%;
     border: none;

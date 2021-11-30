@@ -9,7 +9,7 @@ import { formatShortDateWithTime } from 'utils/formatters/date';
 import { getEtherscanAddressLink, getEtherscanBlockLink } from 'utils/etherscan';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
-import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie } from '../components';
+import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie, VotingPowerTitle } from '../components';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import { ProposalTypeEnum, PROPOSAL_APPROVAL_PERECENTAGE, SpaceKey, StatusEnum } from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
@@ -132,7 +132,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
             <Body dangerouslySetInnerHTML={getRawMarkup(proposal.body)}></Body>
             {proposal.state === StatusEnum.Active && (
                 <>
-                    <FlexDivRowCentered>
+                    <VoteHeader>
                         <FlexDivRow>
                             <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
                             {proposal.space.id === SpaceKey.TIPS && (
@@ -142,12 +142,12 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                                 </VoteNote>
                             )}
                         </FlexDivRow>
-                        <DetailsTitle>{`${t(`governance.proposal.voting-power-label`)}: ${
+                        <VotingPowerTitle>{`${t(`governance.proposal.voting-power-label`)}: ${
                             isWalletConnected && !votingPowerQuery.isLoading
                                 ? formatCurrencyWithKey(proposal.space.symbol, votingPower)
                                 : '-'
-                        }`}</DetailsTitle>
-                    </FlexDivRowCentered>
+                        }`}</VotingPowerTitle>
+                    </VoteHeader>
                     <Divider />
                 </>
             )}
@@ -273,6 +273,13 @@ const Body = styled(FlexDivColumn)`
         color: #f6f6fe;
         margin-top: 24px;
         margin-bottom: 16px;
+    }
+`;
+
+const VoteHeader = styled(FlexDivRowCentered)`
+    @media (max-width: 767px) {
+        flex-direction: column;
+        align-items: start;
     }
 `;
 

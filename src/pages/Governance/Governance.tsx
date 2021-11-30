@@ -157,7 +157,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                 </BackLink>
                             )}
                         </BackLinkWrapper>
-                        <Container>
+                        <Container id="proposal-details">
                             <MainContentContainer isOverviewPage={isOverviewPage}>
                                 <MainContentWrapper isOverviewPage={isOverviewPage}>
                                     {!selectedProposal && (
