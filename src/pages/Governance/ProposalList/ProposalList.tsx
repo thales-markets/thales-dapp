@@ -80,6 +80,9 @@ const NoProposals = styled(FlexDivColumn)`
     align-items: center;
     align-self: center;
     border-radius: 5px;
+    @media (max-width: 767px) {
+        background: transparent;
+    }
 `;
 
 const Wrapper = styled.div`
@@ -87,10 +90,11 @@ const Wrapper = styled.div`
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
     margin-top: 25px;
+    padding: 0 30px;
     @media (max-width: 767px) {
         grid-template-columns: repeat(1, 1fr);
+        padding: 0;
     }
-    padding: 0 30px;
 `;
 
 export default ProposalList;

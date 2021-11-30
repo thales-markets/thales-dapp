@@ -927,8 +927,12 @@
         "title": "Governance",
         "you": "You",
         "tabs": {
-            "tips": "TIPS",
-            "council": "Council",
+            "thalesgov": {
+                "eth": "TIPS"
+            },
+            "thalescouncil": {
+                "eth": "Council"
+            },
             "thales-stakers": "Thales stakers"
         },
         "back-to-proposals": "Back to proposals overview",

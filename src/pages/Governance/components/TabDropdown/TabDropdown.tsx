@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
-import { StatusEnum } from 'constants/governance';
+import { SpaceKey } from 'constants/governance';
 import { ReactComponent as DownIcon } from 'assets/images/down.svg';
 import { useTranslation } from 'react-i18next';
 
-type StatusDropdownProps = {
-    activeStatus: StatusEnum;
+type TabDropdownProps = {
+    activeTab: SpaceKey;
     onSelect: any;
 };
 
-export const StatusDropdown: React.FC<StatusDropdownProps> = ({ activeStatus, onSelect }) => {
+export const TabDropdown: React.FC<TabDropdownProps> = ({ activeTab, onSelect }) => {
     const { t } = useTranslation();
-    const [statusDropdownIsOpen, setStatusDropdownIsOpen] = useState(false);
+    const [tabDropdownIsOpen, setTabDropdownIsOpen] = useState(false);
     const setDropdownIsOpen = (isOpen: boolean) => {
-        if (!isOpen && !statusDropdownIsOpen) {
+        if (!isOpen && !tabDropdownIsOpen) {
             return;
         }
-        setStatusDropdownIsOpen(isOpen);
+        setTabDropdownIsOpen(isOpen);
     };
 
     return (
@@ -27,28 +27,28 @@ export const StatusDropdown: React.FC<StatusDropdownProps> = ({ activeStatus, on
                 <Container>
                     <StatusButton
                         onClick={() => {
-                            setDropdownIsOpen(!statusDropdownIsOpen);
+                            setDropdownIsOpen(!tabDropdownIsOpen);
                         }}
-                        isActive={statusDropdownIsOpen}
+                        isActive={tabDropdownIsOpen}
                     >
                         <InnerButton>
-                            <FlexDiv>{t(`governance.status.${activeStatus}`)}</FlexDiv>
+                            <FlexDiv>{t(`governance.tabs.${activeTab}`)}</FlexDiv>
                             <StyledDownIcon />
                         </InnerButton>
                     </StatusButton>
-                    {statusDropdownIsOpen && (
+                    {tabDropdownIsOpen && (
                         <DropdownContainer>
                             <DropDown>
-                                {Object.values(StatusEnum).map((status: string) => (
+                                {Object.values(SpaceKey).map((tab: string) => (
                                     <DropDownItem
-                                        key={status}
+                                        key={tab}
                                         onClick={() => {
-                                            onSelect(status);
+                                            onSelect(tab);
                                             setDropdownIsOpen(false);
                                         }}
                                     >
                                         <FlexDivCentered>
-                                            <StatusName>{t(`governance.status.${status}`)}</StatusName>
+                                            <TabName>{t(`governance.tabs.${tab}`)}</TabName>
                                         </FlexDivCentered>
                                     </DropDownItem>
                                 ))}
@@ -65,6 +65,7 @@ const Container = styled(FlexDivColumnCentered)`
     width: 140px;
     @media (max-width: 767px) {
         width: 100%;
+        margin-bottom: 20px;
     }
 `;
 
@@ -122,7 +123,7 @@ const DropDownItem = styled(FlexDiv)`
     }
 `;
 
-const StatusName = styled.div`
+const TabName = styled.div`
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
@@ -140,4 +141,4 @@ const StyledDownIcon = styled(DownIcon)`
     }
 `;
 
-export default StatusDropdown;
+export default TabDropdown;

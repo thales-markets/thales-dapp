@@ -927,7 +927,13 @@
         "tabs": {
             "thales-stakers": "泰雷兹前锋",
             "council": "理事会",
-            "tips": "提示"
+            "tips": "提示",
+            "thalesgov": {
+                "eth": "提示"
+            },
+            "thalescouncil": {
+                "eth": "理事会"
+            }
         },
         "status": {
             "pending": "草案",

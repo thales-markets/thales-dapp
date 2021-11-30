@@ -68,7 +68,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                     <Status status={proposal.state}>{t(`governance.status.${proposal.state}`)}</Status>
                 </StatusWrapper>
             </StatusContainer>
-            <FlexDivRow>
+            <DetailsWrapper>
                 <DetailsContainer>
                     <FlexDivRowCentered>
                         <Text>{t(`governance.proposal.author-label`)}</Text>
@@ -126,7 +126,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                         </StyledLink>
                     </FlexDivRowCentered>
                 </DetailsContainer>
-            </FlexDivRow>
+            </DetailsWrapper>
             <DetailsTitle>{t(`governance.proposal.details-label`)}</DetailsTitle>
             <Divider />
             <Body dangerouslySetInnerHTML={getRawMarkup(proposal.body)}></Body>
@@ -152,6 +152,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
         </Container>
     );
 };
+
 const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
 `;
@@ -171,6 +172,12 @@ const Title = styled(FlexDivColumnCentered)`
     margin-bottom: 40px;
 `;
 
+const DetailsWrapper = styled(FlexDivRow)`
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
+`;
+
 const DetailsContainer = styled(FlexDivColumnCentered)`
     padding: 15px;
     background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.03) -2.8%, rgba(255, 255, 255, 0.01) 106.83%);
@@ -179,6 +186,11 @@ const DetailsContainer = styled(FlexDivColumnCentered)`
     color: #f6f6fe;
     &:first-child {
         margin-right: 40px;
+        @media (max-width: 767px) {
+            flex-direction: column;
+            margin-right: 0px;
+        }
+        margin-bottom: 10px;
     }
 `;
 

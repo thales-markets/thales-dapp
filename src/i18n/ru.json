@@ -927,7 +927,13 @@
         "tabs": {
             "tips": "ЧАЕВЫЕ",
             "council": "Совет",
-            "thales-stakers": "Нападающие Thales"
+            "thales-stakers": "Нападающие Thales",
+            "thalesgov": {
+                "eth": "ЧАЕВЫЕ"
+            },
+            "thalescouncil": {
+                "eth": "Совет"
+            }
         },
         "status": {
             "closed": "закрыто",

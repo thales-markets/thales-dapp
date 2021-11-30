@@ -21,6 +21,7 @@ import { ReactComponent as ArrowBackIcon } from 'assets/images/arrow-back.svg';
 import StatusDropdown from './components/StatusDropdown';
 import SidebarDetails from './ProposalDetails/SidebarDetails';
 import ThalesStakers from './ThalesStakers';
+import TabDropdown from './components/TabDropdown';
 
 type GovernancePageProps = RouteComponentProps<{
     space: string;
@@ -33,6 +34,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
     const [selectedProposal, setSelectedProposal] = useState<Proposal | undefined>(undefined);
     const [selectedTab, setSelectedTab] = useState<SpaceKey>(SpaceKey.TIPS);
     const [statusFilter, setStatusFilter] = useState<StatusEnum>(StatusEnum.All);
+    const [isMobile, setIsMobile] = useState(false);
 
     const fetchPreloadedProposal = useCallback(() => {
         const fetch = async () => {
@@ -103,19 +105,35 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         () => [
             {
                 id: SpaceKey.TIPS,
-                name: t(`governance.tabs.tips`),
+                name: t(`governance.tabs.${SpaceKey.TIPS}`),
             },
             {
                 id: SpaceKey.COUNCIL,
-                name: t(`governance.tabs.council`),
+                name: t(`governance.tabs.${SpaceKey.COUNCIL}`),
             },
             {
                 id: SpaceKey.THALES_STAKERS,
-                name: t(`governance.tabs.thales-stakers`),
+                name: t(`governance.tabs.${SpaceKey.THALES_STAKERS}`),
             },
         ],
         [t]
     );
+
+    const handleResize = () => {
+        if (window.innerWidth <= 767) {
+            setIsMobile(true);
+        } else {
+            setIsMobile(false);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
         <Background>
@@ -142,22 +160,26 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                                 {!selectedProposal && (
                                     <>
                                         <OptionsTabWrapper>
-                                            <OptionsTabContainer>
-                                                {optionsTabContent.map((tab, index) => (
-                                                    <OptionsTab
-                                                        isActive={tab.id === selectedTab}
-                                                        key={index}
-                                                        index={index}
-                                                        onClick={() => {
-                                                            navigateToGovernance(tab.id);
-                                                            setSelectedTab(tab.id);
-                                                        }}
-                                                        className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                                                    >
-                                                        {tab.name}
-                                                    </OptionsTab>
-                                                ))}
-                                            </OptionsTabContainer>
+                                            {isMobile ? (
+                                                <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
+                                            ) : (
+                                                <OptionsTabContainer>
+                                                    {optionsTabContent.map((tab, index) => (
+                                                        <OptionsTab
+                                                            isActive={tab.id === selectedTab}
+                                                            key={index}
+                                                            index={index}
+                                                            onClick={() => {
+                                                                navigateToGovernance(tab.id);
+                                                                setSelectedTab(tab.id);
+                                                            }}
+                                                            className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                                                        >
+                                                            {tab.name}
+                                                        </OptionsTab>
+                                                    ))}
+                                                </OptionsTabContainer>
+                                            )}
                                             {selectedTab !== SpaceKey.THALES_STAKERS && (
                                                 <StatusDropdown
                                                     activeStatus={statusFilter}
@@ -236,6 +258,10 @@ const MainContentContainer = styled.div`
     @media (max-width: 1200px) {
         width: 100%;
     }
+    @media (max-width: 767px) {
+        border: none;
+        background: transparent;
+    }
 `;
 
 const SidebarContainer = styled(FlexDivColumn)`
@@ -267,6 +293,10 @@ const Sidebar = styled.div`
 
 const OptionsTabWrapper = styled(FlexDivRow)`
     padding: 0 30px;
+    @media (max-width: 767px) {
+        flex-direction: column;
+        padding: 0;
+    }
 `;
 
 const OptionsTabContainer = styled(FlexDiv)`
