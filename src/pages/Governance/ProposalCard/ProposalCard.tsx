@@ -49,7 +49,7 @@ export const CardContainer = styled(FlexDivColumnCentered)`
     width: 100%;
     position: relative;
     background: linear-gradient(150.74deg, #ca91dc -7.89%, #6ac1d5 107.94%);
-    height: 320px;
+    min-height: 320px;
     padding: 2px;
     border-radius: 15px;
     font-weight: 500;

@@ -221,6 +221,9 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
 
 const Container = styled(FlexDivRow)`
     width: 100%;
+    @media (max-width: 1200px) {
+        flex-direction: column;
+    }
 `;
 
 const MainContentContainer = styled.div`
@@ -230,11 +233,18 @@ const MainContentContainer = styled.div`
     border-radius: 5px;
     padding: 25px 0px 30px 0px;
     height: 100%;
+    @media (max-width: 1200px) {
+        width: 100%;
+    }
 `;
 
 const SidebarContainer = styled(FlexDivColumn)`
     width: 33%;
     margin-left: 10px;
+    @media (max-width: 1200px) {
+        width: 100%;
+        margin-left: 0;
+    }
 `;
 
 const SidebarWrapper = styled.div`
@@ -243,6 +253,9 @@ const SidebarWrapper = styled.div`
     padding: 1px;
     &:first-child {
         margin-bottom: 20px;
+        @media (max-width: 1200px) {
+            margin-top: 20px;
+        }
     }
 `;
 

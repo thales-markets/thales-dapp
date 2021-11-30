@@ -90,12 +90,12 @@ const ThalesStakers: React.FC = () => {
 
     return (
         <FlexDivColumnCentered style={{ paddingTop: '30px' }}>
-            <FlexDivRowCentered>
+            <HeaderContainer>
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
                 </Info>
                 <SearchStakers assetSearch={addressSearch} setAssetSearch={setAddressSearch} />
-            </FlexDivRowCentered>
+            </HeaderContainer>
             <ThalesStakersTable
                 stakers={addressSearch ? searchFilteredStakers : filteredStakers}
                 isLoading={stakersQuery.isLoading}
@@ -128,6 +128,12 @@ const sortByField = (a: Staker, b: Staker, direction: OrderDirection, field: key
     return 0;
 };
 
+const HeaderContainer = styled(FlexDivRowCentered)`
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
+`;
+
 const NoStakers = styled(FlexDivColumn)`
     min-height: 300px;
     background: #04045a;
@@ -143,6 +149,9 @@ const Info = styled.div`
     line-height: 24px;
     color: #f6f6fe;
     margin-left: 30px;
+    @media (max-width: 767px) {
+        margin-left: 0;
+    }
 `;
 
 export default ThalesStakers;
