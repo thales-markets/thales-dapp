@@ -121,7 +121,7 @@ const useBinaryOptionsOrders = (
                 })
             );
 
-            const sortedOptionsMarkets = sortOptionsMarkets(optionsMarkets, snxJSConnector.synthsMap).filter(
+            const sortedOptionsMarkets = sortOptionsMarkets(optionsMarkets).filter(
                 (market) => market.phase === 'trading'
             );
 
