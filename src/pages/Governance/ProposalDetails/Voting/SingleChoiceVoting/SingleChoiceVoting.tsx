@@ -124,6 +124,11 @@ const SingleChoice = styled(FlexDivColumnCentered)`
         cursor: pointer;
         background: #03044e;
     }
+    @media (max-width: 767px) {
+        height: 50px;
+        font-size: 16px;
+        line-height: 46px;
+    }
 `;
 
 export default SingleChoiceVoting;

@@ -147,7 +147,8 @@ const NoStakers = styled(FlexDivColumn)`
     justify-content: space-evenly;
     align-items: center;
     align-self: center;
-    border-radius: 5px;
+    border-radius: 0 0 23px 23px;
+    width: 100%;
 `;
 
 const Info = styled.div`

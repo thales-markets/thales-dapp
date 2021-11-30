@@ -51,6 +51,9 @@ export const SidebarRowData = styled(FlexDivRow)`
     font-size: 16px;
     line-height: 36px;
     color: #f6f6fe;
+    @media (max-width: 575px) {
+        font-size: 14px;
+    }
 `;
 
 export const Percentage = styled(FlexDiv)`
@@ -77,10 +80,16 @@ export const RowPercentageIndicator = styled(FlexDiv)<{ width: number }>`
 
 export const ResultLabel = styled.div`
     width: 160px;
+    @media (max-width: 575px) {
+        width: 140px;
+    }
 `;
 
 export const VoteLabel = styled.div`
     width: 125px;
+    @media (max-width: 575px) {
+        width: 105px;
+    }
 `;
 
 export const Votes = styled.div``;

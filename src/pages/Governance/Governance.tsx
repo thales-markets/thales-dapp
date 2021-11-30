@@ -135,6 +135,8 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
         };
     }, []);
 
+    const isOverviewPage = !selectedProposal;
+
     return (
         <Background>
             <Wrapper>
@@ -142,7 +144,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                     <>
                         <MarketHeader route={ROUTES.Governance.Home} />
                         <Title>{t(`governance.title`)}</Title>
-                        <BackLinkWrapper isOverviewPage={!selectedProposal}>
+                        <BackLinkWrapper isOverviewPage={isOverviewPage}>
                             {selectedProposal && (
                                 <BackLink
                                     onClick={() => {
@@ -156,8 +158,8 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             )}
                         </BackLinkWrapper>
                         <Container>
-                            <MainContentContainer isOverviewPage={!selectedProposal}>
-                                <MainContentWrapper isOverviewPage={!selectedProposal}>
+                            <MainContentContainer isOverviewPage={isOverviewPage}>
+                                <MainContentWrapper isOverviewPage={isOverviewPage}>
                                     {!selectedProposal && (
                                         <>
                                             <OptionsTabWrapper>
@@ -286,7 +288,7 @@ const SidebarContainer = styled(FlexDivColumn)`
         margin-left: 0;
     }
     @media (max-width: 767px) {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 `;
 

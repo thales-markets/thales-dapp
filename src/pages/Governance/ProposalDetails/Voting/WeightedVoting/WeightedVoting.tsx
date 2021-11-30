@@ -193,14 +193,25 @@ const Weighted = styled(FlexDivSpaceBetween)`
             color: #f6f6fe;
         }
     }
+    @media (max-width: 767px) {
+        height: 50px;
+        font-size: 16px;
+        line-height: 46px;
+    }
 `;
 
 const Option = styled(FlexDivRowCentered)`
     padding-left: 30px;
+    @media (max-width: 767px) {
+        padding-left: 10px;
+    }
 `;
 
 const Selection = styled(FlexDiv)`
     width: 250px;
+    @media (max-width: 767px) {
+        width: 165px;
+    }
 `;
 
 const PlusMinus = styled(FlexDivColumnCentered)`
@@ -213,12 +224,19 @@ const PlusMinus = styled(FlexDivColumnCentered)`
         border-right: 2px solid #64d9fe;
         cursor: pointer;
     }
+    @media (max-width: 767px) {
+        max-width: 35px;
+    }
 `;
 
 const Percentage = styled(FlexDivColumnCentered)`
     text-align: right;
     max-width: 100px;
     padding-right: 10px;
+    @media (max-width: 767px) {
+        max-width: 55px;
+        padding-right: 5px;
+    }
 `;
 
 const Input = styled.input`
@@ -234,6 +252,10 @@ const Input = styled.input`
     text-align: right;
     overfloe: hidden;
     text-overflow: ellipsis;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        max-width: 40px;
+    }
 `;
 
 export default WeightedVoting;
