@@ -114,6 +114,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
             }
             const maxPages =
                 Math.ceil(usersToShow.length / showPerPage) < 1 ? 1 : Math.ceil(usersToShow.length / showPerPage);
+            Math.ceil(usersToShow.length / showPerPage) < 1 ? setPage(1) : '';
             const usersToDisplay = usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
             return { maxPages, usersToDisplay };
         }
