@@ -12,11 +12,11 @@ import i18n from '../../../../i18n';
 const getDiscordLink = (selectedLanguage: string) => {
     switch (selectedLanguage) {
         case 'ru':
-            return 'https://discord.gg/vTRawduKew';
+            return 'https://discord.com/invite/rB3AWKwACM';
         case 'cn':
-            return 'https://discord.gg/Z5DeQQw57T';
+            return 'https://discord.com/invite/rB3AWKwACM';
         default:
-            return 'https://discord.gg/cFGv5zyVEj';
+            return 'https://discord.com/invite/rB3AWKwACM';
     }
 };
 

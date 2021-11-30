@@ -1,11 +1,11 @@
 # Thales
 
-[![Discord](https://img.shields.io/discord/816415414404907089.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](https://discord.com/invite/cFGv5zyVEj)
+[![Discord](https://img.shields.io/discord/906484044915687464.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](https://discord.com/invite/rB3AWKwACM)
 [![Twitter Follow](https://img.shields.io/twitter/follow/thalesmarket.svg?label=thalesmarket&style=social)](https://twitter.com/thalesmarket)
 
 A dApp enabling binary options trading — powered by the Synthetix protocol.
 
-The trading UI is available on [thales.market](https://thales.market).
+The trading UI is available on [thalesmarket.io](https://thalesmarket.io).
 
 ## Tech stack
 
@@ -50,7 +50,7 @@ This step is needed only if you wish to contribute to the project.
 
 On every commit a pre-commit hook is triggered to translate missing values from the en.json located in src/i18n.
 
-In order for this to work a Google Cloud account is needed and a system environment variable needs to be set pointing 
+In order for this to work a Google Cloud account is needed and a system environment variable needs to be set pointing
 to a locally stored json provided by Google.
 
 Full Guide: https://github.com/googleapis/nodejs-translate#before-you-begin

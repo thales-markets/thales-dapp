@@ -110,7 +110,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     className="quiz__modal-dialog__title__link"
                                     target="_blank"
                                     rel="noreferrer"
-                                    href="https://discord.gg/cFGv5zyVEj"
+                                    href="https://discord.com/invite/rB3AWKwACM"
                                     style={{ marginRight: '30px' }}
                                 >
                                     {t('options.quiz.discord-link')}
@@ -185,7 +185,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                 <LinkImage
                                     target="_blank"
                                     rel="noreferrer"
-                                    href="https://discord.gg/cFGv5zyVEj"
+                                    href="https://discord.com/invite/rB3AWKwACM"
                                     style={{ color: 'white', verticalAlign: 'top' }}
                                 >
                                     {window.innerWidth > 767 ? t('options.quiz.discord-button') : 'Discord'}
