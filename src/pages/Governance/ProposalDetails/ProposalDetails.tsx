@@ -155,6 +155,9 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
 
 const Container = styled(FlexDivColumnCentered)`
     padding: 10px 40px;
+    @media (max-width: 767px) {
+        padding: 10px 20px;
+    }
 `;
 
 const StatusContainer = styled(FlexDivColumnCentered)`
@@ -189,8 +192,8 @@ const DetailsContainer = styled(FlexDivColumnCentered)`
         @media (max-width: 767px) {
             flex-direction: column;
             margin-right: 0px;
+            margin-bottom: 10px;
         }
-        margin-bottom: 10px;
     }
 `;
 

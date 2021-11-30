@@ -1,6 +1,6 @@
 export enum SpaceKey {
-    COUNCIL = 'thalescouncil.eth',
     TIPS = 'thalesgov.eth',
+    COUNCIL = 'thalescouncil.eth',
     THALES_STAKERS = 'thales-stakers',
 }
 

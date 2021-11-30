@@ -89,7 +89,7 @@ const ThalesStakers: React.FC = () => {
     };
 
     return (
-        <FlexDivColumnCentered style={{ paddingTop: '30px' }}>
+        <Container>
             <HeaderContainer>
                 <Info>
                     {`${t('governance.stakers.number-of-stakers')}: ${stakersQuery.isLoading ? '-' : stakers.length}`}
@@ -113,7 +113,7 @@ const ThalesStakers: React.FC = () => {
                     </>
                 </NoStakers>
             </ThalesStakersTable>
-        </FlexDivColumnCentered>
+        </Container>
     );
 };
 
@@ -127,6 +127,13 @@ const sortByField = (a: Staker, b: Staker, direction: OrderDirection, field: key
 
     return 0;
 };
+
+const Container = styled(FlexDivColumnCentered)`
+    padding-top: 30px;
+    @media (max-width: 767px) {
+        padding-top: 10px;
+    }
+`;
 
 const HeaderContainer = styled(FlexDivRowCentered)`
     @media (max-width: 767px) {

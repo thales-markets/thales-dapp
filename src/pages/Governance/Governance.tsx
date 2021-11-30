@@ -142,7 +142,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                     <>
                         <MarketHeader route={ROUTES.Governance.Home} />
                         <Title>{t(`governance.title`)}</Title>
-                        <BackLinkWrapper>
+                        <BackLinkWrapper isOverviewPage={!selectedProposal}>
                             {selectedProposal && (
                                 <BackLink
                                     onClick={() => {
@@ -156,57 +156,61 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             )}
                         </BackLinkWrapper>
                         <Container>
-                            <MainContentContainer>
-                                {!selectedProposal && (
-                                    <>
-                                        <OptionsTabWrapper>
-                                            {isMobile ? (
-                                                <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
-                                            ) : (
-                                                <OptionsTabContainer>
-                                                    {optionsTabContent.map((tab, index) => (
-                                                        <OptionsTab
-                                                            isActive={tab.id === selectedTab}
-                                                            key={index}
-                                                            index={index}
-                                                            onClick={() => {
-                                                                navigateToGovernance(tab.id);
-                                                                setSelectedTab(tab.id);
-                                                            }}
-                                                            className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                                                        >
-                                                            {tab.name}
-                                                        </OptionsTab>
-                                                    ))}
-                                                </OptionsTabContainer>
-                                            )}
-                                            {selectedTab !== SpaceKey.THALES_STAKERS && (
-                                                <StatusDropdown
-                                                    activeStatus={statusFilter}
-                                                    onSelect={setStatusFilter}
+                            <MainContentContainer isOverviewPage={!selectedProposal}>
+                                <MainContentWrapper isOverviewPage={!selectedProposal}>
+                                    {!selectedProposal && (
+                                        <>
+                                            <OptionsTabWrapper>
+                                                {isMobile ? (
+                                                    <TabDropdown activeTab={selectedTab} onSelect={setSelectedTab} />
+                                                ) : (
+                                                    <OptionsTabContainer>
+                                                        {optionsTabContent.map((tab, index) => (
+                                                            <OptionsTab
+                                                                isActive={tab.id === selectedTab}
+                                                                key={index}
+                                                                index={index}
+                                                                onClick={() => {
+                                                                    navigateToGovernance(tab.id);
+                                                                    setSelectedTab(tab.id);
+                                                                }}
+                                                                className={`${
+                                                                    tab.id === selectedTab ? 'selected' : ''
+                                                                }`}
+                                                            >
+                                                                {tab.name}
+                                                            </OptionsTab>
+                                                        ))}
+                                                    </OptionsTabContainer>
+                                                )}
+                                                {selectedTab !== SpaceKey.THALES_STAKERS && (
+                                                    <StatusDropdown
+                                                        activeStatus={statusFilter}
+                                                        onSelect={setStatusFilter}
+                                                    />
+                                                )}
+                                            </OptionsTabWrapper>
+                                            {selectedTab === SpaceKey.TIPS && (
+                                                <ProposalList
+                                                    spaceKey={SpaceKey.TIPS}
+                                                    onItemClick={setSelectedProposal}
+                                                    statusFilter={statusFilter}
+                                                    resetFilters={() => setStatusFilter(StatusEnum.All)}
                                                 />
                                             )}
-                                        </OptionsTabWrapper>
-                                        {selectedTab === SpaceKey.TIPS && (
-                                            <ProposalList
-                                                spaceKey={SpaceKey.TIPS}
-                                                onItemClick={setSelectedProposal}
-                                                statusFilter={statusFilter}
-                                                resetFilters={() => setStatusFilter(StatusEnum.All)}
-                                            />
-                                        )}
-                                        {selectedTab === SpaceKey.COUNCIL && (
-                                            <ProposalList
-                                                spaceKey={SpaceKey.COUNCIL}
-                                                onItemClick={setSelectedProposal}
-                                                statusFilter={statusFilter}
-                                                resetFilters={() => setStatusFilter(StatusEnum.All)}
-                                            />
-                                        )}
-                                        {selectedTab === SpaceKey.THALES_STAKERS && <ThalesStakers />}
-                                    </>
-                                )}
-                                {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
+                                            {selectedTab === SpaceKey.COUNCIL && (
+                                                <ProposalList
+                                                    spaceKey={SpaceKey.COUNCIL}
+                                                    onItemClick={setSelectedProposal}
+                                                    statusFilter={statusFilter}
+                                                    resetFilters={() => setStatusFilter(StatusEnum.All)}
+                                                />
+                                            )}
+                                            {selectedTab === SpaceKey.THALES_STAKERS && <ThalesStakers />}
+                                        </>
+                                    )}
+                                    {selectedProposal && <ProposalDetails proposal={selectedProposal} />}
+                                </MainContentWrapper>
                             </MainContentContainer>
                             {!selectedProposal && (
                                 <SidebarContainer>
@@ -248,19 +252,29 @@ const Container = styled(FlexDivRow)`
     }
 `;
 
-const MainContentContainer = styled.div`
+const MainContentContainer = styled.div<{ isOverviewPage: boolean }>`
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     width: 66%;
-    background: #04045a;
-    border: 1px solid rgba(202, 145, 220, 0.2);
+    padding: 1px;
     border-radius: 5px;
-    padding: 25px 0px 30px 0px;
     height: 100%;
     @media (max-width: 1200px) {
         width: 100%;
     }
     @media (max-width: 767px) {
         border: none;
-        background: transparent;
+        background: ${(props) =>
+            props.isOverviewPage ? 'transparent' : 'linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);'};
+    }
+`;
+
+const MainContentWrapper = styled.div<{ isOverviewPage: boolean }>`
+    border-radius: 5px;
+    padding: 25px 0px 30px 0px;
+    background: #04045a;
+    @media (max-width: 767px) {
+        background: ${(props) => (props.isOverviewPage ? 'transparent' : '#04045a')};
+        padding: ${(props) => (props.isOverviewPage ? '0px 0px 10px 0px' : '25px 0px 30px 0px')};
     }
 `;
 
@@ -270,6 +284,9 @@ const SidebarContainer = styled(FlexDivColumn)`
     @media (max-width: 1200px) {
         width: 100%;
         margin-left: 0;
+    }
+    @media (max-width: 767px) {
+        margin-bottom: 20px;
     }
 `;
 
@@ -332,17 +349,20 @@ const Title = styled.p`
     padding-bottom: 25px;
     color: #f6f6fe;
     align-self: flex-start;
-    @media (max-width: 1024px) {
+    @media (max-width: 767px) {
         font-size: 31px;
         padding-top: 30px;
-        padding-bottom: 0;
+        padding-bottom: 10px;
     }
 `;
 
-const BackLinkWrapper = styled(FlexDiv)`
+const BackLinkWrapper = styled(FlexDiv)<{ isOverviewPage: boolean }>`
     height: 36px;
     align-self: start;
     margin-bottom: 10px;
+    @media (max-width: 767px) {
+        height: ${(props) => (props.isOverviewPage ? '0' : '36px')};
+    }
 `;
 
 const BackLink = styled(FlexDivCentered)`

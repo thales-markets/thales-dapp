@@ -80,9 +80,6 @@ const NoProposals = styled(FlexDivColumn)`
     align-items: center;
     align-self: center;
     border-radius: 5px;
-    @media (max-width: 767px) {
-        background: transparent;
-    }
 `;
 
 const Wrapper = styled.div`
