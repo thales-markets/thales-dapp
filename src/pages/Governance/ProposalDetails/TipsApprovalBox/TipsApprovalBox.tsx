@@ -99,7 +99,7 @@ const Container = styled(FlexDivRow)`
 `;
 
 const VotedIn = styled(FlexDivColumnCentered)`
-    margin-bottom: 15px;
+    margin: 0 15px 15px 15px;
 `;
 
 const VotedInLabel = styled.span`
@@ -130,8 +130,7 @@ const Votes = styled.span`
 `;
 
 const StyledPieChartContainer = styled(PieChartContainer)`
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin: 0 15px 15px 0;
 `;
 
 const StyledPieChart = styled(PieChart)``;
