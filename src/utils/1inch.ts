@@ -10,8 +10,8 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import qs from 'query-string';
-import Web3 from 'web3';
 import erc20Contract from 'utils/contracts/erc20Contract';
+import Web3 from 'web3';
 
 export const createOneInchLimitOrder = async (
     walletAddress: string,
@@ -151,5 +151,22 @@ const validateOrder = async (network: NetworkId, order: any) => {
             console.log('what what');
             console.error(error);
         }
+    }
+};
+
+export const cancelOrder = async (network: NetworkId, walletAddress: string, order: any) => {
+    const contractAddress = ONE_INCH_CONTRACTS[network];
+    console.log(walletAddress);
+    console.log(order);
+    if (contractAddress) {
+        const web3 = new Web3(Web3.givenProvider) as any;
+        // const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+        // const gasPrice = await provider.getGasPrice();
+        const connector = new Web3ProviderConnector(web3);
+        const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
+
+        const callData = limitOrderProtocolFacade.cancelLimitOrder(order);
+
+        console.log('Order cancelling: ', callData);
     }
 };
