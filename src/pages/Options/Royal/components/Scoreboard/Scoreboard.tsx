@@ -55,6 +55,9 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
+    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+        ? i18n.language
+        : DEFAULT_LANGUAGE;
 
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
@@ -452,7 +455,9 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                             )
                                         )}
                                 </PaginationUsers>
-                                <UsersPerPageText>{t('options.royale.scoreboard.users-per-page')}</UsersPerPageText>
+                                <UsersPerPageText top={selectedLanguage === SupportedLanguages.RUSSIAN ? -3 : 12}>
+                                    {t('options.royale.scoreboard.users-per-page')}
+                                </UsersPerPageText>
                             </Pagination>
                         ) : (
                             ''
@@ -753,10 +758,10 @@ const Arrow = styled.i`
     display: block;
 `;
 
-const UsersPerPageText = styled.p`
+const UsersPerPageText = styled.p<{ top: number }>`
     position: absolute;
     right: 13px;
-    top: 12px;
+    top: ${(props) => props.top}px;
     width: 86px;
     text-align: center;
     font-family: Sansation !important;
