@@ -413,7 +413,7 @@ const CurrentRoundText = styled.p`
     font-family: basis33 !important;
     font-weight: normal;
     font-size: 53.4351px;
-    line-height: 53px;
+    line-height: 64px;
     text-align: center;
 `;
 

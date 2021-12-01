@@ -990,7 +990,8 @@
                 "thales-default": "Thales: Binary options trading powered by Synthetix.",
                 "dead": "dead",
                 "alive": "alive",
-                "winner": "winner"
+                "winner": "winner",
+                "users-per-page": "Users per page"
             },
             "redirect-dialog": {
                 "title": "You are on Optimistic Kovan Network",

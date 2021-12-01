@@ -24,6 +24,8 @@ import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
 import DiscordImage from 'assets/images/royale/discord.png';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
+import i18n from '../../../../../i18n';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -456,7 +458,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                             )
                                         )}
                                 </PaginationUsers>
-                                <UsersPerPageText>Users per page</UsersPerPageText>
+                                <UsersPerPageText>{t('options.royale.scoreboard.users-per-page')}</UsersPerPageText>
                             </Pagination>
                         ) : (
                             ''
@@ -474,6 +476,9 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
         royaleData ? getTimeLeft(royaleData.roundStartTime, royaleData.roundChoosingLength) : null
     );
+    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+        ? i18n.language
+        : DEFAULT_LANGUAGE;
 
     const [timeLeftInRound, setTimeLeftInRound] = useState<Date | null>(
         royaleData
@@ -538,7 +543,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                             </Title>
                         </Button>
                     ) : (
-                        <SubTitle>
+                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             <TimeRemaining end={royaleData.signUpPeriod} showFullCounter />
                         </SubTitle>
                     )}
@@ -548,7 +553,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.ends')}</Title>
-                    <SubTitle>
+                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                         <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
                     </SubTitle>
                 </>
@@ -559,7 +564,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                     <Title>
                         {t('options.royale.scoreboard.position-period')} {royaleData.round}:
                     </Title>
-                    <SubTitle>
+                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                         {timeLeftForPositioning
                             ? format(timeLeftForPositioning, 'HH:mm:ss')
                             : t('options.royale.battle.ended')}
@@ -568,7 +573,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
             ) : (
                 <>
                     <Title>{t('options.royale.scoreboard.round-period', { round: royaleData.round })}:</Title>
-                    <SubTitle>
+                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                         {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
                     </SubTitle>
                 </>
@@ -579,7 +584,9 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     return (
         <>
             {getTitle()}
-            <Question> {t('options.royale.scoreboard.question')} </Question>
+            <Question lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 40 : 30}>
+                {t('options.royale.scoreboard.question')}{' '}
+            </Question>
             <InfoText style={{ margin: '14px 0px' }}>
                 <Trans i18nKey="options.royale.scoreboard.info2" components={{ bold: <strong /> }} />
             </InfoText>
@@ -1027,7 +1034,7 @@ const Title = styled(Text)`
     padding-bottom: 10px;
 `;
 
-const SubTitle = styled(Text)`
+const SubTitle = styled(Text)<{ lineHeight: number }>`
     margin-top: 4px;
     margin-bottom: 14px;
     align-self: center;
@@ -1035,7 +1042,7 @@ const SubTitle = styled(Text)`
     font-style: normal;
     font-weight: 400;
     font-size: 80px;
-    line-height: 56px;
+    line-height: ${(props) => props.lineHeight}px;
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
@@ -1044,19 +1051,19 @@ const SubTitle = styled(Text)`
         font-style: normal;
         font-weight: 400;
         font-size: 80px;
-        line-height: 56px;
+        line-height: ${(props) => props.lineHeight}px;
         text-align: justify;
         letter-spacing: -0.4px;
         color: var(--color);
     }
 `;
 
-const Question = styled(Text)`
+const Question = styled(Text)<{ lineHeight: number }>`
     font-family: basis33 !important;
     font-style: normal;
     font-weight: 400;
     font-size: 38.455px;
-    line-height: 30px;
+    line-height: ${(props) => props.lineHeight}px;
     text-align: justify;
     letter-spacing: -0.4px;
     color: var(--color);
