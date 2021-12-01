@@ -72,9 +72,9 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
                                 dataKey={'value'}
                                 outerRadius={65}
                                 innerRadius={53}
-                                paddingAngle={6}
-                                startAngle={87}
-                                endAngle={-273}
+                                paddingAngle={4}
+                                startAngle={88}
+                                endAngle={-272}
                             >
                                 {pieData.map((slice, index) => (
                                     <Cell key={index} fill={slice.color} />
