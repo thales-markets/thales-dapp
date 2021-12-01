@@ -350,8 +350,14 @@ const Card = styled.div`
     margin: 15px;
     padding: 50px 0;
     position: relative;
+    @media (max-width: 360px) {
+        min-width: 300px;
+    }
     @media (max-width: 340px) {
         min-width: 280px;
+    }
+    @media (max-width: 280px) {
+        min-width: 250px;
     }
 `;
 
@@ -553,7 +559,7 @@ const BattleInfoSection = styled.div`
             }
         }
     }
-    @media (min-width: 1024px) {
+    @media (min-width: 1025px) {
         display: none;
     }
 `;

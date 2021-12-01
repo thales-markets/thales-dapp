@@ -290,14 +290,14 @@ const Footer = styled.div`
             }
         }
     }
-    @media (min-width: 1024px) {
+    @media (min-width: 1025px) {
         bottom: 0;
     }
 `;
 
 const Separator = styled.span`
     padding: 0px 10px;
-    @media (min-width: 1024px) {
+    @media (min-width: 1025px) {
         display: none;
     }
 `;
