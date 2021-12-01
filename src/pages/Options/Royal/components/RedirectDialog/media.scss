@@ -1,0 +1,25 @@
+.redirect-modal-font {
+    font-family: Sansation !important;
+    color: #04045a !important;
+}
+
+.redirect-dialog-icon {
+    color: #04045a;
+    font-size: 20px;
+    position: absolute;
+    display: block;
+
+    &--left {
+        margin-right: 59%;
+        @media screen and (max-width: 450px) {
+            margin-right: 82%;
+        }
+    }
+
+    &--right {
+        margin-left: 62%;
+        @media screen and (max-width: 450px) {
+            margin-left: 85%;
+        }
+    }
+}

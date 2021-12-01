@@ -154,7 +154,8 @@
             "leaderboard-label": "排行榜",
             "quick-trading-label": "快速交易",
             "quick-trading-label-competition": "竞赛订单",
-            "earn-label": "泰雷兹"
+            "earn-label": "泰雷兹",
+            "royale-label": "Thales Royale"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -914,12 +915,103 @@
             "ratio": "比率"
         },
         "swap": {
-            "swap": "交换",
-            "button-text": "获得 sUSD",
-            "insufficient-balance": "余额不足",
-            "select-token": "选择一个令牌",
-            "enter-amount": "输入金额",
-            "approve": "授予交换 {{currency}} 的权限"
+            "swap": "交換",
+            "select-token": "選擇一個令牌",
+            "enter-amount": "輸入金額",
+            "approve": "授予交換 {{currency}} 的權限",
+            "insufficient-balance": "餘額不足",
+            "button-text": "获得 sUSD"
+        },
+        "royale": {
+            "battle": {
+                "will-be": "将会",
+                "round": "圆形的",
+                "time-left": "回合剩余时间",
+                "time-left-in-round": "回合剩余时间",
+                "time-left-for-positioning": "定位剩余时间",
+                "close-round": "关闭回合",
+                "was": "曾是",
+                "in": "在",
+                "eliminated": "淘汰",
+                "players": "球员",
+                "ended": "结束"
+            },
+            "header": {
+                "theme": "主题"
+            },
+            "footer": {
+                "price": "价钱",
+                "players-alive": "活着的玩家",
+                "reward-per-player": "每位玩家的奖励",
+                "current": "当前的",
+                "up": "向上",
+                "down": "下",
+                "vs": "对比",
+                "you-were-eliminated-in": "你被淘汰了",
+                "rd": "圆形的",
+                "royale": "皇家",
+                "scoreboard": "记分牌",
+                "current-reward-per-player": "当前每位玩家的奖励",
+                "current-positions": "目前职位",
+                "stats": "统计数据",
+                "price-source": "资料来源：乐观 Chainlink ETH 提要"
+            },
+            "scoreboard": {
+                "player-no": "玩家编号：",
+                "starts": "Thales Royale 开始于：",
+                "info4": "猜对的人晋级下一轮。进入最后一轮的玩家平分奖金。",
+                "info6": "<italic> 祝你好运，让战斗开始！</italic>",
+                "blog": "[泰雷兹皇家博文]",
+                "info2": "Thales Royale 是一个 <bold>连续 7 轮的猜谜游戏。</bold>注册期结束后，第一轮开始，参与者会看到 3 个参数：资产、执行价格和非常限时罢工日期。",
+                "question": "您有能力击败比赛并进入最后一轮吗？",
+                "info1": "在这场史诗般的预测大战中向我们展示：<bold>Thales Royale</bold>",
+                "info5": "所有<bold>信息、规则以及详细的回合和奖品结构</bold>都可以在这里找到：",
+                "info3": "根据这些信息，参与者<bold>必须选择他们认为当前价格会高于（△）还是低于（◯）</bold> 执行日期的执行价格。",
+                "table-header": {
+                    "status": "地位",
+                    "name": "显示名称",
+                    "avatar": "头像",
+                    "number": "玩家编号"
+                },
+                "ends": "泰雷兹皇家结束于：",
+                "round-starts": "下一轮开始于：",
+                "sign-up": "报名",
+                "go-to": "转到 Thales Discord 频道 ",
+                "verify": "#thales-royale-verify 并输入：",
+                "placeholder": "!verify <你的以太坊地址>",
+                "verification": "完成验证！",
+                "start-royale": "开始泰雷兹皇家",
+                "search": "搜索球员/号码",
+                "eliminated": "你被淘汰了",
+                "position-period": "回合定位剩余时间",
+                "period-expired": "注册期已过",
+                "round-period": "回合{{round}}结束于",
+                "round-positioning": " 直到定位结束",
+                "round-ending": " 直到回合{{round}}结束",
+                "thales-suffix": " | Thales",
+                "thales-default": "Thales：由 Synthetix 提供支持的二元期权交易。",
+                "alive": "活",
+                "winner": "优胜者",
+                "dead": "死的"
+            },
+            "redirect-dialog": {
+                "title": "您在 Optimistic Kovan 网络上",
+                "message": "回到泰雷兹皇家",
+                "or": "或者",
+                "switch-to-mainnet": "切换到以太坊主网"
+            },
+            "wrong-network-dialog": {
+                "title": "网络不对",
+                "message": "请切换到 Optimistic Kovan 继续",
+                "button": "切换到 Optimistic Kovan",
+                "parameters": "OP Kovan 参数",
+                "return-to-dapp": "回到 Thales dApp"
+            },
+            "wallet-not-connected-dialog": {
+                "title": "钱包未连接",
+                "button": "连接钱包",
+                "message": "请连接您的钱包以继续"
+            }
         }
     }
 }
