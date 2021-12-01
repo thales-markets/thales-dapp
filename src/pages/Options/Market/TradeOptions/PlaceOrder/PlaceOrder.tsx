@@ -222,7 +222,8 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                 makerToken,
                 takerToken,
                 newMakerAmount,
-                newTakerAmount
+                newTakerAmount,
+                expiration
             );
             dispatchMarketNotification(
                 t('options.market.trade-options.place-order.confirm-button.confirmation-message')

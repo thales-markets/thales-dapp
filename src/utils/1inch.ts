@@ -8,9 +8,23 @@ import {
 } from '@1inch/limit-order-protocol';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import axios from 'axios';
+import { OrderPeriod, ORDER_PERIOD_IN_SECONDS } from 'constants/options';
 import { ethers } from 'ethers';
 import qs from 'query-string';
 import Web3 from 'web3';
+
+export const ONE_INCH_BASE_URL = 'https://limit-orders.1inch.io/v1.0/';
+export const ONE_INCH_LIMT_URL_ALL = '/limit-order/all?';
+export const ONE_INCH_LIMT_URL = '/limit-order/';
+export const ONE_INCH_CONTRACTS: Record<NetworkId, string | null> = {
+    1: '0x3ef51736315f52d568d6d2cf289419b9cfffe782',
+    10: '0xb707d89d29c189421163515c59e42147371d6857',
+    3: '',
+    4: '',
+    5: '',
+    42: '',
+    69: '',
+};
 
 export const createOneInchLimitOrder = async (
     walletAddress: string,
@@ -18,9 +32,9 @@ export const createOneInchLimitOrder = async (
     makerAssetAddress: string,
     takerAssetAddress: string,
     makerAmount: number | string,
-    takerAmount: number | string
+    takerAmount: number | string,
+    expiration?: OrderPeriod
 ) => {
-    console.log(walletAddress);
     const contractAddress = ONE_INCH_CONTRACTS[network];
     if (walletAddress && contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
@@ -32,9 +46,11 @@ export const createOneInchLimitOrder = async (
             const { and, timestampBelow } = limitOrderPredicateBuilder;
 
             const simplePredicate: LimitOrderPredicateCallData = and(
-                timestampBelow(Math.round(Date.now() / 1000) + 60_000) // a limit order is valid only for 1 minute
+                timestampBelow(
+                    Math.round(Date.now() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration ?? OrderPeriod.ONE_DAY]
+                )
             );
-            // Create a limit order and it's signature
+
             const limitOrder = limitOrderBuilder.buildLimitOrder({
                 makerAssetAddress,
                 takerAssetAddress,
@@ -66,27 +82,12 @@ export const createOneInchLimitOrder = async (
                 };
 
                 await axios.post(ONE_INCH_BASE_URL + network + ONE_INCH_LIMT_URL, data);
-                console.log('order added');
             } catch (e) {
                 console.log('REJECTED: ', e);
             }
         };
         await placeOrder();
     }
-};
-
-export const ONE_INCH_BASE_URL = 'https://limit-orders.1inch.io/v1.0/';
-export const ONE_INCH_LIMT_URL_ALL = '/limit-order/all?';
-export const ONE_INCH_LIMT_URL = '/limit-order/';
-
-export const ONE_INCH_CONTRACTS: Record<NetworkId, string | null> = {
-    1: '0x3ef51736315f52d568d6d2cf289419b9cfffe782',
-    10: '0xb707d89d29c189421163515c59e42147371d6857',
-    3: '',
-    4: '',
-    5: '',
-    42: '',
-    69: '',
 };
 
 export const getAllSellOrdersForToken = async (network: NetworkId, token: string) => {
