@@ -7,7 +7,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
-import { get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -51,7 +50,8 @@ import ExpirationDropdown from '../components/ExpirationDropdown';
 
 import Checkbox from 'components/Checkbox';
 import styled from 'styled-components';
-import { createOneInchLimitOrder, getAllBuyOrdersForToken, getAllSellOrdersForToken } from 'utils/1inch';
+import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
+import { dispatchMarketNotification } from 'utils/options';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -132,7 +132,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove = get0xExchangeProxyAddress(networkId);
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId];
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
@@ -173,7 +173,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
 
         const registerAllowanceListener = () => {
             erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                if (owner === walletAddress && spender === getAddress(addressToApprove ?? '')) {
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -215,74 +215,23 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         const newMakerAmount = isBuy ? Number(amount) * Number(price) : amount;
         const newTakerAmount = isBuy ? amount : Number(amount) * Number(price);
 
-        console.log(newMakerAmount.toString(), newTakerAmount.toString());
-
-        // const amountMaker = isBuy ? Number(amount) * Number(price) : amount;
-        // const amountTaker = isBuy ? amount : Number(amount) * Number(price);
-        console.log('maker: ', makerToken, takerToken);
-
-        getAllSellOrdersForToken(networkId, '0x8a40a97A0F92Bb48398A769D6038e1EfaA172f20');
-        getAllBuyOrdersForToken(networkId, '0x8a40a97A0F92Bb48398A769D6038e1EfaA172f20');
-
-        await createOneInchLimitOrder(walletAddress, networkId, makerToken, takerToken, newMakerAmount, newTakerAmount);
-
-        // try {
-        //     const createSignedOrderV4Async = async () => {
-        //         const order = new LimitOrder({
-        //             makerToken,
-        //             takerToken,
-        //             makerAmount,
-        //             takerAmount,
-        //             maker: walletAddress,
-        //             sender: NULL_ADDRESS,
-        //             pool,
-        //             expiry,
-        //             salt,
-        //             chainId: networkId,
-        //             verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-        //             feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-        //         });
-
-        //         try {
-        //             const signature = useLegacySigning
-        //                 ? await order.getSignatureWithProviderAsync(
-        //                       new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-        //                   )
-        //                 : await order.getSignatureWithProviderAsync(
-        //                       (snxJSConnector.signer?.provider as any).provider,
-        //                       SignatureType.EIP712
-        //                   );
-        //             return { ...order, signature };
-        //         } catch (e) {
-        //             console.log(e);
-        //         }
-        //     };
-
-        //     const signedOrder = await createSignedOrderV4Async();
-
-        //     try {
-        //         await axios({
-        //             method: 'POST',
-        //             url: placeOrderUrl,
-        //             data: signedOrder,
-        //         });
-        //         dispatchMarketNotification(
-        //             t('options.market.trade-options.place-order.confirm-button.confirmation-message')
-        //         );
-        //         refetchOrderbook(baseToken);
-        //         refetchOrders(networkId);
-        //         resetForm();
-        //         onPlaceOrder && onPlaceOrder();
-        //     } catch (err) {
-        //         setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-        //         setIsSubmitting(false);
-        //     }
-        //     setIsSubmitting(false);
-        // } catch (e) {
-        //     console.error(e);
-        //     setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-        //     setIsSubmitting(false);
-        // }
+        try {
+            await createOneInchLimitOrder(
+                walletAddress,
+                networkId,
+                makerToken,
+                takerToken,
+                newMakerAmount,
+                newTakerAmount
+            );
+            dispatchMarketNotification(
+                t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+            );
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+        }
+        setIsSubmitting(false);
     };
 
     const calculateAmount = (percentage: number) => {

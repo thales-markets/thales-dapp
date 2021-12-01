@@ -10,7 +10,6 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 import axios from 'axios';
 import { ethers } from 'ethers';
 import qs from 'query-string';
-import erc20Contract from 'utils/contracts/erc20Contract';
 import Web3 from 'web3';
 
 export const createOneInchLimitOrder = async (
@@ -25,23 +24,7 @@ export const createOneInchLimitOrder = async (
     const contractAddress = ONE_INCH_CONTRACTS[network];
     if (walletAddress && contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
-        // You can create and use a custom provider connector (for example: ethers)
         const connector = new Web3ProviderConnector(web3);
-
-        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-        const signer = provider.getSigner();
-
-        const erc20Instance = new ethers.Contract(makerAssetAddress, erc20Contract.abi, signer);
-        erc20Instance.allowance(walletAddress, contractAddress).then(async (data: any) => {
-            if (Number(ethers.utils.formatUnits(data, 18)) <= 0) {
-                erc20Instance.approve(contractAddress, ethers.constants.MaxUint256).then(async () => {
-                    await placeOrder();
-                });
-            } else {
-                await placeOrder();
-            }
-        });
-
         const placeOrder = async () => {
             const limitOrderBuilder = new LimitOrderBuilder(contractAddress, network as any, connector);
             const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
@@ -88,6 +71,7 @@ export const createOneInchLimitOrder = async (
                 console.log('REJECTED: ', e);
             }
         };
+        await placeOrder();
     }
 };
 
@@ -154,19 +138,15 @@ const validateOrder = async (network: NetworkId, order: any) => {
     }
 };
 
-export const cancelOrder = async (network: NetworkId, walletAddress: string, order: any) => {
+export const cancelOrder = async (network: NetworkId, order: any) => {
     const contractAddress = ONE_INCH_CONTRACTS[network];
-    console.log(walletAddress);
-    console.log(order);
     if (contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
         // const provider = new ethers.providers.Web3Provider((window as any).ethereum);
         // const gasPrice = await provider.getGasPrice();
         const connector = new Web3ProviderConnector(web3);
         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
-
         const callData = limitOrderProtocolFacade.cancelLimitOrder(order);
-
         console.log('Order cancelling: ', callData);
     }
 };
