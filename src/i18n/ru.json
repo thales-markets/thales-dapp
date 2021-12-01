@@ -971,7 +971,14 @@
             "view-all-proposals": "Просмотреть все предложения",
             "voting-system-label": "Система голосования",
             "vote-progress-label": "Идет голосование ...",
-            "vote-note": "{{процент}}% необходимо для утверждения"
+            "vote-note": "{{процент}}% необходимо для утверждения",
+            "voting-approval-status": {
+                "in-progress": "В ходе выполнения",
+                "passed": "Прошедший",
+                "not-passed": "Не прошел"
+            },
+            "voted-in-label": "Проголосовал в",
+            "votes": "{{голосов}} Голоса"
         },
         "stakers": {
             "number-of-stakers": "Общее количество стейкеров",

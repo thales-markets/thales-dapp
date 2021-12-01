@@ -9,9 +9,9 @@ import { SidebarContent, SidebarTitle, SidebarContentWrapper, VotesCount } from 
 import Results from '../Results';
 import History from '../History';
 import { useTranslation } from 'react-i18next';
-// import externalLink from 'remarkable-external-link';
+import TipsApprovalBox from '../TipsApprovalBox';
 
-type SidebarType = 'results' | 'history';
+type SidebarType = 'results' | 'history' | 'approval-box';
 
 type SidebarDetailsProps = {
     proposal: Proposal;
@@ -27,30 +27,43 @@ const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
         proposalResultsQuery.isSuccess && proposalResultsQuery.data ? proposalResultsQuery.data : undefined;
 
     return (
-        <FlexDivColumnCentered>
-            <FlexDivCentered>
-                <FlexDivCentered>
-                    <SidebarTitle>{t(`governance.sidebar.title.${type}`)}</SidebarTitle>
-                    {type === 'history' && proposalResults && proposalResults.votes.length > 0 && (
-                        <VotesCount>{proposalResults.votes.length}</VotesCount>
-                    )}
-                </FlexDivCentered>
-            </FlexDivCentered>
-            <SidebarContentWrapper>
-                <SidebarContent type={type}>
-                    {type === 'results' && (
-                        <Results proposalResults={proposalResults} isLoading={proposalResultsQuery.isLoading} />
-                    )}
-                    {type === 'history' && (
-                        <History
-                            proposal={proposal}
-                            proposalResults={proposalResults}
-                            isLoading={proposalResultsQuery.isLoading}
-                        />
-                    )}
+        <>
+            {type === 'approval-box' && (
+                <SidebarContent>
+                    <TipsApprovalBox
+                        proposal={proposal}
+                        proposalResults={proposalResults}
+                        isLoading={proposalResultsQuery.isLoading}
+                    />
                 </SidebarContent>
-            </SidebarContentWrapper>
-        </FlexDivColumnCentered>
+            )}
+            {type !== 'approval-box' && (
+                <FlexDivColumnCentered>
+                    <FlexDivCentered>
+                        <FlexDivCentered>
+                            <SidebarTitle>{t(`governance.sidebar.title.${type}`)}</SidebarTitle>
+                            {type === 'history' && proposalResults && proposalResults.votes.length > 0 && (
+                                <VotesCount>{proposalResults.votes.length}</VotesCount>
+                            )}
+                        </FlexDivCentered>
+                    </FlexDivCentered>
+                    <SidebarContentWrapper>
+                        <SidebarContent type={type}>
+                            {type === 'results' && (
+                                <Results proposalResults={proposalResults} isLoading={proposalResultsQuery.isLoading} />
+                            )}
+                            {type === 'history' && (
+                                <History
+                                    proposal={proposal}
+                                    proposalResults={proposalResults}
+                                    isLoading={proposalResultsQuery.isLoading}
+                                />
+                            )}
+                        </SidebarContent>
+                    </SidebarContentWrapper>
+                </FlexDivColumnCentered>
+            )}
+        </>
     );
 };
 

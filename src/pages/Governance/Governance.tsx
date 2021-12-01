@@ -225,6 +225,13 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             )}
                             {selectedProposal && (
                                 <SidebarContainer>
+                                    {selectedTab === SpaceKey.TIPS && (
+                                        <SidebarWrapper>
+                                            <Sidebar>
+                                                <SidebarDetails proposal={selectedProposal} type="approval-box" />
+                                            </Sidebar>
+                                        </SidebarWrapper>
+                                    )}
                                     <SidebarWrapper>
                                         <Sidebar>
                                             <SidebarDetails proposal={selectedProposal} type="results" />
@@ -287,17 +294,14 @@ const SidebarContainer = styled(FlexDivColumn)`
         width: 100%;
         margin-left: 0;
     }
-    @media (max-width: 767px) {
-        margin-bottom: 10px;
-    }
 `;
 
 const SidebarWrapper = styled.div`
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     border-radius: 5px;
     padding: 1px;
+    margin-bottom: 20px;
     &:first-child {
-        margin-bottom: 20px;
         @media (max-width: 1200px) {
             margin-top: 20px;
         }

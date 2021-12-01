@@ -971,7 +971,14 @@
             "vote-progress-label": "投票进行中...",
             "view-all-proposals": "查看所有提案",
             "vote-confirmation-message": "投票成功",
-            "vote-note": "{{percentage}}% 需要批准"
+            "vote-note": "{{percentage}}% 需要批准",
+            "voting-approval-status": {
+                "in-progress": "进行中",
+                "not-passed": "没过",
+                "passed": "通过"
+            },
+            "voted-in-label": "投票",
+            "votes": "{{votes}} 票"
         },
         "stakers": {
             "staker-col": "斯塔克",

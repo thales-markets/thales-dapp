@@ -964,7 +964,7 @@
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
             "vote-label": "Vote",
-            "vote-note": "{{percentage}}% needed for approval",
+            "vote-note": "{{approvalVotes}} of {{totalVotes}} votes needed for approval",
             "voting-power-label": "Your voting power",
             "vote-progress-label": "Voting in progress...",
             "vote-confirmation-message": "Successfully voted",
@@ -972,6 +972,13 @@
             "type": {
                 "single-choice": "Single choice voting",
                 "weighted": "Weighted voting"
+            },
+            "voted-in-label": "Voted in",
+            "votes": "{{votes}} Votes",
+            "voting-approval-status": {
+                "passed": "Passed",
+                "not-passed": "Not passed",
+                "in-progress": "In progress"
             }
         },
         "no-votes": "No votes on this proposal",

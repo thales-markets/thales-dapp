@@ -11,7 +11,13 @@ import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie, VotingPowerTitle } from '../components';
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { ProposalTypeEnum, PROPOSAL_APPROVAL_PERECENTAGE, SpaceKey, StatusEnum } from 'constants/governance';
+import {
+    ProposalTypeEnum,
+    PROPOSAL_APPROVAL_VOTES,
+    NUMBER_OF_COUNCIL_MEMBERS,
+    SpaceKey,
+    StatusEnum,
+} from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -137,7 +143,11 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                             <DetailsTitle>{t(`governance.proposal.vote-label`)}</DetailsTitle>
                             {proposal.space.id === SpaceKey.TIPS && (
                                 <VoteNote>
-                                    ({t(`governance.proposal.vote-note`, { percentage: PROPOSAL_APPROVAL_PERECENTAGE })}
+                                    (
+                                    {t(`governance.proposal.vote-note`, {
+                                        approvalVotes: PROPOSAL_APPROVAL_VOTES,
+                                        totalVotes: NUMBER_OF_COUNCIL_MEMBERS,
+                                    })}
                                     )
                                 </VoteNote>
                             )}
