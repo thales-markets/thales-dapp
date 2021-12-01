@@ -928,6 +928,7 @@ const InputWrapper = styled.div`
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
+    text-overflow: ellipsis;
     @media (max-width: 1024px) {
         width: 150px;
     }
@@ -1122,7 +1123,7 @@ const ScoreboardInfoSection = styled.div`
             }
         }
     }
-    @media (min-width: 1024px) {
+    @media (min-width: 1025px) {
         display: none;
     }
 `;
