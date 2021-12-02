@@ -84,5 +84,3 @@ export enum Zero0xErrorReason {
 }
 
 export const ORDERBOOK_AMOUNT_THRESHOLD = 0.01;
-
-export const INCLUDE_MINTING_FEES = true;

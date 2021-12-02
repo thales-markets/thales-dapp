@@ -5,7 +5,7 @@ export const binaryOptionsMarketDataContract = {
         [NetworkId.Mainnet]: '0x9819227C824637f4c93F14C4D83792084d7C5E9b',
         [NetworkId.Ropsten]: '0x87e3C6e879d08F362dCfC5Bad6d9bec0923F2884',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xcA4E2eB038d543345FB314382a331AD0C2A47829',
+        [NetworkId.Kovan]: '0x42Af0890d254387110555A46d261B9e4f6E327Ac',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',

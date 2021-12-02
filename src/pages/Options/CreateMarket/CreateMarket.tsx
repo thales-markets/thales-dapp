@@ -93,8 +93,6 @@ datePickerMaxDate.setFullYear(datePickerMaxDate.getFullYear() + 2);
 
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
-export type MarketFees = Record<string, number>;
-
 export const CreateMarket: React.FC = () => {
     try {
         const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -121,7 +119,6 @@ export const CreateMarket: React.FC = () => {
         const [isAllowing, setIsAllowing] = useState<boolean>(false);
         const [gasLimit, setGasLimit] = useState<number | null>(null);
         const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
-        const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
         const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
         const [showWarning, setShowWarning] = useState(false);
         const [isMarketCreated, setIsMarketCreated] = useState(false);
@@ -191,15 +188,11 @@ export const CreateMarket: React.FC = () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
-                    const [allowance, fees] = await Promise.all([
-                        SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address),
-                        binaryOptionsMarketManagerContract.fees(),
-                    ]);
+                    const allowance = await SynthsUSD.allowance(
+                        walletAddress,
+                        binaryOptionsMarketManagerContract.address
+                    );
                     setAllowance(!!bigNumberFormatter(allowance));
-                    setMarketFees({
-                        creator: fees.creatorFee / 1e18,
-                        pool: fees.poolFee / 1e18,
-                    });
                 } catch (e) {
                     console.log(e);
                 }
@@ -1009,7 +1002,6 @@ export const CreateMarket: React.FC = () => {
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
-                            marketFees={marketFees}
                             currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                         ></MarketSummary>
                     </FlexDiv>

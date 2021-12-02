@@ -130,21 +130,6 @@ export const binaryOptionMarketContract = {
         },
         {
             constant: true,
-            inputs: [],
-            name: 'accumulatedFees',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: '',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
             inputs: [
                 {
                     internalType: 'address',
@@ -325,8 +310,8 @@ export const binaryOptionMarketContract = {
                             type: 'address',
                         },
                         {
-                            internalType: 'contract IAddressResolver',
-                            name: 'resolver',
+                            internalType: 'contract IERC20',
+                            name: 'sUSD',
                             type: 'address',
                         },
                         {
@@ -358,11 +343,6 @@ export const binaryOptionMarketContract = {
                             internalType: 'uint256',
                             name: 'deposit',
                             type: 'uint256',
-                        },
-                        {
-                            internalType: 'uint256[2]',
-                            name: 'fees',
-                            type: 'uint256[2]',
                         },
                         {
                             internalType: 'bool',
@@ -617,12 +597,12 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'resolver',
+            name: 'result',
             outputs: [
                 {
-                    internalType: 'contract IAddressResolver',
+                    internalType: 'enum IBinaryOptionMarket.Side',
                     name: '',
-                    type: 'address',
+                    type: 'uint8',
                 },
             ],
             payable: false,
@@ -632,12 +612,12 @@ export const binaryOptionMarketContract = {
         {
             constant: true,
             inputs: [],
-            name: 'result',
+            name: 'sUSD',
             outputs: [
                 {
-                    internalType: 'enum IBinaryOptionMarket.Side',
+                    internalType: 'contract IERC20',
                     name: '',
-                    type: 'uint8',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -699,6 +679,21 @@ export const binaryOptionMarketContract = {
                 },
             ],
             name: 'setZeroExAddressAtInit',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'setsUSD',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
