@@ -380,7 +380,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                             margin: '24px',
                                         }}
                                     >
-                                        {t('common.wallet.or')}
+                                        {t('common.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}

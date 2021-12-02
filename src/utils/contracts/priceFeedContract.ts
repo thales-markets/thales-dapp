@@ -8,22 +8,10 @@ export const priceFeedContract = {
         [NetworkId.Kovan]: '0x750dCAdcA8e9e7f9702c85383119ea8034450993',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
+        [NetworkId['Mainnet-Ovm']]: '0x8FE726b27e89Cd484981B2D27160186920Af2d17',
         [NetworkId['Kovan-Ovm']]: 'TBD',
     },
     abi: [
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'constructor',
-        },
         {
             anonymous: false,
             inputs: [
@@ -225,6 +213,21 @@ export const priceFeedContract = {
                     type: 'address',
                 },
             ],
+            name: 'initialize',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
             name: 'nominateNewOwner',
             outputs: [],
             payable: false,
@@ -318,6 +321,36 @@ export const priceFeedContract = {
                 },
             ],
             name: 'removeAggregator',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+            ],
+            name: 'setOwner',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'proxyAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'transferOwnershipAtInit',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

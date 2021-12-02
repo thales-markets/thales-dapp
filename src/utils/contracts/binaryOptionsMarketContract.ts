@@ -84,6 +84,25 @@ export const binaryOptionMarketContract = {
                     type: 'uint256',
                 },
             ],
+            name: 'OptionsBurned',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: true,
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'value',
+                    type: 'uint256',
+                },
+            ],
             name: 'OptionsExercised',
             type: 'event',
         },
@@ -152,6 +171,30 @@ export const binaryOptionMarketContract = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
+                    type: 'uint256',
+                },
+            ],
+            name: 'burnOptions',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [],
+            name: 'burnOptionsMaximum',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -257,6 +300,27 @@ export const binaryOptionMarketContract = {
                 {
                     internalType: 'uint256',
                     name: 'creatorFee',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
+            name: 'getMaximumBurnable',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: 'amount',
                     type: 'uint256',
                 },
             ],

@@ -7,6 +7,7 @@ export const SUPPORTED_NETWORKS_0X: Record<NetworkId, string | null> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
+    10: '',
     69: '',
 };
 

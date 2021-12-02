@@ -653,7 +653,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                             margin: 'auto 60px',
                                         }}
                                     >
-                                        {t('common.wallet.or')}
+                                        {t('common.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}

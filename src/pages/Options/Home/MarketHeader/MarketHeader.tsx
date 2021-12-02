@@ -176,18 +176,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             </SidebarItem>
                         </SPAAnchor>
                     )}
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Overview)}>
-                            <SidebarItem
-                                imgSrc={marketOverviewDefaultIcon}
-                                imgSrcHoverSelected={marketOverviewSelectedIcon}
-                                className={route === ROUTES.Options.Overview ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
+                    <SPAAnchor href={buildHref(ROUTES.Options.Overview)}>
+                        <SidebarItem
+                            imgSrc={marketOverviewDefaultIcon}
+                            imgSrcHoverSelected={marketOverviewSelectedIcon}
+                            className={route === ROUTES.Options.Overview ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                     <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
                         <SidebarItem
                             imgSrc={royaleDefaultIcon}
@@ -210,18 +208,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             </SidebarItem>
                         </SPAAnchor>
                     )}
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
-                            <SidebarItem
-                                imgSrc={createMarketDefaultIcon}
-                                imgSrcHoverSelected={createMarketSelectedIcon}
-                                className={route === ROUTES.Options.CreateMarket ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
+                    <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
+                        <SidebarItem
+                            imgSrc={createMarketDefaultIcon}
+                            imgSrcHoverSelected={createMarketSelectedIcon}
+                            className={route === ROUTES.Options.CreateMarket ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                     {!isL2 && (
                         <SPAAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
                             <SidebarItem
@@ -235,18 +231,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         </SPAAnchor>
                     )}
 
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
-                            <SidebarItem
-                                imgSrc={tradeExerciseDefaultIcon}
-                                imgSrcHoverSelected={tradeExerciseSelectedIcon}
-                                className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
+                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
+                        <SidebarItem
+                            imgSrc={tradeExerciseDefaultIcon}
+                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
+                            className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}

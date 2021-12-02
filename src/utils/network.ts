@@ -3,7 +3,7 @@ import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'cons
 import { GWEI_UNIT } from 'constants/network';
 import { ethers } from 'ethers';
 
-export type NetworkId = 1 | 3 | 42 | 69;
+export type NetworkId = 1 | 3 | 42 | 10 | 69;
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -14,6 +14,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
+    10: 'OPTIMISM',
     69: 'KOVAN-OPTIMISTIC',
 };
 
@@ -68,6 +69,8 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
         case 42:
             return true;
         case 69:
+            return true;
+        case 10:
             return true;
         default:
             return false;

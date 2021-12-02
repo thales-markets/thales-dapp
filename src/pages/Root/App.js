@@ -184,26 +184,19 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        {isL2 && (
-                            <Route>
-                                <Redirect to={ROUTES.Options.Home} />
-                                <MainLayout>
-                                    <OptionsHome />
-                                </MainLayout>
-                            </Route>
-                        )}
-
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <MainLayout>
                                 <OptionsCreateMarket />
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <MainLayout>
-                                <LeaderboardPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Leaderboard}>
+                                <MainLayout>
+                                    <LeaderboardPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
@@ -211,17 +204,21 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.QuickTradingCompetition}>
-                            <MainLayout>
-                                <QuickTradingCompetitionPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                                <MainLayout>
+                                    <QuickTradingCompetitionPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
-                        <Route exact path={ROUTES.Options.Token}>
-                            <MainLayout>
-                                <EarnPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Token}>
+                                <MainLayout>
+                                    <EarnPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route
                             exact
