@@ -13,7 +13,6 @@ import {
     getPercentageDifference,
     truncToDecimals,
 } from 'utils/formatters/number';
-import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
@@ -32,6 +31,7 @@ import FillOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/FillOrde
 import CancelOrderModal from 'pages/Options/Market/TradeOptions/Orderbook/CancelOrderModal';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
+import { getSynthName } from 'utils/currency';
 
 type OrderCardMobileProps = {
     orders: ExtendedOrders;
