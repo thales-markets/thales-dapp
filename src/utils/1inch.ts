@@ -139,15 +139,21 @@ const validateOrder = async (network: NetworkId, order: any) => {
     }
 };
 
-export const cancelOrder = async (network: NetworkId, order: any) => {
+export const cancelOrder = async (network: NetworkId, walletAddress: any, order: any, gasPrice: any, gasLimit: any) => {
     const contractAddress = ONE_INCH_CONTRACTS[network];
     if (contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
-        // const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-        // const gasPrice = await provider.getGasPrice();
         const connector = new Web3ProviderConnector(web3);
         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
-        const callData = limitOrderProtocolFacade.cancelLimitOrder(order);
+        const callData = limitOrderProtocolFacade.cancelLimitOrder(order.data);
         console.log('Order cancelling: ', callData);
+
+        await web3.eth.sendTransaction({
+            from: walletAddress,
+            gas: gasLimit, // Set your gas limit
+            gasPrice: gasPrice, // Set your gas price
+            to: contractAddress,
+            data: callData,
+        });
     }
 };
