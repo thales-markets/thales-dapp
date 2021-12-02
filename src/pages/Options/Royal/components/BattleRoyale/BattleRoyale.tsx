@@ -87,11 +87,11 @@ const renderRounds = (
                           <CurrentRoundTitle>{t('options.royale.battle.round')}</CurrentRoundTitle>
                           <CurrentRoundText>{index}</CurrentRoundText>
                       </div>
-                      <div style={{ marginTop: '25px' }}>
+                      <div style={{ marginTop: '10px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
                           <CurrentRoundText>{`$${targetPrice}`}</CurrentRoundText>
                       </div>
-                      <div style={{ marginBottom: '25px' }}>
+                      <div style={{ marginBottom: '10px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
                           <CurrentRoundText>
                               {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
@@ -348,7 +348,7 @@ const Card = styled.div`
     box-sizing: border-box;
     border-radius: 4.36032px;
     margin: 15px;
-    padding: 50px 0;
+    padding: 55px 0;
     position: relative;
     @media (max-width: 360px) {
         min-width: 300px;
@@ -457,8 +457,7 @@ const LongButton = styled.button<{ selected?: boolean; notSelected?: boolean }>`
     height: 90px;
     border-radius: 50px;
     background: ${(props) => (props.notSelected ? '#b9c7c2' : '#59cda3')};
-    background: #59cda3;
-    border: ${(props) => (props.selected ? '5px solid #59cda3' : '5px solid #e5e5e5')};
+    border: 5px solid #e5e5e5;
     box-sizing: border-box;
     box-shadow: inset 0 4px 30px #137b9b;
     color: white;
