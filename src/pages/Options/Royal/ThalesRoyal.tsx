@@ -113,6 +113,9 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+        html.classList.remove(theme === Theme.Light ? 'dark-theme' : 'light-theme');
+        html.classList.add(theme !== Theme.Light ? 'dark-theme' : 'light-theme');
         body.classList.remove(theme === Theme.Light ? 'dark-theme' : 'light-theme');
         body.classList.add(theme !== Theme.Light ? 'dark-theme' : 'light-theme');
     }, [theme]);
@@ -287,14 +290,14 @@ const Footer = styled.div`
             }
         }
     }
-    @media (min-width: 1024px) {
+    @media (min-width: 1025px) {
         bottom: 0;
     }
 `;
 
 const Separator = styled.span`
     padding: 0px 10px;
-    @media (min-width: 1024px) {
+    @media (min-width: 1025px) {
         display: none;
     }
 `;

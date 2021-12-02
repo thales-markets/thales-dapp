@@ -992,7 +992,8 @@
                 "thales-default": "Thales: Торговля бинарными опционами на платформе Synthetix.",
                 "dead": "мертвых",
                 "winner": "победитель",
-                "alive": "в живых"
+                "alive": "в живых",
+                "users-per-page": "Пользователей на страницу"
             },
             "redirect-dialog": {
                 "title": "Вы в сети Optimistic Kovan",

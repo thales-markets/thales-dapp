@@ -176,6 +176,8 @@ const RoyaleLogo = styled.i`
     @media (max-width: 1024px) {
         line-height: 140px;
         font-size: 164px;
+        padding-bottom: 0;
+        padding-right: 0;
     }
 `;
 
