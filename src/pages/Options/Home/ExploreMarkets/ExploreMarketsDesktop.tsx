@@ -22,11 +22,12 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
+import { getSynthName } from 'utils/currency';
 import { getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { history, navigateTo } from 'utils/routes';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
-import { SYNTHS_MAP } from '../../../../constants/currency';
+import snxJSConnector from 'utils/snxJSConnector';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
@@ -261,12 +262,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         switch (secondLevelUserFilter) {
             case SecondaryFilters.Bitcoin:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
-                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC
                 );
                 break;
             case SecondaryFilters.Ethereum:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
-                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH
                 );
                 break;
             case SecondaryFilters.CustomMarkets:
@@ -502,15 +503,19 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                             const isCustomMarketsEmpty =
                                 filteredOptionsMarkets.filter(({ customMarket }) => customMarket).length === 0;
                             const isBtcMarketsEmpty =
-                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
-                                    .length === 0;
+                                filteredOptionsMarkets.filter(
+                                    ({ currencyKey }) =>
+                                        currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                                ).length === 0;
                             const isEthMarketsEmpty =
-                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
-                                    .length === 0;
+                                filteredOptionsMarkets.filter(
+                                    ({ currencyKey }) =>
+                                        currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                                ).length === 0;
                             const assetSearchNoBtc =
                                 filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                                     return (
-                                        currencyKey === SYNTHS_MAP.sBTC &&
+                                        (currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC) &&
                                         (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                             getSynthName(currencyKey)
                                                 ?.toLowerCase()
@@ -522,7 +527,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                             const assetSearchNoEth =
                                 filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                                     return (
-                                        currencyKey === SYNTHS_MAP.sETH &&
+                                        (currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH) &&
                                         (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                             getSynthName(currencyKey)
                                                 ?.toLowerCase()

@@ -38,6 +38,7 @@ export const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
+        SynthsMap: (networkId: NetworkId) => ['binaryOptions', 'synthsMap', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
         MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
         ETHBTCMarketCapRatioHistory: () => ['binaryOptions', 'ETHBTCMarketCapRatioHistory'],
