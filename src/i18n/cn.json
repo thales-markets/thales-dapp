@@ -992,7 +992,8 @@
                 "thales-default": "Thales：由 Synthetix 提供支持的二元期权交易。",
                 "alive": "活",
                 "winner": "优胜者",
-                "dead": "死的"
+                "dead": "死的",
+                "users-per-page": "每页用户数"
             },
             "redirect-dialog": {
                 "title": "您在 Optimistic Kovan 网络上",
