@@ -533,6 +533,7 @@ const Button = styled.button`
         opacity: 0.4;
         cursor: not-allowed;
     }
+    margin-top: 10px;
 `;
 
 const RoundHistoryInfo = styled(FlexDivCentered)`
