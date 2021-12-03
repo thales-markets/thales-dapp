@@ -528,6 +528,12 @@ export const PaginationWrapper = styled(TablePagination)`
     .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
         display: none;
     }
+    .MuiTablePagination-selectRoot {
+        @media (max-width: 767px) {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+    }
 `;
 
 const PriceArrow = styled(Image)`

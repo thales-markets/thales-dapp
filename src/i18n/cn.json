@@ -155,7 +155,8 @@
             "quick-trading-label": "快速交易",
             "quick-trading-label-competition": "竞赛订单",
             "earn-label": "泰雷兹",
-            "royale-label": "Thales Royale"
+            "royale-label": "Thales Royale",
+            "governance-label": "治理"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -1014,5 +1015,78 @@
                 "message": "请连接您的钱包以继续"
             }
         }
+    },
+    "governance": {
+        "tabs": {
+            "thales-stakers": "泰雷兹前锋",
+            "council": "理事会",
+            "tips": "提示",
+            "thalesgov": {
+                "eth": "提示"
+            },
+            "thalescouncil": {
+                "eth": "理事会"
+            }
+        },
+        "status": {
+            "pending": "草案",
+            "active": "表决",
+            "all": "全部",
+            "closed": "关闭"
+        },
+        "sidebar": {
+            "title": {
+                "council-members": "现任理事会成员",
+                "history": "投票",
+                "results": "结果"
+            }
+        },
+        "proposal": {
+            "type": {
+                "weighted": "加权投票",
+                "single-choice": "单选投票"
+            },
+            "start-date-label": "开始日期",
+            "final-result-label": "最后结果",
+            "voting-power-label": "你的投票权",
+            "snapshot-label": "快照",
+            "author-label": "作者",
+            "status-label": "地位",
+            "no-proposals-found": "未找到任何提案",
+            "voting-system-label": "投票系统",
+            "details-label": "细节",
+            "vote-confirmation": "您确定要投票给“{{choice}}”吗？此操作无法撤消。",
+            "end-date-label": "结束日期",
+            "vote-label": "投票",
+            "proposal-label": "提议",
+            "starts-in-label": "开始于",
+            "ends-in-label": "结束于",
+            "vote-progress-label": "投票进行中...",
+            "view-all-proposals": "查看所有提案",
+            "vote-confirmation-message": "投票成功",
+            "vote-note": "{{percentage}}% 需要批准",
+            "voting-approval-status": {
+                "in-progress": "进行中",
+                "not-passed": "没过",
+                "passed": "通过"
+            },
+            "voted-in-label": "投票",
+            "votes": "{{votes}} 票"
+        },
+        "stakers": {
+            "staker-col": "斯塔克",
+            "no-stakers-found": "没有找到质押者",
+            "tooltip-staked-directly": "直接质押",
+            "total-staked-col": "总质押金额",
+            "tooltip-escrowed-amount": "托管金额",
+            "number-of-stakers": "质押者总数",
+            "search-placeholder": "搜索质押者...",
+            "view-all-stakers": "查看所有前锋"
+        },
+        "title": "治理",
+        "view-more": "查看更多",
+        "you": "你",
+        "back-to-proposals": "返回提案概览",
+        "no-votes": "没有对该提案的投票"
     }
 }

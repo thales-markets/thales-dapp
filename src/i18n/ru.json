@@ -155,7 +155,8 @@
             "quick-trading-label": "Быстрая торговля",
             "quick-trading-label-competition": "Kонк. быстрая торговля",
             "earn-label": "THALES",
-            "royale-label": "Thales Royale"
+            "royale-label": "Thales Royale",
+            "governance-label": "Управление"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -1014,5 +1015,78 @@
                 "message": "Пожалуйста, подключите свой кошелек, чтобы продолжить"
             }
         }
+    },
+    "governance": {
+        "tabs": {
+            "tips": "ЧАЕВЫЕ",
+            "council": "Совет",
+            "thales-stakers": "Нападающие Thales",
+            "thalesgov": {
+                "eth": "ЧАЕВЫЕ"
+            },
+            "thalescouncil": {
+                "eth": "Совет"
+            }
+        },
+        "status": {
+            "closed": "закрыто",
+            "all": "все",
+            "pending": "проект",
+            "active": "голосование"
+        },
+        "sidebar": {
+            "title": {
+                "council-members": "Действующие члены совета",
+                "results": "Полученные результаты",
+                "history": "Голоса"
+            }
+        },
+        "proposal": {
+            "type": {
+                "single-choice": "Голосование по выбору",
+                "weighted": "Взвешенное голосование"
+            },
+            "final-result-label": "Конечный результат",
+            "details-label": "Подробности",
+            "start-date-label": "Дата начала",
+            "proposal-label": "Предложение",
+            "status-label": "Положение дел",
+            "end-date-label": "Дата окончания",
+            "snapshot-label": "Снимок",
+            "voting-power-label": "Ваше право голоса",
+            "author-label": "Автор",
+            "vote-confirmation": "Вы уверены, что хотите проголосовать за \"{{choice}}\"? Это действие не может быть отменено.",
+            "vote-label": "Голосование",
+            "starts-in-label": "Начинается в",
+            "no-proposals-found": "Предложений не найдено",
+            "ends-in-label": "Заканчивается через",
+            "vote-confirmation-message": "Успешно проголосовали",
+            "view-all-proposals": "Просмотреть все предложения",
+            "voting-system-label": "Система голосования",
+            "vote-progress-label": "Идет голосование ...",
+            "vote-note": "{{процент}}% необходимо для утверждения",
+            "voting-approval-status": {
+                "in-progress": "В ходе выполнения",
+                "passed": "Прошедший",
+                "not-passed": "Не прошел"
+            },
+            "voted-in-label": "Проголосовал в",
+            "votes": "{{голосов}} Голоса"
+        },
+        "stakers": {
+            "number-of-stakers": "Общее количество стейкеров",
+            "staker-col": "Стейкер",
+            "tooltip-staked-directly": "поставил прямо",
+            "search-placeholder": "Искать стейкеров ...",
+            "total-staked-col": "Общая сумма ставки",
+            "no-stakers-found": "Стейкеров не найдено",
+            "tooltip-escrowed-amount": "депонированная сумма",
+            "view-all-stakers": "Посмотреть всех нападающих"
+        },
+        "no-votes": "Нет голосов по этому предложению",
+        "title": "Управление",
+        "you": "Ты",
+        "view-more": "Посмотреть больше",
+        "back-to-proposals": "Назад к обзору предложений"
     }
 }

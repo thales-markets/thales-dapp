@@ -411,6 +411,13 @@ const StyledLightTooltip = withStyles(() => ({
     },
 }))(MaterialTooltip);
 
+const StyledLightMediumTooltip = withStyles(() => ({
+    tooltip: {
+        padding: '8px 12px',
+        fontSize: '12px',
+    },
+}))(StyledLightTooltip);
+
 export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
     <StyledLightTooltip
         disableHoverListener={disableHoverListener}
@@ -426,6 +433,17 @@ export const RoyaleTooltip: React.FC<TooltipIconProps> = ({ title, children }) =
     <StyledRoyaleTooltip title={<span>{title}</span>} placement="top" arrow={true}>
         {children}
     </StyledRoyaleTooltip>
+);
+
+export const LightMediumTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLightMediumTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
+        {children}
+    </StyledLightMediumTooltip>
 );
 
 export const ProtocolFeeContainer = styled(FlexDivRow)`

@@ -25,6 +25,8 @@ import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-def
 import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
 import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
 import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
+import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
+import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
 
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
@@ -269,6 +271,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
                     )}
+                    <SPAAnchor href={buildHref(ROUTES.Governance.Home)}>
+                        <SidebarItem
+                            imgSrc={governanceDefaultIcon}
+                            imgSrcHoverSelected={governanceSelectedIcon}
+                            className={route === ROUTES.Governance.Home ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
