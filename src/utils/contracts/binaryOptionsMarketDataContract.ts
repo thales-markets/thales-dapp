@@ -8,7 +8,7 @@ export const binaryOptionsMarketDataContract = {
         [NetworkId.Kovan]: '0x42Af0890d254387110555A46d261B9e4f6E327Ac',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0x1751dDCE8D8B917223e05D8bD015dfb81bF1fcf2',
+        [NetworkId['Mainnet-Ovm']]: '0x7dFdA202789A8d35539260fb22b711b55A335674',
         [NetworkId['Kovan-Ovm']]: '0x99D3cF3A00Dcb3DfeDAd5eb89257792c8c897306',
     },
     abi: [
