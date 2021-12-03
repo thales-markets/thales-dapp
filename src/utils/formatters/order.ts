@@ -22,6 +22,8 @@ export function prepSellOrder(record: any) {
             taker: '',
             makerToken: record.data.makerAsset,
             takerToken: record.data.takerAsset,
+            makerAmount: record.makerAmount,
+            takerAmount: record.takerAmount,
         },
         signature: record.signature,
         displayOrder: {
@@ -63,6 +65,8 @@ export function prepBuyOrder(record: any) {
             taker: '',
             makerToken: record.data.makerAsset,
             takerToken: record.data.takerAsset,
+            makerAmount: record.makerAmount,
+            takerAmount: record.takerAmount,
         },
         signature: record.signature,
         displayOrder: {
