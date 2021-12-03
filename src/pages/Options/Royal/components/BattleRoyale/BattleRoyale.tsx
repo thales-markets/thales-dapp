@@ -429,9 +429,13 @@ const CurrentRoundTitle = styled.p`
 
 const PrevRoundText = styled.p`
     font-family: basis33 !important;
-    font-size: 34px;
-    line-height: 22px;
+    font-size: 25px;
+    line-height: 25px;
     text-align: center;
+    @media (max-width: 340px) {
+        font-size: 23px;
+        line-height: 23px;
+    }
 `;
 
 const PrevRoundTitle = styled.p`
