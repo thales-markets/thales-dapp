@@ -127,19 +127,64 @@ export const getAllBuyOrdersForToken = async (network: NetworkId, token: string)
 //     }
 // };
 
+export const fillLimitOrder = async (
+    network: NetworkId,
+    walletAddress: any,
+    order: any,
+    amount: number | string,
+    gasLimit: any,
+    price: any,
+    signature: any
+) => {
+    const contractAddress = ONE_INCH_CONTRACTS[network];
+    if (contractAddress) {
+        try {
+            const web3 = new Web3(Web3.givenProvider) as any;
+            const connector = new Web3ProviderConnector(web3);
+
+            const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
+            const threshold = Number(amount) * price;
+            const callData = limitOrderProtocolFacade.fillLimitOrder(
+                { ...order.data, permit: '0x', interaction: '0x' },
+                signature,
+                '0',
+                ethers.utils.parseUnits('' + amount, 18).toString(),
+                ethers.utils.parseUnits('' + threshold, 18).toString()
+            );
+
+            await web3.eth.sendTransaction({
+                from: walletAddress,
+                gasPrice: gasLimit,
+                to: contractAddress,
+                data: callData,
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
 export const cancelOrder = async (network: NetworkId, walletAddress: any, order: any, gasLimit: any) => {
     const contractAddress = ONE_INCH_CONTRACTS[network];
     if (contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
         const connector = new Web3ProviderConnector(web3);
         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
-        const callData = limitOrderProtocolFacade.cancelLimitOrder(order.data);
 
-        await web3.eth.sendTransaction({
-            from: walletAddress,
-            gasPrice: gasLimit,
-            to: contractAddress,
-            data: callData,
-        });
+        try {
+            const callData = limitOrderProtocolFacade.cancelLimitOrder({
+                ...order.data,
+                permit: '0x',
+                interaction: '0x',
+            });
+            await web3.eth.sendTransaction({
+                from: walletAddress,
+                gasPrice: gasLimit,
+                to: contractAddress,
+                data: callData,
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
 };
