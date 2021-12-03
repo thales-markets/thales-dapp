@@ -14,7 +14,7 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
-    10: 'OPTIMISM',
+    10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
 };
 
