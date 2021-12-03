@@ -217,7 +217,7 @@ const App = () => {
                                 <QuickTradingCompetitionPage />
                             </MainLayout>
                         </Route>
- <Route
+                        <Route
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
                             render={(routeProps) => (
