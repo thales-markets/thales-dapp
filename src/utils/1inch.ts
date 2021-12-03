@@ -1,5 +1,4 @@
 import {
-    LimitOrder,
     LimitOrderBuilder,
     LimitOrderPredicateBuilder,
     LimitOrderPredicateCallData,
@@ -96,12 +95,7 @@ export const getAllSellOrdersForToken = async (network: NetworkId, token: string
         makerAsset: token,
     };
     const response = await fetch(url + qs.stringify(params));
-    const orders = await response.json();
-    if (orders) {
-        orders.map((order: LimitOrder) => {
-            validateOrder(network, order);
-        });
-    }
+    return response.json();
 };
 
 export const getAllBuyOrdersForToken = async (network: NetworkId, token: string) => {
@@ -110,34 +104,28 @@ export const getAllBuyOrdersForToken = async (network: NetworkId, token: string)
         takerAsset: token,
     };
     const response = await fetch(url + qs.stringify(params));
-    const orders = await response.json();
-
-    if (orders) {
-        orders.map((order: LimitOrder) => {
-            validateOrder(network, order);
-        });
-    }
+    return response.json();
 };
 
-const validateOrder = async (network: NetworkId, order: any) => {
-    const contractAddress = ONE_INCH_CONTRACTS[network];
-    if (contractAddress) {
-        const web3 = new Web3(Web3.givenProvider) as any;
-        const connector = new Web3ProviderConnector(web3);
-        const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
-        const addresses = [contractAddress];
-        const callDatas = [order.data.predicate];
+// const validateOrder = async (network: NetworkId, order: any) => {
+//     const contractAddress = ONE_INCH_CONTRACTS[network];
+//     if (contractAddress) {
+//         const web3 = new Web3(Web3.givenProvider) as any;
+//         const connector = new Web3ProviderConnector(web3);
+//         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
+//         const addresses = [contractAddress];
+//         const callDatas = [order.data.predicate];
 
-        try {
-            const result: any = await limitOrderProtocolFacade.simulateCalls(addresses, callDatas);
+//         try {
+//             const result: any = await limitOrderProtocolFacade.simulateCalls(addresses, callDatas);
 
-            console.log('Order validity: ', result);
-        } catch (error) {
-            console.log('what what');
-            console.error(error);
-        }
-    }
-};
+//             console.log('Order validity: ', result);
+//         } catch (error) {
+//             console.log('what what');
+//             console.error(error);
+//         }
+//     }
+// };
 
 export const cancelOrder = async (network: NetworkId, walletAddress: any, order: any, gasPrice: any, gasLimit: any) => {
     const contractAddress = ONE_INCH_CONTRACTS[network];
