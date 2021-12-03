@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
-import { OptionSide, OrderItem } from 'types/options';
-import { formatGasLimit } from 'utils/network';
+import ValidationMessage from 'components/ValidationMessage';
+import { ethers } from 'ethers';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-// import { IZeroExEvents } from '@0x/contract-wrappers';
-import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
-import OrderDetails from '../../components/OrderDetails';
 // import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 // import { getIs0xReady } from 'redux/modules/app';
 import { DefaultSubmitButton, SubmitButtonContainer } from 'pages/Options/Market/components';
-import ValidationMessage from 'components/ValidationMessage';
-import {
-    StyledModal,
-    ModalContainer,
-    ModalTitle,
-    CloseIconContainer,
-    ModalSummaryContainer,
-    ModalHeader,
-} from '../components';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
+import { OptionSide, OrderItem } from 'types/options';
 import { cancelOrder } from 'utils/1inch';
-import { ethers } from 'ethers';
+import { formatGasLimit } from 'utils/network';
+// import { IZeroExEvents } from '@0x/contract-wrappers';
+import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+import OrderDetails from '../../components/OrderDetails';
+import {
+    CloseIconContainer,
+    ModalContainer,
+    ModalHeader,
+    ModalSummaryContainer,
+    ModalTitle,
+    StyledModal,
+} from '../components';
 
 type CancelOrderModalProps = {
     order: OrderItem;
@@ -87,6 +87,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
             try {
                 const provider = new ethers.providers.Web3Provider((window as any).ethereum);
                 const gasPrice = await provider.getGasPrice();
+
                 setGasLimit(formatGasLimit(gasPrice, networkId));
             } catch (e) {
                 console.log(e);
@@ -101,16 +102,12 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
         setTxErrorMessage(null);
         setIsCanceling(true);
         try {
-            cancelOrder(
-                networkId,
-                walletAddress,
-                order.orderData,
-                gasLimit !== null ? gasLimit : undefined,
-                gasLimit
-            ).then(() => {
-                refetchOrderbook(baseToken);
-                refetchOrders(networkId);
-            });
+            cancelOrder(networkId, walletAddress, order.orderData, gasLimit !== null ? gasLimit : undefined).then(
+                () => {
+                    refetchOrderbook(baseToken);
+                    refetchOrders(networkId);
+                }
+            );
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
