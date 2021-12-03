@@ -373,7 +373,7 @@ export const InfoSection = styled.div`
     border-radius: 5px;
     padding: 1.5em;
     position: fixed;
-    z-index: 100;
+    z-index: 1000;
     right: 30px;
     bottom: 30px;
     background: var(--color-background);

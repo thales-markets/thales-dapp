@@ -935,7 +935,8 @@
                 "in": "在",
                 "eliminated": "淘汰",
                 "players": "球员",
-                "ended": "结束"
+                "ended": "结束",
+                "optimism-timestamp-message": "由于 Optimism 上到 L1 的最大汇总时间为 5 分钟，因此诸如关闭轮次等依赖于时间戳的操作最多可延迟 5 分钟。"
             },
             "header": {
                 "theme": "主题"

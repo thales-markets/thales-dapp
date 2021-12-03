@@ -17,6 +17,8 @@ import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User } from '../../Queries/useRoyalePlayersQuery';
 import winnerCard from 'assets/images/royale/winner-card.svg';
+import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
+import { RoyaleTooltip } from '../../../Market/components';
 
 type BattleRoyaleProps = {
     ethPrice: string;
@@ -240,6 +242,9 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     className="icon icon--right"
                 />
                 <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
+                    <RoyaleTooltip title={t('options.royale.battle.optimism-timestamp-message')}>
+                        <StyledInfoIcon />
+                    </RoyaleTooltip>
                     {t('options.royale.battle.close-round')}
                 </Button>
             </StyledWrapper>
@@ -508,6 +513,7 @@ const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
 `;
 
 const Button = styled.button`
+    position: relative;
     align-items: center;
     cursor: pointer;
     display: flex;
@@ -527,6 +533,7 @@ const Button = styled.button`
         opacity: 0.4;
         cursor: not-allowed;
     }
+    margin-top: 10px;
 `;
 
 const RoundHistoryInfo = styled(FlexDivCentered)`
@@ -563,6 +570,23 @@ const BattleInfoSection = styled.div`
         }
     }
     @media (min-width: 1025px) {
+        display: none;
+    }
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
+    @media (max-width: 1024px) {
         display: none;
     }
 `;
