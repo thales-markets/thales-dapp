@@ -207,19 +207,9 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const handleFillOrder = async () => {
         setTxErrorMessage(null);
         setIsFilling(true);
-        const targetOrder = order.orderData;
-        const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
-        console.log(order);
+
         try {
-            fillLimitOrder(
-                networkId,
-                walletAddress,
-                targetOrder,
-                sOPTAmount,
-                gasLimit,
-                order.displayOrder.price,
-                order.signature
-            );
+            fillLimitOrder(networkId, walletAddress, order, amount, gasLimit, isBuy);
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
