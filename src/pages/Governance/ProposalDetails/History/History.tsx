@@ -19,7 +19,7 @@ import {
 import makeBlockie from 'ethereum-blockies-base64';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { NetworkId } from '@synthetixio/contracts-interface';
-import { ProposalTypeEnum } from 'constants/governance';
+import { COUNCIL_PROPOSAL_ID, ProposalTypeEnum } from 'constants/governance';
 import { useTranslation } from 'react-i18next';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
 import { useSelector } from 'react-redux';
@@ -37,7 +37,7 @@ type HistoryProps = {
 const History: React.FC<HistoryProps> = ({ proposal, proposalResults, isLoading }) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const spaceSymbol = proposal.space.symbol;
+    const spaceSymbol = proposal.id.toLowerCase() === COUNCIL_PROPOSAL_ID.toLowerCase() ? 'WD' : proposal.space.symbol;
     const isWeightedChoice = proposal.type === ProposalTypeEnum.Weighted;
     const hasVotes = proposalResults && proposalResults.votes.length > 0;
     const [viewCount, setViewCount] = useState<number>(10);

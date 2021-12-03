@@ -50,7 +50,11 @@ const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
                     <SidebarContentWrapper>
                         <SidebarContent type={type}>
                             {type === 'results' && (
-                                <Results proposalResults={proposalResults} isLoading={proposalResultsQuery.isLoading} />
+                                <Results
+                                    proposalResults={proposalResults}
+                                    isLoading={proposalResultsQuery.isLoading}
+                                    proposalId={proposal.id}
+                                />
                             )}
                             {type === 'history' && (
                                 <History

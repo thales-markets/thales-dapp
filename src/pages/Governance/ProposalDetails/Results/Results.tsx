@@ -14,7 +14,7 @@ import {
 } from 'pages/Governance/components';
 import { truncateText } from 'utils/formatters/string';
 import styled from 'styled-components';
-import { NUMBER_OF_COUNCIL_MEMBERS } from 'constants/governance';
+import { COUNCIL_PROPOSAL_ID, NUMBER_OF_COUNCIL_MEMBERS } from 'constants/governance';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
@@ -25,11 +25,16 @@ type ResultsProps = {
     isCouncilResults?: boolean;
     isLoading: boolean;
     showAll?: boolean;
+    proposalId: string;
 };
 
-const Results: React.FC<ResultsProps> = ({ proposalResults, isCouncilResults, isLoading, showAll }) => {
+const Results: React.FC<ResultsProps> = ({ proposalId, proposalResults, isCouncilResults, isLoading, showAll }) => {
     const { t } = useTranslation();
     const [viewCount, setViewCount] = useState<number>(showAll ? 1000 : 10);
+    const spaceSymbol =
+        proposalId.toLowerCase() === COUNCIL_PROPOSAL_ID.toLowerCase() || !proposalResults
+            ? 'WD'
+            : proposalResults.spaceSymbol;
 
     const choices = useMemo(() => {
         if (proposalResults) {
@@ -85,9 +90,9 @@ const Results: React.FC<ResultsProps> = ({ proposalResults, isCouncilResults, is
                                         <LightMediumTooltip title={choice.choice}>
                                             <ResultLabel>{label}</ResultLabel>
                                         </LightMediumTooltip>
-                                        <Votes>{`${formatNumberShort(results.resultsByVoteBalance[choice.i])} ${
-                                            proposalResults.spaceSymbol
-                                        }`}</Votes>
+                                        <Votes>{`${formatNumberShort(
+                                            results.resultsByVoteBalance[choice.i]
+                                        )} ${spaceSymbol}`}</Votes>
                                     </FlexDiv>
                                     <Percentage>{formatPercentage(percentage)}</Percentage>
                                 </SidebarRowData>

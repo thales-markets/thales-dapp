@@ -27,6 +27,7 @@ const CouncilMembers: React.FC = () => {
                         isCouncilResults={true}
                         isLoading={proposalResultsQuery.isLoading}
                         showAll={true}
+                        proposalId={COUNCIL_PROPOSAL_ID}
                     />
                 </SidebarContent>
             </SidebarContentWrapper>
