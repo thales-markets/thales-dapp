@@ -129,6 +129,7 @@ export type OrderItem = {
     rawOrder: any;
     signature: Signature;
     displayOrder: DisplayOrder;
+    orderData: any;
 };
 
 export type ExtendedOrderItem = OrderItem & {

@@ -132,16 +132,21 @@ export const cancelOrder = async (network: NetworkId, walletAddress: any, order:
     if (contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
         const connector = new Web3ProviderConnector(web3);
+
+        console.log(gasLimit);
+        console.log(walletAddress);
+        console.log(gasPrice);
+        console.log(order);
         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
         const callData = limitOrderProtocolFacade.cancelLimitOrder(order.data);
         console.log('Order cancelling: ', callData);
 
-        await web3.eth.sendTransaction({
-            from: walletAddress,
-            gas: gasLimit, // Set your gas limit
-            gasPrice: gasPrice, // Set your gas price
-            to: contractAddress,
-            data: callData,
-        });
+        // await web3.eth.sendTransaction({
+        //     from: walletAddress,
+        //     gas: gasLimit, // Set your gas limit
+        //     gasPrice: gasPrice, // Set your gas price
+        //     to: contractAddress,
+        //     data: callData,
+        // });
     }
 };

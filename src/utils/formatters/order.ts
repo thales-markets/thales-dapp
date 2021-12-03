@@ -36,6 +36,9 @@ export function prepSellOrder(record: any) {
             potentialReturn,
             potentialReturnAmount,
         },
+        orderData: {
+            data: record.data,
+        },
     };
 }
 
@@ -73,6 +76,9 @@ export function prepBuyOrder(record: any) {
             orderHash,
             potentialReturn,
             potentialReturnAmount,
+        },
+        orderData: {
+            data: record.data,
         },
     };
 }

@@ -100,12 +100,11 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const handleCancelOrder = async () => {
         setTxErrorMessage(null);
         setIsCanceling(true);
-
         try {
             cancelOrder(
                 networkId,
                 walletAddress,
-                order.rawOrder,
+                order.orderData,
                 gasLimit !== null ? gasLimit : undefined,
                 gasLimit
             ).then(() => {
