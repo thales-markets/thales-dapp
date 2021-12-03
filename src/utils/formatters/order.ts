@@ -9,9 +9,9 @@ export function prepSellOrder(record: any) {
     const amount = bigNumberFormatter(record.makerAmount);
     const total = bigNumberFormatter(record.takerAmount);
     const timeRemaining = toJSTimestamp(expirationTimestamp);
-    const fillableAmount = bigNumberFormatter(record.remainingMakerAmount) / price;
-    const fillableTotal = bigNumberFormatter(record.remainingMakerAmount);
-    const filled = (amount - fillableAmount) / amount;
+    const fillableAmount = bigNumberFormatter(record.remainingMakerAmount);
+    const fillableTotal = bigNumberFormatter(record.takerAmount);
+    const filled = (amount - bigNumberFormatter(record.remainingMakerAmount)) / amount;
     const orderHash = record.orderHash;
     const potentialReturn = 1 / price - 1;
     const potentialReturnAmount = fillableAmount - fillableTotal;
