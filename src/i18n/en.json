@@ -953,7 +953,8 @@
                 "was": "Was",
                 "eliminated": "Eliminated",
                 "players": "Players",
-                "ended": "Ended"
+                "ended": "Ended",
+                "optimism-timestamp-message": "As the maximum rollup time to l1 on Optimism is 5 minutes, actions such as closing rounds that depend on timestamp can be up to 5 minutes delayed."
             },
             "scoreboard": {
                 "starts": "Thales Royale Starts In:",
