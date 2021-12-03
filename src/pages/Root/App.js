@@ -1,35 +1,35 @@
-import React, { useEffect, lazy, Suspense, useState } from 'react';
-import { Router, Switch, Route, Redirect } from 'react-router-dom';
-import ROUTES from '../../constants/routes';
-import MainLayout from '../../components/MainLayout';
-import { QueryClientProvider } from 'react-query';
-import { getEthereumNetwork, isNetworkSupported, SUPPORTED_NETWORKS, getIsOVM } from 'utils/network';
-import snxJSConnector from 'utils/snxJSConnector';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateNetworkSettings, updateWallet, getNetworkId } from 'redux/modules/wallet';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { getIsAppReady, setAppReady } from 'redux/modules/app';
-import queryConnector from 'utils/queryConnector';
-import Loader from 'components/Loader';
-import { initOnboard } from 'config/onboard';
-import useLocalStorage from 'hooks/useLocalStorage';
-import { LOCAL_STORAGE_KEYS } from 'constants/storage';
-import onboardConnector from 'utils/onboardConnector';
-import { history } from 'utils/routes';
 import { Snackbar } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
+import { loadProvider } from '@synthetixio/providers';
+import Loader from 'components/Loader';
+import { initOnboard } from 'config/onboard';
+import { LOCAL_STORAGE_KEYS } from 'constants/storage';
+import useLocalStorage from 'hooks/useLocalStorage';
+import EarnPage from 'pages/Options/Earn/Earn.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
-import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import ThalesRoyal from 'pages/Options/Royal/ThalesRoyal';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+import { QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route, Router, Switch } from 'react-router-dom';
+import { getIsAppReady, setAppReady } from 'redux/modules/app';
+import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS } from 'utils/network';
+import onboardConnector from 'utils/onboardConnector';
+import queryConnector from 'utils/queryConnector';
+import { history } from 'utils/routes';
+import snxJSConnector from 'utils/snxJSConnector';
+import MainLayout from '../../components/MainLayout';
+import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
-import { loadProvider } from '@synthetixio/providers';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
-
 const App = () => {
     const dispatch = useDispatch();
     const isAppReady = useSelector((state) => getIsAppReady(state));
@@ -179,19 +179,32 @@ const App = () => {
             <Suspense fallback={<Loader />}>
                 <Router history={history}>
                     <Switch>
+                        <Route exact path={ROUTES.Options.Royal}>
+                            <MainLayout>
+                                <ThalesRoyal />
+                            </MainLayout>
+                        </Route>
+
+                        {isL2 && (
+                            <Route>
+                                <Redirect to={ROUTES.Options.Home} />
+                                <MainLayout>
+                                    <OptionsHome />
+                                </MainLayout>
+                            </Route>
+                        )}
+
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <MainLayout>
                                 <OptionsCreateMarket />
                             </MainLayout>
                         </Route>
 
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.Leaderboard}>
-                                <MainLayout>
-                                    <LeaderboardPage />
-                                </MainLayout>
-                            </Route>
-                        )}
+                        <Route exact path={ROUTES.Options.Leaderboard}>
+                            <MainLayout>
+                                <LeaderboardPage />
+                            </MainLayout>
+                        </Route>
 
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
@@ -199,7 +212,12 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route
+                        <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                            <MainLayout>
+                                <QuickTradingCompetitionPage />
+                            </MainLayout>
+                        </Route>
+ <Route
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
                             render={(routeProps) => (
@@ -208,22 +226,11 @@ const App = () => {
                                 </MainLayout>
                             )}
                         />
-
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
-                                <MainLayout>
-                                    <QuickTradingCompetitionPage />
-                                </MainLayout>
-                            </Route>
-                        )}
-
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.Token}>
-                                <MainLayout>
-                                    <EarnPage />
-                                </MainLayout>
-                            </Route>
-                        )}
+                        <Route exact path={ROUTES.Options.Token}>
+                            <MainLayout>
+                                <EarnPage />
+                            </MainLayout>
+                        </Route>
 
                         <Route
                             exact
@@ -246,7 +253,6 @@ const App = () => {
                                 <Home />
                             </MainLayout>
                         </Route>
-
                         <Route>
                             <Redirect to={ROUTES.Options.Home} />
                             <MainLayout>
