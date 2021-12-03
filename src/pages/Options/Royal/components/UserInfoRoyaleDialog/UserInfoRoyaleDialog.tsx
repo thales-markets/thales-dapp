@@ -38,14 +38,16 @@ const UserInfoRoyaleDialog: React.FC<UserInfoRoyaleDialogProps> = ({
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
         >
-            <ModalWrapper className={theme === Theme.Light ? 'light-theme' : 'dark-theme'}>
+            <ModalWrapper
+                className={'user-info-royale-modal ' + (theme === Theme.Light ? 'light-theme' : 'dark-theme')}
+            >
                 <Header>
                     <Text className="text-m bold font-sansation">{currentDisplayName}</Text>
                     <XButton onClick={() => handleClose(false)} />
                 </Header>
                 <WalletWrapper>
                     <Image src={metamask} style={{ width: 55, height: 49 }}></Image>
-                    <FlexDivColumn style={{ alignItems: 'center', flex: 2 }}>
+                    <FlexDivColumn className="user-info-royale-modal-text" style={{ alignItems: 'center', flex: 2 }}>
                         <Text className="text-m bold font-sansation">{truncateAddress(walletAddress, 13, 4)}</Text>
                         <Text className="text-xs bold capitalize font-sansation">{network}</Text>
                     </FlexDivColumn>
@@ -114,6 +116,9 @@ const WalletWrapper = styled(FlexDiv)`
     align-items: center;
     font-family: Sansation !important;
     color: var(--color);
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+    }
 `;
 
 const DialogButton = styled(Button)`

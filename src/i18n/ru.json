@@ -1005,7 +1005,8 @@
                 "title": "Неправильная сеть!",
                 "message": "Чтобы продолжить, переключитесь на Optimistic Kovan",
                 "button": "Переключиться на Optimistic Kovan",
-                "parameters": "Параметры ОП Кован"
+                "parameters": "Параметры ОП Кован",
+                "return-to-dapp": "Вернуться в приложение Thales dApp"
             },
             "wallet-not-connected-dialog": {
                 "button": "Подключить кошелек",

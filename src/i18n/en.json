@@ -1002,6 +1002,7 @@
             "wrong-network-dialog": {
                 "title": "Wrong network!",
                 "message": "Please switch to Optimistic Kovan to continue",
+                "return-to-dapp": "Return to the Thales dApp",
                 "button": "Switch to Optimistic Kovan",
                 "parameters": "OP Kovan parameters"
             },

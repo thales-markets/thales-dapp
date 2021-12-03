@@ -119,7 +119,14 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
             }
             const maxPages =
                 Math.ceil(usersToShow.length / showPerPage) < 1 ? 1 : Math.ceil(usersToShow.length / showPerPage);
-            const usersToDisplay = usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
+            // set page number to 1 in case number of players in search result < usersToShow
+            const usersToDisplay =
+                usersToShow.length < showPerPage
+                    ? usersToShow
+                    : usersToShow.slice((page - 1) * showPerPage, showPerPage * page);
+
+            Math.ceil(usersToShow.length / showPerPage) < 1 || usersToShow.length < showPerPage ? setPage(1) : '';
+
             return { maxPages, usersToDisplay };
         }
     }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData]);
