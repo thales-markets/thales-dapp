@@ -369,11 +369,6 @@ export const binaryOptionMarketContract = {
                             type: 'address',
                         },
                         {
-                            internalType: 'address',
-                            name: 'binaryOptionMastercopy',
-                            type: 'address',
-                        },
-                        {
                             internalType: 'contract IERC20',
                             name: 'sUSD',
                             type: 'address',
@@ -416,6 +411,16 @@ export const binaryOptionMarketContract = {
                         {
                             internalType: 'address',
                             name: 'iOracleInstanceAddress',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'address',
+                            name: 'long',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'address',
+                            name: 'short',
                             type: 'address',
                         },
                     ],
@@ -723,36 +728,6 @@ export const binaryOptionMarketContract = {
             inputs: [
                 {
                     internalType: 'address',
-                    name: '_zeroExAddress',
-                    type: 'address',
-                },
-            ],
-            name: 'setZeroExAddress',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_zeroExAddress',
-                    type: 'address',
-                },
-            ],
-            name: 'setZeroExAddressAtInit',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'address',
                     name: '_address',
                     type: 'address',
                 },
@@ -797,21 +772,6 @@ export const binaryOptionMarketContract = {
                     internalType: 'uint256',
                     name: 'short',
                     type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'zeroExAddress',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
                 },
             ],
             payable: false,
