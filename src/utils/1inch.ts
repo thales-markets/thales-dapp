@@ -140,27 +140,34 @@ export const fillLimitOrder = async (
         try {
             const web3 = new Web3(Web3.givenProvider) as any;
             const connector = new Web3ProviderConnector(web3);
-            let makerAmount, takerAmount;
-            console.log(order);
+            let makerAmount, takerAmount, threshold;
+
             if (isBuy) {
                 makerAmount = Number(amount) * order.displayOrder.price;
                 takerAmount = '0';
+                threshold = Number(amount);
             } else {
                 makerAmount = Number(amount);
                 takerAmount = '0';
+                threshold = Number(amount) * order.displayOrder.price;
             }
 
             makerAmount = ethers.utils.parseUnits('' + makerAmount, 18).toString();
             takerAmount = ethers.utils.parseUnits('' + takerAmount, 18).toString();
+            threshold = ethers.utils.parseUnits('' + threshold, 18).toString();
 
             const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
 
             const callData = limitOrderProtocolFacade.fillLimitOrder(
-                order.orderData.data,
+                {
+                    ...order.orderData.data,
+                    permit: '0x',
+                    interaction: '0x',
+                },
                 order.signature,
                 makerAmount,
                 takerAmount,
-                order.rawOrder.takerAmount
+                threshold
             );
 
             await web3.eth.sendTransaction({
