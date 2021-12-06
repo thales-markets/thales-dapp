@@ -1,8 +1,6 @@
 import ValidationMessage from 'components/ValidationMessage';
 import { ethers } from 'ethers';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-// import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-// import { getIs0xReady } from 'redux/modules/app';
 import { DefaultSubmitButton, SubmitButtonContainer } from 'pages/Options/Market/components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +10,6 @@ import { RootState } from 'redux/rootReducer';
 import { OptionSide, OrderItem } from 'types/options';
 import { cancelOrder } from 'utils/1inch';
 import { formatGasLimit } from 'utils/network';
-// import { IZeroExEvents } from '@0x/contract-wrappers';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
 import {
@@ -39,50 +36,10 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    // const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
-
-    // const { exchangeProxy } = contractWrappers0xConnector;
-
-    // const isButtonDisabled = !isWalletConnected || isCanceling || !is0xReady;
 
     const isButtonDisabled = !isWalletConnected || isCanceling;
 
-    // useEffect(() => {
-
-    // if (is0xReady) {
-    //     const subscriptionToken = exchangeProxy.subscribe(
-    //         IZeroExEvents.OrderCancelled,
-    //         { orderHash: order.displayOrder.orderHash },
-    //         (_, log) => {
-    //             if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-    //                 refetchOrderbook(baseToken);
-    //                 refetchOrders(networkId);
-    //                 onClose();
-    //             }
-    //         }
-    //     );
-    //     return () => {
-    //         exchangeProxy.unsubscribe(subscriptionToken);
-    //     };
-    // }
-    // }, [is0xReady]);
-
     useEffect(() => {
-        // TODO: FETCHING GAS LIMIT ON BUTTON ENABLING/DISABLING => SOLUTION TBD
-        // const fetchGasLimit = async () => {
-        //     try {
-        //         const gasEstimate = await exchangeProxy
-        //             .cancelLimitOrder(order.rawOrder)
-        //             .estimateGasAsync({ from: walletAddress });
-        //         setGasLimit(formatGasLimit(gasEstimate, networkId));
-        //     } catch (e) {
-        //         console.log(e);
-        //         setGasLimit(null);
-        //     }
-        // };
-        // if (isButtonDisabled) return;
-        // fetchGasLimit();
-
         const fetchGasLimit = async () => {
             try {
                 const provider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -106,24 +63,16 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 () => {
                     refetchOrderbook(baseToken);
                     refetchOrders(networkId);
+                    onClose();
+                    setIsCanceling(false);
                 }
             );
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsCanceling(false);
+            onClose();
         }
-
-        // try {
-        //     await exchangeProxy.cancelLimitOrder(order.rawOrder).sendTransactionAsync({
-        //         from: walletAddress,
-        //         gas: gasLimit !== null ? gasLimit : undefined,
-        //     });
-        // } catch (e) {
-        //     console.log(e);
-        //     setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-        //     setIsCanceling(false);
-        // }
     };
 
     return (
