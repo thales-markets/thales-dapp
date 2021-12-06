@@ -7,7 +7,6 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide, ZeroExErrorResponse } from 'types/options';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { formatCurrencyWithKey, formatPercentageWithSign, toBigNumber, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -15,7 +14,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
 import { formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
-import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { getAddress } from 'utils/formatters/ethers';
 import { AMOUNT_PERCENTAGE, SLIPPAGE_PERCENTAGE, Zero0xErrorReason, Zero0xErrorCode } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
@@ -52,6 +51,12 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import { refetchOrderbook, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import {
+    get1InchBaseURL,
+    ONE_INCH_SWAP_APPROVE_ALLOWANCE_URL,
+    ONE_INCH_SWAP_CONTRACTS,
+    ONE_INCH_SWAP_QUOTE_URL,
+} from 'utils/1inch';
 
 type TokenSwapProps = {
     optionSide: OptionSide;
@@ -141,9 +146,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const buyToken = isBuy ? baseToken : SynthsUSD.address;
     const sellToken = isBuy ? SynthsUSD.address : baseToken;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
-    const addressToApprove = get0xExchangeProxyAddress(networkId);
+    const addressToApprove = ONE_INCH_SWAP_CONTRACTS[networkId];
 
-    const baseUrl = get0xBaseURL(networkId);
+    const baseUrl = get1InchBaseURL(networkId);
 
     const orderbookQuery = useBinaryOptionsMarketOrderbook(networkId, baseToken, {
         enabled: isAppReady,
@@ -162,16 +167,26 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
             try {
-                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
+                const allowanceUrl = `${baseUrl}${ONE_INCH_SWAP_APPROVE_ALLOWANCE_URL}?tokenAddress=${sellToken}&walletAddress=${walletAddress}`;
+                const allowanceResponse = await fetch(allowanceUrl);
+                if (allowanceResponse.status == 200) {
+                    console.log('setting allowance');
+                    setAllowance(true);
+                }
             } catch (e) {
                 console.log(e);
             }
+            /*try {
+                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                setAllowance(!!bigNumberFormatter(allowance));
+            }*/
         };
 
         const registerAllowanceListener = () => {
             erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                console.log('check if allowance listener works');
+                if (owner === walletAddress && spender === getAddress(addressToApprove ? addressToApprove : '')) {
+                    console.log('setting allowance 2');
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -255,19 +270,21 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     };
 
     useDebouncedEffect(() => {
-        const get0xPrice = async () => {
+        const get1InchPrice = async () => {
             if (isAmountEntered && isSlippageValid) {
                 const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
+                console.log(sellToken);
+                console.log(buyToken);
+                console.log(tokenAmount);
                 try {
-                    const swapUrl = `${baseUrl}swap/v1/quote?sellToken=${sellToken}&buyToken=${buyToken}&${
-                        isBuy ? 'buyAmount' : 'sellAmount'
-                    }=${tokenAmount}&slippagePercentage=${Number(slippage) / 100}${
-                        isWalletConnected && hasAllowance ? `&takerAddress=${walletAddress}` : ''
-                    }`;
+                    const swapUrl = `${baseUrl}${ONE_INCH_SWAP_QUOTE_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}`; /*&slippage=${Number(slippage) / 100}${
+                        isWalletConnected && hasAllowance ? `&destReceiver=${walletAddress}` : ''
+                    }`;*/
 
                     const response = await fetch(swapUrl);
                     if (response.status == 200) {
                         const quote = await response.json();
+                        console.log(quote);
                         setPrice(quote.price);
                         setTotal(Number(amount) * Number(quote.price));
                         setMinimumReceived(Number(amount) * Number(quote.guaranteedPrice));
@@ -295,7 +312,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 resetQuote();
             }
         };
-        get0xPrice();
+        get1InchPrice();
     }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, isAmountEntered, isSlippageValid]);
 
     const handle0xErrorResponse = (response: ZeroExErrorResponse) => {

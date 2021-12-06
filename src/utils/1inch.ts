@@ -25,6 +25,23 @@ export const ONE_INCH_CONTRACTS: Record<NetworkId, string | null> = {
     69: '',
 };
 
+export const ONE_INCH_SWAP_CONTRACTS: Record<NetworkId, string | null> = {
+    1: '0x1111111254fb6c44bac0bed2854e76f90643097d',
+    10: '0x1111111254760f7ab3f16433eea9304126dcd199',
+    3: '',
+    4: '',
+    5: '',
+    42: '',
+    69: '',
+};
+
+export const ONE_INCH_SWAP_APPROVE_ALLOWANCE_URL = 'approve/allowance';
+export const ONE_INCH_SWAP_QUOTE_URL = 'quote';
+
+export const get1InchBaseURL = (networkId: NetworkId) => {
+    return `https://api.1inch.exchange/v4.0/${networkId}/`;
+};
+
 export const createOneInchLimitOrder = async (
     walletAddress: string,
     network: NetworkId,
