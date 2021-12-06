@@ -27,14 +27,15 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
                 <FlexDivRowCentered>
                     <Status status={proposal.state}>{t(`governance.status.${proposal.state}`)}</Status>
                     {!closed && (
-                        <div>
+                        <RightSection>
                             <span>{t(`governance.proposal.${pending ? 'starts-in-label' : 'ends-in-label'}`)}: </span>
                             <TimeRemaining end={(pending ? proposal.start : proposal.end) * 1000} fontSize={16} />
-                        </div>
+                        </RightSection>
                     )}
                     {!!closed && (
                         <Result>
-                            {t(`governance.proposal.final-result-label`)}: {finalChoice}
+                            <span>{t(`governance.proposal.final-result-label`)}: </span>
+                            <span>{finalChoice}</span>
                         </Result>
                     )}
                 </FlexDivRowCentered>
@@ -81,9 +82,10 @@ const Status = styled(FlexDivCentered)<{ status: string }>`
     letter-spacing: 0.5px;
     border: 2px solid ${(props) => getColor(props.status)};
     border-radius: 10px;
-    width: 100px;
+    padding: 0px 20px;
     height: 36px;
     text-align: center;
+    margin-right: 20px;
 `;
 
 const Title = styled(FlexDivRow)<{ status: string }>`
@@ -105,6 +107,11 @@ const Body = styled(FlexDivRow)<{ status: string }>`
 
 const Result = styled.div`
     color: #b8c6e5;
+    text-align: right;
+`;
+
+const RightSection = styled.div`
+    text-align: right;
 `;
 
 export default ProposalCard;

@@ -8,6 +8,8 @@ import { Proposal, ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { Pie, PieChart, Cell } from 'recharts';
 import { PieChartContainer } from 'pages/Options/Earn/components';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
+import i18n from 'i18n';
 
 type TipsApprovalBoxProps = {
     proposal: Proposal;
@@ -46,6 +48,10 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         ? ''
         : t(`governance.proposal.voting-approval-status.in-progress`);
 
+    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+        ? i18n.language
+        : DEFAULT_LANGUAGE;
+
     return (
         <>
             {!isLoading && proposalResults && (
@@ -81,7 +87,15 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
                                 ))}
                             </Pie>
                         </StyledPieChart>
-                        <ChartInnerText isInProgress={active && !isPassed}>{chartInnerText}</ChartInnerText>
+                        <ChartInnerText
+                            isInProgress={active && !isPassed}
+                            fontSize={selectedLanguage === SupportedLanguages.RUSSIAN ? 12 : 16}
+                            lineHeight={
+                                active && !isPassed ? 24 : selectedLanguage === SupportedLanguages.RUSSIAN ? 48 : 36
+                            }
+                        >
+                            {chartInnerText}
+                        </ChartInnerText>
                     </StyledPieChartContainer>
                 </Container>
             )}
@@ -135,14 +149,14 @@ const StyledPieChartContainer = styled(PieChartContainer)`
 
 const StyledPieChart = styled(PieChart)``;
 
-const ChartInnerText = styled(FlexDivColumnCentered)<{ isInProgress: boolean }>`
+const ChartInnerText = styled(FlexDivColumnCentered)<{ isInProgress: boolean; fontSize: number; lineHeight: number }>`
     position: absolute;
     bottom: 36%;
     left: 50%;
     transform: translate(-50%, 0);
     font-weight: ${(props) => (props.isInProgress ? 300 : 500)};
-    font-size: 16px;
-    line-height: ${(props) => (props.isInProgress ? 24 : 36)}px;
+    font-size: ${(props) => props.fontSize}px;
+    line-height: ${(props) => props.lineHeight}px;
     color: #f6f6fe;
     text-transform: uppercase;
     text-align: center;

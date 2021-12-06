@@ -92,9 +92,11 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                 fetchPreloadedProposal();
             } else {
                 setSelectedTab(params.space as SpaceKey);
+                setSelectedProposal(undefined);
             }
         } else {
             setSelectedTab(SpaceKey.TIPS);
+            setSelectedProposal(undefined);
         }
     }, [props.match]);
 

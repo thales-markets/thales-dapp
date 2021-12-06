@@ -1029,7 +1029,7 @@
         },
         "status": {
             "all": "все",
-            "active": "голосование",
+            "active": "активный",
             "closed": "закрыто",
             "pending": "проект"
         },
@@ -1055,7 +1055,7 @@
             "vote-label": "Голосование",
             "author-label": "Автор",
             "start-date-label": "Дата начала",
-            "ends-in-label": "Заканчивается через",
+            "ends-in-label": "Оставшееся время",
             "voting-power-label": "Ваше право голоса",
             "end-date-label": "Дата окончания",
             "starts-in-label": "Начинается в",
@@ -1067,10 +1067,10 @@
             "final-result-label": "Конечный результат",
             "vote-progress-label": "Идет голосование ...",
             "voted-in-label": "Проголосовал в",
-            "votes": "{{голосов}} Голоса",
+            "votes": "{{votes}} Голоса",
             "no-proposals-found": "Предложений не найдено",
             "view-all-proposals": "Просмотреть все предложения",
-            "vote-note": "Для утверждения необходимо {{hostingVotes}} из {{totalVotes}} голосов"
+            "vote-note": "Для утверждения необходимо {{approvalVotes}} из {{totalVotes}} голосов"
         },
         "stakers": {
             "no-stakers-found": "Стейкеров не найдено",

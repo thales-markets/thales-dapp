@@ -106,7 +106,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                     <Divider />
                     <FlexDivRowCentered>
                         <Text>{t(`governance.proposal.voting-system-label`)}</Text>
-                        <Text>{t(`governance.proposal.type.${proposal.type}`)}</Text>
+                        <Text style={{ textAlign: 'right' }}>{t(`governance.proposal.type.${proposal.type}`)}</Text>
                     </FlexDivRowCentered>
                 </DetailsContainer>
                 <DetailsContainer>
