@@ -928,94 +928,96 @@
                 "theme": "主题"
             },
             "footer": {
-                "current-reward-per-player": "当前每位玩家的奖励",
-                "price": "价钱",
-                "rd": "圆形的",
-                "down": "下",
-                "current": "当前的",
-                "scoreboard": "记分牌",
-                "vs": "对比",
-                "reward-per-player": "每位玩家的奖励",
-                "up": "向上",
-                "price-source": "资料来源：乐观 Chainlink ETH 提要",
+                "current": "当前",
+                "price": "价格",
+                "current-positions": "当前交易敞口",
+                "current-reward-per-player": "每位玩家当前奖励r",
+                "reward-per-player": "每位玩家奖励",
                 "players-alive": "活着的玩家",
-                "current-positions": "目前职位",
-                "stats": "统计数据",
-                "royale": "皇家",
-                "you-were-eliminated-in": "你被淘汰了"
+                "up": "向上",
+                "down": "向下",
+                "vs": "vs",
+                "you-were-eliminated-in": "你被淘汰",
+                "rd": "回合",
+                "royale": "Royale",
+                "scoreboard": "积分榜",
+                "stats": "数据",
+                "price-source": "来源：链接ETH"
             },
             "battle": {
-                "players": "球员",
-                "will-be": "{{token}} 会超过",
-                "ended": "结束",
-                "was": "曾是",
-                "in": "在",
-                "round": "圆形的",
+                "round": "回合",
+                "will-be": "将{{token}}更过",
+                "in": "in",
+                "time-left-for-positioning": "剩余时间",
                 "time-left-in-round": "回合剩余时间",
-                "close-round": "关闭回合",
-                "time-left-for-positioning": "定位剩余时间",
+                "close-round": "结束回合",
+                "was": "是",
                 "eliminated": "淘汰",
+                "players": "玩家",
+                "ended": "结束",
                 "optimism-timestamp-message": "由于 Optimism 上 L1 的最大汇总时间为 5 分钟，因此取决于时间戳的关闭回合等操作最多可延迟 5 分钟。"
             },
             "scoreboard": {
-                "table-header": {
-                    "status": "地位",
-                    "name": "显示名称",
-                    "avatar": "头像",
-                    "number": "玩家 <无> № <无>"
-                },
-                "starts": "Thales Royale 开始于：",
-                "info6": "<italic>祝你好运，让战斗开始！</italic>",
-                "ends": "泰雷兹皇家结束于：",
-                "search": "搜索球员/号码",
-                "go-to": "前往泰雷兹不和谐频道",
-                "blog": "[泰雷兹皇家博文]",
-                "question": "你有能力击败比赛并进入最后一轮吗？",
-                "verify": "#thales-royale-verify 并输入：",
-                "verification": "完成验证！",
-                "round-positioning": " 直到定位结束",
-                "round-period": "回合{{round}}结束于",
-                "thales-default": "Thales：由 Synthetix 提供支持的二元期权交易。",
-                "period-expired": "注册期已过",
-                "info4": "猜对者晋级下一轮。没有的被淘汰。达到并击败最后一轮的玩家瓜分了整个奖池。",
-                "info2": "Thales Royale 是一款<bold>连续赢家通吃的预测游戏，</bold> 进行了 6 轮比赛。",
-                "start-royale": "开始泰雷兹皇家",
-                "round-ending": " 直到回合{{round}}结束",
-                "round-starts": "下一轮开始于：",
-                "sign-up": "报名",
-                "winner": "优胜者",
-                "info5": "所有信息、规则和详细的回合和奖品结构都可以在这里找到：",
-                "position-period": "回合定位剩余时间",
-                "info3": "注册期结束后，参与者将看到未来行使日期的资产目标价格。他们必须<bold>预测资产的实际价格是否会高于（△）或低于（◯）所述行使日期的目标价格。</bold>",
-                "placeholder": "!verify <你的以太坊地址>",
-                "alive": "活",
-                "users-per-page": "每页用户数",
-                "dead": "死的",
-                "thales-suffix": " |泰雷兹",
+                "starts": "泰雷兹 Royale 开始于:",
+                "round-starts": "下一轮开始于:",
+                "position-period": "轮中剩余时间",
+                "round-period": "回合{{round}} 结束于",
+                "start-royale": "开始泰雷兹 Royale",
+                "ends": "泰雷兹Royale结束于",
+                "question": "您是否具备击败竞争对手并进入决赛的条件?",
+                "info2": "泰雷兹Royale是一款连续的赢家通吃预测游戏，</bold>分6轮进行",
+                "info3": "注册期结束后，参与者将收到未来执行日期资产的目标价格。他们必须<bold>预测资产的实际价格是否会更高(△) 或更低(◯) 高于上述执行日期的目标价格。</bold>“",
+                "info4": "猜对的人进入下一轮。猜错的人被淘汰。到达并击败最后一轮的玩家将分享整个奖金池。",
+                "info5": "所有信息、规则以及详细的回合和奖金结构都可以在这里找到",
+                "info6": "<italic>祝你好运，让战斗开始吧！</italic>",
+                "blog": "[Thales Royale博客帖子]",
+                "player-no": "玩家  <sans>№<sans>: ",
                 "eliminated": "你被淘汰了",
-                "player-no": "玩家 <无> № <无>："
+                "period-expired": "注册期限已过",
+                "table-header": {
+                    "status": "状态",
+                    "avatar": "头像",
+                    "name": "名称",
+                    "number": "玩家 <sans>№<sans>"
+                },
+                "search": "搜索玩家/号码",
+                "verification": "完成验证",
+                "go-to": "转到泰利斯不和谐频道",
+                "verify": "#泰雷兹Royal盐城并键入: ",
+                "placeholder": "！验证<您的以太坊地址>",
+                "sign-up": "注册",
+                "round-positioning": "直到敞口选择结束",
+                "round-ending": " 直到回合{round}}结束",
+                "thales-suffix": " | 泰雷兹",
+                "thales-default": "泰雷兹：由Synthetix提供动力的二元期权交易。",
+                "dead": "死亡",
+                "alive": "活着",
+                "winner": "获胜者",
+                "users-per-page": "每页用户数"
             },
             "redirect-dialog": {
-                "switch-to-mainnet": "切换到以太坊主网",
-                "message": "回到泰雷兹皇家",
-                "title": "你在乐观科文网络上",
-                "or": "或者"
+                "title": "你在 Optimistic Kovan 网络",
+                "message": "回到泰雷兹Royale",
+                "or": "或",
+                "switch-to-mainnet": "切换到以太坊mainnet"
             },
             "wrong-network-dialog": {
-                "title": "网络不对！",
-                "button": "切换到乐观的科万",
-                "message": "请切换到 Optimistic Kovan 继续",
-                "parameters": "OP Kovan 参数",
-                "return-to-dapp": "返回泰雷兹 dApp"
+                "title": "错误的网络！",
+                "message": "请切换到Optimistic Kovan 继续",
+                "return-to-dapp": "返回泰雷兹dApp",
+                "button": "切换到Optimistic Kovan",
+                "parameters": "OP Kovan参数"
             },
             "wallet-not-connected-dialog": {
-                "message": "请连接您的钱包以继续",
-                "button": "连接钱包",
-                "title": "钱包未连接"
+                "title": "钱包未连接",
+                "message": "请连接您的钱包继续",
+                "button": "连接钱包"
             }
         }
     },
     "governance": {
+        "title": "治理",
+        "you": "你",
         "tabs": {
             "thalesgov": {
                 "eth": "提示"
@@ -1023,67 +1025,65 @@
             "thalescouncil": {
                 "eth": "理事会"
             },
-            "thales-stakers": "泰雷兹前锋"
+            "thales-stakers": "Thales质押者"
         },
+        "back-to-proposals": "返回提案概述",
         "status": {
-            "closed": "关闭",
             "all": "全部",
-            "pending": "草案",
-            "active": "表决"
+            "pending": "草稿",
+            "active": "投票",
+            "closed": "结束"
         },
         "sidebar": {
             "title": {
                 "results": "结果",
-                "council-members": "现任理事会成员",
-                "history": "投票"
+                "history": "投票",
+                "council-members": "现任理事会成员"
             }
         },
         "proposal": {
+            "status-label": "状态",
+            "author-label": "作者",
+            "proposal-label": "提案",
+            "voting-system-label": "投票系统",
+            "start-date-label": "开始日期",
+            "end-date-label": "结束日期",
+            "snapshot-label": "快照",
+            "details-label": "细节",
+            "starts-in-label": "从。。开始",
+            "ends-in-label": "到。。结束",
+            "final-result-label": "最后结果t",
+            "no-proposals-found": "未找到提案",
+            "view-all-proposals": "“查看所有提案",
+            "vote-label": "投票",
+            "vote-note": "{{approvalVotes}} of {{totalVotes}} votes needed for approval",
+            "voting-power-label": "您的投票权",
+            "vote-progress-label": "正在投票",
+            "vote-confirmation-message": "投票成功",
+            "vote-confirmation": "您确定要投票“{choice}}”？此操作无法撤消。",
             "type": {
                 "single-choice": "单选投票",
                 "weighted": "加权投票"
             },
+            "voted-in-label": "投票",
+            "votes": "{{votes}} 票",
             "voting-approval-status": {
                 "in-progress": "进行中",
                 "not-passed": "没过",
                 "passed": "通过"
-            },
-            "vote-label": "投票",
-            "voting-power-label": "你的投票权",
-            "end-date-label": "结束日期",
-            "proposal-label": "提议",
-            "voting-system-label": "投票系统",
-            "start-date-label": "开始日期",
-            "vote-note": "{{approvalVotes}} 的 {{totalVotes}} 票需要批准",
-            "starts-in-label": "开始于",
-            "status-label": "地位",
-            "no-proposals-found": "未找到任何提案",
-            "view-all-proposals": "查看所有提案",
-            "final-result-label": "最后结果",
-            "author-label": "作者",
-            "ends-in-label": "结束于",
-            "vote-confirmation-message": "投票成功",
-            "details-label": "细节",
-            "vote-progress-label": "投票进行中...",
-            "vote-confirmation": "您确定要投票给“{{choice}}”吗？此操作无法撤消。",
-            "snapshot-label": "快照",
-            "voted-in-label": "投票",
-            "votes": "{{votes}} 票"
+            }
         },
+        "no-votes": "对本提案无票",
+        "view-more": "查看更多",
         "stakers": {
-            "number-of-stakers": "质押者总数",
-            "no-stakers-found": "没有找到质押者",
-            "view-all-stakers": "查看所有前锋",
-            "total-staked-col": "总质押金额",
-            "search-placeholder": "搜索质押者...",
+            "staker-col": "质押者",
+            "total-staked-col": "全部质押",
             "tooltip-staked-directly": "直接质押",
-            "tooltip-escrowed-amount": "托管金额",
-            "staker-col": "斯塔克"
-        },
-        "you": "你",
-        "title": "治理",
-        "no-votes": "没有对该提案的投票",
-        "back-to-proposals": "返回提案概览",
-        "view-more": "查看更多"
+            "tooltip-escrowed-amount": "托管数量",
+            "no-stakers-found": "未发现质押",
+            "view-all-stakers": "查看所有质押",
+            "number-of-stakers": "质押者总量",
+            "search-placeholder": "查找质押人"
+        }
     }
 }
