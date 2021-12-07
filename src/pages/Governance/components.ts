@@ -46,8 +46,8 @@ export const VoteRow = styled(FlexDivColumnCentered)`
     border-bottom: 1px solid #2d3079;
 `;
 
-export const SidebarRowData = styled(FlexDivRow)`
-    font-weight: bold;
+export const SidebarRowData = styled(FlexDivRow)<{ fontWeight?: number }>`
+    font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 600)};
     font-size: 16px;
     line-height: 36px;
     color: #f6f6fe;

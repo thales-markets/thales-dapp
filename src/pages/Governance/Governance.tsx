@@ -331,7 +331,7 @@ const OptionsTabContainer = styled(FlexDiv)`
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     font-style: normal;
     font-weight: 500;
-    font-size: 25px;
+    font-size: 20px;
     line-height: 48px;
     color: #748bc6;
     user-select: none;
@@ -351,10 +351,11 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
 
 const Title = styled.p`
     font-weight: bold;
-    line-height: 64px;
+    line-height: 62px;
     letter-spacing: -1px;
     font-size: 39px;
-    padding-bottom: 25px;
+    padding-top: 20px;
+    padding-bottom: 10px;
     color: #f6f6fe;
     align-self: flex-start;
     @media (max-width: 767px) {
@@ -365,18 +366,18 @@ const Title = styled.p`
 `;
 
 const BackLinkWrapper = styled(FlexDiv)<{ isOverviewPage: boolean }>`
-    height: 36px;
+    height: 20px;
     align-self: start;
     margin-bottom: 10px;
     @media (max-width: 767px) {
-        height: ${(props) => (props.isOverviewPage ? '0' : '36px')};
+        height: ${(props) => (props.isOverviewPage ? '0' : '20px')};
     }
 `;
 
 const BackLink = styled(FlexDivCentered)`
     font-weight: normal;
-    font-size: 20px;
-    line-height: 36px;
+    font-size: 16px;
+    line-height: 20px;
     color: #b8c6e5;
     &path {
         fill: #b8c6e5;
@@ -391,9 +392,9 @@ const BackLink = styled(FlexDivCentered)`
 `;
 
 const ArrowIcon = styled(ArrowBackIcon)`
-    height: 20px;
-    width: 24px;
-    margin-right: 6px;
+    height: 16px;
+    width: 18px;
+    margin-right: 4px;
     margin-left: 4px;
 `;
 

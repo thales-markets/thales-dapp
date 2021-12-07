@@ -8,8 +8,6 @@ import { Proposal, ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { Pie, PieChart, Cell } from 'recharts';
 import { PieChartContainer } from 'pages/Options/Earn/components';
-import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
-import i18n from 'i18n';
 
 type TipsApprovalBoxProps = {
     proposal: Proposal;
@@ -24,6 +22,8 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
     const active = proposal.state === StatusEnum.Active;
     const isPassed = proposalResults && proposalResults.votes.length >= PROPOSAL_APPROVAL_VOTES;
 
+    const chartColor = isPassed ? '#8208FC' : closed ? 'rgba(130, 8, 252, 0.6)' : '#64D9FE';
+
     const pieData = useMemo(() => {
         const data = [];
         const numberOfVotes = proposalResults ? proposalResults.votes.length : 0;
@@ -32,7 +32,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
             const piece = {
                 name: 'vote',
                 value: 1,
-                color: index < numberOfVotes ? (closed && !isPassed ? 'rgba(130, 8, 252, 0.6)' : '#8208FC') : '#0C1C68',
+                color: index < numberOfVotes ? chartColor : '#0C1C68',
             };
             data.push(piece);
         }
@@ -48,25 +48,22 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         ? ''
         : t(`governance.proposal.voting-approval-status.in-progress`);
 
-    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
-        ? i18n.language
-        : DEFAULT_LANGUAGE;
-
     return (
         <>
             {!isLoading && proposalResults && (
                 <Container>
                     <VotedIn>
-                        <VotedInLabel>{t(`governance.proposal.voted-in-label`)}</VotedInLabel>
-                        <VoteNote>
-                            (
-                            {t(`governance.proposal.vote-note`, {
-                                approvalVotes: PROPOSAL_APPROVAL_VOTES,
-                                totalVotes: NUMBER_OF_COUNCIL_MEMBERS,
-                            })}
-                            )
-                        </VoteNote>
-
+                        <FlexDivColumnCentered>
+                            <VotedInLabel>{t(`governance.proposal.voted-in-label`)}</VotedInLabel>
+                            <VoteNote>
+                                (
+                                {t(`governance.proposal.vote-note`, {
+                                    approvalVotes: PROPOSAL_APPROVAL_VOTES,
+                                    totalVotes: NUMBER_OF_COUNCIL_MEMBERS,
+                                })}
+                                )
+                            </VoteNote>
+                        </FlexDivColumnCentered>
                         <Votes>{t(`governance.proposal.votes`, { votes: proposalResults.votes.length })}</Votes>
                     </VotedIn>
                     <StyledPieChartContainer>
@@ -87,15 +84,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
                                 ))}
                             </Pie>
                         </StyledPieChart>
-                        <ChartInnerText
-                            isInProgress={active && !isPassed}
-                            fontSize={selectedLanguage === SupportedLanguages.RUSSIAN ? 12 : 16}
-                            lineHeight={
-                                active && !isPassed ? 24 : selectedLanguage === SupportedLanguages.RUSSIAN ? 48 : 36
-                            }
-                        >
-                            {chartInnerText}
-                        </ChartInnerText>
+                        <ChartInnerText isInProgress={active && !isPassed}>{chartInnerText}</ChartInnerText>
                     </StyledPieChartContainer>
                 </Container>
             )}
@@ -122,7 +111,7 @@ const VotedInLabel = styled.span`
     line-height: 30px;
     color: #f6f6fe;
     text-align: center;
-    margin-top: 15px;
+    margin-top: 5px;
 `;
 
 const VoteNote = styled.span`
@@ -140,7 +129,6 @@ const Votes = styled.span`
     line-height: 48px;
     text-align: center;
     color: #f6f6fe;
-    margin-top: 6px;
 `;
 
 const StyledPieChartContainer = styled(PieChartContainer)`
@@ -149,14 +137,14 @@ const StyledPieChartContainer = styled(PieChartContainer)`
 
 const StyledPieChart = styled(PieChart)``;
 
-const ChartInnerText = styled(FlexDivColumnCentered)<{ isInProgress: boolean; fontSize: number; lineHeight: number }>`
+const ChartInnerText = styled(FlexDivColumnCentered)<{ isInProgress: boolean }>`
     position: absolute;
     bottom: 36%;
     left: 50%;
     transform: translate(-50%, 0);
     font-weight: ${(props) => (props.isInProgress ? 300 : 500)};
-    font-size: ${(props) => props.fontSize}px;
-    line-height: ${(props) => props.lineHeight}px;
+    font-size: 14px;
+    line-height: ${(props) => (props.isInProgress ? 30 : 34)}px;
     color: #f6f6fe;
     text-transform: uppercase;
     text-align: center;

@@ -91,7 +91,9 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
             </VoteContainer>
             <FlexDivCentered>
                 <VoteButton disabled={!selectedChoices || isVoting || !hasVotingRights} onClick={handleVote}>
-                    {!isVoting ? t(`governance.proposal.vote-label`) : t(`governance.proposal.vote-progress-label`)}
+                    {!isVoting
+                        ? t(`governance.proposal.submit-vote-label`)
+                        : t(`governance.proposal.vote-progress-label`)}
                 </VoteButton>
             </FlexDivCentered>
             <ValidationMessage
@@ -104,28 +106,33 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
 };
 
 const SingleChoice = styled(FlexDivColumnCentered)`
-    height: 60px;
-    border: 2px solid #748bc6;
+    box-sizing: content-box;
+    height: 56px;
+    border: 1px solid #748bc6;
     border-radius: 5px;
     margin-bottom: 20px;
     color: #b8c6e5;
     font-weight: bold;
     font-size: 20px;
-    line-height: 48px;
+    line-height: 56px;
     text-align: center;
     &.selected {
+        margin: -1px;
+        margin-bottom: 19px;
         border: 2px solid #64d9fe;
         color: #f6f6fe;
         background: #03044e;
     }
     &:hover {
+        margin: -1px;
+        margin-bottom: 19px;
         border: 2px solid #64d9fe;
         color: #f6f6fe;
         cursor: pointer;
         background: #03044e;
     }
     @media (max-width: 767px) {
-        height: 50px;
+        height: 46px;
         font-size: 16px;
         line-height: 46px;
     }

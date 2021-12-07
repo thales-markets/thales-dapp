@@ -870,14 +870,6 @@
                 }
             }
         },
-        "swap": {
-            "button-text": "Get sUSD",
-            "select-token": "Select a token",
-            "enter-amount": "Enter amount",
-            "approve": "Give permission to swap {{currency}}",
-            "swap": "Swap",
-            "insufficient-balance": "Insufficient balance"
-        },
         "common": {
             "time-remaining": {
                 "ended": "ended",
@@ -922,6 +914,14 @@
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing, and selecting this option can resolve the issue."
             },
             "ratio": "Ratio"
+        },
+        "swap": {
+            "button-text": "Get sUSD",
+            "select-token": "Select a token",
+            "enter-amount": "Enter amount",
+            "approve": "Give permission to swap {{currency}}",
+            "swap": "Swap",
+            "insufficient-balance": "Insufficient balance"
         },
         "royale": {
             "header": {
@@ -1056,6 +1056,7 @@
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
             "vote-label": "Vote",
+            "submit-vote-label": "Submit your vote",
             "vote-note": "{{approvalVotes}} of {{totalVotes}} votes needed for approval",
             "voting-power-label": "Your voting power",
             "vote-progress-label": "Voting in progress...",
