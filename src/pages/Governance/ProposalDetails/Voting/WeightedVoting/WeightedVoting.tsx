@@ -152,7 +152,9 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
             </VoteContainer>
             <FlexDivCentered>
                 <VoteButton disabled={!isOptionSelected || isVoting || !hasVotingRights} onClick={handleVote}>
-                    {!isVoting ? t(`governance.proposal.vote-label`) : t(`governance.proposal.vote-progress-label`)}
+                    {!isVoting
+                        ? t(`governance.proposal.submit-vote-label`)
+                        : t(`governance.proposal.vote-progress-label`)}
                 </VoteButton>
             </FlexDivCentered>
             <ValidationMessage
@@ -165,8 +167,9 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
 };
 
 const Weighted = styled(FlexDivSpaceBetween)`
-    height: 60px;
-    border: 2px solid #748bc6;
+    box-sizing: content-box;
+    height: 56px;
+    border: 1px solid #748bc6;
     border-radius: 5px;
     margin-bottom: 20px;
     font-weight: bold;
@@ -178,6 +181,8 @@ const Weighted = styled(FlexDivSpaceBetween)`
     -ms-user-select: none;
     user-select: none;
     &.selected {
+        margin: -1px;
+        margin-bottom: 19px;
         border: 2px solid #64d9fe;
         color: #f6f6fe;
         background: #03044e;
@@ -186,6 +191,8 @@ const Weighted = styled(FlexDivSpaceBetween)`
         }
     }
     &:hover {
+        margin: -1px;
+        margin-bottom: 19px;
         border: 2px solid #64d9fe;
         color: #f6f6fe;
         background: #03044e;
@@ -194,7 +201,7 @@ const Weighted = styled(FlexDivSpaceBetween)`
         }
     }
     @media (max-width: 767px) {
-        height: 50px;
+        height: 46px;
         font-size: 16px;
         line-height: 46px;
     }
@@ -230,12 +237,10 @@ const PlusMinus = styled(FlexDivColumnCentered)`
 `;
 
 const Percentage = styled(FlexDivColumnCentered)`
-    text-align: right;
+    text-align: center;
     max-width: 100px;
-    padding-right: 10px;
     @media (max-width: 767px) {
         max-width: 55px;
-        padding-right: 5px;
     }
 `;
 
@@ -249,7 +254,7 @@ const Input = styled.input`
     font-weight: bold;
     font-size: 20px;
     color: #b8c6e5;
-    text-align: right;
+    text-align: center;
     overfloe: hidden;
     text-overflow: ellipsis;
     @media (max-width: 767px) {

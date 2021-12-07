@@ -257,12 +257,12 @@ const Body = styled(FlexDivColumn)`
     font-weight: 300;
     font-size: 16px;
     line-height: 24px;
-    color: #b8c6e5;
+    color: #f6f6fe;
     p {
         margin-bottom: 15px;
     }
     a {
-        color: #ffffff;
+        color: #b8c6e5;
         &:hover {
             color: #00f9ff;
         }

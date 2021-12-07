@@ -55,7 +55,7 @@ const History: React.FC<HistoryProps> = ({ proposal, proposalResults, isLoading 
 
                         return (
                             <VoteRow key={vote.voter}>
-                                <SidebarRowData>
+                                <SidebarRowData fontWeight={300}>
                                     <FlexDivCentered>
                                         <StyledLink
                                             href={getEtherscanAddressLink(NetworkId.Mainnet, vote.voter)}

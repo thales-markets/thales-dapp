@@ -1056,6 +1056,7 @@
             "no-proposals-found": "未找到提案",
             "view-all-proposals": "“查看所有提案",
             "vote-label": "投票",
+            "submit-vote-label": "投票",
             "vote-note": "{{approvalVotes}} of {{totalVotes}} votes needed for approval",
             "voting-power-label": "您的投票权",
             "vote-progress-label": "正在投票",
