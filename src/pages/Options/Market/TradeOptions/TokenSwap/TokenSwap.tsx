@@ -185,6 +185,10 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
         const registerAllowanceListener = () => {
             erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
                 console.log('check if allowance listener works');
+                console.log(owner);
+                console.log(walletAddress);
+                console.log(spender);
+                console.log(addressToApprove);
                 if (owner === walletAddress && spender === getAddress(addressToApprove ? addressToApprove : '')) {
                     console.log('setting allowance 2');
                     setAllowance(true);
@@ -277,11 +281,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 console.log(buyToken);
                 console.log(tokenAmount);
                 try {
-                    const swapUrl = `${baseUrl}${ONE_INCH_SWAP_QUOTE_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}`; /*&slippage=${Number(slippage) / 100}${
+                    const quoteUrl = `${baseUrl}${ONE_INCH_SWAP_QUOTE_URL}?fromTokenAddress=${buyToken}&toTokenAddress=${sellToken}&amount=${tokenAmount}`; /*&slippage=${Number(slippage) / 100}${
                         isWalletConnected && hasAllowance ? `&destReceiver=${walletAddress}` : ''
                     }`;*/
 
-                    const response = await fetch(swapUrl);
+                    const response = await fetch(quoteUrl);
                     if (response.status == 200) {
                         const quote = await response.json();
                         console.log(quote);
