@@ -21,7 +21,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, OrderData } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
@@ -72,18 +72,18 @@ export enum SecondaryFilters {
     Competition = 'competition',
 }
 
-const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
+const isOrderInMarket = (orderData: OrderData, market: HistoricalOptionsMarketInfo): boolean => {
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const isBuy: boolean = order.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+    const isBuy: boolean = orderData.makerAsset.toLowerCase() === SynthsUSD.address.toLowerCase();
     return (
         (isBuy &&
-            (market.longAddress.toLowerCase() === order.takerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.takerToken.toLowerCase())) ||
+            (market.longAddress.toLowerCase() === orderData.takerAsset.toLowerCase() ||
+                market.shortAddress.toLowerCase() === orderData.takerAsset.toLowerCase())) ||
         (!isBuy &&
-            (market.longAddress.toLowerCase() === order.makerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.makerToken.toLowerCase()))
+            (market.longAddress.toLowerCase() === orderData.makerAsset.toLowerCase() ||
+                market.shortAddress.toLowerCase() === orderData.makerAsset.toLowerCase()))
     );
 };
 
@@ -115,8 +115,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     });
 
     const userAssets = userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : [];
-    const userOrders =
-        userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records) ? userOrdersQuery.data.records : [];
+    const userOrders = userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data) ? userOrdersQuery.data : [];
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     useEffect(() => {
@@ -188,7 +187,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 break;
             case PrimaryFilters.MyOrders:
                 filteredMarkets = filteredMarkets.filter((market) =>
-                    userOrders.find((order) => isOrderInMarket(order.order, market))
+                    userOrders.find((order) => isOrderInMarket(order.data, market))
                 );
                 break;
             case PrimaryFilters.Recent:

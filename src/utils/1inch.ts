@@ -14,6 +14,7 @@ import Web3 from 'web3';
 
 export const ONE_INCH_BASE_URL = 'https://limit-orders.1inch.io/v1.0/';
 export const ONE_INCH_LIMT_URL_ALL = '/limit-order/all?';
+export const ONE_INCH_LIMT_URL_ADDRESS = '/limit-order/address/';
 export const ONE_INCH_LIMT_URL = '/limit-order/';
 export const ONE_INCH_CONTRACTS: Record<NetworkId, string | null> = {
     1: '0x3ef51736315f52d568d6d2cf289419b9cfffe782',
@@ -121,6 +122,12 @@ export const getAllBuyOrdersForToken = async (network: NetworkId, token: string)
         takerAsset: token,
     };
     const response = await fetch(url + qs.stringify(params));
+    return response.json();
+};
+
+export const getUserOrders = async (network: NetworkId, walletAddress: string) => {
+    const url = ONE_INCH_BASE_URL + network + ONE_INCH_LIMT_URL_ADDRESS + walletAddress;
+    const response = await fetch(url);
     return response.json();
 };
 

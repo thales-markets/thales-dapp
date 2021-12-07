@@ -186,16 +186,21 @@ export type UsersAssets = {
     };
 };
 
-export type UserOrderMetaData = {
-    createdAt: string;
-    orderHash: string;
-    remainingFillableTakerAmount: string;
+export type OrderData = {
+    makerAsset: string;
+    takerAsset: string;
+    predicate: string;
 };
 
 export type UserOrder = {
-    metaData: UserOrderMetaData;
-    order: Trade;
+    makerAmount: number;
+    takerAmount: number;
+    orderMaker: number;
+    remainingMakerAmount: number;
+    data: OrderData;
 };
+
+export type UserOrders = UserOrder[];
 
 export type ZeroExErrorResponse = {
     code: number;
