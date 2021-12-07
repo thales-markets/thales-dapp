@@ -1066,7 +1066,7 @@
                 "weighted": "加权投票"
             },
             "voted-in-label": "投票",
-            "votes": "{{votes}} 票",
+            "votes": "{{votes}} 投票",
             "voting-approval-status": {
                 "in-progress": "进行中",
                 "not-passed": "没过",
