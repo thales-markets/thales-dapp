@@ -24,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import SimpleLoader from 'components/SimpleLoader';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -103,13 +103,16 @@ type StakerCellProps = {
 const Voter: React.FC<StakerCellProps> = ({ address, walletAddress }) => {
     const { t } = useTranslation();
     const [voterEns, setVoterEns] = useState<string | null>(null);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     useEffect(() => {
         const fetchVoterEns = async () => {
             const stakerEns = await (snxJSConnector as any).provider.lookupAddress(address);
             setVoterEns(stakerEns);
         };
-        fetchVoterEns();
+        if (networkId === NetworkId.Mainnet) {
+            fetchVoterEns();
+        }
     }, [address]);
 
     const voter =

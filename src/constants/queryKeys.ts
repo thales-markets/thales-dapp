@@ -133,7 +133,7 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         CouncilMembers: () => ['governance', 'councilMembers'],
-        ThalesStakers: (networkId: NetworkId) => ['governance', 'thalesStakers', networkId],
+        ThalesStakers: () => ['governance', 'thalesStakers'],
         VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
             'governance',
             'votingPower',
