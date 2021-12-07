@@ -168,13 +168,13 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
 
 const Weighted = styled(FlexDivSpaceBetween)`
     box-sizing: content-box;
-    height: 56px;
+    height: 50px;
     border: 1px solid #748bc6;
     border-radius: 5px;
     margin-bottom: 20px;
     font-weight: bold;
     font-size: 20px;
-    line-height: 56px;
+    line-height: 50px;
     color: #b8c6e5;
     -webkit-user-select: none;
     -moz-user-select: none;
