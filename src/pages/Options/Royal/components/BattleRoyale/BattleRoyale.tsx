@@ -17,6 +17,8 @@ import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User } from '../../Queries/useRoyalePlayersQuery';
 import winnerCard from 'assets/images/royale/winner-card.svg';
+import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
+import { RoyaleTooltip } from '../../../Market/components';
 
 type BattleRoyaleProps = {
     ethPrice: string;
@@ -87,11 +89,11 @@ const renderRounds = (
                           <CurrentRoundTitle>{t('options.royale.battle.round')}</CurrentRoundTitle>
                           <CurrentRoundText>{index}</CurrentRoundText>
                       </div>
-                      <div style={{ marginTop: '25px' }}>
+                      <div style={{ marginTop: '10px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
                           <CurrentRoundText>{`$${targetPrice}`}</CurrentRoundText>
                       </div>
-                      <div style={{ marginBottom: '25px' }}>
+                      <div style={{ marginBottom: '10px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
                           <CurrentRoundText>
                               {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
@@ -240,6 +242,9 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     className="icon icon--right"
                 />
                 <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
+                    <RoyaleTooltip title={t('options.royale.battle.optimism-timestamp-message')}>
+                        <StyledInfoIcon />
+                    </RoyaleTooltip>
                     {t('options.royale.battle.close-round')}
                 </Button>
             </StyledWrapper>
@@ -348,7 +353,7 @@ const Card = styled.div`
     box-sizing: border-box;
     border-radius: 4.36032px;
     margin: 15px;
-    padding: 50px 0;
+    padding: 55px 0;
     position: relative;
     @media (max-width: 360px) {
         min-width: 300px;
@@ -429,9 +434,13 @@ const CurrentRoundTitle = styled.p`
 
 const PrevRoundText = styled.p`
     font-family: basis33 !important;
-    font-size: 34px;
-    line-height: 22px;
+    font-size: 25px;
+    line-height: 25px;
     text-align: center;
+    @media (max-width: 340px) {
+        font-size: 23px;
+        line-height: 23px;
+    }
 `;
 
 const PrevRoundTitle = styled.p`
@@ -457,8 +466,7 @@ const LongButton = styled.button<{ selected?: boolean; notSelected?: boolean }>`
     height: 90px;
     border-radius: 50px;
     background: ${(props) => (props.notSelected ? '#b9c7c2' : '#59cda3')};
-    background: #59cda3;
-    border: ${(props) => (props.selected ? '5px solid #59cda3' : '5px solid #e5e5e5')};
+    border: 5px solid #e5e5e5;
     box-sizing: border-box;
     box-shadow: inset 0 4px 30px #137b9b;
     color: white;
@@ -505,6 +513,7 @@ const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
 `;
 
 const Button = styled.button`
+    position: relative;
     align-items: center;
     cursor: pointer;
     display: flex;
@@ -524,6 +533,7 @@ const Button = styled.button`
         opacity: 0.4;
         cursor: not-allowed;
     }
+    margin-top: 10px;
 `;
 
 const RoundHistoryInfo = styled(FlexDivCentered)`
@@ -560,6 +570,23 @@ const BattleInfoSection = styled.div`
         }
     }
     @media (min-width: 1025px) {
+        display: none;
+    }
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
+    @media (max-width: 1024px) {
         display: none;
     }
 `;

@@ -155,7 +155,8 @@
             "quick-trading-label": "Быстрая торговля",
             "quick-trading-label-competition": "Kонк. быстрая торговля",
             "earn-label": "THALES",
-            "royale-label": "Thales Royale"
+            "royale-label": "Thales Royale",
+            "governance-label": "Управление"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -934,7 +935,8 @@
                 "was": "Было",
                 "players": "Игроки",
                 "eliminated": "Устранено",
-                "ended": "Закончено"
+                "ended": "Закончено",
+                "optimism-timestamp-message": "Поскольку максимальное время накопления до L1 в Optimism составляет 5 минут, такие действия, как завершающие раунды, зависящие от метки времени, могут быть отложены до 5 минут."
             },
             "header": {
                 "theme": "Тема"
@@ -1014,5 +1016,76 @@
                 "message": "Пожалуйста, подключите свой кошелек, чтобы продолжить"
             }
         }
+    },
+    "governance": {
+        "tabs": {
+            "thalesgov": {
+                "eth": "ЧАЕВЫЕ"
+            },
+            "thalescouncil": {
+                "eth": "Совет"
+            },
+            "thales-stakers": "Нападающие Thales"
+        },
+        "status": {
+            "all": "все",
+            "active": "активный",
+            "closed": "закрыто",
+            "pending": "проект"
+        },
+        "sidebar": {
+            "title": {
+                "council-members": "Действующие члены совета",
+                "history": "Голоса",
+                "results": "Полученные результаты"
+            }
+        },
+        "proposal": {
+            "type": {
+                "single-choice": "Голосование по выбору",
+                "weighted": "Взвешенное голосование"
+            },
+            "voting-approval-status": {
+                "not-passed": "Не прошел",
+                "passed": "Прошедший",
+                "in-progress": "В ходе выполнения"
+            },
+            "voting-system-label": "Система голосования",
+            "details-label": "Подробности",
+            "vote-label": "Голосование",
+            "author-label": "Автор",
+            "start-date-label": "Дата начала",
+            "ends-in-label": "Оставшееся время",
+            "voting-power-label": "Ваше право голоса",
+            "end-date-label": "Дата окончания",
+            "starts-in-label": "Начинается в",
+            "proposal-label": "Предложение",
+            "snapshot-label": "Снимок",
+            "status-label": "Положение дел",
+            "vote-confirmation": "Вы уверены, что хотите проголосовать за \"{{choice}}\"? Это действие не может быть отменено.",
+            "vote-confirmation-message": "Успешно проголосовали",
+            "final-result-label": "Конечный результат",
+            "vote-progress-label": "Идет голосование ...",
+            "voted-in-label": "Проголосовал в",
+            "votes": "{{votes}} Голоса",
+            "no-proposals-found": "Предложений не найдено",
+            "view-all-proposals": "Просмотреть все предложения",
+            "vote-note": "Для утверждения необходимо {{approvalVotes}} из {{totalVotes}} голосов"
+        },
+        "stakers": {
+            "no-stakers-found": "Стейкеров не найдено",
+            "view-all-stakers": "Посмотреть всех нападающих",
+            "tooltip-staked-directly": "поставил прямо",
+            "total-staked-col": "Общая сумма ставки",
+            "number-of-stakers": "Общее количество стейкеров",
+            "staker-col": "Стейкер",
+            "tooltip-escrowed-amount": "депонированная сумма",
+            "search-placeholder": "Искать стейкеров ..."
+        },
+        "title": "Управление",
+        "you": "Ты",
+        "no-votes": "Нет голосов по этому предложению",
+        "back-to-proposals": "Назад к обзору предложений",
+        "view-more": "Посмотреть больше"
     }
 }

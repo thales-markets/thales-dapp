@@ -1,3 +1,4 @@
+import { SpaceKey } from 'constants/governance';
 import QUERY_KEYS from 'constants/queryKeys';
 import { QueryClient } from 'react-query';
 import { NetworkId } from 'utils/network';
@@ -67,6 +68,10 @@ export const refetchUserTokenTransactions = (walletAddress: string, networkId: N
 
 export const refetchUserBalance = (walletAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
+};
+
+export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress: string) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
 };
 
 export default queryConnector;

@@ -24,6 +24,7 @@ import { history } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
+import GovernancePage from 'pages/Governance';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -211,7 +212,15 @@ const App = () => {
                                 </MainLayout>
                             </Route>
                         )}
-
+                        <Route
+                            exact
+                            path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
+                            render={(routeProps) => (
+                                <MainLayout>
+                                    <GovernancePage {...routeProps} />
+                                </MainLayout>
+                            )}
+                        />
                         {!isL2 && (
                             <Route exact path={ROUTES.Options.Token}>
                                 <MainLayout>
