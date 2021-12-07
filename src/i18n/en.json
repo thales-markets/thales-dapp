@@ -1051,7 +1051,7 @@
             "snapshot-label": "Snapshot",
             "details-label": "Details",
             "starts-in-label": "Starts in",
-            "ends-in-label": "Ends in",
+            "ends-in-label": "Time left",
             "final-result-label": "Final result",
             "no-proposals-found": "No proposals found",
             "view-all-proposals": "View all proposals",
