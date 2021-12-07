@@ -5,11 +5,11 @@ import Loader from 'components/Loader';
 import { AccountMarketInfo, OptionsMarketInfo } from 'types/options';
 import OptionsPriceChart from './OptionsPriceChart';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
-import { getIsAppReady, set0xReady } from 'redux/modules/app';
+import { getIsAppReady } from 'redux/modules/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
 import MaturityPhaseCard from './TradeCard/MaturityPhaseCard';
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -17,7 +17,6 @@ import 'react-resizable/css/styles.css';
 import './temp.css';
 import YourTransactions from './TransactionsCard/YourTransactions';
 import RecentTransactions from './TransactionsCard/RecentTransactions';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import TradeOptions from './TradeOptions';
 import Orderbook from './TradeOptions/Orderbook';
 import MarketWidget from './components/MarketWidget';
@@ -55,7 +54,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const dispatch = useDispatch();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const visibilityMap = useSelector((state: RootState) => getVisibilityMap(state));
     const currentLayout = useSelector((state: RootState) => getCurrentLayout(state));
     const fullLayout = useSelector((state: RootState) => getFullLayout(state));
@@ -245,18 +243,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         );
         return widgets;
     };
-
-    useEffect(() => {
-        if (optionsMarket && optionsMarket.phase === 'trading') {
-            // For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering.
-            // Timeout added to delay initialization and not block page rendering.
-            setTimeout(() => {
-                dispatch(set0xReady(false));
-                contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
-                dispatch(set0xReady(true));
-            }, 500);
-        }
-    }, [networkId, isWalletConnected, marketQuery.isSuccess, optionsMarket]);
 
     const handleResize = () => {
         if (window.innerWidth <= 900) {

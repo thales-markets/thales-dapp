@@ -4,7 +4,6 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { OptionSide, OptionsMarkets, OrderItem, ExtendedOrders, ExtendedOrderItem } from 'types/options';
 import { NetworkId } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
-import { get0xBaseURL } from 'utils/0x';
 import { prepBuyOrder, prepSellOrder } from 'utils/formatters/order';
 import { keyBy } from 'lodash';
 import { ethers } from 'ethers';
@@ -13,6 +12,7 @@ import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { sortOptionsMarkets } from 'utils/options';
 import { ORDERBOOK_AMOUNT_THRESHOLD } from 'constants/options';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import { getAllBuyOrdersForToken, getAllSellOrdersForToken } from 'utils/1inch';
 
 const filterAndPrepareOrders = (
     optionSide: OptionSide,
@@ -23,11 +23,11 @@ const filterAndPrepareOrders = (
 ) => {
     let preparedOrders = [];
 
-    if (responseJ.records && responseJ.records.length > 0) {
-        const filteredOrders = responseJ.records.filter((record: any) =>
+    if (responseJ.length > 0) {
+        const filteredOrders = responseJ.filter((record: any) =>
             isBuyOrder
-                ? optionsAddresses.includes(record.order.takerToken.toLowerCase())
-                : optionsAddresses.includes(record.order.makerToken.toLowerCase())
+                ? optionsAddresses.includes(record.data.takerAsset.toLowerCase())
+                : optionsAddresses.includes(record.data.makerAsset.toLowerCase())
         );
 
         preparedOrders = filteredOrders
@@ -38,9 +38,7 @@ const filterAndPrepareOrders = (
                         ...preparedOrder,
                         market:
                             marketsAddressMap[
-                                isBuyOrder
-                                    ? record.order.takerToken.toLowerCase()
-                                    : record.order.makerToken.toLowerCase()
+                                isBuyOrder ? record.data.takerAsset.toLowerCase() : record.data.makerAsset.toLowerCase()
                             ],
                         optionSide,
                     };
@@ -66,7 +64,6 @@ const useBinaryOptionsOrders = (
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const baseUrl = `${get0xBaseURL(networkId)}sra/v4/`;
 
     return useQuery<ExtendedOrders>(
         QUERY_KEYS.BinaryOptions.Orders(orderType, networkId),
@@ -127,12 +124,9 @@ const useBinaryOptionsOrders = (
 
             const isBuyOrder = orderType === 'buys';
 
-            const orders = isBuyOrder
-                ? `${baseUrl}orders?makerToken=${SynthsUSD.address}&perPage=1000`
-                : `${baseUrl}orders?takerToken=${SynthsUSD.address}&perPage=1000`;
-
-            const response = await fetch(orders);
-            const responseJ = await response.json();
+            const responseJ = isBuyOrder
+                ? await getAllSellOrdersForToken(networkId, SynthsUSD.address)
+                : await getAllBuyOrdersForToken(networkId, SynthsUSD.address);
 
             const marketsLongAddressMap = keyBy(sortedOptionsMarkets, 'longAddress');
             const marketsShortAddressMap = keyBy(sortedOptionsMarkets, 'shortAddress');
