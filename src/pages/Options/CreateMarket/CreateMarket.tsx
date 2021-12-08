@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
+import { formatGasLimit, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -53,13 +53,7 @@ import { COLORS } from 'constants/ui';
 import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
-import { toBigNumber } from 'utils/formatters/number';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { get0xBaseURL } from 'utils/0x';
-import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-import axios from 'axios';
 import { refetchOrderbook } from 'utils/queryConnector';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
 import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
@@ -68,12 +62,12 @@ import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
 import { ZERO_ADDRESS } from '../../../constants/network';
-import { MetamaskSubprovider } from '@0x/subproviders';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getSynthName } from 'utils/currency';
+import { createOneInchLimitOrder } from 'utils/1inch';
 
 const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
@@ -200,7 +194,7 @@ export const CreateMarket: React.FC = () => {
             getAllowanceForCurrentWallet();
         }, [walletAddress]);
 
-        const getOrderEndDate = () => toBigNumber(Math.round((optionsMarket as any)?.timeRemaining / 1000));
+        const getOrderEndDate = () => Math.round((optionsMarket as any)?.timeRemaining / 1000);
 
         const handleMarketCreation = async () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
@@ -380,82 +374,32 @@ export const CreateMarket: React.FC = () => {
             setTxErrorMessage(null);
             isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
 
-            const baseUrl = get0xBaseURL(networkId);
-            const placeOrderUrl = `${baseUrl}sra/v4/order`;
-
-            const makerAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(optionsAmount), DEFAULT_TOKEN_DECIMALS);
-            const takerAmount = Web3Wrapper.toBaseUnitAmount(
-                toBigNumber(Number(optionsAmount) * Number(price)),
-                DEFAULT_TOKEN_DECIMALS
-            );
+            const takerToken = SynthsUSD.address;
+            const makerAmount = optionsAmount;
+            const takerAmount = Number(optionsAmount) * Number(price);
             const expiry = getOrderEndDate();
-            const salt = generatePseudoRandomSalt();
-            let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-            if (isMainNet(networkId)) {
-                pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
-            }
 
             try {
-                const createSignedOrderV4Async = async () => {
-                    const order = new LimitOrder({
-                        makerToken,
-                        takerToken: SynthsUSD.address,
-                        makerAmount,
-                        takerAmount,
-                        maker: walletAddress,
-                        sender: NULL_ADDRESS,
-                        pool,
-                        expiry,
-                        salt,
-                        chainId: networkId,
-                        verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                        feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-                    });
-
-                    try {
-                        const signature = useLegacySigning
-                            ? await order.getSignatureWithProviderAsync(
-                                  new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-                              )
-                            : await order.getSignatureWithProviderAsync(
-                                  (snxJSConnector.signer?.provider as any).provider,
-                                  SignatureType.EIP712
-                              );
-                        return { ...order, signature };
-                    } catch (e) {
-                        console.log(e);
-                    }
-                };
-
-                const signedOrder = await createSignedOrderV4Async();
-
-                try {
-                    await axios({
-                        method: 'POST',
-                        url: placeOrderUrl,
-                        data: signedOrder,
-                    });
-                    isLong ? setIsLongSubmitted(true) : setIsShortSubmitted(true);
-
-                    refetchOrderbook(makerToken);
-                    if (isLong && !sellShort) {
-                        navigateToOptionsMarket(market);
-                        return;
-                    }
-                    if (!isLong) {
-                        navigateToOptionsMarket(market);
-                        return;
-                    }
-                } catch (err) {
-                    setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                    isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+                await createOneInchLimitOrder(
+                    walletAddress,
+                    networkId,
+                    makerToken,
+                    takerToken,
+                    makerAmount,
+                    takerAmount,
+                    expiry
+                );
+                refetchOrderbook(makerToken);
+                isLong ? setIsLongSubmitted(true) : setIsShortSubmitted(true);
+                if ((isLong && !sellShort) || !isLong) {
+                    navigateToOptionsMarket(market);
+                    return;
                 }
-                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             } catch (e) {
-                console.error(e);
+                console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             }
+            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
         };
 
         const formattedMaturityDate = maturityDate ? formatShortDate(maturityDate) : EMPTY_VALUE;

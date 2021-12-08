@@ -7,7 +7,6 @@ import {
 } from '@1inch/limit-order-protocol';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import axios from 'axios';
-import { OrderPeriod, ORDER_PERIOD_IN_SECONDS } from 'constants/options';
 import { ethers } from 'ethers';
 import qs from 'query-string';
 import Web3 from 'web3';
@@ -50,7 +49,7 @@ export const createOneInchLimitOrder = async (
     takerAssetAddress: string,
     makerAmount: number | string,
     takerAmount: number | string,
-    expiration?: OrderPeriod
+    expiration: number
 ) => {
     const contractAddress = ONE_INCH_CONTRACTS[network];
     if (walletAddress && contractAddress) {
@@ -62,11 +61,7 @@ export const createOneInchLimitOrder = async (
             const limitOrderPredicateBuilder = new LimitOrderPredicateBuilder(limitOrderProtocolFacade);
             const { and, timestampBelow } = limitOrderPredicateBuilder;
 
-            const simplePredicate: LimitOrderPredicateCallData = and(
-                timestampBelow(
-                    Math.round(Date.now() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration ?? OrderPeriod.ONE_DAY]
-                )
-            );
+            const simplePredicate: LimitOrderPredicateCallData = and(timestampBelow(expiration));
 
             const limitOrder = limitOrderBuilder.buildLimitOrder({
                 makerAssetAddress,
@@ -81,27 +76,20 @@ export const createOneInchLimitOrder = async (
 
             const limitOrderTypedData = limitOrderBuilder.buildLimitOrderTypedData(limitOrder);
 
-            try {
-                const limitOrderSignature = await limitOrderBuilder.buildOrderSignature(
-                    walletAddress,
-                    limitOrderTypedData
-                );
-                const limitOrderHash = limitOrderBuilder.buildLimitOrderHash(limitOrderTypedData);
+            const limitOrderSignature = await limitOrderBuilder.buildOrderSignature(walletAddress, limitOrderTypedData);
+            const limitOrderHash = limitOrderBuilder.buildLimitOrderHash(limitOrderTypedData);
 
-                const data = {
-                    orderHash: limitOrderHash,
-                    orderMaker: walletAddress,
-                    signature: limitOrderSignature,
-                    makerAmount: ethers.utils.parseUnits('' + makerAmount, 18).toString(),
-                    takerAmount: ethers.utils.parseUnits('' + takerAmount, 18).toString(),
-                    createDateTime: new Date(),
-                    data: limitOrder,
-                };
+            const data = {
+                orderHash: limitOrderHash,
+                orderMaker: walletAddress,
+                signature: limitOrderSignature,
+                makerAmount: ethers.utils.parseUnits('' + makerAmount, 18).toString(),
+                takerAmount: ethers.utils.parseUnits('' + takerAmount, 18).toString(),
+                createDateTime: new Date(),
+                data: limitOrder,
+            };
 
-                await axios.post(ONE_INCH_BASE_URL + network + ONE_INCH_LIMT_URL, data);
-            } catch (e) {
-                console.log('REJECTED: ', e);
-            }
+            await axios.post(ONE_INCH_BASE_URL + network + ONE_INCH_LIMT_URL, data);
         };
         await placeOrder();
     }

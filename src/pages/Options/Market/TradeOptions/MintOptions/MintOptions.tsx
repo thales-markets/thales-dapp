@@ -9,7 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { isMainNet, formatGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -38,22 +38,11 @@ import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
-import {
-    formatCurrency,
-    formatCurrencyWithSign,
-    formatPercentage,
-    toBigNumber,
-    truncToDecimals,
-} from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import axios from 'axios';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 // import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import NumericInput from '../../components/NumericInput';
@@ -62,7 +51,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
-import { MetamaskSubprovider } from '@0x/subproviders';
+import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -122,7 +111,7 @@ const MintOptions: React.FC = () => {
         !isLongPriceValid ||
         !isShortPriceValid;
 
-    const addressToApprove = get0xExchangeProxyAddress(networkId);
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId] ?? '';
 
     useEffect(() => {
         const {
@@ -447,7 +436,7 @@ const MintOptions: React.FC = () => {
         }
     };
 
-    const getOrderEndDate = () => toBigNumber(Math.round(optionsMarket.timeRemaining / 1000));
+    const getOrderEndDate = () => Math.round(optionsMarket.timeRemaining / 1000);
 
     const handleSubmitOrder = async (
         price: number | string,
@@ -461,73 +450,28 @@ const MintOptions: React.FC = () => {
         setTxErrorMessage(null);
         isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
 
-        const baseUrl = get0xBaseURL(networkId);
-        const placeOrderUrl = `${baseUrl}sra/v4/order`;
-
-        const makerAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(optionsAmount), DEFAULT_TOKEN_DECIMALS);
-        const takerAmount = Web3Wrapper.toBaseUnitAmount(
-            toBigNumber(Number(optionsAmount) * Number(price)),
-            DEFAULT_TOKEN_DECIMALS
-        );
+        const takerToken = SynthsUSD.address;
+        const makerAmount = optionsAmount;
+        const takerAmount = Number(optionsAmount) * Number(price);
         const expiry = getOrderEndDate();
-        const salt = generatePseudoRandomSalt();
-        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        if (isMainNet(networkId)) {
-            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
-        }
 
         try {
-            const createSignedOrderV4Async = async () => {
-                const order = new LimitOrder({
-                    makerToken,
-                    takerToken: SynthsUSD.address,
-                    makerAmount,
-                    takerAmount,
-                    maker: walletAddress,
-                    sender: NULL_ADDRESS,
-                    pool,
-                    expiry,
-                    salt,
-                    chainId: networkId,
-                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                    feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-                });
-
-                try {
-                    const signature = useLegacySigning
-                        ? await order.getSignatureWithProviderAsync(
-                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-                          )
-                        : await order.getSignatureWithProviderAsync(
-                              (snxJSConnector.signer?.provider as any).provider,
-                              SignatureType.EIP712
-                          );
-                    return { ...order, signature };
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-
-            const signedOrder = await createSignedOrderV4Async();
-
-            try {
-                await axios({
-                    method: 'POST',
-                    url: placeOrderUrl,
-                    data: signedOrder,
-                });
-                refetchOrderbook(makerToken);
-                dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
-            } catch (err) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
-            }
-            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+            await createOneInchLimitOrder(
+                walletAddress,
+                networkId,
+                makerToken,
+                takerToken,
+                makerAmount,
+                takerAmount,
+                expiry
+            );
+            refetchOrderbook(makerToken);
+            dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
         } catch (e) {
-            console.error(e);
+            console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
         }
+        isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
     };
 
     useEffect(() => {

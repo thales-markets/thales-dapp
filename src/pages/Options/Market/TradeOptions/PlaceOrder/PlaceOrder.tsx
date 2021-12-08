@@ -15,7 +15,13 @@ import { ethers } from 'ethers';
 import { formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { AMOUNT_PERCENTAGE, OrderPeriod, OrderPeriodItem, ORDER_PERIOD_ITEMS_MAP } from 'constants/options';
+import {
+    AMOUNT_PERCENTAGE,
+    OrderPeriod,
+    OrderPeriodItem,
+    ORDER_PERIOD_IN_SECONDS,
+    ORDER_PERIOD_ITEMS_MAP,
+} from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
@@ -52,6 +58,7 @@ import Checkbox from 'components/Checkbox';
 import styled from 'styled-components';
 import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import { dispatchMarketNotification } from 'utils/options';
+import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -70,6 +77,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     defaultOrderSide,
     defaultPrice,
     defaultAmount,
+    onPlaceOrder,
 }) => {
     const { t } = useTranslation();
     const optionsMarket = market || useMarketContext();
@@ -160,6 +168,20 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         insufficientBalance ||
         !isPriceValid;
 
+    const getOrderEndDate = () => {
+        let orderEndDate = 0;
+        if (expiration) {
+            orderEndDate =
+                expiration === OrderPeriod.TRADING_END
+                    ? Math.round(optionsMarket.timeRemaining / 1000)
+                    : expiration === OrderPeriod.CUSTOM
+                    ? Math.round(new Date().getTime() / 1000) +
+                      Math.round(Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])
+                    : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
+        }
+        return orderEndDate;
+    };
+
     useEffect(() => {
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
         const getAllowance = async () => {
@@ -214,6 +236,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
 
         const newMakerAmount = isBuy ? Number(amount) * Number(price) : amount;
         const newTakerAmount = isBuy ? amount : Number(amount) * Number(price);
+        const expiry = getOrderEndDate();
 
         try {
             await createOneInchLimitOrder(
@@ -223,11 +246,15 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                 takerToken,
                 newMakerAmount,
                 newTakerAmount,
-                expiration
+                expiry
             );
             dispatchMarketNotification(
                 t('options.market.trade-options.place-order.confirm-button.confirmation-message')
             );
+            refetchOrderbook(baseToken);
+            refetchOrders(networkId);
+            resetForm();
+            onPlaceOrder && onPlaceOrder();
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
