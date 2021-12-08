@@ -59,19 +59,14 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
         setTxErrorMessage(null);
         setIsCanceling(true);
         try {
-            cancelOrder(networkId, walletAddress, order.orderData, gasLimit !== null ? gasLimit : undefined).then(
-                () => {
-                    refetchOrderbook(baseToken);
-                    refetchOrders(networkId);
-                    onClose();
-                    setIsCanceling(false);
-                }
-            );
+            await cancelOrder(networkId, walletAddress, order.orderData, gasLimit !== null ? gasLimit : undefined);
+            refetchOrderbook(baseToken);
+            refetchOrders(networkId);
+            onClose();
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
             setIsCanceling(false);
-            onClose();
         }
     };
 

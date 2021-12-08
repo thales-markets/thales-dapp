@@ -20,8 +20,8 @@ import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/fo
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
+import { refetchOrderbook, refetchOrders, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
-
 import {
     CloseIconContainer,
     ModalContainer,
@@ -147,27 +147,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         };
     }, [walletAddress, isWalletConnected, hasAllowance]);
 
-    // useEffect(() => {
-    //     if (is0xReady) {
-    //         const subscriptionToken = exchangeProxy.subscribe(
-    //             IZeroExEvents.LimitOrderFilled,
-    //             { orderHash: order.displayOrder.orderHash },
-    //             (_, log) => {
-    //                 if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-    //                     refetchOrderbook(baseToken);
-    //                     refetchTrades(optionsMarket.address);
-    //                     refetchUserTrades(optionsMarket.address, walletAddress);
-    //                     refetchOrders(networkId);
-    //                     onClose();
-    //                 }
-    //             }
-    //         );
-    //         return () => {
-    //             exchangeProxy.unsubscribe(subscriptionToken);
-    //         };
-    //     }
-    // }, [is0xReady]);
-
     useEffect(() => {
         const fetchGasLimit = async () => {
             try {
@@ -209,7 +188,12 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         setIsFilling(true);
 
         try {
-            fillLimitOrder(networkId, walletAddress, order, amount, gasLimit, isBuy);
+            await fillLimitOrder(networkId, walletAddress, order, amount, gasLimit, isBuy);
+            refetchOrderbook(baseToken);
+            refetchTrades(optionsMarket.address);
+            refetchUserTrades(optionsMarket.address, walletAddress);
+            refetchOrders(networkId);
+            onClose();
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
