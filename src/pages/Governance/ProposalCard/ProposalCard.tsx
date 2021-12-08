@@ -1,4 +1,4 @@
-import { StatusEnum } from 'constants/governance';
+import { SpaceKey, StatusEnum } from 'constants/governance';
 import { indexOf, max } from 'lodash';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import React from 'react';
@@ -32,7 +32,7 @@ const ProposalCard: React.FC<ProposalCardProps> = ({ proposal, onClick }) => {
                             <TimeRemaining end={(pending ? proposal.start : proposal.end) * 1000} fontSize={16} />
                         </RightSection>
                     )}
-                    {!!closed && (
+                    {!!closed && proposal.space.id === SpaceKey.TIPS && (
                         <Result>
                             <span>{t(`governance.proposal.final-result-label`)}: </span>
                             <span>{finalChoice}</span>

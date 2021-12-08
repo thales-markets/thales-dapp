@@ -84,6 +84,15 @@ const Results: React.FC<ResultsProps> = ({ proposalId, proposalResults, isCounci
                                         ? 20
                                         : 10
                                 }
+                                style={
+                                    isCouncilResults && index === 0
+                                        ? {
+                                              textDecoration: 'line-through',
+                                              textDecorationColor: '#B8C6E5',
+                                              textDecorationThickness: '2px',
+                                          }
+                                        : {}
+                                }
                             >
                                 <SidebarRowData>
                                     <FlexDiv>
