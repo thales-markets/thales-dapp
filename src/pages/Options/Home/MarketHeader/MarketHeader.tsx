@@ -313,6 +313,9 @@ const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
+    @media screen and (max-width: 767px) {
+        height: 100%;
+    }
 `;
 
 const Sidebar = styled.nav`

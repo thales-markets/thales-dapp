@@ -132,6 +132,7 @@ const Container = styled(FlexDivColumnCentered)`
     margin-right: 10px;
     @media (max-width: 767px) {
         width: 100%;
+        margin-bottom: 20px;
     }
 `;
 
@@ -185,7 +186,10 @@ const DropDown = styled(FlexDivColumn)`
     position: absolute;
     margin-top: 2px;
     padding: 8px;
-    width: 130%;
+    width: 220px;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const DropDownItem = styled(FlexDivRowCentered)`
