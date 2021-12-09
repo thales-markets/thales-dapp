@@ -107,14 +107,14 @@ const SingleChoiceVoting: React.FC<SingleChoiceVotingProps> = ({ proposal, hasVo
 
 const SingleChoice = styled(FlexDivColumnCentered)`
     box-sizing: content-box;
-    height: 56px;
+    height: 48px;
     border: 1px solid #748bc6;
     border-radius: 5px;
     margin-bottom: 20px;
     color: #b8c6e5;
     font-weight: bold;
     font-size: 20px;
-    line-height: 56px;
+    line-height: 48px;
     text-align: center;
     &.selected {
         margin: -1px;

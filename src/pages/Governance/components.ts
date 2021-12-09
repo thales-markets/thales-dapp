@@ -4,7 +4,7 @@ import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperl
 import { StatusEnum } from 'constants/governance';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
-export const SidebarTitle = styled(FlexDivColumnCentered)`
+export const SidebarTitle = styled(FlexDivCentered)`
     font-weight: 500;
     font-size: 25px;
     line-height: 48px;
