@@ -23,6 +23,7 @@ export const MESSAGE_VERSION = '0.1.3';
 
 export const NUMBER_OF_COUNCIL_MEMBERS = 4;
 export const COUNCIL_PROPOSAL_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
+export const FIRST_COUNCIL_ELECTIONS_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
 
 export const PROPOSAL_APPROVAL_VOTES = 3;
 
