@@ -4,7 +4,7 @@ import important from 'assets/images/royale/important.svg';
 import notSigned from 'assets/images/royale/not-signed.svg';
 import notVerified from 'assets/images/royale/not-verified.svg';
 import triangle from 'assets/images/royale/triangle.svg';
-import SimpleLoader from 'components/SimpleLoader';
+import SimpleLoader from '../SimpleLoader';
 import format from 'date-fns/format';
 import useInterval from 'hooks/useInterval';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';

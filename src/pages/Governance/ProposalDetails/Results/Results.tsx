@@ -14,7 +14,7 @@ import {
 } from 'pages/Governance/components';
 import { truncateText } from 'utils/formatters/string';
 import styled from 'styled-components';
-import { COUNCIL_PROPOSAL_ID, NUMBER_OF_COUNCIL_MEMBERS } from 'constants/governance';
+import { FIRST_COUNCIL_ELECTIONS_ID, NUMBER_OF_COUNCIL_MEMBERS } from 'constants/governance';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
 import SimpleLoader from 'components/SimpleLoader';
 import { ProposalResults } from 'types/governance';
@@ -32,7 +32,7 @@ const Results: React.FC<ResultsProps> = ({ proposalId, proposalResults, isCounci
     const { t } = useTranslation();
     const [viewCount, setViewCount] = useState<number>(showAll ? 1000 : 10);
     const spaceSymbol =
-        proposalId.toLowerCase() === COUNCIL_PROPOSAL_ID.toLowerCase() || !proposalResults
+        proposalId.toLowerCase() === FIRST_COUNCIL_ELECTIONS_ID.toLowerCase() || !proposalResults
             ? 'WD'
             : proposalResults.spaceSymbol;
 
