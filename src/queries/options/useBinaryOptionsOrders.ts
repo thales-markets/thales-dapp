@@ -47,7 +47,8 @@ const filterAndPrepareOrders = (
             .filter(
                 (order: ExtendedOrderItem) =>
                     order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
-                    order.displayOrder.potentialReturnAmount >= ORDERBOOK_AMOUNT_THRESHOLD
+                    order.displayOrder.potentialReturnAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
+                    order.displayOrder.timeRemaining >= Date.now()
             );
     }
 

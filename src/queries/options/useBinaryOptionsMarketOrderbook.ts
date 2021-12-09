@@ -29,7 +29,11 @@ const useBinaryOptionsMarketOrderbook = (
                             return prepSellOrder(record);
                         }
                     )
-                    .filter((order: OrderItem) => order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD);
+                    .filter(
+                        (order: OrderItem) =>
+                            order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
+                            order.displayOrder.timeRemaining >= Date.now()
+                    );
             }
             if (buyOrders.length > 0) {
                 orderbook.buyOrders = buyOrders
@@ -38,7 +42,11 @@ const useBinaryOptionsMarketOrderbook = (
                             return prepBuyOrder(record);
                         }
                     )
-                    .filter((order: OrderItem) => order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD);
+                    .filter(
+                        (order: OrderItem) =>
+                            order.displayOrder.fillableAmount >= ORDERBOOK_AMOUNT_THRESHOLD &&
+                            order.displayOrder.timeRemaining >= Date.now()
+                    );
             }
 
             return orderbook;

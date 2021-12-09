@@ -65,12 +65,14 @@ const UsersOrders: React.FC<UsersOrdersProps> = ({ optionsMarkets, walletAddress
                         }
                         const displayOrder = isBuy ? prepBuyOrder(order) : prepSellOrder(order);
 
-                        temp.push({
-                            ...displayOrder,
-                            market,
-                            isBuy,
-                            isLong,
-                        });
+                        if (displayOrder.displayOrder.timeRemaining >= Date.now()) {
+                            temp.push({
+                                ...displayOrder,
+                                market,
+                                isBuy,
+                                isLong,
+                            });
+                        }
                         return temp;
                     }, []);
                     acc.push(...userOrdersForMarket);
