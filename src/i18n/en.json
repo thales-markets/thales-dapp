@@ -1086,5 +1086,13 @@
             "number-of-stakers": "Total number of stakers",
             "search-placeholder": "Search stakers..."
         }
+    },
+    "optimism": {
+        "optimistic-l2": "Optimistic L2",
+        "switch-to-l1": "Switch to L1",
+        "switch-to-l2": "Switch to L2",
+        "optimistic-gateway": "Optimistic Gateway",
+        "optimistic-etherscan": "Optimistic Etherscan",
+        "learn-more": "Learn more"
     }
 }

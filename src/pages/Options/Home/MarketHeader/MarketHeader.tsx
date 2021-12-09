@@ -40,6 +40,7 @@ import { buildHref } from '../../../../utils/routes';
 import { Modal } from '@material-ui/core';
 import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
+import NetworkSwitch from 'components/NetworkSwitch';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -122,6 +123,11 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     <DesktopLanguageSelectorContainer>
                         <LanguageSelector />
                     </DesktopLanguageSelectorContainer>
+                    {isWalletConnected && (
+                        <div>
+                            <NetworkSwitch />
+                        </div>
+                    )}
                     {!isWalletConnected ? (
                         <Button
                             className="primary dapp-header__connectWallet"

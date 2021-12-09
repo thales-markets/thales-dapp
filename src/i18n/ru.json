@@ -1086,5 +1086,13 @@
         "no-votes": "Нет голосов по этому предложению",
         "back-to-proposals": "Назад к обзору предложений",
         "view-more": "Посмотреть больше"
+    },
+    "optimism": {
+        "learn-more": "Учить больше",
+        "switch-to-l2": "Переключиться на L2",
+        "optimistic-l2": "Оптимистичный L2",
+        "optimistic-etherscan": "Оптимистичный Etherscan",
+        "switch-to-l1": "Переключиться на L1",
+        "optimistic-gateway": "Оптимистичный шлюз"
     }
 }

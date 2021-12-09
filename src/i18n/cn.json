@@ -1086,5 +1086,13 @@
             "number-of-stakers": "质押者总量",
             "search-placeholder": "查找质押人"
         }
+    },
+    "optimism": {
+        "learn-more": "了解更多",
+        "optimistic-gateway": "乐观网关",
+        "optimistic-etherscan": "乐观 Etherscan",
+        "switch-to-l2": "切换到 L2",
+        "optimistic-l2": "乐观的L2",
+        "switch-to-l1": "切换到 L1"
     }
 }
