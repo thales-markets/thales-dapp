@@ -14,5 +14,10 @@ export const ROUTES = {
         Token: '/token',
         Royal: '/royale',
     },
+    Governance: {
+        Home: '/governance',
+        Space: '/governance/:space',
+        Proposal: '/governance/:space/:id',
+    },
 };
 export default ROUTES;

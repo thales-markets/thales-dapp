@@ -1,4 +1,5 @@
 import { NetworkId } from 'utils/network';
+import { SpaceKey } from './governance';
 
 export const QUERY_KEYS = {
     WalletBalances: {
@@ -120,6 +121,25 @@ export const QUERY_KEYS = {
         Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: (contractAddress: string) => ['royale', 'ethBalance', contractAddress],
+    },
+    Governance: {
+        Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],
+        Proposal: (spaceKey: SpaceKey, hash: string, walletAddress: string) => [
+            'governance',
+            'proposal',
+            spaceKey,
+            hash,
+            walletAddress,
+        ],
+        CouncilMembers: () => ['governance', 'councilMembers'],
+        ThalesStakers: (networkId: NetworkId) => ['governance', 'thalesStakers', networkId],
+        VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
+            'governance',
+            'votingPower',
+            proposalId,
+            snapshot,
+            walletAddress,
+        ],
     },
 };
 

@@ -68,3 +68,16 @@ export const truncToDecimals = (value: NumericValue, decimals = DEFAULT_CURRENCY
     const matchedValue = value.toString().match(`^-?\\\d+(?:\\\.\\\d{0,${decimals}})?`);
     return matchedValue !== null ? matchedValue[0] : '0';
 };
+
+export const formatNumberShort = (value: number) => {
+    // Nine Zeroes for Billions
+    return value >= 1.0e9
+        ? formatCurrency(value / 1.0e9, 2, true) + 'b'
+        : // Six Zeroes for Millions
+        value >= 1.0e6
+        ? formatCurrency(value / 1.0e6, 2, true) + 'm'
+        : // Three Zeroes for Thousands
+        value >= 1.0e3
+        ? formatCurrency(value / 1.0e3, 2, true) + 'k'
+        : formatCurrency(value, 2, true);
+};

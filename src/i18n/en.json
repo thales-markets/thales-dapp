@@ -155,7 +155,8 @@
             "quick-trading-label": "Quick trading",
             "quick-trading-label-competition": "Comp. quick trading",
             "earn-label": "THALES",
-            "royale-label": "Thales Royale"
+            "royale-label": "Thales Royale",
+            "governance-label": "Governance"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -869,14 +870,6 @@
                 }
             }
         },
-        "swap": {
-            "button-text": "Get sUSD",
-            "select-token": "Select a token",
-            "enter-amount": "Enter amount",
-            "approve": "Give permission to swap {{currency}}",
-            "swap": "Swap",
-            "insufficient-balance": "Insufficient balance"
-        },
         "common": {
             "time-remaining": {
                 "ended": "ended",
@@ -921,6 +914,14 @@
                 "tooltip": "If you have trouble with placing an order, check this option to try legacy signing. Some wallets (e.g. Trezor) have problems with signing, and selecting this option can resolve the issue."
             },
             "ratio": "Ratio"
+        },
+        "swap": {
+            "button-text": "Get sUSD",
+            "select-token": "Select a token",
+            "enter-amount": "Enter amount",
+            "approve": "Give permission to swap {{currency}}",
+            "swap": "Swap",
+            "insufficient-balance": "Insufficient balance"
         },
         "royale": {
             "header": {
@@ -1012,6 +1013,78 @@
                 "message": "Please connect your wallet to continue",
                 "button": "Connect wallet"
             }
+        }
+    },
+    "governance": {
+        "title": "Governance",
+        "you": "You",
+        "tabs": {
+            "thalesgov": {
+                "eth": "TIPS"
+            },
+            "thalescouncil": {
+                "eth": "Elections"
+            },
+            "thales-stakers": "Thales stakers"
+        },
+        "back-to-proposals": "Back to proposals overview",
+        "status": {
+            "all": "all",
+            "pending": "draft",
+            "active": "voting",
+            "closed": "closed"
+        },
+        "sidebar": {
+            "title": {
+                "results": "Results",
+                "history": "Votes",
+                "council-members": "Current council members"
+            }
+        },
+        "proposal": {
+            "status-label": "Status",
+            "author-label": "Author",
+            "proposal-label": "Proposal",
+            "voting-system-label": "Voting system",
+            "start-date-label": "Start date",
+            "end-date-label": "End date",
+            "snapshot-label": "Snapshot",
+            "details-label": "Details",
+            "starts-in-label": "Starts in",
+            "ends-in-label": "Time left",
+            "final-result-label": "Final result",
+            "no-proposals-found": "No proposals found",
+            "view-all-proposals": "View all proposals",
+            "vote-label": "Vote",
+            "submit-vote-label": "Submit your vote",
+            "vote-note": "{{approvalVotes}} of {{totalVotes}} votes needed for approval",
+            "voting-power-label": "Your voting power",
+            "vote-progress-label": "Voting in progress...",
+            "vote-confirmation-message": "Successfully voted",
+            "vote-confirmation": "Are you sure you want to vote \"{{choice}}\"? This action cannot be undone.",
+            "type": {
+                "single-choice": "Single choice voting",
+                "weighted": "Weighted voting"
+            },
+            "voted-in-label": "Voted in",
+            "votes": "{{votes}} Votes",
+            "voting-approval-status": {
+                "passed": "Passed",
+                "not-passed": "Not passed",
+                "in-progress": "In progress"
+            }
+        },
+        "no-votes": "No votes on this proposal",
+        "view-more": "View more",
+        "stakers": {
+            "staker-col": "Staker",
+            "total-staked-col": "Total staked amount",
+            "tooltip-staked-directly": "staked directly",
+            "tooltip-escrowed-amount": "escrowed amount",
+            "no-stakers-found": "No stakers found",
+            "view-all-stakers": "View all stakers",
+            "number-of-stakers": "Total number of stakers",
+            "search-placeholder": "Search stakers..."
         }
     }
 }

@@ -6,7 +6,7 @@ export const formatTxTimestamp = (timestamp: number | Date) => format(timestamp,
 export const toJSTimestamp = (timestamp: number) => timestamp * 1000;
 
 export const formatShortDate = (date: Date | number) => format(date, 'MMM d, yyyy');
-export const formatShortDateWithTime = (date: Date | number) => format(date, 'MMM d, yyyy H:mm a');
+export const formatShortDateWithTime = (date: Date | number) => format(date, 'MMM d, yyyy | HH:mm');
 
 export const secondsToTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -80,3 +80,5 @@ export const convertUTCToLocalDate = (date: Date) => {
 export const convertLocalToUTCDate = (date: Date) => {
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()));
 };
+
+export const getCurrentTimestampSeconds = () => Date.now() / 1000;
