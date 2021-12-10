@@ -1,5 +1,4 @@
 import ValidationMessage from 'components/ValidationMessage';
-import { ethers } from 'ethers';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { DefaultSubmitButton, SubmitButtonContainer } from 'pages/Options/Market/components';
 import React, { useEffect, useState } from 'react';
@@ -8,9 +7,10 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { OptionSide, OrderItem } from 'types/options';
-import { cancelOrder } from 'utils/1inch';
+import { cancelOrder, getCancelOrderData } from 'utils/1inch';
 import { formatGasLimit } from 'utils/network';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import OrderDetails from '../../components/OrderDetails';
 import {
     CloseIconContainer,
@@ -42,10 +42,15 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     useEffect(() => {
         const fetchGasLimit = async () => {
             try {
-                const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-                const gasPrice = await provider.getGasPrice();
+                const { limitOrderProtocol1inchContract } = snxJSConnector as any;
+                const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
+                    (snxJSConnector as any).signer
+                );
 
-                setGasLimit(formatGasLimit(gasPrice, networkId));
+                const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(
+                    getCancelOrderData(order.orderData)
+                );
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);

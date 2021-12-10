@@ -139,6 +139,36 @@ export const getUserOrders = async (network: NetworkId, walletAddress: string) =
 //     }
 // };
 
+export const getFillOrderData = (order: any, amount: number | string, isBuy: boolean) => {
+    let makerAmount, takerAmount, threshold;
+
+    if (isBuy) {
+        makerAmount = Number(amount) * order.displayOrder.price;
+        takerAmount = '0';
+        threshold = Number(amount);
+    } else {
+        makerAmount = Number(amount);
+        takerAmount = '0';
+        threshold = Number(amount) * order.displayOrder.price;
+    }
+
+    makerAmount = ethers.utils.parseUnits('' + makerAmount, 18).toString();
+    takerAmount = ethers.utils.parseUnits('' + takerAmount, 18).toString();
+    threshold = ethers.utils.parseUnits('' + threshold, 18).toString();
+
+    return {
+        limitOrder: {
+            ...order.orderData.data,
+            permit: '0x',
+            interaction: '0x',
+        },
+        signature: order.signature,
+        makerAmount,
+        takerAmount,
+        threshold,
+    };
+};
+
 export const fillLimitOrder = async (
     network: NetworkId,
     walletAddress: any,
@@ -151,44 +181,33 @@ export const fillLimitOrder = async (
     if (contractAddress) {
         const web3 = new Web3(Web3.givenProvider) as any;
         const connector = new Web3ProviderConnector(web3);
-        let makerAmount, takerAmount, threshold;
-
-        if (isBuy) {
-            makerAmount = Number(amount) * order.displayOrder.price;
-            takerAmount = '0';
-            threshold = Number(amount);
-        } else {
-            makerAmount = Number(amount);
-            takerAmount = '0';
-            threshold = Number(amount) * order.displayOrder.price;
-        }
-
-        makerAmount = ethers.utils.parseUnits('' + makerAmount, 18).toString();
-        takerAmount = ethers.utils.parseUnits('' + takerAmount, 18).toString();
-        threshold = ethers.utils.parseUnits('' + threshold, 18).toString();
 
         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
 
+        const fillOrderData = getFillOrderData(order, amount, isBuy);
+
         const callData = limitOrderProtocolFacade.fillLimitOrder(
-            {
-                ...order.orderData.data,
-                permit: '0x',
-                interaction: '0x',
-            },
-            order.signature,
-            makerAmount,
-            takerAmount,
-            threshold
+            fillOrderData.limitOrder,
+            fillOrderData.signature,
+            fillOrderData.makerAmount,
+            fillOrderData.takerAmount,
+            fillOrderData.threshold
         );
 
         await web3.eth.sendTransaction({
             from: walletAddress,
-            gasPrice: gasLimit,
+            gasLimit: gasLimit,
             to: contractAddress,
             data: callData,
         });
     }
 };
+
+export const getCancelOrderData = (order: any) => ({
+    ...order.data,
+    permit: '0x',
+    interaction: '0x',
+});
 
 export const cancelOrder = async (network: NetworkId, walletAddress: any, order: any, gasLimit: any) => {
     const contractAddress = ONE_INCH_CONTRACTS[network];
@@ -197,14 +216,10 @@ export const cancelOrder = async (network: NetworkId, walletAddress: any, order:
         const connector = new Web3ProviderConnector(web3);
         const limitOrderProtocolFacade = new LimitOrderProtocolFacade(contractAddress, connector);
 
-        const callData = limitOrderProtocolFacade.cancelLimitOrder({
-            ...order.data,
-            permit: '0x',
-            interaction: '0x',
-        });
+        const callData = limitOrderProtocolFacade.cancelLimitOrder(getCancelOrderData(order));
         await web3.eth.sendTransaction({
             from: walletAddress,
-            gasPrice: gasLimit,
+            gasLimit: gasLimit,
             to: contractAddress,
             data: callData,
         });

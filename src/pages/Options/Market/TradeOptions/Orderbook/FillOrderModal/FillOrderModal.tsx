@@ -52,7 +52,7 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet-light.svg';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import styled from 'styled-components';
-import { fillLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
+import { fillLimitOrder, getFillOrderData, ONE_INCH_CONTRACTS } from 'utils/1inch';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -150,10 +150,20 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     useEffect(() => {
         const fetchGasLimit = async () => {
             try {
-                const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-                const gasPrice = await provider.getGasPrice();
+                const { limitOrderProtocol1inchContract } = snxJSConnector as any;
+                const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
+                    (snxJSConnector as any).signer
+                );
 
-                setGasLimit(formatGasLimit(gasPrice, networkId));
+                const fillOrderData = getFillOrderData(order, amount, isBuy);
+                const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
+                    fillOrderData.limitOrder,
+                    fillOrderData.signature,
+                    fillOrderData.makerAmount,
+                    fillOrderData.takerAmount,
+                    fillOrderData.threshold
+                );
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
