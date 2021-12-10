@@ -534,7 +534,8 @@
                 "button": {
                     "customize-layout": "自定义视图",
                     "reset-layout": "重置布局"
-                }
+                },
+                "amm-widget": "ADM"
             },
             "chart-card": {
                 "no-chart-data": "无图表数据"
@@ -731,6 +732,10 @@
                     "inital-amount-label": "初始金额（{{currencyKey}}）",
                     "inital-total-label": "初始总计（{{currencyKey}}）"
                 }
+            },
+            "header": {
+                "orderbook": "订单簿",
+                "amm": "ADM"
             }
         },
         "quick-trading": {

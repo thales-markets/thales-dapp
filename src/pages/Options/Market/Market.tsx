@@ -42,12 +42,16 @@ import './media.scss';
 import { MarketOverviewMobile } from './components/MarketOverview/MarketOverviewMobile';
 import MarketMobile from './MarketMobile';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
+import AMM from './AMM';
+import Cookies from 'universal-cookie';
 
 const ReactGridLayout = WidthProvider(RGL);
 
 type MarketProps = {
     marketAddress: string;
 };
+
+const cookies = new Cookies();
 
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const { t } = useTranslation();
@@ -63,6 +67,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
 
     const [layout, setLayout] = useState(currentLayout);
+    const [ammSelected, setAmmSelected] = useState(JSON.parse(cookies.get('ammSelected') || false));
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
@@ -175,7 +180,17 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         widget: ReactElement,
         background?: string
     ) => {
-        if (isMarketWidgetVisible(widgetKey, visibilityMap, phase, isCustomMarket, isWalletConnected, false)) {
+        if (
+            isMarketWidgetVisible(
+                widgetKey,
+                visibilityMap,
+                phase,
+                isCustomMarket,
+                isWalletConnected,
+                false,
+                ammSelected
+            )
+        ) {
             widgets.push(
                 <div key={widgetKey} data-grid={fullLayout.find((item: Layout) => item.i === widgetKey)}>
                     <MarketWidget background={background}>{widget}</MarketWidget>
@@ -186,6 +201,14 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const renderWidgets = (optionsMarket: OptionsMarketInfo) => {
         const widgets: ReactElement[] = [];
+        wrapWidget(
+            optionsMarket.phase,
+            optionsMarket.customMarket,
+            widgets,
+            MarketWidgetKey.AMM,
+            <AMM optionSide={optionsActiveTab.id} />,
+            '#0A2E66'
+        );
         wrapWidget(
             optionsMarket.phase,
             optionsMarket.customMarket,
@@ -294,6 +317,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         phase={optionsMarket.phase}
                         isCustomMarket={optionsMarket.customMarket}
                         route={ROUTES.Options.MarketMatch}
+                        ammSelected={ammSelected}
+                        setAmmSelected={setAmmSelected}
                     />
 
                     <FlexDivColumn className="market__content">
@@ -304,7 +329,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         )}
 
                         <MainContentContainer className="market__container">
-                            {optionsMarket.phase === 'trading' && (
+                            {optionsMarket.phase === 'trading' && !ammSelected && (
                                 <OptionsTabContainer className="market__container__tabs">
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab

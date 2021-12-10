@@ -37,9 +37,10 @@ import { Overlay } from 'components/Header/Header';
 import LanguageSelector from 'components/LanguageSelector';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { buildHref } from '../../../../utils/routes';
-import { Modal } from '@material-ui/core';
+import { Modal, Switch } from '@material-ui/core';
 import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
+import Cookies from 'universal-cookie';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -47,6 +48,8 @@ type MarketHeaderProps = {
     isCustomMarket?: boolean;
     route: string;
     className?: string;
+    ammSelected?: boolean;
+    setAmmSelected?: (selected: boolean) => void;
 };
 
 enum BurgerState {
@@ -55,12 +58,16 @@ enum BurgerState {
     Hide,
 }
 
+const cookies = new Cookies();
+
 const MarketHeader: React.FC<MarketHeaderProps> = ({
     showCustomizeLayout,
     phase,
     route,
     isCustomMarket,
     className,
+    ammSelected,
+    setAmmSelected,
 }) => {
     const { t } = useTranslation();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -102,7 +109,23 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         src={burger}
                     />
                 </FlexDiv>
-                {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
+                {showCustomizeLayout && phase && (
+                    <CustomizeLayout ammSelected={ammSelected || false} phase={phase} isCustomMarket={isCustomMarket} />
+                )}
+                {phase === 'trading' && setAmmSelected && (
+                    <SwitchWrapper>
+                        {t('options.market.header.orderbook')}
+                        <Switch
+                            checked={ammSelected}
+                            onChange={(_e, checked) => {
+                                setAmmSelected(checked);
+                                cookies.set('ammSelected', true);
+                            }}
+                            color="primary"
+                        />
+                        {t('options.market.header.amm')}
+                    </SwitchWrapper>
+                )}
                 <FlexDiv className="dapp-header__buttonsWrapper">
                     {isWalletConnected && (
                         <Button className="tertiary" style={{ padding: '6px 24px' }} onClick={() => setShowSwap(true)}>
@@ -412,6 +435,12 @@ const BurdgerIcon = styled.img`
     right: 30px;
     top: 32px;
     padding: 10px;
+`;
+
+const SwitchWrapper = styled(FlexDiv)`
+    align-items: center;
+    color: #f6f6fe;
+    font-weight: bold;
 `;
 
 export default MarketHeader;
