@@ -302,6 +302,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
+                        <SidebarItem
+                            imgSrc={marketOverviewDefaultIcon}
+                            imgSrcHoverSelected={marketOverviewSelectedIcon}
+                            className={route === ROUTES.Options.Game ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.game-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
