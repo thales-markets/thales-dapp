@@ -201,14 +201,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
 
     const renderWidgets = (optionsMarket: OptionsMarketInfo) => {
         const widgets: ReactElement[] = [];
-        wrapWidget(
-            optionsMarket.phase,
-            optionsMarket.customMarket,
-            widgets,
-            MarketWidgetKey.AMM,
-            <AMM optionSide={optionsActiveTab.id} />,
-            '#0A2E66'
-        );
+        wrapWidget(optionsMarket.phase, optionsMarket.customMarket, widgets, MarketWidgetKey.AMM, <AMM />, '#0A2E66');
         wrapWidget(
             optionsMarket.phase,
             optionsMarket.customMarket,

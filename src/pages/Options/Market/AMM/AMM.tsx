@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 import { COLORS, MarketWidgetKey } from '../../../../constants/ui';
-import { FlexDiv, FlexDivCentered, FlexDivRow } from '../../../../theme/common';
+import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from '../../../../theme/common';
 import { ReactComponent as WalletIcon } from '../../../../assets/images/wallet-dark.svg';
 import {
     Container,
     CurrencyLabel,
+    FilterButton,
     InputLabel,
     ReactSelect,
     ShortInputContainer,
@@ -32,24 +33,23 @@ import { useMarketContext } from '../contexts/MarketContext';
 import { useTranslation } from 'react-i18next';
 import { OrderSideOptionType } from '../TradeOptions/PlaceOrder/PlaceOrder';
 import NumericInput from '../components/NumericInput';
-import quickTradingImg from 'assets/images/amm-quick-trading.svg';
 import { BuySlider, SellSlider } from '../../CreateMarket/components';
+import ValidationMessage from 'components/ValidationMessage';
+import onboardConnector from 'utils/onboardConnector';
+import erc20Contract from 'utils/contracts/erc20Contract';
+import { ethers } from 'ethers';
+import snxJSConnector from 'utils/snxJSConnector';
+import { APPROVAL_EVENTS } from 'constants/events';
+import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
+import { formatGasLimit } from 'utils/network';
 
-type AMMProps = {
-    optionSide: OptionSide;
-};
-
-const AMM: React.FC<AMMProps> = ({ optionSide }) => {
+const AMM: React.FC = () => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-
-    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
-        enabled: isAppReady && isWalletConnected,
-    });
 
     const orderSideOptions = [
         {
@@ -61,15 +61,25 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
             label: t('common.sell'),
         },
     ];
-
     const [orderSide, setOrderSide] = useState<OrderSideOptionType>(orderSideOptions[0]);
-    const [selectedOption, setSelectedOption] = useState<boolean>(true);
+    const [optionSide, setOptionSide] = useState<OptionSide>('long');
+    const [amount, setAmount] = useState<number | string>('');
+    const [price /*, setPrice*/] = useState<number | string>('');
+    const [total /*, setTotal*/] = useState<number | string>('');
+    const [hasAllowance, setAllowance] = useState<boolean>(false);
+    const [isSubmitting /*, setIsSubmitting*/] = useState<boolean>(false);
+    const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [insufficientLiquidity /*, setInsufficientLiquidity*/] = useState<boolean>(false);
+    const [isAmountValid /*, setIsAmountValid*/] = useState<boolean>(true);
 
+    const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
+        enabled: isAppReady && isWalletConnected,
+    });
     let optBalances = {
         long: 0,
         short: 0,
     };
-
     if (isWalletConnected && accountMarketInfoQuery.isSuccess && accountMarketInfoQuery.data) {
         optBalances = accountMarketInfoQuery.data as AccountMarketInfo;
     }
@@ -83,6 +93,130 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+
+    const {
+        contracts: { SynthsUSD },
+    } = snxJSConnector.snxJS as any;
+    const isBuy = orderSide.value === 'buy';
+    const isLong = optionSide === 'long';
+    const isAmountEntered = Number(amount) > 0;
+    const isPriceEntered = Number(price) > 0;
+
+    const insufficientBalance = isBuy
+        ? sUSDBalance < Number(total) || !sUSDBalance
+        : tokenBalance < Number(amount) || !tokenBalance;
+
+    const isButtonDisabled =
+        !isPriceEntered || !isAmountEntered || isSubmitting || !isWalletConnected || insufficientBalance;
+
+    const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket.longAddress : optionsMarket.shortAddress;
+    const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+
+    useEffect(() => {
+        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const { ammContract } = snxJSConnector;
+        const addressToApprove = ammContract ? ammContract.address : '';
+
+        const getAllowance = async () => {
+            try {
+                const allowance = await erc20Instance.allowance(walletAddress, addressToApprove);
+                setAllowance(!!bigNumberFormatter(allowance));
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const registerAllowanceListener = () => {
+            erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
+            });
+        };
+        if (isWalletConnected) {
+            getAllowance();
+            registerAllowanceListener();
+        }
+        return () => {
+            erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+        };
+    }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
+
+    const handleAllowance = async () => {
+        const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
+        const { ammContract } = snxJSConnector;
+        const addressToApprove = ammContract ? ammContract.address : '';
+
+        try {
+            setIsAllowing(true);
+            const gasEstimate = await erc20Instance.estimateGas.approve(addressToApprove, ethers.constants.MaxUint256);
+            const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
+                gasLimit: formatGasLimit(gasEstimate, networkId),
+            })) as ethers.ContractTransaction;
+            const txResult = await tx.wait();
+            if (txResult && txResult.transactionHash) {
+                setAllowance(true);
+                setIsAllowing(false);
+            }
+        } catch (e) {
+            console.log(e);
+            setIsAllowing(false);
+        }
+    };
+
+    const handleSubmitOrder = async () => {};
+
+    const getSubmitButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <SubmitButton isBuy={isBuy} onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </SubmitButton>
+            );
+        }
+        if (insufficientBalance) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.insufficient-balance`)}
+                </SubmitButton>
+            );
+        }
+        if (!isAmountEntered) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.enter-amount`)}
+                </SubmitButton>
+            );
+        }
+        if (insufficientLiquidity) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.insufficient-liquidity`)}
+                </SubmitButton>
+            );
+        }
+        if (!hasAllowance) {
+            return (
+                <SubmitButton disabled={isAllowing} onClick={handleAllowance} isBuy={isBuy}>
+                    {!isAllowing
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: sellTokenCurrencyKey })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: sellTokenCurrencyKey,
+                          })}
+                </SubmitButton>
+            );
+        }
+        return (
+            <SubmitButton disabled={isButtonDisabled} onClick={handleSubmitOrder} isBuy={isBuy}>
+                {!isSubmitting
+                    ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
+                    : t(
+                          `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.progress-label`
+                      )}
+            </SubmitButton>
+        );
+    };
 
     return (
         <AMMWrapper>
@@ -125,56 +259,61 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
                             <UnusableCurrencyLabel>{'USD'}</UnusableCurrencyLabel>
                         </ShortInputContainer>
                     </FlexDivRow>
-                    <FlexDivRow>
-                        <ShortContainer>
-                            <OptionButtonWrapper>
+                    <FlexDivRowCentered>
+                        <ShortInputContainer>
+                            <OptionsContainer>
                                 <OptionButton
-                                    onClick={() => setSelectedOption(true)}
-                                    className={selectedOption ? 'selected' : ''}
+                                    onClick={() => setOptionSide('long')}
+                                    className={optionSide === 'long' ? 'selected' : ''}
                                 >
-                                    UP
+                                    LONG
                                 </OptionButton>
-                            </OptionButtonWrapper>
-                            <OptionButtonWrapper>
                                 <OptionButton
-                                    onClick={() => setSelectedOption(false)}
-                                    className={!selectedOption ? 'selected' : ''}
+                                    onClick={() => setOptionSide('short')}
+                                    className={optionSide === 'short' ? 'selected' : ''}
                                 >
-                                    DOWN
+                                    SHORT
                                 </OptionButton>
-                            </OptionButtonWrapper>
-                        </ShortContainer>
+                            </OptionsContainer>
+                        </ShortInputContainer>
                         <ShortInputContainer>
                             <UnusableInput value={50} onChange={() => {}} disabled={true} />
                             <UnusableInputLabel>Strike Date</UnusableInputLabel>
                         </ShortInputContainer>
-                    </FlexDivRow>
+                    </FlexDivRowCentered>
                     <FlexDivRow>
-                        <ShortContainer>
-                            <AmountInputWrapper>
-                                <AmountInput />
-                                <AmountInputLabel>YOU SELL</AmountInputLabel>
-                            </AmountInputWrapper>
-                            <img width={30} height={30} src={quickTradingImg} />
-                            <AmountInputWrapper>
-                                <AmountInput />
-                                <AmountInputLabel>YOU RECEIVE</AmountInputLabel>
-                            </AmountInputWrapper>
-                        </ShortContainer>
-                        <ShortInputContainerRow>
-                            <ShortInputContainer>
-                                <UnusableInput value={50} onChange={() => {}} disabled={true} />
-                                <UnusableInputLabel>Slippage</UnusableInputLabel>
-                            </ShortInputContainer>
-                            <ShortInputContainer>
-                                <UnusableInput value={50} onChange={() => {}} disabled={true} />
-                                <UnusableInputLabel>Price per option</UnusableInputLabel>
-                            </ShortInputContainer>
-                        </ShortInputContainerRow>
+                        <ShortInputContainer>
+                            <NumericInput
+                                value={amount}
+                                onChange={(_, value) => setAmount(value)}
+                                className={isAmountValid && !insufficientLiquidity ? '' : 'error'}
+                                disabled={isSubmitting}
+                            />
+                            <InputLabel>
+                                {t('options.market.trade-options.place-order.amount-label', {
+                                    orderSide: orderSide.value,
+                                })}
+                            </InputLabel>
+                            <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                                {OPTIONS_CURRENCY_MAP[optionSide]}
+                            </CurrencyLabel>
+                        </ShortInputContainer>
+                        <ShortInputContainer>
+                            <FlexDivRow style={{ width: 'calc(100% - 10px)' }}>
+                                <ShortInputContainer>
+                                    <UnusableInput value={50} onChange={() => {}} disabled={true} />
+                                    <UnusableInputLabel>Slippage</UnusableInputLabel>
+                                </ShortInputContainer>
+                                <ShortInputContainer>
+                                    <UnusableInput value={50} onChange={() => {}} disabled={true} />
+                                    <UnusableInputLabel>Price per option</UnusableInputLabel>
+                                </ShortInputContainer>
+                            </FlexDivRow>
+                        </ShortInputContainer>
                     </FlexDivRow>
                     <FlexDivRow>
                         <BuySellSliderContainer>
-                            {selectedOption ? (
+                            {isBuy ? (
                                 <BuySlider
                                     value={Number(0)}
                                     step={0.01}
@@ -200,23 +339,18 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
                                 />
                             )}
                             <FlexDivRow>
-                                <SliderRange
-                                    color={selectedOption ? COLORS.BUY : COLORS.SELL}
-                                >{`${USD_SIGN}0`}</SliderRange>
-                                <SliderRange
-                                    color={selectedOption ? COLORS.BUY : COLORS.SELL}
-                                >{`${USD_SIGN}1`}</SliderRange>
+                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}0`}</SliderRange>
+                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}1`}</SliderRange>
                             </FlexDivRow>
                         </BuySellSliderContainer>
                     </FlexDivRow>
                 </Container>
-                <StyledSubmitButtonContainer>
-                    <FlexDivCentered>
-                        <SubmitButton isBuy={selectedOption} onClick={() => {}}>
-                            {t('common.wallet.connect-your-wallet')}
-                        </SubmitButton>
-                    </FlexDivCentered>
-                </StyledSubmitButtonContainer>
+                <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+                <ValidationMessage
+                    showValidation={txErrorMessage !== null}
+                    message={txErrorMessage}
+                    onDismiss={() => setTxErrorMessage(null)}
+                />
             </Widget>
             <Info>
                 <Container>
@@ -254,6 +388,12 @@ const Widget = styled.div`
     background: linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%);
 `;
 
+const OptionsContainer = styled(FlexDivRowCentered)``;
+
+const OptionButton = styled(FilterButton)`
+    width: 120px;
+`;
+
 const Info = styled.div`
     flex: 1;
     overflow: auto;
@@ -263,33 +403,6 @@ const Info = styled.div`
         padding-top: 20px;
         font-size: 16px;
         line-height: 24px;
-    }
-`;
-
-const ShortContainer = styled(FlexDiv)`
-    width: 50%;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    margin-right: 10px;
-`;
-
-const OptionButtonWrapper = styled.div`
-    width: 40%;
-`;
-
-const OptionButton = styled.button`
-    cursor: pointer;
-    font-weight: bold;
-    border: 2px solid #0c1c68;
-    background: transparent;
-    border-radius: 20px;
-    width: 100%;
-    padding: 10px;
-    color: #fefefe;
-    &.selected {
-        background: #0c1c68;
-        border: 2px solid #00f9ff;
     }
 `;
 
@@ -311,47 +424,10 @@ const UnusableCurrencyLabel = styled(CurrencyLabel)`
     color: #0c1c68;
 `;
 
-const ShortInputContainerRow = styled(ShortInputContainer)`
-    width: 49%;
-    flex-direction: row;
-    & div {
-        width: 48%;
-        margin-bottom: 0;
-    }
-`;
-
-const AmountInputWrapper = styled.div`
-    position: relative;
-    width: 40%;
-`;
-
-const AmountInput = styled.input`
-    cursor: pointer;
-    font-weight: bold;
-    background: #f6f6fe;
-    border: 2px solid #0c1c68;
-    border-radius: 20px;
-    width: 100%;
-    padding: 10px 14px;
-    color: #0c1c68;
-`;
-
-const AmountInputLabel = styled.span`
-    color: #fefefe;
-    position: absolute;
-    top: -16px;
-    left: 8px;
-    font-size: 10px;
-`;
-
 const BuySellSliderContainer = styled(SliderContainer)`
     margin-right: 10px;
     margin-top: 0;
     padding: 0 10px;
-`;
-
-const StyledSubmitButtonContainer = styled(SubmitButtonContainer)`
-    margin-top: 20px;
 `;
 
 export default AMM;
