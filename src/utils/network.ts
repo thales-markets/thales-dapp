@@ -99,7 +99,6 @@ export const getL1FeeInWei = async (txRequest: any) => {
     );
     const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
     if (unsignedTx) {
-        console.log(unsignedTx);
         const serializedTx = serializeTransaction({
             nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
             value: unsignedTx.value,

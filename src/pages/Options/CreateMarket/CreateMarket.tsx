@@ -300,9 +300,9 @@ export const CreateMarket: React.FC = () => {
                     setGasLimit(null);
                 }
             };
-            if (!hasAllowance) return;
+            if (isButtonDisabled) return;
             fetchGasLimit();
-        }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, hasAllowance]);
+        }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, isButtonDisabled]);
 
         useEffect(() => {
             if (initialFundingAmount) {
