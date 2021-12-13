@@ -3,6 +3,7 @@ import { Layout } from 'react-grid-layout';
 export enum MarketWidgetKey {
     MATURITY_PHASE = 'maturity-phase-widget',
     ORDERBOOK = 'orderbook-widget',
+    AMM = 'amm-widget',
     TRADE = 'trade-widget',
     CHART_TRADING_VIEW = 'chart-trading-view-widget',
     CHART_OPTIONS_PRICE = 'chart-options-price-widget',
@@ -20,6 +21,7 @@ export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
     [MarketWidgetKey.CHART_OPTIONS_PRICE]: { i: MarketWidgetKey.CHART_OPTIONS_PRICE, x: 6, y: 2, w: 6, h: 11 },
     [MarketWidgetKey.RECENT_TRANSACTIONS]: { i: MarketWidgetKey.RECENT_TRANSACTIONS, x: 0, y: 3, w: 12, h: 10 },
     [MarketWidgetKey.YOUR_TRANSACTIONS]: { i: MarketWidgetKey.YOUR_TRANSACTIONS, x: 0, y: 4, w: 12, h: 10 },
+    [MarketWidgetKey.AMM]: { i: MarketWidgetKey.AMM, x: 0, y: 5, w: 12, h: 10 },
 };
 
 export enum COLORS {

@@ -497,6 +497,10 @@
             "go-to-market": "Go to market"
         },
         "market": {
+            "header": {
+                "orderbook": "Orderbook",
+                "amm": "AMM"
+            },
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
@@ -521,6 +525,7 @@
                 "burned-last-hour": "Burned in the last hour"
             },
             "widgets": {
+                "amm-widget": "AMM",
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
                 "orderbook-widget": "Order book",

@@ -52,12 +52,17 @@ export const isMarketWidgetVisible = (
     marketPhase: string,
     isCustomMarket: boolean,
     isWalletConected: boolean,
-    isCustomizationVisibility: boolean
+    isCustomizationVisibility: boolean,
+    ammSelected: boolean
 ) => {
     switch (marketWidget) {
+        case MarketWidgetKey.AMM:
+            return ammSelected && (visibilityMap[marketWidget] || isCustomizationVisibility);
         case MarketWidgetKey.ORDERBOOK:
         case MarketWidgetKey.TRADE:
-            return marketPhase === 'trading' && (visibilityMap[marketWidget] || isCustomizationVisibility);
+            return (
+                !ammSelected && marketPhase === 'trading' && (visibilityMap[marketWidget] || isCustomizationVisibility)
+            );
         case MarketWidgetKey.MATURITY_PHASE:
             return marketPhase === 'maturity' && (visibilityMap[marketWidget] || isCustomizationVisibility);
         case MarketWidgetKey.YOUR_TRANSACTIONS:

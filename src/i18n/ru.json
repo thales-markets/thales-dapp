@@ -534,7 +534,8 @@
                 "button": {
                     "customize-layout": "Настроить вид",
                     "reset-layout": "Сбросить вид"
-                }
+                },
+                "amm-widget": "ADM"
             },
             "chart-card": {
                 "no-chart-data": "Нет данных"
@@ -731,6 +732,10 @@
                     "inital-amount-label": "Начальная сумма ({{currencyKey}})",
                     "inital-total-label": "Общая сумма ({{currencyKey}})"
                 }
+            },
+            "header": {
+                "orderbook": "Книга заказов",
+                "amm": "ADM"
             }
         },
         "quick-trading": {
