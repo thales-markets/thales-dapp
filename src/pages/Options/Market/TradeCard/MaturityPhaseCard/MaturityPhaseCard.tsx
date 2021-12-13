@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import snxJSConnector from 'utils/snxJSConnector';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { SYNTHS_MAP } from 'constants/currency';
 import { ethers } from 'ethers';
@@ -44,6 +44,8 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isExercising, setIsExercising] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const { result } = optionsMarket;
     const longAmount = accountMarketInfo.long;
@@ -69,11 +71,25 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
     }, [walletAddress]);
 
     useEffect(() => {
+        const fetchL1Fee = async (BOMContractWithSigner: any) => {
+            const txRequest = await BOMContractWithSigner.populateTransaction.exerciseOptions();
+            return getL1FeeInWei(txRequest);
+        };
         const fetchGasLimit = async () => {
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        BOMContractWithSigner.estimateGas.exerciseOptions(),
+                        fetchL1Fee(BOMContractWithSigner),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -168,7 +184,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                             </SummaryItem>
                         </MaturitySummaryContainer>
                         <Divider />
-                        <NetworkFees gasLimit={gasLimit} />
+                        <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                         <SubmitButtonContainer>
                             <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleExercise}>
                                 {nothingToExercise

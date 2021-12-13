@@ -9,7 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -87,6 +87,8 @@ const MintOptions: React.FC = () => {
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const [mintedAmount, setMintedAmount] = useState<number | string>('');
     const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
     const marketFees = optionsMarket.fees;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
@@ -172,12 +174,27 @@ const MintOptions: React.FC = () => {
     // }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
+        const fetchL1Fee = async (BOMContractWithSigner: any, mintAmount: any) => {
+            const txRequest = await BOMContractWithSigner.populateTransaction.mint(mintAmount);
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             const mintAmount = ethers.utils.parseEther(amount.toString());
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        BOMContractWithSigner.estimateGas.mint(mintAmount),
+                        fetchL1Fee(BOMContractWithSigner, mintAmount),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -745,7 +762,7 @@ const MintOptions: React.FC = () => {
                         </MintingInnerSummaryItem>
                     </>
                 )}
-                <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} />
+                <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} l1Fee={l1Fee} />
             </FeeSummaryContainer>
             <SubmitButtonContainer style={{ marginTop: '20px' }}>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>

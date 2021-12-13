@@ -8,7 +8,7 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import { OptionSide, OrderItem } from 'types/options';
 import { cancelOrder, getCancelOrderData } from 'utils/1inch';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 import snxJSConnector from 'utils/snxJSConnector';
 import OrderDetails from '../../components/OrderDetails';
@@ -36,21 +36,40 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const isButtonDisabled = !isWalletConnected || isCanceling;
 
     useEffect(() => {
+        const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, cancelOrderData: any) => {
+            const txRequest = await limitOrderProtocol1inchContractWithSigner.populateTransaction.cancelOrder(
+                cancelOrderData
+            );
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             try {
                 const { limitOrderProtocol1inchContract } = snxJSConnector as any;
                 const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
                     (snxJSConnector as any).signer
                 );
+                const cancelOrderData = getCancelOrderData(order.orderData);
 
-                const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(
-                    getCancelOrderData(order.orderData)
-                );
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(cancelOrderData),
+                        fetchL1Fee(limitOrderProtocol1inchContractWithSigner, cancelOrderData),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(
+                        getCancelOrderData(order.orderData)
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -84,7 +103,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 </ModalHeader>
                 <OrderDetails order={order.displayOrder} optionSide={optionSide} />
                 <ModalSummaryContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isCanceling} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isCanceling} l1Fee={l1Fee} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>
                     <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleCancelOrder}>

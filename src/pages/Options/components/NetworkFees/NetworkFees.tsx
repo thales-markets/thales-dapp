@@ -22,9 +22,10 @@ export type GasLimit = {
 type NetworkFeesProps = {
     gasLimit: number | GasLimit[] | null;
     disabled?: boolean;
+    l1Fee?: number | null;
 };
 
-const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
+const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -65,7 +66,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit }) => {
                         <NetworkFeeSummaryContent>
                             {formatCurrencyWithSign(
                                 USD_SIGN,
-                                getTransactionPrice(gasPrice, gasLimit as number, ethRate)
+                                getTransactionPrice(gasPrice, gasLimit as number, ethRate, l1Fee)
                             )}
                         </NetworkFeeSummaryContent>
                     </NetworkFeeSummaryItem>

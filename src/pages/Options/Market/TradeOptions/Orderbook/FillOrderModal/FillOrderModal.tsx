@@ -9,7 +9,7 @@ import { ethers } from 'ethers';
 import { APPROVAL_EVENTS } from 'constants/events';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
@@ -79,6 +79,8 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -148,22 +150,48 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     }, [walletAddress, isWalletConnected, hasAllowance]);
 
     useEffect(() => {
+        const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, fillOrderData: any) => {
+            const txRequest = await limitOrderProtocol1inchContractWithSigner.populateTransaction.fillOrder(
+                fillOrderData.limitOrder,
+                fillOrderData.signature,
+                fillOrderData.makerAmount,
+                fillOrderData.takerAmount,
+                fillOrderData.threshold
+            );
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             try {
                 const { limitOrderProtocol1inchContract } = snxJSConnector as any;
                 const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
                     (snxJSConnector as any).signer
                 );
-
                 const fillOrderData = getFillOrderData(order, amount, isBuy);
-                const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
-                    fillOrderData.limitOrder,
-                    fillOrderData.signature,
-                    fillOrderData.makerAmount,
-                    fillOrderData.takerAmount,
-                    fillOrderData.threshold
-                );
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
+                            fillOrderData.limitOrder,
+                            fillOrderData.signature,
+                            fillOrderData.makerAmount,
+                            fillOrderData.takerAmount,
+                            fillOrderData.threshold
+                        ),
+                        fetchL1Fee(limitOrderProtocol1inchContractWithSigner, fillOrderData),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(
+                        fillOrderData.limitOrder,
+                        fillOrderData.signature,
+                        fillOrderData.makerAmount,
+                        fillOrderData.takerAmount,
+                        fillOrderData.threshold
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -262,7 +290,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
             );
         }
         return (
-            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleFillOrder}>
+            <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleFillOrder}>
                 {!isFilling
                     ? t('options.market.trade-options.fill-order.confirm-button.label')
                     : t('options.market.trade-options.fill-order.confirm-button.progress-label')}
@@ -340,7 +368,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                         </SummaryContent>
                     </SummaryItem>
                     <Divider />
-                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} l1Fee={l1Fee} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

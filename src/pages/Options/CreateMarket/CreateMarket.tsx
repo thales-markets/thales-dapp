@@ -9,7 +9,7 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatGasLimit, isNetworkSupported } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei, isNetworkSupported } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
@@ -68,7 +68,6 @@ import Loader from 'components/Loader';
 import { SynthsMap } from 'types/synthetix';
 import { getSynthName } from 'utils/currency';
 import { createOneInchLimitOrder } from 'utils/1inch';
-
 const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
@@ -129,6 +128,8 @@ export const CreateMarket: React.FC = () => {
         const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
         const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
         const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
+        const [l1Fee, setL1Fee] = useState<number | null>(null);
+        const isL2 = getIsOVM(networkId);
 
         const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
@@ -239,27 +240,68 @@ export const CreateMarket: React.FC = () => {
         };
 
         useEffect(() => {
-            if (!hasAllowance) return;
-            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-            try {
-                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                    (snxJSConnector as any).signer
+            const fetchL1Fee = async (
+                binaryOptionsMarketManagerContract: any,
+                oracleKey: any,
+                price: any,
+                maturity: any,
+                initialMint: any
+            ) => {
+                const txRequest = await binaryOptionsMarketManagerContract.populateTransaction.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint,
+                    false,
+                    ZERO_ADDRESS
                 );
-                BOMMContractWithSigner.estimateGas
-                    .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
-                    .then((gasEstimate: any) => {
+                return getL1FeeInWei(txRequest);
+            };
+
+            const fetchGasLimit = async () => {
+                const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+                try {
+                    const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
+                    const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                        (snxJSConnector as any).signer
+                    );
+                    if (isL2) {
+                        const [gasEstimate, l1FeeInWei] = await Promise.all([
+                            BOMMContractWithSigner.estimateGas.createMarket(
+                                oracleKey,
+                                price,
+                                maturity,
+                                initialMint,
+                                false,
+                                ZERO_ADDRESS
+                            ),
+                            fetchL1Fee(BOMMContractWithSigner, oracleKey, price, maturity, initialMint),
+                        ]);
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
-                    })
-                    .catch((e: any) => {
-                        if (e.data?.originalError?.code === 3) {
-                            setUserHasEnoughFunds(false);
-                        }
-                        console.log(e);
-                        setGasLimit(null);
-                    });
-            } catch (e) {}
+                        setL1Fee(l1FeeInWei);
+                    } else {
+                        const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
+                            oracleKey,
+                            price,
+                            maturity,
+                            initialMint,
+                            false,
+                            ZERO_ADDRESS
+                        );
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        setUserHasEnoughFunds(true);
+                    }
+                } catch (e: any) {
+                    if (e.data?.originalError?.code === 3) {
+                        setUserHasEnoughFunds(false);
+                    }
+                    console.log(e);
+                    setGasLimit(null);
+                }
+            };
+            if (!hasAllowance) return;
+            fetchGasLimit();
         }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, hasAllowance]);
 
         useEffect(() => {
@@ -937,7 +979,7 @@ export const CreateMarket: React.FC = () => {
                                     </DoubleShortInputContainer>
                                     {/* </FlexDiv> */}
                                 </FlexDiv>
-                                <NetworkFees gasLimit={gasLimit} />
+                                <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                             </InputsWrapper>
                         </FlexDivColumn>
                         <MarketSummary
