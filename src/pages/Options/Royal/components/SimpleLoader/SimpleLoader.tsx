@@ -10,6 +10,7 @@ const StyledLoader = styled(CircularProgress)`
     position: absolute;
     left: calc(50% - 22px);
     top: calc(50% - 22px);
+    color: var(--color) !important;
 `;
 
 export default SimpleLoader;
