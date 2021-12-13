@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -40,8 +40,8 @@ import { buildHref } from '../../../../utils/routes';
 import { Modal, Switch } from '@material-ui/core';
 import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
-import Cookies from 'universal-cookie';
 import NetworkSwitch from 'components/NetworkSwitch';
+import { getAmmSelected, setAmmSelected } from 'redux/modules/marketWidgets';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -49,8 +49,6 @@ type MarketHeaderProps = {
     isCustomMarket?: boolean;
     route: string;
     className?: string;
-    ammSelected?: boolean;
-    setAmmSelected?: (selected: boolean) => void;
 };
 
 enum BurgerState {
@@ -59,21 +57,19 @@ enum BurgerState {
     Hide,
 }
 
-const cookies = new Cookies();
-
 const MarketHeader: React.FC<MarketHeaderProps> = ({
     showCustomizeLayout,
     phase,
     route,
     isCustomMarket,
     className,
-    ammSelected,
-    setAmmSelected,
 }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [showSwap, setShowSwap] = useState(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
     const isL2 = getIsOVM(networkId);
 
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
@@ -110,17 +106,14 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         src={burger}
                     />
                 </FlexDiv>
-                {showCustomizeLayout && phase && (
-                    <CustomizeLayout ammSelected={ammSelected || false} phase={phase} isCustomMarket={isCustomMarket} />
-                )}
-                {phase === 'trading' && setAmmSelected && (
+                {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
+                {phase === 'trading' && (
                     <SwitchWrapper>
                         {t('options.market.header.orderbook')}
                         <Switch
                             checked={ammSelected}
                             onChange={(_e, checked) => {
-                                setAmmSelected(checked);
-                                cookies.set('ammSelected', true);
+                                dispatch(setAmmSelected(checked));
                             }}
                             color="primary"
                         />

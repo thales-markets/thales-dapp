@@ -17,6 +17,7 @@ type UISliceState = {
     visibilityMap: Record<MarketWidgetKey, boolean>;
     currentLayout: Layout[];
     fullLayout: Layout[];
+    ammSelected: boolean;
 };
 
 const defaultMarketWidgetVisibility: Record<MarketWidgetKey, boolean> = {
@@ -35,12 +36,14 @@ const defaultState: UISliceState = {
     visibilityMap: defaultMarketWidgetVisibility,
     currentLayout: [],
     fullLayout: getDefaultLayout(),
+    ammSelected: false,
 };
 
 const initialState: UISliceState = {
     visibilityMap: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP) || defaultMarketWidgetVisibility,
     currentLayout: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_CURRENT_LAYOUT) || [],
     fullLayout: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT) || getDefaultLayout(),
+    ammSelected: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_AMM_SELECTED) || false,
 };
 
 export const uiSlice = createSlice({
@@ -86,6 +89,26 @@ export const uiSlice = createSlice({
             state.currentLayout = newLayout;
             saveWidgetsToLS(state);
         },
+        setAmmSelected: (state: UISliceState, action: PayloadAction<boolean>) => {
+            state.ammSelected = action.payload;
+            // if (action.payload) {
+            //     const layoutItem = state.fullLayout.find((item) => item.i === MarketWidgetKey.AMM);
+            //     console.log(layoutItem);
+            //     if (layoutItem) {
+            //         state.currentLayout = [...state.currentLayout, layoutItem];
+            //     } else {
+            //         state.currentLayout = [...state.currentLayout, MarketWidgetDefaultLayoutMap[MarketWidgetKey.AMM]];
+            //     }
+
+            //     console.log(state.currentLayout);
+
+            //     state.visibilityMap = {
+            //         ...state.visibilityMap,
+            //         [MarketWidgetKey.AMM]: true,
+            //     };
+            // }
+            saveWidgetsToLS(state);
+        },
     },
 });
 
@@ -93,13 +116,20 @@ const saveWidgetsToLS = (state: UISliceState) => {
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP, state.visibilityMap);
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_CURRENT_LAYOUT, state.currentLayout);
     localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT, state.fullLayout);
+    localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_AMM_SELECTED, state.ammSelected);
 };
 
-export const { setMarketWidgetVisibility, resetMarketWidgetVisibilityMap, setMarketWidgetLayout } = uiSlice.actions;
+export const {
+    setMarketWidgetVisibility,
+    resetMarketWidgetVisibilityMap,
+    setMarketWidgetLayout,
+    setAmmSelected,
+} = uiSlice.actions;
 
 export const getUIState = (state: RootState) => state[sliceName];
 export const getVisibilityMap = (state: RootState) => getUIState(state).visibilityMap;
 export const getCurrentLayout = (state: RootState) => getUIState(state).currentLayout;
 export const getFullLayout = (state: RootState) => getUIState(state).fullLayout;
+export const getAmmSelected = (state: RootState) => getUIState(state).ammSelected;
 
 export default uiSlice.reducer;

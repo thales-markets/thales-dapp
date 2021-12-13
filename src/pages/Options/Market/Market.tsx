@@ -21,7 +21,13 @@ import TradeOptions from './TradeOptions';
 import Orderbook from './TradeOptions/Orderbook';
 import MarketWidget from './components/MarketWidget';
 import { MarketWidgetKey } from 'constants/ui';
-import { getVisibilityMap, setMarketWidgetLayout, getCurrentLayout, getFullLayout } from 'redux/modules/marketWidgets';
+import {
+    getVisibilityMap,
+    setMarketWidgetLayout,
+    getCurrentLayout,
+    getFullLayout,
+    getAmmSelected,
+} from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
 import { FlexDivCentered, FlexDivColumn, Wrapper } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
@@ -42,15 +48,12 @@ import { MarketOverviewMobile } from './components/MarketOverview/MarketOverview
 import MarketMobile from './MarketMobile';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import AMM from './AMM';
-import Cookies from 'universal-cookie';
 
 const ReactGridLayout = WidthProvider(RGL);
 
 type MarketProps = {
     marketAddress: string;
 };
-
-const cookies = new Cookies();
 
 const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const { t } = useTranslation();
@@ -63,9 +66,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const fullLayout = useSelector((state: RootState) => getFullLayout(state));
     const [isMobileView, setIsMobileView] = useState(false);
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
-
     const [layout, setLayout] = useState(currentLayout);
-    const [ammSelected, setAmmSelected] = useState(JSON.parse(cookies.get('ammSelected') || false));
+    const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
@@ -303,8 +305,6 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         phase={optionsMarket.phase}
                         isCustomMarket={optionsMarket.customMarket}
                         route={ROUTES.Options.MarketMatch}
-                        ammSelected={ammSelected}
-                        setAmmSelected={setAmmSelected}
                     />
 
                     <FlexDivColumn className="market__content">

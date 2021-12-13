@@ -11,12 +11,11 @@ import { ReactComponent as RightIcon } from 'assets/images/right.svg';
 import OutsideClickHandler from 'react-outside-click-handler';
 
 type CustomizeLayoutProps = {
-    ammSelected: boolean;
     phase: string;
     isCustomMarket?: boolean;
 };
 
-export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase, isCustomMarket, ammSelected }) => {
+export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase, isCustomMarket }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [layoutDropdownIsOpen, setLayoutDropdownIsOpen] = useState(false);
@@ -47,7 +46,6 @@ export const CustomizeLayout: React.FC<CustomizeLayoutProps> = ({ phase, isCusto
                                     widgetKey={widgetKey as MarketWidgetKey}
                                     phase={phase}
                                     isCustomMarket={isCustomMarket}
-                                    ammSelected={ammSelected}
                                 />
                             ))}
                             <ResetButton
