@@ -120,7 +120,7 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
                             <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <UnusableInput value={50} onChange={(_, _value) => {}} disabled={true} />
+                            <UnusableInput value={50} onChange={() => {}} disabled={true} />
                             <UnusableInputLabel>Higher Than</UnusableInputLabel>
                             <UnusableCurrencyLabel>{'USD'}</UnusableCurrencyLabel>
                         </ShortInputContainer>
@@ -145,7 +145,7 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
                             </OptionButtonWrapper>
                         </ShortContainer>
                         <ShortInputContainer>
-                            <UnusableInput value={50} onChange={(_, _value) => {}} disabled={true} />
+                            <UnusableInput value={50} onChange={() => {}} disabled={true} />
                             <UnusableInputLabel>Strike Date</UnusableInputLabel>
                         </ShortInputContainer>
                     </FlexDivRow>
@@ -163,11 +163,11 @@ const AMM: React.FC<AMMProps> = ({ optionSide }) => {
                         </ShortContainer>
                         <ShortInputContainerRow>
                             <ShortInputContainer>
-                                <UnusableInput value={50} onChange={(_, _value) => {}} disabled={true} />
+                                <UnusableInput value={50} onChange={() => {}} disabled={true} />
                                 <UnusableInputLabel>Slippage</UnusableInputLabel>
                             </ShortInputContainer>
                             <ShortInputContainer>
-                                <UnusableInput value={50} onChange={(_, _value) => {}} disabled={true} />
+                                <UnusableInput value={50} onChange={() => {}} disabled={true} />
                                 <UnusableInputLabel>Price per option</UnusableInputLabel>
                             </ShortInputContainer>
                         </ShortInputContainerRow>
