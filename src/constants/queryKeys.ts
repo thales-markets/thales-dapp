@@ -78,6 +78,7 @@ export const QUERY_KEYS = {
         Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
+        AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],

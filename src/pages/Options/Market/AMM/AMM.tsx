@@ -18,7 +18,7 @@ import {
     Wallet,
     WalletContainer,
 } from '../components';
-import { formatCurrencyWithKey } from '../../../../utils/formatters/number';
+import { formatCurrencyWithKey, formatCurrencyWithSign } from '../../../../utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from '../../../../constants/currency';
 import { EMPTY_VALUE } from '../../../../constants/placeholder';
 import { useSelector } from 'react-redux';
@@ -42,6 +42,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { formatGasLimit } from 'utils/network';
+import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -72,6 +73,7 @@ const AMM: React.FC = () => {
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [insufficientLiquidity /*, setInsufficientLiquidity*/] = useState<boolean>(false);
     const [isAmountValid /*, setIsAmountValid*/] = useState<boolean>(true);
+    const [maxLimit, setMaxLimit] = useState<number>(0);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -93,6 +95,12 @@ const AMM: React.FC = () => {
             ? { synths: synthsWalletBalancesQuery.data }
             : null;
     const sUSDBalance = getCurrencyKeyBalance(walletBalancesMap, SYNTHS_MAP.sUSD) || 0;
+
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket.address, {
+        enabled: isAppReady,
+    });
+    const ammMaxLimits =
+        ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data ? (ammMaxLimitsQuery.data as AmmMaxLimits) : undefined;
 
     const {
         contracts: { SynthsUSD },
@@ -166,6 +174,20 @@ const AMM: React.FC = () => {
     };
 
     const handleSubmitOrder = async () => {};
+
+    useEffect(() => {
+        let max = 0;
+        if (ammMaxLimits) {
+            max = isLong
+                ? isBuy
+                    ? ammMaxLimits.maxBuyLong
+                    : ammMaxLimits.maxSellLong
+                : isBuy
+                ? ammMaxLimits.maxBuyShort
+                : ammMaxLimits.maxSellShort;
+        }
+        setMaxLimit(max + 4000);
+    }, [ammMaxLimits, isLong, isBuy]);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
@@ -248,8 +270,8 @@ const AMM: React.FC = () => {
                                 onChange={(option: any) => setOrderSide(option)}
                                 isSearchable={false}
                                 isUppercase
-                                // isDisabled={isSubmitting}
-                                // className={isSubmitting ? 'disabled' : ''}
+                                isDisabled={isSubmitting}
+                                className={isSubmitting ? 'disabled' : ''}
                             />
                             <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                         </ShortInputContainer>
@@ -315,32 +337,38 @@ const AMM: React.FC = () => {
                         <BuySellSliderContainer>
                             {isBuy ? (
                                 <BuySlider
-                                    value={Number(0)}
-                                    step={0.01}
-                                    max={1}
+                                    value={Number(amount)}
+                                    step={1}
+                                    max={maxLimit}
                                     min={0}
-                                    // onChange={(_, value) => {
-                                    //     setIsPriceValid(Number(value) <= 1);
-                                    //     setPrice(Number(value));
-                                    // }}
-                                    // disabled={isSubmitting}
+                                    onChange={(_, value) => {
+                                        // setIsPriceValid(Number(value) <= 1);
+                                        setAmount(Number(value));
+                                    }}
+                                    disabled={isSubmitting}
                                 />
                             ) : (
                                 <SellSlider
-                                    value={Number(0)}
-                                    step={0.01}
-                                    max={1}
+                                    value={Number(amount)}
+                                    step={1}
+                                    max={maxLimit}
                                     min={0}
-                                    // onChange={(_, value) => {
-                                    //     setIsPriceValid(Number(value) <= 1);
-                                    //     setPrice(Number(value));
-                                    // }}
-                                    // disabled={isSubmitting}
+                                    onChange={(_, value) => {
+                                        // setIsPriceValid(Number(value) <= 1);
+                                        setAmount(Number(value));
+                                    }}
+                                    disabled={isSubmitting}
                                 />
                             )}
                             <FlexDivRow>
-                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}0`}</SliderRange>
-                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${USD_SIGN}1`}</SliderRange>
+                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithSign(
+                                    USD_SIGN,
+                                    0
+                                )}`}</SliderRange>
+                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithSign(
+                                    USD_SIGN,
+                                    maxLimit
+                                )}`}</SliderRange>
                             </FlexDivRow>
                         </BuySellSliderContainer>
                     </FlexDivRow>
@@ -378,7 +406,6 @@ const AMM: React.FC = () => {
 const AMMWrapper = styled.div`
     display: flex;
     height: 100%;
-    margin-top: 20px !important;
 `;
 
 const Widget = styled.div`

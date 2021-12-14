@@ -13,6 +13,24 @@ const getDefaultLayout = () => {
     );
 };
 
+const getInitialFullLayout = () => {
+    const localStoreFullLayout: any = localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT);
+
+    if (localStoreFullLayout) {
+        Object.values(MarketWidgetKey).forEach((widgetKey: string) => {
+            const layoutItemIndex = localStoreFullLayout.findIndex((item: any) => item.i === widgetKey);
+            if (layoutItemIndex == -1) {
+                localStoreFullLayout.push(MarketWidgetDefaultLayoutMap[widgetKey as MarketWidgetKey]);
+            }
+        });
+
+        localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT, localStoreFullLayout);
+        return localStoreFullLayout;
+    }
+
+    return getDefaultLayout();
+};
+
 type UISliceState = {
     visibilityMap: Record<MarketWidgetKey, boolean>;
     currentLayout: Layout[];
@@ -42,7 +60,7 @@ const defaultState: UISliceState = {
 const initialState: UISliceState = {
     visibilityMap: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP) || defaultMarketWidgetVisibility,
     currentLayout: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_CURRENT_LAYOUT) || [],
-    fullLayout: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_FULL_LAYOUT) || getDefaultLayout(),
+    fullLayout: getInitialFullLayout(),
     ammSelected: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_AMM_SELECTED) || false,
 };
 
@@ -91,22 +109,19 @@ export const uiSlice = createSlice({
         },
         setAmmSelected: (state: UISliceState, action: PayloadAction<boolean>) => {
             state.ammSelected = action.payload;
-            // if (action.payload) {
-            //     const layoutItem = state.fullLayout.find((item) => item.i === MarketWidgetKey.AMM);
-            //     console.log(layoutItem);
-            //     if (layoutItem) {
-            //         state.currentLayout = [...state.currentLayout, layoutItem];
-            //     } else {
-            //         state.currentLayout = [...state.currentLayout, MarketWidgetDefaultLayoutMap[MarketWidgetKey.AMM]];
-            //     }
+            if (action.payload) {
+                const layoutItem = state.fullLayout.find((item) => item.i === MarketWidgetKey.AMM);
+                if (layoutItem) {
+                    state.currentLayout = [...state.currentLayout, layoutItem];
+                } else {
+                    state.currentLayout = [...state.currentLayout, MarketWidgetDefaultLayoutMap[MarketWidgetKey.AMM]];
+                }
 
-            //     console.log(state.currentLayout);
-
-            //     state.visibilityMap = {
-            //         ...state.visibilityMap,
-            //         [MarketWidgetKey.AMM]: true,
-            //     };
-            // }
+                state.visibilityMap = {
+                    ...state.visibilityMap,
+                    [MarketWidgetKey.AMM]: true,
+                };
+            }
             saveWidgetsToLS(state);
         },
     },

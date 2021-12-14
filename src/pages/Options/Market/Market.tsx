@@ -334,6 +334,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                                 className="market__gridWrapper"
                                 phase={optionsMarket.phase}
                                 optionsActiveTab={optionsActiveTab.id}
+                                ammSelected={ammSelected}
                             >
                                 {isMobileView ? (
                                     <MarketMobile
@@ -415,7 +416,7 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; isLong: boolean 
 
 const OptionsIcon = styled.img``;
 
-const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string }>`
+const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string; ammSelected: boolean }>`
     background-color: #0a2e66;
     border-radius: ${(props) =>
         props.phase === 'trading'
@@ -426,6 +427,7 @@ const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string 
     position: relative;
     top: ${(props) => (props.phase === 'trading' ? '-15px' : '0')};
     z-index: 3;
+    padding-top: ${(props) => (props.ammSelected ? 15 : 0)}px;
 `;
 
 export default Market;
