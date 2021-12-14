@@ -255,14 +255,18 @@ const Weighted = styled(FlexDivSpaceBetween)`
 `;
 
 const Option = styled(FlexDivRowCentered)`
-    padding-left: 30px;
+    padding-left: 20px;
+    padding-right: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     @media (max-width: 767px) {
         padding-left: 10px;
     }
 `;
 
 const Selection = styled(FlexDiv)`
-    width: 250px;
+    width: 230px;
     @media (max-width: 767px) {
         width: 165px;
     }
@@ -285,7 +289,7 @@ const PlusMinus = styled(FlexDivColumnCentered)`
 
 const Percentage = styled(FlexDivColumnCentered)`
     text-align: center;
-    max-width: 100px;
+    max-width: 80px;
     @media (max-width: 767px) {
         max-width: 55px;
     }
@@ -328,7 +332,7 @@ const SeePitchButton = styled.button`
     color: white;
     background: transparent;
     padding: 5px 30px;
-    margin-left: 30px;
+    margin-left: 20px;
     font-size: 15px;
     &:disabled {
         opacity: 0.4;
