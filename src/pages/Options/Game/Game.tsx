@@ -20,21 +20,26 @@ const Game: React.FC = () => {
         codeUrl: '/miletus-game/build.wasm',
     });
 
+    const handleOnClickFullscreen = () => {
+        unityContext.setFullscreen(true);
+    };
+
     return isNetworkSupported(networkId) ? (
         <Background style={{ minHeight: '100vh' }}>
             <Wrapper>
-                <FlexDivColumn className="game" style={{ zIndex: 10 }}>
+                <Container className="game" style={{ zIndex: 10 }}>
                     <MarketHeader route={ROUTES.Options.Game} />
                     <GameWrapper>
                         <Unity
                             unityContext={unityContext}
                             style={{
-                                height: '600px',
-                                width: '600px',
+                                height: 'auto',
+                                width: '100%',
                             }}
                         />
+                        <FullScreenButton onClick={handleOnClickFullscreen}>⛶</FullScreenButton>
                     </GameWrapper>
-                </FlexDivColumn>
+                </Container>
             </Wrapper>
         </Background>
     ) : (
@@ -42,6 +47,25 @@ const Game: React.FC = () => {
     );
 };
 
-const GameWrapper = styled.div``;
+const FullScreenButton = styled.span`
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 5em;
+    cursor: pointer;
+    color: white;
+`;
+
+const GameWrapper = styled.div`
+    position: relative;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+`;
+
+const Container = styled(FlexDivColumn)`
+    z-index: 10;
+    width: 100%;
+`;
 
 export default Game;
