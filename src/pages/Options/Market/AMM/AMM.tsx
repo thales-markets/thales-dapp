@@ -17,8 +17,10 @@ import {
     SubmitButtonContainer,
     Wallet,
     WalletContainer,
+    SummaryContainer,
+    Divider,
 } from '../components';
-import { formatCurrencyWithKey, formatCurrencyWithSign } from '../../../../utils/formatters/number';
+import { formatCurrencyWithKey, formatCurrencyWithSign, formatPercentage } from '../../../../utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from '../../../../constants/currency';
 import { EMPTY_VALUE } from '../../../../constants/placeholder';
 import { useSelector } from 'react-redux';
@@ -41,8 +43,10 @@ import { ethers } from 'ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { formatGasLimit } from 'utils/network';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
+import NetworkFees from 'pages/Options/components/NetworkFees';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -65,15 +69,20 @@ const AMM: React.FC = () => {
     const [orderSide, setOrderSide] = useState<OrderSideOptionType>(orderSideOptions[0]);
     const [optionSide, setOptionSide] = useState<OptionSide>('long');
     const [amount, setAmount] = useState<number | string>('');
-    const [price /*, setPrice*/] = useState<number | string>('');
-    const [total /*, setTotal*/] = useState<number | string>('');
+    const [price /*, setPrice*/] = useState<number | string>(0.658);
+    const [total /*, setTotal*/] = useState<number | string>(500);
+    const [priceImpact /*, setPriceImpact*/] = useState<number | string>(0.045);
+    const [potentialReturn /*, setPotentialReturn*/] = useState<number | string>(1);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting /*, setIsSubmitting*/] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
+    const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [insufficientLiquidity /*, setInsufficientLiquidity*/] = useState<boolean>(false);
     const [isAmountValid /*, setIsAmountValid*/] = useState<boolean>(true);
     const [maxLimit, setMaxLimit] = useState<number>(0);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const accountMarketInfoQuery = useBinaryOptionsAccountMarketInfoQuery(optionsMarket.address, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -150,6 +159,45 @@ const AMM: React.FC = () => {
             erc20Instance.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
         };
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
+
+    useEffect(() => {
+        const fetchL1Fee = async (ammContractWithSigner: any, marketAddress: any, optionSide: any, amount: any) => {
+            const txRequest = await ammContractWithSigner.populateTransaction.buyFromAMM(
+                marketAddress,
+                optionSide,
+                amount
+            );
+            return getL1FeeInWei(txRequest);
+        };
+
+        const fetchGasLimit = async () => {
+            try {
+                const { ammContract } = snxJSConnector as any;
+                const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        ammContractWithSigner.estimateGas.buyFromAMM(optionsMarket.address, optionSide, amount),
+                        fetchL1Fee(ammContractWithSigner, optionsMarket.address, optionSide, amount),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await ammContractWithSigner.estimateGas.buyFromAMM(
+                        optionsMarket.address,
+                        optionSide,
+                        amount
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
+            } catch (e) {
+                console.log(e);
+                setGasLimit(null);
+            }
+        };
+        if (isButtonDisabled) return;
+        fetchGasLimit();
+    }, [isButtonDisabled, amount, hasAllowance]);
 
     const handleAllowance = async () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
@@ -276,9 +324,14 @@ const AMM: React.FC = () => {
                             <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <UnusableInput value={50} onChange={() => {}} disabled={true} />
-                            <UnusableInputLabel>Higher Than</UnusableInputLabel>
-                            <UnusableCurrencyLabel>{'USD'}</UnusableCurrencyLabel>
+                            <SummaryContent>
+                                {formatCurrencyWithKey(SYNTHS_MAP.sUSD, price, DEFAULT_OPTIONS_DECIMALS)}
+                            </SummaryContent>
+                            <SummaryLabel>
+                                {t('options.market.trade-options.place-order.price-label', {
+                                    currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                                })}
+                            </SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRow>
                     <FlexDivRowCentered>
@@ -299,8 +352,8 @@ const AMM: React.FC = () => {
                             </OptionsContainer>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <UnusableInput value={50} onChange={() => {}} disabled={true} />
-                            <UnusableInputLabel>Strike Date</UnusableInputLabel>
+                            <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</SummaryContent>
+                            <SummaryLabel>Total</SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRowCentered>
                     <FlexDivRow>
@@ -321,16 +374,8 @@ const AMM: React.FC = () => {
                             </CurrencyLabel>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <FlexDivRow style={{ width: 'calc(100% - 10px)' }}>
-                                <ShortInputContainer>
-                                    <UnusableInput value={50} onChange={() => {}} disabled={true} />
-                                    <UnusableInputLabel>Slippage</UnusableInputLabel>
-                                </ShortInputContainer>
-                                <ShortInputContainer>
-                                    <UnusableInput value={50} onChange={() => {}} disabled={true} />
-                                    <UnusableInputLabel>Price per option</UnusableInputLabel>
-                                </ShortInputContainer>
-                            </FlexDivRow>
+                            <SummaryContent>{formatPercentage(potentialReturn)}</SummaryContent>
+                            <SummaryLabel>Potential return</SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRow>
                     <FlexDivRow>
@@ -371,14 +416,22 @@ const AMM: React.FC = () => {
                                 )}`}</SliderRange>
                             </FlexDivRow>
                         </BuySellSliderContainer>
+                        <ShortInputContainer>
+                            <SummaryContent>{formatPercentage(priceImpact)}</SummaryContent>
+                            <SummaryLabel>Slippage</SummaryLabel>
+                        </ShortInputContainer>
                     </FlexDivRow>
+                    <Divider />
+                    <SummaryContainer>
+                        <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} l1Fee={l1Fee} />
+                    </SummaryContainer>
+                    <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
                 </Container>
-                <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
             </Widget>
             <Info>
                 <Container>
@@ -433,28 +486,25 @@ const Info = styled.div`
     }
 `;
 
-const UnusableInput = styled(NumericInput)`
+const SummaryContent = styled.div`
     background: #b8c6e5;
+    border-radius: 12px;
+    height: 64px;
+    padding: 31px 68px 0 22px;
     color: #0c1c68;
-    border: none;
-    &:disabled {
-        opacity: 1;
-        cursor: default;
-    }
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: 0.25px;
 `;
 
-const UnusableInputLabel = styled(InputLabel)`
-    color: #0c1c68;
-`;
-
-const UnusableCurrencyLabel = styled(CurrencyLabel)`
+const SummaryLabel = styled(InputLabel)`
     color: #0c1c68;
 `;
 
 const BuySellSliderContainer = styled(SliderContainer)`
     margin-right: 10px;
-    margin-top: 0;
-    padding: 0 10px;
+    padding: 0 10px 0 10px;
 `;
 
 export default AMM;
