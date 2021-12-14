@@ -193,7 +193,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                 onDismiss={() => setTxErrorMessage(null)}
             />
             <PitchModal
-                onClose={() => setModalInfo({ isOpen: false, author: '', content: '' })}
+                onClose={() => setModalInfo({ isOpen: false, author: modalInfo.author, content: modalInfo.content })}
                 open={modalInfo.isOpen}
             >
                 <PitchContainer>
@@ -201,7 +201,11 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                         {t('governance.proposal.pitch-by')}: <span>{modalInfo.author}</span>
                     </PitchHeader>
                     <PitchContent>{modalInfo.content}</PitchContent>
-                    <CloseDialog onClick={() => setModalInfo({ isOpen: false, author: '', content: '' })} />
+                    <CloseDialog
+                        onClick={() =>
+                            setModalInfo({ isOpen: false, author: modalInfo.author, content: modalInfo.content })
+                        }
+                    />
                 </PitchContainer>
             </PitchModal>
         </>
