@@ -257,9 +257,8 @@ const Weighted = styled(FlexDivSpaceBetween)`
 const Option = styled(FlexDivRowCentered)`
     padding-left: 20px;
     padding-right: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: break-spaces;
+    line-height: 22px;
     @media (max-width: 767px) {
         padding-left: 10px;
     }
@@ -275,6 +274,7 @@ const Selection = styled(FlexDiv)`
 const PlusMinus = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 45px;
+    min-width: 45px;
     border-left: 2px solid #748bc6;
     border-right: 2px solid #748bc6;
     &:hover {
@@ -284,14 +284,17 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     }
     @media (max-width: 767px) {
         max-width: 35px;
+        min-width: 35px;
     }
 `;
 
 const Percentage = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 80px;
+    min-width: 80px;
     @media (max-width: 767px) {
         max-width: 55px;
+        min-width: 55px;
     }
 `;
 
@@ -302,6 +305,7 @@ const Input = styled.input`
     padding: 0 10px;
     outline: none !important;
     max-width: 60px;
+    min-width: 60px;
     font-weight: bold;
     font-size: 20px;
     color: #b8c6e5;
@@ -311,6 +315,7 @@ const Input = styled.input`
     @media (max-width: 767px) {
         font-size: 16px;
         max-width: 40px;
+        min-width: 40px;
     }
 `;
 
