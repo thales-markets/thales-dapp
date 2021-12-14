@@ -112,7 +112,7 @@ export const QUERY_KEYS = {
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
-        Quote: () => ['swap', 'quote'],
+        Quote: (networkId: NetworkId) => ['swap', 'quote', networkId],
         Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
         Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },

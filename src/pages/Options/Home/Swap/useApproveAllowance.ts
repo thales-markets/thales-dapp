@@ -2,17 +2,11 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import dotenv from 'dotenv';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
-import { BigNumber } from '@ethersproject/bignumber';
 
 dotenv.config();
 
-interface Preview {
-    toToken: Token;
-    fromToken: Token;
-    fromTokenAmount: string;
-    toTokenAmount: string;
-    estimatedGas: number;
-    protocols: [];
+interface Allowance {
+    allowance: number;
 }
 
 interface Token {
@@ -24,21 +18,21 @@ interface Token {
 }
 
 const baseUrl = 'https://api.1inch.exchange/v4.0/';
-const suffix = '/approve/transaction?';
+const suffix = '/approve/allowance?';
 
-const useApproveToken = (
+const useApproveAllowance = (
     networkId: NetworkId,
     fromToken: Token,
-    amount: BigNumber,
-    options?: UseQueryOptions<Preview>
+    walletAddress: string,
+    options?: UseQueryOptions<Allowance>
 ) => {
-    return useQuery<Preview>(
+    return useQuery<Allowance>(
         QUERY_KEYS.Swap.Approve(networkId),
         async () => {
             let url = baseUrl + networkId + suffix;
             const fromUrl = 'tokenAddress=' + fromToken.address;
-            const amountUrl = '&amount=' + amount;
-            url = url + fromUrl + amountUrl;
+            const addressUrl = '&walletAddress=' + walletAddress;
+            url = url + fromUrl + addressUrl;
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
             return result;
@@ -46,4 +40,4 @@ const useApproveToken = (
         options
     );
 };
-export default useApproveToken;
+export default useApproveAllowance;
