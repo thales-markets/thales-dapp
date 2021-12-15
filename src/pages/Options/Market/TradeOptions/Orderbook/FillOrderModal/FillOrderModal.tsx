@@ -183,7 +183,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
                     setL1Fee(l1FeeInWei);
                 } else {
-                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(
+                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
                         fillOrderData.limitOrder,
                         fillOrderData.signature,
                         fillOrderData.makerAmount,
