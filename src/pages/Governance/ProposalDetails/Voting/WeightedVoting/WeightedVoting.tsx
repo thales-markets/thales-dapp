@@ -158,12 +158,12 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                             {hasPitches && (
                                 <SeePitchWrapper>
                                     <SeePitchButton
-                                        disabled={!(pitches as Record<string, string>)[choice]}
+                                        disabled={!(pitches as Record<string, string>)[choice.toString().trim()]}
                                         onClick={() =>
                                             setModalInfo({
                                                 isOpen: true,
-                                                author: choice,
-                                                content: (pitches as Record<string, string>)[choice],
+                                                author: choice.toString().trim(),
+                                                content: (pitches as Record<string, string>)[choice.toString().trim()],
                                             })
                                         }
                                     >
