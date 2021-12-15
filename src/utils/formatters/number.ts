@@ -41,11 +41,17 @@ export const formatCurrency = (value: NumericValue, decimals = DEFAULT_CURRENCY_
 export const formatCurrencyWithPrecision = (value: NumericValue, trimDecimals = false) =>
     formatCurrency(value, getPrecision(value), trimDecimals);
 
-export const formatPercentage = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS) =>
-    numbro(value).format({
+export const formatPercentage = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS) => {
+    let percentageValue = value;
+    if (!value || !Number(value)) {
+        percentageValue = 0;
+    }
+
+    return numbro(percentageValue).format({
         output: 'percent',
         mantissa: decimals,
     });
+};
 
 export const formatPercentageWithSign = (value: NumericValue, decimals = DEFAULT_CURRENCY_DECIMALS) =>
     `${value > 0 ? '+' : ''}${formatPercentage(value, decimals)}`;

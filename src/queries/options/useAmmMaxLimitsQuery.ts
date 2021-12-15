@@ -25,8 +25,8 @@ const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<A
             if (ammContract) {
                 const [maxBuyLong, maxSellLong, maxBuyShort, maxSellShort] = await Promise.all([
                     ammContract.availableToBuyFromAMM(marketAddress, SIDE['long']),
-                    ammContract.availableToSellToAMM(marketAddress, SIDE['short']),
-                    ammContract.availableToBuyFromAMM(marketAddress, SIDE['long']),
+                    ammContract.availableToSellToAMM(marketAddress, SIDE['long']),
+                    ammContract.availableToBuyFromAMM(marketAddress, SIDE['short']),
                     ammContract.availableToSellToAMM(marketAddress, SIDE['short']),
                 ]);
 

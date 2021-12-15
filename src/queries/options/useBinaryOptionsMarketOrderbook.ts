@@ -61,8 +61,10 @@ const useBinaryOptionsMarketOrderbook = (
             return orderbook;
         },
         {
-            refetchInterval: 5000,
             ...options,
+            refetchInterval: 5000,
+            // enable only for Optimism Mainnet
+            enabled: options?.enabled && networkId === 10,
         }
     );
 };

@@ -575,7 +575,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     );
 };
 
-const SlippageButton = styled(AmountButton)`
+export const SlippageButton = styled(AmountButton)`
     margin: 0 10px 0 0;
     min-height: 26px;
     width: 48px;
@@ -588,7 +588,7 @@ const SlippageButton = styled(AmountButton)`
     }
 `;
 
-const SlippageInput = styled(NumericInput)`
+export const SlippageInput = styled(NumericInput)`
     height: 26px;
     width: 80px;
     padding: 0;
@@ -602,15 +602,15 @@ const SlippageInput = styled(NumericInput)`
     }
 `;
 
-const PercentageLabel = styled(CurrencyLabel)`
+export const PercentageLabel = styled(CurrencyLabel)`
     padding: 5px 10px 5px 0;
 `;
 
-const SlippageContainer = styled(InputContainer)`
+export const SlippageContainer = styled(InputContainer)`
     margin: 0;
 `;
 
-const SlippageLabel = styled(SummaryLabel)`
+export const SlippageLabel = styled(SummaryLabel)`
     display: flex;
     align-items: center;
     margin-top: 5px;
@@ -625,7 +625,7 @@ const Price = styled(SummaryContent)<{ color: string }>`
     text-align: end;
 `;
 
-const QuestionMarkIcon = styled(StyledQuestionMarkIcon)`
+export const QuestionMarkIcon = styled(StyledQuestionMarkIcon)`
     @media (max-width: 767px) {
         display: none;
     }

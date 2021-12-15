@@ -423,6 +423,16 @@ export const binaryOptionMarketContract = {
                             name: 'short',
                             type: 'address',
                         },
+                        {
+                            internalType: 'address',
+                            name: 'limitOrderProvider',
+                            type: 'address',
+                        },
+                        {
+                            internalType: 'address',
+                            name: 'thalesAMM',
+                            type: 'address',
+                        },
                     ],
                     internalType: 'struct BinaryOptionMarket.BinaryOptionMarketParameters',
                     name: '_parameters',

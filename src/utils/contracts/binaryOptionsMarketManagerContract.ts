@@ -9,7 +9,7 @@ export const binaryOptionsMarketDataContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0x6002a8F2A8dC0B704080765cE96aac63D5f7B224',
-        [NetworkId['Kovan-Ovm']]: '0x459AEF68B60bF97311A63dF592a43aCfb9dC0B65',
+        [NetworkId['Kovan-Ovm']]: '0x3Aa0814cD91f33467e6eb5ba58e56AB73699582b',
     },
     abi: [
         {
@@ -300,6 +300,21 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'addWhitelistedAddress',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'binaryOptionMarketFactory',
@@ -406,6 +421,15 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [],
+            name: 'disableWhitelistedAddresses',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'durations',
@@ -423,6 +447,15 @@ export const binaryOptionsMarketDataContract = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [],
+            name: 'enableWhitelistedAddresses',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -453,6 +486,48 @@ export const binaryOptionsMarketDataContract = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'candidate',
+                    type: 'address',
+                },
+            ],
+            name: 'isActiveMarket',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'candidate',
+                    type: 'address',
+                },
+            ],
+            name: 'isKnownMarket',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
@@ -599,6 +674,21 @@ export const binaryOptionsMarketDataContract = {
         {
             constant: true,
             inputs: [],
+            name: 'onlyWhitelistedAddressesCanCreateMarkets',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'owner',
             outputs: [
                 {
@@ -656,6 +746,21 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'receiveMarkets',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'removeWhitelistedAddress',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -830,6 +935,21 @@ export const binaryOptionsMarketDataContract = {
             constant: false,
             inputs: [
                 {
+                    internalType: 'address[]',
+                    name: '_whitelistedAddresses',
+                    type: 'address[]',
+                },
+            ],
+            name: 'setWhitelistedAddresses',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
                     internalType: 'address',
                     name: '_address',
                     type: 'address',
@@ -879,6 +999,27 @@ export const binaryOptionsMarketDataContract = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: 'whitelistedAddresses',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
     ],

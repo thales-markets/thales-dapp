@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 import { COLORS, MarketWidgetKey } from '../../../../constants/ui';
-import { FlexDivCentered, FlexDivRow, FlexDivRowCentered } from '../../../../theme/common';
+import { FlexDivCentered, FlexDivColumn, FlexDivEnd, FlexDivRow, FlexDivRowCentered } from '../../../../theme/common';
 import { ReactComponent as WalletIcon } from '../../../../assets/images/wallet-dark.svg';
 import {
     Container,
@@ -19,6 +19,7 @@ import {
     WalletContainer,
     SummaryContainer,
     Divider,
+    LightTooltip,
 } from '../components';
 import { formatCurrencyWithKey, formatCurrencyWithSign, formatPercentage } from '../../../../utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from '../../../../constants/currency';
@@ -44,9 +45,20 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
-import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import useDebouncedEffect from 'hooks/useDebouncedEffect';
+import { SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import FieldValidationMessage from 'components/FieldValidationMessage';
+import {
+    QuestionMarkIcon,
+    PercentageLabel,
+    SlippageButton,
+    SlippageContainer,
+    SlippageInput,
+    SlippageLabel,
+} from '../TradeOptions/TokenSwap/TokenSwap';
+import { dispatchMarketNotification } from 'utils/options';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -69,17 +81,19 @@ const AMM: React.FC = () => {
     const [orderSide, setOrderSide] = useState<OrderSideOptionType>(orderSideOptions[0]);
     const [optionSide, setOptionSide] = useState<OptionSide>('long');
     const [amount, setAmount] = useState<number | string>('');
-    const [price /*, setPrice*/] = useState<number | string>(0.658);
-    const [total /*, setTotal*/] = useState<number | string>(500);
-    const [priceImpact /*, setPriceImpact*/] = useState<number | string>(0.045);
-    const [potentialReturn /*, setPotentialReturn*/] = useState<number | string>(1);
+    const [price, setPrice] = useState<number | string>('');
+    const [total, setTotal] = useState<number | string>('');
+    const [priceImpact, setPriceImpact] = useState<number | string>('');
+    const [potentialReturn, setPotentialReturn] = useState<number | string>('');
+    const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
-    const [isSubmitting /*, setIsSubmitting*/] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [insufficientLiquidity /*, setInsufficientLiquidity*/] = useState<boolean>(false);
-    const [isAmountValid /*, setIsAmountValid*/] = useState<boolean>(true);
+    const [maxLimitExceeded /*, setMaxLimitExceeded*/] = useState<boolean>(false);
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
+    const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
     const [maxLimit, setMaxLimit] = useState<number>(0);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
@@ -124,10 +138,24 @@ const AMM: React.FC = () => {
         : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
-        !isPriceEntered || !isAmountEntered || isSubmitting || !isWalletConnected || insufficientBalance;
+        !isPriceEntered ||
+        !isAmountEntered ||
+        !isSlippageValid ||
+        isSubmitting ||
+        !isWalletConnected ||
+        insufficientBalance;
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
+
+    const formatBuySellArguments = () => {
+        const marketAddress = optionsMarket.address;
+        const side = SIDE[optionSide];
+        const parsedAmount = ethers.utils.parseEther(amount.toString());
+        const parsedTotal = ethers.utils.parseEther(total.toString());
+        const parsedSlippage = ethers.utils.parseEther(slippage.toString());
+        return { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage };
+    };
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
@@ -161,12 +189,24 @@ const AMM: React.FC = () => {
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
     useEffect(() => {
-        const fetchL1Fee = async (ammContractWithSigner: any, marketAddress: any, optionSide: any, amount: any) => {
-            const txRequest = await ammContractWithSigner.populateTransaction.buyFromAMM(
-                marketAddress,
-                optionSide,
-                amount
-            );
+        const fetchL1Fee = async (ammContractWithSigner: any) => {
+            const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
+
+            const txRequest = isBuy
+                ? await ammContractWithSigner.populateTransaction.buyFromAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage
+                  )
+                : await ammContractWithSigner.populateTransaction.sellToAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage
+                  );
             return getL1FeeInWei(txRequest);
         };
 
@@ -175,19 +215,45 @@ const AMM: React.FC = () => {
                 const { ammContract } = snxJSConnector as any;
                 const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
+                const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
+
                 if (isL2) {
                     const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        ammContractWithSigner.estimateGas.buyFromAMM(optionsMarket.address, optionSide, amount),
-                        fetchL1Fee(ammContractWithSigner, optionsMarket.address, optionSide, amount),
+                        isBuy
+                            ? ammContractWithSigner.estimateGas.buyFromAMM(
+                                  marketAddress,
+                                  side,
+                                  parsedAmount,
+                                  parsedTotal,
+                                  parsedSlippage
+                              )
+                            : ammContractWithSigner.estimateGas.sellToAMM(
+                                  marketAddress,
+                                  side,
+                                  parsedAmount,
+                                  parsedTotal,
+                                  parsedSlippage
+                              ),
+                        fetchL1Fee(ammContractWithSigner),
                     ]);
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
                     setL1Fee(l1FeeInWei);
                 } else {
-                    const gasEstimate = await ammContractWithSigner.estimateGas.buyFromAMM(
-                        optionsMarket.address,
-                        optionSide,
-                        amount
-                    );
+                    const gasEstimate = await (isBuy
+                        ? ammContractWithSigner.estimateGas.buyFromAMM(
+                              marketAddress,
+                              side,
+                              parsedAmount,
+                              parsedTotal,
+                              parsedSlippage
+                          )
+                        : ammContractWithSigner.estimateGas.sellToAMM(
+                              optionsMarket.address,
+                              SIDE[optionSide],
+                              parsedAmount,
+                              parsedTotal,
+                              parsedSlippage
+                          ));
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
                 }
             } catch (e) {
@@ -197,7 +263,7 @@ const AMM: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, amount, hasAllowance]);
+    }, [isButtonDisabled, amount, hasAllowance, isBuy, isLong, amount, slippage, total]);
 
     const handleAllowance = async () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
@@ -221,7 +287,104 @@ const AMM: React.FC = () => {
         }
     };
 
-    const handleSubmitOrder = async () => {};
+    const resetData = () => {
+        setPrice('');
+        setTotal('');
+        setPriceImpact('');
+        setPotentialReturn('');
+        setGasLimit(null);
+    };
+
+    useDebouncedEffect(() => {
+        const fetchAmmPriceData = async () => {
+            if (isAmountEntered) {
+                try {
+                    const { ammContract } = snxJSConnector as any;
+                    const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
+
+                    const parsedAmount = ethers.utils.parseEther(amount.toString());
+                    const [ammQuote, ammPriceImpact] = await Promise.all([
+                        isBuy
+                            ? ammContractWithSigner.buyFromAmmQuote(
+                                  optionsMarket.address,
+                                  SIDE[optionSide],
+                                  parsedAmount
+                              )
+                            : ammContractWithSigner.sellToAmmQuote(
+                                  optionsMarket.address,
+                                  SIDE[optionSide],
+                                  parsedAmount
+                              ),
+                        isBuy
+                            ? ammContractWithSigner.buyPriceImpact(
+                                  optionsMarket.address,
+                                  SIDE[optionSide],
+                                  parsedAmount
+                              )
+                            : ammContractWithSigner.sellPriceImpact(
+                                  optionsMarket.address,
+                                  SIDE[optionSide],
+                                  parsedAmount
+                              ),
+                    ]);
+                    const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
+                    setPrice(ammPrice);
+                    setTotal(bigNumberFormatter(ammQuote));
+                    setPriceImpact(bigNumberFormatter(ammPriceImpact));
+                    setPotentialReturn(1 / ammPrice - 1);
+                } catch (e) {
+                    console.log(e);
+                    resetData();
+                }
+            } else {
+                resetData();
+            }
+        };
+        fetchAmmPriceData();
+    }, [amount, isBuy, isLong, walletAddress, isAmountEntered]);
+
+    const handleSubmit = async () => {
+        setTxErrorMessage(null);
+        setIsSubmitting(true);
+        try {
+            const { ammContract } = snxJSConnector as any;
+            const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
+
+            const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
+
+            const tx = (isBuy
+                ? await ammContractWithSigner.buyFromAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage,
+                      {
+                          gasLimit,
+                      }
+                  )
+                : await ammContractWithSigner.sellToAMM(
+                      marketAddress,
+                      side,
+                      parsedAmount,
+                      parsedTotal,
+                      parsedSlippage,
+                      {
+                          gasLimit,
+                      }
+                  )) as ethers.ContractTransaction;
+            const txResult = await tx.wait();
+
+            if (txResult && txResult.transactionHash) {
+                dispatchMarketNotification('Swap succesfull');
+                setIsSubmitting(false);
+            }
+        } catch (e) {
+            console.log(e);
+            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setIsSubmitting(false);
+        }
+    };
 
     useEffect(() => {
         let max = 0;
@@ -234,8 +397,23 @@ const AMM: React.FC = () => {
                 ? ammMaxLimits.maxBuyShort
                 : ammMaxLimits.maxSellShort;
         }
-        setMaxLimit(max + 4000);
+        setMaxLimit(max);
     }, [ammMaxLimits, isLong, isBuy]);
+
+    useEffect(() => {
+        setIsSlippageValid(Number(slippage) > 0 && Number(slippage) <= 100);
+    }, [slippage]);
+
+    useEffect(() => {
+        setIsAmountValid(
+            Number(amount) === 0 ||
+                (Number(amount) > 0 &&
+                    (isBuy
+                        ? (Number(total) > 0 && Number(total) <= sUSDBalance) ||
+                          (Number(total) === 0 && sUSDBalance > 0)
+                        : Number(amount) <= tokenBalance))
+        );
+    }, [amount, total, isBuy, sUSDBalance, tokenBalance]);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
@@ -259,7 +437,14 @@ const AMM: React.FC = () => {
                 </SubmitButton>
             );
         }
-        if (insufficientLiquidity) {
+        if (!isSlippageValid) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.invalid-slippage`)}
+                </SubmitButton>
+            );
+        }
+        if (maxLimitExceeded) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
                     {t(`common.errors.insufficient-liquidity`)}
@@ -278,7 +463,7 @@ const AMM: React.FC = () => {
             );
         }
         return (
-            <SubmitButton disabled={isButtonDisabled} onClick={handleSubmitOrder} isBuy={isBuy}>
+            <SubmitButton disabled={isButtonDisabled} onClick={handleSubmit} isBuy={isBuy}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
                     : t(
@@ -324,9 +509,7 @@ const AMM: React.FC = () => {
                             <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <SummaryContent>
-                                {formatCurrencyWithKey(SYNTHS_MAP.sUSD, price, DEFAULT_OPTIONS_DECIMALS)}
-                            </SummaryContent>
+                            <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}</SummaryContent>
                             <SummaryLabel>
                                 {t('options.market.trade-options.place-order.price-label', {
                                     currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
@@ -361,7 +544,7 @@ const AMM: React.FC = () => {
                             <NumericInput
                                 value={amount}
                                 onChange={(_, value) => setAmount(value)}
-                                className={isAmountValid && !insufficientLiquidity ? '' : 'error'}
+                                className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
                                 disabled={isSubmitting}
                             />
                             <InputLabel>
@@ -372,6 +555,17 @@ const AMM: React.FC = () => {
                             <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
                                 {OPTIONS_CURRENCY_MAP[optionSide]}
                             </CurrencyLabel>
+                            <FieldValidationMessage
+                                showValidation={!isAmountValid || maxLimitExceeded}
+                                message={t(
+                                    !isAmountValid
+                                        ? 'common.errors.insufficient-balance-wallet'
+                                        : 'common.errors.insufficient-liquidity-for-trade',
+                                    {
+                                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                                    }
+                                )}
+                            />
                         </ShortInputContainer>
                         <ShortInputContainer>
                             <SummaryContent>{formatPercentage(potentialReturn)}</SummaryContent>
@@ -418,9 +612,51 @@ const AMM: React.FC = () => {
                         </BuySellSliderContainer>
                         <ShortInputContainer>
                             <SummaryContent>{formatPercentage(priceImpact)}</SummaryContent>
-                            <SummaryLabel>Slippage</SummaryLabel>
+                            <SummaryLabel>Skew impact</SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRow>
+                    <SummaryContainer>
+                        <FlexDivRow>
+                            <FlexDivColumn>
+                                <SlippageLabel>
+                                    {t('options.market.trade-options.place-order.slippage-label')}
+                                    <LightTooltip
+                                        title={t('options.market.trade-options.place-order.slippage-tooltip')}
+                                    >
+                                        <QuestionMarkIcon />
+                                    </LightTooltip>
+                                </SlippageLabel>
+                            </FlexDivColumn>
+                            <FlexDivColumn>
+                                <FlexDivEnd>
+                                    {SLIPPAGE_PERCENTAGE.map((percentage: number) => (
+                                        <SlippageButton
+                                            className={percentage === slippage ? 'selected' : ''}
+                                            key={percentage}
+                                            onClick={() => setSlippage(percentage)}
+                                            disabled={isSubmitting}
+                                        >
+                                            {`${percentage}%`}
+                                        </SlippageButton>
+                                    ))}
+                                    <SlippageContainer>
+                                        <SlippageInput
+                                            value={slippage}
+                                            onChange={(_: any, value: any) => setSlippage(value)}
+                                            disabled={isSubmitting}
+                                        />
+                                        <PercentageLabel className={isSubmitting ? 'disabled' : ''}>%</PercentageLabel>
+                                    </SlippageContainer>
+                                </FlexDivEnd>
+                                <FieldValidationMessage
+                                    showValidation={!isSlippageValid}
+                                    message={t(`common.errors.enter-valid-slippage`)}
+                                    arrowPosition="right"
+                                    marginLeft="40px"
+                                />
+                            </FlexDivColumn>
+                        </FlexDivRow>
+                    </SummaryContainer>
                     <Divider />
                     <SummaryContainer>
                         <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} l1Fee={l1Fee} />
