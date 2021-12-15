@@ -227,7 +227,7 @@ const GovernancePage: React.FC<GovernancePageProps> = (props) => {
                             )}
                             {selectedProposal && (
                                 <SidebarContainer>
-                                    {selectedTab === SpaceKey.TIPS && (
+                                    {selectedProposal.space.id === SpaceKey.TIPS && (
                                         <SidebarWrapper>
                                             <Sidebar>
                                                 <SidebarDetails proposal={selectedProposal} type="approval-box" />
