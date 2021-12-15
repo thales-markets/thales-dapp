@@ -1061,7 +1061,6 @@
             "voting-power-label": "您的投票权",
             "vote-progress-label": "正在投票",
             "vote-confirmation-message": "投票成功",
-            "vote-confirmation": "您确定要投票“{choice}}”？此操作无法撤消。",
             "type": {
                 "single-choice": "单选投票",
                 "weighted": "加权投票"
@@ -1074,7 +1073,8 @@
                 "passed": "通过"
             },
             "pitch-by": "投球",
-            "see-pitch": "看到这个音高"
+            "see-pitch": "看到这个音高",
+            "vote-confirmation": "你确定要投票吗"
         },
         "no-votes": "对本提案无票",
         "view-more": "查看更多",

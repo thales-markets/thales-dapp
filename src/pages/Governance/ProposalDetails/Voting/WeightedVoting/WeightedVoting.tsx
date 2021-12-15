@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered, FlexDiv, FlexDivSpaceBetween } from 'theme/common';
 import { Proposal } from 'types/governance';
@@ -24,6 +24,7 @@ import voting from 'utils/voting';
 import pitches from '../pitches.json';
 import { Dialog, withStyles } from '@material-ui/core';
 import { CloseIconContainer } from '../../../../Options/Market/TradeOptions/Orderbook/components';
+import useProposalQuery from '../../../../../queries/governance/useProposalQuery';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -37,6 +38,23 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     const [isVoting, setIsVoting] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [modalInfo, setModalInfo] = useState({ isOpen: false, author: '', content: '' });
+
+    const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
+    const proposalResults =
+        proposalResultsQuery.isSuccess && proposalResultsQuery.data ? proposalResultsQuery.data : undefined;
+
+    const myVote = useMemo(() => proposalResults?.votes.find((vote: any) => vote.voter === walletAddress), [
+        proposalResults,
+        walletAddress,
+    ]);
+
+    useEffect(() => {
+        if (myVote) {
+            setSelectedChoices([0, ...Object.values(myVote.choice as Record<number, number>)]);
+        } else {
+            setSelectedChoices(new Array(proposal.choices.length + 1).fill(0));
+        }
+    }, [myVote]);
 
     function addVote(i: number, selectedChoices: number[]) {
         selectedChoices[i] = selectedChoices[i] ? (selectedChoices[i] += 1) : 1;
@@ -176,7 +194,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                 })}
                 {isOptionSelected && hasVotingRights && (
                     <VoteConfirmation>
-                        {t(`governance.proposal.vote-confirmation`, { choice: formattedChoiceString })}
+                        {t(`governance.proposal.vote-confirmation`) + formattedChoiceString + '?'}
                     </VoteConfirmation>
                 )}
             </VoteContainer>
