@@ -194,7 +194,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                 })}
                 {isOptionSelected && hasVotingRights && (
                     <VoteConfirmation>
-                        {t(`governance.proposal.vote-confirmation`) + formattedChoiceString + '?'}
+                        {t(`governance.proposal.vote-confirmation`) + ' ' + formattedChoiceString + '?'}
                     </VoteConfirmation>
                 )}
             </VoteContainer>
