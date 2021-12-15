@@ -2,6 +2,14 @@
     &__logoWrapper {
         display: none !important;
     }
+    &__nav {
+        overflow: auto !important;
+        height: 100%;
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+            width: 0;
+        }
+    }
 }
 
 @media screen and (max-width: 1024px) {
@@ -20,6 +28,7 @@
                 height: 100%;
                 overflow: auto !important;
                 z-index: 1001 !important;
+                scrollbar-width: none;
                 &::-webkit-scrollbar {
                     width: 0px;
                 }
