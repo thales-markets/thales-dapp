@@ -21,8 +21,8 @@ import {
     Divider,
     LightTooltip,
 } from '../components';
-import { formatCurrencyWithKey, formatCurrencyWithSign, formatPercentage } from '../../../../utils/formatters/number';
-import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from '../../../../constants/currency';
+import { formatCurrencyWithKey, formatPercentage } from '../../../../utils/formatters/number';
+import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
 import { EMPTY_VALUE } from '../../../../constants/placeholder';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/rootReducer';
@@ -59,6 +59,7 @@ import {
     SlippageLabel,
 } from '../TradeOptions/TokenSwap/TokenSwap';
 import { dispatchMarketNotification } from 'utils/options';
+import SimpleLoader from './SimpleLoader';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -88,10 +89,11 @@ const AMM: React.FC = () => {
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isGettingQuote, setIsGettingQuote] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [maxLimitExceeded /*, setMaxLimitExceeded*/] = useState<boolean>(false);
+    const [maxLimitExceeded, setMaxLimitExceeded] = useState<boolean>(false);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
     const [maxLimit, setMaxLimit] = useState<number>(0);
@@ -132,18 +134,21 @@ const AMM: React.FC = () => {
     const isLong = optionSide === 'long';
     const isAmountEntered = Number(amount) > 0;
     const isPriceEntered = Number(price) > 0;
+    const isTotalEntered = Number(total) > 0;
 
     const insufficientBalance = isBuy
         ? sUSDBalance < Number(total) || !sUSDBalance
         : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
+        !isTotalEntered ||
         !isPriceEntered ||
         !isAmountEntered ||
         !isSlippageValid ||
         isSubmitting ||
         !isWalletConnected ||
-        insufficientBalance;
+        insufficientBalance ||
+        maxLimitExceeded;
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
@@ -153,7 +158,7 @@ const AMM: React.FC = () => {
         const side = SIDE[optionSide];
         const parsedAmount = ethers.utils.parseEther(amount.toString());
         const parsedTotal = ethers.utils.parseEther(total.toString());
-        const parsedSlippage = ethers.utils.parseEther(slippage.toString());
+        const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
         return { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage };
     };
 
@@ -217,6 +222,8 @@ const AMM: React.FC = () => {
 
                 const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
 
+                console.log(amount, total, slippage);
+
                 if (isL2) {
                     const [gasEstimate, l1FeeInWei] = await Promise.all([
                         isBuy
@@ -263,7 +270,7 @@ const AMM: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, amount, hasAllowance, isBuy, isLong, amount, slippage, total]);
+    }, [isButtonDisabled, hasAllowance, isBuy, isLong, /*amount, */ slippage, total]);
 
     const handleAllowance = async () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
@@ -297,6 +304,7 @@ const AMM: React.FC = () => {
 
     useDebouncedEffect(() => {
         const fetchAmmPriceData = async () => {
+            setIsGettingQuote(true);
             if (isAmountEntered) {
                 try {
                     const { ammContract } = snxJSConnector as any;
@@ -331,14 +339,16 @@ const AMM: React.FC = () => {
                     setPrice(ammPrice);
                     setTotal(bigNumberFormatter(ammQuote));
                     setPriceImpact(bigNumberFormatter(ammPriceImpact));
-                    setPotentialReturn(1 / ammPrice - 1);
+                    setPotentialReturn(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
                 } catch (e) {
                     console.log(e);
+                    console.log('out');
                     resetData();
                 }
             } else {
                 resetData();
             }
+            setIsGettingQuote(false);
         };
         fetchAmmPriceData();
     }, [amount, isBuy, isLong, walletAddress, isAmountEntered]);
@@ -414,6 +424,10 @@ const AMM: React.FC = () => {
                         : Number(amount) <= tokenBalance))
         );
     }, [amount, total, isBuy, sUSDBalance, tokenBalance]);
+
+    useEffect(() => {
+        setMaxLimitExceeded(Number(amount) > maxLimit);
+    }, [amount, maxLimit]);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
@@ -509,7 +523,9 @@ const AMM: React.FC = () => {
                             <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}</SummaryContent>
+                            <SummaryContent>
+                                {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}
+                            </SummaryContent>
                             <SummaryLabel>
                                 {t('options.market.trade-options.place-order.price-label', {
                                     currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
@@ -523,19 +539,23 @@ const AMM: React.FC = () => {
                                 <OptionButton
                                     onClick={() => setOptionSide('long')}
                                     className={optionSide === 'long' ? 'selected' : ''}
+                                    disabled={isSubmitting}
                                 >
                                     LONG
                                 </OptionButton>
                                 <OptionButton
                                     onClick={() => setOptionSide('short')}
                                     className={optionSide === 'short' ? 'selected' : ''}
+                                    disabled={isSubmitting}
                                 >
                                     SHORT
                                 </OptionButton>
                             </OptionsContainer>
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}</SummaryContent>
+                            <SummaryContent>
+                                {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}
+                            </SummaryContent>
                             <SummaryLabel>Total</SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRowCentered>
@@ -560,7 +580,7 @@ const AMM: React.FC = () => {
                                 message={t(
                                     !isAmountValid
                                         ? 'common.errors.insufficient-balance-wallet'
-                                        : 'common.errors.insufficient-liquidity-for-trade',
+                                        : 'common.errors.max-limit-exceeded',
                                     {
                                         currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
                                     }
@@ -568,7 +588,9 @@ const AMM: React.FC = () => {
                             />
                         </ShortInputContainer>
                         <ShortInputContainer>
-                            <SummaryContent>{formatPercentage(potentialReturn)}</SummaryContent>
+                            <SummaryContent>
+                                {isGettingQuote ? <SimpleLoader /> : formatPercentage(potentialReturn)}
+                            </SummaryContent>
                             <SummaryLabel>Potential return</SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRow>
@@ -581,7 +603,6 @@ const AMM: React.FC = () => {
                                     max={maxLimit}
                                     min={0}
                                     onChange={(_, value) => {
-                                        // setIsPriceValid(Number(value) <= 1);
                                         setAmount(Number(value));
                                     }}
                                     disabled={isSubmitting}
@@ -593,25 +614,26 @@ const AMM: React.FC = () => {
                                     max={maxLimit}
                                     min={0}
                                     onChange={(_, value) => {
-                                        // setIsPriceValid(Number(value) <= 1);
                                         setAmount(Number(value));
                                     }}
                                     disabled={isSubmitting}
                                 />
                             )}
                             <FlexDivRow>
-                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithSign(
-                                    USD_SIGN,
+                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithKey(
+                                    OPTIONS_CURRENCY_MAP[optionSide],
                                     0
                                 )}`}</SliderRange>
-                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithSign(
-                                    USD_SIGN,
+                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithKey(
+                                    OPTIONS_CURRENCY_MAP[optionSide],
                                     maxLimit
                                 )}`}</SliderRange>
                             </FlexDivRow>
                         </BuySellSliderContainer>
                         <ShortInputContainer>
-                            <SummaryContent>{formatPercentage(priceImpact)}</SummaryContent>
+                            <SummaryContent>
+                                {isGettingQuote ? <SimpleLoader /> : formatPercentage(priceImpact)}
+                            </SummaryContent>
                             <SummaryLabel>Skew impact</SummaryLabel>
                         </ShortInputContainer>
                     </FlexDivRow>

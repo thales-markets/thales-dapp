@@ -129,7 +129,8 @@
             "invalid-price-max": "价格不能高于${{max}}",
             "invalid-amount-max": "金额不能高于{{max}}",
             "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
-            "invalid-slippage": "无效滑点"
+            "invalid-slippage": "无效滑点",
+            "max-limit-exceeded": "金额超过 AMM 上的可用金额"
         },
         "search": "搜索",
         "buy": "买",

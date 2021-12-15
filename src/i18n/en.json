@@ -129,7 +129,8 @@
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
-            "invalid-slippage": "Invalid slippage"
+            "invalid-slippage": "Invalid slippage",
+            "max-limit-exceeded": "Amount exceeded the amount available on AMM"
         },
         "search": "search",
         "buy": "buy",

@@ -129,7 +129,8 @@
             "invalid-price-max": "Цена не может быть выше ${{max}}",
             "invalid-amount-max": "Сумма не может быть выше {{max}}",
             "insufficient-balance-wallet": "Пожалуйста, убедитесь, что в вашем кошельке достаточно {{currencyKey}}",
-            "invalid-slippage": "Недопустимый процент проскальзывания"
+            "invalid-slippage": "Недопустимый процент проскальзывания",
+            "max-limit-exceeded": "Сумма превышает доступную на AMM"
         },
         "search": "поиск",
         "buy": "купить",
