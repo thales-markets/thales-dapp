@@ -22,6 +22,7 @@ import {
     Divider,
     StyledQuestionMarkIcon,
     LightMediumTooltip,
+    BetaBadge,
 } from '../components';
 import { formatCurrencyWithKey, formatPercentage } from '../../../../utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
@@ -534,7 +535,15 @@ const AMM: React.FC = () => {
     return (
         <AMMWrapper>
             <Widget>
-                <MarketWidgetHeader widgetKey={MarketWidgetKey.AMM}>
+                <MarketWidgetHeader
+                    widgetKey={MarketWidgetKey.AMM}
+                    titleComponent={
+                        <FlexDivCentered>
+                            {t(`options.market.widgets.${MarketWidgetKey.AMM}`)}
+                            <BetaBadge>{t('amm.beta')}</BetaBadge>
+                        </FlexDivCentered>
+                    }
+                >
                     <FlexDivCentered>
                         <WalletIcon />
                         <WalletContainer>

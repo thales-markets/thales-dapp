@@ -1112,6 +1112,7 @@
         "max-limit-buy-tooltip": "从 AMM 购买的 {{currencyKey}} 选项的最大数量",
         "total-buy-label": "支付总额",
         "amm-disabled-warning": "此市场禁用 AMM 交易",
-        "amm-disabled": "AMM 交易禁用"
+        "amm-disabled": "AMM 交易禁用",
+        "beta": "测试版"
     }
 }

@@ -1112,6 +1112,7 @@
         "skew-tooltip": "Косое воздействие",
         "total-buy-label": "Итого к оплате",
         "amm-disabled-warning": "Торговля AMM отключена для этого рынка",
-        "amm-disabled": "Торговля AMM отключена"
+        "amm-disabled": "Торговля AMM отключена",
+        "beta": "БЕТА"
     }
 }

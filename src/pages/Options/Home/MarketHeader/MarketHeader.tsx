@@ -42,6 +42,7 @@ import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
 import { getAmmSelected, setAmmSelected } from 'redux/modules/marketWidgets';
+import { BetaBadge } from 'pages/Options/Market/components';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -119,6 +120,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SwitchDot />
                         </BorderedWrapper>
                         {t('options.market.header.amm')}
+                        <BetaBadge>{t('amm.beta')}</BetaBadge>
                     </SwitchWrapper>
                 )}
                 <FlexDiv className="dapp-header__buttonsWrapper">
