@@ -316,7 +316,7 @@ export const FilterButton = styled.button`
         border: 2px solid #00f9ff;
         color: #00f9ff;
     }
-    &.selected:hover {
+    &.selected:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #00f9ff;
         color: #b8c6e5;

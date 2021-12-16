@@ -63,6 +63,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from './SimpleLoader';
 import useInterval from 'hooks/useInterval';
 import { refetchAmmData } from 'utils/queryConnector';
+import WarningMessage from 'components/WarningMessage';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -139,6 +140,7 @@ const AMM: React.FC = () => {
     const isAmountEntered = Number(amount) > 0;
     const isPriceEntered = Number(price) > 0;
     const isTotalEntered = Number(total) > 0;
+    const isAmmTradingDisabled = ammMaxLimits && !ammMaxLimits.isMarketInAmmTrading;
 
     const insufficientBalance = isBuy
         ? sUSDBalance < Number(total) || !sUSDBalance
@@ -153,7 +155,8 @@ const AMM: React.FC = () => {
         !isWalletConnected ||
         insufficientBalance ||
         maxLimitExceeded ||
-        isGettingQuote;
+        isGettingQuote ||
+        isAmmTradingDisabled;
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
@@ -339,9 +342,9 @@ const AMM: React.FC = () => {
                 const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
                 setPrice(ammPrice);
                 setTotal(bigNumberFormatter(ammQuote));
-                setPriceImpact(bigNumberFormatter(ammPriceImpact));
-                setPotentialReturn(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
-                setPotentialReturnsUsd(ammPrice > 0 ? amount : 0);
+                setPriceImpact(bigNumberFormatter(ammPriceImpact) - 0.01);
+                setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
+                setPotentialReturnsUsd(ammPrice > 0 && isBuy ? (1 / ammPrice - 1) * bigNumberFormatter(ammQuote) : 0);
 
                 const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
                 const isQuoteChanged = ammPrice !== price || total !== bigNumberFormatter(ammQuote);
@@ -452,6 +455,13 @@ const AMM: React.FC = () => {
     }, [amount, maxLimit]);
 
     const getSubmitButton = () => {
+        if (isAmmTradingDisabled) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t('amm.amm-disabled')}
+                </SubmitButton>
+            );
+        }
         if (!isWalletConnected) {
             return (
                 <SubmitButton isBuy={isBuy} onClick={() => onboardConnector.connectWallet()}>
@@ -509,6 +519,18 @@ const AMM: React.FC = () => {
         );
     };
 
+    const getPriceImpactColor = (priceImpactPercentage: number) => {
+        if (priceImpactPercentage > 0.03 || Number(priceImpactPercentage) < -0.03) {
+            return 'rgb(223, 47, 43)';
+        }
+        if (priceImpactPercentage > 0.01 || Number(priceImpactPercentage) < -0.01) {
+            return COLORS.LONG;
+        }
+        return 'rgb(49, 208, 170)';
+    };
+
+    const formDisabled = isSubmitting || isAmmTradingDisabled;
+
     return (
         <AMMWrapper>
             <Widget>
@@ -530,6 +552,11 @@ const AMM: React.FC = () => {
                     </FlexDivCentered>
                 </MarketWidgetHeader>
                 <Container>
+                    {isAmmTradingDisabled && (
+                        <AmmWarningMessage>
+                            <WarningMessage message={t('amm.amm-disabled-warning')} hideIcon />
+                        </AmmWarningMessage>
+                    )}
                     <FormContainer>
                         <AmmShortInputContainer>
                             <InputContainer>
@@ -540,8 +567,8 @@ const AMM: React.FC = () => {
                                     onChange={(option: any) => setOrderSide(option)}
                                     isSearchable={false}
                                     isUppercase
-                                    isDisabled={isSubmitting}
-                                    className={isSubmitting ? 'disabled' : ''}
+                                    isDisabled={formDisabled}
+                                    className={formDisabled ? 'disabled' : ''}
                                 />
                                 <InputLabel>{t('amm.type-label')}</InputLabel>
                             </InputContainer>
@@ -550,14 +577,14 @@ const AMM: React.FC = () => {
                                     <OptionButton
                                         onClick={() => setOptionSide('long')}
                                         className={optionSide === 'long' ? 'selected' : ''}
-                                        disabled={isSubmitting}
+                                        disabled={formDisabled}
                                     >
                                         {t('options.common.long')}
                                     </OptionButton>
                                     <OptionButton
                                         onClick={() => setOptionSide('short')}
                                         className={optionSide === 'short' ? 'selected' : ''}
-                                        disabled={isSubmitting}
+                                        disabled={formDisabled}
                                     >
                                         {t('options.common.short')}
                                     </OptionButton>
@@ -568,14 +595,14 @@ const AMM: React.FC = () => {
                                     value={amount}
                                     onChange={(_, value) => setAmount(value)}
                                     className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
-                                    disabled={isSubmitting}
+                                    disabled={formDisabled}
                                 />
                                 <InputLabel>
                                     {t('options.market.trade-options.place-order.amount-label', {
                                         orderSide: orderSide.value,
                                     })}
                                 </InputLabel>
-                                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                                <CurrencyLabel className={formDisabled ? 'disabled' : ''}>
                                     {OPTIONS_CURRENCY_MAP[optionSide]}
                                 </CurrencyLabel>
                                 <AmountValidationMessage>
@@ -602,7 +629,7 @@ const AMM: React.FC = () => {
                                         onChange={(_, value) => {
                                             setAmount(Number(value));
                                         }}
-                                        disabled={isSubmitting}
+                                        disabled={formDisabled}
                                     />
                                 ) : (
                                     <SellSlider
@@ -613,7 +640,7 @@ const AMM: React.FC = () => {
                                         onChange={(_, value) => {
                                             setAmount(Number(value));
                                         }}
-                                        disabled={isSubmitting}
+                                        disabled={formDisabled}
                                     />
                                 )}
                                 <FlexDivRow>
@@ -648,7 +675,7 @@ const AMM: React.FC = () => {
                                 <SummaryLabel>{t(`amm.total-${orderSide.value}-label`)}</SummaryLabel>
                             </InputContainer>
                             <InputContainer>
-                                <SummaryContent>
+                                <SummaryContent color={potentialReturn > 0 ? COLORS.LONG : '#0c1c68'}>
                                     {isBuy ? (
                                         isGettingQuote ? (
                                             <SimpleLoader />
@@ -670,7 +697,7 @@ const AMM: React.FC = () => {
                                 </SummaryLabel>
                             </InputContainer>
                             <InputContainer>
-                                <SummaryContent>
+                                <SummaryContent color={getPriceImpactColor(Number(priceImpact))}>
                                     {isGettingQuote ? <SimpleLoader /> : formatPercentage(priceImpact)}
                                 </SummaryContent>
                                 <SummaryLabel>
@@ -682,7 +709,7 @@ const AMM: React.FC = () => {
                             </InputContainer>
                         </AmmShortInputContainer>
                     </FormContainer>
-                    <SummaryContainer>
+                    <SlippageSummary>
                         <FlexDivRow>
                             <FlexDivColumn>
                                 <SlippageLabel>
@@ -701,7 +728,7 @@ const AMM: React.FC = () => {
                                             className={percentage === slippage ? 'selected' : ''}
                                             key={percentage}
                                             onClick={() => setSlippage(percentage)}
-                                            disabled={isSubmitting}
+                                            disabled={formDisabled}
                                         >
                                             {`${percentage}%`}
                                         </SlippageButton>
@@ -710,9 +737,9 @@ const AMM: React.FC = () => {
                                         <SlippageInput
                                             value={slippage}
                                             onChange={(_: any, value: any) => setSlippage(value)}
-                                            disabled={isSubmitting}
+                                            disabled={formDisabled}
                                         />
-                                        <PercentageLabel className={isSubmitting ? 'disabled' : ''}>%</PercentageLabel>
+                                        <PercentageLabel className={formDisabled ? 'disabled' : ''}>%</PercentageLabel>
                                     </SlippageContainer>
                                 </FlexDivEnd>
                                 <FieldValidationMessage
@@ -723,10 +750,10 @@ const AMM: React.FC = () => {
                                 />
                             </FlexDivColumn>
                         </FlexDivRow>
-                    </SummaryContainer>
+                    </SlippageSummary>
                     <Divider />
                     <SummaryContainer>
-                        <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} l1Fee={l1Fee} />
+                        <NetworkFees gasLimit={gasLimit} disabled={formDisabled} l1Fee={l1Fee} />
                     </SummaryContainer>
                     <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                     <ValidationMessage
@@ -784,6 +811,9 @@ const AmmShortInputContainer = styled(ShortInputContainer)`
     margin-bottom: 0px;
     @media (max-width: 576px) {
         width: 100%;
+        &:first-child {
+            margin-bottom: 20px;
+        }
     }
 `;
 
@@ -794,6 +824,8 @@ const OptionsContainer = styled(FlexDivRowCentered)`
 const OptionButton = styled(FilterButton)`
     text-transform: uppercase;
     width: 120px;
+    margin: 0 9px;
+    padding: 0px;
 `;
 
 const Info = styled.div`
@@ -808,12 +840,12 @@ const Info = styled.div`
     }
 `;
 
-const SummaryContent = styled.div`
+const SummaryContent = styled.div<{ color?: string }>`
     background: #b8c6e5;
     border-radius: 12px;
     height: 64px;
     padding: 31px 0 0 22px;
-    color: #0c1c68;
+    color: ${(props) => (props.color ? props.color : '#0c1c68')};
     font-weight: 600;
     font-size: 14px;
     line-height: 16px;
@@ -829,6 +861,9 @@ const BuySellSliderContainer = styled(SliderContainer)`
     width: 100%;
     margin-top: 10px;
     padding: 0 10px 0 10px;
+    @media (max-width: 576px) {
+        margin-top: 0px;
+    }
 `;
 
 const QuestionMarkIcon = styled(StyledQuestionMarkIcon)``;
@@ -851,6 +886,28 @@ const AmountValidationMessage = styled.div`
         position: absolute;
         bottom: -25px;
         width: 100%;
+    }
+`;
+
+const SlippageSummary = styled(SummaryContainer)`
+    @media (max-width: 576px) {
+        padding: 0px 5px;
+    }
+    @media (min-width: 901px) and (max-width: 1200px) {
+        padding: 0px 5px;
+    }
+`;
+
+const AmmWarningMessage = styled(FlexDivCentered)`
+    margin-bottom: 15px;
+    div {
+        font-size: 14px;
+        font-weight: bold;
+    }
+    svg {
+        min-width: 18px;
+        min-height: 18px;
+        margin-top: -1px;
     }
 `;
 

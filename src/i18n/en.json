@@ -1105,11 +1105,13 @@
         "type-label": "type",
         "total-buy-label": "Total to pay",
         "total-sell-label": "Total to receive",
-        "return-label": "Potential return",
-        "return-tooltip": "Potential return if this option wins",
+        "return-label": "Potential profit",
+        "return-tooltip": "Potential profit if this option wins",
         "skew-label": "Skew impact",
-        "skew-tooltip": "Skew impact",
+        "skew-tooltip": "AMM will add a price impact on the side it is more exposed to",
         "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} options for buying from AMM",
-        "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} options for sale to AMM"
+        "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} options for sale to AMM",
+        "amm-disabled-warning": "AMM trading is disabled for this market",
+        "amm-disabled": "AMM trading disabled"
     }
 }

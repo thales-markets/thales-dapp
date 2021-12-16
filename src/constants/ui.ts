@@ -21,7 +21,7 @@ export const MarketWidgetDefaultLayoutMap: Record<MarketWidgetKey, Layout> = {
     [MarketWidgetKey.CHART_OPTIONS_PRICE]: { i: MarketWidgetKey.CHART_OPTIONS_PRICE, x: 6, y: 2, w: 6, h: 11 },
     [MarketWidgetKey.RECENT_TRANSACTIONS]: { i: MarketWidgetKey.RECENT_TRANSACTIONS, x: 0, y: 3, w: 12, h: 10 },
     [MarketWidgetKey.YOUR_TRANSACTIONS]: { i: MarketWidgetKey.YOUR_TRANSACTIONS, x: 0, y: 4, w: 12, h: 10 },
-    [MarketWidgetKey.AMM]: { i: MarketWidgetKey.AMM, x: 0, y: 1, w: 12, h: 16 },
+    [MarketWidgetKey.AMM]: { i: MarketWidgetKey.AMM, x: 0, y: 1, w: 12, h: 17 },
 };
 
 export enum COLORS {

@@ -9,34 +9,38 @@ export type AmmMaxLimits = {
     maxSellLong: number;
     maxBuyShort: number;
     maxSellShort: number;
+    isMarketInAmmTrading: boolean;
 };
 
 const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<AmmMaxLimits>) => {
     return useQuery<AmmMaxLimits>(
         QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress),
         async () => {
-            const exchangeRates: AmmMaxLimits = {
+            const ammMaxLimits: AmmMaxLimits = {
                 maxBuyLong: 0,
                 maxSellLong: 0,
                 maxBuyShort: 0,
                 maxSellShort: 0,
+                isMarketInAmmTrading: false,
             };
             const ammContract = snxJSConnector.ammContract;
             if (ammContract) {
-                const [maxBuyLong, maxSellLong, maxBuyShort, maxSellShort] = await Promise.all([
+                const [maxBuyLong, maxSellLong, maxBuyShort, maxSellShort, isMarketInAmmTrading] = await Promise.all([
                     ammContract.availableToBuyFromAMM(marketAddress, SIDE['long']),
                     ammContract.availableToSellToAMM(marketAddress, SIDE['long']),
                     ammContract.availableToBuyFromAMM(marketAddress, SIDE['short']),
                     ammContract.availableToSellToAMM(marketAddress, SIDE['short']),
+                    ammContract.isMarketInAMMTrading(marketAddress),
                 ]);
 
-                exchangeRates.maxBuyLong = bigNumberFormatter(maxBuyLong);
-                exchangeRates.maxSellLong = bigNumberFormatter(maxSellLong);
-                exchangeRates.maxBuyShort = bigNumberFormatter(maxBuyShort);
-                exchangeRates.maxSellShort = bigNumberFormatter(maxSellShort);
+                ammMaxLimits.maxBuyLong = bigNumberFormatter(maxBuyLong);
+                ammMaxLimits.maxSellLong = bigNumberFormatter(maxSellLong);
+                ammMaxLimits.maxBuyShort = bigNumberFormatter(maxBuyShort);
+                ammMaxLimits.maxSellShort = bigNumberFormatter(maxSellShort);
+                ammMaxLimits.isMarketInAmmTrading = isMarketInAmmTrading;
             }
 
-            return exchangeRates;
+            return ammMaxLimits;
         },
         {
             refetchInterval: 5000,
