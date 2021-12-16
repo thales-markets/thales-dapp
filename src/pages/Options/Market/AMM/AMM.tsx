@@ -61,6 +61,8 @@ import {
 } from '../TradeOptions/TokenSwap/TokenSwap';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from './SimpleLoader';
+import useInterval from 'hooks/useInterval';
+import { refetchAmmData } from 'utils/queryConnector';
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -87,6 +89,7 @@ const AMM: React.FC = () => {
     const [total, setTotal] = useState<number | string>('');
     const [priceImpact, setPriceImpact] = useState<number | string>('');
     const [potentialReturn, setPotentialReturn] = useState<number | string>('');
+    const [potentialReturnsUsd, setPotentialReturnsUsd] = useState<number | string>('');
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -149,7 +152,8 @@ const AMM: React.FC = () => {
         isSubmitting ||
         !isWalletConnected ||
         insufficientBalance ||
-        maxLimitExceeded;
+        maxLimitExceeded ||
+        isGettingQuote;
 
     const sellToken = isBuy ? SynthsUSD.address : isLong ? optionsMarket.longAddress : optionsMarket.shortAddress;
     const sellTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
@@ -194,60 +198,46 @@ const AMM: React.FC = () => {
         };
     }, [walletAddress, isWalletConnected, isBuy, optionSide, hasAllowance]);
 
-    useEffect(() => {
-        const fetchL1Fee = async (ammContractWithSigner: any) => {
-            const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
+    const fetchL1Fee = async (
+        ammContractWithSigner: any,
+        marketAddress: string,
+        side: any,
+        parsedAmount: any,
+        parsedTotal: any,
+        parsedSlippage: any
+    ) => {
+        const txRequest = isBuy
+            ? await ammContractWithSigner.populateTransaction.buyFromAMM(
+                  marketAddress,
+                  side,
+                  parsedAmount,
+                  parsedTotal,
+                  parsedSlippage
+              )
+            : await ammContractWithSigner.populateTransaction.sellToAMM(
+                  marketAddress,
+                  side,
+                  parsedAmount,
+                  parsedTotal,
+                  parsedSlippage
+              );
+        return getL1FeeInWei(txRequest);
+    };
 
-            const txRequest = isBuy
-                ? await ammContractWithSigner.populateTransaction.buyFromAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage
-                  )
-                : await ammContractWithSigner.populateTransaction.sellToAMM(
-                      marketAddress,
-                      side,
-                      parsedAmount,
-                      parsedTotal,
-                      parsedSlippage
-                  );
-            return getL1FeeInWei(txRequest);
-        };
+    const fetchGasLimit = async (
+        marketAddress: string,
+        side: any,
+        parsedAmount: any,
+        parsedTotal: any,
+        parsedSlippage: any
+    ) => {
+        try {
+            const { ammContract } = snxJSConnector as any;
+            const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
-        const fetchGasLimit = async () => {
-            try {
-                const { ammContract } = snxJSConnector as any;
-                const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
-
-                const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
-
-                console.log(amount, total, slippage);
-
-                if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        isBuy
-                            ? ammContractWithSigner.estimateGas.buyFromAMM(
-                                  marketAddress,
-                                  side,
-                                  parsedAmount,
-                                  parsedTotal,
-                                  parsedSlippage
-                              )
-                            : ammContractWithSigner.estimateGas.sellToAMM(
-                                  marketAddress,
-                                  side,
-                                  parsedAmount,
-                                  parsedTotal,
-                                  parsedSlippage
-                              ),
-                        fetchL1Fee(ammContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                    setL1Fee(l1FeeInWei);
-                } else {
-                    const gasEstimate = await (isBuy
+            if (isL2) {
+                const [gasEstimate, l1FeeInWei] = await Promise.all([
+                    isBuy
                         ? ammContractWithSigner.estimateGas.buyFromAMM(
                               marketAddress,
                               side,
@@ -256,22 +246,45 @@ const AMM: React.FC = () => {
                               parsedSlippage
                           )
                         : ammContractWithSigner.estimateGas.sellToAMM(
-                              optionsMarket.address,
-                              SIDE[optionSide],
+                              marketAddress,
+                              side,
                               parsedAmount,
                               parsedTotal,
                               parsedSlippage
-                          ));
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
-                }
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
+                          ),
+                    fetchL1Fee(ammContractWithSigner, marketAddress, side, parsedAmount, parsedTotal, parsedSlippage),
+                ]);
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                setL1Fee(l1FeeInWei);
+            } else {
+                const gasEstimate = await (isBuy
+                    ? ammContractWithSigner.estimateGas.buyFromAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      )
+                    : ammContractWithSigner.estimateGas.sellToAMM(
+                          marketAddress,
+                          side,
+                          parsedAmount,
+                          parsedTotal,
+                          parsedSlippage
+                      ));
+                setGasLimit(formatGasLimit(gasEstimate, networkId));
             }
-        };
+        } catch (e) {
+            console.log(e);
+            setGasLimit(null);
+        }
+    };
+
+    useEffect(() => {
         if (isButtonDisabled) return;
-        fetchGasLimit();
-    }, [isButtonDisabled, hasAllowance, /* isBuy, isLong, amount, */ slippage, total]);
+        const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
+        fetchGasLimit(marketAddress, side, parsedAmount, parsedTotal, parsedSlippage);
+    }, [isWalletConnected, hasAllowance, slippage]);
 
     const handleAllowance = async () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
@@ -301,58 +314,60 @@ const AMM: React.FC = () => {
         setTotal('');
         setPriceImpact('');
         setPotentialReturn('');
+        setPotentialReturnsUsd('');
         setGasLimit(null);
     };
 
-    useDebouncedEffect(() => {
-        const fetchAmmPriceData = async () => {
+    const fetchAmmPriceData = async (isRefresh: boolean) => {
+        if (!isRefresh) {
             setIsGettingQuote(true);
-            if (isAmountEntered) {
-                try {
-                    const { ammContract } = snxJSConnector as any;
-                    const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
+        }
+        if (isAmountEntered) {
+            try {
+                const { ammContract } = snxJSConnector as any;
+                const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
-                    const parsedAmount = ethers.utils.parseEther(amount.toString());
-                    const [ammQuote, ammPriceImpact] = await Promise.all([
-                        isBuy
-                            ? ammContractWithSigner.buyFromAmmQuote(
-                                  optionsMarket.address,
-                                  SIDE[optionSide],
-                                  parsedAmount
-                              )
-                            : ammContractWithSigner.sellToAmmQuote(
-                                  optionsMarket.address,
-                                  SIDE[optionSide],
-                                  parsedAmount
-                              ),
-                        isBuy
-                            ? ammContractWithSigner.buyPriceImpact(
-                                  optionsMarket.address,
-                                  SIDE[optionSide],
-                                  parsedAmount
-                              )
-                            : ammContractWithSigner.sellPriceImpact(
-                                  optionsMarket.address,
-                                  SIDE[optionSide],
-                                  parsedAmount
-                              ),
-                    ]);
-                    const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
-                    setPrice(ammPrice);
-                    setTotal(bigNumberFormatter(ammQuote));
-                    setPriceImpact(bigNumberFormatter(ammPriceImpact));
-                    setPotentialReturn(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
-                } catch (e) {
-                    console.log(e);
-                    resetData();
+                const parsedAmount = ethers.utils.parseEther(amount.toString());
+                const [ammQuote, ammPriceImpact] = await Promise.all([
+                    isBuy
+                        ? ammContractWithSigner.buyFromAmmQuote(optionsMarket.address, SIDE[optionSide], parsedAmount)
+                        : ammContractWithSigner.sellToAmmQuote(optionsMarket.address, SIDE[optionSide], parsedAmount),
+                    isBuy
+                        ? ammContractWithSigner.buyPriceImpact(optionsMarket.address, SIDE[optionSide], parsedAmount)
+                        : ammContractWithSigner.sellPriceImpact(optionsMarket.address, SIDE[optionSide], parsedAmount),
+                ]);
+                const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
+                setPrice(ammPrice);
+                setTotal(bigNumberFormatter(ammQuote));
+                setPriceImpact(bigNumberFormatter(ammPriceImpact));
+                setPotentialReturn(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
+                setPotentialReturnsUsd(ammPrice > 0 ? amount : 0);
+
+                const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
+                const isQuoteChanged = ammPrice !== price || total !== bigNumberFormatter(ammQuote);
+
+                if (ammPrice > 0 && bigNumberFormatter(ammQuote) > 0 && isSlippageValid && isQuoteChanged) {
+                    fetchGasLimit(optionsMarket.address, SIDE[optionSide], parsedAmount, ammQuote, parsedSlippage);
                 }
-            } else {
+            } catch (e) {
+                console.log(e);
                 resetData();
             }
+        } else {
+            resetData();
+        }
+        if (!isRefresh) {
             setIsGettingQuote(false);
-        };
-        fetchAmmPriceData();
+        }
+    };
+
+    useDebouncedEffect(() => {
+        fetchAmmPriceData(false);
     }, [amount, isBuy, isLong, walletAddress, isAmountEntered]);
+
+    useInterval(async () => {
+        fetchAmmPriceData(true);
+    }, 5000);
 
     const handleSubmit = async () => {
         setTxErrorMessage(null);
@@ -392,6 +407,7 @@ const AMM: React.FC = () => {
                         `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
                     )
                 );
+                refetchAmmData(walletAddress, optionsMarket.address);
                 setIsSubmitting(false);
                 resetData();
             }
@@ -514,8 +530,8 @@ const AMM: React.FC = () => {
                     </FlexDivCentered>
                 </MarketWidgetHeader>
                 <Container>
-                    <FlexDivRow>
-                        <ShortInputContainer style={{ marginBottom: 0 }}>
+                    <FormContainer>
+                        <AmmShortInputContainer>
                             <InputContainer>
                                 <ReactSelect
                                     formatOptionLabel={(option: any) => option.label}
@@ -613,8 +629,8 @@ const AMM: React.FC = () => {
                                     </SliderRange>
                                 </FlexDivRow>
                             </BuySellSliderContainer>
-                        </ShortInputContainer>
-                        <ShortInputContainer style={{ marginBottom: 0 }}>
+                        </AmmShortInputContainer>
+                        <AmmShortInputContainer>
                             <InputContainer>
                                 <SummaryContent>
                                     {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}
@@ -633,7 +649,18 @@ const AMM: React.FC = () => {
                             </InputContainer>
                             <InputContainer>
                                 <SummaryContent>
-                                    {isGettingQuote ? <SimpleLoader /> : formatPercentage(potentialReturn)}
+                                    {isBuy ? (
+                                        isGettingQuote ? (
+                                            <SimpleLoader />
+                                        ) : (
+                                            `${formatCurrencyWithKey(
+                                                SYNTHS_MAP.sUSD,
+                                                potentialReturnsUsd
+                                            )} (${formatPercentage(potentialReturn)})`
+                                        )
+                                    ) : (
+                                        '-'
+                                    )}
                                 </SummaryContent>
                                 <SummaryLabel>
                                     {t('amm.return-label')}
@@ -653,9 +680,8 @@ const AMM: React.FC = () => {
                                     </LightMediumTooltip>
                                 </SummaryLabel>
                             </InputContainer>
-                        </ShortInputContainer>
-                    </FlexDivRow>
-
+                        </AmmShortInputContainer>
+                    </FormContainer>
                     <SummaryContainer>
                         <FlexDivRow>
                             <FlexDivColumn>
@@ -736,6 +762,9 @@ const AMM: React.FC = () => {
 const AMMWrapper = styled.div`
     display: flex;
     height: 100%;
+    @media (max-width: 900px) {
+        flex-direction: column;
+    }
 `;
 
 const Widget = styled.div`
@@ -743,6 +772,19 @@ const Widget = styled.div`
     overflow: auto;
     border-radius: 23px;
     background: linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%);
+`;
+
+const FormContainer = styled(FlexDivRow)`
+    @media (max-width: 576px) {
+        flex-direction: column;
+    }
+`;
+
+const AmmShortInputContainer = styled(ShortInputContainer)`
+    margin-bottom: 0px;
+    @media (max-width: 576px) {
+        width: 100%;
+    }
 `;
 
 const OptionsContainer = styled(FlexDivRowCentered)`
@@ -770,7 +812,7 @@ const SummaryContent = styled.div`
     background: #b8c6e5;
     border-radius: 12px;
     height: 64px;
-    padding: 31px 68px 0 22px;
+    padding: 31px 0 0 22px;
     color: #0c1c68;
     font-weight: 600;
     font-size: 14px;
