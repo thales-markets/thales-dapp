@@ -1100,5 +1100,16 @@
         "switch-to-l2": "切换到 L2",
         "optimistic-l2": "乐观的L2",
         "switch-to-l1": "切换到 L1"
+    },
+    "amm": {
+        "type-label": "类型",
+        "return-label": "潜在回报",
+        "skew-label": "倾斜冲击",
+        "total-sell-label": "接收总数",
+        "skew-tooltip": "倾斜冲击",
+        "return-tooltip": "如果此选项获胜，则潜在回报",
+        "max-limit-sell-tooltip": "出售给 AMM 的最大 {{currencyKey}} 期权数量",
+        "max-limit-buy-tooltip": "从 AMM 购买的 {{currencyKey}} 选项的最大数量",
+        "total-buy-label": "支付总额"
     }
 }

@@ -10,6 +10,7 @@ import {
     FilterButton,
     InputLabel,
     ReactSelect,
+    InputContainer,
     ShortInputContainer,
     SliderContainer,
     SliderRange,
@@ -19,7 +20,8 @@ import {
     WalletContainer,
     SummaryContainer,
     Divider,
-    LightTooltip,
+    StyledQuestionMarkIcon,
+    LightMediumTooltip,
 } from '../components';
 import { formatCurrencyWithKey, formatPercentage } from '../../../../utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
@@ -51,7 +53,6 @@ import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import {
-    QuestionMarkIcon,
     PercentageLabel,
     SlippageButton,
     SlippageContainer,
@@ -270,7 +271,7 @@ const AMM: React.FC = () => {
         };
         if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [isButtonDisabled, hasAllowance, isBuy, isLong, /*amount, */ slippage, total]);
+    }, [isButtonDisabled, hasAllowance, /* isBuy, isLong, amount, */ slippage, total]);
 
     const handleAllowance = async () => {
         const erc20Instance = new ethers.Contract(sellToken, erc20Contract.abi, snxJSConnector.signer);
@@ -295,6 +296,7 @@ const AMM: React.FC = () => {
     };
 
     const resetData = () => {
+        setAmount('');
         setPrice('');
         setTotal('');
         setPriceImpact('');
@@ -342,7 +344,6 @@ const AMM: React.FC = () => {
                     setPotentialReturn(ammPrice > 0 ? 1 / ammPrice - 1 : 0);
                 } catch (e) {
                     console.log(e);
-                    console.log('out');
                     resetData();
                 }
             } else {
@@ -386,8 +387,13 @@ const AMM: React.FC = () => {
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
-                dispatchMarketNotification('Swap succesfull');
+                dispatchMarketNotification(
+                    t(
+                        `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
+                    )
+                );
                 setIsSubmitting(false);
+                resetData();
             }
         } catch (e) {
             console.log(e);
@@ -477,7 +483,7 @@ const AMM: React.FC = () => {
             );
         }
         return (
-            <SubmitButton disabled={isButtonDisabled} onClick={handleSubmit} isBuy={isBuy}>
+            <SubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleSubmit} isBuy={isBuy}>
                 {!isSubmitting
                     ? t(`options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.label`)
                     : t(
@@ -509,144 +515,157 @@ const AMM: React.FC = () => {
                 </MarketWidgetHeader>
                 <Container>
                     <FlexDivRow>
-                        <ShortInputContainer>
-                            <ReactSelect
-                                formatOptionLabel={(option: any) => option.label}
-                                options={orderSideOptions}
-                                value={orderSide}
-                                onChange={(option: any) => setOrderSide(option)}
-                                isSearchable={false}
-                                isUppercase
-                                isDisabled={isSubmitting}
-                                className={isSubmitting ? 'disabled' : ''}
-                            />
-                            <InputLabel>{t('options.market.trade-options.place-order.order-type-label')}</InputLabel>
-                        </ShortInputContainer>
-                        <ShortInputContainer>
-                            <SummaryContent>
-                                {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}
-                            </SummaryContent>
-                            <SummaryLabel>
-                                {t('options.market.trade-options.place-order.price-label', {
-                                    currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
-                                })}
-                            </SummaryLabel>
-                        </ShortInputContainer>
-                    </FlexDivRow>
-                    <FlexDivRowCentered>
-                        <ShortInputContainer>
-                            <OptionsContainer>
-                                <OptionButton
-                                    onClick={() => setOptionSide('long')}
-                                    className={optionSide === 'long' ? 'selected' : ''}
+                        <ShortInputContainer style={{ marginBottom: 0 }}>
+                            <InputContainer>
+                                <ReactSelect
+                                    formatOptionLabel={(option: any) => option.label}
+                                    options={orderSideOptions}
+                                    value={orderSide}
+                                    onChange={(option: any) => setOrderSide(option)}
+                                    isSearchable={false}
+                                    isUppercase
+                                    isDisabled={isSubmitting}
+                                    className={isSubmitting ? 'disabled' : ''}
+                                />
+                                <InputLabel>{t('amm.type-label')}</InputLabel>
+                            </InputContainer>
+                            <InputContainer>
+                                <OptionsContainer>
+                                    <OptionButton
+                                        onClick={() => setOptionSide('long')}
+                                        className={optionSide === 'long' ? 'selected' : ''}
+                                        disabled={isSubmitting}
+                                    >
+                                        {t('options.common.long')}
+                                    </OptionButton>
+                                    <OptionButton
+                                        onClick={() => setOptionSide('short')}
+                                        className={optionSide === 'short' ? 'selected' : ''}
+                                        disabled={isSubmitting}
+                                    >
+                                        {t('options.common.short')}
+                                    </OptionButton>
+                                </OptionsContainer>
+                            </InputContainer>
+                            <InputContainer>
+                                <NumericInput
+                                    value={amount}
+                                    onChange={(_, value) => setAmount(value)}
+                                    className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
                                     disabled={isSubmitting}
-                                >
-                                    LONG
-                                </OptionButton>
-                                <OptionButton
-                                    onClick={() => setOptionSide('short')}
-                                    className={optionSide === 'short' ? 'selected' : ''}
-                                    disabled={isSubmitting}
-                                >
-                                    SHORT
-                                </OptionButton>
-                            </OptionsContainer>
-                        </ShortInputContainer>
-                        <ShortInputContainer>
-                            <SummaryContent>
-                                {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}
-                            </SummaryContent>
-                            <SummaryLabel>Total</SummaryLabel>
-                        </ShortInputContainer>
-                    </FlexDivRowCentered>
-                    <FlexDivRow>
-                        <ShortInputContainer>
-                            <NumericInput
-                                value={amount}
-                                onChange={(_, value) => setAmount(value)}
-                                className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
-                                disabled={isSubmitting}
-                            />
-                            <InputLabel>
-                                {t('options.market.trade-options.place-order.amount-label', {
-                                    orderSide: orderSide.value,
-                                })}
-                            </InputLabel>
-                            <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
-                                {OPTIONS_CURRENCY_MAP[optionSide]}
-                            </CurrencyLabel>
-                            <FieldValidationMessage
-                                showValidation={!isAmountValid || maxLimitExceeded}
-                                message={t(
-                                    !isAmountValid
-                                        ? 'common.errors.insufficient-balance-wallet'
-                                        : 'common.errors.max-limit-exceeded',
-                                    {
-                                        currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
-                                    }
+                                />
+                                <InputLabel>
+                                    {t('options.market.trade-options.place-order.amount-label', {
+                                        orderSide: orderSide.value,
+                                    })}
+                                </InputLabel>
+                                <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>
+                                    {OPTIONS_CURRENCY_MAP[optionSide]}
+                                </CurrencyLabel>
+                                <AmountValidationMessage>
+                                    <FieldValidationMessage
+                                        showValidation={!isAmountValid || maxLimitExceeded}
+                                        message={t(
+                                            !isAmountValid
+                                                ? 'common.errors.insufficient-balance-wallet'
+                                                : 'common.errors.max-limit-exceeded',
+                                            {
+                                                currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
+                                            }
+                                        )}
+                                    />
+                                </AmountValidationMessage>
+                            </InputContainer>
+                            <BuySellSliderContainer>
+                                {isBuy ? (
+                                    <BuySlider
+                                        value={Number(amount)}
+                                        step={1}
+                                        max={maxLimit}
+                                        min={0}
+                                        onChange={(_, value) => {
+                                            setAmount(Number(value));
+                                        }}
+                                        disabled={isSubmitting}
+                                    />
+                                ) : (
+                                    <SellSlider
+                                        value={Number(amount)}
+                                        step={1}
+                                        max={maxLimit}
+                                        min={0}
+                                        onChange={(_, value) => {
+                                            setAmount(Number(value));
+                                        }}
+                                        disabled={isSubmitting}
+                                    />
                                 )}
-                            />
+                                <FlexDivRow>
+                                    <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithKey(
+                                        OPTIONS_CURRENCY_MAP[optionSide],
+                                        0
+                                    )}`}</SliderRange>
+                                    <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>
+                                        {`${formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], maxLimit)}`}
+                                        <LightMediumTooltip title={t(`amm.max-limit-${orderSide.value}-tooltip`)}>
+                                            <AmmMaxLimitQuestionMarkIcon isBuy={isBuy} />
+                                        </LightMediumTooltip>
+                                    </SliderRange>
+                                </FlexDivRow>
+                            </BuySellSliderContainer>
                         </ShortInputContainer>
-                        <ShortInputContainer>
-                            <SummaryContent>
-                                {isGettingQuote ? <SimpleLoader /> : formatPercentage(potentialReturn)}
-                            </SummaryContent>
-                            <SummaryLabel>Potential return</SummaryLabel>
+                        <ShortInputContainer style={{ marginBottom: 0 }}>
+                            <InputContainer>
+                                <SummaryContent>
+                                    {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}
+                                </SummaryContent>
+                                <SummaryLabel>
+                                    {t('options.market.trade-options.place-order.price-label', {
+                                        currencyKey: OPTIONS_CURRENCY_MAP[optionSide],
+                                    })}
+                                </SummaryLabel>
+                            </InputContainer>
+                            <InputContainer>
+                                <SummaryContent>
+                                    {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}
+                                </SummaryContent>
+                                <SummaryLabel>{t(`amm.total-${orderSide.value}-label`)}</SummaryLabel>
+                            </InputContainer>
+                            <InputContainer>
+                                <SummaryContent>
+                                    {isGettingQuote ? <SimpleLoader /> : formatPercentage(potentialReturn)}
+                                </SummaryContent>
+                                <SummaryLabel>
+                                    {t('amm.return-label')}
+                                    <LightMediumTooltip title={t('amm.return-tooltip')}>
+                                        <SummaryQuestionMarkIcon />
+                                    </LightMediumTooltip>
+                                </SummaryLabel>
+                            </InputContainer>
+                            <InputContainer>
+                                <SummaryContent>
+                                    {isGettingQuote ? <SimpleLoader /> : formatPercentage(priceImpact)}
+                                </SummaryContent>
+                                <SummaryLabel>
+                                    {t('amm.skew-label')}
+                                    <LightMediumTooltip title={t('amm.skew-tooltip')}>
+                                        <SummaryQuestionMarkIcon />
+                                    </LightMediumTooltip>
+                                </SummaryLabel>
+                            </InputContainer>
                         </ShortInputContainer>
                     </FlexDivRow>
-                    <FlexDivRow>
-                        <BuySellSliderContainer>
-                            {isBuy ? (
-                                <BuySlider
-                                    value={Number(amount)}
-                                    step={1}
-                                    max={maxLimit}
-                                    min={0}
-                                    onChange={(_, value) => {
-                                        setAmount(Number(value));
-                                    }}
-                                    disabled={isSubmitting}
-                                />
-                            ) : (
-                                <SellSlider
-                                    value={Number(amount)}
-                                    step={1}
-                                    max={maxLimit}
-                                    min={0}
-                                    onChange={(_, value) => {
-                                        setAmount(Number(value));
-                                    }}
-                                    disabled={isSubmitting}
-                                />
-                            )}
-                            <FlexDivRow>
-                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithKey(
-                                    OPTIONS_CURRENCY_MAP[optionSide],
-                                    0
-                                )}`}</SliderRange>
-                                <SliderRange color={isBuy ? COLORS.BUY : COLORS.SELL}>{`${formatCurrencyWithKey(
-                                    OPTIONS_CURRENCY_MAP[optionSide],
-                                    maxLimit
-                                )}`}</SliderRange>
-                            </FlexDivRow>
-                        </BuySellSliderContainer>
-                        <ShortInputContainer>
-                            <SummaryContent>
-                                {isGettingQuote ? <SimpleLoader /> : formatPercentage(priceImpact)}
-                            </SummaryContent>
-                            <SummaryLabel>Skew impact</SummaryLabel>
-                        </ShortInputContainer>
-                    </FlexDivRow>
+
                     <SummaryContainer>
                         <FlexDivRow>
                             <FlexDivColumn>
                                 <SlippageLabel>
                                     {t('options.market.trade-options.place-order.slippage-label')}
-                                    <LightTooltip
+                                    <LightMediumTooltip
                                         title={t('options.market.trade-options.place-order.slippage-tooltip')}
                                     >
                                         <QuestionMarkIcon />
-                                    </LightTooltip>
+                                    </LightMediumTooltip>
                                 </SlippageLabel>
                             </FlexDivColumn>
                             <FlexDivColumn>
@@ -726,9 +745,12 @@ const Widget = styled.div`
     background: linear-gradient(90deg, #3936c7 -8.53%, #2d83d2 52.71%, #23a5dd 105.69%, #35dadb 127.72%);
 `;
 
-const OptionsContainer = styled(FlexDivRowCentered)``;
+const OptionsContainer = styled(FlexDivRowCentered)`
+    height: 64px;
+`;
 
 const OptionButton = styled(FilterButton)`
+    text-transform: uppercase;
     width: 120px;
 `;
 
@@ -758,11 +780,36 @@ const SummaryContent = styled.div`
 
 const SummaryLabel = styled(InputLabel)`
     color: #0c1c68;
+    pointer-events: auto;
 `;
 
 const BuySellSliderContainer = styled(SliderContainer)`
-    margin-right: 10px;
+    width: 100%;
+    margin-top: 10px;
     padding: 0 10px 0 10px;
+`;
+
+const QuestionMarkIcon = styled(StyledQuestionMarkIcon)``;
+
+const AmmMaxLimitQuestionMarkIcon = styled(StyledQuestionMarkIcon)<{ isBuy: boolean }>`
+    path {
+        fill: ${(props) => (props.isBuy ? COLORS.BUY : COLORS.SELL)};
+    }
+`;
+
+const SummaryQuestionMarkIcon = styled(StyledQuestionMarkIcon)`
+    margin-bottom: -2px;
+    path {
+        fill: #0c1c68;
+    }
+`;
+
+const AmountValidationMessage = styled.div`
+    > div {
+        position: absolute;
+        bottom: -25px;
+        width: 100%;
+    }
 `;
 
 export default AMM;

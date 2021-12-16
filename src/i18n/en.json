@@ -1100,5 +1100,16 @@
         "optimistic-gateway": "Optimistic Gateway",
         "optimistic-etherscan": "Optimistic Etherscan",
         "learn-more": "Learn more"
+    },
+    "amm": {
+        "type-label": "type",
+        "total-buy-label": "Total to pay",
+        "total-sell-label": "Total to receive",
+        "return-label": "Potential return",
+        "return-tooltip": "Potential return if this option wins",
+        "skew-label": "Skew impact",
+        "skew-tooltip": "Skew impact",
+        "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} options for buying from AMM",
+        "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} options for sale to AMM"
     }
 }

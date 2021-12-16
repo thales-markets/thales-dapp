@@ -1100,5 +1100,16 @@
         "optimistic-etherscan": "Оптимистичный Etherscan",
         "switch-to-l1": "Переключиться на L1",
         "optimistic-gateway": "Оптимистичный шлюз"
+    },
+    "amm": {
+        "type-label": "тип",
+        "return-tooltip": "Возможный возврат, если этот вариант выиграет",
+        "max-limit-sell-tooltip": "Максимальное количество опционов {{currencyKey}} для продажи AMM",
+        "return-label": "Возможный возврат",
+        "max-limit-buy-tooltip": "Максимальное количество вариантов {{currencyKey}} для покупки в AMM",
+        "total-sell-label": "Всего получить",
+        "skew-label": "Косое воздействие",
+        "skew-tooltip": "Косое воздействие",
+        "total-buy-label": "Итого к оплате"
     }
 }
