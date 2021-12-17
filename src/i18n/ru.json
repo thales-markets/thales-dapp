@@ -1075,7 +1075,9 @@
             "votes": "{{votes}} Голоса",
             "no-proposals-found": "Предложений не найдено",
             "view-all-proposals": "Просмотреть все предложения",
-            "vote-note": "Для утверждения необходимо {{approvalVotes}} из {{totalVotes}} голосов"
+            "vote-note": "Для утверждения необходимо {{approvalVotes}} из {{totalVotes}} голосов",
+            "see-pitch": "Смотрите эту презентацию",
+            "pitch-by": "Питч"
         },
         "stakers": {
             "no-stakers-found": "Стейкеров не найдено",

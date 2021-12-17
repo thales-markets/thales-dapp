@@ -1068,6 +1068,8 @@
             "vote-progress-label": "Voting in progress...",
             "vote-confirmation-message": "Successfully voted",
             "vote-confirmation": "Are you sure you want to vote \"{{choice}}\"? This action cannot be undone.",
+            "see-pitch": "See this pitch",
+            "pitch-by": "Pitch by",
             "type": {
                 "single-choice": "Single choice voting",
                 "weighted": "Weighted voting"

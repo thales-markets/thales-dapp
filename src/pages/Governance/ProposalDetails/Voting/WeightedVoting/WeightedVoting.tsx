@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered, FlexDivRowCentered, FlexDiv, FlexDivSpaceBetween } from 'theme/common';
 import { Proposal } from 'types/governance';
@@ -12,9 +12,18 @@ import axios from 'axios';
 import { refetchProposal } from 'utils/queryConnector';
 import { dispatchMarketNotification } from 'utils/options';
 import { percentageOfTotal } from 'utils/voting/weighted';
-import { MESSAGE_VERSION, MESSAGE_VOTE_TYPE, SNAPSHOT_MESSAGE_API_URL, ProposalTypeEnum } from 'constants/governance';
+import {
+    MESSAGE_VERSION,
+    MESSAGE_VOTE_TYPE,
+    SNAPSHOT_MESSAGE_API_URL,
+    ProposalTypeEnum,
+    SpaceKey,
+} from 'constants/governance';
 import ValidationMessage from 'components/ValidationMessage';
 import voting from 'utils/voting';
+import pitches from '../pitches.json';
+import { Dialog, withStyles } from '@material-ui/core';
+import { CloseIconContainer } from '../../../../Options/Market/TradeOptions/Orderbook/components';
 
 type WeightedVotingProps = {
     proposal: Proposal;
@@ -27,6 +36,7 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
     const [selectedChoices, setSelectedChoices] = useState<number[]>(new Array(proposal.choices.length + 1).fill(0));
     const [isVoting, setIsVoting] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [modalInfo, setModalInfo] = useState({ isOpen: false, author: '', content: '' });
 
     function addVote(i: number, selectedChoices: number[]) {
         selectedChoices[i] = selectedChoices[i] ? (selectedChoices[i] += 1) : 1;
@@ -92,6 +102,8 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
         selectedChoices
     ).getChoiceString();
 
+    const hasPitches = useMemo(() => proposal.space.id === SpaceKey.COUNCIL, [proposal]);
+
     return (
         <>
             <VoteContainer>
@@ -100,48 +112,66 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                     const selected = selectedChoiceValue > 0;
 
                     return (
-                        <Weighted key={choice} className={selected ? 'selected' : ''}>
-                            <Option>{choice}</Option>
-                            <Selection>
-                                <PlusMinus
-                                    onClick={() => {
-                                        const newSelectedChoices = [...selectedChoices];
-                                        removeVote(i + 1, newSelectedChoices);
-                                        setSelectedChoices(newSelectedChoices);
-                                    }}
-                                >
-                                    -
-                                </PlusMinus>
-                                <Input
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    value={selectedChoiceValue}
-                                    onChange={(e) => {
-                                        const { value } = e.target;
-                                        const parsedInt = parseInt(value);
-                                        const newSelectedChoices = [...selectedChoices];
-                                        if (isNaN(parsedInt)) {
-                                            newSelectedChoices[i + 1] = 0;
-                                        } else {
-                                            newSelectedChoices[i + 1] = parsedInt;
+                        <VotingWrapper key={choice}>
+                            <Weighted key={choice} className={selected ? 'selected' : ''}>
+                                <Option>{choice}</Option>
+                                <Selection>
+                                    <PlusMinus
+                                        onClick={() => {
+                                            const newSelectedChoices = [...selectedChoices];
+                                            removeVote(i + 1, newSelectedChoices);
+                                            setSelectedChoices(newSelectedChoices);
+                                        }}
+                                    >
+                                        -
+                                    </PlusMinus>
+                                    <Input
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        value={selectedChoiceValue}
+                                        onChange={(e) => {
+                                            const { value } = e.target;
+                                            const parsedInt = parseInt(value);
+                                            const newSelectedChoices = [...selectedChoices];
+                                            if (isNaN(parsedInt)) {
+                                                newSelectedChoices[i + 1] = 0;
+                                            } else {
+                                                newSelectedChoices[i + 1] = parsedInt;
+                                            }
+                                            setSelectedChoices(newSelectedChoices);
+                                        }}
+                                        onFocus={(e) => e.target.select()}
+                                    />
+                                    <PlusMinus
+                                        onClick={() => {
+                                            const newSelectedChoices = [...selectedChoices];
+                                            addVote(i + 1, newSelectedChoices);
+                                            setSelectedChoices(newSelectedChoices);
+                                        }}
+                                    >
+                                        +
+                                    </PlusMinus>
+                                    <Percentage>{percentage(i, selectedChoices)}%</Percentage>
+                                </Selection>
+                            </Weighted>
+                            {hasPitches && (
+                                <SeePitchWrapper>
+                                    <SeePitchButton
+                                        disabled={!(pitches as Record<string, string>)[choice.toString().trim()]}
+                                        onClick={() =>
+                                            setModalInfo({
+                                                isOpen: true,
+                                                author: choice.toString().trim(),
+                                                content: (pitches as Record<string, string>)[choice.toString().trim()],
+                                            })
                                         }
-                                        setSelectedChoices(newSelectedChoices);
-                                    }}
-                                    onFocus={(e) => e.target.select()}
-                                />
-                                <PlusMinus
-                                    onClick={() => {
-                                        const newSelectedChoices = [...selectedChoices];
-                                        addVote(i + 1, newSelectedChoices);
-                                        setSelectedChoices(newSelectedChoices);
-                                    }}
-                                >
-                                    +
-                                </PlusMinus>
-                                <Percentage>{percentage(i, selectedChoices)}%</Percentage>
-                            </Selection>
-                        </Weighted>
+                                    >
+                                        {t('governance.proposal.see-pitch')}
+                                    </SeePitchButton>
+                                </SeePitchWrapper>
+                            )}
+                        </VotingWrapper>
                     );
                 })}
                 {isOptionSelected && hasVotingRights && (
@@ -162,11 +192,28 @@ const WeightedVoting: React.FC<WeightedVotingProps> = ({ proposal, hasVotingRigh
                 message={txErrorMessage}
                 onDismiss={() => setTxErrorMessage(null)}
             />
+            <PitchModal
+                onClose={() => setModalInfo({ isOpen: false, author: modalInfo.author, content: modalInfo.content })}
+                open={modalInfo.isOpen}
+            >
+                <PitchContainer>
+                    <PitchHeader>
+                        {t('governance.proposal.pitch-by')}: <span>{modalInfo.author}</span>
+                    </PitchHeader>
+                    <PitchContent>{modalInfo.content}</PitchContent>
+                    <CloseDialog
+                        onClick={() =>
+                            setModalInfo({ isOpen: false, author: modalInfo.author, content: modalInfo.content })
+                        }
+                    />
+                </PitchContainer>
+            </PitchModal>
         </>
     );
 };
 
 const Weighted = styled(FlexDivSpaceBetween)`
+    flex: 1;
     box-sizing: content-box;
     height: 50px;
     border: 1px solid #748bc6;
@@ -208,14 +255,17 @@ const Weighted = styled(FlexDivSpaceBetween)`
 `;
 
 const Option = styled(FlexDivRowCentered)`
-    padding-left: 30px;
+    padding-left: 20px;
+    padding-right: 5px;
+    white-space: break-spaces;
+    line-height: 22px;
     @media (max-width: 767px) {
         padding-left: 10px;
     }
 `;
 
 const Selection = styled(FlexDiv)`
-    width: 250px;
+    width: 230px;
     @media (max-width: 767px) {
         width: 165px;
     }
@@ -224,6 +274,7 @@ const Selection = styled(FlexDiv)`
 const PlusMinus = styled(FlexDivColumnCentered)`
     text-align: center;
     max-width: 45px;
+    min-width: 45px;
     border-left: 2px solid #748bc6;
     border-right: 2px solid #748bc6;
     &:hover {
@@ -233,14 +284,17 @@ const PlusMinus = styled(FlexDivColumnCentered)`
     }
     @media (max-width: 767px) {
         max-width: 35px;
+        min-width: 35px;
     }
 `;
 
 const Percentage = styled(FlexDivColumnCentered)`
     text-align: center;
-    max-width: 100px;
+    max-width: 80px;
+    min-width: 80px;
     @media (max-width: 767px) {
         max-width: 55px;
+        min-width: 55px;
     }
 `;
 
@@ -251,6 +305,7 @@ const Input = styled.input`
     padding: 0 10px;
     outline: none !important;
     max-width: 60px;
+    min-width: 60px;
     font-weight: bold;
     font-size: 20px;
     color: #b8c6e5;
@@ -260,6 +315,80 @@ const Input = styled.input`
     @media (max-width: 767px) {
         font-size: 16px;
         max-width: 40px;
+        min-width: 40px;
+    }
+`;
+
+const SeePitchWrapper = styled.div`
+    align-self: center;
+    margin-bottom: 20px;
+    @media (max-width: 767px) {
+        margin-bottom: 35px;
+    }
+`;
+
+const SeePitchButton = styled.button`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 36px;
+    border-radius: 23px;
+    border: 2px solid #516aff;
+    cursor: pointer;
+    color: white;
+    background: transparent;
+    padding: 5px 30px;
+    margin-left: 20px;
+    font-size: 15px;
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    @media (max-width: 767px) {
+        margin-left: 0;
+        line-height: 26px;
+    }
+`;
+
+const PitchModal = withStyles(() => ({
+    paper: {
+        borderRadius: '15px',
+        width: '900px',
+        maxWidth: '900px',
+        background: '#04045a',
+        overflow: 'auto',
+        border: '2px solid #64D9FE',
+        color: '#F6F6FE',
+    },
+}))(Dialog);
+
+const PitchContainer = styled.div`
+    position: relative;
+    margin: 30px;
+    padding-top: 15px;
+`;
+
+const PitchHeader = styled.div`
+    margin-bottom: 30px;
+    & span {
+        margin-left: 15px;
+        font-weight: bold;
+    }
+`;
+
+const PitchContent = styled.div`
+    white-space: pre-line;
+    line-height: 24px;
+`;
+
+const CloseDialog = styled(CloseIconContainer)`
+    position: absolute;
+    top: 0;
+    right: 0;
+`;
+
+const VotingWrapper = styled(FlexDiv)`
+    @media (max-width: 767px) {
+        flex-direction: column;
     }
 `;
 

@@ -1078,7 +1078,9 @@
                 "in-progress": "进行中",
                 "not-passed": "没过",
                 "passed": "通过"
-            }
+            },
+            "pitch-by": "投球",
+            "see-pitch": "看到这个音高"
         },
         "no-votes": "对本提案无票",
         "view-more": "查看更多",
