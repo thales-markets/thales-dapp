@@ -1067,7 +1067,7 @@
             "voting-power-label": "Your voting power",
             "vote-progress-label": "Voting in progress...",
             "vote-confirmation-message": "Successfully voted",
-            "vote-confirmation": "Are you sure you want to vote \"{{choice}}\"? This action cannot be undone.",
+            "vote-confirmation": "Are you sure you want to vote",
             "see-pitch": "See this pitch",
             "pitch-by": "Pitch by",
             "type": {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -10,6 +10,7 @@ import Results from '../Results';
 import History from '../History';
 import { useTranslation } from 'react-i18next';
 import TipsApprovalBox from '../TipsApprovalBox';
+import { SpaceKey } from '../../../../constants/governance';
 
 type SidebarType = 'results' | 'history' | 'approval-box';
 
@@ -25,6 +26,9 @@ const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
     const proposalResultsQuery = useProposalQuery(proposal.space.id, proposal.id, walletAddress);
     const proposalResults =
         proposalResultsQuery.isSuccess && proposalResultsQuery.data ? proposalResultsQuery.data : undefined;
+    const isCouncilVoting = useMemo(() => proposal.space.id === SpaceKey.COUNCIL && proposal.state === 'active', [
+        proposal,
+    ]);
 
     return (
         <>
@@ -48,9 +52,10 @@ const SidebarDetails: React.FC<SidebarDetailsProps> = ({ proposal, type }) => {
                         </FlexDivCentered>
                     </FlexDivCentered>
                     <SidebarContentWrapper>
-                        <SidebarContent type={type}>
+                        <SidebarContent type={type} isCouncilVoting={isCouncilVoting}>
                             {type === 'results' && (
                                 <Results
+                                    isCouncilVoting={isCouncilVoting}
                                     proposalResults={proposalResults}
                                     isLoading={proposalResultsQuery.isLoading}
                                     proposalId={proposal.id}

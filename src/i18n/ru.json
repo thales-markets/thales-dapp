@@ -1067,7 +1067,6 @@
             "proposal-label": "Предложение",
             "snapshot-label": "Снимок",
             "status-label": "Положение дел",
-            "vote-confirmation": "Вы уверены, что хотите проголосовать за \"{{choice}}\"? Это действие не может быть отменено.",
             "vote-confirmation-message": "Успешно проголосовали",
             "final-result-label": "Конечный результат",
             "vote-progress-label": "Идет голосование ...",
@@ -1077,7 +1076,8 @@
             "view-all-proposals": "Просмотреть все предложения",
             "vote-note": "Для утверждения необходимо {{approvalVotes}} из {{totalVotes}} голосов",
             "see-pitch": "Смотрите эту презентацию",
-            "pitch-by": "Питч"
+            "pitch-by": "Питч",
+            "vote-confirmation": "Вы уверены, что хотите проголосовать"
         },
         "stakers": {
             "no-stakers-found": "Стейкеров не найдено",

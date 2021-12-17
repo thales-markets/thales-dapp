@@ -23,12 +23,20 @@ import { useTranslation } from 'react-i18next';
 type ResultsProps = {
     proposalResults?: ProposalResults;
     isCouncilResults?: boolean;
+    isCouncilVoting?: boolean;
     isLoading: boolean;
     showAll?: boolean;
     proposalId: string;
 };
 
-const Results: React.FC<ResultsProps> = ({ proposalId, proposalResults, isCouncilResults, isLoading, showAll }) => {
+const Results: React.FC<ResultsProps> = ({
+    isCouncilVoting,
+    proposalId,
+    proposalResults,
+    isCouncilResults,
+    isLoading,
+    showAll,
+}) => {
     const { t } = useTranslation();
     const [viewCount, setViewCount] = useState<number>(showAll ? 1000 : 10);
     const spaceSymbol =
@@ -72,11 +80,18 @@ const Results: React.FC<ResultsProps> = ({ proposalId, proposalResults, isCounci
                             <ResultRow
                                 key={label}
                                 backgroundColor={
-                                    isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS ? '#03044e' : '#04045a'
+                                    (isCouncilVoting && index < 7) ||
+                                    (isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS)
+                                        ? '#03044e'
+                                        : '#04045a'
                                 }
                                 opacity={isCouncilResults && index >= NUMBER_OF_COUNCIL_MEMBERS ? 0.5 : 1}
                                 borderColor={
-                                    isCouncilResults && index === NUMBER_OF_COUNCIL_MEMBERS - 1 ? '#3f1fb4' : undefined
+                                    // TODO update NUMBER_OF_COUNCIL_MEMBERS and remove 7 hardcoded
+                                    (isCouncilVoting && index === 6) ||
+                                    (isCouncilResults && index === NUMBER_OF_COUNCIL_MEMBERS - 1)
+                                        ? '#3f1fb4'
+                                        : undefined
                                 }
                                 paddingBottom={
                                     isCouncilResults &&
