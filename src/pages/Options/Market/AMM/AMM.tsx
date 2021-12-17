@@ -66,6 +66,8 @@ import useInterval from 'hooks/useInterval';
 import { refetchAmmData } from 'utils/queryConnector';
 import WarningMessage from 'components/WarningMessage';
 
+const MINIMUM_AMM_LIQUIDITY = 2;
+
 const AMM: React.FC = () => {
     const { t } = useTranslation();
     const optionsMarket = useMarketContext();
@@ -91,7 +93,7 @@ const AMM: React.FC = () => {
     const [total, setTotal] = useState<number | string>('');
     const [priceImpact, setPriceImpact] = useState<number | string>('');
     const [potentialReturn, setPotentialReturn] = useState<number | string>('');
-    const [potentialReturnsUsd, setPotentialReturnsUsd] = useState<number | string>('');
+    const [isPotentialReturnAvailable, setIsPotentialReturnAvailable] = useState<boolean>(true);
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -99,9 +101,11 @@ const AMM: React.FC = () => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
+    const [isPriceChanged, setIsPriceChanged] = useState<boolean>(false);
     const [maxLimitExceeded, setMaxLimitExceeded] = useState<boolean>(false);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
+    const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [maxLimit, setMaxLimit] = useState<number>(0);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
@@ -258,6 +262,7 @@ const AMM: React.FC = () => {
                           ),
                     fetchL1Fee(ammContractWithSigner, marketAddress, side, parsedAmount, parsedTotal, parsedSlippage),
                 ]);
+                console.log(formatGasLimit(gasEstimate, networkId));
                 setGasLimit(formatGasLimit(gasEstimate, networkId));
                 setL1Fee(l1FeeInWei);
             } else {
@@ -318,11 +323,11 @@ const AMM: React.FC = () => {
         setTotal('');
         setPriceImpact('');
         setPotentialReturn('');
-        setPotentialReturnsUsd('');
         setGasLimit(null);
     };
 
     const fetchAmmPriceData = async (isRefresh: boolean) => {
+        let priceChanged = false;
         if (!isRefresh) {
             setIsGettingQuote(true);
         }
@@ -343,9 +348,9 @@ const AMM: React.FC = () => {
                 const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
                 setPrice(ammPrice);
                 setTotal(bigNumberFormatter(ammQuote));
-                setPriceImpact(bigNumberFormatter(ammPriceImpact) - 0.01);
+                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - 0.01 : 0);
                 setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
-                setPotentialReturnsUsd(ammPrice > 0 && isBuy ? (1 / ammPrice - 1) * bigNumberFormatter(ammQuote) : 0);
+                setIsPotentialReturnAvailable(isBuy);
 
                 const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
                 const isQuoteChanged = ammPrice !== price || total !== bigNumberFormatter(ammQuote);
@@ -353,9 +358,11 @@ const AMM: React.FC = () => {
                 if (ammPrice > 0 && bigNumberFormatter(ammQuote) > 0 && isSlippageValid && isQuoteChanged) {
                     fetchGasLimit(optionsMarket.address, SIDE[optionSide], parsedAmount, ammQuote, parsedSlippage);
                 }
+                priceChanged = ammPrice !== price;
             } catch (e) {
                 console.log(e);
                 resetData();
+                priceChanged = true;
             }
         } else {
             resetData();
@@ -363,6 +370,7 @@ const AMM: React.FC = () => {
         if (!isRefresh) {
             setIsGettingQuote(false);
         }
+        return priceChanged;
     };
 
     useDebouncedEffect(() => {
@@ -376,12 +384,21 @@ const AMM: React.FC = () => {
     const handleSubmit = async () => {
         setTxErrorMessage(null);
         setIsSubmitting(true);
+        setIsPriceChanged(false);
+
+        const priceChanged = await fetchAmmPriceData(true);
+        if (priceChanged) {
+            setIsPriceChanged(true);
+            setIsSubmitting(false);
+            return;
+        }
         try {
             const { ammContract } = snxJSConnector as any;
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
             const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
 
+            console.log('gasLimit', gasLimit);
             const tx = (isBuy
                 ? await ammContractWithSigner.buyFromAMM(
                       marketAddress,
@@ -434,6 +451,7 @@ const AMM: React.FC = () => {
                 : ammMaxLimits.maxSellShort;
         }
         setMaxLimit(max);
+        setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
 
     useEffect(() => {
@@ -467,6 +485,13 @@ const AMM: React.FC = () => {
             return (
                 <SubmitButton isBuy={isBuy} onClick={() => onboardConnector.connectWallet()}>
                     {t('common.wallet.connect-your-wallet')}
+                </SubmitButton>
+            );
+        }
+        if (insufficientLiquidity) {
+            return (
+                <SubmitButton disabled={true} isBuy={isBuy}>
+                    {t(`common.errors.insufficient-liquidity`)}
                 </SubmitButton>
             );
         }
@@ -522,12 +547,12 @@ const AMM: React.FC = () => {
 
     const getPriceImpactColor = (priceImpactPercentage: number) => {
         if (priceImpactPercentage >= 0.03 || Number(priceImpactPercentage) <= -0.03) {
-            return '#D74B6D';
+            return '#FF9548;';
         }
         if (priceImpactPercentage >= 0.01 || Number(priceImpactPercentage) <= -0.01) {
-            return '#FB7F26';
+            return '#FFCC00';
         }
-        return '#04C19D';
+        return '#00F152';
     };
 
     const formDisabled = isSubmitting || isAmmTradingDisabled;
@@ -604,14 +629,14 @@ const AMM: React.FC = () => {
                                     value={amount}
                                     onChange={(_, value) => setAmount(value)}
                                     className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
-                                    disabled={formDisabled}
+                                    disabled={formDisabled || insufficientLiquidity}
                                 />
                                 <InputLabel>
                                     {t('options.market.trade-options.place-order.amount-label', {
                                         orderSide: orderSide.value,
                                     })}
                                 </InputLabel>
-                                <CurrencyLabel className={formDisabled ? 'disabled' : ''}>
+                                <CurrencyLabel className={formDisabled || insufficientLiquidity ? 'disabled' : ''}>
                                     {OPTIONS_CURRENCY_MAP[optionSide]}
                                 </CurrencyLabel>
                                 <AmountValidationMessage>
@@ -638,7 +663,7 @@ const AMM: React.FC = () => {
                                         onChange={(_, value) => {
                                             setAmount(Number(value));
                                         }}
-                                        disabled={formDisabled}
+                                        disabled={formDisabled || insufficientLiquidity}
                                     />
                                 ) : (
                                     <SellSlider
@@ -649,7 +674,7 @@ const AMM: React.FC = () => {
                                         onChange={(_, value) => {
                                             setAmount(Number(value));
                                         }}
-                                        disabled={formDisabled}
+                                        disabled={formDisabled || insufficientLiquidity}
                                     />
                                 )}
                                 <FlexDivRow>
@@ -684,16 +709,14 @@ const AMM: React.FC = () => {
                                 <SummaryLabel>{t(`amm.total-${orderSide.value}-label`)}</SummaryLabel>
                             </InputContainer>
                             <InputContainer>
-                                <SummaryContent color={potentialReturn > 0 ? COLORS.LONG : '#0c1c68'}>
-                                    {isBuy ? (
-                                        isGettingQuote ? (
-                                            <SimpleLoader />
-                                        ) : (
-                                            `${formatCurrencyWithKey(
-                                                SYNTHS_MAP.sUSD,
-                                                potentialReturnsUsd
-                                            )} (${formatPercentage(potentialReturn)})`
-                                        )
+                                <SummaryContent color={potentialReturn > 0 ? '#00F152' : '#0c1c68'}>
+                                    {isGettingQuote ? (
+                                        <SimpleLoader />
+                                    ) : isPotentialReturnAvailable ? (
+                                        `${formatCurrencyWithKey(
+                                            SYNTHS_MAP.sUSD,
+                                            Number(potentialReturn) * Number(total)
+                                        )} (${formatPercentage(potentialReturn)})`
                                     ) : (
                                         '-'
                                     )}
@@ -706,7 +729,9 @@ const AMM: React.FC = () => {
                                 </SummaryLabel>
                             </InputContainer>
                             <InputContainer>
-                                <SummaryContent color={getPriceImpactColor(Number(priceImpact))}>
+                                <SummaryContent
+                                    color={Number(price) > 0 ? getPriceImpactColor(Number(priceImpact)) : undefined}
+                                >
                                     {isGettingQuote ? <SimpleLoader /> : formatPercentage(priceImpact)}
                                 </SummaryContent>
                                 <SummaryLabel>
@@ -765,6 +790,11 @@ const AMM: React.FC = () => {
                         <NetworkFees gasLimit={gasLimit} disabled={formDisabled} l1Fee={l1Fee} />
                     </SummaryContainer>
                     <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
+                    {isPriceChanged && (
+                        <AmmWarningMessage style={{ marginTop: 15 }}>
+                            <WarningMessage message={t('amm.price-changed-warning')} hideIcon />
+                        </AmmWarningMessage>
+                    )}
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}
                         message={txErrorMessage}
@@ -850,8 +880,9 @@ const Info = styled.div`
 `;
 
 const SummaryContent = styled.div<{ color?: string }>`
-    background: #b8c6e5;
+    background: rgba(206, 214, 233, 0.2);
     border-radius: 12px;
+    border: 2px solid #0c1c68;
     height: 64px;
     padding: 31px 0 0 22px;
     color: ${(props) => (props.color ? props.color : '#0c1c68')};

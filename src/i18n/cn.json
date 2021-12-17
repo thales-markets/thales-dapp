@@ -1105,16 +1105,17 @@
     },
     "amm": {
         "type-label": "类型",
-        "return-label": "潜在回报",
-        "skew-label": "倾斜冲击",
-        "total-sell-label": "接收总数",
-        "skew-tooltip": "倾斜冲击",
-        "return-tooltip": "如果此选项获胜，则潜在回报",
-        "max-limit-sell-tooltip": "出售给 AMM 的最大 {{currencyKey}} 期权数量",
-        "max-limit-buy-tooltip": "从 AMM 购买的 {{currencyKey}} 选项的最大数量",
-        "total-buy-label": "支付总额",
+        "return-label": "潜在利润",
         "amm-disabled-warning": "此市场禁用 AMM 交易",
         "amm-disabled": "AMM 交易禁用",
-        "beta": "测试版"
+        "return-tooltip": "如果此选项获胜，则潜在利润",
+        "max-limit-buy-tooltip": "从 AMM 购买的 {{currencyKey}} 选项的最大数量",
+        "price-changed-warning": "价格已更改，请查看",
+        "max-limit-sell-tooltip": "出售给 AMM 的最大 {{currencyKey}} 期权数量",
+        "skew-tooltip": "AMM 将在它更容易受到影响的方面增加价格影响",
+        "total-sell-label": "接收总数",
+        "skew-label": "倾斜冲击",
+        "beta": "测试版",
+        "total-buy-label": "支付总额"
     }
 }
