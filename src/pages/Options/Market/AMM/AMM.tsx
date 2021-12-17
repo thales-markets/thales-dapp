@@ -262,9 +262,9 @@ const AMM: React.FC = () => {
                           ),
                     fetchL1Fee(ammContractWithSigner, marketAddress, side, parsedAmount, parsedTotal, parsedSlippage),
                 ]);
-                console.log(formatGasLimit(gasEstimate, networkId));
                 setGasLimit(formatGasLimit(gasEstimate, networkId));
                 setL1Fee(l1FeeInWei);
+                return formatGasLimit(gasEstimate, networkId);
             } else {
                 const gasEstimate = await (isBuy
                     ? ammContractWithSigner.estimateGas.buyFromAMM(
@@ -282,10 +282,12 @@ const AMM: React.FC = () => {
                           parsedSlippage
                       ));
                 setGasLimit(formatGasLimit(gasEstimate, networkId));
+                return formatGasLimit(gasEstimate, networkId);
             }
         } catch (e) {
             console.log(e);
             setGasLimit(null);
+            return null;
         }
     };
 
@@ -326,9 +328,10 @@ const AMM: React.FC = () => {
         setGasLimit(null);
     };
 
-    const fetchAmmPriceData = async (isRefresh: boolean) => {
+    const fetchAmmPriceData = async (isRefresh: boolean, isSubmit = false) => {
         let priceChanged = false;
-        if (!isRefresh) {
+        let latestGasLimit = null;
+        if (!isRefresh && !isSubmit) {
             setIsGettingQuote(true);
         }
         if (isAmountEntered) {
@@ -358,6 +361,15 @@ const AMM: React.FC = () => {
                 if (ammPrice > 0 && bigNumberFormatter(ammQuote) > 0 && isSlippageValid && isQuoteChanged) {
                     fetchGasLimit(optionsMarket.address, SIDE[optionSide], parsedAmount, ammQuote, parsedSlippage);
                 }
+                if (isSubmit) {
+                    latestGasLimit = await fetchGasLimit(
+                        optionsMarket.address,
+                        SIDE[optionSide],
+                        parsedAmount,
+                        ammQuote,
+                        parsedSlippage
+                    );
+                }
                 priceChanged = ammPrice !== price;
             } catch (e) {
                 console.log(e);
@@ -367,10 +379,10 @@ const AMM: React.FC = () => {
         } else {
             resetData();
         }
-        if (!isRefresh) {
+        if (!isRefresh && !isSubmit) {
             setIsGettingQuote(false);
         }
-        return priceChanged;
+        return { priceChanged, latestGasLimit };
     };
 
     useDebouncedEffect(() => {
@@ -386,7 +398,7 @@ const AMM: React.FC = () => {
         setIsSubmitting(true);
         setIsPriceChanged(false);
 
-        const priceChanged = await fetchAmmPriceData(true);
+        const { priceChanged, latestGasLimit } = await fetchAmmPriceData(true, true);
         if (priceChanged) {
             setIsPriceChanged(true);
             setIsSubmitting(false);
@@ -398,7 +410,6 @@ const AMM: React.FC = () => {
 
             const { marketAddress, side, parsedAmount, parsedTotal, parsedSlippage } = formatBuySellArguments();
 
-            console.log('gasLimit', gasLimit);
             const tx = (isBuy
                 ? await ammContractWithSigner.buyFromAMM(
                       marketAddress,
@@ -407,7 +418,7 @@ const AMM: React.FC = () => {
                       parsedTotal,
                       parsedSlippage,
                       {
-                          gasLimit,
+                          gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
                       }
                   )
                 : await ammContractWithSigner.sellToAMM(
@@ -417,7 +428,7 @@ const AMM: React.FC = () => {
                       parsedTotal,
                       parsedSlippage,
                       {
-                          gasLimit,
+                          gasLimit: latestGasLimit !== null ? latestGasLimit : gasLimit,
                       }
                   )) as ethers.ContractTransaction;
             const txResult = await tx.wait();
