@@ -27,7 +27,7 @@ export const QUERY_KEYS = {
         ],
     },
     Rates: {
-        ExchangeRates: ['rates', 'exchangeRates'],
+        ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: NetworkId) => ['rates', 'exchangeRatesMarketData', networkId],
     },
     Synths: {

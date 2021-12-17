@@ -32,7 +32,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
     const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
     const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
 
-    const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+    const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
     const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
     const ethRate = get(exchangeRates, SYNTHS_MAP.sETH, null);
 

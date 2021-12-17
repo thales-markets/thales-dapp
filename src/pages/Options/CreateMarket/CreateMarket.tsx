@@ -131,7 +131,7 @@ export const CreateMarket: React.FC = () => {
         const [l1Fee, setL1Fee] = useState<number | null>(null);
         const isL2 = getIsOVM(networkId);
 
-        const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+        const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
         let isCurrencySelected = false;
 

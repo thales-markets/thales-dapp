@@ -312,7 +312,7 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         )}
 
                         <MainContentContainer className="market__container">
-                            {optionsMarket.phase === 'trading' && !ammSelected && (
+                            {optionsMarket.phase === 'trading' && (!ammSelected || !isL2) && (
                                 <OptionsTabContainer className="market__container__tabs">
                                     {optionsTabContent.map((tab) => (
                                         <OptionsTab
