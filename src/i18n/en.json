@@ -499,7 +499,7 @@
         },
         "market": {
             "header": {
-                "orderbook": "Orderbook",
+                "orderbook": "Order book",
                 "amm": "AMM"
             },
             "overview": {
@@ -1115,6 +1115,7 @@
         "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} options for sale to AMM",
         "amm-disabled-warning": "AMM trading is disabled for this market",
         "amm-disabled": "AMM trading disabled",
-        "beta": "BETA"
+        "beta": "BETA",
+        "price-changed-warning": "Price changed, please review"
     }
 }

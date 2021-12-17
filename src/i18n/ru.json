@@ -735,7 +735,7 @@
                 }
             },
             "header": {
-                "orderbook": "Книга заказов",
+                "orderbook": "Таблица заказов",
                 "amm": "ADM"
             }
         },
@@ -1104,17 +1104,18 @@
         "optimistic-gateway": "Оптимистичный шлюз"
     },
     "amm": {
+        "beta": "БЕТА",
         "type-label": "тип",
-        "return-tooltip": "Возможный возврат, если этот вариант выиграет",
-        "max-limit-sell-tooltip": "Максимальное количество опционов {{currencyKey}} для продажи AMM",
-        "return-label": "Возможный возврат",
-        "max-limit-buy-tooltip": "Максимальное количество вариантов {{currencyKey}} для покупки в AMM",
-        "total-sell-label": "Всего получить",
         "skew-label": "Косое воздействие",
-        "skew-tooltip": "Косое воздействие",
-        "total-buy-label": "Итого к оплате",
+        "total-sell-label": "Всего получить",
+        "return-tooltip": "Возможная прибыль в случае выигрыша этого варианта",
         "amm-disabled-warning": "Торговля AMM отключена для этого рынка",
+        "price-changed-warning": "Цена изменена, пожалуйста, проверьте",
         "amm-disabled": "Торговля AMM отключена",
-        "beta": "БЕТА"
+        "return-label": "Потенциальная прибыль",
+        "max-limit-sell-tooltip": "Максимальное количество опционов {{currencyKey}} для продажи AMM",
+        "total-buy-label": "Итого к оплате",
+        "skew-tooltip": "AMM добавит влияние на цену на той стороне, которой он более подвержен",
+        "max-limit-buy-tooltip": "Максимальное количество вариантов {{currencyKey}} для покупки в AMM"
     }
 }
