@@ -9,7 +9,7 @@ import { getIsAppReady } from 'redux/modules/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import MaturityPhaseCard from './TradeCard/MaturityPhaseCard';
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -48,6 +48,7 @@ import { MarketOverviewMobile } from './components/MarketOverview/MarketOverview
 import MarketMobile from './MarketMobile';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import AMM from './AMM';
+import { getIsOVM } from 'utils/network';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -68,6 +69,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const [optionsMarket, setOptionsMarket] = useState<OptionsMarketInfo | null>(null);
     const [layout, setLayout] = useState(currentLayout);
     const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
@@ -188,7 +191,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 isCustomMarket,
                 isWalletConnected,
                 false,
-                ammSelected
+                ammSelected,
+                isL2
             )
         ) {
             widgets.push(

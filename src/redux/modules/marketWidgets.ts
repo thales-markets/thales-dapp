@@ -31,6 +31,11 @@ const getInitialFullLayout = () => {
     return getDefaultLayout();
 };
 
+const getInitialAmmSelected = () => {
+    const localStoreAmmSelected: any = localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_AMM_SELECTED);
+    return localStoreAmmSelected === undefined ? true : localStoreAmmSelected;
+};
+
 type UISliceState = {
     visibilityMap: Record<MarketWidgetKey, boolean>;
     currentLayout: Layout[];
@@ -61,7 +66,7 @@ const initialState: UISliceState = {
     visibilityMap: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP) || defaultMarketWidgetVisibility,
     currentLayout: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_CURRENT_LAYOUT) || [],
     fullLayout: getInitialFullLayout(),
-    ammSelected: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_AMM_SELECTED) || false,
+    ammSelected: getInitialAmmSelected(),
 };
 
 export const uiSlice = createSlice({

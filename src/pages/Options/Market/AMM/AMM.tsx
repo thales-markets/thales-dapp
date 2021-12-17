@@ -521,13 +521,13 @@ const AMM: React.FC = () => {
     };
 
     const getPriceImpactColor = (priceImpactPercentage: number) => {
-        if (priceImpactPercentage > 0.03 || Number(priceImpactPercentage) < -0.03) {
-            return 'rgb(223, 47, 43)';
+        if (priceImpactPercentage >= 0.03 || Number(priceImpactPercentage) <= -0.03) {
+            return '#D74B6D';
         }
-        if (priceImpactPercentage > 0.01 || Number(priceImpactPercentage) < -0.01) {
-            return COLORS.LONG;
+        if (priceImpactPercentage >= 0.01 || Number(priceImpactPercentage) <= -0.01) {
+            return '#FB7F26';
         }
-        return 'rgb(49, 208, 170)';
+        return '#04C19D';
     };
 
     const formDisabled = isSubmitting || isAmmTradingDisabled;

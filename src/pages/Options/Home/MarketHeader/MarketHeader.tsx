@@ -108,9 +108,10 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     />
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                {phase === 'trading' && (
+                {phase === 'trading' && isL2 && (
                     <SwitchWrapper>
-                        {t('options.market.header.orderbook')}
+                        {t('options.market.header.amm')}
+                        <BetaBadge>{t('amm.beta')}</BetaBadge>
                         <BorderedWrapper
                             ammSelected={ammSelected}
                             onClick={() => {
@@ -119,8 +120,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SwitchDot />
                         </BorderedWrapper>
-                        {t('options.market.header.amm')}
-                        <BetaBadge>{t('amm.beta')}</BetaBadge>
+                        {t('options.market.header.orderbook')}
                     </SwitchWrapper>
                 )}
                 <FlexDiv className="dapp-header__buttonsWrapper">
@@ -447,7 +447,7 @@ const SwitchWrapper = styled(FlexDiv)`
 `;
 
 const BorderedWrapper = styled(FlexDivRow)<{ ammSelected: boolean }>`
-    flex-direction: ${(props) => (props.ammSelected ? 'row-reverse' : 'row')};
+    flex-direction: ${(props) => (props.ammSelected ? 'row' : 'row-reverse')};
     height: 32px;
     width: 64px;
     border: 2px solid #00f9ff;
