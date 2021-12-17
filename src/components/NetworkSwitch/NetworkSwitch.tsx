@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
+import { useLocation } from 'react-router-dom';
+import { matchPath } from 'react-router';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import styled from 'styled-components';
 import { ReactComponent as DownIcon } from 'assets/images/down.svg';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +20,8 @@ import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { NetworkId } from '@synthetixio/contracts-interface';
+import ROUTES from '../../constants/routes';
+import { buildHref, navigateTo } from '../../utils/routes';
 
 export const NetworkSwitch: React.FC = () => {
     const { t } = useTranslation();
@@ -30,6 +34,7 @@ export const NetworkSwitch: React.FC = () => {
         }
         setOptimismDropdownIsOpen(isOpen);
     };
+    const location = useLocation();
 
     const switchOrAddOptimismNetwork = async () => {
         const switchTo = L1_TO_L2_NETWORK_MAPPER[networkId] ?? NetworkId['Mainnet-Ovm'];
@@ -41,6 +46,9 @@ export const NetworkSwitch: React.FC = () => {
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: optimismNetworkParms.chainId }],
                 });
+                if (matchPath(location.pathname, { path: ROUTES.Options.MarketMatch })) {
+                    navigateTo(buildHref(ROUTES.Options.Home));
+                }
             } catch (switchError: any) {
                 if (switchError.code === 4902) {
                     try {
@@ -52,6 +60,9 @@ export const NetworkSwitch: React.FC = () => {
                             method: 'wallet_switchEthereumChain',
                             params: [{ chainId: optimismNetworkParms.chainId }],
                         });
+                        if (matchPath(location.pathname, { path: ROUTES.Options.MarketMatch })) {
+                            navigateTo(buildHref(ROUTES.Options.Home));
+                        }
                     } catch (addError) {
                         console.log(addError);
                     }
@@ -71,6 +82,9 @@ export const NetworkSwitch: React.FC = () => {
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: formattedChainId }],
                 });
+                if (matchPath(location.pathname, { path: ROUTES.Options.MarketMatch })) {
+                    navigateTo(buildHref(ROUTES.Options.Home));
+                }
             } catch (switchError: any) {
                 console.log(switchError);
             }
