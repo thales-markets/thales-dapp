@@ -499,7 +499,7 @@
         },
         "market": {
             "header": {
-                "orderbook": "Orderbook",
+                "orderbook": "Order book",
                 "amm": "AMM"
             },
             "overview": {
