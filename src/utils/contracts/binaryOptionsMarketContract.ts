@@ -5,6 +5,19 @@ export const binaryOptionMarketContract = {
             inputs: [
                 {
                     indexed: false,
+                    internalType: 'address',
+                    name: 'beneficiary',
+                    type: 'address',
+                },
+            ],
+            name: 'Expired',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
                     internalType: 'enum IBinaryOptionMarket.Side',
                     name: 'result',
                     type: 'uint8',
@@ -136,6 +149,71 @@ export const binaryOptionMarketContract = {
                 },
             ],
             name: 'OwnerNominated',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetIOracleInstance',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetPriceFeed',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_zeroExAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'SetZeroExAddress',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_zeroExAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'SetZeroExAddressAtInit',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetsUSD',
             type: 'event',
         },
         {

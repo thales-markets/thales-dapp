@@ -8,8 +8,8 @@ export const ammContract = {
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0xb073ADE4c711ab40D675909F9810971C993e9D1B',
+        [NetworkId['Mainnet-Ovm']]: '0x5ae7454827D83526261F3871C1029792644Ef1B1',
+        [NetworkId['Kovan-Ovm']]: '0xB0437C95551738FC48e2656017B70344d269f337',
     },
     abi: [
         {
@@ -38,6 +38,24 @@ export const ammContract = {
                     internalType: 'uint256',
                     name: 'amount',
                     type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'sUSDPaid',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'susd',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'asset',
+                    type: 'address',
                 },
             ],
             name: 'BoughtFromAmm',
@@ -94,6 +112,116 @@ export const ammContract = {
                 {
                     indexed: false,
                     internalType: 'address',
+                    name: '_manager',
+                    type: 'address',
+                },
+            ],
+            name: 'SetBinaryOptionsMarketManager',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_capPerMarket',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SetCapPerMarket',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bytes32',
+                    name: 'asset',
+                    type: 'bytes32',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_impliedVolatility',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SetImpliedVolatilityPerAsset',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_spread',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SetMaxSpread',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_spread',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SetMinSpread',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: '_minimalTimeLeftToMaturity',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SetMinimalTimeLeftToMaturity',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_priceFeed',
+                    type: 'address',
+                },
+            ],
+            name: 'SetPriceFeed',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'sUSD',
+                    type: 'address',
+                },
+            ],
+            name: 'SetSUSD',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
                     name: 'seller',
                     type: 'address',
                 },
@@ -114,6 +242,24 @@ export const ammContract = {
                     internalType: 'uint256',
                     name: 'amount',
                     type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'sUSDPaid',
+                    type: 'uint256',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'susd',
+                    type: 'address',
+                },
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'asset',
+                    type: 'address',
                 },
             ],
             name: 'SoldToAMM',
@@ -437,6 +583,21 @@ export const ammContract = {
                     name: '_deciMath',
                     type: 'address',
                 },
+                {
+                    internalType: 'uint256',
+                    name: '_min_spread',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_max_spread',
+                    type: 'uint256',
+                },
+                {
+                    internalType: 'uint256',
+                    name: '_minimalTimeLeftToMaturity',
+                    type: 'uint256',
+                },
             ],
             name: 'initialize',
             outputs: [],
@@ -650,7 +811,7 @@ export const ammContract = {
                     type: 'address',
                 },
             ],
-            name: 'pullFunds',
+            name: 'retrieveSUSD',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

@@ -67,6 +67,7 @@ import { refetchAmmData } from 'utils/queryConnector';
 import WarningMessage from 'components/WarningMessage';
 
 const MINIMUM_AMM_LIQUIDITY = 2;
+const MAX_L2_GAS_LIMIT = 15000000;
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -244,45 +245,53 @@ const AMM: React.FC = () => {
             const ammContractWithSigner = ammContract.connect((snxJSConnector as any).signer);
 
             if (isL2) {
-                const [gasEstimate, l1FeeInWei] = await Promise.all([
-                    isBuy
-                        ? ammContractWithSigner.estimateGas.buyFromAMM(
-                              marketAddress,
-                              side,
-                              parsedAmount,
-                              parsedTotal,
-                              parsedSlippage
-                          )
-                        : ammContractWithSigner.estimateGas.sellToAMM(
-                              marketAddress,
-                              side,
-                              parsedAmount,
-                              parsedTotal,
-                              parsedSlippage
-                          ),
-                    fetchL1Fee(ammContractWithSigner, marketAddress, side, parsedAmount, parsedTotal, parsedSlippage),
-                ]);
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                // const [gasEstimate, l1FeeInWei] = await Promise.all([
+                //     isBuy
+                //         ? ammContractWithSigner.estimateGas.buyFromAMM(
+                //               marketAddress,
+                //               side,
+                //               parsedAmount,
+                //               parsedTotal,
+                //               parsedSlippage
+                //           )
+                //         : ammContractWithSigner.estimateGas.sellToAMM(
+                //               marketAddress,
+                //               side,
+                //               parsedAmount,
+                //               parsedTotal,
+                //               parsedSlippage
+                //           ),
+                //     fetchL1Fee(ammContractWithSigner, marketAddress, side, parsedAmount, parsedTotal, parsedSlippage),
+                // ]);
+                const l1FeeInWei = await fetchL1Fee(
+                    ammContractWithSigner,
+                    marketAddress,
+                    side,
+                    parsedAmount,
+                    parsedTotal,
+                    parsedSlippage
+                );
+                setGasLimit(MAX_L2_GAS_LIMIT);
                 setL1Fee(l1FeeInWei);
-                return formatGasLimit(gasEstimate, networkId);
+                return MAX_L2_GAS_LIMIT;
             } else {
-                const gasEstimate = await (isBuy
-                    ? ammContractWithSigner.estimateGas.buyFromAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage
-                      )
-                    : ammContractWithSigner.estimateGas.sellToAMM(
-                          marketAddress,
-                          side,
-                          parsedAmount,
-                          parsedTotal,
-                          parsedSlippage
-                      ));
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
-                return formatGasLimit(gasEstimate, networkId);
+                // const gasEstimate = await (isBuy
+                //     ? ammContractWithSigner.estimateGas.buyFromAMM(
+                //           marketAddress,
+                //           side,
+                //           parsedAmount,
+                //           parsedTotal,
+                //           parsedSlippage
+                //       )
+                //     : ammContractWithSigner.estimateGas.sellToAMM(
+                //           marketAddress,
+                //           side,
+                //           parsedAmount,
+                //           parsedTotal,
+                //           parsedSlippage
+                //       ));
+                setGasLimit(MAX_L2_GAS_LIMIT);
+                return MAX_L2_GAS_LIMIT;
             }
         } catch (e) {
             console.log(e);
@@ -358,9 +367,6 @@ const AMM: React.FC = () => {
                 const parsedSlippage = ethers.utils.parseEther((Number(slippage) / 100).toString());
                 const isQuoteChanged = ammPrice !== price || total !== bigNumberFormatter(ammQuote);
 
-                if (ammPrice > 0 && bigNumberFormatter(ammQuote) > 0 && isSlippageValid && isQuoteChanged) {
-                    fetchGasLimit(optionsMarket.address, SIDE[optionSide], parsedAmount, ammQuote, parsedSlippage);
-                }
                 if (isSubmit) {
                     latestGasLimit = await fetchGasLimit(
                         optionsMarket.address,
@@ -369,6 +375,10 @@ const AMM: React.FC = () => {
                         ammQuote,
                         parsedSlippage
                     );
+                } else {
+                    if (ammPrice > 0 && bigNumberFormatter(ammQuote) > 0 && isSlippageValid && isQuoteChanged) {
+                        fetchGasLimit(optionsMarket.address, SIDE[optionSide], parsedAmount, ammQuote, parsedSlippage);
+                    }
                 }
                 priceChanged = ammPrice !== price;
             } catch (e) {
@@ -439,7 +449,7 @@ const AMM: React.FC = () => {
                         `options.market.trade-options.place-order.swap-confirm-button.${orderSide.value}.confirmation-message`
                     )
                 );
-                refetchAmmData(walletAddress, optionsMarket.address);
+                refetchAmmData(walletAddress, optionsMarket.address, networkId);
                 setIsSubmitting(false);
                 resetData();
             }

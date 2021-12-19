@@ -60,6 +60,8 @@ export const isMainNet = (networkId: NetworkId) => networkId === 1;
 
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 
+export const normalizeL2GasLimit = (gasLimit: number) => Math.trunc(gasLimit * 1.2);
+
 export const normalize0xGasLimit = (gasLimit: number) => Math.trunc(gasLimit * DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER);
 
 export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
@@ -92,6 +94,9 @@ export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 
 export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId: number): number =>
     getIsOVM(networkId) ? Number(gasEstimate) : normalizeGasLimit(Number(gasEstimate));
+
+export const formatL2GasLimit = (gasEstimate: ethers.BigNumber | number): number =>
+    normalizeL2GasLimit(Number(gasEstimate));
 
 export const getL1FeeInWei = async (txRequest: any) => {
     const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(

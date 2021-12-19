@@ -8,8 +8,8 @@ export const binaryOptionsMarketDataContract = {
         [NetworkId.Kovan]: '0x547818b1ee8bd9a6d5854e8A9E84E066B9a07aA7',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0x6002a8F2A8dC0B704080765cE96aac63D5f7B224',
-        [NetworkId['Kovan-Ovm']]: '0x3Aa0814cD91f33467e6eb5ba58e56AB73699582b',
+        [NetworkId['Mainnet-Ovm']]: '0xBE086E0A2c588Ad64C8530048cE4356190D6a6F3',
+        [NetworkId['Kovan-Ovm']]: '0x6382660BF24f5e7BeC43a7D47591F823488FDB8D',
     },
     abi: [
         {
@@ -262,6 +262,84 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'PauseChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_binaryOptionMarketFactory',
+                    type: 'address',
+                },
+            ],
+            name: 'SetBinaryOptionsMarketFactory',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'SetCustomMarketCreationEnabled',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'manager',
+                    type: 'address',
+                },
+            ],
+            name: 'SetMigratingManager',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetPriceFeed',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_zeroExAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'SetZeroExAddress',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetsUSD',
             type: 'event',
         },
         {

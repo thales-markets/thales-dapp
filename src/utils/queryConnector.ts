@@ -74,11 +74,12 @@ export const refetchProposal = (spaceKey: SpaceKey, hash: string, walletAddress:
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Governance.Proposal(spaceKey, hash, walletAddress));
 };
 
-export const refetchAmmData = (walletAddress: string, marketAddress: string) => {
+export const refetchAmmData = (walletAddress: string, marketAddress: string, networkId: NetworkId) => {
     queryConnector.queryClient.invalidateQueries(
         QUERY_KEYS.BinaryOptions.AccountMarketInfo(marketAddress, walletAddress)
     );
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.BinaryOptions.AmmMaxLimits(marketAddress));
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.Synths(walletAddress, networkId));
 };
 
 export default queryConnector;
