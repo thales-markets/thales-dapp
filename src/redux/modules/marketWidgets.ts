@@ -59,7 +59,7 @@ const defaultState: UISliceState = {
     visibilityMap: defaultMarketWidgetVisibility,
     currentLayout: [],
     fullLayout: getDefaultLayout(),
-    ammSelected: false,
+    ammSelected: true,
 };
 
 const initialState: UISliceState = {

@@ -63,7 +63,7 @@ import {
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from './SimpleLoader';
 import useInterval from 'hooks/useInterval';
-import { refetchAmmData } from 'utils/queryConnector';
+import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import WarningMessage from 'components/WarningMessage';
 
 const MINIMUM_AMM_LIQUIDITY = 2;
@@ -450,6 +450,8 @@ const AMM: React.FC = () => {
                     )
                 );
                 refetchAmmData(walletAddress, optionsMarket.address, networkId);
+                refetchTrades(optionsMarket.address);
+                refetchUserTrades(optionsMarket.address, walletAddress);
                 setIsSubmitting(false);
                 resetData();
             }
