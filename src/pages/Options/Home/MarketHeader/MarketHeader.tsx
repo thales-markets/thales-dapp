@@ -8,9 +8,9 @@ import { Button, FlexDiv, FlexDivColumn, FlexDivRow, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
-import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
+// import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
-import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
+// import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
 import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
 import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
 import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
@@ -23,8 +23,8 @@ import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
 // import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 // import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
 // import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
-import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
-import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
+// import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
+// import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
 import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
 import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
 
@@ -167,18 +167,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     <SPAAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
                     </SPAAnchor>
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
-                            <SidebarItem
-                                imgSrc={earnDefaultIcon}
-                                imgSrcHoverSelected={earnSelectedIcon}
-                                className={route === ROUTES.Options.Token ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
                     {/* {!isL2 && (
                         <SPAAnchor href={buildHref(ROUTES.Options.CompetitionMarkets)}>
                             <SidebarItem
@@ -213,7 +201,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
-                    <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
+                    {/* <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
                         <SidebarItem
                             imgSrc={royaleDefaultIcon}
                             imgSrcHoverSelected={royaleSelectedIcon}
@@ -222,7 +210,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
                         </SidebarItem>
-                    </SPAAnchor>
+                    </SPAAnchor> */}
                     {/* {!isL2 && (
                         <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
                             <SidebarItem
@@ -235,7 +223,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             </SidebarItem>
                         </SPAAnchor>
                     )} */}
-                    <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
+                    {/* <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
                         <SidebarItem
                             imgSrc={createMarketDefaultIcon}
                             imgSrcHoverSelected={createMarketSelectedIcon}
@@ -243,6 +231,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor> */}
+                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
+                        <SidebarItem
+                            imgSrc={tradeExerciseDefaultIcon}
+                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
+                            className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
                     {!isL2 && (
@@ -257,17 +255,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             </SidebarItem>
                         </SPAAnchor>
                     )}
-
-                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
-                        <SidebarItem
-                            imgSrc={tradeExerciseDefaultIcon}
-                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
-                            className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
                     {phase === 'trading' && (
                         <SidebarItem
                             imgSrc={tradeExerciseDefaultIcon}
@@ -289,6 +276,19 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
                         </SidebarItem>
+                    )}
+                    <Divider />
+                    {!isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
+                            <SidebarItem
+                                imgSrc={earnDefaultIcon}
+                                imgSrcHoverSelected={earnSelectedIcon}
+                                className={route === ROUTES.Options.Token ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
                     )}
                     <SPAAnchor href={buildHref(ROUTES.Governance.Home)}>
                         <SidebarItem
@@ -381,7 +381,7 @@ const ItemsContainer = styled.ul``;
 const SidebarItem = styled.li<{ imgSrc: string; imgSrcHoverSelected: string }>`
     cursor: pointer;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     height: 50px;
     padding: 14px;
     color: #04045a;
@@ -469,6 +469,12 @@ const SwitchDot = styled.span`
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0px 4px 7px rgba(17, 20, 45, 0.402414);
+`;
+
+const Divider = styled.hr`
+    width: 100%;
+    border: none;
+    border-top: 2px solid #04045a;
 `;
 
 export default MarketHeader;
