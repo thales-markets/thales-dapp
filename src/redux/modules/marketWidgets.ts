@@ -46,7 +46,7 @@ const getInitialVisibilityMap = () => {
         return localStoreVisibilityMap;
     }
 
-    return getDefaultLayout();
+    return defaultMarketWidgetVisibility;
 };
 
 const getInitialAmmSelected = () => {
