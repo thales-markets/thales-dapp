@@ -59,6 +59,8 @@ export type HistoricalOptionsMarketInfo = {
     customMarket: boolean;
     customOracle: string;
     result: OptionSide;
+    availableLongs: number;
+    availableShorts: number;
     country?: string;
     eventName?: string;
     outcome?: string;

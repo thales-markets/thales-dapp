@@ -2,7 +2,7 @@ import { NetworkId } from '../../utils/network';
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 
-type OpenOrdersMap = Record<string, number> | null;
+type OpenOrdersMap = Record<string, { ordersCount: number; availableLong: number; availableShort: number }> | null;
 
 // TODO: discuss with team to change logic and store and update markets in redux to avoid this
 export let openOrdersMapCacheNew: OpenOrdersMap = null;

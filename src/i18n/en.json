@@ -253,7 +253,7 @@
                 "asset-price-col": "Asset price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
-                "pool-size-col": "Market size",
+                "pool-size-col": "AMM liquidity",
                 "time-remaining-col": "Time remaining",
                 "competition-tooltip": "This market is eligible for trading competition"
             }
