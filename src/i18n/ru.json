@@ -1005,14 +1005,14 @@
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
                 "or": "или",
                 "message": "Вернитесь в Thales Royale",
-                "title": "Вы в сети Optimistic Kovan"
+                "title": "Вы в сети Optimism Kovan"
             },
             "wrong-network-dialog": {
                 "parameters": "Параметры ОП Кован",
                 "return-to-dapp": "Вернуться в приложение Thales dApp",
                 "title": "Неправильная сеть!",
-                "button": "Переключиться на Оптимистичного Кована",
-                "message": "Пожалуйста, переключитесь на Оптимистичного Кована, чтобы продолжить"
+                "button": "Переключиться на Optimism Kovan",
+                "message": "Пожалуйста, переключитесь на Optimism Kovan, чтобы продолжить"
             },
             "wallet-not-connected-dialog": {
                 "button": "Подключить кошелек",
@@ -1098,10 +1098,10 @@
     "optimism": {
         "learn-more": "Учить больше",
         "switch-to-l2": "Переключиться на L2",
-        "optimistic-l2": "Оптимистичный L2",
-        "optimistic-etherscan": "Оптимистичный Etherscan",
+        "optimistic-l2": "Optimism L2",
+        "optimistic-etherscan": "Optimism Etherscan",
         "switch-to-l1": "Переключиться на L1",
-        "optimistic-gateway": "Оптимистичный шлюз"
+        "optimistic-gateway": "Optimism Gateway"
     },
     "amm": {
         "beta": "БЕТА",

@@ -1002,16 +1002,16 @@
                 "users-per-page": "Users per page"
             },
             "redirect-dialog": {
-                "title": "You are on Optimistic Kovan Network",
+                "title": "You are on Optimism Kovan Network",
                 "message": "Go back to Thales Royale",
                 "or": "or",
                 "switch-to-mainnet": "Switch to Ethereum Mainnet"
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",
-                "message": "Please switch to Optimistic Kovan to continue",
+                "message": "Please switch to Optimism Kovan to continue",
                 "return-to-dapp": "Return to the Thales dApp",
-                "button": "Switch to Optimistic Kovan",
+                "button": "Switch to Optimism Kovan",
                 "parameters": "OP Kovan parameters"
             },
             "wallet-not-connected-dialog": {
@@ -1096,11 +1096,11 @@
         }
     },
     "optimism": {
-        "optimistic-l2": "Optimistic L2",
+        "optimistic-l2": "Optimism L2",
         "switch-to-l1": "Switch to L1",
         "switch-to-l2": "Switch to L2",
-        "optimistic-gateway": "Optimistic Gateway",
-        "optimistic-etherscan": "Optimistic Etherscan",
+        "optimistic-gateway": "Optimism Gateway",
+        "optimistic-etherscan": "Optimism Etherscan",
         "learn-more": "Learn more"
     },
     "amm": {

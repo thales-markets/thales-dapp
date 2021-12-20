@@ -104,7 +104,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                 </InfoWrapper>
                 <UserInfoRoyaleDialog
                     walletAddress={walletAddress}
-                    network={'Optimistic Kovan'}
+                    network={'Optimism Kovan'}
                     open={openUserInfo}
                     handleClose={setOpenUserInfo.bind(this, false)}
                     theme={theme}

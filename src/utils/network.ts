@@ -21,6 +21,14 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'KOVAN-OPTIMISTIC',
 };
 
+export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
+    1: 'MAINNET',
+    3: 'ROPSTEN',
+    42: 'KOVAN',
+    10: 'OPTIMISM MAINNET',
+    69: 'OPTIMISM KOVAN',
+};
+
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
     name: 'MAINNET',
     networkId: 1,
@@ -34,7 +42,7 @@ export async function getEthereumNetwork() {
             const provider = (await detectEthereumProvider()) as EthereumProvider;
             if (provider && provider.networkVersion != null) {
                 const networkId = Number(provider.networkVersion) as NetworkId;
-                return { name: SUPPORTED_NETWORKS[networkId], networkId };
+                return { name: SUPPORTED_NETWORKS_NAMES[networkId], networkId };
             }
         }
         return defaultNetwork;
