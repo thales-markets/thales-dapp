@@ -31,6 +31,24 @@ const getInitialFullLayout = () => {
     return getDefaultLayout();
 };
 
+const getInitialVisibilityMap = () => {
+    const localStoreVisibilityMap: any = localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP);
+
+    if (localStoreVisibilityMap) {
+        Object.values(MarketWidgetKey).forEach((widgetKey: string) => {
+            const visibilityMapItem = localStoreVisibilityMap[widgetKey];
+            if (visibilityMapItem === undefined) {
+                localStoreVisibilityMap[widgetKey] = true;
+            }
+        });
+
+        localStore.set(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP, localStoreVisibilityMap);
+        return localStoreVisibilityMap;
+    }
+
+    return getDefaultLayout();
+};
+
 const getInitialAmmSelected = () => {
     const localStoreAmmSelected: any = localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_AMM_SELECTED);
     return localStoreAmmSelected === undefined ? true : localStoreAmmSelected;
@@ -63,7 +81,7 @@ const defaultState: UISliceState = {
 };
 
 const initialState: UISliceState = {
-    visibilityMap: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_VISIBILITY_MAP) || defaultMarketWidgetVisibility,
+    visibilityMap: getInitialVisibilityMap(),
     currentLayout: localStore.get(LOCAL_STORAGE_KEYS.MARKET_WIDGET_CURRENT_LAYOUT) || [],
     fullLayout: getInitialFullLayout(),
     ammSelected: getInitialAmmSelected(),
