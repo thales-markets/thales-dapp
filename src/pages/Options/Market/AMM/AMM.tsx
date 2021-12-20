@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import MarketWidgetHeader from '../components/MarketWidget/MarketWidgetHeader';
 import { COLORS, MarketWidgetKey } from '../../../../constants/ui';
-import { FlexDivCentered, FlexDivColumn, FlexDivEnd, FlexDivRow, FlexDivRowCentered } from '../../../../theme/common';
+import {
+    FlexDiv,
+    FlexDivCentered,
+    FlexDivColumn,
+    FlexDivEnd,
+    FlexDivRow,
+    FlexDivRowCentered,
+} from '../../../../theme/common';
 import { ReactComponent as WalletIcon } from '../../../../assets/images/wallet-dark.svg';
 import {
     Container,
@@ -24,7 +31,7 @@ import {
     LightMediumTooltip,
     BetaBadge,
 } from '../components';
-import { formatCurrencyWithKey, formatPercentage } from '../../../../utils/formatters/number';
+import { formatCurrencyWithKey, formatPercentage, truncToDecimals } from '../../../../utils/formatters/number';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
 import { EMPTY_VALUE } from '../../../../constants/placeholder';
 import { useSelector } from 'react-redux';
@@ -36,7 +43,7 @@ import { getIsAppReady } from '../../../../redux/modules/app';
 import { AccountMarketInfo, OptionSide, OrderSide } from '../../../../types/options';
 import useBinaryOptionsAccountMarketInfoQuery from '../../../../queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import { useMarketContext } from '../contexts/MarketContext';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { OrderSideOptionType } from '../TradeOptions/PlaceOrder/PlaceOrder';
 import NumericInput from '../components/NumericInput';
 import { BuySlider, SellSlider } from '../../CreateMarket/components';
@@ -65,9 +72,11 @@ import SimpleLoader from './SimpleLoader';
 import useInterval from 'hooks/useInterval';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import WarningMessage from 'components/WarningMessage';
+import { LINKS } from 'constants/links';
 
 const MINIMUM_AMM_LIQUIDITY = 2;
 const MAX_L2_GAS_LIMIT = 15000000;
+const MIN_SCEW_IMPACT = 0.02;
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -91,9 +100,11 @@ const AMM: React.FC = () => {
     const [optionSide, setOptionSide] = useState<OptionSide>('long');
     const [amount, setAmount] = useState<number | string>('');
     const [price, setPrice] = useState<number | string>('');
+    const [basePrice, setBasePrice] = useState<number | string>('');
     const [total, setTotal] = useState<number | string>('');
     const [priceImpact, setPriceImpact] = useState<number | string>('');
     const [potentialReturn, setPotentialReturn] = useState<number | string>('');
+    const [potentialBaseReturn, setPotentialBaseReturn] = useState<number | string>('');
     const [isPotentialReturnAvailable, setIsPotentialReturnAvailable] = useState<boolean>(true);
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [hasAllowance, setAllowance] = useState<boolean>(false);
@@ -329,12 +340,12 @@ const AMM: React.FC = () => {
     };
 
     const resetData = () => {
-        setAmount('');
         setPrice('');
         setTotal('');
         setPriceImpact('');
         setPotentialReturn('');
         setGasLimit(null);
+        setIsPotentialReturnAvailable(isBuy);
     };
 
     const fetchAmmPriceData = async (isRefresh: boolean, isSubmit = false) => {
@@ -360,7 +371,7 @@ const AMM: React.FC = () => {
                 const ammPrice = bigNumberFormatter(ammQuote) / Number(amount);
                 setPrice(ammPrice);
                 setTotal(bigNumberFormatter(ammQuote));
-                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - 0.01 : 0);
+                setPriceImpact(ammPrice > 0 ? bigNumberFormatter(ammPriceImpact) - MIN_SCEW_IMPACT : 0);
                 setPotentialReturn(ammPrice > 0 && isBuy ? 1 / ammPrice - 1 : 0);
                 setIsPotentialReturnAvailable(isBuy);
 
@@ -454,6 +465,7 @@ const AMM: React.FC = () => {
                 refetchUserTrades(optionsMarket.address, walletAddress);
                 setIsSubmitting(false);
                 resetData();
+                setAmount('');
             }
         } catch (e) {
             console.log(e);
@@ -464,6 +476,7 @@ const AMM: React.FC = () => {
 
     useEffect(() => {
         let max = 0;
+        let base = 0;
         if (ammMaxLimits) {
             max = isLong
                 ? isBuy
@@ -472,8 +485,17 @@ const AMM: React.FC = () => {
                 : isBuy
                 ? ammMaxLimits.maxBuyShort
                 : ammMaxLimits.maxSellShort;
+            base = isLong
+                ? isBuy
+                    ? ammMaxLimits.buyLongPrice
+                    : ammMaxLimits.sellLongPrice
+                : isBuy
+                ? ammMaxLimits.buyShortPrice
+                : ammMaxLimits.sellShortPrice;
         }
         setMaxLimit(max);
+        setBasePrice(base);
+        setPotentialBaseReturn(base > 0 && isBuy ? 1 / Number(base) - 1 : 0);
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
 
@@ -495,6 +517,10 @@ const AMM: React.FC = () => {
     useEffect(() => {
         setMaxLimitExceeded(Number(amount) > maxLimit);
     }, [amount, maxLimit]);
+
+    const onMaxClick = () => {
+        setAmount(truncToDecimals(tokenBalance));
+    };
 
     const getSubmitButton = () => {
         if (isAmmTradingDisabled) {
@@ -647,35 +673,49 @@ const AMM: React.FC = () => {
                                     </OptionButton>
                                 </OptionsContainer>
                             </InputContainer>
-                            <InputContainer>
-                                <NumericInput
-                                    value={amount}
-                                    onChange={(_, value) => setAmount(value)}
-                                    className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
-                                    disabled={formDisabled || insufficientLiquidity}
-                                />
-                                <InputLabel>
-                                    {t('options.market.trade-options.place-order.amount-label', {
-                                        orderSide: orderSide.value,
-                                    })}
-                                </InputLabel>
-                                <CurrencyLabel className={formDisabled || insufficientLiquidity ? 'disabled' : ''}>
-                                    {OPTIONS_CURRENCY_MAP[optionSide]}
-                                </CurrencyLabel>
-                                <AmountValidationMessage>
-                                    <FieldValidationMessage
-                                        showValidation={!isAmountValid || maxLimitExceeded}
-                                        message={t(
-                                            !isAmountValid
-                                                ? 'common.errors.insufficient-balance-wallet'
-                                                : 'common.errors.max-limit-exceeded',
-                                            {
-                                                currencyKey: isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide],
-                                            }
-                                        )}
+                            <FlexDiv>
+                                <AmountInputContainer isBuy={isBuy}>
+                                    <NumericInput
+                                        value={amount}
+                                        onChange={(_, value) => setAmount(value)}
+                                        className={isAmountValid && !maxLimitExceeded ? '' : 'error'}
+                                        disabled={formDisabled || insufficientLiquidity}
                                     />
-                                </AmountValidationMessage>
-                            </InputContainer>
+                                    <InputLabel>
+                                        {t('options.market.trade-options.place-order.amount-label', {
+                                            orderSide: orderSide.value,
+                                        })}
+                                    </InputLabel>
+                                    <CurrencyLabel className={formDisabled || insufficientLiquidity ? 'disabled' : ''}>
+                                        {OPTIONS_CURRENCY_MAP[optionSide]}
+                                    </CurrencyLabel>
+                                    <AmountValidationMessage isBuy={isBuy}>
+                                        <FieldValidationMessage
+                                            showValidation={!isAmountValid || maxLimitExceeded}
+                                            message={t(
+                                                !isAmountValid
+                                                    ? 'common.errors.insufficient-balance-wallet'
+                                                    : 'common.errors.max-limit-exceeded',
+                                                {
+                                                    currencyKey: isBuy
+                                                        ? SYNTHS_MAP.sUSD
+                                                        : OPTIONS_CURRENCY_MAP[optionSide],
+                                                }
+                                            )}
+                                        />
+                                    </AmountValidationMessage>
+                                </AmountInputContainer>
+                                {!isBuy && (
+                                    <MaxButtonContainer>
+                                        <MaxButton
+                                            onClick={onMaxClick}
+                                            disabled={formDisabled || insufficientLiquidity}
+                                        >
+                                            {t('common.max')}
+                                        </MaxButton>
+                                    </MaxButtonContainer>
+                                )}
+                            </FlexDiv>
                             <BuySellSliderContainer>
                                 {isBuy ? (
                                     <BuySlider
@@ -717,7 +757,11 @@ const AMM: React.FC = () => {
                         <AmmShortInputContainer>
                             <InputContainer>
                                 <SummaryContent>
-                                    {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, price)}
+                                    {isGettingQuote ? (
+                                        <SimpleLoader />
+                                    ) : (
+                                        formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) > 0 ? price : basePrice)
+                                    )}
                                 </SummaryContent>
                                 <SummaryLabel>
                                     {t('options.market.trade-options.place-order.price-label', {
@@ -732,14 +776,30 @@ const AMM: React.FC = () => {
                                 <SummaryLabel>{t(`amm.total-${orderSide.value}-label`)}</SummaryLabel>
                             </InputContainer>
                             <InputContainer>
-                                <SummaryContent color={potentialReturn > 0 ? '#00F152' : '#0c1c68'}>
+                                <SummaryContent
+                                    color={
+                                        (isPotentialReturnAvailable && potentialReturn > 0) ||
+                                        (Number(price) === 0 &&
+                                            isBuy &&
+                                            Number(basePrice) > 0 &&
+                                            potentialBaseReturn > 0)
+                                            ? '#00F152'
+                                            : '#f6f6fe'
+                                    }
+                                >
                                     {isGettingQuote ? (
                                         <SimpleLoader />
-                                    ) : isPotentialReturnAvailable ? (
-                                        `${formatCurrencyWithKey(
-                                            SYNTHS_MAP.sUSD,
-                                            Number(potentialReturn) * Number(total)
-                                        )} (${formatPercentage(potentialReturn)})`
+                                    ) : Number(price) > 0 ? (
+                                        isPotentialReturnAvailable ? (
+                                            `${formatCurrencyWithKey(
+                                                SYNTHS_MAP.sUSD,
+                                                Number(potentialReturn) * Number(total)
+                                            )} (${formatPercentage(potentialReturn)})`
+                                        ) : (
+                                            '-'
+                                        )
+                                    ) : isBuy && Number(basePrice) > 0 && Number(potentialBaseReturn) > 0 ? (
+                                        formatPercentage(potentialBaseReturn)
                                     ) : (
                                         '-'
                                     )}
@@ -827,26 +887,27 @@ const AMM: React.FC = () => {
             </Widget>
             <Info>
                 <Container>
-                    <h1>WHAT IS AMM TRADING</h1>
-                    <p>
-                        You could think of an automated market maker as a robot that’s always willing to quote you a
-                        price between two assets. Some use a simple formula like Uniswap, while Curve, Balancer and
-                        others use more complicated ones.
-                    </p>
-                    <p>
-                        Not only can you trade trustlessly using an AMM, but you can also become the house by providing
-                        liquidity to a liquidity pool. This allows essentially anyone to become a market maker on an
-                        exchange and earn fees for providing liquidity.
-                    </p>
-                    <p>
-                        AMMs have really carved out their niche in the DeFi space due to how simple and easy they are to
-                        use. Decentralizing market making this way is intrinsic to the vision of crypt
-                    </p>
+                    <Trans i18nKey="amm.explanation-text" components={[<p key="0" />, <TipLink key="1" />]} />
                 </Container>
             </Info>
         </AMMWrapper>
     );
 };
+
+const TipLink: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.AMM.Tip}>
+            {LINKS.AMM.Tip}
+        </TooltipLink>
+    );
+};
+
+const TooltipLink = styled.a`
+    color: #b8c6e5;
+    &:hover {
+        color: #00f9ff;
+    }
+`;
 
 const AMMWrapper = styled.div`
     display: flex;
@@ -871,6 +932,7 @@ const FormContainer = styled(FlexDivRow)`
 
 const AmmShortInputContainer = styled(ShortInputContainer)`
     margin-bottom: 0px;
+    width: calc(50% - 5px);
     @media (max-width: 576px) {
         width: 100%;
         &:first-child {
@@ -903,20 +965,20 @@ const Info = styled.div`
 `;
 
 const SummaryContent = styled.div<{ color?: string }>`
-    background: rgba(206, 214, 233, 0.2);
+    background: rgba(12, 28, 104, 0.4);
     border-radius: 12px;
-    border: 2px solid #0c1c68;
+    border: none;
     height: 64px;
     padding: 31px 0 0 22px;
-    color: ${(props) => (props.color ? props.color : '#0c1c68')};
+    color: ${(props) => (props.color ? props.color : '#F6F6FE')};
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 16px;
     letter-spacing: 0.25px;
 `;
 
 const SummaryLabel = styled(InputLabel)`
-    color: #0c1c68;
+    color: #f6f6fe;
     pointer-events: auto;
 `;
 
@@ -940,14 +1002,14 @@ const AmmMaxLimitQuestionMarkIcon = styled(StyledQuestionMarkIcon)<{ isBuy: bool
 const SummaryQuestionMarkIcon = styled(StyledQuestionMarkIcon)`
     margin-bottom: -2px;
     path {
-        fill: #0c1c68;
+        fill: #f6f6fe;
     }
 `;
 
-const AmountValidationMessage = styled.div`
+const AmountValidationMessage = styled.div<{ isBuy: boolean }>`
     > div {
         position: absolute;
-        bottom: -25px;
+        bottom: ${(props) => (props.isBuy ? -25 : -40)}px;
         width: 100%;
     }
 `;
@@ -972,6 +1034,31 @@ const AmmWarningMessage = styled(FlexDivCentered)`
         min-height: 18px;
         margin-top: -1px;
     }
+`;
+
+const MaxButton = styled(SubmitButton)`
+    background: transparent;
+    border: 3px solid #0a2e66;
+    box-sizing: border-box;
+    border-radius: 5px;
+    height: 52px;
+    margin-left: 10px;
+    margin-top: 6px;
+    text-transform: uppercase;
+    padding: 0;
+    &.selected,
+    &:hover:not(:disabled) {
+        background: rgba(1, 38, 81, 0.8);
+        color: #b8c6e5;
+    }
+`;
+
+const AmountInputContainer = styled(InputContainer)<{ isBuy: boolean }>`
+    width: ${(props) => (props.isBuy ? 100 : 75)}%;
+`;
+
+const MaxButtonContainer = styled(InputContainer)`
+    width: 25%;
 `;
 
 export default AMM;
