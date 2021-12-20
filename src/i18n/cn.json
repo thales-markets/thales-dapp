@@ -1002,16 +1002,16 @@
                 "users-per-page": "每页用户数"
             },
             "redirect-dialog": {
-                "title": "你在 Optimistic Kovan 网络",
+                "title": "你在 Optimism Kovan 网络",
                 "message": "回到泰雷兹Royale",
                 "or": "或",
                 "switch-to-mainnet": "切换到以太坊mainnet"
             },
             "wrong-network-dialog": {
                 "title": "错误的网络！",
-                "message": "请切换到Optimistic Kovan 继续",
+                "message": "请切换到Optimism Kovan 继续",
                 "return-to-dapp": "返回泰雷兹dApp",
-                "button": "切换到Optimistic Kovan",
+                "button": "切换到Optimism Kovan",
                 "parameters": "OP Kovan参数"
             },
             "wallet-not-connected-dialog": {
@@ -1097,10 +1097,10 @@
     },
     "optimism": {
         "learn-more": "了解更多",
-        "optimistic-gateway": "乐观网关",
-        "optimistic-etherscan": "乐观 Etherscan",
+        "optimistic-gateway": "Optimism Gateway",
+        "optimistic-etherscan": "Optimism Etherscan",
         "switch-to-l2": "切换到 L2",
-        "optimistic-l2": "乐观的L2",
+        "optimistic-l2": "Optimism L2",
         "switch-to-l1": "切换到 L1"
     },
     "amm": {

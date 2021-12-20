@@ -58,7 +58,7 @@ import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLim
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
-import { SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
+import { MAX_L2_GAS_LIMIT, MINIMUM_AMM_LIQUIDITY, MIN_SCEW_IMPACT, SIDE, SLIPPAGE_PERCENTAGE } from 'constants/options';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import {
     PercentageLabel,
@@ -73,10 +73,6 @@ import useInterval from 'hooks/useInterval';
 import { refetchAmmData, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import WarningMessage from 'components/WarningMessage';
 import { LINKS } from 'constants/links';
-
-const MINIMUM_AMM_LIQUIDITY = 2;
-const MAX_L2_GAS_LIMIT = 15000000;
-const MIN_SCEW_IMPACT = 0.02;
 
 const AMM: React.FC = () => {
     const { t } = useTranslation();
@@ -103,6 +99,7 @@ const AMM: React.FC = () => {
     const [basePrice, setBasePrice] = useState<number | string>('');
     const [total, setTotal] = useState<number | string>('');
     const [priceImpact, setPriceImpact] = useState<number | string>('');
+    const [basePriceImpact, setBasePriceImpact] = useState<number | string>('');
     const [potentialReturn, setPotentialReturn] = useState<number | string>('');
     const [potentialBaseReturn, setPotentialBaseReturn] = useState<number | string>('');
     const [isPotentialReturnAvailable, setIsPotentialReturnAvailable] = useState<boolean>(true);
@@ -477,6 +474,7 @@ const AMM: React.FC = () => {
     useEffect(() => {
         let max = 0;
         let base = 0;
+        let baseImpact = 0;
         if (ammMaxLimits) {
             max = isLong
                 ? isBuy
@@ -492,9 +490,17 @@ const AMM: React.FC = () => {
                 : isBuy
                 ? ammMaxLimits.buyShortPrice
                 : ammMaxLimits.sellShortPrice;
+            baseImpact = isLong
+                ? isBuy
+                    ? ammMaxLimits.buyLongPriceImpact
+                    : ammMaxLimits.sellLongPriceImpact
+                : isBuy
+                ? ammMaxLimits.buyShortPriceImpact
+                : ammMaxLimits.sellShortPriceImpact;
         }
         setMaxLimit(max);
         setBasePrice(base);
+        setBasePriceImpact(baseImpact);
         setPotentialBaseReturn(base > 0 && isBuy ? 1 / Number(base) - 1 : 0);
         setInsufficientLiquidity(max < MINIMUM_AMM_LIQUIDITY);
     }, [ammMaxLimits, isLong, isBuy]);
@@ -771,7 +777,13 @@ const AMM: React.FC = () => {
                             </InputContainer>
                             <InputContainer>
                                 <SummaryContent>
-                                    {isGettingQuote ? <SimpleLoader /> : formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}
+                                    {isGettingQuote ? (
+                                        <SimpleLoader />
+                                    ) : Number(price) > 0 ? (
+                                        formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)
+                                    ) : (
+                                        '-'
+                                    )}
                                 </SummaryContent>
                                 <SummaryLabel>{t(`amm.total-${orderSide.value}-label`)}</SummaryLabel>
                             </InputContainer>
@@ -813,9 +825,21 @@ const AMM: React.FC = () => {
                             </InputContainer>
                             <InputContainer>
                                 <SummaryContent
-                                    color={Number(price) > 0 ? getPriceImpactColor(Number(priceImpact)) : undefined}
+                                    color={
+                                        Number(price) > 0 || Number(basePrice) > 0
+                                            ? getPriceImpactColor(
+                                                  Number(price) > 0 ? Number(priceImpact) : Number(basePriceImpact)
+                                              )
+                                            : undefined
+                                    }
                                 >
-                                    {isGettingQuote ? <SimpleLoader /> : formatPercentage(priceImpact)}
+                                    {isGettingQuote ? (
+                                        <SimpleLoader />
+                                    ) : Number(price) > 0 || Number(basePrice) > 0 ? (
+                                        formatPercentage(Number(price) > 0 ? priceImpact : basePriceImpact)
+                                    ) : (
+                                        '-'
+                                    )}
                                 </SummaryContent>
                                 <SummaryLabel>
                                     {t('amm.skew-label')}

@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
-import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS } from 'utils/network';
+import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -97,14 +97,14 @@ const App = () => {
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     } else {
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     }
@@ -129,7 +129,7 @@ const App = () => {
                             dispatch(
                                 updateNetworkSettings({
                                     networkId,
-                                    networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                    networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                                 })
                             );
                             setSelectedWallet(wallet.name);
@@ -138,7 +138,7 @@ const App = () => {
                         dispatch(
                             updateNetworkSettings({
                                 networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     } else {

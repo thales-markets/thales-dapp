@@ -84,3 +84,7 @@ export enum Zero0xErrorReason {
 }
 
 export const ORDERBOOK_AMOUNT_THRESHOLD = 0.01;
+
+export const MINIMUM_AMM_LIQUIDITY = 2;
+export const MAX_L2_GAS_LIMIT = 15000000;
+export const MIN_SCEW_IMPACT = 0.02;

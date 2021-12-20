@@ -34,7 +34,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                             params: [
                                 {
                                     chainId: '0x45',
-                                    chainName: 'Optimistic Ethereum Testnet Kovan',
+                                    chainName: 'Optimism Kovan',
                                     rpcUrls: ['https://kovan.optimism.io/'],
                                     nativeCurrency: {
                                         name: 'Ether',
