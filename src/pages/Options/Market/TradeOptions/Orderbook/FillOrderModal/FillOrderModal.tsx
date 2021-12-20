@@ -364,7 +364,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     <SummaryItem>
                         <SummaryLabel>{t('options.market.trade-options.fill-order.total-label')}</SummaryLabel>
                         <SummaryContent>
-                            {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(order.displayOrder.price) * Number(amount))}
+                            {formatCurrencyWithKey(
+                                SYNTHS_MAP.sUSD,
+                                Number(order.displayOrder.price) * Number(amount),
+                                DEFAULT_OPTIONS_DECIMALS
+                            )}
                         </SummaryContent>
                     </SummaryItem>
                     <Divider />
