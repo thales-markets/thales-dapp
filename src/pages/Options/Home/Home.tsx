@@ -39,7 +39,10 @@ export const Home: React.FC = () => {
     const optionsMarkets = useMemo(() => {
         if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
             const markets = openOrdersMap
-                ? marketsQuery.data.map((m) => ({ ...m, openOrders: (openOrdersMap as any).get(m.address) }))
+                ? marketsQuery.data.map((m) => ({
+                      ...m,
+                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
+                  }))
                 : marketsQuery.data;
             return sortOptionsMarkets(markets, synthsMap);
         }
