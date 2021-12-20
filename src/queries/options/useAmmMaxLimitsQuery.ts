@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
-import { SIDE } from 'constants/options';
+import { MIN_SCEW_IMPACT, SIDE } from 'constants/options';
 import { ethers } from 'ethers';
 
 export type AmmMaxLimits = {
@@ -15,6 +15,10 @@ export type AmmMaxLimits = {
     buyShortPrice: number;
     sellLongPrice: number;
     sellShortPrice: number;
+    buyLongPriceImpact: number;
+    buyShortPriceImpact: number;
+    sellLongPriceImpact: number;
+    sellShortPriceImpact: number;
 };
 
 const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<AmmMaxLimits>) => {
@@ -31,6 +35,10 @@ const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<A
                 buyShortPrice: 0,
                 sellLongPrice: 0,
                 sellShortPrice: 0,
+                buyLongPriceImpact: 0,
+                buyShortPriceImpact: 0,
+                sellLongPriceImpact: 0,
+                sellShortPriceImpact: 0,
             };
             const ammContract = snxJSConnector.ammContract;
             if (ammContract) {
@@ -45,6 +53,10 @@ const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<A
                     buyShortPrice,
                     sellLongPrice,
                     sellShortPrice,
+                    buyLongPriceImpact,
+                    buyShortPriceImpact,
+                    sellLongPriceImpact,
+                    sellShortPriceImpact,
                 ] = await Promise.all([
                     ammContract.availableToBuyFromAMM(marketAddress, SIDE['long']),
                     ammContract.availableToSellToAMM(marketAddress, SIDE['long']),
@@ -55,6 +67,10 @@ const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<A
                     ammContract.buyFromAmmQuote(marketAddress, SIDE['short'], parsedAmount),
                     ammContract.sellToAmmQuote(marketAddress, SIDE['long'], parsedAmount),
                     ammContract.sellToAmmQuote(marketAddress, SIDE['short'], parsedAmount),
+                    ammContract.buyPriceImpact(marketAddress, SIDE['long'], parsedAmount),
+                    ammContract.buyPriceImpact(marketAddress, SIDE['short'], parsedAmount),
+                    ammContract.sellPriceImpact(marketAddress, SIDE['long'], parsedAmount),
+                    ammContract.sellPriceImpact(marketAddress, SIDE['short'], parsedAmount),
                 ]);
 
                 ammMaxLimits.maxBuyLong = bigNumberFormatter(maxBuyLong);
@@ -65,6 +81,10 @@ const useAmmMaxLimitsQuery = (marketAddress: string, options?: UseQueryOptions<A
                 ammMaxLimits.buyShortPrice = bigNumberFormatter(buyShortPrice);
                 ammMaxLimits.sellLongPrice = bigNumberFormatter(sellLongPrice);
                 ammMaxLimits.sellShortPrice = bigNumberFormatter(sellShortPrice);
+                ammMaxLimits.buyLongPriceImpact = bigNumberFormatter(buyLongPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.buyShortPriceImpact = bigNumberFormatter(buyShortPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.sellLongPriceImpact = bigNumberFormatter(sellLongPriceImpact) - MIN_SCEW_IMPACT;
+                ammMaxLimits.sellShortPriceImpact = bigNumberFormatter(sellShortPriceImpact) - MIN_SCEW_IMPACT;
                 ammMaxLimits.isMarketInAmmTrading = isMarketInAmmTrading;
             }
 
