@@ -108,7 +108,8 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                                 <MarketInfo>
                                     <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
                                     <MarketInfoContent>
-                                        {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
+                                        <span className="green">{optionMarket.availableLongs}</span> /
+                                        <span className="red">{optionMarket.availableShorts}</span>
                                     </MarketInfoContent>
                                 </MarketInfo>
                             </GradientBorderWrapper>

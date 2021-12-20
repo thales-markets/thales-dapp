@@ -93,6 +93,8 @@ export type OptionsMarketInfo = {
     //     skewLimit: number;
     // };
     // BN: BNOptionValue;
+    availableLongs: number;
+    availableShorts: number;
     longAddress: string;
     shortAddress: string;
     customMarket: boolean;

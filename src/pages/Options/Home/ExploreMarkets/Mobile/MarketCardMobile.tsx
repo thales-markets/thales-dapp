@@ -130,7 +130,8 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                             {t('options.home.market-card.pool-size')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            <span className="green">{market.availableLongs}</span> /
+                                            <span className="red">{market.availableShorts}</span>
                                         </Text>
                                     </FlexDivColumnCentered>
                                 )}
@@ -142,7 +143,8 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                             {t('options.home.market-card.pool-size')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            <span className="green">{market.availableLongs}</span> /
+                                            <span className="red">{market.availableShorts}</span>
                                         </Text>
                                     </FlexDivColumnCentered>
                                 </FlexDivRow>

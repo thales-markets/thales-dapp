@@ -225,7 +225,7 @@
         "home": {
             "market-card": {
                 "current-asset-price": "Current asset price",
-                "pool-size": "Pool size",
+                "pool-size": "AMM liquidity",
                 "end-date": "End date",
                 "strike-price": "Strike price",
                 "open-orders": "Open orders",
@@ -513,7 +513,7 @@
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
-                "deposited-currency-label": "Deposited {{currencyKey}}",
+                "deposited-currency-label": "AMM liquidity",
                 "event-name-label": "Event Name",
                 "current-ratio-label": "Current ratio",
                 "final-ratio-label": "Final ratio",
