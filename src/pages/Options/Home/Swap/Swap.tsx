@@ -87,8 +87,6 @@ const Swap: React.FC<any> = ({ handleClose }) => {
         if (fromToken && amount > 0) {
             setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
-                console.log(amount);
-                console.log(resp.data?.toTokenAmount);
                 setPreviewData(resp.data as any);
                 setShowSceleton(false);
             });
@@ -179,7 +177,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
             }
         } catch (e) {
             setLoading(false);
-            setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-success'));
+            setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-failed'));
             console.log('failed: ', e);
         }
     };
