@@ -274,8 +274,8 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                                 {openOrdersMap
                                     ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())?.availableLongs
                                     : '0'}
-                            </span>
-                            /
+                            </span>{' '}
+                            /{' '}
                             <span className="red">
                                 {openOrdersMap
                                     ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())?.availableShorts
