@@ -25,7 +25,7 @@ import makeBlockie from 'ethereum-blockies-base64';
 import { getProposalUrl } from 'utils/governance';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
 
@@ -38,6 +38,7 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [authorEns, setAuthorEns] = useState<string | null>(null);
 
     const votingPowerQuery = useVotingPowerQuery(proposal, walletAddress, {
@@ -62,7 +63,9 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
             const authorEns = await (snxJSConnector as any).provider.lookupAddress(proposal.author);
             setAuthorEns(authorEns);
         };
-        fetchAuthorEns();
+        if (networkId === NetworkId.Mainnet) {
+            fetchAuthorEns();
+        }
     }, [proposal]);
 
     return (

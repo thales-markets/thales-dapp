@@ -10,12 +10,12 @@ import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatShortDate } from 'utils/formatters/date';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { getSynthName } from 'utils/snxJSConnector';
 import { PhaseLabel } from '../MarketsTable/components';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
 import SPAAnchor from '../../../../components/SPAAnchor';
+import { getSynthName } from 'utils/currency';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -108,7 +108,8 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                                 <MarketInfo>
                                     <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
                                     <MarketInfoContent>
-                                        {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
+                                        <span className="green">{optionMarket.availableLongs}</span> /{' '}
+                                        <span className="red">{optionMarket.availableShorts}</span>
                                     </MarketInfoContent>
                                 </MarketInfo>
                             </GradientBorderWrapper>

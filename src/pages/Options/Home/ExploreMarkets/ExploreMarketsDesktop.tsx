@@ -21,12 +21,13 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } from 'theme/common';
-import { HistoricalOptionsMarketInfo, OptionsMarkets, Trade } from 'types/options';
+import { HistoricalOptionsMarketInfo, OptionsMarkets, OrderData } from 'types/options';
+import { getSynthName } from 'utils/currency';
 import { getIsOVM } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { history, navigateTo } from 'utils/routes';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
-import { SYNTHS_MAP } from '../../../../constants/currency';
+import snxJSConnector from 'utils/snxJSConnector';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
 import useAssetsBalanceQuery from '../../../../queries/user/useUserAssetsBalanceQuery';
 import useUserOrdersQuery from '../../../../queries/user/useUserOrdersQuery';
@@ -71,18 +72,18 @@ export enum SecondaryFilters {
     Competition = 'competition',
 }
 
-const isOrderInMarket = (order: Trade, market: HistoricalOptionsMarketInfo): boolean => {
+const isOrderInMarket = (orderData: OrderData, market: HistoricalOptionsMarketInfo): boolean => {
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const isBuy: boolean = order.makerToken.toLowerCase() === SynthsUSD.address.toLowerCase();
+    const isBuy: boolean = orderData.makerAsset.toLowerCase() === SynthsUSD.address.toLowerCase();
     return (
         (isBuy &&
-            (market.longAddress.toLowerCase() === order.takerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.takerToken.toLowerCase())) ||
+            (market.longAddress.toLowerCase() === orderData.takerAsset.toLowerCase() ||
+                market.shortAddress.toLowerCase() === orderData.takerAsset.toLowerCase())) ||
         (!isBuy &&
-            (market.longAddress.toLowerCase() === order.makerToken.toLowerCase() ||
-                market.shortAddress.toLowerCase() === order.makerToken.toLowerCase()))
+            (market.longAddress.toLowerCase() === orderData.makerAsset.toLowerCase() ||
+                market.shortAddress.toLowerCase() === orderData.makerAsset.toLowerCase()))
     );
 };
 
@@ -114,8 +115,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     });
 
     const userAssets = userAssetsQuery.isSuccess && Array.isArray(userAssetsQuery.data) ? userAssetsQuery.data : [];
-    const userOrders =
-        userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data?.records) ? userOrdersQuery.data.records : [];
+    const userOrders = userOrdersQuery.isSuccess && Array.isArray(userOrdersQuery.data) ? userOrdersQuery.data : [];
     const watchlistedMarkets = watchlistedMarketsQuery.data ? watchlistedMarketsQuery.data.data : [];
 
     useEffect(() => {
@@ -187,7 +187,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 break;
             case PrimaryFilters.MyOrders:
                 filteredMarkets = filteredMarkets.filter((market) =>
-                    userOrders.find((order) => isOrderInMarket(order.order, market))
+                    userOrders.find((order) => isOrderInMarket(order.data, market))
                 );
                 break;
             case PrimaryFilters.Recent:
@@ -261,12 +261,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
         switch (secondLevelUserFilter) {
             case SecondaryFilters.Bitcoin:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
-                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC
                 );
                 break;
             case SecondaryFilters.Ethereum:
                 secondLevelFilteredOptionsMarkets = filteredOptionsMarkets.filter(
-                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH
+                    ({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH
                 );
                 break;
             case SecondaryFilters.CustomMarkets:
@@ -502,15 +502,19 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                             const isCustomMarketsEmpty =
                                 filteredOptionsMarkets.filter(({ customMarket }) => customMarket).length === 0;
                             const isBtcMarketsEmpty =
-                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sBTC)
-                                    .length === 0;
+                                filteredOptionsMarkets.filter(
+                                    ({ currencyKey }) =>
+                                        currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                                ).length === 0;
                             const isEthMarketsEmpty =
-                                filteredOptionsMarkets.filter(({ currencyKey }) => currencyKey === SYNTHS_MAP.sETH)
-                                    .length === 0;
+                                filteredOptionsMarkets.filter(
+                                    ({ currencyKey }) =>
+                                        currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                                ).length === 0;
                             const assetSearchNoBtc =
                                 filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                                     return (
-                                        currencyKey === SYNTHS_MAP.sBTC &&
+                                        (currencyKey === SYNTHS_MAP.sBTC || currencyKey === CRYPTO_CURRENCY_MAP.BTC) &&
                                         (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                             getSynthName(currencyKey)
                                                 ?.toLowerCase()
@@ -522,7 +526,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                             const assetSearchNoEth =
                                 filteredOptionsMarkets.filter(({ asset, currencyKey }) => {
                                     return (
-                                        currencyKey === SYNTHS_MAP.sETH &&
+                                        (currencyKey === SYNTHS_MAP.sETH || currencyKey === CRYPTO_CURRENCY_MAP.ETH) &&
                                         (asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                                             getSynthName(currencyKey)
                                                 ?.toLowerCase()
@@ -648,7 +652,7 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                             margin: 'auto 60px',
                                         }}
                                     >
-                                        {t('common.wallet.or')}
+                                        {t('common.or')}
                                     </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}

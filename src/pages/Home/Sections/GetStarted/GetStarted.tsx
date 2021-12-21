@@ -103,17 +103,13 @@ const GetStarted: React.FC = () => {
                         {t('landing-page.get-started.third')}
                         &nbsp;
                         <Links target="_blank" rel="noreferrer" href="https://app.uniswap.org/#/swap">
-                            Uniswap
+                            Uniswap&nbsp;
                         </Links>
-                        ,&nbsp;
+                        and&nbsp;
                         <Links target="_blank" rel="noreferrer" href="https://app.1inch.io/#/1/swap/ETH/susd">
-                            1inch,
+                            1inch
                         </Links>
-                        &nbsp;
-                        <Links target="_blank" rel="noreferrer" href="https://curve.fi/susdv2/">
-                            Curve
-                        </Links>
-                        &nbsp;etc.
+                        .
                     </Text>
                 </CardsSmall>
                 <Image className="animate-r" src={image3} style={{ width: 250, height: 200 }}></Image>

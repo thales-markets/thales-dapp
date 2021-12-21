@@ -401,7 +401,8 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                                <span className="green">{market.availableLongs}</span> /{' '}
+                                                <span className="red">{market.availableShorts}</span>
                                             </StyledAnchoredTableCell>
                                         </SPAAnchor>
                                         <SPAAnchor

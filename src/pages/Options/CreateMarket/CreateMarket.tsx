@@ -9,8 +9,8 @@ import orderBy from 'lodash/orderBy';
 import { SYNTHS_MAP, CRYPTO_CURRENCY_MAP, CurrencyKey, USD_SIGN } from 'constants/currency';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { bytesFormatter, bigNumberFormatter } from 'utils/formatters/ethers';
-import { formatGasLimit, isMainNet, isNetworkSupported } from 'utils/network';
-import snxJSConnector, { getSynthName } from 'utils/snxJSConnector';
+import { formatGasLimit, getIsOVM, getL1FeeInWei, isNetworkSupported } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
 import DatePicker from 'components/Input/DatePicker';
 import NetworkFees from '../components/NetworkFees';
 import { RootState } from 'redux/rootReducer';
@@ -39,12 +39,10 @@ import {
     DoubleShortInputContainer,
     Input,
     InputLabel,
-    LightTooltip,
     ReactSelect,
     ShortInputContainer,
     SliderContainer,
     SliderRange,
-    StyledQuestionMarkIcon,
 } from '../Market/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
@@ -53,26 +51,21 @@ import { COLORS } from 'constants/ui';
 import ROUTES from 'constants/routes';
 import Checkbox from 'components/Checkbox';
 import ProgressTracker from './ProgressTracker';
-import erc20Contract from 'utils/contracts/erc20Contract';
-import { toBigNumber } from 'utils/formatters/number';
 import { DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
-import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-import axios from 'axios';
 import { refetchOrderbook } from 'utils/queryConnector';
 import useBinaryOptionsMarketQuery from 'queries/options/useBinaryOptionsMarketQuery';
+import useSynthsMapQuery from 'queries/options/useSynthsMapQuery';
 import { OptionsMarketInfo } from 'types/options';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { getIsAppReady } from 'redux/modules/app';
 import ValidationMessage from 'components/ValidationMessage';
 import { ZERO_ADDRESS } from '../../../constants/network';
-import { MetamaskSubprovider } from '@0x/subproviders';
 import styled from 'styled-components';
 import './media.scss';
 import Loader from 'components/Loader';
-
+import { SynthsMap } from 'types/synthetix';
+import { getSynthName } from 'utils/currency';
+import { createOneInchLimitOrder } from 'utils/1inch';
 const MIN_FUNDING_AMOUNT_ROPSTEN = 1;
 const MIN_FUNDING_AMOUNT_MAINNET = 1000;
 
@@ -91,8 +84,6 @@ datePickerMaxDate.setFullYear(datePickerMaxDate.getFullYear() + 2);
 
 export type CurrencyKeyOptionType = { value: CurrencyKey; label: string };
 
-export type MarketFees = Record<string, number>;
-
 export const CreateMarket: React.FC = () => {
     try {
         const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -103,7 +94,6 @@ export const CreateMarket: React.FC = () => {
         const [sellLong, setSellLong] = useState<boolean>(false);
         const [sellShort, setSellShort] = useState<boolean>(false);
         const { t } = useTranslation();
-        const { synthsMap: synths } = snxJSConnector;
         const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
         const [currencyKey, setCurrencyKey] = useState<ValueType<CurrencyKeyOptionType, false>>();
         const [isCurrencyKeyValid, setIsCurrencyKeyValid] = useState(true);
@@ -120,19 +110,14 @@ export const CreateMarket: React.FC = () => {
         const [isAllowing, setIsAllowing] = useState<boolean>(false);
         const [gasLimit, setGasLimit] = useState<number | null>(null);
         const [isCreatingMarket, setIsCreatingMarket] = useState<boolean>(false);
-        const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
         const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
         const [showWarning, setShowWarning] = useState(false);
         const [isMarketCreated, setIsMarketCreated] = useState(false);
         const [market, setMarket] = useState<string>('');
         const [longAddress, setLong] = useState('');
         const [shortAddress, setShort] = useState('');
-        const [hasLongAllowance, setLongAllowance] = useState<boolean>(false);
-        const [isLongAllowing, setIsLongAllowing] = useState<boolean>(false);
         const [isLongSubmitting, setIsLongSubmitting] = useState<boolean>(false);
         const [isLongSubmitted, setIsLongSubmitted] = useState<boolean>(false);
-        const [hasShortAllowance, setShortAllowance] = useState<boolean>(false);
-        const [isShortAllowing, setIsShortAllowing] = useState<boolean>(false);
         const [isShortSubmitting, setIsShortSubmitting] = useState<boolean>(false);
         const [isShortSubmitted, setIsShortSubmitted] = useState<boolean>(false);
         const [isLongAmountValid, setIsLongAmountValid] = useState<boolean>(true);
@@ -140,11 +125,11 @@ export const CreateMarket: React.FC = () => {
         const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
         const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
         const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-        const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
+        const [l1Fee, setL1Fee] = useState<number | null>(null);
+        const isL2 = getIsOVM(networkId);
 
-        const exchangeRatesQuery = useExchangeRatesQuery({ enabled: isAppReady });
+        const exchangeRatesQuery = useExchangeRatesQuery(networkId, { enabled: isAppReady });
         const exchangeRates = exchangeRatesQuery.isSuccess ? exchangeRatesQuery.data ?? null : null;
-        const addressToApprove = get0xExchangeProxyAddress(networkId);
         let isCurrencySelected = false;
 
         const marketQuery = useBinaryOptionsMarketQuery(market, {
@@ -154,29 +139,23 @@ export const CreateMarket: React.FC = () => {
         const optionsMarket: OptionsMarketInfo | null =
             marketQuery.isSuccess && marketQuery.data ? marketQuery.data : null;
 
+        const synthsMapQuery = useSynthsMapQuery(networkId, {
+            enabled: isAppReady,
+        });
+
+        const synthsMap: SynthsMap = synthsMapQuery.isSuccess && synthsMapQuery.data ? synthsMapQuery.data : {};
+
         const assetsOptions = useMemo(
             () =>
                 orderBy(
-                    [
-                        {
-                            label: CRYPTO_CURRENCY_MAP.SNX,
-                            value: CRYPTO_CURRENCY_MAP.SNX,
-                        },
-                        {
-                            label: CRYPTO_CURRENCY_MAP.KNC,
-                            value: CRYPTO_CURRENCY_MAP.KNC,
-                        },
-                        ...Object.values(synths)
-                            .filter((synth) => !synth.inverted && synth.name !== SYNTHS_MAP.sUSD)
-                            .map((synth) => ({
-                                label: synth.asset,
-                                value: synth.name,
-                            })),
-                    ],
+                    Object.values(synthsMap).map((synth) => ({
+                        label: synth.asset,
+                        value: synth.name,
+                    })),
                     'label',
                     'asc'
                 ),
-            [synths]
+            [synthsMap]
         );
         const isButtonDisabled =
             !hasAllowance ||
@@ -201,15 +180,11 @@ export const CreateMarket: React.FC = () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector;
             const getAllowanceForCurrentWallet = async () => {
                 try {
-                    const [allowance, fees] = await Promise.all([
-                        SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address),
-                        binaryOptionsMarketManagerContract.fees(),
-                    ]);
+                    const allowance = await SynthsUSD.allowance(
+                        walletAddress,
+                        binaryOptionsMarketManagerContract.address
+                    );
                     setAllowance(!!bigNumberFormatter(allowance));
-                    setMarketFees({
-                        creator: fees.creatorFee / 1e18,
-                        pool: fees.poolFee / 1e18,
-                    });
                 } catch (e) {
                     console.log(e);
                 }
@@ -217,7 +192,7 @@ export const CreateMarket: React.FC = () => {
             getAllowanceForCurrentWallet();
         }, [walletAddress]);
 
-        const getOrderEndDate = () => toBigNumber(Math.round((optionsMarket as any)?.timeRemaining / 1000));
+        const getOrderEndDate = () => Math.round((optionsMarket as any)?.timeRemaining / 1000);
 
         const handleMarketCreation = async () => {
             const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
@@ -262,28 +237,69 @@ export const CreateMarket: React.FC = () => {
         };
 
         useEffect(() => {
-            if (!hasAllowance) return;
-            const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
-            try {
-                const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
-                const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
-                    (snxJSConnector as any).signer
+            const fetchL1Fee = async (
+                binaryOptionsMarketManagerContract: any,
+                oracleKey: any,
+                price: any,
+                maturity: any,
+                initialMint: any
+            ) => {
+                const txRequest = await binaryOptionsMarketManagerContract.populateTransaction.createMarket(
+                    oracleKey,
+                    price,
+                    maturity,
+                    initialMint,
+                    false,
+                    ZERO_ADDRESS
                 );
-                BOMMContractWithSigner.estimateGas
-                    .createMarket(oracleKey, price, maturity, initialMint, false, ZERO_ADDRESS)
-                    .then((gasEstimate: any) => {
+                return getL1FeeInWei(txRequest);
+            };
+
+            const fetchGasLimit = async () => {
+                const { binaryOptionsMarketManagerContract } = snxJSConnector as any;
+                try {
+                    const { oracleKey, price, maturity, initialMint } = formatCreateMarketArguments();
+                    const BOMMContractWithSigner = binaryOptionsMarketManagerContract.connect(
+                        (snxJSConnector as any).signer
+                    );
+                    if (isL2) {
+                        const [gasEstimate, l1FeeInWei] = await Promise.all([
+                            BOMMContractWithSigner.estimateGas.createMarket(
+                                oracleKey,
+                                price,
+                                maturity,
+                                initialMint,
+                                false,
+                                ZERO_ADDRESS
+                            ),
+                            fetchL1Fee(BOMMContractWithSigner, oracleKey, price, maturity, initialMint),
+                        ]);
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setUserHasEnoughFunds(true);
-                    })
-                    .catch((e: any) => {
-                        if (e.data?.originalError?.code === 3) {
-                            setUserHasEnoughFunds(false);
-                        }
-                        console.log(e);
-                        setGasLimit(null);
-                    });
-            } catch (e) {}
-        }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, hasAllowance]);
+                        setL1Fee(l1FeeInWei);
+                    } else {
+                        const gasEstimate = await BOMMContractWithSigner.estimateGas.createMarket(
+                            oracleKey,
+                            price,
+                            maturity,
+                            initialMint,
+                            false,
+                            ZERO_ADDRESS
+                        );
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        setUserHasEnoughFunds(true);
+                    }
+                } catch (e: any) {
+                    if (e.data?.originalError?.code === 3) {
+                        setUserHasEnoughFunds(false);
+                    }
+                    console.log(e);
+                    setGasLimit(null);
+                }
+            };
+            if (isButtonDisabled) return;
+            fetchGasLimit();
+        }, [isButtonDisabled, currencyKey, strikePrice, maturityDate, initialFundingAmount, isButtonDisabled]);
 
         useEffect(() => {
             if (initialFundingAmount) {
@@ -325,46 +341,6 @@ export const CreateMarket: React.FC = () => {
             }
         };
 
-        const handleLongAllowance = async () => {
-            const erc20Instance = new ethers.Contract(longAddress, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsLongAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                })) as ethers.ContractTransaction;
-                await tx.wait();
-                setLongAllowance(true);
-                setIsLongAllowing(false);
-            } catch (e) {
-                console.log(e);
-                setIsLongAllowing(false);
-            }
-        };
-
-        const handleShortAllowance = async () => {
-            const erc20Instance = new ethers.Contract(shortAddress, erc20Contract.abi, snxJSConnector.signer);
-            try {
-                setIsShortAllowing(true);
-                const gasEstimate = await erc20Instance.estimateGas.approve(
-                    addressToApprove,
-                    ethers.constants.MaxUint256
-                );
-                const tx = (await erc20Instance.approve(addressToApprove, ethers.constants.MaxUint256, {
-                    gasLimit: formatGasLimit(gasEstimate, networkId),
-                })) as ethers.ContractTransaction;
-                await tx.wait();
-                setShortAllowance(true);
-                setIsShortAllowing(false);
-            } catch (e) {
-                console.log(e);
-                setIsShortAllowing(false);
-            }
-        };
-
         const getSubmitButton = () => {
             if (!hasAllowance) {
                 return (
@@ -394,40 +370,7 @@ export const CreateMarket: React.FC = () => {
                     </Button>
                 );
             }
-            if (sellLong && !hasLongAllowance) {
-                return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary  button-div-responsive__upper"
-                        disabled={isLongAllowing}
-                        onClick={handleLongAllowance}
-                    >
-                        {!isLongAllowing
-                            ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sLONG })
-                            : t('common.enable-wallet-access.approve-progress-label', {
-                                  currencyKey: SYNTHS_MAP.sLONG,
-                              })}
-                    </Button>
-                );
-            }
-
-            if (sellShort && !hasShortAllowance) {
-                return (
-                    <Button
-                        style={{ padding: '8px 24px' }}
-                        className="primary  button-div-responsive__upper"
-                        disabled={isShortAllowing}
-                        onClick={handleShortAllowance}
-                    >
-                        {!isShortAllowing
-                            ? t('common.enable-wallet-access.approve-label', { currencyKey: SYNTHS_MAP.sSHORT })
-                            : t('common.enable-wallet-access.approve-progress-label', {
-                                  currencyKey: SYNTHS_MAP.sSHORT,
-                              })}
-                    </Button>
-                );
-            }
-            if (sellLong && hasLongAllowance && !isLongSubmitted) {
+            if (sellLong && !isLongSubmitted) {
                 return (
                     <Button
                         style={{ padding: '8px 24px' }}
@@ -442,7 +385,7 @@ export const CreateMarket: React.FC = () => {
                 );
             }
 
-            if (sellShort && hasShortAllowance && !isShortSubmitted) {
+            if (sellShort && !isShortSubmitted) {
                 return (
                     <Button
                         style={{ padding: '8px 24px' }}
@@ -470,82 +413,32 @@ export const CreateMarket: React.FC = () => {
             setTxErrorMessage(null);
             isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
 
-            const baseUrl = get0xBaseURL(networkId);
-            const placeOrderUrl = `${baseUrl}sra/v4/order`;
-
-            const makerAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(optionsAmount), DEFAULT_TOKEN_DECIMALS);
-            const takerAmount = Web3Wrapper.toBaseUnitAmount(
-                toBigNumber(Number(optionsAmount) * Number(price)),
-                DEFAULT_TOKEN_DECIMALS
-            );
+            const takerToken = SynthsUSD.address;
+            const makerAmount = optionsAmount;
+            const takerAmount = Number(optionsAmount) * Number(price);
             const expiry = getOrderEndDate();
-            const salt = generatePseudoRandomSalt();
-            let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-            if (isMainNet(networkId)) {
-                pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
-            }
 
             try {
-                const createSignedOrderV4Async = async () => {
-                    const order = new LimitOrder({
-                        makerToken,
-                        takerToken: SynthsUSD.address,
-                        makerAmount,
-                        takerAmount,
-                        maker: walletAddress,
-                        sender: NULL_ADDRESS,
-                        pool,
-                        expiry,
-                        salt,
-                        chainId: networkId,
-                        verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                        feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-                    });
-
-                    try {
-                        const signature = useLegacySigning
-                            ? await order.getSignatureWithProviderAsync(
-                                  new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-                              )
-                            : await order.getSignatureWithProviderAsync(
-                                  (snxJSConnector.signer?.provider as any).provider,
-                                  SignatureType.EIP712
-                              );
-                        return { ...order, signature };
-                    } catch (e) {
-                        console.log(e);
-                    }
-                };
-
-                const signedOrder = await createSignedOrderV4Async();
-
-                try {
-                    await axios({
-                        method: 'POST',
-                        url: placeOrderUrl,
-                        data: signedOrder,
-                    });
-                    isLong ? setIsLongSubmitted(true) : setIsShortSubmitted(true);
-
-                    refetchOrderbook(makerToken);
-                    if (isLong && !sellShort) {
-                        navigateToOptionsMarket(market);
-                        return;
-                    }
-                    if (!isLong) {
-                        navigateToOptionsMarket(market);
-                        return;
-                    }
-                } catch (err) {
-                    setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                    isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+                await createOneInchLimitOrder(
+                    walletAddress,
+                    networkId,
+                    makerToken,
+                    takerToken,
+                    makerAmount,
+                    takerAmount,
+                    expiry
+                );
+                refetchOrderbook(makerToken);
+                isLong ? setIsLongSubmitted(true) : setIsShortSubmitted(true);
+                if ((isLong && !sellShort) || !isLong) {
+                    navigateToOptionsMarket(market);
+                    return;
                 }
-                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             } catch (e) {
-                console.error(e);
+                console.log(e);
                 setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
             }
+            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
         };
 
         const formattedMaturityDate = maturityDate ? formatShortDate(maturityDate) : EMPTY_VALUE;
@@ -1083,7 +976,7 @@ export const CreateMarket: React.FC = () => {
                                     </DoubleShortInputContainer>
                                     {/* </FlexDiv> */}
                                 </FlexDiv>
-                                <NetworkFees gasLimit={gasLimit} />
+                                <NetworkFees gasLimit={gasLimit} l1Fee={l1Fee} />
                             </InputsWrapper>
                         </FlexDivColumn>
                         <MarketSummary
@@ -1092,7 +985,6 @@ export const CreateMarket: React.FC = () => {
                             maturityDate={formattedMaturityDate}
                             initialFundingAmount={initialFundingAmount}
                             timeLeftToExercise={timeLeftToExercise}
-                            marketFees={marketFees}
                             currentPrice={currencyKey ? get(exchangeRates, currencyKey.value, 0) : undefined}
                         ></MarketSummary>
                     </FlexDiv>
@@ -1101,10 +993,6 @@ export const CreateMarket: React.FC = () => {
                         isAllowing={isAllowing}
                         isMarketCreated={isMarketCreated}
                         isCreating={isCreatingMarket}
-                        isLongApproved={hasLongAllowance}
-                        isLongAllowing={isLongAllowing}
-                        isShortApproved={hasShortAllowance}
-                        isShortAllowing={isShortAllowing}
                         isLongSubmitted={isLongSubmitted}
                         isLongSubmitting={isLongSubmitting}
                         isShortSubmitted={isShortSubmitted}
@@ -1145,22 +1033,6 @@ export const CreateMarket: React.FC = () => {
                                 <></>
                             )}
                         </div>
-                        {(sellLong || sellShort) && (
-                            <FlexDivCentered>
-                                <UseLegacySigningContainer>
-                                    <Checkbox
-                                        disabled={isCreatingMarket || isLongSubmitting || isShortSubmitting}
-                                        checked={useLegacySigning}
-                                        value={useLegacySigning.toString()}
-                                        onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                                        label={t('options.common.legacy-signing.label')}
-                                    />
-                                </UseLegacySigningContainer>
-                                <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
-                                    <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                                </LightTooltip>
-                            </FlexDivCentered>
-                        )}
                         <ValidationMessage
                             showValidation={txErrorMessage !== null}
                             message={txErrorMessage}

@@ -1,25 +1,24 @@
+import ValidationMessage from 'components/ValidationMessage';
+import NetworkFees from 'pages/Options/components/NetworkFees';
+import { DefaultSubmitButton, SubmitButtonContainer } from 'pages/Options/Market/components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 import { OptionSide, OrderItem } from 'types/options';
-import { formatGasLimit } from 'utils/network';
-import NetworkFees from 'pages/Options/components/NetworkFees';
-import { IZeroExEvents } from '@0x/contract-wrappers';
+import { cancelOrder, getCancelOrderData } from 'utils/1inch';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
+import snxJSConnector from 'utils/snxJSConnector';
 import OrderDetails from '../../components/OrderDetails';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-import { getIs0xReady } from 'redux/modules/app';
-import { DefaultSubmitButton, SubmitButtonContainer } from 'pages/Options/Market/components';
-import ValidationMessage from 'components/ValidationMessage';
 import {
-    StyledModal,
-    ModalContainer,
-    ModalTitle,
     CloseIconContainer,
-    ModalSummaryContainer,
+    ModalContainer,
     ModalHeader,
+    ModalSummaryContainer,
+    ModalTitle,
+    StyledModal,
 } from '../components';
 
 type CancelOrderModalProps = {
@@ -37,38 +36,40 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const [isCanceling, setIsCanceling] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
-    const { exchangeProxy } = contractWrappers0xConnector;
-
-    const isButtonDisabled = !isWalletConnected || isCanceling || !is0xReady;
+    const isButtonDisabled = !isWalletConnected || isCanceling;
 
     useEffect(() => {
-        if (is0xReady) {
-            const subscriptionToken = exchangeProxy.subscribe(
-                IZeroExEvents.OrderCancelled,
-                { orderHash: order.displayOrder.orderHash },
-                (_, log) => {
-                    if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-                        refetchOrderbook(baseToken);
-                        refetchOrders(networkId);
-                        onClose();
-                    }
-                }
+        const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, cancelOrderData: any) => {
+            const txRequest = await limitOrderProtocol1inchContractWithSigner.populateTransaction.cancelOrder(
+                cancelOrderData
             );
-            return () => {
-                exchangeProxy.unsubscribe(subscriptionToken);
-            };
-        }
-    }, [is0xReady]);
+            return getL1FeeInWei(txRequest);
+        };
 
-    useEffect(() => {
         const fetchGasLimit = async () => {
             try {
-                const gasEstimate = await exchangeProxy
-                    .cancelLimitOrder(order.rawOrder)
-                    .estimateGasAsync({ from: walletAddress });
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                const { limitOrderProtocol1inchContract } = snxJSConnector as any;
+                const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const cancelOrderData = getCancelOrderData(order.orderData);
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(cancelOrderData),
+                        fetchL1Fee(limitOrderProtocol1inchContractWithSigner, cancelOrderData),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.cancelOrder(
+                        getCancelOrderData(order.orderData)
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -81,12 +82,11 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
     const handleCancelOrder = async () => {
         setTxErrorMessage(null);
         setIsCanceling(true);
-
         try {
-            await exchangeProxy.cancelLimitOrder(order.rawOrder).sendTransactionAsync({
-                from: walletAddress,
-                gas: gasLimit !== null ? gasLimit : undefined,
-            });
+            await cancelOrder(networkId, walletAddress, order.orderData, gasLimit !== null ? gasLimit : undefined);
+            refetchOrderbook(baseToken);
+            refetchOrders(networkId);
+            onClose();
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -103,7 +103,7 @@ export const CancelOrderModal: React.FC<CancelOrderModalProps> = ({ onClose, ord
                 </ModalHeader>
                 <OrderDetails order={order.displayOrder} optionSide={optionSide} />
                 <ModalSummaryContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isCanceling} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isCanceling} l1Fee={l1Fee} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>
                     <DefaultSubmitButton disabled={isButtonDisabled || !gasLimit} onClick={handleCancelOrder}>

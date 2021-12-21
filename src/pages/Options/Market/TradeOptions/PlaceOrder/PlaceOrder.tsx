@@ -1,7 +1,3 @@
-import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import axios from 'axios';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import React, { useEffect, useState } from 'react';
@@ -11,13 +7,12 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { AccountMarketInfo, OptionSide, OrderSide } from 'types/options';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
 import { getCurrencyKeyBalance } from 'utils/balances';
-import { formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import snxJSConnector from 'utils/snxJSConnector';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { ethers } from 'ethers';
-import { isMainNet, formatGasLimit } from 'utils/network';
+import { formatGasLimit } from 'utils/network';
 import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import {
@@ -28,7 +23,7 @@ import {
     ORDER_PERIOD_ITEMS_MAP,
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import {
     Container,
@@ -46,10 +41,7 @@ import {
     BuySellSliderContainer,
     ShortInputContainer,
     SummaryContainer,
-    StyledQuestionMarkIcon,
-    LightTooltip,
 } from 'pages/Options/Market/components';
-import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
@@ -57,11 +49,11 @@ import { BuySlider, SellSlider } from 'pages/Options/CreateMarket/components';
 import { COLORS } from 'constants/ui';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
-import { dispatchMarketNotification } from '../../../../../utils/options';
 import ExpirationDropdown from '../components/ExpirationDropdown';
-import { MetamaskSubprovider } from '@0x/subproviders';
-import Checkbox from 'components/Checkbox';
 import styled from 'styled-components';
+import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
+import { dispatchMarketNotification } from 'utils/options';
+import { refetchOrderbook, refetchOrders } from 'utils/queryConnector';
 
 type PlaceOrderProps = {
     optionSide: OptionSide;
@@ -96,7 +88,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
 
     const orderSideOptions = [
         {
@@ -143,7 +134,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const makerToken = isBuy ? SynthsUSD.address : baseToken;
     const makerTokenCurrencyKey = isBuy ? SYNTHS_MAP.sUSD : OPTIONS_CURRENCY_MAP[optionSide];
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
-    const addressToApprove = get0xExchangeProxyAddress(networkId);
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId];
 
     const expirationOptions = ORDER_PERIOD_ITEMS_MAP.map((period: OrderPeriodItem) => {
         return {
@@ -182,7 +173,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                       Math.round(Number(customHoursExpiration) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])
                     : Math.round(new Date().getTime() / 1000) + ORDER_PERIOD_IN_SECONDS[expiration as OrderPeriod];
         }
-        return toBigNumber(orderEndDate);
+        return orderEndDate;
     };
 
     useEffect(() => {
@@ -198,7 +189,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
 
         const registerAllowanceListener = () => {
             erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                if (owner === walletAddress && spender === getAddress(addressToApprove ?? '')) {
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -237,81 +228,32 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         setTxErrorMessage(null);
         setIsSubmitting(true);
 
-        const baseUrl = get0xBaseURL(networkId);
-        const placeOrderUrl = `${baseUrl}sra/v4/order`;
-
-        const makerAmount = Web3Wrapper.toBaseUnitAmount(
-            toBigNumber(isBuy ? Number(amount) * Number(price) : amount),
-            DEFAULT_TOKEN_DECIMALS
-        );
-        const takerAmount = Web3Wrapper.toBaseUnitAmount(
-            toBigNumber(isBuy ? amount : Number(amount) * Number(price)),
-            DEFAULT_TOKEN_DECIMALS
-        );
+        const newMakerAmount = isBuy ? Number(amount) * Number(price) : amount;
+        const newTakerAmount = isBuy ? amount : Number(amount) * Number(price);
         const expiry = getOrderEndDate();
-        const salt = generatePseudoRandomSalt();
-        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        if (isMainNet(networkId)) {
-            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
-        }
 
         try {
-            const createSignedOrderV4Async = async () => {
-                const order = new LimitOrder({
-                    makerToken,
-                    takerToken,
-                    makerAmount,
-                    takerAmount,
-                    maker: walletAddress,
-                    sender: NULL_ADDRESS,
-                    pool,
-                    expiry,
-                    salt,
-                    chainId: networkId,
-                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                    feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-                });
-
-                try {
-                    const signature = useLegacySigning
-                        ? await order.getSignatureWithProviderAsync(
-                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-                          )
-                        : await order.getSignatureWithProviderAsync(
-                              (snxJSConnector.signer?.provider as any).provider,
-                              SignatureType.EIP712
-                          );
-                    return { ...order, signature };
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-
-            const signedOrder = await createSignedOrderV4Async();
-
-            try {
-                await axios({
-                    method: 'POST',
-                    url: placeOrderUrl,
-                    data: signedOrder,
-                });
-                dispatchMarketNotification(
-                    t('options.market.trade-options.place-order.confirm-button.confirmation-message')
-                );
-                refetchOrderbook(baseToken);
-                refetchOrders(networkId);
-                resetForm();
-                onPlaceOrder && onPlaceOrder();
-            } catch (err) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                setIsSubmitting(false);
-            }
-            setIsSubmitting(false);
+            await createOneInchLimitOrder(
+                walletAddress,
+                networkId,
+                makerToken,
+                takerToken,
+                newMakerAmount,
+                newTakerAmount,
+                expiry
+            );
+            dispatchMarketNotification(
+                t('options.market.trade-options.place-order.confirm-button.confirmation-message')
+            );
+            refetchOrderbook(baseToken);
+            refetchOrders(networkId);
+            resetForm();
+            onPlaceOrder && onPlaceOrder();
         } catch (e) {
-            console.error(e);
+            console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            setIsSubmitting(false);
         }
+        setIsSubmitting(false);
     };
 
     const calculateAmount = (percentage: number) => {
@@ -546,20 +488,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
             </SummaryContainer>
             <SubmitButtonContainer>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
-                <FlexDivCentered>
-                    <UseLegacySigningContainer>
-                        <Checkbox
-                            disabled={isSubmitting}
-                            checked={useLegacySigning}
-                            value={useLegacySigning.toString()}
-                            onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                            label={t('options.common.legacy-signing.label')}
-                        />
-                    </UseLegacySigningContainer>
-                    <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
-                        <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                    </LightTooltip>
-                </FlexDivCentered>
             </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}

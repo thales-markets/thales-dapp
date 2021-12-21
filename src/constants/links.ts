@@ -9,4 +9,7 @@ export const LINKS = {
         RetroUnlockEligibilitySheet:
             'https://docs.google.com/spreadsheets/d/1nuTg7dL2BjMTbNAp_gnjjtXuhzNyw-DTy3PaZwsIXS0/edit#gid=0',
     },
+    AMM: {
+        Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',
+    },
 };

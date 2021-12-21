@@ -1,10 +1,10 @@
 import { MarketWidgetKey } from 'constants/ui';
 import orderBy from 'lodash/orderBy';
-import { SynthsMap } from 'types/synthetix';
 import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
+import { getSynthAsset } from './currency';
 
-export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthsMap) =>
+export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
         markets.map((optionsMarket) => {
             const { phase, timeRemaining } = getPhaseAndEndDate(optionsMarket.maturityDate, optionsMarket.expiryDate);
@@ -12,7 +12,7 @@ export const sortOptionsMarkets = (markets: OptionsMarkets, synthsMap: SynthsMap
             return {
                 ...optionsMarket,
                 phase,
-                asset: synthsMap[optionsMarket.currencyKey]?.asset || optionsMarket.currencyKey,
+                asset: getSynthAsset(optionsMarket.currencyKey),
                 timeRemaining,
                 phaseNum: PHASE[phase],
             };
@@ -52,12 +52,25 @@ export const isMarketWidgetVisible = (
     marketPhase: string,
     isCustomMarket: boolean,
     isWalletConected: boolean,
-    isCustomizationVisibility: boolean
+    isCustomizationVisibility: boolean,
+    ammSelected: boolean,
+    isL2: boolean
 ) => {
     switch (marketWidget) {
+        case MarketWidgetKey.AMM:
+            return (
+                marketPhase === 'trading' &&
+                ammSelected &&
+                isL2 &&
+                (visibilityMap[marketWidget] || isCustomizationVisibility)
+            );
         case MarketWidgetKey.ORDERBOOK:
         case MarketWidgetKey.TRADE:
-            return marketPhase === 'trading' && (visibilityMap[marketWidget] || isCustomizationVisibility);
+            return (
+                marketPhase === 'trading' &&
+                (!ammSelected || !isL2) &&
+                (visibilityMap[marketWidget] || isCustomizationVisibility)
+            );
         case MarketWidgetKey.MATURITY_PHASE:
             return marketPhase === 'maturity' && (visibilityMap[marketWidget] || isCustomizationVisibility);
         case MarketWidgetKey.YOUR_TRANSACTIONS:

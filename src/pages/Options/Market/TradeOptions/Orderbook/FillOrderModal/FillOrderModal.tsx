@@ -5,26 +5,23 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { AccountMarketInfo, OptionSide, OrderItem, OrderSide } from 'types/options';
 import snxJSConnector from 'utils/snxJSConnector';
-import { Web3Wrapper } from '@0x/web3-wrapper';
 import { ethers } from 'ethers';
 import { APPROVAL_EVENTS } from 'constants/events';
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
-import { formatGasLimit } from 'utils/network';
-import { getIs0xReady, getIsAppReady } from 'redux/modules/app';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
+import { getIsAppReady } from 'redux/modules/app';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
-import { formatCurrency, formatCurrencyWithKey, toBigNumber, truncToDecimals } from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { IZeroExEvents } from '@0x/contract-wrappers';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
 import { refetchOrderbook, refetchOrders, refetchTrades, refetchUserTrades } from 'utils/queryConnector';
 import OrderDetails from '../../components/OrderDetails';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
 import {
     CloseIconContainer,
     ModalContainer,
@@ -55,7 +52,7 @@ import { ReactComponent as WalletIcon } from 'assets/images/wallet-light.svg';
 import NumericInput from 'pages/Options/Market/components/NumericInput';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import styled from 'styled-components';
-import { get0xExchangeProxyAddress } from 'utils/0x';
+import { fillLimitOrder, getFillOrderData, ONE_INCH_CONTRACTS } from 'utils/1inch';
 
 type FillOrderModalProps = {
     order: OrderItem;
@@ -80,9 +77,10 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const is0xReady = useSelector((state: RootState) => getIs0xReady(state));
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [insufficientOrderAmount, setInsufficientOrderAmount] = useState<boolean>(false);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -109,7 +107,6 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     const {
         contracts: { SynthsUSD },
     } = snxJSConnector.snxJS as any;
-    const { exchangeProxy } = contractWrappers0xConnector;
 
     const isBuy = orderSide === 'buy';
 
@@ -118,11 +115,11 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         ? tokenBalance < Number(amount) || !tokenBalance
         : sUSDBalance < Number(order.displayOrder.price) * Number(amount) || !sUSDBalance;
 
-    const isButtonDisabled = !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance || !is0xReady;
+    const isButtonDisabled = !isAmountEntered || isFilling || !isWalletConnected || insufficientBalance;
 
     const takerToken = isBuy ? baseToken : SynthsUSD.address;
     const takeTokenCurrencyKey = isBuy ? OPTIONS_CURRENCY_MAP[optionSide] : SYNTHS_MAP.sUSD;
-    const addressToApprove = get0xExchangeProxyAddress(networkId);
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId];
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(takerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -137,7 +134,7 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
 
         const registerAllowanceListener = () => {
             erc20Instance.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                if (owner === walletAddress && spender === getAddress(addressToApprove ?? '')) {
                     setAllowance(true);
                     setIsAllowing(false);
                 }
@@ -153,40 +150,48 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
     }, [walletAddress, isWalletConnected, hasAllowance]);
 
     useEffect(() => {
-        if (is0xReady) {
-            const subscriptionToken = exchangeProxy.subscribe(
-                IZeroExEvents.LimitOrderFilled,
-                { orderHash: order.displayOrder.orderHash },
-                (_, log) => {
-                    if (log?.log.args.orderHash.toLowerCase() === order.displayOrder.orderHash.toLowerCase()) {
-                        refetchOrderbook(baseToken);
-                        refetchTrades(optionsMarket.address);
-                        refetchUserTrades(optionsMarket.address, walletAddress);
-                        refetchOrders(networkId);
-                        onClose();
-                    }
-                }
+        const fetchL1Fee = async (limitOrderProtocol1inchContractWithSigner: any, fillOrderData: any) => {
+            const txRequest = await limitOrderProtocol1inchContractWithSigner.populateTransaction.fillOrder(
+                fillOrderData.limitOrder,
+                fillOrderData.signature,
+                fillOrderData.makerAmount,
+                fillOrderData.takerAmount,
+                fillOrderData.threshold
             );
-            return () => {
-                exchangeProxy.unsubscribe(subscriptionToken);
-            };
-        }
-    }, [is0xReady]);
+            return getL1FeeInWei(txRequest);
+        };
 
-    useEffect(() => {
         const fetchGasLimit = async () => {
-            const targetOrder = order.rawOrder;
-            const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
-
             try {
-                const gasEstimate = await exchangeProxy
-                    .fillLimitOrder(
-                        targetOrder,
-                        order.signature,
-                        Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
-                    )
-                    .estimateGasAsync({ from: walletAddress });
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                const { limitOrderProtocol1inchContract } = snxJSConnector as any;
+                const limitOrderProtocol1inchContractWithSigner = limitOrderProtocol1inchContract.connect(
+                    (snxJSConnector as any).signer
+                );
+                const fillOrderData = getFillOrderData(order, amount, isBuy);
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
+                            fillOrderData.limitOrder,
+                            fillOrderData.signature,
+                            fillOrderData.makerAmount,
+                            fillOrderData.takerAmount,
+                            fillOrderData.threshold
+                        ),
+                        fetchL1Fee(limitOrderProtocol1inchContractWithSigner, fillOrderData),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await limitOrderProtocol1inchContractWithSigner.estimateGas.fillOrder(
+                        fillOrderData.limitOrder,
+                        fillOrderData.signature,
+                        fillOrderData.makerAmount,
+                        fillOrderData.takerAmount,
+                        fillOrderData.threshold
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -220,20 +225,13 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
         setTxErrorMessage(null);
         setIsFilling(true);
 
-        const targetOrder = order.rawOrder;
-        const sOPTAmount = isBuy ? amount : Number(amount) * order.displayOrder.price;
-
         try {
-            await exchangeProxy
-                .fillLimitOrder(
-                    targetOrder,
-                    order.signature,
-                    Web3Wrapper.toBaseUnitAmount(toBigNumber(sOPTAmount), DEFAULT_TOKEN_DECIMALS)
-                )
-                .sendTransactionAsync({
-                    from: walletAddress,
-                    gas: gasLimit !== null ? gasLimit : undefined,
-                });
+            await fillLimitOrder(networkId, walletAddress, order, amount, gasLimit, isBuy);
+            refetchOrderbook(baseToken);
+            refetchTrades(optionsMarket.address);
+            refetchUserTrades(optionsMarket.address, walletAddress);
+            refetchOrders(networkId);
+            onClose();
         } catch (e) {
             console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -366,11 +364,15 @@ export const FillOrderModal: React.FC<FillOrderModalProps> = ({ onClose, order, 
                     <SummaryItem>
                         <SummaryLabel>{t('options.market.trade-options.fill-order.total-label')}</SummaryLabel>
                         <SummaryContent>
-                            {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(order.displayOrder.price) * Number(amount))}
+                            {formatCurrencyWithKey(
+                                SYNTHS_MAP.sUSD,
+                                Number(order.displayOrder.price) * Number(amount),
+                                DEFAULT_OPTIONS_DECIMALS
+                            )}
                         </SummaryContent>
                     </SummaryItem>
                     <Divider />
-                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isFilling} l1Fee={l1Fee} />
                 </ModalSummaryContainer>
                 <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
                 <ValidationMessage

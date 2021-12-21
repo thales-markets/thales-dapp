@@ -15,7 +15,7 @@ interface Preview {
     protocols: [];
 }
 
-interface Token {
+export interface Token {
     address: string;
     decimals: number;
     logoURI: string;
@@ -23,7 +23,7 @@ interface Token {
     symbol: string;
 }
 
-const baseUrl = 'https://api.1inch.exchange/v3.0/';
+const baseUrl = 'https://api.1inch.exchange/v4.0/';
 const suffix = '/quote?';
 
 const useQuoteTokensQuery = (
@@ -34,7 +34,7 @@ const useQuoteTokensQuery = (
     options?: UseQueryOptions<Preview>
 ) => {
     return useQuery<Preview>(
-        QUERY_KEYS.Swap.Quote(),
+        QUERY_KEYS.Swap.Quote(networkId),
         async () => {
             let url = baseUrl + networkId + suffix;
             const fromUrl = 'fromTokenAddress=' + fromToken.address;

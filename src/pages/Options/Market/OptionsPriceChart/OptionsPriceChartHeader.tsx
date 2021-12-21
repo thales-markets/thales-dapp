@@ -13,6 +13,7 @@ import { COLORS } from 'constants/ui';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { EMPTY_VALUE } from 'constants/placeholder';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
+import useAmmMaxLimitsQuery, { AmmMaxLimits } from 'queries/options/useAmmMaxLimitsQuery';
 
 type OptionsPriceChartContentProps = {
     optionsMarket: OptionsMarketInfo;
@@ -28,20 +29,24 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
         enabled: isAppReady,
     });
 
+    const ammMaxLimitsQuery = useAmmMaxLimitsQuery(optionsMarket.address, {
+        enabled: isAppReady,
+    });
+
     const getMarketPrice = (sellOrders: Orders, buyOrders: Orders) => {
         if (sellOrders.length > 0 && buyOrders.length > 0) {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
             const marketPrice = mean([lowestSellOrderPrice, highestBuyOrderPrice]);
-            return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
+            return marketPrice;
         }
         if (sellOrders.length > 0) {
             const lowestSellOrderPrice = sellOrders[0].displayOrder.price;
-            return formatCurrencyWithSign(USD_SIGN, lowestSellOrderPrice, DEFAULT_OPTIONS_DECIMALS);
+            return lowestSellOrderPrice;
         }
         if (buyOrders.length > 0) {
             const highestBuyOrderPrice = buyOrders[0].displayOrder.price;
-            return formatCurrencyWithSign(USD_SIGN, highestBuyOrderPrice, DEFAULT_OPTIONS_DECIMALS);
+            return highestBuyOrderPrice;
         }
 
         return EMPTY_VALUE;
@@ -52,20 +57,34 @@ const OptionsPriceChartHeader: React.FC<OptionsPriceChartContentProps> = ({ opti
             shortOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.sellOrders : [];
         const buyOrders =
             longOrderbookQuery.isSuccess && longOrderbookQuery.data ? longOrderbookQuery.data.buyOrders : [];
+        const ammMaxLimits =
+            ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
+                ? (ammMaxLimitsQuery.data as AmmMaxLimits)
+                : undefined;
 
-        const marketPrice = getMarketPrice(sellOrders, buyOrders);
-        return marketPrice;
-    }, [longOrderbookQuery.data]);
+        const marketPrice =
+            ammMaxLimits && ammMaxLimits.isMarketInAmmTrading
+                ? mean([ammMaxLimits.buyLongPrice, ammMaxLimits.sellLongPrice])
+                : getMarketPrice(sellOrders, buyOrders);
+        return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
+    }, [longOrderbookQuery.data, ammMaxLimitsQuery.data]);
 
     const shortMarketPrice = useMemo(() => {
         const sellOrders =
             shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.sellOrders : [];
         const buyOrders =
             shortOrderbookQuery.isSuccess && shortOrderbookQuery.data ? shortOrderbookQuery.data.buyOrders : [];
+        const ammMaxLimits =
+            ammMaxLimitsQuery.isSuccess && ammMaxLimitsQuery.data
+                ? (ammMaxLimitsQuery.data as AmmMaxLimits)
+                : undefined;
 
-        const marketPrice = getMarketPrice(sellOrders, buyOrders);
-        return marketPrice;
-    }, [shortOrderbookQuery.data]);
+        const marketPrice =
+            ammMaxLimits && ammMaxLimits.isMarketInAmmTrading
+                ? mean([ammMaxLimits.buyShortPrice, ammMaxLimits.sellShortPrice])
+                : getMarketPrice(sellOrders, buyOrders);
+        return formatCurrencyWithSign(USD_SIGN, marketPrice, DEFAULT_OPTIONS_DECIMALS);
+    }, [shortOrderbookQuery.data, ammMaxLimitsQuery.data]);
 
     return (
         <ChartHeader>

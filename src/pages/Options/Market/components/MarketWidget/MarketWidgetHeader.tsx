@@ -12,6 +12,7 @@ type MarketWidgetHeaderProps = {
     widgetKey: MarketWidgetKey;
     children?: React.ReactNode;
     title?: string;
+    titleComponent?: React.ReactNode;
 };
 
 export const MarketWidgetHeader: React.FC<MarketWidgetHeaderProps> = ({
@@ -19,13 +20,16 @@ export const MarketWidgetHeader: React.FC<MarketWidgetHeaderProps> = ({
     widgetKey,
     children,
     title,
+    titleComponent,
 }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     return (
         <WidgetHeader hideBorderOnMobile={hideBorderOnMobile} className="grid-component-header">
-            <WidgetTitle>{title || t(`options.market.widgets.${widgetKey}`)}</WidgetTitle>
+            <WidgetTitle>
+                {titleComponent ? titleComponent : title || t(`options.market.widgets.${widgetKey}`)}
+            </WidgetTitle>
             <FlexDivRowCentered>
                 {children}
                 <CloseIconContainer

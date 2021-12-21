@@ -2,20 +2,30 @@ import { toJSTimestamp } from './date';
 import { bigNumberFormatter } from './ethers';
 
 export function prepSellOrder(record: any) {
-    const price = bigNumberFormatter(record.order.takerAmount) / bigNumberFormatter(record.order.makerAmount);
-    const amount = bigNumberFormatter(record.order.makerAmount);
-    const total = bigNumberFormatter(record.order.takerAmount);
-    const timeRemaining = toJSTimestamp(record.order.expiry);
-    const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) / price;
-    const fillableTotal = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
-    const filled = (amount - fillableAmount) / amount;
-    const orderHash = record.metaData.orderHash;
+    const hexTimestmap = '0x' + record.data.predicate.split('63592c2b')[1].substr(0, 64);
+    const expirationTimestamp = parseInt(hexTimestmap, 16);
+
+    const price = bigNumberFormatter(record.takerAmount) / bigNumberFormatter(record.makerAmount);
+    const amount = bigNumberFormatter(record.makerAmount);
+    const total = bigNumberFormatter(record.takerAmount);
+    const timeRemaining = toJSTimestamp(expirationTimestamp);
+    const fillableAmount = bigNumberFormatter(record.remainingMakerAmount);
+    const fillableTotal = bigNumberFormatter(record.remainingMakerAmount) * price;
+    const filled = (amount - bigNumberFormatter(record.remainingMakerAmount)) / amount;
+    const orderHash = record.orderHash;
     const potentialReturn = 1 / price - 1;
     const potentialReturnAmount = fillableAmount - fillableTotal;
 
     return {
-        rawOrder: record.order,
-        signature: record.order.signature,
+        rawOrder: {
+            maker: record.orderMaker,
+            taker: '',
+            makerToken: record.data.makerAsset,
+            takerToken: record.data.takerAsset,
+            makerAmount: record.makerAmount,
+            takerAmount: record.takerAmount,
+        },
+        signature: record.signature,
         displayOrder: {
             amount,
             price,
@@ -28,24 +38,37 @@ export function prepSellOrder(record: any) {
             potentialReturn,
             potentialReturnAmount,
         },
+        orderData: {
+            data: record.data,
+        },
     };
 }
 
 export function prepBuyOrder(record: any) {
-    const price = bigNumberFormatter(record.order.makerAmount) / bigNumberFormatter(record.order.takerAmount);
-    const amount = bigNumberFormatter(record.order.takerAmount);
-    const total = bigNumberFormatter(record.order.makerAmount);
-    const timeRemaining = toJSTimestamp(record.order.expiry);
-    const fillableAmount = bigNumberFormatter(record.metaData.remainingFillableTakerAmount);
-    const fillableTotal = bigNumberFormatter(record.metaData.remainingFillableTakerAmount) * price;
-    const filled = (amount - fillableAmount) / amount;
-    const orderHash = record.metaData.orderHash;
+    const hexTimestmap = '0x' + record.data.predicate.split('63592c2b')[1].substr(0, 64);
+    const expirationTimestamp = parseInt(hexTimestmap, 16);
+
+    const price = bigNumberFormatter(record.makerAmount) / bigNumberFormatter(record.takerAmount);
+    const amount = bigNumberFormatter(record.takerAmount);
+    const total = bigNumberFormatter(record.makerAmount);
+    const timeRemaining = toJSTimestamp(expirationTimestamp);
+    const fillableAmount = bigNumberFormatter(record.remainingMakerAmount) / price;
+    const fillableTotal = bigNumberFormatter(record.remainingMakerAmount);
+    const filled = (total - fillableTotal) / total;
+    const orderHash = record.orderHash;
     const potentialReturn = 1 / price - 1;
     const potentialReturnAmount = fillableAmount - fillableTotal;
 
     return {
-        rawOrder: record.order,
-        signature: record.order.signature,
+        rawOrder: {
+            maker: record.orderMaker,
+            taker: '',
+            makerToken: record.data.makerAsset,
+            takerToken: record.data.takerAsset,
+            makerAmount: record.makerAmount,
+            takerAmount: record.takerAmount,
+        },
+        signature: record.signature,
         displayOrder: {
             amount,
             price,
@@ -57,6 +80,9 @@ export function prepBuyOrder(record: any) {
             orderHash,
             potentialReturn,
             potentialReturnAmount,
+        },
+        orderData: {
+            data: record.data,
         },
     };
 }

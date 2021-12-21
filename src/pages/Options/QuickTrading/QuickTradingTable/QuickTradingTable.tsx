@@ -21,7 +21,6 @@ import { USD_SIGN } from 'constants/currency';
 import { ExtendedOrderItem, ExtendedOrders, HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import { formatShortDateWithTime } from 'utils/formatters/date';
-import { getSynthName } from 'utils/snxJSConnector';
 import { DefaultSubmitButton, LightTooltip, SubmitButton } from '../../Market/components';
 import FillOrderModal from '../../Market/TradeOptions/Orderbook/FillOrderModal';
 import PlaceOrderModal from '../PlaceOrderModal';
@@ -48,6 +47,7 @@ import arrowDown from 'assets/images/arrow-down.svg';
 import arrowUp from 'assets/images/arrow-up.svg';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import SPAAnchor from '../../../../components/SPAAnchor';
+import { getSynthName } from 'utils/currency';
 
 interface HeadCell {
     id: keyof ExtendedOrderItem[];

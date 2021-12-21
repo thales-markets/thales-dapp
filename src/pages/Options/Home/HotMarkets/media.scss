@@ -77,6 +77,7 @@
 
 @media screen and (max-width: 767px) {
     .hot-markets {
+        padding: 20px 0;
         &__desktop > div {
             max-width: 352px;
             min-width: 352px;
@@ -99,6 +100,7 @@
 
 @media screen and (max-width: 420px) {
     .hot-markets {
+        padding: 20px 0;
         &__desktop > div {
             max-width: 300px;
             min-width: 300px;

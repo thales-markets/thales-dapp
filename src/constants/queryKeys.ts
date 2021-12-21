@@ -27,7 +27,7 @@ export const QUERY_KEYS = {
         ],
     },
     Rates: {
-        ExchangeRates: ['rates', 'exchangeRates'],
+        ExchangeRates: (networkId: NetworkId) => ['rates', 'exchangeRates', networkId],
         ExchangeRatesMarketData: (networkId: NetworkId) => ['rates', 'exchangeRatesMarketData', networkId],
     },
     Synths: {
@@ -39,6 +39,7 @@ export const QUERY_KEYS = {
     },
     BinaryOptions: {
         Markets: (networkId: NetworkId) => ['binaryOptions', 'markets', networkId],
+        SynthsMap: (networkId: NetworkId) => ['binaryOptions', 'synthsMap', networkId],
         Market: (marketAddress: string) => ['binaryOptions', 'markets', marketAddress],
         MarketFlippening: () => ['binaryOptions', 'marketFlippening'],
         ETHBTCMarketCapRatioHistory: () => ['binaryOptions', 'ETHBTCMarketCapRatioHistory'],
@@ -77,6 +78,7 @@ export const QUERY_KEYS = {
         Competition: (networkId: NetworkId) => ['binaryOptions', 'competition', networkId],
         Orders: (orderType: string, networkId: NetworkId) => ['binaryOptions', 'orders', orderType, networkId],
         OrdersCount: (networkId: NetworkId) => ['binaryOptions', 'ordersCount', networkId],
+        AmmMaxLimits: (marketAddress: string) => ['binaryOptions', 'amm', marketAddress],
     },
     User: {
         Watchlist: (walletAddress: string, networkId: NetworkId) => ['user', 'watchlist', walletAddress, networkId],
@@ -110,7 +112,7 @@ export const QUERY_KEYS = {
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
-        Quote: () => ['swap', 'quote'],
+        Quote: (networkId: NetworkId) => ['swap', 'quote', networkId],
         Approve: (networkId: NetworkId) => ['swap', 'approve', networkId],
         Swap: (networkId: NetworkId) => ['swap', 'swap', networkId],
     },
@@ -132,7 +134,7 @@ export const QUERY_KEYS = {
             walletAddress,
         ],
         CouncilMembers: () => ['governance', 'councilMembers'],
-        ThalesStakers: (networkId: NetworkId) => ['governance', 'thalesStakers', networkId],
+        ThalesStakers: () => ['governance', 'thalesStakers'],
         VotingPower: (proposalId: string, snapshot: string, walletAddress: string) => [
             'governance',
             'votingPower',

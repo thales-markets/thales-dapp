@@ -316,7 +316,7 @@ export const FilterButton = styled.button`
         border: 2px solid #00f9ff;
         color: #00f9ff;
     }
-    &.selected:hover {
+    &.selected:hover:not(:disabled) {
         background: rgba(1, 38, 81, 0.8);
         border: 2px solid #00f9ff;
         color: #b8c6e5;
@@ -471,4 +471,16 @@ export const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
 export const StyledInfoIcon = styled(InfoIcon)`
     cursor: pointer;
     margin-left: 10px;
+`;
+
+export const BetaBadge = styled.div`
+    background-color: #3cb55b;
+    border-radius: 5px;
+    color: #f6f6fe;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 10px;
+    padding: 2px 4px;
+    margin-bottom: 15px;
+    margin-left: 2px;
 `;
