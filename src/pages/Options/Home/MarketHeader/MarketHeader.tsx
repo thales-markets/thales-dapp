@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn, FlexDivRow, Logo } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivRow, FlexDivRowCentered, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
@@ -27,7 +27,6 @@ import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
 // import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
 import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
 import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
-
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -110,8 +109,14 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
                 {phase === 'trading' && isL2 && (
                     <SwitchWrapper>
-                        {t('options.market.header.amm')}
-                        <BetaBadge>{t('amm.beta')}</BetaBadge>
+                        <SwitchOption
+                            onClick={() => {
+                                dispatch(setAmmSelected(true));
+                            }}
+                        >
+                            {t('options.market.header.amm')}
+                            <BetaBadge>{t('amm.beta')}</BetaBadge>
+                        </SwitchOption>
                         <BorderedWrapper
                             ammSelected={ammSelected}
                             onClick={() => {
@@ -120,7 +125,13 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SwitchDot />
                         </BorderedWrapper>
-                        {t('options.market.header.orderbook')}
+                        <SwitchOption
+                            onClick={() => {
+                                dispatch(setAmmSelected(false));
+                            }}
+                        >
+                            {t('options.market.header.orderbook')}
+                        </SwitchOption>
                     </SwitchWrapper>
                 )}
                 <FlexDiv className="dapp-header__buttonsWrapper">
@@ -469,6 +480,12 @@ const SwitchDot = styled.span`
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0px 4px 7px rgba(17, 20, 45, 0.402414);
+`;
+
+const SwitchOption = styled(FlexDivRowCentered)`
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 const Divider = styled.hr`
