@@ -27,7 +27,7 @@ const Loader: React.FC = () => {
                     <Image style={{ width: 200, height: 200, margin: 'auto' }} src={angry}></Image>
                     <Text className="pale-grey text-l ls25">{t(`common.unsupported-network.title`)}</Text>
 
-                    <Text style={{ marginTop: 45 }} className="pale-grey text-s lh32 ls35">
+                    <Text style={{ marginTop: 45 }} className="pale-grey text-s lh32 ls25">
                         {t(`common.unsupported-network.description`)}
                     </Text>
                     <FlexDivRowCentered>
@@ -87,8 +87,9 @@ const WrongNetworkWrapper = styled.div`
     border-radius: 23px;
     display: flex;
     flex-direction: column;
-    max-width: 550px;
+    max-width: 600px;
     padding: 40px;
+    text-align: center;
 `;
 
 export default Loader;
