@@ -1112,7 +1112,8 @@
         "switch-to-l2": "Switch to L2",
         "optimistic-gateway": "Optimism Gateway",
         "optimistic-etherscan": "Optimism Etherscan",
-        "learn-more": "Learn more"
+        "learn-more": "Learn more",
+        "info": "As the maximum rollup time to L1 on Optimism is 15 minutes, actions that depend on timestamps can be up to 15 minutes delayed."
     },
     "amm": {
         "type-label": "type",

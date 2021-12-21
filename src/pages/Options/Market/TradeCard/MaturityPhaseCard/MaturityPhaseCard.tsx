@@ -118,6 +118,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                         type: 'exercise',
                         amount: isLongResult ? longAmount : shortAmount,
                         side: isLongResult ? 'long' : 'short',
+                        blockNumber: tx.blockNumber || 0,
                     },
                 })
             );
@@ -129,6 +130,7 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                     updateOptionsPendingTransactionStatus({
                         hash: txResult.transactionHash,
                         status: 'confirmed',
+                        blockNumber: txResult.blockNumber,
                     })
                 );
                 refetchMarketQueries(walletAddress, BOMContract.address, optionsMarket.address);

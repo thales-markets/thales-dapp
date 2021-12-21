@@ -1106,7 +1106,8 @@
         "optimistic-l2": "Optimism L2",
         "optimistic-etherscan": "Optimism Etherscan",
         "switch-to-l1": "Переключиться на L1",
-        "optimistic-gateway": "Optimism Gateway"
+        "optimistic-gateway": "Optimism Gateway",
+        "info": "Поскольку максимальное время накопления до уровня L1 в Optimism составляет 15 минут, действия, зависящие от временных меток, могут быть отложены до 15 минут."
     },
     "amm": {
         "beta": "БЕТА",

@@ -37,13 +37,15 @@ export const optionsSlice = createSlice({
             action: PayloadAction<{
                 hash: OptionsTransaction['hash'];
                 status: OptionsTransaction['status'];
+                blockNumber: OptionsTransaction['blockNumber'];
             }>
         ) => {
-            const { hash, status } = action.payload;
+            const { hash, status, blockNumber } = action.payload;
 
             state.pendingTransactions.forEach((optionTransaction, idx) => {
                 if (optionTransaction.hash === hash) {
                     state.pendingTransactions[idx].status = status;
+                    state.pendingTransactions[idx].blockNumber = blockNumber;
                 }
             });
         },

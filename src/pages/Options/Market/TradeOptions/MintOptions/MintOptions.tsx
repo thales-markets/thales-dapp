@@ -250,6 +250,7 @@ const MintOptions: React.FC = () => {
                         type: 'mint',
                         amount: mintedAmount,
                         side: 'long',
+                        blockNumber: tx.blockNumber || 0,
                     },
                 })
             );
@@ -265,6 +266,7 @@ const MintOptions: React.FC = () => {
                     updateOptionsPendingTransactionStatus({
                         hash: txResult.transactionHash,
                         status: 'confirmed',
+                        blockNumber: txResult.blockNumber,
                     })
                 );
 
