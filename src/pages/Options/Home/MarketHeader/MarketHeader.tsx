@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivRowCentered, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
@@ -40,6 +40,9 @@ import { Modal } from '@material-ui/core';
 import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { withStyles } from '@material-ui/core';
+import MaterialTooltip from '@material-ui/core/Tooltip';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -123,9 +126,14 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         <LanguageSelector />
                     </DesktopLanguageSelectorContainer>
                     {isWalletConnected && (
-                        <div>
+                        <FlexDivRowCentered>
                             <NetworkSwitch />
-                        </div>
+                            {isL2 && (
+                                <StyledMaterialTooltip arrow interactive title={t('optimism.info') as string}>
+                                    <StyledInfoIcon />
+                                </StyledMaterialTooltip>
+                            )}
+                        </FlexDivRowCentered>
                     )}
                     {!isWalletConnected ? (
                         <Button
@@ -421,5 +429,30 @@ const Divider = styled.hr`
     border: none;
     border-top: 2px solid #04045a;
 `;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 20px;
+    min-height: 20px;
+    margin-right: 10px;
+`;
+
+export const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #58519b',
+        },
+        color: '#0C1C68',
+        marginLeft: '0px!important',
+    },
+    tooltip: {
+        background: '#0C1C68',
+        borderRadius: '15px',
+        border: '1px solid #58519b',
+        padding: '15px',
+        fontSize: '14px',
+        lineHeight: '18px',
+        color: '#F6F6FE',
+    },
+}))(MaterialTooltip);
 
 export default MarketHeader;

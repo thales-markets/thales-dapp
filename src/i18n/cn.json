@@ -1106,7 +1106,8 @@
         "optimistic-etherscan": "Optimism Etherscan",
         "switch-to-l2": "切换到 L2",
         "optimistic-l2": "Optimism L2",
-        "switch-to-l1": "切换到 L1"
+        "switch-to-l1": "切换到 L1",
+        "info": "由于 Optimism 上 L1 的最长汇总时间为 15 分钟，因此依赖于时间戳的操作最多可延迟 15 分钟。"
     },
     "amm": {
         "type-label": "类型",
