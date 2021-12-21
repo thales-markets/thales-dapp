@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn, FlexDivRow, FlexDivRowCentered, Logo } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
@@ -40,8 +40,6 @@ import { Modal } from '@material-ui/core';
 import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
 import NetworkSwitch from 'components/NetworkSwitch';
-import { getAmmSelected, setAmmSelected } from 'redux/modules/marketWidgets';
-import { BetaBadge } from 'pages/Options/Market/components';
 
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
@@ -65,11 +63,9 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
     className,
 }) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [showSwap, setShowSwap] = useState(false);
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
     const isL2 = getIsOVM(networkId);
 
     const [showBurgerMenu, setShowBurdgerMenu] = useState<BurgerState>(BurgerState.Init);
@@ -107,33 +103,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     />
                 </FlexDiv>
                 {showCustomizeLayout && phase && <CustomizeLayout phase={phase} isCustomMarket={isCustomMarket} />}
-                {phase === 'trading' && isL2 && (
-                    <SwitchWrapper>
-                        <SwitchOption
-                            onClick={() => {
-                                dispatch(setAmmSelected(true));
-                            }}
-                        >
-                            {t('options.market.header.amm')}
-                            <BetaBadge>{t('amm.beta')}</BetaBadge>
-                        </SwitchOption>
-                        <BorderedWrapper
-                            ammSelected={ammSelected}
-                            onClick={() => {
-                                dispatch(setAmmSelected(!ammSelected));
-                            }}
-                        >
-                            <SwitchDot />
-                        </BorderedWrapper>
-                        <SwitchOption
-                            onClick={() => {
-                                dispatch(setAmmSelected(false));
-                            }}
-                        >
-                            {t('options.market.header.orderbook')}
-                        </SwitchOption>
-                    </SwitchWrapper>
-                )}
                 <FlexDiv className="dapp-header__buttonsWrapper">
                     {isWalletConnected && (
                         <Button className="tertiary" style={{ padding: '6px 24px' }} onClick={() => setShowSwap(true)}>
@@ -445,47 +414,6 @@ const BurdgerIcon = styled.img`
     right: 30px;
     top: 32px;
     padding: 10px;
-`;
-
-const SwitchWrapper = styled(FlexDiv)`
-    align-items: center;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 13px;
-    text-align: center;
-    letter-spacing: 0.4px;
-    color: #ffffff;
-`;
-
-const BorderedWrapper = styled(FlexDivRow)<{ ammSelected: boolean }>`
-    flex-direction: ${(props) => (props.ammSelected ? 'row' : 'row-reverse')};
-    height: 32px;
-    width: 64px;
-    border: 2px solid #00f9ff;
-    border-radius: 16px;
-    padding-left: 6px;
-    padding-right: 6px;
-    margin-left: 6px;
-    margin-right: 6px;
-    align-items: center;
-    &:hover {
-        cursor: pointer;
-    }
-`;
-
-const SwitchDot = styled.span`
-    height: 20px;
-    width: 20px;
-    background: #f6f6fe;
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0px 4px 7px rgba(17, 20, 45, 0.402414);
-`;
-
-const SwitchOption = styled(FlexDivRowCentered)`
-    &:hover {
-        cursor: pointer;
-    }
 `;
 
 const Divider = styled.hr`

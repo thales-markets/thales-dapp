@@ -27,9 +27,10 @@ import {
     getCurrentLayout,
     getFullLayout,
     getAmmSelected,
+    setAmmSelected,
 } from 'redux/modules/marketWidgets';
 import { isMarketWidgetVisible } from 'utils/options';
-import { FlexDivCentered, FlexDivColumn, Wrapper } from 'theme/common';
+import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivRow, FlexDivRowCentered, Wrapper } from 'theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import MarketOverview from './components/MarketOverview';
 import styled from 'styled-components';
@@ -49,6 +50,7 @@ import MarketMobile from './MarketMobile';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import AMM from './AMM';
 import { getIsOVM } from 'utils/network';
+import { BetaBadge } from './components';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -310,7 +312,33 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                         ) : (
                             <MarketOverview optionsMarket={optionsMarket} />
                         )}
-
+                        {optionsMarket.phase === 'trading' && isL2 && (
+                            <SwitchWrapper>
+                                <SwitchOption
+                                    onClick={() => {
+                                        dispatch(setAmmSelected(true));
+                                    }}
+                                >
+                                    {t('options.market.header.amm')}
+                                    <BetaBadge>{t('amm.beta')}</BetaBadge>
+                                </SwitchOption>
+                                <BorderedWrapper
+                                    ammSelected={ammSelected}
+                                    onClick={() => {
+                                        dispatch(setAmmSelected(!ammSelected));
+                                    }}
+                                >
+                                    <SwitchDot />
+                                </BorderedWrapper>
+                                <SwitchOption
+                                    onClick={() => {
+                                        dispatch(setAmmSelected(false));
+                                    }}
+                                >
+                                    {t('options.market.header.orderbook')}
+                                </SwitchOption>
+                            </SwitchWrapper>
+                        )}
                         <MainContentContainer className="market__container">
                             {optionsMarket.phase === 'trading' && (!ammSelected || !isL2) && (
                                 <OptionsTabContainer className="market__container__tabs">
@@ -432,6 +460,49 @@ const ReactGridContainer = styled.div<{ phase: string; optionsActiveTab: string;
     top: ${(props) => (props.phase === 'trading' ? '-15px' : '0')};
     z-index: 3;
     padding-top: ${(props) => (props.ammSelected ? 15 : 0)}px;
+`;
+
+const SwitchWrapper = styled(FlexDiv)`
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 13px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    color: #ffffff;
+    margin-bottom: 20px;
+`;
+
+const BorderedWrapper = styled(FlexDivRow)<{ ammSelected: boolean }>`
+    flex-direction: ${(props) => (props.ammSelected ? 'row' : 'row-reverse')};
+    height: 32px;
+    width: 64px;
+    border: 2px solid #00f9ff;
+    border-radius: 16px;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-left: 6px;
+    margin-right: 6px;
+    align-items: center;
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
+const SwitchDot = styled.span`
+    height: 20px;
+    width: 20px;
+    background: #f6f6fe;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0px 4px 7px rgba(17, 20, 45, 0.402414);
+`;
+
+const SwitchOption = styled(FlexDivRowCentered)`
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 export default Market;
