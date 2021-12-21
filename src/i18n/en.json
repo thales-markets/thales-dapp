@@ -48,7 +48,7 @@
         "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms. Through growing demand, he became the <strong>first known person to exercise an options contract.</strong>",
         "markets": {
             "title": "Binary Markets",
-            "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
+            "option1": "Anyone in the world can participate in Thales binary options markets without any limitations.",
             "option2": "Market makers don't pay a fee but earn as liquidity adds up.",
             "option3": "Permissionless, non-custodial and unrestricted.",
             "view-markets": "View Markets"
@@ -68,14 +68,14 @@
             "title": "To get started you'll need",
             "first": "Web3 wallet, like Metamask",
             "second": "Ether to pay for network fees (also called gas)",
-            "third": "Synth USD (sUSD), which can be obtained on"
+            "third": "Synth USD (sUSD), which can be obtained directly from our dApp or by using"
         },
         "faq": {
             "title": "FAQ",
             "firstQ": "What are binary options?",
             "firstA": "Binary options are a simple and intuitive derivative offering fixed payoffs for a wide variety of markets in a limited risk environment, making risk management more precise.",
-            "secondQ": "What markets are supported?",
-            "secondA": "More than 60 market types are secured by Chainlink price feeds, including cryptocurrencies, equities, commodities, FX, and index products.",
+            "secondQ": "What is the utility of the THALES token?",
+            "secondA": "Thales DAO governance token (THALES) is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in Thales governance. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocol's community governance structure.",
             "thirdQ": "Which asset do users need to mint or buy options on Thales?",
             "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now."
         },

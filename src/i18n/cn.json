@@ -48,7 +48,7 @@
         "thales-is3": "当收获到来时，当需求增长时，他按照自己的条件出租压榨机，赚了一大笔钱，成为<strong>第一个行使期权合同的人。</strong>",
         "markets": {
             "title": "二元市场",
-            "option1": "世界上任何人都可以根据资产的价格创建二元期权市场。",
+            "option1": "世界上任何人都可以不受任何限制地参与泰雷兹二元期权市场。",
             "option2": "做市商不支付任何费用，但随着流动性的增加而盈利。",
             "option3": "无许可、自托管和不受限。",
             "view-markets": "查看市场"
@@ -68,14 +68,14 @@
             "title": "要开始，您需要",
             "first": "Web3钱包，比如说Metamask",
             "second": "以太支付网络费用（也称为gas）",
-            "third": "Synth USD（sUSD），可获得于"
+            "third": "Synth USD（sUSD），可直接从我们的 dApp 或使用"
         },
         "faq": {
             "title": "常见问题",
             "firstQ": "什么是二元期权？",
             "firstA": "二元期权是一种简单直观的衍生品工具，在有限的风险环境中为多种市场提供收益，使风险管理更加精确。",
-            "secondQ": "支持哪些市场？",
-            "secondA": "超过60种市场类型由Chainlink喂价担保，包括加密货币、股票、商品、外汇和指数产品。",
+            "secondQ": "THALES 代币的用途是什么？",
+            "secondA": "Thales DAO 治理代币（THALES）是用于治理 Thales 协议的标准 ERC-20 代币。 这些代币授予各自的利益相关者参与泰雷兹治理的权利。 通过这种方式，THALES 质押者代表了与协议开发相关的每一个关键决策的基础。 任何可能与协议相关的代币的其他效用，都可以由协议的社区治理结构决定和投票。",
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
             "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
@@ -225,7 +225,7 @@
         "home": {
             "market-card": {
                 "current-asset-price": "流动资产价格",
-                "pool-size": "池大小",
+                "pool-size": "AMM流动性",
                 "end-date": "结束日期",
                 "strike-price": "执行价格",
                 "open-orders": "未结订单",
@@ -253,7 +253,7 @@
                 "asset-price-col": "资产价格",
                 "open-orders-col": "未结订单",
                 "phase-col": "阶段",
-                "pool-size-col": "市场大小",
+                "pool-size-col": "AMM流动性",
                 "time-remaining-col": "剩余时间",
                 "competition-tooltip": "该市场参与交易竞赛"
             }
@@ -509,7 +509,7 @@
                 "expiry-label": "到期",
                 "current-result-label": "当前结果",
                 "final-result-label": "最终结果",
-                "deposited-currency-label": "存款{{currencyKey}}",
+                "deposited-currency-label": "AMM流动性",
                 "event-name-label": "事件名称",
                 "current-ratio-label": "现比率",
                 "final-ratio-label": "最终比率",

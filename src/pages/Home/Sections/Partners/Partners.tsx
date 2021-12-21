@@ -2,7 +2,8 @@ import { SyntetixLogo } from 'pages/Home/Footer/components';
 import React from 'react';
 import { CardsAbs, FlexDiv, FlexDivColumn, Image, Text, IconLink } from 'theme/common';
 import synthetix from 'assets/images/synthetix.svg';
-import zeroX from 'assets/images/0x.svg';
+import oneInch from 'assets/images/1inch.svg';
+import optimism from 'assets/images/optimism.svg';
 import chainlink from 'assets/images/chainlink.svg';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
@@ -23,14 +24,21 @@ const Partners: React.FC = () => {
                 {t('landing-page.partners.technical')}
             </Text>
             <TechPartners>
-                <IconLink target="_blank" rel="noreferrer" href="https://0x.org/">
-                    <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
-                        <Image style={{ width: 'auto', height: 50 }} src={zeroX}></Image>
+                <IconLink target="_blank" rel="noreferrer" href="https://app.1inch.io/">
+                    <Partner
+                        style={{ maxWidth: 265, marginTop: 0, marginBottom: 90, paddingTop: 20, paddingBottom: 20 }}
+                    >
+                        <Image style={{ width: 'auto', height: 70 }} src={oneInch}></Image>
                     </Partner>
                 </IconLink>
                 <IconLink target="_blank" rel="noreferrer" href="https://chain.link/">
                     <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
                         <Image style={{ width: 'auto', height: 50 }} src={chainlink}></Image>
+                    </Partner>
+                </IconLink>
+                <IconLink target="_blank" rel="noreferrer" href="https://www.optimism.io/">
+                    <Partner style={{ maxWidth: 265, marginTop: 0, marginBottom: 90 }}>
+                        <Image style={{ width: 150, height: 50 }} src={optimism}></Image>
                     </Partner>
                 </IconLink>
             </TechPartners>
@@ -60,7 +68,7 @@ const Partner = styled(CardsAbs)`
 `;
 
 const TechPartners = styled(FlexDiv)`
-    @media (max-width: 620px) {
+    @media (max-width: 890px) {
         flex-direction: column;
     }
 `;
