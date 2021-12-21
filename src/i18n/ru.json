@@ -21,7 +21,7 @@
             "maturity-date-col": "Дата погашения",
             "long-col": "сЛОНГ",
             "short-col": "сШОРТ",
-            "pool-size-col": "Размер пула",
+            "pool-size-col": "AMM ликвидность",
             "amount-col": "Сумма",
             "price-col": "Цена",
             "filled-col": "Исполнен",
@@ -48,8 +48,8 @@
         "thales-is3": "Когда появился урожай и спрос на прессы вырос, он выручил большую сумму денег, сдавая их в аренду на своих условиях, став <strong> первым известным человеком, который реализовал опционный контракт.</strong>",
         "markets": {
             "title": "Рынки Бинарных опционов",
-            "option1": "Любой человек в мире может создать рынок бинарных опционов на базе стоимости поддерживаемых активов",
-            "option2": "Маркет-мейкеры не платят комиссии, а зарабатывают на росте объема ликвидности",
+            "option1": "Любой человек в мире может участвовать в рынках бинарных опционов Thales без каких-либо ограничений.",
+            "option2": "Маркет-мейкеры не платят комиссии, а зарабатывают на росте объема ликвидности.",
             "option3": "Децентрализованные, некастодиальные и неподверженные запретам.",
             "view-markets": "Посмотреть рынки"
         },
@@ -68,14 +68,14 @@
             "title": "Для начала вам понадобится",
             "first": "Кошелек Web3, такой как Metamask",
             "second": "Ether для оплаты комиссий сети (также называемый газом)",
-            "third": "Синтететический USD (sUSD), который можно получить на"
+            "third": "Synth USD (sUSD), который можно получить непосредственно из нашего dApp или с помощью"
         },
         "faq": {
             "title": "Часто задаваемые вопросы",
             "firstQ": "Что такое бинарные опционы?",
             "firstA": "Бинарные опционы - это простые и интуитивно понятные диривативные продукты, предлагающие фиксированные выплаты для различных рынков в условиях ограниченных рисков, что делает риск-менеджмент более точным.",
-            "secondQ": "Какие рынки поддерживаются?",
-            "secondA": "Более 60 рынков доступны благодаря использованию ценовых потоков Chainlink, включая криптовалюты, акции, сырьевые активы, валютные и индексные продукты.",
+            "secondQ": "Какая польза от токена THALES?",
+            "secondA": "Токен управления Thales DAO (THALES) - это стандартный токен ERC-20, используемый для управления протоколом Thales. Эти жетоны предоставляют соответствующему игроку ставки право участвовать в управлении Thales. Таким образом, стейкер THALES представляет собой основу каждого ключевого решения, важного для разработки протокола. Любая дополнительная полезность токена, которая может иметь отношение к протоколу, может быть решена и утверждена структурой управления сообществом протокола.",
             "thirdQ": "Какой актив необходим пользователям для создания или приобретения опционов на Thales?",
             "thirdA": "В настоящее время синтетический USD, или sUSD, является единственным активом, поддерживаемым Thales для создания или торговли опционами."
         },
@@ -225,7 +225,7 @@
         "home": {
             "market-card": {
                 "current-asset-price": "Текущая цена актива",
-                "pool-size": "Размер пула",
+                "pool-size": "AMM ликвидность",
                 "end-date": "Дата окончания",
                 "strike-price": "Цена исполнения",
                 "open-orders": "Открытые ордера",
@@ -509,7 +509,7 @@
                 "expiry-label": "Срок действия",
                 "current-result-label": "Текущий результат",
                 "final-result-label": "Конечный результат",
-                "deposited-currency-label": "Депонированно {{currencyKey}}",
+                "deposited-currency-label": "AMM ликвидность",
                 "event-name-label": "Название события",
                 "current-ratio-label": "Коэффициент тока",
                 "final-ratio-label": "Окончательный коэффициент",
@@ -1119,6 +1119,6 @@
         "total-buy-label": "Итого к оплате",
         "skew-tooltip": "AMM добавит влияние на цену на той стороне, которой он более подвержен",
         "max-limit-buy-tooltip": "Максимальное количество вариантов {{currencyKey}} для покупки в AMM",
-        "explanation-text": "<0> Thales AMM - это смарт-контракт, цель которого - обеспечить ликвидность Thales Binary Markets. </0> <0> AMM использует алгоритм BlackScholes для определения реальной цены бинарного опциона. Основываясь на этой цене и перекосе, который представляет собой подверженность AMM текущему рынку, AMM будет предлагать трейдерам купить или продать котировки. </0> <0> AMM Thales всегда стремится сбалансировать свои позиции, поэтому, если у AMM покупается больше длинных опционов, чем коротких, это добавит искажения цены к ценообразованию длинных опционов, предлагая короткие опционы по базовой цене. </0> <0> Поскольку AMM находится в стадии бета-тестирования, у него есть ограничение (лимит) на рынок, а количество опционов, которые можно купить / продать в любое время, ограничено. Однако, даже если все опционы на одной стороне покупаются у AMM, больше ликвидности будет доступно, как только трейдер купит опционы противоположной позиции. </0> <0> AMM Thales поддерживает торговлю только на повышающемся рынке. до 8 часов до наступления рыночной конъюнктуры, чтобы избежать крайних случаев и опережения в последнюю минуту. </0> <0> Более подробную информацию о AMM можно найти здесь: </0> <1 />"
+        "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market up to 8 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
     }
 }

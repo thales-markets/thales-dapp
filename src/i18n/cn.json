@@ -48,7 +48,7 @@
         "thales-is3": "当收获到来时，当需求增长时，他按照自己的条件出租压榨机，赚了一大笔钱，成为<strong>第一个行使期权合同的人。</strong>",
         "markets": {
             "title": "二元市场",
-            "option1": "世界上任何人都可以根据资产的价格创建二元期权市场。",
+            "option1": "世界上任何人都可以不受任何限制地参与泰雷兹二元期权市场。",
             "option2": "做市商不支付任何费用，但随着流动性的增加而盈利。",
             "option3": "无许可、自托管和不受限。",
             "view-markets": "查看市场"
@@ -68,14 +68,14 @@
             "title": "要开始，您需要",
             "first": "Web3钱包，比如说Metamask",
             "second": "以太支付网络费用（也称为gas）",
-            "third": "Synth USD（sUSD），可获得于"
+            "third": "Synth USD（sUSD），可直接从我们的 dApp 或使用"
         },
         "faq": {
             "title": "常见问题",
             "firstQ": "什么是二元期权？",
             "firstA": "二元期权是一种简单直观的衍生品工具，在有限的风险环境中为多种市场提供收益，使风险管理更加精确。",
-            "secondQ": "支持哪些市场？",
-            "secondA": "超过60种市场类型由Chainlink喂价担保，包括加密货币、股票、商品、外汇和指数产品。",
+            "secondQ": "THALES 代币的用途是什么？",
+            "secondA": "Thales DAO 治理代币（THALES）是用于治理 Thales 协议的标准 ERC-20 代币。 这些代币授予各自的利益相关者参与泰雷兹治理的权利。 通过这种方式，THALES 质押者代表了与协议开发相关的每一个关键决策的基础。 任何可能与协议相关的代币的其他效用，都可以由协议的社区治理结构决定和投票。",
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
             "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
@@ -225,7 +225,7 @@
         "home": {
             "market-card": {
                 "current-asset-price": "流动资产价格",
-                "pool-size": "池大小",
+                "pool-size": "AMM流动性",
                 "end-date": "结束日期",
                 "strike-price": "执行价格",
                 "open-orders": "未结订单",
@@ -253,7 +253,7 @@
                 "asset-price-col": "资产价格",
                 "open-orders-col": "未结订单",
                 "phase-col": "阶段",
-                "pool-size-col": "市场大小",
+                "pool-size-col": "AMM流动性",
                 "time-remaining-col": "剩余时间",
                 "competition-tooltip": "该市场参与交易竞赛"
             }
@@ -509,7 +509,7 @@
                 "expiry-label": "到期",
                 "current-result-label": "当前结果",
                 "final-result-label": "最终结果",
-                "deposited-currency-label": "存款{{currencyKey}}",
+                "deposited-currency-label": "AMM流动性",
                 "event-name-label": "事件名称",
                 "current-ratio-label": "现比率",
                 "final-ratio-label": "最终比率",
@@ -1119,6 +1119,6 @@
         "skew-label": "倾斜冲击",
         "beta": "测试版",
         "total-buy-label": "支付总额",
-        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都是从 AMM 购买的，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 只支持在市场上行交易到市场成熟前 8 小时，以避免边缘情况和最后一刻提前运行。</0><0>有关 AMM 的更多信息，请访问：</0><1 />"
+        "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market up to 8 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
     }
 }
