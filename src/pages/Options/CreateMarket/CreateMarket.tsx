@@ -39,12 +39,10 @@ import {
     DoubleShortInputContainer,
     Input,
     InputLabel,
-    LightTooltip,
     ReactSelect,
     ShortInputContainer,
     SliderContainer,
     SliderRange,
-    StyledQuestionMarkIcon,
 } from '../Market/components';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import NumericInput from '../Market/components/NumericInput';
@@ -127,7 +125,6 @@ export const CreateMarket: React.FC = () => {
         const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
         const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
         const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-        const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
         const [l1Fee, setL1Fee] = useState<number | null>(null);
         const isL2 = getIsOVM(networkId);
 
@@ -1036,22 +1033,6 @@ export const CreateMarket: React.FC = () => {
                                 <></>
                             )}
                         </div>
-                        {(sellLong || sellShort) && (
-                            <FlexDivCentered>
-                                <UseLegacySigningContainer>
-                                    <Checkbox
-                                        disabled={isCreatingMarket || isLongSubmitting || isShortSubmitting}
-                                        checked={useLegacySigning}
-                                        value={useLegacySigning.toString()}
-                                        onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                                        label={t('options.common.legacy-signing.label')}
-                                    />
-                                </UseLegacySigningContainer>
-                                <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
-                                    <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                                </LightTooltip>
-                            </FlexDivCentered>
-                        )}
                         <ValidationMessage
                             showValidation={txErrorMessage !== null}
                             message={txErrorMessage}

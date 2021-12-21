@@ -41,10 +41,7 @@ import {
     BuySellSliderContainer,
     ShortInputContainer,
     SummaryContainer,
-    StyledQuestionMarkIcon,
-    LightTooltip,
 } from 'pages/Options/Market/components';
-
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
 import onboardConnector from 'utils/onboardConnector';
@@ -53,8 +50,6 @@ import { COLORS } from 'constants/ui';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import ValidationMessage from 'components/ValidationMessage';
 import ExpirationDropdown from '../components/ExpirationDropdown';
-
-import Checkbox from 'components/Checkbox';
 import styled from 'styled-components';
 import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 import { dispatchMarketNotification } from 'utils/options';
@@ -93,7 +88,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
 
     const orderSideOptions = [
         {
@@ -494,20 +488,6 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
             </SummaryContainer>
             <SubmitButtonContainer>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
-                <FlexDivCentered>
-                    <UseLegacySigningContainer>
-                        <Checkbox
-                            disabled={isSubmitting}
-                            checked={useLegacySigning}
-                            value={useLegacySigning.toString()}
-                            onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                            label={t('options.common.legacy-signing.label')}
-                        />
-                    </UseLegacySigningContainer>
-                    <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
-                        <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                    </LightTooltip>
-                </FlexDivCentered>
             </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}

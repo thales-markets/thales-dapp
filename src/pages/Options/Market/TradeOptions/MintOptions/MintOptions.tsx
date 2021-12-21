@@ -31,8 +31,6 @@ import {
     DoubleShortInputContainer,
     DefaultSubmitButton,
     Divider,
-    StyledQuestionMarkIcon,
-    LightTooltip,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
@@ -86,7 +84,6 @@ const MintOptions: React.FC = () => {
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const [mintedAmount, setMintedAmount] = useState<number | string>('');
-    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
     const marketFees = optionsMarket.fees;
@@ -766,22 +763,6 @@ const MintOptions: React.FC = () => {
             </FeeSummaryContainer>
             <SubmitButtonContainer style={{ marginTop: '20px' }}>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
-                {(sellLong || sellShort) && (
-                    <FlexDivCentered>
-                        <UseLegacySigningContainer>
-                            <Checkbox
-                                disabled={actionInProgress}
-                                checked={useLegacySigning}
-                                value={useLegacySigning.toString()}
-                                onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                                label={t('options.common.legacy-signing.label')}
-                            />
-                        </UseLegacySigningContainer>
-                        <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
-                            <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                        </LightTooltip>
-                    </FlexDivCentered>
-                )}
             </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
