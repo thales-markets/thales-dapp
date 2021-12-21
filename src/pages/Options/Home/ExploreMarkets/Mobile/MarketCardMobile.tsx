@@ -23,6 +23,10 @@ import xyz from 'assets/images/xyz.png';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
 import { getSynthName } from 'utils/currency';
+import { getIsOVM } from 'utils/network';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type MarketCardMobileProps = {
     optionsMarkets: HistoricalOptionsMarketInfo[];
@@ -31,6 +35,7 @@ type MarketCardMobileProps = {
 
 export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     return (
         <Wrapper>
             {optionsMarkets.map((market: HistoricalOptionsMarketInfo, index) => {
@@ -127,11 +132,19 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 {market.customMarket && (
                                     <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {t('options.home.market-card.pool-size')}
+                                            {getIsOVM(networkId)
+                                                ? t('options.home.market-card.pool-size')
+                                                : t('options.home.market-card.amm-liquidity')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            <span className="green">{market.availableLongs}</span> /{' '}
-                                            <span className="red">{market.availableShorts}</span>
+                                            {getIsOVM(networkId) ? (
+                                                <>
+                                                    <span className="green">{market.availableLongs}</span> /{' '}
+                                                    <span className="red">{market.availableShorts}</span>
+                                                </>
+                                            ) : (
+                                                <>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</>
+                                            )}
                                         </Text>
                                     </FlexDivColumnCentered>
                                 )}

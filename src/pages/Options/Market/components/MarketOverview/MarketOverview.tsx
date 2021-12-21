@@ -24,6 +24,7 @@ import useFlippeningQuery from 'queries/options/useFlippeningQuery';
 import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
 import { getSynthName } from 'utils/currency';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { getIsOVM } from 'utils/network';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -263,25 +264,36 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>
-                            {t('options.market.overview.deposited-currency-label', {
-                                currencyKey: SYNTHS_MAP.sUSD,
-                            })}
-                        </Title>
+                        {getIsOVM(networkId) ? (
+                            <>
+                                <Title>{t('options.market.overview.amm-liquidity')}</Title>
 
-                        <Content>
-                            <span className="green">
-                                {openOrdersMap
-                                    ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())?.availableLongs
-                                    : '0'}
-                            </span>{' '}
-                            /{' '}
-                            <span className="red">
-                                {openOrdersMap
-                                    ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())?.availableShorts
-                                    : '0'}
-                            </span>
-                        </Content>
+                                <Content>
+                                    <span className="green">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableLongs
+                                            : '0'}
+                                    </span>{' '}
+                                    /{' '}
+                                    <span className="red">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableShorts
+                                            : '0'}
+                                    </span>
+                                </Content>
+                            </>
+                        ) : (
+                            <>
+                                <Title>
+                                    {t('options.market.overview.deposited-currency-label', {
+                                        currencyKey: SYNTHS_MAP.sUSD,
+                                    })}
+                                </Title>
+                                <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                            </>
+                        )}
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Title>{t('options.market.overview.time-remaining-label')}</Title>

@@ -254,7 +254,8 @@
                 "asset-price-col": "Asset price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
-                "pool-size-col": "AMM liquidity",
+                "pool-size-col": "Pool size",
+                "amm-size-col": "AMM liquidity",
                 "time-remaining-col": "Time remaining",
                 "competition-tooltip": "This market is eligible for trading competition"
             }
@@ -514,7 +515,8 @@
                 "expiry-label": "Expiry",
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
-                "deposited-currency-label": "AMM liquidity",
+                "deposited-currency-label": "Deposited {{currencyKey}}",
+                "amm-liquidity": "AMM liquidity",
                 "event-name-label": "Event Name",
                 "current-ratio-label": "Current ratio",
                 "final-ratio-label": "Final ratio",
