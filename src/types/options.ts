@@ -20,6 +20,7 @@ export type OptionsTransaction = {
     market: string;
     status?: 'pending' | 'confirmed';
     price?: number;
+    blockNumber: number;
 };
 
 export type OptionValue = {
@@ -171,6 +172,7 @@ export type Trade = {
     takerToken: string;
     makerAmount: number;
     takerAmount: number;
+    blockNumber: number;
 };
 export type ExtendedTrade = Trade & {
     market: string;

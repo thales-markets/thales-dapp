@@ -765,8 +765,10 @@ const AMM: React.FC = () => {
                                 <SummaryContent>
                                     {isGettingQuote ? (
                                         <SimpleLoader />
-                                    ) : (
+                                    ) : Number(price) > 0 || Number(basePrice) > 0 ? (
                                         formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) > 0 ? price : basePrice)
+                                    ) : (
+                                        '-'
                                     )}
                                 </SummaryContent>
                                 <SummaryLabel>

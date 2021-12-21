@@ -36,10 +36,10 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFiltersMobile, setShowFiltersMobile] = useState<boolean>(false);
 
-    const transactions = useMemo(() => orderBy([...marketTransactions, ...tradesTransactions], 'timestamp', 'desc'), [
-        marketTransactions,
-        tradesTransactions,
-    ]);
+    const transactions = useMemo(
+        () => orderBy([...tradesTransactions, ...marketTransactions], ['timestamp', 'blockNumber'], ['desc', 'desc']),
+        [marketTransactions, tradesTransactions]
+    );
 
     const filteredTransactions = useMemo(() => {
         switch (filter) {
