@@ -225,7 +225,8 @@
         "home": {
             "market-card": {
                 "current-asset-price": "Current asset price",
-                "pool-size": "AMM liquidity",
+                "pool-size": "Pool size",
+                "amm-liquidity": "AMM liquidity",
                 "end-date": "End date",
                 "strike-price": "Strike price",
                 "open-orders": "Open orders",

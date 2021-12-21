@@ -16,6 +16,10 @@ import arrowUp from '../../../../assets/images/arrow-up.svg';
 import arrowDown from '../../../../assets/images/arrow-down.svg';
 import SPAAnchor from '../../../../components/SPAAnchor';
 import { getSynthName } from 'utils/currency';
+import { getIsOVM } from 'utils/network';
+import { RootState } from 'redux/rootReducer';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -24,6 +28,7 @@ type MarketCardPros = {
 
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const currentAssetPrice = exchangeRates?.[optionMarket?.currencyKey] || 0;
     const strikeAndAssetPriceDifference = getPercentageDifference(currentAssetPrice, optionMarket?.strikePrice);
     return (
@@ -106,11 +111,26 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             </GradientBorderWrapper>
                             <GradientBorderWrapper>
                                 <MarketInfo>
-                                    <MarketInfoTitle>{t('options.home.market-card.pool-size')}:</MarketInfoTitle>
-                                    <MarketInfoContent>
-                                        <span className="green">{optionMarket.availableLongs}</span> /{' '}
-                                        <span className="red">{optionMarket.availableShorts}</span>
-                                    </MarketInfoContent>
+                                    {getIsOVM(networkId) ? (
+                                        <>
+                                            <MarketInfoTitle>
+                                                {t('options.home.market-card.amm-liquidity')}:
+                                            </MarketInfoTitle>
+                                            <MarketInfoContent>
+                                                <span className="green">{optionMarket.availableLongs}</span> /{' '}
+                                                <span className="red">{optionMarket.availableShorts}</span>
+                                            </MarketInfoContent>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <MarketInfoTitle>
+                                                {t('options.home.market-card.pool-size')}:
+                                            </MarketInfoTitle>
+                                            <MarketInfoContent>
+                                                {formatCurrencyWithSign(USD_SIGN, optionMarket.poolSize)}
+                                            </MarketInfoContent>
+                                        </>
+                                    )}
                                 </MarketInfo>
                             </GradientBorderWrapper>
                             <GradientBorderWrapper>
