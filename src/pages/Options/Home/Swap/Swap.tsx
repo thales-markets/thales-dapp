@@ -210,109 +210,126 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     };
 
     return (
-        <GradientBorderWrapper>
-            <GradientBorderContent className={isLoading ? 'loading' : ''}>
-                <CloseButton onClick={handleClose.bind(this, false)} />
-                <SectionWrapper>
-                    <FlexDivRowCentered>
-                        <Text className="text-xxs white">From:</Text>
-                        <Text className="text-xxs white">Balance: {Number(balance).toFixed(4)}</Text>
-                    </FlexDivRowCentered>
-                    <FlexDivRowCentered>
-                        <Select
-                            options={preLoadTokens}
-                            formatOptionLabel={(option: any) => {
-                                return (
-                                    <FlexDivRowCentered style={{ flex: 1 }}>
-                                        <Image
-                                            src={option.logoURI}
-                                            style={{ width: 32, height: 32, marginRight: 6 }}
-                                        ></Image>
-                                        <Text className="text-xs white">{option.name}</Text>
-                                    </FlexDivRowCentered>
-                                );
-                            }}
-                            value={fromToken}
-                            onChange={(option: any) => {
-                                _setFromToken(option);
-                            }}
-                        ></Select>
+        <>
+            {networkId !== 1 && networkId !== 10 ? (
+                <GradientBorderWrapper>
+                    <GradientBorderContent className="unsupported">
+                        <CloseButton onClick={handleClose.bind(this, false)} />{' '}
+                        <Text style={{ fontSize: 18, display: 'flex', alignSelf: 'center' }}>
+                            {t(`common.errors.insufficient-liquidity`)}
+                        </Text>
+                    </GradientBorderContent>
+                </GradientBorderWrapper>
+            ) : (
+                <GradientBorderWrapper>
+                    <GradientBorderContent className={isLoading ? 'loading' : ''}>
+                        <CloseButton onClick={handleClose.bind(this, false)} />
+                        <SectionWrapper>
+                            <FlexDivRowCentered>
+                                <Text className="text-xxs white">From:</Text>
+                                <Text className="text-xxs white">Balance: {Number(balance).toFixed(4)}</Text>
+                            </FlexDivRowCentered>
+                            <FlexDivRowCentered>
+                                <Select
+                                    options={preLoadTokens}
+                                    formatOptionLabel={(option: any) => {
+                                        return (
+                                            <FlexDivRowCentered style={{ flex: 1 }}>
+                                                <Image
+                                                    src={option.logoURI}
+                                                    style={{ width: 32, height: 32, marginRight: 6 }}
+                                                ></Image>
+                                                <Text className="text-xs white">{option.name}</Text>
+                                            </FlexDivRowCentered>
+                                        );
+                                    }}
+                                    value={fromToken}
+                                    onChange={(option: any) => {
+                                        _setFromToken(option);
+                                    }}
+                                ></Select>
 
-                        <NumInput
-                            style={{ padding: 10, width: 150, textAlign: 'right' }}
-                            value={amount}
-                            onChange={(_, value) => {
-                                setAmount(value as any);
-                            }}
-                        ></NumInput>
-                    </FlexDivRowCentered>
-                </SectionWrapper>
-                <SceletonWrapper className={showSceleton ? 'visible' : ''}>
-                    <FlexDivRowCentered>
-                        <TextSceleton className="small" />
-                        <TextSceleton className="large" />
-                    </FlexDivRowCentered>
-                    <FlexDivRowCentered style={{ height: 64 }}>
-                        <FlexDivCentered>
-                            <ImageSceleton />
-                            <TextSceleton className="medium" />
-                        </FlexDivCentered>
-                        <TextSceleton className="medium" />
-                    </FlexDivRowCentered>
-                </SceletonWrapper>
-                <SectionWrapper className={showSceleton ? 'hide' : ''}>
-                    <FlexDivRowCentered>
-                        <Text className="text-xxs white">To:</Text>
-                        <Text className="text-xxs white">
-                            Estimated Gas:{' '}
-                            {previewData
-                                ? formatCurrencyWithSign(
-                                      USD_SIGN,
-                                      getTransactionPrice(gasPrice, Number((previewData as any).estimatedGas), ethRate)
-                                  )
-                                : 'n/a'}
-                        </Text>
-                    </FlexDivRowCentered>
-                    <FlexDivRowCentered>
-                        <Select
-                            options={preLoadTokens}
-                            formatOptionLabel={(option: any) => {
-                                return (
-                                    <FlexDivRowCentered style={{ flex: 1 }}>
-                                        <Image
-                                            src={option.logoURI}
-                                            style={{ width: 32, height: 32, marginRight: 6 }}
-                                        ></Image>
-                                        <Text className="text-xs white">{option.name}</Text>
-                                    </FlexDivRowCentered>
-                                );
-                            }}
-                            isDisabled={true}
-                            value={toToken}
-                            onChange={(option: any) => {
-                                _setToToken(option);
-                            }}
-                        ></Select>
-                        <Text className="text-m white blur">
-                            {previewData
-                                ? Number(
-                                      ethers.utils.formatUnits(
-                                          (previewData as any).toTokenAmount,
-                                          (previewData as any).toToken.decimals
-                                      )
-                                  ).toFixed(4)
-                                : 'n/a'}
-                        </Text>
-                    </FlexDivRowCentered>
-                </SectionWrapper>
-                {getButton()}
-                {isLoading && (
-                    <LoaderContainer>
-                        <SimpleLoader />
-                    </LoaderContainer>
-                )}
-            </GradientBorderContent>
-        </GradientBorderWrapper>
+                                <NumInput
+                                    style={{ padding: 10, width: 150, textAlign: 'right' }}
+                                    value={amount}
+                                    onChange={(_, value) => {
+                                        setAmount(value as any);
+                                    }}
+                                ></NumInput>
+                            </FlexDivRowCentered>
+                        </SectionWrapper>
+                        <SceletonWrapper className={showSceleton ? 'visible' : ''}>
+                            <FlexDivRowCentered>
+                                <TextSceleton className="small" />
+                                <TextSceleton className="large" />
+                            </FlexDivRowCentered>
+                            <FlexDivRowCentered style={{ height: 64 }}>
+                                <FlexDivCentered>
+                                    <ImageSceleton />
+                                    <TextSceleton className="medium" />
+                                </FlexDivCentered>
+                                <TextSceleton className="medium" />
+                            </FlexDivRowCentered>
+                        </SceletonWrapper>
+                        <SectionWrapper className={showSceleton ? 'hide' : ''}>
+                            <FlexDivRowCentered>
+                                <Text className="text-xxs white">To:</Text>
+                                <Text className="text-xxs white">
+                                    Estimated Gas:{' '}
+                                    {previewData
+                                        ? formatCurrencyWithSign(
+                                              USD_SIGN,
+                                              getTransactionPrice(
+                                                  gasPrice,
+                                                  Number((previewData as any).estimatedGas),
+                                                  ethRate
+                                              )
+                                          )
+                                        : 'n/a'}
+                                </Text>
+                            </FlexDivRowCentered>
+                            <FlexDivRowCentered>
+                                <Select
+                                    options={preLoadTokens}
+                                    formatOptionLabel={(option: any) => {
+                                        return (
+                                            <FlexDivRowCentered style={{ flex: 1 }}>
+                                                <Image
+                                                    src={option.logoURI}
+                                                    style={{ width: 32, height: 32, marginRight: 6 }}
+                                                ></Image>
+                                                <Text className="text-xs white">{option.name}</Text>
+                                            </FlexDivRowCentered>
+                                        );
+                                    }}
+                                    isDisabled={true}
+                                    value={toToken}
+                                    onChange={(option: any) => {
+                                        _setToToken(option);
+                                    }}
+                                ></Select>
+                                <Text className="text-m white blur">
+                                    {previewData
+                                        ? Number(
+                                              ethers.utils.formatUnits(
+                                                  (previewData as any).toTokenAmount,
+                                                  (previewData as any).toToken.decimals
+                                              )
+                                          ).toFixed(4)
+                                        : 'n/a'}
+                                </Text>
+                            </FlexDivRowCentered>
+                        </SectionWrapper>
+                        {getButton()}
+                        {isLoading && (
+                            <LoaderContainer>
+                                <SimpleLoader />
+                            </LoaderContainer>
+                        )}
+                    </GradientBorderContent>
+                </GradientBorderWrapper>
+            )}
+        </>
     );
 };
 
@@ -384,6 +401,9 @@ const GradientBorderContent = styled.div`
     height: 334px;
     &.loading {
         opacity: 0.85;
+    }
+    &.unsupported {
+        height: 115px;
     }
     @media screen and (max-width: 500px) {
         width: 340px;

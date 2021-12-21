@@ -654,6 +654,7 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "amount-label-mobile": "Amount:",
                     "price-label": "Price per {{currencyKey}}",
+                    "price-for-label": "Amount per {{currencyKey}}",
                     "price-label-mobile": "Price per:",
                     "expiration-label": "Expires in",
                     "total-label": "Total (sUSD)",
@@ -927,7 +928,8 @@
             "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
-            "insufficient-balance": "Insufficient balance"
+            "insufficient-balance": "Insufficient balance",
+            "not-supported": " Swap is not supported on Test networks"
         },
         "royale": {
             "header": {

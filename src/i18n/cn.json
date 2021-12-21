@@ -677,7 +677,8 @@
                             "progress-label": "正在出售…",
                             "confirmation-message": "已成功售出"
                         }
-                    }
+                    },
+                    "price-for-label": "每个 {{currencyKey}} 的金额"
                 },
                 "mint": {
                     "amount-label": "金额",
@@ -927,7 +928,8 @@
             "enter-amount": "输入数量",
             "approve": "授予交易{{currency}}的权限}",
             "swap": "交易",
-            "insufficient-balance": "余额不足"
+            "insufficient-balance": "余额不足",
+            "not-supported": " 测试网络不支持交换"
         },
         "royale": {
             "header": {
@@ -1116,6 +1118,7 @@
         "total-sell-label": "接收总数",
         "skew-label": "倾斜冲击",
         "beta": "测试版",
-        "total-buy-label": "支付总额"
+        "total-buy-label": "支付总额",
+        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都是从 AMM 购买的，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 只支持在市场上行交易到市场成熟前 8 小时，以避免边缘情况和最后一刻提前运行。</0><0>有关 AMM 的更多信息，请访问：</0><1 />"
     }
 }
