@@ -49,8 +49,9 @@ import { MarketOverviewMobile } from './components/MarketOverview/MarketOverview
 import MarketMobile from './MarketMobile';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import AMM from './AMM';
-import { getIsOVM } from 'utils/network';
+import { getIsOVM, NetworkId } from 'utils/network';
 import { BetaBadge } from './components';
+import { buildHref, navigateTo } from '../../../utils/routes';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -73,10 +74,19 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
     const ammSelected = useSelector((state: RootState) => getAmmSelected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
+    const [currentNetwork, setCurrentNetwork] = useState<null | NetworkId>(null);
 
     const marketQuery = useBinaryOptionsMarketQuery(marketAddress, {
         enabled: isAppReady,
     });
+
+    useEffect(() => {
+        if (!currentNetwork) {
+            setCurrentNetwork(networkId);
+        } else {
+            navigateTo(buildHref(ROUTES.Options.Home));
+        }
+    }, [networkId]);
 
     useEffect(() => {
         const fetchMarketData = async () => {
@@ -123,6 +133,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
                 } else {
                     setOptionsMarket(marketQuery.data);
                 }
+            } else if (marketQuery.data === null) {
+                navigateTo(buildHref(ROUTES.Options.Home));
             }
         };
         fetchMarketData();
