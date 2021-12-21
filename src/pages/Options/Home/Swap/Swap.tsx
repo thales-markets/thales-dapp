@@ -1,4 +1,5 @@
 import SimpleLoader from 'components/SimpleLoader';
+import { ValidationMessage } from 'components/ValidationMessage/ValidationMessage';
 import { SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import { BigNumber, ethers } from 'ethers';
 import { get } from 'lodash';
@@ -26,6 +27,7 @@ import {
 import erc20Contract from 'utils/contracts/erc20Contract';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { getIsOVM, getTransactionPrice } from 'utils/network';
+import { dispatchMarketNotification } from 'utils/options';
 import { refetchUserBalance } from 'utils/queryConnector';
 import { ETH_Dai, ETH_Eth, ETH_sUSD, ETH_USDC, ETH_USDT, OP_Dai, OP_Eth, OP_sUSD, OP_USDC, OP_USDT } from './tokens';
 import useApproveSpender from './useApproveSpender';
@@ -49,6 +51,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     const [balance, setBalance] = useState('0');
     const [isLoading, setLoading] = useState(false);
     const [showSceleton, setShowSceleton] = useState(false);
+    const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     const ethGasPriceEip1559Query = useEthGasPriceEip1559Query(networkId, { enabled: isAppReady });
     const gasPrice = ethGasPriceEip1559Query.isSuccess ? ethGasPriceEip1559Query.data.proposeGasPrice ?? null : null;
@@ -65,7 +68,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
         networkId,
         fromToken,
         toToken,
-        ethers.utils.parseUnits(amount.toString(), fromToken.decimals),
+        ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
         { enabled: false }
     );
 
@@ -74,7 +77,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
         fromToken,
         toToken,
         walletAddress ? walletAddress : '',
-        ethers.utils.parseUnits(amount.toString(), fromToken.decimals),
+        ethers.utils.parseUnits(amount ? amount.toString() : '0', fromToken.decimals),
         {
             enabled: false,
         }
@@ -84,6 +87,8 @@ const Swap: React.FC<any> = ({ handleClose }) => {
         if (fromToken && amount > 0) {
             setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
+                console.log(amount);
+                console.log(resp.data?.toTokenAmount);
                 setPreviewData(resp.data as any);
                 setShowSceleton(false);
             });
@@ -147,28 +152,35 @@ const Swap: React.FC<any> = ({ handleClose }) => {
 
     const swapTx = async () => {
         setLoading(true);
-        const req = await swapQuery.refetch();
-        if (req.isSuccess) {
-            const data = req.data as any;
-            const transactionData = {
-                data: data.tx.data,
-                from: data.tx.from,
-                to: data.tx.to,
-                value: BigNumber.from(data.tx.value).toHexString(),
-            };
-            const tx = await signer.sendTransaction(transactionData);
-            await tx.wait();
-            refetchUserBalance(walletAddress as any, networkId);
+        try {
+            const req = await swapQuery.refetch();
+            if (req.isSuccess) {
+                const data = req.data as any;
+                const transactionData = {
+                    data: data.tx.data,
+                    from: data.tx.from,
+                    to: data.tx.to,
+                    value: BigNumber.from(data.tx.value).toHexString(),
+                };
+                const tx = await signer.sendTransaction(transactionData);
+                await tx.wait();
+                refetchUserBalance(walletAddress as any, networkId);
+                setLoading(false);
+                dispatchMarketNotification(t('options.swap.tx-success'));
+                return {
+                    data: (data as any).tx.data,
+                    from: (data as any).tx.from,
+                    to: (data as any).tx.to,
+                    value:
+                        Number((data as any).tx.value) > 0
+                            ? ethers.utils.parseUnits(amount.toString(), fromToken.decimals)
+                            : undefined,
+                };
+            }
+        } catch (e) {
             setLoading(false);
-            return {
-                data: (data as any).tx.data,
-                from: (data as any).tx.from,
-                to: (data as any).tx.to,
-                value:
-                    Number((data as any).tx.value) > 0
-                        ? ethers.utils.parseUnits(amount.toString(), fromToken.decimals)
-                        : undefined,
-            };
+            setTxErrorMessage(e.code === 4001 ? t('options.swap.tx-user-rejected') : t('options.swap.tx-success'));
+            console.log('failed: ', e);
         }
     };
 
@@ -222,7 +234,9 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                 </GradientBorderWrapper>
             ) : (
                 <GradientBorderWrapper>
-                    <GradientBorderContent className={isLoading ? 'loading' : ''}>
+                    <GradientBorderContent
+                        className={` ${isLoading ? 'loading' : ''} ${txErrorMessage !== null ? 'error' : ''}`}
+                    >
                         <CloseButton onClick={handleClose.bind(this, false)} />
                         <SectionWrapper>
                             <FlexDivRowCentered>
@@ -326,6 +340,11 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                 <SimpleLoader />
                             </LoaderContainer>
                         )}
+                        <ValidationMessage
+                            showValidation={txErrorMessage !== null}
+                            message={txErrorMessage}
+                            onDismiss={() => setTxErrorMessage(null)}
+                        />
                     </GradientBorderContent>
                 </GradientBorderWrapper>
             )}
@@ -404,6 +423,9 @@ const GradientBorderContent = styled.div`
     }
     &.unsupported {
         height: 115px;
+    }
+    &.error {
+        height: 395px;
     }
     @media screen and (max-width: 500px) {
         width: 340px;

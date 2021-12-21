@@ -929,7 +929,10 @@
             "approve": "授予交易{{currency}}的权限}",
             "swap": "交易",
             "insufficient-balance": "余额不足",
-            "not-supported": " 测试网络不支持交换"
+            "not-supported": " 测试网络不支持交换",
+            "tx-failed": "交易失败",
+            "tx-success": "成功买入sUSD",
+            "tx-user-rejected": "用户拒绝交易"
         },
         "royale": {
             "header": {
