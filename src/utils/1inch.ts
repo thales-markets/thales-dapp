@@ -36,7 +36,9 @@ export const ONE_INCH_SWAP_CONTRACTS: Record<NetworkId, string | null> = {
 };
 
 export const ONE_INCH_SWAP_APPROVE_ALLOWANCE_URL = 'approve/allowance';
+export const ONE_INCH_SWAP_APPROVE_SPENDER_URL = 'approve/spender';
 export const ONE_INCH_SWAP_QUOTE_URL = 'quote';
+export const ONE_INCH_SWAP_URL = 'swap';
 
 export const get1InchBaseURL = (networkId: NetworkId) => {
     return `https://api.1inch.exchange/v4.0/${networkId}/`;

@@ -72,8 +72,8 @@ export enum OrderbookFilterEnum {
     BUY = 'buy',
     SELL = 'sell',
 }
-export enum Zero0xErrorCode {
-    VALIDATION_FAILED = 100,
+export enum OneInchErrorReason {
+    INSUFFICIENT_LIQUIDITY = 'insufficient liquidity',
     TRANSACTION_INVALID = 105,
 }
 

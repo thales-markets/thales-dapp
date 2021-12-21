@@ -206,10 +206,9 @@ export type UserOrder = {
 
 export type UserOrders = UserOrder[];
 
-export type ZeroExErrorResponse = {
-    code: number;
-    reason: string;
-    validationErrors?: ZeroExValidationError[];
+export type OneInchErrorResponse = {
+    statusCode: number;
+    description: string;
 };
 
 export type ZeroExValidationError = {
