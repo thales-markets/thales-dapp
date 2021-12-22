@@ -169,8 +169,11 @@
         },
         "unsupported-network": {
             "title": "哎呀！你在错的网络上！",
-            "description": "您在钱包中选择了错误的网络。请从wallet切换到以太坊网络以继续。",
-            "button": "切换到主网"
+            "description": "您在钱包中选择了错误的网络。 要继续，请切换到以太坊主网或乐观网络。",
+            "button": {
+                "mainnet": "切换到主网",
+                "optimism": "转为乐观"
+            }
         }
     },
     "modals": {
@@ -225,7 +228,8 @@
         "home": {
             "market-card": {
                 "current-asset-price": "流动资产价格",
-                "pool-size": "AMM流动性",
+                "pool-size": "池大小",
+                "amm-liquidity": "AMM流动性",
                 "end-date": "结束日期",
                 "strike-price": "执行价格",
                 "open-orders": "未结订单",
@@ -253,7 +257,8 @@
                 "asset-price-col": "资产价格",
                 "open-orders-col": "未结订单",
                 "phase-col": "阶段",
-                "pool-size-col": "AMM流动性",
+                "pool-size-col": "市场大小",
+                "amm-size-col": "AMM流动性",
                 "time-remaining-col": "剩余时间",
                 "competition-tooltip": "该市场参与交易竞赛"
             }
@@ -509,7 +514,8 @@
                 "expiry-label": "到期",
                 "current-result-label": "当前结果",
                 "final-result-label": "最终结果",
-                "deposited-currency-label": "AMM流动性",
+                "deposited-currency-label": "存款{{currencyKey}}",
+                "amm-liquidity": "AMM流动性",
                 "event-name-label": "事件名称",
                 "current-ratio-label": "现比率",
                 "final-ratio-label": "最终比率",

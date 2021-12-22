@@ -21,7 +21,7 @@
             "maturity-date-col": "Дата погашения",
             "long-col": "сЛОНГ",
             "short-col": "сШОРТ",
-            "pool-size-col": "AMM ликвидность",
+            "pool-size-col": "Размер пула",
             "amount-col": "Сумма",
             "price-col": "Цена",
             "filled-col": "Исполнен",
@@ -169,8 +169,11 @@
         },
         "unsupported-network": {
             "title": "Упс! Вы находитесь не в той сети",
-            "description": "Вы выбрали не ту сеть в своем кошельке. Для продолжения, пожалуйста, смените ее на сеть Ethereum.",
-            "button": "Переключитесь на основную сеть."
+            "description": "Вы выбрали не ту сеть в своем кошельке. Для продолжения, пожалуйста, смените ее на сеть Ethereum или Optimism.",
+            "button": {
+                "mainnet": "Переключитесь на основную сеть.",
+                "optimism": "Перейти к оптимизму "
+            }
         }
     },
     "modals": {
@@ -225,7 +228,8 @@
         "home": {
             "market-card": {
                 "current-asset-price": "Текущая цена актива",
-                "pool-size": "AMM ликвидность",
+                "pool-size": "Размер пула",
+                "amm-liquidity": "AMM ликвидность",
                 "end-date": "Дата окончания",
                 "strike-price": "Цена исполнения",
                 "open-orders": "Открытые ордера",
@@ -254,6 +258,7 @@
                 "open-orders-col": "Открытые ордера",
                 "phase-col": "Фаза",
                 "pool-size-col": "Размер рынка",
+                "amm-size-col": "AMM ликвидность",
                 "time-remaining-col": "Оставшееся время",
                 "competition-tooltip": "Этот рынок имеет право на торговую конкуренцию "
             }
@@ -509,7 +514,8 @@
                 "expiry-label": "Срок действия",
                 "current-result-label": "Текущий результат",
                 "final-result-label": "Конечный результат",
-                "deposited-currency-label": "AMM ликвидность",
+                "deposited-currency-label": "Депонированно {{currencyKey}}",
+                "amm-liquidity": "AMM ликвидность",
                 "event-name-label": "Название события",
                 "current-ratio-label": "Коэффициент тока",
                 "final-ratio-label": "Окончательный коэффициент",
