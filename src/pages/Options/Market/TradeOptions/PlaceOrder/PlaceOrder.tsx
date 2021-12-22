@@ -1,6 +1,6 @@
 import { OPTIONS_CURRENCY_MAP, SYNTHS_MAP, USD_SIGN } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -17,30 +17,30 @@ import { APPROVAL_EVENTS } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import {
     AMOUNT_PERCENTAGE,
-    OrderPeriod,
-    OrderPeriodItem,
     ORDER_PERIOD_IN_SECONDS,
     ORDER_PERIOD_ITEMS_MAP,
+    OrderPeriod,
+    OrderPeriodItem,
 } from 'constants/options';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
 import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 import useBinaryOptionsAccountMarketInfoQuery from 'queries/options/useBinaryOptionsAccountMarketInfoQuery';
 import {
-    Container,
-    InputLabel,
-    SubmitButtonContainer,
-    ReactSelect,
-    CurrencyLabel,
     AmountButton,
     AmountButtonContainer,
-    SummaryLabel,
-    SummaryItem,
-    SummaryContent,
-    SubmitButton,
-    SliderRange,
     BuySellSliderContainer,
+    Container,
+    CurrencyLabel,
+    InputLabel,
+    ReactSelect,
     ShortInputContainer,
+    SliderRange,
+    SubmitButton,
+    SubmitButtonContainer,
     SummaryContainer,
+    SummaryContent,
+    SummaryItem,
+    SummaryLabel,
 } from 'pages/Options/Market/components';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import NumericInput from '../../components/NumericInput';
@@ -88,7 +88,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [isPriceValid, setIsPriceValid] = useState(true);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
-
+    const [isExpirationAfterMaturity, setIsExpirationAfterMaturity] = useState<boolean>(false);
     const orderSideOptions = [
         {
             value: 'buy' as OrderSide,
@@ -175,6 +175,47 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
         }
         return orderEndDate;
     };
+
+    const checkIfPeriodEndsAfterMarketMaturity = useCallback(
+        (periodDurationInSeconds: number, suppressNotification?: boolean) => {
+            const now = new Date().getTime() / 1000;
+            if (now + periodDurationInSeconds >= optionsMarket.maturityDate / 1000) {
+                if (!suppressNotification) {
+                    // dispatchMarketNotification('Order expiration cannot be after market maturity', 'error');
+                    setIsExpirationAfterMaturity(true);
+                    setTimeout(() => {
+                        setIsExpirationAfterMaturity(false);
+                    }, 5000);
+                }
+                return true;
+            }
+            return false;
+        },
+        [optionsMarket]
+    );
+
+    const setExpirationCallback = useCallback(
+        (period: OrderPeriod | undefined, suppressNotification?: boolean) => {
+            if (period && checkIfPeriodEndsAfterMarketMaturity(ORDER_PERIOD_IN_SECONDS[period], suppressNotification)) {
+                setExpiration(OrderPeriod.TRADING_END);
+            } else {
+                setExpiration(period);
+            }
+        },
+        [setExpiration, optionsMarket]
+    );
+
+    const setCustomHoursExpirationCallback = useCallback(
+        (hours: number | string) => {
+            if (checkIfPeriodEndsAfterMarketMaturity(Number(hours) * ORDER_PERIOD_IN_SECONDS[OrderPeriod.ONE_HOUR])) {
+                setCustomHoursExpiration('');
+                setExpiration(OrderPeriod.TRADING_END);
+            } else {
+                setCustomHoursExpiration(hours);
+            }
+        },
+        [setCustomHoursExpiration, setExpiration]
+    );
 
     useEffect(() => {
         const erc20Instance = new ethers.Contract(makerToken, erc20Contract.abi, snxJSConnector.signer);
@@ -329,7 +370,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
     const resetForm = () => {
         setAmount(defaultAmount || '');
         setPrice(defaultPrice || '');
-        setExpiration(OrderPeriod.ONE_DAY);
+        setExpirationCallback(OrderPeriod.ONE_DAY, true);
         setCustomHoursExpiration('');
         const defaultOrderSideOption = orderSideOptions.find((option) => option.value === defaultOrderSide);
         setOrderSide(defaultOrderSideOption || orderSideOptions[0]);
@@ -452,16 +493,20 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
                 <ShortInputContainer>
                     <ExpirationDropdown
                         expirationOptions={expirationOptions}
-                        onChange={(option: any) => setExpiration(option)}
+                        onChange={(option: any) => setExpirationCallback(option)}
                         value={expiration}
                         customValue={customHoursExpiration}
-                        onCustomChange={(value: string | number) => setCustomHoursExpiration(value)}
+                        onCustomChange={(value: string | number) => setCustomHoursExpirationCallback(value)}
                         disabled={isSubmitting}
                     />
                     <InputLabel>{t('options.market.trade-options.place-order.expiration-label')}</InputLabel>
                     <FieldValidationMessage
                         showValidation={!isExpirationEntered}
                         message={t(`common.errors.insufficient-balance-wallet`)}
+                    />
+                    <FieldValidationMessage
+                        showValidation={isExpirationAfterMaturity}
+                        message={t('options.market.trade-options.place-order.errors.order-after-maturity')}
                     />
                 </ShortInputContainer>
             </FlexDiv>
@@ -479,7 +524,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
             <SummaryContainer className="marketTab__summary">
                 <SummaryItem>
                     <SummaryLabel style={{ minWidth: 80 }}>
-                        {t('options.market.trade-options.place-order.total-label')}
+                        {t('options.market.trade-options.place-order.total-label-susd')}
                     </SummaryLabel>
                     <SummaryContent>
                         {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}
