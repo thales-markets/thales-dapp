@@ -401,6 +401,7 @@ const GradientBorderWrapper = styled.div`
     width: 422px;
     padding: 1px;
     @media screen and (max-width: 500px) {
+        top: 50px;
         width: 342px;
     }
 `;
