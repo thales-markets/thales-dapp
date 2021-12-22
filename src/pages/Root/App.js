@@ -37,7 +37,7 @@ const App = () => {
     const networkId = useSelector((state) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
-    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false });
+    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
     queryConnector.setQueryClient();
 
@@ -161,12 +161,12 @@ const App = () => {
         if (e) {
             return;
         }
-        setSnackbarDetails({ ...snackbarDetails, isOpen: false });
+        setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
     };
 
     useEffect(() => {
         const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, isOpen: true });
+            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
         };
         document.addEventListener('market-notification', handler);
         return () => {
@@ -268,7 +268,7 @@ const App = () => {
                     }}
                     autoHideDuration={5000}
                 >
-                    <Alert elevation={6} variant="filled" severity="success">
+                    <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
                         {snackbarDetails.message}
                     </Alert>
                 </Snackbar>

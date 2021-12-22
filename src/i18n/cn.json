@@ -684,7 +684,10 @@
                             "confirmation-message": "已成功售出"
                         }
                     },
-                    "price-for-label": "每个 {{currencyKey}} 的金额"
+                    "price-for-label": "每个 {{currencyKey}} 的金额",
+                    "errors": {
+                        "order-after-maturity": "订单到期不能在市场到期后，默认为交易期到期"
+                    }
                 },
                 "mint": {
                     "amount-label": "金额",

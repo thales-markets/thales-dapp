@@ -684,7 +684,10 @@
                             "confirmation-message": "Успешно продано"
                         }
                     },
-                    "price-for-label": "Сумма за {{currencyKey}}"
+                    "price-for-label": "Сумма за {{currencyKey}}",
+                    "errors": {
+                        "order-after-maturity": "Срок действия ордера не может быть после наступления рыночного срока, по умолчанию - до истечения торгового периода."
+                    }
                 },
                 "mint": {
                     "amount-label": "Сумма",

@@ -3,6 +3,7 @@ import orderBy from 'lodash/orderBy';
 import { PHASE } from '../constants/options';
 import { OptionsMarkets, Phase } from '../types/options';
 import { getSynthAsset } from './currency';
+import { Color } from '@material-ui/lab';
 
 export const sortOptionsMarkets = (markets: OptionsMarkets) =>
     orderBy(
@@ -84,10 +85,10 @@ export const isMarketWidgetVisible = (
     }
 };
 
-export const dispatchMarketNotification = (message: string) => {
+export const dispatchMarketNotification = (message: string, type?: Color) => {
     const marketNotificationEvent = new CustomEvent('market-notification', {
         bubbles: true,
-        detail: { text: message },
+        detail: { text: message, type: type },
     });
     document.dispatchEvent(marketNotificationEvent);
 };

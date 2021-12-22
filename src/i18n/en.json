@@ -688,6 +688,9 @@
                             "progress-label": "Selling in progress...",
                             "confirmation-message": "Successfully sold"
                         }
+                    },
+                    "errors": {
+                        "order-after-maturity": "Order expiration cannot be after market maturity, defaulted to trading period expiration"
                     }
                 },
                 "mint": {
