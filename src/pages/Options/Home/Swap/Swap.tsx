@@ -266,7 +266,11 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                 ></Select>
 
                                 <NumInput
-                                    style={{ padding: 10, width: 150, textAlign: 'right' }}
+                                    style={{
+                                        padding: 10,
+                                        width: window.innerWidth <= 500 ? 130 : 150,
+                                        textAlign: 'right',
+                                    }}
                                     value={amount}
                                     onChange={(_, value) => {
                                         setAmount(value as any);
@@ -444,6 +448,7 @@ const SceletonWrapper = styled.div`
     border-radius: 20px;
     &.visible {
         display: block;
+        width: 100%;
     }
 
     @keyframes shimmer {

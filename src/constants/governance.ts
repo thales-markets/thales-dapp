@@ -21,11 +21,17 @@ export const SNAPSHOT_MESSAGE_API_URL = 'https://hub.snapshot.org/api/message';
 export const MESSAGE_VOTE_TYPE = 'vote';
 export const MESSAGE_VERSION = '0.1.3';
 
-export const NUMBER_OF_COUNCIL_MEMBERS = 4;
-export const COUNCIL_PROPOSAL_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
+export const VOTING_COUNCIL_PROPOSAL_ID = '0x6b04d3f3824ef26750509d483cd9395c49b92555536a5ba3df8cf490022bb294';
+export const COUNCIL_PROPOSAL_ID = '0x6b04d3f3824ef26750509d483cd9395c49b92555536a5ba3df8cf490022bb294';
 export const FIRST_COUNCIL_ELECTIONS_ID = 'QmcKWQZYyj6Z7iaWpUR3unjNU5otchQsARSVjE4utYSyv3';
 
-export const PROPOSAL_APPROVAL_VOTES = 3;
+export const NUMBER_OF_COUNCIL_MEMBERS_OLD = 4;
+export const PROPOSAL_APPROVAL_VOTES_OLD = 3;
+
+export const NUMBER_OF_COUNCIL_MEMBERS = 7;
+export const PROPOSAL_APPROVAL_VOTES = 5;
+
+export const OLD_COUNCIL_END_DATE = new Date('Dec 22 2021 00:00:00 UTC');
 
 export const EXCLUDED_PROPOSALS = [
     'QmNhZzp96fEzA4LFBnARKw2A4SYBQRaftzR3cRw3NqC2Yb',
