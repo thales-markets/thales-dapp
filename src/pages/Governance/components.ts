@@ -21,7 +21,12 @@ export const SidebarContentWrapper = styled(FlexDivColumn)`
 `;
 
 export const SidebarContent = styled(FlexDivColumn)<{ type?: string; isCouncilVoting?: boolean }>`
-    padding: ${(props) => (props.type === 'results' && !props.isCouncilVoting ? '10px 0 20px 0' : '0')};
+    padding: ${(props) =>
+        props.type === 'results' && !props.isCouncilVoting
+            ? '10px 0 20px 0'
+            : props.isCouncilVoting && props.type === 'results'
+            ? '0 0 10px 0'
+            : '0'};
     background-color: #04045a;
     border-radius: 0 0 5px 5px;
 `;
