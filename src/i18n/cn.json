@@ -130,7 +130,8 @@
             "invalid-amount-max": "金额不能高于{{max}}",
             "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
             "invalid-slippage": "无效滑点",
-            "max-limit-exceeded": "金额超过 AMM 上的可用金额"
+            "max-limit-exceeded": "金额超过 AMM 上的可用金额",
+            "user-rejected-tx": "用户拒绝交易"
         },
         "search": "搜索",
         "buy": "买",
@@ -236,7 +237,8 @@
                 "difference-text": "当前价格与执行价格之间的差异",
                 "time-remaining": "剩余时间",
                 "result": "当前结果",
-                "view-market": "查看市场"
+                "view-market": "查看市场",
+                "amm-liquidity": "AMM流动性"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场",
@@ -658,7 +660,8 @@
                     "price-label": "每{{currencyKey}}的价格",
                     "price-label-mobile": "价格：",
                     "expiration-label": "到期时间",
-                    "total-label": "总量（sUSD）",
+                    "total-label-susd": "总量（sUSD）",
+                    "total-label-option": "总量 {{option}}",
                     "total-max-label": "最大发送量（sUSD）",
                     "total-min-label": "最小接收（sUSD）",
                     "slippage-label": "滑动公差",
@@ -1132,6 +1135,6 @@
         "skew-label": "倾斜冲击",
         "beta": "测试版",
         "total-buy-label": "支付总额",
-        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都是从 AMM 购买的，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 只支持在市场上行交易到市场成熟前 8 小时，以避免边缘情况和最后一刻提前运行。</0><0>有关 AMM 的更多信息，请访问：</0><1 />"
+        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都从 AMM 购买，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 仅支持在具有在市场成熟前 8 小时内通过 BlackScholes 计算出 10% 以上和 90% 以下的赔率，以避免边缘情况和最后一分钟的领先。</0><0>可以在此处找到有关 AMM 的更多信息：</0> <1 />"
     }
 }

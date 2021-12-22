@@ -8,6 +8,7 @@ import { AMOUNT_PERCENTAGE, OneInchErrorReason, SLIPPAGE_PERCENTAGE } from 'cons
 import { ethers } from 'ethers';
 import useDebouncedEffect from 'hooks/useDebouncedEffect';
 import { maxBy } from 'lodash';
+// import { maxBy } from 'lodash';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import {
     AmountButton,
@@ -73,17 +74,14 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const [amount, setAmount] = useState<number | string>('');
     const [price, setPrice] = useState<number | string>('');
     const [total, setTotal] = useState<number | string>('');
-    const [minimumReceived, setMinimumReceived] = useState<number | string>('');
     const [hasAllowance, setAllowance] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [swapQuote, setSwapQuote] = useState<any>();
     const [insufficientLiquidity, setInsufficientLiquidity] = useState<boolean>(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [slippage, setSlippage] = useState<number | string>(SLIPPAGE_PERCENTAGE[1]);
     const [priceImpactPercentage, setPriceImpactPercentage] = useState<number | string>('0');
-    const [insufficientBalance0x, setInsufficientBalance0x] = useState<boolean>(false);
     const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isSlippageValid, setIsSlippageValid] = useState<boolean>(true);
 
@@ -133,7 +131,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const isPriceEntered = Number(price) > 0;
 
     const insufficientBalance = isBuy
-        ? sUSDBalance < Number(total) || !sUSDBalance
+        ? sUSDBalance < Number(amount) || !sUSDBalance
         : tokenBalance < Number(amount) || !tokenBalance;
 
     const isButtonDisabled =
@@ -169,22 +167,17 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 });
             }
         }
+
         return orders.filter((order: OrderItem) => order.rawOrder.maker.toLowerCase() === walletAddress.toLowerCase());
     };
 
     const onlyUsersBuyOrders = useMemo(() => {
         const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.buyOrders : [];
-        console.log(orders);
-        console.log(filterUserOrders(orders));
-        console.log(orders.length === filterUserOrders(orders).length);
         return orders.length === filterUserOrders(orders).length;
     }, [orderbookQuery.data, walletAddress]);
 
     const onlyUsersSellOrders = useMemo(() => {
         const orders = orderbookQuery.isSuccess && orderbookQuery.data ? orderbookQuery.data.sellOrders : [];
-        console.log(orders);
-        console.log(filterUserOrders(orders));
-        console.log(orders.length === filterUserOrders(orders).length);
         return orders.length === filterUserOrders(orders).length;
     }, [orderbookQuery.data, walletAddress]);
 
@@ -242,21 +235,12 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 setIsSubmitting(true);
                 window.web3 = new Web3(Web3.givenProvider);
                 const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
-                console.log(walletAddress);
-                const swapUrl = `${baseUrl}${ONE_INCH_SWAP_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}&fromAddress=${walletAddress}&slippage=1`;
+                const swapUrl = `${baseUrl}${ONE_INCH_SWAP_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}&fromAddress=${walletAddress}&slippage=${
+                    isSlippageValid && slippage ? slippage : 1
+                }`;
                 const response = await fetch(swapUrl);
                 const swapResponse = await response.json();
-                console.log(swapQuote);
                 console.log(swapResponse);
-                // const quote = {
-                //     ...swapQuote,
-                //     from: walletAddress,
-                // };
-                // delete quote.protocolFee;
-                // delete quote.minimumProtocolFee;
-                // delete quote.value;
-                // delete doesn't work for gasPrice for some reason, set to null
-                // quote.gasPrice = null;
                 await window.web3.eth.sendTransaction(swapResponse.tx);
                 refetchOrderbook(baseToken);
                 refetchTrades(optionsMarket.address);
@@ -271,7 +255,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             }
         } catch (e) {
             console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+            setTxErrorMessage(
+                e.code === 4001 ? t('common.errors.user-rejected-tx') : t('common.errors.unknown-error-try-again')
+            );
             setIsSubmitting(false);
         }
     };
@@ -285,8 +271,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     const resetQuote = () => {
         setPrice('');
         setTotal('');
-        setMinimumReceived('');
-        setSwapQuote(undefined);
         setGasLimit(null);
         setPriceImpactPercentage('0');
     };
@@ -294,12 +278,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     useDebouncedEffect(() => {
         const get1InchPrice = async () => {
             if (isAmountEntered && isSlippageValid) {
-                console.log(amount);
                 const tokenAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(amount), DEFAULT_TOKEN_DECIMALS);
                 try {
-                    const quoteUrl = `${baseUrl}${ONE_INCH_SWAP_QUOTE_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}`; /*&slippage=${Number(slippage) / 100}${
-                        isWalletConnected && hasAllowance ? `&destReceiver=${walletAddress}` : ''
-                    }`;*/
+                    const quoteUrl = `${baseUrl}${ONE_INCH_SWAP_QUOTE_URL}?fromTokenAddress=${sellToken}&toTokenAddress=${buyToken}&amount=${tokenAmount}`;
 
                     const response = await fetch(quoteUrl);
                     if (response.status == 200) {
@@ -308,11 +289,9 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                         const quoteAmount = Number(
                             Web3Wrapper.toUnitAmount(toBigNumber(quote.toTokenAmount), DEFAULT_TOKEN_DECIMALS)
                         );
+                        setGasLimit(formatGasLimit(quote.estimatedGas, networkId));
                         setPrice(quoteAmount / Number(amount));
                         setTotal(quoteAmount);
-                        // setMinimumReceived(Number(amount) * Number(quote.guaranteedPrice));
-                        setSwapQuote(quote);
-                        // setGasLimit(quote.gas);
                         if (isBuy) {
                             setPriceImpactPercentage(
                                 bestBuyPrice ? (quoteAmount / Number(amount) - bestBuyPrice) / bestBuyPrice : 0
@@ -323,7 +302,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                             );
                         }
                         setInsufficientLiquidity(false);
-                        setInsufficientBalance0x(false);
                     } else {
                         resetQuote();
                         const errorResponse = await response.json();
@@ -341,26 +319,11 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
     }, [amount, slippage, hasAllowance, walletAddress, sellToken, buyToken, isAmountEntered, isSlippageValid]);
 
     const handle1inchErrorResponse = (response: OneInchErrorResponse) => {
-        console.log(response);
-        console.log(response.description);
         switch (response.description) {
             case OneInchErrorReason.INSUFFICIENT_LIQUIDITY:
                 set1InchError('insufficient-liquidity');
                 break;
-            // case OneInchErrorReason.TRANSACTION_INVALID:
-            //     switch (response.code) {
-            //         case Zero0xErrorReason.MATCHED_MY_OWN_ORDERS:
-            //         case Zero0xErrorReason.MAKER_WALLET_INSUFFICIENT_BALANCE:
-            //             set1InchError('insufficient-liquidity');
-            //             break;
-            //         case Zero0xErrorReason.TAKER_WALLET_INSUFFICIENT_BALANCE:
-            //             set1InchError('insufficient-balance');
-            //             break;
-            //         default:
-            //             set1InchError('general');
-            //             break;
-            //     }
-            //     break;
+
             default:
                 set1InchError('general');
                 break;
@@ -369,7 +332,6 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
 
     const set1InchError = (errorType?: OneInchErrorType) => {
         setInsufficientLiquidity(errorType === 'insufficient-liquidity');
-        setInsufficientBalance0x(errorType === 'insufficient-balance');
         setTxErrorMessage(errorType === 'general' ? t('common.errors.unknown-error-try-again-general') : null);
     };
 
@@ -379,15 +341,14 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
 
     useEffect(() => {
         setIsAmountValid(
-            (Number(amount) === 0 ||
+            Number(amount) === 0 ||
                 (Number(amount) > 0 &&
                     (isBuy
-                        ? (Number(total) > 0 && Number(total) <= sUSDBalance) ||
+                        ? (Number(total) > 0 && Number(amount) <= sUSDBalance) ||
                           (Number(total) === 0 && sUSDBalance > 0)
-                        : Number(amount) <= tokenBalance))) &&
-                !insufficientBalance0x
+                        : Number(amount) <= tokenBalance))
         );
-    }, [amount, total, isBuy, insufficientBalance0x, sUSDBalance, tokenBalance]);
+    }, [amount, total, isBuy, sUSDBalance, tokenBalance]);
 
     const getSubmitButton = () => {
         if (!isWalletConnected) {
@@ -397,7 +358,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 </SubmitButton>
             );
         }
-        if (isBuy && onlyUsersBuyOrders) {
+        if (isBuy && onlyUsersSellOrders) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
                     {t(`common.errors.insufficient-liquidity`)}
@@ -405,7 +366,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             );
         }
 
-        if (!isBuy && onlyUsersSellOrders) {
+        if (!isBuy && onlyUsersBuyOrders) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
                     {t(`common.errors.insufficient-liquidity`)}
@@ -413,7 +374,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
             );
         }
 
-        if (insufficientBalance || insufficientBalance0x) {
+        if (insufficientBalance) {
             return (
                 <SubmitButton disabled={true} isBuy={isBuy}>
                     {t(`common.errors.insufficient-balance`)}
@@ -597,19 +558,20 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 </SummaryItem>
 
                 <SummaryItem>
-                    <SummaryLabel>{t('options.market.trade-options.place-order.total-label')}</SummaryLabel>
+                    <SummaryLabel>
+                        {isBuy
+                            ? t('options.market.trade-options.place-order.total-label-option', {
+                                  option: OPTIONS_CURRENCY_MAP[optionSide],
+                              })
+                            : t('options.market.trade-options.place-order.total-label-susd')}
+                    </SummaryLabel>
                     <SummaryContent>
                         {isBuy
                             ? formatCurrencyWithKey(OPTIONS_CURRENCY_MAP[optionSide], total)
                             : formatCurrencyWithKey(SYNTHS_MAP.sUSD, total)}
                     </SummaryContent>
                 </SummaryItem>
-                <SummaryItem style={{ marginBottom: 10 }}>
-                    <SummaryLabel>
-                        {t(`options.market.trade-options.place-order.${isBuy ? 'total-max-label' : 'total-min-label'}`)}
-                    </SummaryLabel>
-                    <SummaryContent>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, minimumReceived)}</SummaryContent>
-                </SummaryItem>
+
                 <Divider />
                 <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
             </SummaryContainer>
