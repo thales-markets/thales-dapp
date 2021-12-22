@@ -18,6 +18,9 @@ import { hexStripZeros } from '@ethersproject/bytes';
 import { BigNumber } from '@ethersproject/bignumber';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { NetworkId } from '@synthetixio/contracts-interface';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { withStyles } from '@material-ui/core';
+import MaterialTooltip from '@material-ui/core/Tooltip';
 
 export const NetworkSwitch: React.FC = () => {
     const { t } = useTranslation();
@@ -80,63 +83,77 @@ export const NetworkSwitch: React.FC = () => {
     return (
         <>
             <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
-                <Container>
-                    <OptimismButton
-                        onClick={() => {
-                            isL2 ? setDropdownIsOpen(!optimismDropdownIsOpen) : switchOrAddOptimismNetwork();
-                        }}
-                        isActive={optimismDropdownIsOpen}
-                    >
-                        <InnerButton isL2={isL2}>
-                            <FlexDiv>{t(isL2 ? 'optimism.optimistic-l2' : 'optimism.switch-to-l2')}</FlexDiv>
-                            {isL2 && <StyledDownIcon />}
-                        </InnerButton>
-                    </OptimismButton>
-                    {optimismDropdownIsOpen && (
-                        <DropdownContainer>
-                            <DropDown>
-                                <DropDownItem
-                                    key="switch"
-                                    onClick={() => {
-                                        switchToL1();
-                                        setDropdownIsOpen(false);
-                                    }}
-                                >
-                                    <FlexDivCentered>
-                                        <OptimismOption>{t('optimism.switch-to-l1')}</OptimismOption>
-                                    </FlexDivCentered>
-                                </DropDownItem>
-                                {OPTIMISM_OPTIONS.map((option: any) => (
-                                    <StyledLink key={option.label} href={option.link} target="_blank" rel="noreferrer">
-                                        <DropDownItem
-                                            onClick={() => {
-                                                setDropdownIsOpen(false);
-                                            }}
+                <FlexDivRowCentered>
+                    <Container isL2={isL2}>
+                        <OptimismButton
+                            onClick={() => {
+                                isL2 ? setDropdownIsOpen(!optimismDropdownIsOpen) : switchOrAddOptimismNetwork();
+                            }}
+                        >
+                            <InnerButton isL2={isL2}>
+                                <FlexDiv>{t(isL2 ? 'optimism.optimistic-l2' : 'optimism.switch-to-l2')}</FlexDiv>
+                                {isL2 && <StyledDownIcon />}
+                            </InnerButton>
+                        </OptimismButton>
+                        {optimismDropdownIsOpen && (
+                            <DropdownContainer>
+                                <DropDown>
+                                    <DropDownItem
+                                        key="switch"
+                                        onClick={() => {
+                                            switchToL1();
+                                            setDropdownIsOpen(false);
+                                        }}
+                                    >
+                                        <FlexDivCentered>
+                                            <OptimismOption>{t('optimism.switch-to-l1')}</OptimismOption>
+                                        </FlexDivCentered>
+                                    </DropDownItem>
+                                    {OPTIMISM_OPTIONS.map((option: any) => (
+                                        <StyledLink
+                                            key={option.label}
+                                            href={option.link}
+                                            target="_blank"
+                                            rel="noreferrer"
                                         >
-                                            <OptimismOption>{t(option.label)}</OptimismOption>
-                                            <ArrowIcon />
-                                        </DropDownItem>
-                                    </StyledLink>
-                                ))}
-                            </DropDown>
-                        </DropdownContainer>
+                                            <DropDownItem
+                                                onClick={() => {
+                                                    setDropdownIsOpen(false);
+                                                }}
+                                            >
+                                                <OptimismOption>{t(option.label)}</OptimismOption>
+                                                <ArrowIcon />
+                                            </DropDownItem>
+                                        </StyledLink>
+                                    ))}
+                                </DropDown>
+                            </DropdownContainer>
+                        )}
+                    </Container>
+                    {isL2 && (
+                        <TooltipContainer>
+                            <StyledMaterialTooltip arrow interactive title={t('optimism.info') as string}>
+                                <StyledInfoIcon />
+                            </StyledMaterialTooltip>
+                        </TooltipContainer>
                     )}
-                </Container>
+                </FlexDivRowCentered>
             </OutsideClickHandler>
         </>
     );
 };
 
-const Container = styled(FlexDivColumnCentered)`
+const Container = styled(FlexDivColumnCentered)<{ isL2: boolean }>`
     width: 170px;
     margin-right: 10px;
     @media (max-width: 767px) {
         width: 100%;
         margin-bottom: 20px;
+        margin-right: ${(props) => (props.isL2 ? 10 : 0)}px;
     }
 `;
 
-const OptimismButton = styled.button<{ isActive: boolean }>`
+const OptimismButton = styled.button`
     position: relative;
     width: 170px;
     height: 40px;
@@ -225,6 +242,37 @@ const ArrowIcon = styled(ArrowHyperlinkIcon)`
 const StyledDownIcon = styled(DownIcon)`
     height: 15px;
     width: 15px;
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 20px;
+    min-height: 20px;
+    margin-right: 10px;
+`;
+
+const StyledMaterialTooltip = withStyles(() => ({
+    arrow: {
+        '&:before': {
+            border: '1px solid #58519b',
+        },
+        color: '#0C1C68',
+        marginLeft: '0px!important',
+    },
+    tooltip: {
+        background: '#0C1C68',
+        borderRadius: '15px',
+        border: '1px solid #58519b',
+        padding: '15px',
+        fontSize: '14px',
+        lineHeight: '18px',
+        color: '#F6F6FE',
+    },
+}))(MaterialTooltip);
+
+const TooltipContainer = styled(FlexDivRowCentered)`
+    @media (max-width: 767px) {
+        margin-bottom: 20px;
+    }
 `;
 
 export default NetworkSwitch;
