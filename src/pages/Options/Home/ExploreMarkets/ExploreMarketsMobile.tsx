@@ -319,7 +319,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                     <DropDown>
                         {Object.keys(SortByEnum)
                             .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
-                            .map((key, index) => {
+                            .map((key) => {
                                 if (
                                     getIsOVM(networkId) &&
                                     SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Pool_Size
@@ -338,7 +338,11 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                                 ? 'selected'
                                                 : ''
                                         } text-s lh32 pale-grey capitalize`}
-                                        onClick={() => setOrderBy(index + 2)}
+                                        onClick={() =>
+                                            setOrderBy(
+                                                revertOrderToEnum(SortByEnum[key as keyof typeof SortByEnum], networkId)
+                                            )
+                                        }
                                         key={key}
                                     >
                                         {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
@@ -432,6 +436,25 @@ const mapOrderByToEnum = (data: number, networkId: number) => {
             return SortByEnum.Time_Remaining;
         case 7:
             return SortByEnum.Open_Orders;
+        default:
+            return SortByEnum.Time_Remaining;
+    }
+};
+
+const revertOrderToEnum = (data: SortByEnum, networkId: number) => {
+    switch (data) {
+        case SortByEnum.Asset:
+            return 2;
+        case SortByEnum.Asset_Price:
+            return 3;
+        case SortByEnum.Strike_Price:
+            return 4;
+        case getIsOVM(networkId) ? SortByEnum.Amm_Size : SortByEnum.Pool_Size:
+            return 5;
+        case SortByEnum.Time_Remaining:
+            return 6;
+        case SortByEnum.Open_Orders:
+            return 7;
         default:
             return SortByEnum.Time_Remaining;
     }
