@@ -26,7 +26,7 @@
             "price-col": "Цена",
             "filled-col": "Исполнен",
             "expires-col": "Истекает через",
-            "amm-size-col": "Ликвидность AMM"
+            "amm-size-col": "AMM ликвидность"
         },
         "wallet": {
             "switch-wallet": "Сменить кошелек",
@@ -231,7 +231,7 @@
             "market-card": {
                 "current-asset-price": "Текущая цена актива",
                 "pool-size": "Размер пула",
-                "amm-liquidity": "Ликвидность AMM",
+                "amm-liquidity": "AMM ликвидность",
                 "end-date": "Дата окончания",
                 "strike-price": "Цена исполнения",
                 "open-orders": "Открытые ордера",
@@ -544,7 +544,7 @@
                     "customize-layout": "Настроить вид",
                     "reset-layout": "Сбросить вид"
                 },
-                "amm-widget": "ADM"
+                "amm-widget": "AMM"
             },
             "chart-card": {
                 "no-chart-data": "Нет данных"
