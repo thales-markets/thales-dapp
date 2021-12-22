@@ -130,7 +130,8 @@
             "invalid-amount-max": "金额不能高于{{max}}",
             "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
             "invalid-slippage": "无效滑点",
-            "max-limit-exceeded": "金额超过 AMM 上的可用金额"
+            "max-limit-exceeded": "金额超过 AMM 上的可用金额",
+            "user-rejected-tx": "用户拒绝交易"
         },
         "search": "搜索",
         "buy": "买",
@@ -236,7 +237,8 @@
                 "difference-text": "当前价格与执行价格之间的差异",
                 "time-remaining": "剩余时间",
                 "result": "当前结果",
-                "view-market": "查看市场"
+                "view-market": "查看市场",
+                "amm-liquidity": "AMM流动性"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场",
@@ -658,7 +660,8 @@
                     "price-label": "每{{currencyKey}}的价格",
                     "price-label-mobile": "价格：",
                     "expiration-label": "到期时间",
-                    "total-label": "总量（sUSD）",
+                    "total-label-susd": "总量（sUSD）",
+                    "total-label-option": "总量 {{option}}",
                     "total-max-label": "最大发送量（sUSD）",
                     "total-min-label": "最小接收（sUSD）",
                     "slippage-label": "滑动公差",

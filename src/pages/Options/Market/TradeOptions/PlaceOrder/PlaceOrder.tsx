@@ -479,7 +479,7 @@ const PlaceOrder: React.FC<PlaceOrderProps> = ({
             <SummaryContainer className="marketTab__summary">
                 <SummaryItem>
                     <SummaryLabel style={{ minWidth: 80 }}>
-                        {t('options.market.trade-options.place-order.total-label')}
+                        {t('options.market.trade-options.place-order.total-label-susd')}
                     </SummaryLabel>
                     <SummaryContent>
                         {formatCurrencyWithKey(SYNTHS_MAP.sUSD, Number(price) * Number(amount))}

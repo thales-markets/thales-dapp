@@ -130,7 +130,8 @@
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
             "invalid-slippage": "Invalid slippage",
-            "max-limit-exceeded": "Amount exceeded the amount available on AMM"
+            "max-limit-exceeded": "Amount exceeded the amount available on AMM",
+            "user-rejected-tx": "User rejected transaction"
         },
         "search": "search",
         "buy": "buy",
@@ -663,7 +664,8 @@
                     "price-for-label": "Amount per {{currencyKey}}",
                     "price-label-mobile": "Price per:",
                     "expiration-label": "Expires in",
-                    "total-label": "Total (sUSD)",
+                    "total-label-susd": "Total (sUSD)",
+                    "total-label-option": "Total {{option}}",
                     "total-max-label": "Maximum sent (sUSD)",
                     "total-min-label": "Minimum received (sUSD)",
                     "slippage-label": "Slippage tolerance",

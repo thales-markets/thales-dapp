@@ -130,7 +130,8 @@
             "invalid-amount-max": "Сумма не может быть выше {{max}}",
             "insufficient-balance-wallet": "Пожалуйста, убедитесь, что в вашем кошельке достаточно {{currencyKey}}",
             "invalid-slippage": "Недопустимый процент проскальзывания",
-            "max-limit-exceeded": "Сумма превышает доступную на AMM"
+            "max-limit-exceeded": "Сумма превышает доступную на AMM",
+            "user-rejected-tx": "Пользователь отклонил транзакцию"
         },
         "search": "поиск",
         "buy": "купить",
@@ -236,7 +237,8 @@
                 "difference-text": "Разница между текущей ценой и ценой исполнения",
                 "time-remaining": "Оставшееся время",
                 "result": "Текущий результат",
-                "view-market": "Посмотреть рынок"
+                "view-market": "Посмотреть рынок",
+                "amm-liquidity": "Ликвидность AMM"
             },
             "market-creation": {
                 "explore-markets-button-label": "Познакомиться с рынками",
@@ -658,7 +660,8 @@
                     "price-label": "Цена за единицу {{currencykey}}",
                     "price-label-mobile": "Цена:",
                     "expiration-label": "Истекает через",
-                    "total-label": "Общий (sUSD)",
+                    "total-label-susd": "Общий (sUSD)",
+                    "total-label-option": "Общий {{option}}",
                     "total-max-label": "Максимум посланно (sUSD)",
                     "total-min-label": "Максимум полученно (sUSD)",
                     "slippage-label": "Лимит Проскальзывания",

@@ -90,7 +90,8 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                 setPreviewData(resp.data as any);
                 setShowSceleton(false);
             });
-        } else if (fromToken && amount == 0) {
+        } else if (fromToken) {
+            setAmount(0);
             setPreviewData(undefined);
             setShowSceleton(false);
         }
