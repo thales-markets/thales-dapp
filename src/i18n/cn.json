@@ -25,7 +25,8 @@
             "amount-col": "数量",
             "price-col": "价格",
             "filled-col": "已成交",
-            "expires-col": "过期于"
+            "expires-col": "过期于",
+            "amm-size-col": "AMM流动性"
         },
         "wallet": {
             "switch-wallet": "更换钱包",
@@ -237,8 +238,7 @@
                 "difference-text": "当前价格与执行价格之间的差异",
                 "time-remaining": "剩余时间",
                 "result": "当前结果",
-                "view-market": "查看市场",
-                "amm-liquidity": "AMM流动性"
+                "view-market": "查看市场"
             },
             "market-creation": {
                 "explore-markets-button-label": "探索市场",
