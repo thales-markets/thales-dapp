@@ -3,6 +3,13 @@ import { SpaceKey } from 'constants/governance';
 // import { getCurrentTimestampSeconds } from 'utils/formatters/date';
 import { ethers } from 'ethers';
 import { truncateAddress, truncateText } from './formatters/string';
+import {
+    OLD_COUNCIL_END_DATE,
+    NUMBER_OF_COUNCIL_MEMBERS_OLD,
+    NUMBER_OF_COUNCIL_MEMBERS,
+    PROPOSAL_APPROVAL_VOTES,
+    PROPOSAL_APPROVAL_VOTES_OLD,
+} from 'constants/governance';
 
 export function getENSForAddresses(addresses: any[]) {
     return new Promise((resolve, reject) => {
@@ -74,3 +81,15 @@ export function getUsername(address: string, youText: string, profile: any, wall
 }
 
 export const getProposalUrl = (spaceKey: SpaceKey, id: string) => `https://snapshot.org/#/${spaceKey}/proposal/${id}`;
+
+export const getProposalApprovalData = (proposalStartDate: number) => {
+    const numberOfCouncilMembers =
+        OLD_COUNCIL_END_DATE > new Date(proposalStartDate * 1000)
+            ? NUMBER_OF_COUNCIL_MEMBERS_OLD
+            : NUMBER_OF_COUNCIL_MEMBERS;
+    const proposalApprovalVotes =
+        OLD_COUNCIL_END_DATE > new Date(proposalStartDate * 1000)
+            ? PROPOSAL_APPROVAL_VOTES_OLD
+            : PROPOSAL_APPROVAL_VOTES;
+    return { numberOfCouncilMembers, proposalApprovalVotes };
+};

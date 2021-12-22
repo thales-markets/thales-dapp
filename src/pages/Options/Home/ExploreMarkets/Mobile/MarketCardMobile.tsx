@@ -9,7 +9,6 @@ import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumnCentered, FlexDivRow, Image, Text } from 'theme/common';
 import { HistoricalOptionsMarketInfo } from 'types/options';
 import { formatCurrency, formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
-import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import arrowUp from 'assets/images/arrow-up.svg';
 import arrowDown from 'assets/images/arrow-down.svg';
@@ -23,6 +22,11 @@ import tennis from 'assets/images/tennis.svg';
 import xyz from 'assets/images/xyz.png';
 import flippening from 'assets/images/flippening.png';
 import burn from 'assets/images/burn.png';
+import { getSynthName } from 'utils/currency';
+import { getIsOVM } from 'utils/network';
+import { useSelector } from 'react-redux';
+import { RootState } from 'redux/rootReducer';
+import { getNetworkId } from 'redux/modules/wallet';
 
 type MarketCardMobileProps = {
     optionsMarkets: HistoricalOptionsMarketInfo[];
@@ -31,6 +35,7 @@ type MarketCardMobileProps = {
 
 export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarkets, exchangeRates }) => {
     const { t } = useTranslation();
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     return (
         <Wrapper>
             {optionsMarkets.map((market: HistoricalOptionsMarketInfo, index) => {
@@ -127,10 +132,19 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 {market.customMarket && (
                                     <FlexDivColumnCentered style={{ textAlign: 'right' }}>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {t('options.home.market-card.pool-size')}
+                                            {getIsOVM(networkId)
+                                                ? t('options.home.market-card.amm-liquidity')
+                                                : t('options.home.market-card.pool-size')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            {getIsOVM(networkId) ? (
+                                                <>
+                                                    <span className="green">{market.availableLongs}</span> /{' '}
+                                                    <span className="red">{market.availableShorts}</span>
+                                                </>
+                                            ) : (
+                                                <>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</>
+                                            )}
                                         </Text>
                                     </FlexDivColumnCentered>
                                 )}
@@ -139,10 +153,19 @@ export const MarketCardMobile: React.FC<MarketCardMobileProps> = ({ optionsMarke
                                 <FlexDivRow style={{ marginBottom: 8 }}>
                                     <FlexDivColumnCentered>
                                         <Text className="text-xxs pale-grey" style={{ marginBottom: 2 }}>
-                                            {t('options.home.market-card.pool-size')}
+                                            {getIsOVM(networkId)
+                                                ? t('options.home.market-card.amm-liquidity')
+                                                : t('options.home.market-card.pool-size')}
                                         </Text>
                                         <Text className="text-ms pale-grey">
-                                            {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                            {getIsOVM(networkId) ? (
+                                                <>
+                                                    <span className="green">{market.availableLongs}</span> /{' '}
+                                                    <span className="red">{market.availableShorts}</span>
+                                                </>
+                                            ) : (
+                                                <>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</>
+                                            )}
                                         </Text>
                                     </FlexDivColumnCentered>
                                 </FlexDivRow>

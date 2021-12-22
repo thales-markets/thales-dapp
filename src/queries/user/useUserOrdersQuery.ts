@@ -1,22 +1,16 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import { get0xBaseURL } from 'utils/0x';
 import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
-import { UserOrder } from 'types/options';
+import { UserOrders } from 'types/options';
+import { getUserOrders } from 'utils/1inch';
 
-const useUserOrdersQuery = (
-    networkId: NetworkId,
-    walletAddress: string,
-    options?: UseQueryOptions<{ records: UserOrder[] }>
-) => {
-    const baseUrl = `${get0xBaseURL(networkId)}sra/v4/`;
-    return useQuery<{ records: UserOrder[] }>(
+const useUserOrdersQuery = (networkId: NetworkId, walletAddress: string, options?: UseQueryOptions<UserOrders>) => {
+    return useQuery<UserOrders>(
         QUERY_KEYS.User.Orders(walletAddress, networkId),
         async () => {
-            const ordersUrl = `${baseUrl}orders?trader=${walletAddress}`;
-            const response = await fetch(ordersUrl);
+            const orders = getUserOrders(networkId, walletAddress);
 
-            return response.json();
+            return orders;
         },
         options
     );

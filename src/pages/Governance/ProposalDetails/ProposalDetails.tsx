@@ -11,21 +11,15 @@ import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { useTranslation } from 'react-i18next';
 import { ArrowIcon, DetailsTitle, Divider, getColor, StyledLink, Blockie, VotingPowerTitle } from '../components';
 import { NetworkId } from '@synthetixio/contracts-interface';
-import {
-    ProposalTypeEnum,
-    PROPOSAL_APPROVAL_VOTES,
-    NUMBER_OF_COUNCIL_MEMBERS,
-    SpaceKey,
-    StatusEnum,
-} from 'constants/governance';
+import { ProposalTypeEnum, SpaceKey, StatusEnum } from 'constants/governance';
 import SingleChoiceVoting from './Voting/SingleChoiceVoting';
 import WeightedVoting from './Voting/WeightedVoting';
 import snxJSConnector from 'utils/snxJSConnector';
 import makeBlockie from 'ethereum-blockies-base64';
-import { getProposalUrl } from 'utils/governance';
+import { getProposalApprovalData, getProposalUrl } from 'utils/governance';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
-import { getIsWalletConnected, getWalletAddress } from 'redux/modules/wallet';
+import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
 import useVotingPowerQuery from 'queries/governance/useVotingPowerQuery';
 
@@ -38,7 +32,9 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [authorEns, setAuthorEns] = useState<string | null>(null);
+    const { numberOfCouncilMembers, proposalApprovalVotes } = getProposalApprovalData(proposal.start);
 
     const votingPowerQuery = useVotingPowerQuery(proposal, walletAddress, {
         enabled: isAppReady && isWalletConnected,
@@ -62,7 +58,9 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
             const authorEns = await (snxJSConnector as any).provider.lookupAddress(proposal.author);
             setAuthorEns(authorEns);
         };
-        fetchAuthorEns();
+        if (networkId === NetworkId.Mainnet) {
+            fetchAuthorEns();
+        }
     }, [proposal]);
 
     return (
@@ -145,8 +143,8 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                                 <VoteNote>
                                     (
                                     {t(`governance.proposal.vote-note`, {
-                                        approvalVotes: PROPOSAL_APPROVAL_VOTES,
-                                        totalVotes: NUMBER_OF_COUNCIL_MEMBERS,
+                                        approvalVotes: numberOfCouncilMembers,
+                                        totalVotes: proposalApprovalVotes,
                                     })}
                                     )
                                 </VoteNote>

@@ -25,7 +25,8 @@
             "amount-col": "数量",
             "price-col": "价格",
             "filled-col": "已成交",
-            "expires-col": "过期于"
+            "expires-col": "过期于",
+            "amm-size-col": "AMM流动性"
         },
         "wallet": {
             "switch-wallet": "更换钱包",
@@ -48,8 +49,8 @@
         "thales-is3": "当收获到来时，当需求增长时，他按照自己的条件出租压榨机，赚了一大笔钱，成为<strong>第一个行使期权合同的人。</strong>",
         "markets": {
             "title": "二元市场",
-            "option1": "世界上任何人都可以根据资产的价格创建二元期权市场。",
-            "option2": "做市商不支付任何费用，但随着流动性的增加而盈利。",
+            "option1": "世界上任何人都可以不受任何限制地参与泰雷兹二元期权市场。",
+            "option2": "探索具有上限的简单直观的衍生品。",
             "option3": "无许可、自托管和不受限。",
             "view-markets": "查看市场"
         },
@@ -68,14 +69,14 @@
             "title": "要开始，您需要",
             "first": "Web3钱包，比如说Metamask",
             "second": "以太支付网络费用（也称为gas）",
-            "third": "Synth USD（sUSD），可获得于"
+            "third": "Synth USD（sUSD），可直接从我们的 dApp 或使用"
         },
         "faq": {
             "title": "常见问题",
             "firstQ": "什么是二元期权？",
             "firstA": "二元期权是一种简单直观的衍生品工具，在有限的风险环境中为多种市场提供收益，使风险管理更加精确。",
-            "secondQ": "支持哪些市场？",
-            "secondA": "超过60种市场类型由Chainlink喂价担保，包括加密货币、股票、商品、外汇和指数产品。",
+            "secondQ": "THALES 代币的用途是什么？",
+            "secondA": "Thales DAO 治理代币（THALES）是用于治理 Thales 协议的标准 ERC-20 代币。 这些代币授予各自的利益相关者参与泰雷兹治理的权利。 通过这种方式，THALES 质押者代表了与协议开发相关的每一个关键决策的基础。 任何可能与协议相关的代币的其他效用，都可以由协议的社区治理结构决定和投票。",
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
             "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
@@ -129,7 +130,9 @@
             "invalid-price-max": "价格不能高于${{max}}",
             "invalid-amount-max": "金额不能高于{{max}}",
             "insufficient-balance-wallet": "请确保您的钱包有足够的{{currencyKey}}",
-            "invalid-slippage": "无效滑点"
+            "invalid-slippage": "无效滑点",
+            "max-limit-exceeded": "金额超过 AMM 上的可用金额",
+            "user-rejected-tx": "用户拒绝交易"
         },
         "search": "搜索",
         "buy": "买",
@@ -168,8 +171,11 @@
         },
         "unsupported-network": {
             "title": "哎呀！你在错的网络上！",
-            "description": "您在钱包中选择了错误的网络。请从wallet切换到以太坊网络以继续。",
-            "button": "切换到主网"
+            "description": "您在钱包中选择了错误的网络。 要继续，请切换到以太坊主网或乐观网络。",
+            "button": {
+                "mainnet": "切换到主网",
+                "optimism": "转为乐观"
+            }
         }
     },
     "modals": {
@@ -225,6 +231,7 @@
             "market-card": {
                 "current-asset-price": "流动资产价格",
                 "pool-size": "池大小",
+                "amm-liquidity": "AMM流动性",
                 "end-date": "结束日期",
                 "strike-price": "执行价格",
                 "open-orders": "未结订单",
@@ -253,6 +260,7 @@
                 "open-orders-col": "未结订单",
                 "phase-col": "阶段",
                 "pool-size-col": "市场大小",
+                "amm-size-col": "AMM流动性",
                 "time-remaining-col": "剩余时间",
                 "competition-tooltip": "该市场参与交易竞赛"
             }
@@ -509,6 +517,7 @@
                 "current-result-label": "当前结果",
                 "final-result-label": "最终结果",
                 "deposited-currency-label": "存款{{currencyKey}}",
+                "amm-liquidity": "AMM流动性",
                 "event-name-label": "事件名称",
                 "current-ratio-label": "现比率",
                 "final-ratio-label": "最终比率",
@@ -534,7 +543,8 @@
                 "button": {
                     "customize-layout": "自定义视图",
                     "reset-layout": "重置布局"
-                }
+                },
+                "amm-widget": "ADM"
             },
             "chart-card": {
                 "no-chart-data": "无图表数据"
@@ -650,7 +660,8 @@
                     "price-label": "每{{currencyKey}}的价格",
                     "price-label-mobile": "价格：",
                     "expiration-label": "到期时间",
-                    "total-label": "总量（sUSD）",
+                    "total-label-susd": "总量（sUSD）",
+                    "total-label-option": "总量 {{option}}",
                     "total-max-label": "最大发送量（sUSD）",
                     "total-min-label": "最小接收（sUSD）",
                     "slippage-label": "滑动公差",
@@ -675,6 +686,10 @@
                             "progress-label": "正在出售…",
                             "confirmation-message": "已成功售出"
                         }
+                    },
+                    "price-for-label": "每个 {{currencyKey}} 的金额",
+                    "errors": {
+                        "order-after-maturity": "订单到期不能在市场到期后，默认为交易期到期"
                     }
                 },
                 "mint": {
@@ -731,6 +746,10 @@
                     "inital-amount-label": "初始金额（{{currencyKey}}）",
                     "inital-total-label": "初始总计（{{currencyKey}}）"
                 }
+            },
+            "header": {
+                "orderbook": "订单簿",
+                "amm": "ADM"
             }
         },
         "quick-trading": {
@@ -764,7 +783,7 @@
             "leaderboard-subtitle-2": "它考虑了泰雷兹平台内的所有交易",
             "trading-comp-title": "交易竞赛",
             "trading-comp-subtitle": "这是泰雷兹第一次交易竞赛的排行榜.",
-            "trading-comp-subtitle-2": "竞赛赛已于2021年10月11日UTC上午10点正式开始",
+            "trading-comp-subtitle-2": "比赛于2021年10月11日正式开始| UTC 时间上午 10 点，并于 2021 年 11 月 1 日结束 | 世界标准时间上午 11 点",
             "trading-comp-subtitle-3": "单击此处查看符合交易竞赛条件的市场",
             "trading-comp-subtitle-4": "有关如何参与的更多信息和指南，请访问： ",
             "profile-subtitle": "选项卡显示您的所有交易以及其他用户的交易",
@@ -921,7 +940,11 @@
             "enter-amount": "输入数量",
             "approve": "授予交易{{currency}}的权限}",
             "swap": "交易",
-            "insufficient-balance": "余额不足"
+            "insufficient-balance": "余额不足",
+            "not-supported": " 测试网络不支持交换",
+            "tx-failed": "交易失败",
+            "tx-success": "成功买入sUSD",
+            "tx-user-rejected": "用户拒绝交易"
         },
         "royale": {
             "header": {
@@ -996,16 +1019,16 @@
                 "users-per-page": "每页用户数"
             },
             "redirect-dialog": {
-                "title": "你在 Optimistic Kovan 网络",
+                "title": "你在 Optimism Kovan 网络",
                 "message": "回到泰雷兹Royale",
                 "or": "或",
                 "switch-to-mainnet": "切换到以太坊mainnet"
             },
             "wrong-network-dialog": {
                 "title": "错误的网络！",
-                "message": "请切换到Optimistic Kovan 继续",
+                "message": "请切换到Optimism Kovan 继续",
                 "return-to-dapp": "返回泰雷兹dApp",
-                "button": "切换到Optimistic Kovan",
+                "button": "切换到Optimism Kovan",
                 "parameters": "OP Kovan参数"
             },
             "wallet-not-connected-dialog": {
@@ -1088,5 +1111,30 @@
             "number-of-stakers": "质押者总量",
             "search-placeholder": "查找质押人"
         }
+    },
+    "optimism": {
+        "learn-more": "了解更多",
+        "optimistic-gateway": "Optimism Gateway",
+        "optimistic-etherscan": "Optimism Etherscan",
+        "switch-to-l2": "切换到 L2",
+        "optimistic-l2": "Optimism L2",
+        "switch-to-l1": "切换到 L1",
+        "info": "由于 Optimism 上 L1 的最长汇总时间为 15 分钟，因此依赖于时间戳的操作最多可延迟 15 分钟。"
+    },
+    "amm": {
+        "type-label": "类型",
+        "return-label": "潜在利润",
+        "amm-disabled-warning": "此市场禁用 AMM 交易",
+        "amm-disabled": "AMM 交易禁用",
+        "return-tooltip": "如果此选项获胜，则潜在利润",
+        "max-limit-buy-tooltip": "从 AMM 购买的 {{currencyKey}} 选项的最大数量",
+        "price-changed-warning": "价格已更改，请查看",
+        "max-limit-sell-tooltip": "出售给 AMM 的最大 {{currencyKey}} 期权数量",
+        "skew-tooltip": "AMM 将在它更容易受到影响的方面增加价格影响",
+        "total-sell-label": "接收总数",
+        "skew-label": "倾斜冲击",
+        "beta": "测试版",
+        "total-buy-label": "支付总额",
+        "explanation-text": "<0>Thales AMM 是旨在为 Thales Binary Markets 提供流动性的智能合约。</0><0>AMM 使用 BlackScholes 算法来确定二元期权的实际价格。根据该价格和偏差（代表 AMM 对当前市场的敞口），AMM 将向交易者提供买入或卖出报价。</0><0>Thales 的 AMM 始终旨在重新平衡其敞口，因此如果从 AMM 购买的多头期权多于空头，这将对多头期权定价产生偏斜的价格影响，同时以基本价格提供空头期权。</0><0>由于 AMM 处于测试阶段，因此有一个上限(limit) 每个市场，可以随时买卖的期权数量是有限的。然而，即使一侧的所有期权都从 AMM 购买，一旦交易者购买相反头寸的期权，就会有更多的流动性可用。</0><0>Thales 的 AMM 仅支持在具有在市场成熟前 8 小时内通过 BlackScholes 计算出 10% 以上和 90% 以下的赔率，以避免边缘情况和最后一分钟的领先。</0><0>可以在此处找到有关 AMM 的更多信息：</0> <1 />"
     }
 }

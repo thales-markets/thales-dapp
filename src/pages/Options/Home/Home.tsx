@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { sortOptionsMarkets } from '../../../utils/options';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import snxJSConnector from 'utils/snxJSConnector';
 import HotMarkets from './HotMarkets';
 import MarketCreation from './MarketCreation/MarketCreation';
 import ExploreMarkets from './ExploreMarkets';
 import Loader from 'components/Loader';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { Background, Wrapper } from 'theme/common';
@@ -17,20 +16,17 @@ import useExchangeRatesMarketDataQuery from '../../../queries/rates/useExchangeR
 import { getIsAppReady } from '../../../redux/modules/app';
 import { useLocation } from 'react-router-dom';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
-import { getIsOVM } from 'utils/network';
 import { RedirectDialog } from '../Royal/components/RedirectDialog/RedirectDialog';
 import WalletNotConnectedDialog from '../Royal/components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 
 const MAX_HOT_MARKETS = 9;
 
 export const Home: React.FC = () => {
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const location = useLocation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
     const openOrdersQuery = fetchAllMarketOrders(networkId);
-    const { synthsMap } = snxJSConnector;
     const openOrdersMap = useMemo(() => {
         if (openOrdersQuery.isSuccess) {
             return openOrdersQuery.data;
@@ -42,13 +38,14 @@ export const Home: React.FC = () => {
                 ? marketsQuery.data.map((m) => ({
                       ...m,
                       openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
+                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
+                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
                   }))
                 : marketsQuery.data;
-            return sortOptionsMarkets(markets, synthsMap);
+            return sortOptionsMarkets(markets);
         }
         return [];
-    }, [marketsQuery, synthsMap, openOrdersMap]);
-    const isL2 = getIsOVM(networkId);
+    }, [marketsQuery, openOrdersMap]);
     const [openRedirectDialog, setOpenRedirectDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
 
@@ -76,17 +73,6 @@ export const Home: React.FC = () => {
         } else {
         }
     }, [location]);
-
-    useEffect(() => {
-        if (!walletAddress && isL2) {
-            setOpenWalletNotConnectedDialog(true);
-        } else {
-            setOpenWalletNotConnectedDialog(false);
-            if (isL2 && location.pathname !== ROUTES.Options.Royal) {
-                setOpenRedirectDialog(true);
-            }
-        }
-    }, [location, walletAddress]);
 
     return (
         <>

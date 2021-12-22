@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
-import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS } from 'utils/network';
+import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
 import { history } from 'utils/routes';
@@ -37,7 +37,7 @@ const App = () => {
     const networkId = useSelector((state) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
 
-    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false });
+    const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
     queryConnector.setQueryClient();
 
@@ -97,14 +97,14 @@ const App = () => {
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     } else {
                         dispatch(
                             updateNetworkSettings({
                                 networkId: networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     }
@@ -129,7 +129,7 @@ const App = () => {
                             dispatch(
                                 updateNetworkSettings({
                                     networkId,
-                                    networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                    networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                                 })
                             );
                             setSelectedWallet(wallet.name);
@@ -138,7 +138,7 @@ const App = () => {
                         dispatch(
                             updateNetworkSettings({
                                 networkId,
-                                networkName: SUPPORTED_NETWORKS[networkId]?.toLowerCase(),
+                                networkName: SUPPORTED_NETWORKS_NAMES[networkId]?.toLowerCase(),
                             })
                         );
                     } else {
@@ -161,12 +161,12 @@ const App = () => {
         if (e) {
             return;
         }
-        setSnackbarDetails({ ...snackbarDetails, isOpen: false });
+        setSnackbarDetails({ ...snackbarDetails, type: 'success', isOpen: false });
     };
 
     useEffect(() => {
         const handler = (e) => {
-            setSnackbarDetails({ message: e.detail.text, isOpen: true });
+            setSnackbarDetails({ message: e.detail.text, type: e.detail.type || 'success', isOpen: true });
         };
         document.addEventListener('market-notification', handler);
         return () => {
@@ -185,26 +185,19 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        {isL2 && (
-                            <Route>
-                                <Redirect to={ROUTES.Options.Home} />
-                                <MainLayout>
-                                    <OptionsHome />
-                                </MainLayout>
-                            </Route>
-                        )}
-
                         <Route exact path={ROUTES.Options.CreateMarket}>
                             <MainLayout>
                                 <OptionsCreateMarket />
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.Leaderboard}>
-                            <MainLayout>
-                                <LeaderboardPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Leaderboard}>
+                                <MainLayout>
+                                    <LeaderboardPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
@@ -212,11 +205,13 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.QuickTradingCompetition}>
-                            <MainLayout>
-                                <QuickTradingCompetitionPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.QuickTradingCompetition}>
+                                <MainLayout>
+                                    <QuickTradingCompetitionPage />
+                                </MainLayout>
+                            </Route>
+                        )}
                         <Route
                             exact
                             path={[ROUTES.Governance.Home, ROUTES.Governance.Space, ROUTES.Governance.Proposal]}
@@ -226,11 +221,13 @@ const App = () => {
                                 </MainLayout>
                             )}
                         />
-                        <Route exact path={ROUTES.Options.Token}>
-                            <MainLayout>
-                                <EarnPage />
-                            </MainLayout>
-                        </Route>
+                        {!isL2 && (
+                            <Route exact path={ROUTES.Options.Token}>
+                                <MainLayout>
+                                    <EarnPage />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         <Route
                             exact
@@ -271,7 +268,7 @@ const App = () => {
                     }}
                     autoHideDuration={5000}
                 >
-                    <Alert elevation={6} variant="filled" severity="success">
+                    <Alert elevation={6} variant="filled" severity={snackbarDetails.type || 'success'}>
                         {snackbarDetails.message}
                     </Alert>
                 </Snackbar>

@@ -3,13 +3,13 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const binaryOptionsMarketDataContract = {
     addresses: {
         [NetworkId.Mainnet]: '0x5ed98Ebb66A929758C7Fe5Ac60c979aDF0F4040a',
-        [NetworkId.Ropsten]: '0x4E48FA3638939D2B8e0acE9ceed724c606FEf608',
+        [NetworkId.Ropsten]: '0x708f748CD51dcFaE38F9f18ae928007F293898ce',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x46d9DB2830C005e38878b241199bb09d9d355994',
+        [NetworkId.Kovan]: '0x547818b1ee8bd9a6d5854e8A9E84E066B9a07aA7',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0x496307BD492C5538A2AcC67c328995c9B0194504',
+        [NetworkId['Mainnet-Ovm']]: '0xBE086E0A2c588Ad64C8530048cE4356190D6a6F3',
+        [NetworkId['Kovan-Ovm']]: '0x6382660BF24f5e7BeC43a7D47591F823488FDB8D',
     },
     abi: [
         {
@@ -20,14 +20,14 @@ export const binaryOptionsMarketDataContract = {
                     type: 'address',
                 },
                 {
-                    internalType: 'contract IAddressResolver',
-                    name: '_resolver',
+                    internalType: 'contract IERC20',
+                    name: '_sUSD',
                     type: 'address',
                 },
                 {
-                    internalType: 'uint256',
-                    name: '_maxOraclePriceAge',
-                    type: 'uint256',
+                    internalType: 'contract IPriceFeed',
+                    name: '_priceFeed',
+                    type: 'address',
                 },
                 {
                     internalType: 'uint256',
@@ -43,21 +43,6 @@ export const binaryOptionsMarketDataContract = {
                     internalType: 'uint256',
                     name: '_creatorCapitalRequirement',
                     type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_poolFee',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: '_creatorFee',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'address',
-                    name: '_feeAddress',
-                    type: 'address',
                 },
             ],
             payable: false,
@@ -75,19 +60,6 @@ export const binaryOptionsMarketDataContract = {
                 },
             ],
             name: 'CreatorCapitalRequirementUpdated',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'fee',
-                    type: 'uint256',
-                },
-            ],
-            name: 'CreatorFeeUpdated',
             type: 'event',
         },
         {
@@ -244,19 +216,6 @@ export const binaryOptionsMarketDataContract = {
                     type: 'uint256',
                 },
             ],
-            name: 'MaxOraclePriceAgeUpdated',
-            type: 'event',
-        },
-        {
-            anonymous: false,
-            inputs: [
-                {
-                    indexed: false,
-                    internalType: 'uint256',
-                    name: 'duration',
-                    type: 'uint256',
-                },
-            ],
             name: 'MaxTimeToMaturityUpdated',
             type: 'event',
         },
@@ -310,12 +269,77 @@ export const binaryOptionsMarketDataContract = {
             inputs: [
                 {
                     indexed: false,
-                    internalType: 'uint256',
-                    name: 'fee',
-                    type: 'uint256',
+                    internalType: 'address',
+                    name: '_binaryOptionMarketFactory',
+                    type: 'address',
                 },
             ],
-            name: 'PoolFeeUpdated',
+            name: 'SetBinaryOptionsMarketFactory',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'bool',
+                    name: 'enabled',
+                    type: 'bool',
+                },
+            ],
+            name: 'SetCustomMarketCreationEnabled',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: 'manager',
+                    type: 'address',
+                },
+            ],
+            name: 'SetMigratingManager',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetPriceFeed',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_zeroExAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'SetZeroExAddress',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'SetsUSD',
             type: 'event',
         },
         {
@@ -351,6 +375,21 @@ export const binaryOptionsMarketDataContract = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'addWhitelistedAddress',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -460,15 +499,19 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [],
+            name: 'disableWhitelistedAddresses',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'durations',
             outputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'maxOraclePriceAge',
-                    type: 'uint256',
-                },
                 {
                     internalType: 'uint256',
                     name: 'expiryDuration',
@@ -482,6 +525,15 @@ export const binaryOptionsMarketDataContract = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [],
+            name: 'enableWhitelistedAddresses',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
@@ -500,41 +552,6 @@ export const binaryOptionsMarketDataContract = {
             type: 'function',
         },
         {
-            constant: true,
-            inputs: [],
-            name: 'feeAddress',
-            outputs: [
-                {
-                    internalType: 'address',
-                    name: '',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
-            constant: true,
-            inputs: [],
-            name: 'fees',
-            outputs: [
-                {
-                    internalType: 'uint256',
-                    name: 'poolFee',
-                    type: 'uint256',
-                },
-                {
-                    internalType: 'uint256',
-                    name: 'creatorFee',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        },
-        {
             constant: false,
             inputs: [
                 {
@@ -547,6 +564,48 @@ export const binaryOptionsMarketDataContract = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'candidate',
+                    type: 'address',
+                },
+            ],
+            name: 'isActiveMarket',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'candidate',
+                    type: 'address',
+                },
+            ],
+            name: 'isKnownMarket',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
@@ -693,6 +752,21 @@ export const binaryOptionsMarketDataContract = {
         {
             constant: true,
             inputs: [],
+            name: 'onlyWhitelistedAddressesCanCreateMarkets',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'owner',
             outputs: [
                 {
@@ -714,6 +788,21 @@ export const binaryOptionsMarketDataContract = {
                     internalType: 'bool',
                     name: '',
                     type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'priceFeed',
+            outputs: [
+                {
+                    internalType: 'contract IPriceFeed',
+                    name: '',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -745,6 +834,21 @@ export const binaryOptionsMarketDataContract = {
             inputs: [
                 {
                     internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'removeWhitelistedAddress',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
                     name: 'market',
                     type: 'address',
                 },
@@ -758,10 +862,10 @@ export const binaryOptionsMarketDataContract = {
         {
             constant: true,
             inputs: [],
-            name: 'resolver',
+            name: 'sUSD',
             outputs: [
                 {
-                    internalType: 'contract IAddressResolver',
+                    internalType: 'contract IERC20',
                     name: '',
                     type: 'address',
                 },
@@ -804,21 +908,6 @@ export const binaryOptionsMarketDataContract = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'uint256',
-                    name: '_creatorFee',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setCreatorFee',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
                     internalType: 'bool',
                     name: 'enabled',
                     type: 'bool',
@@ -849,42 +938,12 @@ export const binaryOptionsMarketDataContract = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'address',
-                    name: '_feeAddress',
-                    type: 'address',
-                },
-            ],
-            name: 'setFeeAddress',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
                     internalType: 'bool',
                     name: 'enabled',
                     type: 'bool',
                 },
             ],
             name: 'setMarketCreationEnabled',
-            outputs: [],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'function',
-        },
-        {
-            constant: false,
-            inputs: [
-                {
-                    internalType: 'uint256',
-                    name: '_maxOraclePriceAge',
-                    type: 'uint256',
-                },
-            ],
-            name: 'setMaxOraclePriceAge',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -939,12 +998,42 @@ export const binaryOptionsMarketDataContract = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'uint256',
-                    name: '_poolFee',
-                    type: 'uint256',
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
                 },
             ],
-            name: 'setPoolFee',
+            name: 'setPriceFeed',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address[]',
+                    name: '_whitelistedAddresses',
+                    type: 'address[]',
+                },
+            ],
+            name: 'setWhitelistedAddresses',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_address',
+                    type: 'address',
+                },
+            ],
+            name: 'setsUSD',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -988,6 +1077,27 @@ export const binaryOptionsMarketDataContract = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            name: 'whitelistedAddresses',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
     ],

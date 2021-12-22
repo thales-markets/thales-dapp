@@ -9,7 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { isMainNet, formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { APPROVAL_EVENTS /*BINARY_OPTIONS_EVENTS */ } from 'constants/events';
 import { bigNumberFormatter, getAddress } from 'utils/formatters/ethers';
 import { useMarketContext } from 'pages/Options/Market/contexts/MarketContext';
@@ -31,30 +31,16 @@ import {
     DoubleShortInputContainer,
     DefaultSubmitButton,
     Divider,
-    StyledQuestionMarkIcon,
-    LightTooltip,
 } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import { addOptionsPendingTransaction, updateOptionsPendingTransactionStatus } from 'redux/modules/options';
 import { refetchMarketQueries, refetchOrderbook } from 'utils/queryConnector';
 import { useBOMContractContext } from '../../contexts/BOMContractContext';
-import { MarketFees } from 'pages/Options/CreateMarket/CreateMarket';
-import {
-    formatCurrency,
-    formatCurrencyWithSign,
-    formatPercentage,
-    toBigNumber,
-    truncToDecimals,
-} from 'utils/formatters/number';
+import { formatCurrency, formatCurrencyWithSign, formatPercentage, truncToDecimals } from 'utils/formatters/number';
 import { LongSlider, ShortSlider } from 'pages/Options/CreateMarket/components';
 import { FlexDiv, FlexDivCentered, FlexDivRow } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
-import { get0xBaseURL, get0xExchangeProxyAddress } from 'utils/0x';
-import { DEFAULT_OPTIONS_DECIMALS, DEFAULT_TOKEN_DECIMALS } from 'constants/defaults';
-import { Web3Wrapper } from '@0x/web3-wrapper';
-import { generatePseudoRandomSalt, NULL_ADDRESS } from '@0x/order-utils';
-import { LimitOrder, SignatureType } from '@0x/protocol-utils';
-import axios from 'axios';
+import { DEFAULT_OPTIONS_DECIMALS } from 'constants/defaults';
 // import { SIDE } from 'constants/options';
 import { COLORS } from 'constants/ui';
 import NumericInput from '../../components/NumericInput';
@@ -63,8 +49,7 @@ import ValidationMessage from 'components/ValidationMessage';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import Checkbox from 'components/Checkbox';
 import { dispatchMarketNotification } from '../../../../../utils/options';
-import { MetamaskSubprovider } from '@0x/subproviders';
-import { INCLUDE_MINTING_FEES } from 'constants/options';
+import { createOneInchLimitOrder, ONE_INCH_CONTRACTS } from 'utils/1inch';
 
 const MintOptions: React.FC = () => {
     const { t } = useTranslation();
@@ -81,7 +66,6 @@ const MintOptions: React.FC = () => {
     const [isAllowing, setIsAllowing] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
-    const [marketFees, setMarketFees] = useState<MarketFees | null>(null);
     const [longPrice, setLongPrice] = useState<number | string>(1);
     const [shortPrice, setShortPrice] = useState<number | string>(1);
     const [longAmount, setLongAmount] = useState<number | string>('');
@@ -100,7 +84,9 @@ const MintOptions: React.FC = () => {
     const [isLongPriceValid, setIsLongPriceValid] = useState<boolean>(true);
     const [isShortPriceValid, setIsShortPriceValid] = useState<boolean>(true);
     const [mintedAmount, setMintedAmount] = useState<number | string>('');
-    const [useLegacySigning, setUseLegacySigning] = useState<boolean>(false);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
+    const marketFees = optionsMarket.fees;
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -124,7 +110,7 @@ const MintOptions: React.FC = () => {
         !isLongPriceValid ||
         !isShortPriceValid;
 
-    const addressToApprove = get0xExchangeProxyAddress(networkId);
+    const addressToApprove = ONE_INCH_CONTRACTS[networkId] ?? '';
 
     useEffect(() => {
         const {
@@ -134,15 +120,8 @@ const MintOptions: React.FC = () => {
 
         const getAllowance = async () => {
             try {
-                const [allowance, fees] = await Promise.all([
-                    SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address),
-                    binaryOptionsMarketManagerContract.fees(),
-                ]);
+                const allowance = await SynthsUSD.allowance(walletAddress, binaryOptionsMarketManagerContract.address);
                 setAllowance(!!bigNumberFormatter(allowance));
-                setMarketFees({
-                    creator: fees.creatorFee / 1e18,
-                    pool: fees.poolFee / 1e18,
-                });
             } catch (e) {
                 console.log(e);
             }
@@ -192,12 +171,27 @@ const MintOptions: React.FC = () => {
     // }, [walletAddress, sellLong, sellShort, longPrice, shortPrice, longAmount, shortAmount]);
 
     useEffect(() => {
+        const fetchL1Fee = async (BOMContractWithSigner: any, mintAmount: any) => {
+            const txRequest = await BOMContractWithSigner.populateTransaction.mint(mintAmount);
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             const mintAmount = ethers.utils.parseEther(amount.toString());
             try {
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        BOMContractWithSigner.estimateGas.mint(mintAmount),
+                        fetchL1Fee(BOMContractWithSigner, mintAmount),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await BOMContractWithSigner.estimateGas.mint(mintAmount);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -256,6 +250,7 @@ const MintOptions: React.FC = () => {
                         type: 'mint',
                         amount: mintedAmount,
                         side: 'long',
+                        blockNumber: tx.blockNumber || 0,
                     },
                 })
             );
@@ -271,6 +266,7 @@ const MintOptions: React.FC = () => {
                     updateOptionsPendingTransactionStatus({
                         hash: txResult.transactionHash,
                         status: 'confirmed',
+                        blockNumber: txResult.blockNumber,
                     })
                 );
 
@@ -456,7 +452,7 @@ const MintOptions: React.FC = () => {
         }
     };
 
-    const getOrderEndDate = () => toBigNumber(Math.round(optionsMarket.timeRemaining / 1000));
+    const getOrderEndDate = () => Math.round(optionsMarket.timeRemaining / 1000);
 
     const handleSubmitOrder = async (
         price: number | string,
@@ -470,83 +466,33 @@ const MintOptions: React.FC = () => {
         setTxErrorMessage(null);
         isLong ? setIsLongSubmitting(true) : setIsShortSubmitting(true);
 
-        const baseUrl = get0xBaseURL(networkId);
-        const placeOrderUrl = `${baseUrl}sra/v4/order`;
-
-        const makerAmount = Web3Wrapper.toBaseUnitAmount(toBigNumber(optionsAmount), DEFAULT_TOKEN_DECIMALS);
-        const takerAmount = Web3Wrapper.toBaseUnitAmount(
-            toBigNumber(Number(optionsAmount) * Number(price)),
-            DEFAULT_TOKEN_DECIMALS
-        );
+        const takerToken = SynthsUSD.address;
+        const makerAmount = optionsAmount;
+        const takerAmount = Number(optionsAmount) * Number(price);
         const expiry = getOrderEndDate();
-        const salt = generatePseudoRandomSalt();
-        let pool = '0x0000000000000000000000000000000000000000000000000000000000000000';
-        if (isMainNet(networkId)) {
-            pool = '0x000000000000000000000000000000000000000000000000000000000000003D';
-        }
 
         try {
-            const createSignedOrderV4Async = async () => {
-                const order = new LimitOrder({
-                    makerToken,
-                    takerToken: SynthsUSD.address,
-                    makerAmount,
-                    takerAmount,
-                    maker: walletAddress,
-                    sender: NULL_ADDRESS,
-                    pool,
-                    expiry,
-                    salt,
-                    chainId: networkId,
-                    verifyingContract: '0xDef1C0ded9bec7F1a1670819833240f027b25EfF',
-                    feeRecipient: '0x0f8c816a31daef932b9f8afc3fcaa62a557ba2f7',
-                });
-
-                try {
-                    const signature = useLegacySigning
-                        ? await order.getSignatureWithProviderAsync(
-                              new MetamaskSubprovider((snxJSConnector.signer?.provider as any).provider)
-                          )
-                        : await order.getSignatureWithProviderAsync(
-                              (snxJSConnector.signer?.provider as any).provider,
-                              SignatureType.EIP712
-                          );
-                    return { ...order, signature };
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-
-            const signedOrder = await createSignedOrderV4Async();
-
-            try {
-                await axios({
-                    method: 'POST',
-                    url: placeOrderUrl,
-                    data: signedOrder,
-                });
-                refetchOrderbook(makerToken);
-                dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
-            } catch (err) {
-                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-                isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
-            }
-            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
+            await createOneInchLimitOrder(
+                walletAddress,
+                networkId,
+                makerToken,
+                takerToken,
+                makerAmount,
+                takerAmount,
+                expiry
+            );
+            refetchOrderbook(makerToken);
+            dispatchMarketNotification(t('options.market.trade-options.mint.confirm-button.confirmation-message'));
         } catch (e) {
-            console.error(e);
+            console.log(e);
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
         }
+        isLong ? setIsLongSubmitting(false) : setIsShortSubmitting(false);
     };
 
     useEffect(() => {
         setMintedAmount(
-            marketFees
-                ? Number(
-                      Number(amount) -
-                          (INCLUDE_MINTING_FEES ? Number(amount) * (marketFees.creator + marketFees.pool) : 0)
-                  )
-                : 0
+            marketFees ? Number(Number(amount) - Number(amount) * (marketFees.creator + marketFees.pool)) : 0
         );
     }, [amount, marketFees]);
 
@@ -781,7 +727,7 @@ const MintOptions: React.FC = () => {
             <Divider style={{ marginTop: 4 }} />
 
             <FeeSummaryContainer className="mintTab__summary">
-                {INCLUDE_MINTING_FEES && (
+                {marketFees && (marketFees.creator > 0 || marketFees.pool > 0) && (
                     <>
                         <MintingSummaryItem>
                             <ProtocolFeeLabel>{t('options.market.trade-options.mint.fees.minting')}</ProtocolFeeLabel>
@@ -815,26 +761,10 @@ const MintOptions: React.FC = () => {
                         </MintingInnerSummaryItem>
                     </>
                 )}
-                <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} />
+                <NetworkFees gasLimit={gasLimit} disabled={actionInProgress} l1Fee={l1Fee} />
             </FeeSummaryContainer>
             <SubmitButtonContainer style={{ marginTop: '20px' }}>
                 <FlexDivCentered>{getSubmitButton()}</FlexDivCentered>
-                {(sellLong || sellShort) && (
-                    <FlexDivCentered>
-                        <UseLegacySigningContainer>
-                            <Checkbox
-                                disabled={actionInProgress}
-                                checked={useLegacySigning}
-                                value={useLegacySigning.toString()}
-                                onChange={(e: any) => setUseLegacySigning(e.target.checked || false)}
-                                label={t('options.common.legacy-signing.label')}
-                            />
-                        </UseLegacySigningContainer>
-                        <LightTooltip title={t('options.common.legacy-signing.tooltip')}>
-                            <StyledQuestionMarkIcon style={{ marginBottom: -4 }} />
-                        </LightTooltip>
-                    </FlexDivCentered>
-                )}
             </SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}

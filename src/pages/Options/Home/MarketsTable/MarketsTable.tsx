@@ -50,6 +50,7 @@ import { OrderDirection, PhaseFilterEnum } from '../ExploreMarkets/ExploreMarket
 import { Arrow, ArrowsWrapper, PhaseLabel, Star, StyledTableCell, TableHeaderLabel } from './components';
 import Pagination from './Pagination';
 import SPAAnchor from '../../../../components/SPAAnchor';
+import { getIsOVM } from 'utils/network';
 
 dotenv.config();
 
@@ -179,7 +180,13 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
             { id: 2, label: t(`options.home.markets-table.asset-col`), sortable: true },
             { id: 3, label: t(`options.home.markets-table.asset-price-col`), sortable: true },
             { id: 4, label: t(`options.home.markets-table.strike-price-col`), sortable: true },
-            { id: 5, label: t(`options.home.markets-table.pool-size-col`), sortable: true },
+            {
+                id: 5,
+                label: getIsOVM(networkId)
+                    ? t(`options.home.markets-table.amm-size-col`)
+                    : t(`options.home.markets-table.pool-size-col`),
+                sortable: true,
+            },
             { id: 6, label: t(`options.home.markets-table.time-remaining-col`), sortable: true },
             { id: 7, label: t(`options.home.markets-table.open-orders-col`), sortable: true },
             { id: 8, label: t(`options.home.markets-table.phase-col`), sortable: false },
@@ -401,7 +408,14 @@ const MarketsTable: React.FC<MarketsTableProps> = memo(
                                             href={buildOptionsMarketLink(market.address)}
                                         >
                                             <StyledAnchoredTableCell>
-                                                {formatCurrencyWithSign(USD_SIGN, market.poolSize)}
+                                                {getIsOVM(networkId) ? (
+                                                    <>
+                                                        <span className="green">{market.availableLongs}</span> /{' '}
+                                                        <span className="red">{market.availableShorts}</span>
+                                                    </>
+                                                ) : (
+                                                    <>{formatCurrencyWithSign(USD_SIGN, market.poolSize)}</>
+                                                )}
                                             </StyledAnchoredTableCell>
                                         </SPAAnchor>
                                         <SPAAnchor

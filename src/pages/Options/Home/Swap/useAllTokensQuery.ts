@@ -13,7 +13,7 @@ export interface Token {
     symbol: string;
 }
 
-const baseUrl = 'https://api.1inch.exchange/v3.0/';
+const baseUrl = 'https://api.1inch.exchange/v4.0/';
 const suffix = '/tokens';
 
 const useAllTokensQuery = (networkId: NetworkId, options?: UseQueryOptions<Token[]>) => {

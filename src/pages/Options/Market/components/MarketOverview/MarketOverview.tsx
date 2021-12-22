@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { ETHBurned, Flippening, OptionsMarketInfo } from 'types/options';
@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { COLORS } from 'constants/ui';
 import { LightTooltip } from '../../components';
-import { getSynthName } from 'utils/snxJSConnector';
 import { ReactComponent as ArrowHyperlinkIcon } from 'assets/images/arrow-hyperlink.svg';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -23,6 +22,9 @@ import ReactCountryFlag from 'react-country-flag';
 import { getIsAppReady } from 'redux/modules/app';
 import useFlippeningQuery from 'queries/options/useFlippeningQuery';
 import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
+import { getSynthName } from 'utils/currency';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { getIsOVM } from 'utils/network';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -38,6 +40,12 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
     const flippeningQuery = useFlippeningQuery({
         enabled: isAppReady,
     });
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
 
     useEffect(() => {
         if (flippeningQuery.isSuccess && flippeningQuery.data) {
@@ -256,12 +264,36 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ optionsMarket })
                         </Content>
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
-                        <Title>
-                            {t('options.market.overview.deposited-currency-label', {
-                                currencyKey: SYNTHS_MAP.sUSD,
-                            })}
-                        </Title>
-                        <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                        {getIsOVM(networkId) ? (
+                            <>
+                                <Title>{t('options.market.overview.amm-liquidity')}</Title>
+
+                                <Content>
+                                    <span className="green">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableLongs
+                                            : '0'}
+                                    </span>{' '}
+                                    /{' '}
+                                    <span className="red">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableShorts
+                                            : '0'}
+                                    </span>
+                                </Content>
+                            </>
+                        ) : (
+                            <>
+                                <Title>
+                                    {t('options.market.overview.deposited-currency-label', {
+                                        currencyKey: SYNTHS_MAP.sUSD,
+                                    })}
+                                </Title>
+                                <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                            </>
+                        )}
                     </ItemContainer>
                     <ItemContainer className="market__overview__cell">
                         <Title>{t('options.market.overview.time-remaining-label')}</Title>

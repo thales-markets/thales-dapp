@@ -7,7 +7,6 @@ import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
-import snxJSConnector from 'utils/snxJSConnector';
 import { sortOptionsMarkets } from 'utils/options';
 import { RootState } from 'redux/rootReducer';
 import { truncateAddress } from 'utils/formatters/string';
@@ -20,6 +19,7 @@ import axios from 'axios';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -47,9 +47,28 @@ const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
 const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, walletAddress, network }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const marketsQuery = useBinaryOptionsMarketsQuery(networkId, {
-        enabled: open,
-    });
+    const marketsQuery = useBinaryOptionsMarketsQuery(networkId);
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
+
+    const optionsMarkets = useMemo(() => {
+        if (marketsQuery.isSuccess && Array.isArray(marketsQuery.data)) {
+            const markets = openOrdersMap
+                ? marketsQuery.data.map((m) => ({
+                      ...m,
+                      openOrders: (openOrdersMap as any).get(m.address.toLowerCase())?.ordersCount ?? '0',
+                      availableLongs: (openOrdersMap as any).get(m.address.toLowerCase())?.availableLongs ?? '0',
+                      availableShorts: (openOrdersMap as any).get(m.address.toLowerCase())?.availableShorts ?? '0',
+                  }))
+                : marketsQuery.data;
+            return sortOptionsMarkets(markets);
+        }
+        return [];
+    }, [marketsQuery, openOrdersMap]);
 
     const displayNameQuery = useDisplayNameQuery(walletAddress, { enabled: open });
 
@@ -64,15 +83,6 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
     const [displayName, setName] = useState(currentDisplayName);
 
     const [filter, setFilter] = useState(Filters.MARKETS);
-    const { synthsMap } = snxJSConnector;
-
-    const optionsMarkets = useMemo(
-        () =>
-            marketsQuery.isSuccess && Array.isArray(marketsQuery.data)
-                ? sortOptionsMarkets(marketsQuery.data, synthsMap)
-                : [],
-        [marketsQuery, synthsMap]
-    );
 
     const usersMarkets = useMemo(
         () =>

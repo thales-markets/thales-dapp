@@ -22,6 +22,7 @@
             "long-col": "sLONG",
             "short-col": "sSHORT",
             "pool-size-col": "Pool size",
+            "amm-size-col": "AMM liquidity",
             "amount-col": "Amount",
             "price-col": "Price",
             "filled-col": "Filled",
@@ -48,8 +49,8 @@
         "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms. Through growing demand, he became the <strong>first known person to exercise an options contract.</strong>",
         "markets": {
             "title": "Binary Markets",
-            "option1": "Anyone in the world can create a binary options market based on the prices of supported assets.",
-            "option2": "Market makers don't pay a fee but earn as liquidity adds up.",
+            "option1": "Anyone in the world can participate in Thales binary options markets without any limitations.",
+            "option2": "Explore simple and intuitive derivatives with capped downside.",
             "option3": "Permissionless, non-custodial and unrestricted.",
             "view-markets": "View Markets"
         },
@@ -68,14 +69,14 @@
             "title": "To get started you'll need",
             "first": "Web3 wallet, like Metamask",
             "second": "Ether to pay for network fees (also called gas)",
-            "third": "Synth USD (sUSD), which can be obtained on"
+            "third": "Synth USD (sUSD), which can be obtained directly from our dApp or by using"
         },
         "faq": {
             "title": "FAQ",
             "firstQ": "What are binary options?",
             "firstA": "Binary options are a simple and intuitive derivative offering fixed payoffs for a wide variety of markets in a limited risk environment, making risk management more precise.",
-            "secondQ": "What markets are supported?",
-            "secondA": "More than 60 market types are secured by Chainlink price feeds, including cryptocurrencies, equities, commodities, FX, and index products.",
+            "secondQ": "What is the utility of the THALES token?",
+            "secondA": "Thales DAO governance token (THALES) is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in Thales governance. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocol's community governance structure.",
             "thirdQ": "Which asset do users need to mint or buy options on Thales?",
             "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now."
         },
@@ -129,7 +130,9 @@
             "invalid-price-max": "The price cannot be higher than ${{max}}",
             "invalid-amount-max": "The amount cannot be higher than {{max}}",
             "insufficient-balance-wallet": "Please ensure your wallet has sufficient {{currencyKey}}",
-            "invalid-slippage": "Invalid slippage"
+            "invalid-slippage": "Invalid slippage",
+            "max-limit-exceeded": "Amount exceeded the amount available on AMM",
+            "user-rejected-tx": "User rejected transaction"
         },
         "search": "search",
         "buy": "buy",
@@ -168,8 +171,11 @@
         },
         "unsupported-network": {
             "title": "Oops! You are on the wrong network!",
-            "description": "You have selected the wrong network in your wallet. To continue, please switch to the Ethereum network in your wallet.",
-            "button": "Switch to Mainnet"
+            "description": "You have selected the wrong network in your wallet. To continue, please switch to Ethereum mainnet or Optimism network.",
+            "button": {
+                "mainnet": "Switch to Mainnet",
+                "optimism": "Switch to Optimism"
+            }
         }
     },
     "modals": {
@@ -225,6 +231,7 @@
             "market-card": {
                 "current-asset-price": "Current asset price",
                 "pool-size": "Pool size",
+                "amm-liquidity": "AMM liquidity",
                 "end-date": "End date",
                 "strike-price": "Strike price",
                 "open-orders": "Open orders",
@@ -252,7 +259,8 @@
                 "asset-price-col": "Asset price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
-                "pool-size-col": "Market size",
+                "pool-size-col": "Pool size",
+                "amm-size-col": "AMM liquidity",
                 "time-remaining-col": "Time remaining",
                 "competition-tooltip": "This market is eligible for trading competition"
             }
@@ -497,6 +505,10 @@
             "go-to-market": "Go to market"
         },
         "market": {
+            "header": {
+                "orderbook": "Order book",
+                "amm": "AMM"
+            },
             "overview": {
                 "view-market-contract-tooltip": "View market contract",
                 "strike-price-label": "Strike price",
@@ -509,6 +521,7 @@
                 "current-result-label": "Current result",
                 "final-result-label": "Final result",
                 "deposited-currency-label": "Deposited {{currencyKey}}",
+                "amm-liquidity": "AMM liquidity",
                 "event-name-label": "Event Name",
                 "current-ratio-label": "Current ratio",
                 "final-ratio-label": "Final ratio",
@@ -521,6 +534,7 @@
                 "burned-last-hour": "Burned in the last hour"
             },
             "widgets": {
+                "amm-widget": "AMM",
                 "trading-phase-widget": "Claim options",
                 "maturity-phase-widget": "Exercise options",
                 "orderbook-widget": "Order book",
@@ -648,9 +662,11 @@
                     "amount-label": "Amount to {{orderSide}}",
                     "amount-label-mobile": "Amount:",
                     "price-label": "Price per {{currencyKey}}",
+                    "price-for-label": "Amount per {{currencyKey}}",
                     "price-label-mobile": "Price per:",
                     "expiration-label": "Expires in",
-                    "total-label": "Total (sUSD)",
+                    "total-label-susd": "Total (sUSD)",
+                    "total-label-option": "Total {{option}}",
                     "total-max-label": "Maximum sent (sUSD)",
                     "total-min-label": "Minimum received (sUSD)",
                     "slippage-label": "Slippage tolerance",
@@ -675,6 +691,9 @@
                             "progress-label": "Selling in progress...",
                             "confirmation-message": "Successfully sold"
                         }
+                    },
+                    "errors": {
+                        "order-after-maturity": "Order expiration cannot be after market maturity, defaulted to trading period expiration"
                     }
                 },
                 "mint": {
@@ -764,7 +783,7 @@
             "leaderboard-subtitle-2": "It takes into account all trades made within Thales platform.",
             "trading-comp-title": "Trading Competition",
             "trading-comp-subtitle": "This is the leaderboard for Thales' first trading competition.",
-            "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10AM UTC",
+            "trading-comp-subtitle-2": "The competition has officially started on Oct 11 2021 | 10 AM UTC and ended on Nov 01 2021 | 11 AM UTC",
             "trading-comp-subtitle-3": "Click here to see markets eligible for the trading competition",
             "trading-comp-subtitle-4": "For more information and a guide on how to participate, please visit: ",
             "profile-subtitle": "This tab shows you all of your transactions, as well as the transactions of other users.",
@@ -921,7 +940,11 @@
             "enter-amount": "Enter amount",
             "approve": "Give permission to swap {{currency}}",
             "swap": "Swap",
-            "insufficient-balance": "Insufficient balance"
+            "insufficient-balance": "Insufficient balance",
+            "not-supported": " Swap is not supported on Test networks",
+            "tx-success": "Successfully bought sUSD",
+            "tx-failed": "Transaction failed",
+            "tx-user-rejected": "User rejected transaction"
         },
         "royale": {
             "header": {
@@ -996,16 +1019,16 @@
                 "users-per-page": "Users per page"
             },
             "redirect-dialog": {
-                "title": "You are on Optimistic Kovan Network",
+                "title": "You are on Optimism Kovan Network",
                 "message": "Go back to Thales Royale",
                 "or": "or",
                 "switch-to-mainnet": "Switch to Ethereum Mainnet"
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",
-                "message": "Please switch to Optimistic Kovan to continue",
+                "message": "Please switch to Optimism Kovan to continue",
                 "return-to-dapp": "Return to the Thales dApp",
-                "button": "Switch to Optimistic Kovan",
+                "button": "Switch to Optimism Kovan",
                 "parameters": "OP Kovan parameters"
             },
             "wallet-not-connected-dialog": {
@@ -1088,5 +1111,30 @@
             "number-of-stakers": "Total number of stakers",
             "search-placeholder": "Search stakers..."
         }
+    },
+    "optimism": {
+        "optimistic-l2": "Optimism L2",
+        "switch-to-l1": "Switch to L1",
+        "switch-to-l2": "Switch to L2",
+        "optimistic-gateway": "Optimism Gateway",
+        "optimistic-etherscan": "Optimism Etherscan",
+        "learn-more": "Learn more",
+        "info": "As the maximum rollup time to L1 on Optimism is 15 minutes, actions that depend on timestamps can be up to 15 minutes delayed."
+    },
+    "amm": {
+        "type-label": "type",
+        "total-buy-label": "Total to pay",
+        "total-sell-label": "Total to receive",
+        "return-label": "Potential profit",
+        "return-tooltip": "Potential profit if this option wins",
+        "skew-label": "Skew impact",
+        "skew-tooltip": "AMM will add a price impact on the side it is more exposed to",
+        "max-limit-buy-tooltip": "The maximum amount of {{currencyKey}} options for buying from AMM",
+        "max-limit-sell-tooltip": "The maximum amount of {{currencyKey}} options for sale to AMM",
+        "amm-disabled-warning": "AMM trading is disabled for this market",
+        "amm-disabled": "AMM trading disabled",
+        "beta": "BETA",
+        "price-changed-warning": "Price changed, please review",
+        "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 8 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
     }
 }

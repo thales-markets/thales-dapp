@@ -1,6 +1,6 @@
 import { CurrencyKey } from '../constants/currency';
 import { BigNumberish } from 'ethers';
-import { LimitOrder, Signature } from '@0x/protocol-utils';
+import { Signature } from '@0x/protocol-utils';
 import { OrderPeriod } from 'constants/options';
 
 export type Phase = 'trading' | 'maturity' | 'expiry';
@@ -20,6 +20,7 @@ export type OptionsTransaction = {
     market: string;
     status?: 'pending' | 'confirmed';
     price?: number;
+    blockNumber: number;
 };
 
 export type OptionValue = {
@@ -59,6 +60,8 @@ export type HistoricalOptionsMarketInfo = {
     customMarket: boolean;
     customOracle: string;
     result: OptionSide;
+    availableLongs: number;
+    availableShorts: number;
     country?: string;
     eventName?: string;
     outcome?: string;
@@ -83,14 +86,16 @@ export type OptionsMarketInfo = {
     creator: string;
     // options: OptionValue;
     fees: {
-        creatorFee: number;
-        poolFee: number;
+        creator: number;
+        pool: number;
     };
     // creatorLimits: {
     //     capitalRequirement: number;
     //     skewLimit: number;
     // };
     // BN: BNOptionValue;
+    availableLongs: number;
+    availableShorts: number;
     longAddress: string;
     shortAddress: string;
     customMarket: boolean;
@@ -126,9 +131,10 @@ export type OrderbookInfo = {
 export type Orders = OrderItem[];
 
 export type OrderItem = {
-    rawOrder: LimitOrder;
+    rawOrder: any;
     signature: Signature;
     displayOrder: DisplayOrder;
+    orderData: any;
 };
 
 export type ExtendedOrderItem = OrderItem & {
@@ -166,6 +172,7 @@ export type Trade = {
     takerToken: string;
     makerAmount: number;
     takerAmount: number;
+    blockNumber: number;
 };
 export type ExtendedTrade = Trade & {
     market: string;
@@ -185,21 +192,25 @@ export type UsersAssets = {
     };
 };
 
-export type UserOrderMetaData = {
-    createdAt: string;
-    orderHash: string;
-    remainingFillableTakerAmount: string;
+export type OrderData = {
+    makerAsset: string;
+    takerAsset: string;
+    predicate: string;
 };
 
 export type UserOrder = {
-    metaData: UserOrderMetaData;
-    order: Trade;
+    makerAmount: number;
+    takerAmount: number;
+    orderMaker: number;
+    remainingMakerAmount: number;
+    data: OrderData;
 };
 
-export type ZeroExErrorResponse = {
-    code: number;
-    reason: string;
-    validationErrors?: ZeroExValidationError[];
+export type UserOrders = UserOrder[];
+
+export type OneInchErrorResponse = {
+    statusCode: number;
+    description: string;
 };
 
 export type ZeroExValidationError = {

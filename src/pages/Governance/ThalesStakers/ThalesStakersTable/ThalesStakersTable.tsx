@@ -23,6 +23,9 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 import { getEtherscanAddressLink } from 'utils/etherscan';
 import { LightMediumTooltip } from 'pages/Options/Market/components';
 import snxJSConnector from 'utils/snxJSConnector';
+import { useSelector } from 'react-redux';
+import { getNetworkId } from 'redux/modules/wallet';
+import { RootState } from 'redux/rootReducer';
 
 interface HeadCell {
     id: keyof Staker[];
@@ -260,13 +263,16 @@ type StakerCellProps = {
 
 const StakerCell: React.FC<StakerCellProps> = ({ staker }) => {
     const [stakerEns, setStakerEns] = useState<string | null>(null);
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     useEffect(() => {
         const fetchStakerEns = async () => {
             const stakerEns = await (snxJSConnector as any).provider.lookupAddress(staker.id);
             setStakerEns(stakerEns);
         };
-        fetchStakerEns();
+        if (networkId === NetworkId.Mainnet) {
+            fetchStakerEns();
+        }
     }, [staker]);
 
     return <Address>{stakerEns != null ? stakerEns : truncateAddress(staker.id)}</Address>;

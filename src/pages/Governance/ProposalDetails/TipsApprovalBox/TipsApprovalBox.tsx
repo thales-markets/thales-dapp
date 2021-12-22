@@ -2,12 +2,13 @@ import React, { useMemo } from 'react';
 import { FlexDivColumnCentered, FlexDivRow } from 'theme/common';
 import { LoaderContainer } from 'pages/Governance/components';
 import styled from 'styled-components';
-import { PROPOSAL_APPROVAL_VOTES, NUMBER_OF_COUNCIL_MEMBERS, StatusEnum } from 'constants/governance';
+import { StatusEnum } from 'constants/governance';
 import SimpleLoader from 'components/SimpleLoader';
 import { Proposal, ProposalResults } from 'types/governance';
 import { useTranslation } from 'react-i18next';
 import { Pie, PieChart, Cell } from 'recharts';
 import { PieChartContainer } from 'pages/Options/Earn/components';
+import { getProposalApprovalData } from 'utils/governance';
 
 type TipsApprovalBoxProps = {
     proposal: Proposal;
@@ -20,7 +21,8 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
     const closed = proposal.state === StatusEnum.Closed;
     const pending = proposal.state === StatusEnum.Pending;
     const active = proposal.state === StatusEnum.Active;
-    const isPassed = proposalResults && proposalResults.votes.length >= PROPOSAL_APPROVAL_VOTES;
+    const { numberOfCouncilMembers, proposalApprovalVotes } = getProposalApprovalData(proposal.start);
+    const isPassed = proposalResults && proposalResults.votes.length >= proposalApprovalVotes;
 
     const chartColor = isPassed ? '#8208FC' : closed ? 'rgba(130, 8, 252, 0.6)' : '#64D9FE';
 
@@ -28,7 +30,7 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
         const data = [];
         const numberOfVotes = proposalResults ? proposalResults.votes.length : 0;
 
-        for (let index = 0; index < NUMBER_OF_COUNCIL_MEMBERS; index++) {
+        for (let index = 0; index < numberOfCouncilMembers; index++) {
             const piece = {
                 name: 'vote',
                 value: 1,
@@ -58,8 +60,8 @@ const TipsApprovalBox: React.FC<TipsApprovalBoxProps> = ({ proposal, proposalRes
                             <VoteNote>
                                 (
                                 {t(`governance.proposal.vote-note`, {
-                                    approvalVotes: PROPOSAL_APPROVAL_VOTES,
-                                    totalVotes: NUMBER_OF_COUNCIL_MEMBERS,
+                                    approvalVotes: proposalApprovalVotes,
+                                    totalVotes: numberOfCouncilMembers,
                                 })}
                                 )
                             </VoteNote>

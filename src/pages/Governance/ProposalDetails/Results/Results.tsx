@@ -80,33 +80,22 @@ const Results: React.FC<ResultsProps> = ({
                             <ResultRow
                                 key={label}
                                 backgroundColor={
-                                    (isCouncilVoting && index < 7) ||
-                                    (isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS)
+                                    (isCouncilVoting || isCouncilResults) && index < NUMBER_OF_COUNCIL_MEMBERS
                                         ? '#03044e'
                                         : '#04045a'
                                 }
                                 opacity={isCouncilResults && index >= NUMBER_OF_COUNCIL_MEMBERS ? 0.5 : 1}
                                 borderColor={
-                                    // TODO update NUMBER_OF_COUNCIL_MEMBERS and remove 7 hardcoded
-                                    (isCouncilVoting && index === 6) ||
-                                    (isCouncilResults && index === NUMBER_OF_COUNCIL_MEMBERS - 1)
+                                    (isCouncilVoting || isCouncilResults) && index === NUMBER_OF_COUNCIL_MEMBERS - 1
                                         ? '#3f1fb4'
                                         : undefined
                                 }
                                 paddingBottom={
-                                    isCouncilResults &&
-                                    (index === NUMBER_OF_COUNCIL_MEMBERS - 1 || index === choices.length - 1)
+                                    (isCouncilVoting && index === NUMBER_OF_COUNCIL_MEMBERS - 1) ||
+                                    (isCouncilResults &&
+                                        (index === NUMBER_OF_COUNCIL_MEMBERS - 1 || index === choices.length - 1))
                                         ? 20
                                         : 10
-                                }
-                                style={
-                                    isCouncilResults && index === 0
-                                        ? {
-                                              textDecoration: 'line-through',
-                                              textDecorationColor: '#B8C6E5',
-                                              textDecorationThickness: '2px',
-                                          }
-                                        : {}
                                 }
                             >
                                 <SidebarRowData>

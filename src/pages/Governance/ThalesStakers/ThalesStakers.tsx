@@ -13,6 +13,7 @@ import { EnsNames, Staker, Stakers } from 'types/governance';
 import ThalesStakersTable from './ThalesStakersTable';
 import SearchStakers from '../components/SearchStakers';
 import snxJSConnector from 'utils/snxJSConnector';
+import { NetworkId } from '@synthetixio/contracts-interface';
 
 enum OrderDirection {
     NONE,
@@ -31,7 +32,7 @@ const ThalesStakers: React.FC = () => {
     const [addressSearch, setAddressSearch] = useState<string>('');
     const [ensNames, setEnsNames] = useState<EnsNames | undefined>(undefined);
 
-    const stakersQuery = useThalesStakersQuery(networkId, {
+    const stakersQuery = useThalesStakersQuery({
         enabled: isAppReady,
     });
     const stakers: Staker[] = stakersQuery.isSuccess && stakersQuery.data ? stakersQuery.data : [];
@@ -48,7 +49,9 @@ const ThalesStakers: React.FC = () => {
             setEnsNames(records);
         };
 
-        getEnsNames(stakers);
+        if (networkId === NetworkId.Mainnet) {
+            getEnsNames(stakers);
+        }
     }, [stakers]);
 
     const filteredStakers = useMemo(() => {

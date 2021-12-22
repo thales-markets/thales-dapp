@@ -22,10 +22,10 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDiv, Image, Text, FlexDivColumn } from 'theme/common';
 import { HistoricalOptionsMarketInfo, OptionSide } from 'types/options';
+import { getSynthName } from 'utils/currency';
 import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import { formatCurrency, formatCurrencyWithSign } from 'utils/formatters/number';
 import { buildOptionsMarketLink } from 'utils/routes';
-import { getSynthName } from 'utils/snxJSConnector';
 import '../media.scss';
 import { HeadCell, OrderDirection } from '../Profile';
 

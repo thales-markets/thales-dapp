@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ETHBurned, Flippening, OptionsMarketInfo } from 'types/options';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import CurrencyIcon from 'components/Currency/CurrencyIcon';
 import { LightTooltip } from '../../components';
 import { Content, GreenText, RedText, StyledLink, Title, PriceArrow, Result } from './MarketOverview';
 import { getEtherscanAddressLink } from 'utils/etherscan';
-import { getSynthName } from 'utils/snxJSConnector';
 import { CryptoKey, CryptoName } from 'pages/Options/Home/MarketCard/MarketCard';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -23,6 +22,9 @@ import { countryToCountryCode } from 'pages/Options/Home/MarketsTable/MarketsTab
 import { getIsAppReady } from 'redux/modules/app';
 import useFlippeningQuery from 'queries/options/useFlippeningQuery';
 import useETHBurnedCountQuery from 'queries/options/useETHBurnedCountQuery';
+import { getSynthName } from 'utils/currency';
+import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import { getIsOVM } from 'utils/network';
 
 type MarketOverviewProps = {
     optionsMarket: OptionsMarketInfo;
@@ -38,6 +40,13 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
     const flippeningQuery = useFlippeningQuery({
         enabled: isAppReady,
     });
+
+    const openOrdersQuery = fetchAllMarketOrders(networkId);
+    const openOrdersMap = useMemo(() => {
+        if (openOrdersQuery.isSuccess) {
+            return openOrdersQuery.data;
+        }
+    }, [openOrdersQuery]);
 
     useEffect(() => {
         if (flippeningQuery.isSuccess && flippeningQuery.data) {
@@ -193,12 +202,35 @@ export const MarketOverviewMobile: React.FC<MarketOverviewProps> = ({ optionsMar
                 </FlexDivRowCentered>
                 <FlexDivRowCentered style={{ marginTop: 16 }}>
                     <FlexDivColumnCentered>
-                        <Title>
-                            {t('options.market.overview.deposited-currency-label', {
-                                currencyKey: SYNTHS_MAP.sUSD,
-                            })}
-                        </Title>
-                        <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                        {getIsOVM(networkId) ? (
+                            <>
+                                <Title>{t('options.market.overview.amm-liquidity')}</Title>
+                                <Content>
+                                    <span className="green">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableLongs
+                                            : '0'}
+                                    </span>{' '}
+                                    /{' '}
+                                    <span className="red">
+                                        {openOrdersMap
+                                            ? (openOrdersMap as any).get(optionsMarket.address.toLowerCase())
+                                                  ?.availableShorts
+                                            : '0'}
+                                    </span>
+                                </Content>
+                            </>
+                        ) : (
+                            <>
+                                <Title>
+                                    {t('options.market.overview.deposited-currency-label', {
+                                        currencyKey: SYNTHS_MAP.sUSD,
+                                    })}
+                                </Title>
+                                <Content>{formatCurrencyWithSign(USD_SIGN, optionsMarket.deposited)}</Content>
+                            </>
+                        )}
                     </FlexDivColumnCentered>
                     <FlexDivColumnCentered style={{ alignItems: 'flex-end' }}>
                         <Title>{t('options.market.overview.time-remaining-label')}</Title>

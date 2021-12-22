@@ -1,9 +1,12 @@
+import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
 import { ethers } from 'ethers';
+import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
+import snxJSConnector from './snxJSConnector';
 
-export type NetworkId = 1 | 3 | 42 | 69;
+export type NetworkId = 1 | 3 | 42 | 10 | 69;
 
 type EthereumProvider = {
     isMetaMask: boolean;
@@ -14,7 +17,16 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
     42: 'KOVAN',
+    10: 'OPTIMISTIC',
     69: 'KOVAN-OPTIMISTIC',
+};
+
+export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
+    1: 'MAINNET',
+    3: 'ROPSTEN',
+    42: 'KOVAN',
+    10: 'OPTIMISM MAINNET',
+    69: 'OPTIMISM KOVAN',
 };
 
 export const defaultNetwork: { name: string; networkId: NetworkId } = {
@@ -30,7 +42,7 @@ export async function getEthereumNetwork() {
             const provider = (await detectEthereumProvider()) as EthereumProvider;
             if (provider && provider.networkVersion != null) {
                 const networkId = Number(provider.networkVersion) as NetworkId;
-                return { name: SUPPORTED_NETWORKS[networkId], networkId };
+                return { name: SUPPORTED_NETWORKS_NAMES[networkId], networkId };
             }
         }
         return defaultNetwork;
@@ -40,15 +52,23 @@ export async function getEthereumNetwork() {
     }
 }
 
-export const getTransactionPrice = (gasPrice: number | null, gasLimit: number | null, ethPrice: number | null) => {
+export const getTransactionPrice = (
+    gasPrice: number | null,
+    gasLimit: number | null,
+    ethPrice: number | null,
+    l1Fee?: number | null
+) => {
     if (!gasPrice || !gasLimit || !ethPrice) return 0;
-
-    return (gasPrice * ethPrice * gasLimit) / GWEI_UNIT;
+    const transsactionPrice = (gasPrice * ethPrice * gasLimit) / GWEI_UNIT;
+    const l1TranactionPrice = l1Fee && l1Fee !== null ? (l1Fee * ethPrice) / GWEI_UNIT / GWEI_UNIT : 0;
+    return transsactionPrice + l1TranactionPrice;
 };
 
 export const isMainNet = (networkId: NetworkId) => networkId === 1;
 
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
+
+export const normalizeL2GasLimit = (gasLimit: number) => Math.trunc(gasLimit * 1.2);
 
 export const normalize0xGasLimit = (gasLimit: number) => Math.trunc(gasLimit * DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER);
 
@@ -69,6 +89,8 @@ export const isNetworkSupported = (networkId: NetworkId): boolean => {
             return true;
         case 69:
             return true;
+        case 10:
+            return true;
         default:
             return false;
     }
@@ -80,3 +102,26 @@ export const formatGwei = (wei: number) => wei / GWEI_UNIT;
 
 export const formatGasLimit = (gasEstimate: ethers.BigNumber | number, networkId: number): number =>
     getIsOVM(networkId) ? Number(gasEstimate) : normalizeGasLimit(Number(gasEstimate));
+
+export const formatL2GasLimit = (gasEstimate: ethers.BigNumber | number): number =>
+    normalizeL2GasLimit(Number(gasEstimate));
+
+export const getL1FeeInWei = async (txRequest: any) => {
+    const OVM_GasPriceOracle = getContractFactory('OVM_GasPriceOracle', (snxJSConnector as any).signer).attach(
+        predeploys.OVM_GasPriceOracle
+    );
+    const unsignedTx = (await (snxJSConnector as any).signer.populateTransaction(txRequest)) as UnsignedTransaction;
+    if (unsignedTx) {
+        const serializedTx = serializeTransaction({
+            nonce: unsignedTx.nonce ? parseInt(unsignedTx.nonce.toString(10), 10) : 0,
+            value: unsignedTx.value,
+            gasPrice: unsignedTx.gasPrice,
+            gasLimit: unsignedTx.gasLimit,
+            to: unsignedTx.to,
+            data: unsignedTx.data,
+        });
+        const l1FeeInWei = await OVM_GasPriceOracle.getL1Fee(serializedTx);
+        return l1FeeInWei.toNumber();
+    }
+    return null;
+};

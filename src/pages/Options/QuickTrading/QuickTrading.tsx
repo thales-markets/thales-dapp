@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getIsAppReady, set0xReady } from 'redux/modules/app';
+import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import {
@@ -17,13 +17,12 @@ import {
 import SearchMarket from '../Home/SearchMarket/SearchMarket';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from 'constants/routes';
-import { SYNTHS_MAP } from 'constants/currency';
+import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
 import useBinaryOptionsOrders from 'queries/options/useBinaryOptionsOrders';
 import { DisplayOrder, ExtendedOrderItem, HistoricalOptionsMarketInfo } from 'types/options';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
 import UserFilter from '../Home/ExploreMarkets/UserFilters';
 import { useTranslation } from 'react-i18next';
-import { getSynthName } from 'utils/snxJSConnector';
 import bitcoin from 'assets/images/filters/bitcoin.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
@@ -32,14 +31,13 @@ import short from 'assets/images/filters/short.svg';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import QuickTradingTable from './QuickTradingTable';
 import styled from 'styled-components';
-import contractWrappers0xConnector from 'utils/contractWrappers0xConnector';
-import { useEffect } from 'react';
 import useUserAssetsBalanceQuery from 'queries/user/useUserAssetsBalanceQuery';
 import { useLocation } from 'react-router-dom';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 import QuickTradingMobile from './QuickTradingMobile';
 import './media.scss';
 import Loader from 'components/Loader';
+import { getSynthName } from 'utils/currency';
 
 export enum TradingModeFilterEnum {
     Buy = 'buy',
@@ -88,7 +86,6 @@ const QuickTradingPage: React.FC<any> = () => {
         const [assetSearch, setAssetSearch] = useState<string>('');
         const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
         const [orderDirection, setOrderDirection] = useState(OrderDirection.DESC);
-        const dispatch = useDispatch();
 
         const { search } = useLocation();
         const query = new URLSearchParams(search);
@@ -220,10 +217,18 @@ const QuickTradingPage: React.FC<any> = () => {
             }
             switch (coinFilter) {
                 case CoinFilterEnum.Bitcoin:
-                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sBTC);
+                    filteredOrders = filteredOrders.filter(
+                        (order) =>
+                            order.market.currencyKey === SYNTHS_MAP.sBTC ||
+                            order.market.currencyKey === CRYPTO_CURRENCY_MAP.BTC
+                    );
                     break;
                 case CoinFilterEnum.Ethereum:
-                    filteredOrders = filteredOrders.filter((order) => order.market.currencyKey === SYNTHS_MAP.sETH);
+                    filteredOrders = filteredOrders.filter(
+                        (order) =>
+                            order.market.currencyKey === SYNTHS_MAP.sETH ||
+                            order.market.currencyKey === CRYPTO_CURRENCY_MAP.ETH
+                    );
                     break;
             }
             switch (optionFilter) {
@@ -285,16 +290,6 @@ const QuickTradingPage: React.FC<any> = () => {
             [filteredOrders, assetSearch],
             DEFAULT_SEARCH_DEBOUNCE_MS
         );
-
-        useEffect(() => {
-            // For some reason, creating a new instance of contract wrappers is time-consuming and blocks rendering.
-            // Timeout added to delay initialization and not block page rendering.
-            setTimeout(() => {
-                dispatch(set0xReady(false));
-                contractWrappers0xConnector.setExchangeProxy(isWalletConnected, networkId);
-                dispatch(set0xReady(true));
-            }, 500);
-        }, [networkId, isWalletConnected]);
 
         const resetFilters = () => {
             setOrderFilter(OrderFilterEnum.All);
