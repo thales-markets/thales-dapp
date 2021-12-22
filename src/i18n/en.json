@@ -22,6 +22,7 @@
             "long-col": "sLONG",
             "short-col": "sSHORT",
             "pool-size-col": "Pool size",
+            "amm-size-col": "AMM liquidity",
             "amount-col": "Amount",
             "price-col": "Price",
             "filled-col": "Filled",

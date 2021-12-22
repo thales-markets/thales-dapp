@@ -44,6 +44,7 @@ export enum SortByEnum {
     Asset_Price = 'asset-price-col',
     Strike_Price = 'strike-price-col',
     Pool_Size = 'pool-size-col',
+    Amm_Size = 'amm-size-col',
     Time_Remaining = 'time-remaining-col',
     Open_Orders = 'open-orders-col',
 }
@@ -312,25 +313,38 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
 
             <SortyByMobile
                 onClick={setShowDropwodnSort.bind(this, !showDropdownSort)}
-                filter={t(`options.home.markets-table.${mapOrderByToEnum(orderBy)}`)}
+                filter={t(`options.home.markets-table.${mapOrderByToEnum(orderBy, networkId)}`)}
             >
                 <DropDownWrapper className="markets-mobile__sorting-dropdown" hidden={!showDropdownSort}>
                     <DropDown>
                         {Object.keys(SortByEnum)
                             .filter((key) => isNaN(Number(SortByEnum[key as keyof typeof SortByEnum])))
-                            .map((key, index) => (
-                                <Text
-                                    className={`${
-                                        mapOrderByToEnum(orderBy) === SortByEnum[key as keyof typeof SortByEnum]
-                                            ? 'selected'
-                                            : ''
-                                    } text-s lh32 pale-grey capitalize`}
-                                    onClick={() => setOrderBy(index + 2)}
-                                    key={key}
-                                >
-                                    {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
-                                </Text>
-                            ))}
+                            .map((key, index) => {
+                                if (
+                                    getIsOVM(networkId) &&
+                                    SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Pool_Size
+                                )
+                                    return <></>;
+                                if (
+                                    !getIsOVM(networkId) &&
+                                    SortByEnum[key as keyof typeof SortByEnum] === SortByEnum.Amm_Size
+                                )
+                                    return <></>;
+                                return (
+                                    <Text
+                                        className={`${
+                                            mapOrderByToEnum(orderBy, networkId) ===
+                                            SortByEnum[key as keyof typeof SortByEnum]
+                                                ? 'selected'
+                                                : ''
+                                        } text-s lh32 pale-grey capitalize`}
+                                        onClick={() => setOrderBy(index + 2)}
+                                        key={key}
+                                    >
+                                        {t(`options.home.markets-table.${SortByEnum[key as keyof typeof SortByEnum]}`)}
+                                    </Text>
+                                );
+                            })}
                     </DropDown>
                 </DropDownWrapper>
             </SortyByMobile>
@@ -403,7 +417,7 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
     );
 };
 
-const mapOrderByToEnum = (data: number) => {
+const mapOrderByToEnum = (data: number, networkId: number) => {
     switch (data) {
         case 1:
         case 2:
@@ -413,7 +427,7 @@ const mapOrderByToEnum = (data: number) => {
         case 4:
             return SortByEnum.Strike_Price;
         case 5:
-            return SortByEnum.Pool_Size;
+            return getIsOVM(networkId) ? SortByEnum.Amm_Size : SortByEnum.Pool_Size;
         case 6:
             return SortByEnum.Time_Remaining;
         case 7:

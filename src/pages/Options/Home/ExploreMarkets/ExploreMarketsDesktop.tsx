@@ -233,7 +233,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                 case 4:
                     return sortByField(a, b, orderDirection, 'strikePrice');
                 case 5:
-                    return sortByField(a, b, orderDirection, 'poolSize');
+                    return !getIsOVM(networkId)
+                        ? sortByField(a, b, orderDirection, 'poolSize')
+                        : orderDirection === OrderDirection.ASC
+                        ? a.availableLongs - b.availableLongs
+                        : b.availableLongs - a.availableLongs;
+
                 case 6:
                     return sortByTime(a, b, orderDirection);
                 case 7:
