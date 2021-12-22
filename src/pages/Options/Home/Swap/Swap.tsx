@@ -255,7 +255,12 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                                     src={option.logoURI}
                                                     style={{ width: 32, height: 32, marginRight: 6 }}
                                                 ></Image>
-                                                <Text className="text-xs white">{option.name}</Text>
+                                                <Text
+                                                    className="text-xs white"
+                                                    style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
+                                                >
+                                                    {option.name}
+                                                </Text>
                                             </FlexDivRowCentered>
                                         );
                                     }}
