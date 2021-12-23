@@ -7,7 +7,7 @@ import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { keyBy } from 'lodash';
+import { keyBy, orderBy } from 'lodash';
 import { sortOptionsMarkets } from 'utils/options';
 import { NetworkId } from 'utils/network';
 
@@ -78,7 +78,7 @@ const useBinaryOptionsAllTradesQuery = (networkId: NetworkId, options?: UseQuery
                 trade.marketItem = optionsMarketsMap[trade.market];
             });
 
-            return trades;
+            return orderBy(trades, ['timestamp', 'blockNumber'], ['desc', 'desc']);
         },
         {
             refetchInterval: 5000,
