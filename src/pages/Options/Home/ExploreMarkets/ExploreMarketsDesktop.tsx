@@ -8,7 +8,6 @@ import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
 import { DEFAULT_SEARCH_DEBOUNCE_MS } from 'constants/defaults';
-import ROUTES from 'constants/routes';
 import useDebouncedMemo from 'hooks/useDebouncedMemo';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 import queryString from 'query-string';
@@ -24,8 +23,7 @@ import { Button, FilterButton, FlexDiv, FlexDivCentered, FlexDivColumn, Text } f
 import { HistoricalOptionsMarketInfo, OptionsMarkets, OrderData } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { getIsOVM } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
-import { history, navigateTo } from 'utils/routes';
+import { history } from 'utils/routes';
 import snxJSConnector from 'utils/snxJSConnector';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from '../../../../constants/currency';
 import { Rates } from '../../../../queries/rates/useExchangeRatesQuery';
@@ -639,26 +637,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                                     {t('options.home.explore-markets.table.no-markets-created')}
                                 </Text>
                                 <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                    <Button
-                                        className="secondary"
-                                        onClick={() =>
-                                            isWalletConnected
-                                                ? navigateTo(ROUTES.Options.CreateMarket)
-                                                : onboardConnector.connectWallet()
-                                        }
-                                    >
-                                        {isWalletConnected
-                                            ? t('options.home.market-creation.create-market-button-label')
-                                            : t('common.wallet.connect-your-wallet')}
-                                    </Button>
-                                    <Text
-                                        className="text-l bold pale-grey"
-                                        style={{
-                                            margin: 'auto 60px',
-                                        }}
-                                    >
-                                        {t('common.or')}
-                                    </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}
                                     </Button>
