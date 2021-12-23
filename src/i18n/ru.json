@@ -229,7 +229,8 @@
             "short": "Короткий",
             "my-trades": "Мои сделки",
             "amm": "AMM",
-            "orderbook": "Таблица заказов"
+            "orderbook": "Таблица заказов",
+            "trade-type": "Тип торговли"
         },
         "home": {
             "market-card": {

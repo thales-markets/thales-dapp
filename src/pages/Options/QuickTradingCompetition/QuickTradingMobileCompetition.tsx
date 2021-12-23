@@ -88,19 +88,13 @@ const QuickTradingCompetitionMobile: React.FC<QuickTradingMobileProps> = ({
         }
         let categoryFilter = '';
         if (orderFilter !== OrderFilterEnum.All) {
-            categoryFilter = `${t(`options.filters-labels.${categoryFilter}`)}, ${t(
-                `options.filters-labels.${orderFilter}`
-            )}`;
+            categoryFilter = `${categoryFilter}, ${t(`options.filters-labels.${orderFilter}`)}`;
         }
         if (coinFilter !== CoinFilterEnum.All) {
-            categoryFilter = `${t(`options.filters-labels.${categoryFilter}`)}, ${t(
-                `options.filters-labels.${coinFilter}`
-            )}`;
+            categoryFilter = `${categoryFilter}, ${t(`options.filters-labels.${coinFilter}`)}`;
         }
         if (optionFilter !== OptionFilterEnum.All) {
-            categoryFilter = `${t(`options.filters-labels.${categoryFilter}`)}, ${t(
-                `options.filters-labels.${optionFilter}`
-            )}`;
+            categoryFilter = `${categoryFilter}, ${t(`options.filters-labels.${optionFilter}`)}`;
         }
         return categoryFilter.substring(1);
     };

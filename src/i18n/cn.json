@@ -229,7 +229,8 @@
             "short": "空头",
             "my-trades": "我的交易",
             "amm": "AMM",
-            "orderbook": "订单簿"
+            "orderbook": "订单簿",
+            "trade-type": "交易类型"
         },
         "home": {
             "market-card": {

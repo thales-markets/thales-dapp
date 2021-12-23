@@ -33,6 +33,8 @@ import myTrades from 'assets/images/filters/my-open-orders.svg';
 import { getCoinImage, getOptionImage } from '../QuickTradingCompetition/QuickTradingCompetition';
 import UserFilter from '../Home/ExploreMarkets/UserFilters';
 import snxJSConnector from 'utils/snxJSConnector';
+import TradeHistoryMobile from './TradeHistoryMobile';
+import './media.scss';
 
 enum OrderDirection {
     NONE,
@@ -204,7 +206,25 @@ const TradeHistory: React.FC = () => {
             <Wrapper>
                 <MarketHeader route={ROUTES.Options.TradeHistory} />
                 <Title style={{ alignSelf: 'flex-start' }}>{t('common.sidebar.trade-history-label')}</Title>
-                <FlexDivColumnCentered className="leaderboard__wrapper">
+                <TradeHistoryMobile
+                    tradeTypeFilter={tradeTypeFilter}
+                    tradeFilter={tradeFilter}
+                    coinFilter={coinFilter}
+                    optionFilter={optionFilter}
+                    setTradeTypeFilter={setTradeTypeFilter}
+                    setTradeFilter={setTradeFilter}
+                    setCoinFilter={setCoinFilter}
+                    setOptionFilter={setOptionFilter}
+                    assetSearch={assetSearch}
+                    setAssetSearch={setAssetSearch}
+                    trades={assetSearch ? searchFilteredTrades : filteredTrades}
+                    orderBy={orderBy}
+                    setOrderBy={setOrderBy}
+                    isLoading={tradesQuery.isLoading}
+                    resetFilters={resetFilters}
+                />
+
+                <FlexDivColumnCentered id="trade-history" className="trade-history-desktop" style={{ width: '100%' }}>
                     <FlexDivCentered style={{ flexFlow: 'wrap' }}>
                         {Object.values(TradeFilterEnum).map((filterItem) => {
                             return filterItem === TradeFilterEnum.All ? null : (
@@ -296,6 +316,7 @@ const TradeHistory: React.FC = () => {
                         setOrderBy={setOrderBy}
                         setOrderDirection={setOrderDirection}
                         hideBorderRadius
+                        deps={[orderBy, orderDirection, tradeTypeFilter, tradeFilter, coinFilter, optionFilter]}
                     >
                         <NoTrades>
                             <>

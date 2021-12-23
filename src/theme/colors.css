@@ -45,3 +45,11 @@
 .red-fade {
     color: rgba(229, 55, 32, 0.5) !important;
 }
+
+.color-buy {
+    color: #04c19d !important;
+}
+
+.color-sell {
+    color: #ff3e24 !important;
+}

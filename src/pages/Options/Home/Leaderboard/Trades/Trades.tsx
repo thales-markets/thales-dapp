@@ -137,6 +137,7 @@ const Trades: React.FC = () => {
                 orderDirection={orderDirection}
                 setOrderBy={setOrderBy}
                 setOrderDirection={setOrderDirection}
+                deps={[orderBy, orderDirection]}
             >
                 <NoTrades>
                     <>

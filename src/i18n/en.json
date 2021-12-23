@@ -229,7 +229,8 @@
             "short": "Short",
             "my-trades": "My Trades",
             "amm": "AMM",
-            "orderbook": "Order book"
+            "orderbook": "Order book",
+            "trade-type": "Trade type"
         },
         "home": {
             "market-card": {
@@ -830,14 +831,14 @@
                 "view-all-trades": "View all trades",
                 "no-trades-found": "No trades found",
                 "table": {
-                    "date-time-col": "date | time",
-                    "market-col": "market",
-                    "asset-col": "asset",
-                    "type-col": "type",
-                    "tx-type-col": "tx type",
-                    "amount-col": "amount",
-                    "price-col": "price",
-                    "tx-status-col": "tx status"
+                    "date-time-col": "Date | time",
+                    "market-col": "Market",
+                    "asset-col": "Asset",
+                    "type-col": "Type",
+                    "tx-type-col": "Tx type",
+                    "amount-col": "Amount",
+                    "price-col": "Price",
+                    "tx-status-col": "Tx status"
                 }
             },
             "profile": {

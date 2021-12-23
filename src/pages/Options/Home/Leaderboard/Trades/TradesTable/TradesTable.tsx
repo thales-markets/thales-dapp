@@ -54,6 +54,7 @@ type TradesTableProps = {
     orderDirection: OrderDirection;
     setOrderDirection: (data: any) => void;
     hideBorderRadius?: boolean;
+    deps: any;
 };
 
 const TradesTable: React.FC<TradesTableProps> = ({
@@ -65,6 +66,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
     setOrderDirection,
     hideBorderRadius,
     children,
+    deps,
 }) => {
     const { t } = useTranslation();
 
@@ -108,7 +110,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
         }
     };
 
-    useEffect(() => setPage(0), [orderBy, orderDirection]);
+    useEffect(() => setPage(0), deps);
 
     const sortedTrades = useMemo(() => {
         return trades.slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
