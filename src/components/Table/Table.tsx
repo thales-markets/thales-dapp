@@ -43,6 +43,7 @@ const Table: React.FC<TableProps> = ({
             columns: memoizedColumns,
             data,
             ...options,
+            autoResetSortBy: false,
         },
         useSortBy
     );

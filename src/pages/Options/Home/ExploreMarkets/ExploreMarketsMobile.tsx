@@ -1,6 +1,5 @@
 import { Overlay } from 'components/Header/Header';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP } from 'constants/currency';
-import ROUTES from 'constants/routes';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 import queryString from 'query-string';
 import React, { useState } from 'react';
@@ -14,8 +13,7 @@ import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
 import { OptionsMarkets } from 'types/options';
 import { getSynthName } from 'utils/currency';
 import { getIsOVM } from 'utils/network';
-import onboardConnector from 'utils/onboardConnector';
-import { history, navigateTo } from 'utils/routes';
+import { history } from 'utils/routes';
 import SearchMarket from '../SearchMarket';
 import { PhaseFilterEnum, PrimaryFilters, SecondaryFilters } from './ExploreMarketsDesktop';
 import { CategoryFilters, DropDown, DropDownWrapper } from './Mobile/CategoryFilters';
@@ -380,26 +378,6 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
                                         flexDirection: 'column',
                                     }}
                                 >
-                                    <Button
-                                        className="primary"
-                                        onClick={() =>
-                                            isWalletConnected
-                                                ? navigateTo(ROUTES.Options.CreateMarket)
-                                                : onboardConnector.connectWallet()
-                                        }
-                                    >
-                                        {isWalletConnected
-                                            ? t('options.home.market-creation.create-market-button-label')
-                                            : t('common.wallet.connect-your-wallet')}
-                                    </Button>
-                                    <Text
-                                        className="text-m bold pale-grey"
-                                        style={{
-                                            margin: '24px',
-                                        }}
-                                    >
-                                        {t('common.or')}
-                                    </Text>
                                     <Button className="primary" onClick={resetFilters}>
                                         {t('options.home.explore-markets.table.view-all-markets')}
                                     </Button>
