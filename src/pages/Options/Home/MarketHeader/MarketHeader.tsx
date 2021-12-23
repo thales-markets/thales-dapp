@@ -19,8 +19,8 @@ import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.
 import burger from 'assets/images/burger.svg';
 import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
 import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
-// import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
-// import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
+import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
+import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 // import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
 // import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
 // import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
@@ -221,6 +221,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.TradeHistory)}>
+                        <SidebarItem
+                            imgSrc={customMarketsDefaultIcon}
+                            imgSrcHoverSelected={customMarketsSelectedIcon}
+                            className={route === ROUTES.Options.TradeHistory ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.trade-history-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
                     {!isL2 && (

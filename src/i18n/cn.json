@@ -159,7 +159,8 @@
             "quick-trading-label-competition": "竞赛订单",
             "earn-label": "泰雷兹",
             "royale-label": "Thales Royale",
-            "governance-label": "治理"
+            "governance-label": "治理",
+            "trade-history-label": "交易历史"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -225,7 +226,10 @@
             "competition": "交易竞赛",
             "custom": "自定义市场",
             "long": "多头",
-            "short": "空头"
+            "short": "空头",
+            "my-trades": "我的交易",
+            "amm": "AMM",
+            "orderbook": "订单簿"
         },
         "home": {
             "market-card": {
@@ -543,7 +547,7 @@
                     "customize-layout": "自定义视图",
                     "reset-layout": "重置布局"
                 },
-                "amm-widget": "ADM"
+                "amm-widget": "AMM"
             },
             "chart-card": {
                 "no-chart-data": "无图表数据"
@@ -748,7 +752,7 @@
             },
             "header": {
                 "orderbook": "订单簿",
-                "amm": "ADM"
+                "amm": "AMM"
             }
         },
         "quick-trading": {

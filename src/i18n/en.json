@@ -159,7 +159,8 @@
             "quick-trading-label-competition": "Comp. quick trading",
             "earn-label": "THALES",
             "royale-label": "Thales Royale",
-            "governance-label": "Governance"
+            "governance-label": "Governance",
+            "trade-history-label": "Trade history"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -225,7 +226,10 @@
             "competition": "Trading Competition",
             "custom": "Custom Markets",
             "long": "Long",
-            "short": "Short"
+            "short": "Short",
+            "my-trades": "My Trades",
+            "amm": "AMM",
+            "orderbook": "Order book"
         },
         "home": {
             "market-card": {

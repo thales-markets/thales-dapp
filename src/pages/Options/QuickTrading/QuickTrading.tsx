@@ -524,7 +524,7 @@ const Title = styled.p`
     line-height: 64px;
     letter-spacing: -1px;
     font-size: 39px;
-    padding-bottom: 65px;
+    padding-bottom: 30px;
     color: #f6f6fe;
     @media (max-width: 1024px) {
         font-size: 31px;

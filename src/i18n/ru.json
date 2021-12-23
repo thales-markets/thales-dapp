@@ -159,7 +159,8 @@
             "quick-trading-label-competition": "Kонк. быстрая торговля",
             "earn-label": "THALES",
             "royale-label": "Thales Royale",
-            "governance-label": "Управление"
+            "governance-label": "Управление",
+            "trade-history-label": "История торговли"
         },
         "coming-soon": "Скоро...",
         "of": "из",
@@ -225,7 +226,10 @@
             "competition": "Торговый конкурс",
             "custom": "рынки пользователей",
             "long": "Длинный",
-            "short": "Короткий"
+            "short": "Короткий",
+            "my-trades": "Мои сделки",
+            "amm": "AMM",
+            "orderbook": "Таблица заказов"
         },
         "home": {
             "market-card": {
@@ -748,7 +752,7 @@
             },
             "header": {
                 "orderbook": "Таблица заказов",
-                "amm": "ADM"
+                "amm": "AMM"
             }
         },
         "quick-trading": {

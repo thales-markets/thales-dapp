@@ -9,10 +9,11 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 import { keyBy } from 'lodash';
 import { sortOptionsMarkets } from 'utils/options';
+import { NetworkId } from 'utils/network';
 
-const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOptions<ExtendedTrades>) => {
+const useBinaryOptionsAllTradesQuery = (networkId: NetworkId, options?: UseQueryOptions<ExtendedTrades>) => {
     return useQuery<ExtendedTrades>(
-        QUERY_KEYS.BinaryOptions.AllTrades(),
+        QUERY_KEYS.BinaryOptions.AllTrades(networkId),
         async () => {
             const [trades, rawOptionsMarkets] = await Promise.all([
                 thalesData.binaryOptions.trades({

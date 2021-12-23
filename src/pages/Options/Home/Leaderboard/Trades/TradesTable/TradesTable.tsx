@@ -53,6 +53,7 @@ type TradesTableProps = {
     setOrderBy: (data: any) => void;
     orderDirection: OrderDirection;
     setOrderDirection: (data: any) => void;
+    hideBorderRadius?: boolean;
 };
 
 const TradesTable: React.FC<TradesTableProps> = ({
@@ -62,6 +63,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
     orderDirection,
     setOrderBy,
     setOrderDirection,
+    hideBorderRadius,
     children,
 }) => {
     const { t } = useTranslation();
@@ -126,7 +128,11 @@ const TradesTable: React.FC<TradesTableProps> = ({
         <>
             {!isLoading && (
                 <TableContainer
-                    style={{ background: 'transparent', boxShadow: 'none', borderRadius: '23px 23px 0 0' }}
+                    style={{
+                        background: 'transparent',
+                        boxShadow: 'none',
+                        borderRadius: `${hideBorderRadius ? '0' : '23px 23px 0 0'}`,
+                    }}
                     component={Paper}
                 >
                     <Table aria-label="customized table">
@@ -270,7 +276,7 @@ const TradesTable: React.FC<TradesTableProps> = ({
                 </TableContainer>
             )}
             {isLoading && (
-                <LoaderContainer>
+                <LoaderContainer hideBorderRadius={hideBorderRadius}>
                     <SimpleLoader />
                 </LoaderContainer>
             )}
@@ -289,12 +295,12 @@ export const StyledLink = styled(SPAAnchor)`
     cursor: pointer;
 `;
 
-const LoaderContainer = styled(FlexDivColumn)`
+const LoaderContainer = styled(FlexDivColumn)<{ hideBorderRadius?: boolean }>`
     min-height: 400px;
     background: #04045a;
     justify-content: space-evenly;
     position: relative;
-    border-radius: 23px;
+    border-radius: ${(props) => (props.hideBorderRadius ? '0 0 23px 23px' : '23px')};
 `;
 
 const SideImage = styled.img`
