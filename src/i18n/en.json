@@ -753,6 +753,9 @@
         },
         "quick-trading": {
             "title": "Quick Trading",
+            "subtitle-1": "Quick trading routes through the order book and does not include the AMM.",
+            "subtitle-2": "Volume generated on Quick trading will not be subject to the current",
+            "subtitle-3": "AMM incentive program",
             "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
             "counter-offer-button-label": "Counter",

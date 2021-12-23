@@ -304,6 +304,19 @@ const QuickTradingPage: React.FC<any> = () => {
                 <Wrapper>
                     <MarketHeader route={ROUTES.Options.QuickTrading} />
                     <Title style={{ alignSelf: 'flex-start' }}>{t('options.quick-trading.title')}</Title>
+                    <SubtitlesWrapper>
+                        <Text className="text-s ls25 lh24 pale-grey">{t('options.quick-trading.subtitle-1')}</Text>
+                        <Text className="text-s ls25 lh24 pale-grey">
+                            {t('options.quick-trading.subtitle-2')}{' '}
+                            <Link
+                                target="_blank"
+                                href="https://thalesmarket.medium.com/thales-l2-deployment-2021-in-review-and-next-steps-975d2374d676"
+                            >
+                                {t('options.quick-trading.subtitle-3')}
+                            </Link>
+                            .
+                        </Text>
+                    </SubtitlesWrapper>
                     <QuickTradingMobile
                         exchangeRates={exchangeRates}
                         tradingModeFilter={tradingModeFilter}
@@ -322,7 +335,7 @@ const QuickTradingPage: React.FC<any> = () => {
                         isSingleMode={isSingleMode}
                         isLoading={ordersQuery.isLoading || (!isBuyMode && userAssetsQuery.isLoading)}
                         resetFilters={resetFilters}
-                    ></QuickTradingMobile>
+                    />
 
                     <div id="quick-trading" className="quick-trading-desktop" style={{ width: '100%' }}>
                         <FlexDivCentered style={{ flexFlow: 'wrap' }}>
@@ -524,7 +537,7 @@ const Title = styled.p`
     line-height: 64px;
     letter-spacing: -1px;
     font-size: 39px;
-    padding-bottom: 65px;
+    padding-bottom: 30px;
     color: #f6f6fe;
     @media (max-width: 1024px) {
         font-size: 31px;
@@ -553,6 +566,16 @@ const NoOrders = styled(FlexDivColumn)`
         align-self: center;
     }
     border-radius: 0 0 23px 23px;
+`;
+
+const Link = styled.a`
+    color: #fefefe;
+    font-weight: bold;
+`;
+
+const SubtitlesWrapper = styled.div`
+    padding: 3px;
+    align-self: start;
 `;
 
 export default QuickTradingPage;

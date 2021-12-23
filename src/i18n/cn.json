@@ -771,7 +771,10 @@
                 "options-to-sell-col": "出售期权",
                 "options-in-wallet-col": "已有期权",
                 "actions-col": "操作"
-            }
+            },
+            "subtitle-3": "AMM激励计划",
+            "subtitle-2": "快速交易产生的交易量将不受当前",
+            "subtitle-1": "通过订单簿的快速交易路线，不包括 AMM。"
         },
         "competition-quick-trading": {
             "title": "竞赛订单"
