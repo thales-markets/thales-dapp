@@ -160,7 +160,8 @@
             "earn-label": "THALES",
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
-            "trade-history-label": "Trading history"
+            "trade-history-label": "Trading history",
+            "amm-mining-label": "AMM mining"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -833,6 +834,7 @@
                 "volume": "Volume",
                 "view-all-trades": "View all trades",
                 "no-trades-found": "No trades found",
+                "unique-traders": "Unique traders",
                 "table": {
                     "date-time-col": "Date | time",
                     "market-col": "Market",
@@ -1048,8 +1050,20 @@
                 "message": "Please connect your wallet to continue",
                 "button": "Connect wallet"
             }
+        },
+        "amm-mining": {
+            "title": "AMM Mining",
+            "subtitle1": "The <a>first batch of Thales markets</a> on Optimism it's currently being incentivized with 20,000 THALES. This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
+            "subtitle2": "This incentive will run until January 7th, 8:00am UTC. The THALES tokens rewards will be distributed as soon as the token is available on Optimism L2.  For more information please <b>read our blog post</b>",
+            "subtitle3": "You can check the expected amount of THALES rewards on the table below.",
+            "subtitle4": "The results presented are provisional and subject to final corrections by Thales CCs and Thales Council",
+            "address": "Address",
+            "volume": "Volume",
+            "share": "Share",
+            "rewards": "Rewards"
         }
     },
+
     "governance": {
         "title": "Governance",
         "you": "You",
