@@ -10,7 +10,7 @@ import { CryptoKey, CryptoName } from '../../MarketCard/MarketCard';
 import { navigateToOptionsMarket } from 'utils/routes';
 import { countryToCountryCode, eventToIcon } from '../../MarketsTable/MarketsTable';
 import ReactCountryFlag from 'react-country-flag';
-import { formatTxTimestamp } from 'utils/formatters/date';
+import { formatShortDate, formatTxTimestamp } from 'utils/formatters/date';
 import longIcon from 'assets/images/long_small.svg';
 import shortIcon from 'assets/images/short_small.svg';
 import { getSynthName } from 'utils/currency';
@@ -104,10 +104,13 @@ const TradeCardMobile: React.FC<TradeCardMobileProps> = ({ trades }) => {
                                             <FlexDivCentered>
                                                 <Sign>{orderbookSign(trade.marketItem, trade.optionSide)}</Sign>
                                             </FlexDivCentered>
-                                            <FlexDivColumnCentered style={{ flex: 0, alignItems: 'center' }}>
+                                            <FlexDivColumnCentered style={{ flex: 0, alignItems: 'flex-start' }}>
                                                 <Price>
                                                     {formatCurrencyWithSign(USD_SIGN, trade.marketItem.strikePrice)}
                                                 </Price>
+                                                <MaturityDate>
+                                                    {`@ ${formatShortDate(trade.marketItem.maturityDate)}`}
+                                                </MaturityDate>
                                             </FlexDivColumnCentered>
                                         </>
                                     )}
@@ -248,6 +251,14 @@ export const CustomIcon = styled(Image)`
 const SideImage = styled.img`
     width: 44px;
     margin-left: 4px;
+`;
+
+const MaturityDate = styled.span`
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    white-space: nowrap;
 `;
 
 export default TradeCardMobile;
