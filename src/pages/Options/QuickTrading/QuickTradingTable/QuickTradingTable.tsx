@@ -394,6 +394,11 @@ const QuickTradingTable: React.FC<QuickTradingTableProps> = ({
                                                             onClick={() => {
                                                                 openFillOrderModal(order);
                                                             }}
+                                                            className={
+                                                                window.innerWidth >= 1025 && window.innerWidth <= 1100
+                                                                    ? 'tablet-view'
+                                                                    : ''
+                                                            }
                                                             isBuy={isBuyMode}
                                                             disabled={order.walletBalance === 0}
                                                         >
@@ -546,6 +551,10 @@ const BuySellButton = styled(SubmitButton)`
     padding: 4px 20px;
     margin-right: 10px;
     text-transform: capitalize;
+    &.tablet-view {
+        margin-right: 0px;
+        margin-bottom: 5px;
+    }
 `;
 
 const CounterOfferButton = styled(DefaultSubmitButton)`

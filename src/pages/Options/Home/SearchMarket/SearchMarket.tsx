@@ -28,6 +28,7 @@ export const SearchInput = styled.input`
     font-size: 16px;
     line-height: 24px;
     padding: 0 10px;
+    padding-right: 50px !important;
     letter-spacing: 0.15px;
     background: #04045a;
     color: #f6f6fe;
@@ -44,9 +45,10 @@ type SearchMarketProp = {
     assetSearch: string;
     setAssetSearch: (param: string) => void;
     className?: string;
+    placeholder?: string;
 };
 
-const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch, className }) => {
+const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch, className, placeholder }) => {
     const { t } = useTranslation();
 
     return (
@@ -59,7 +61,7 @@ const SearchMarket: React.FC<SearchMarketProp> = ({ assetSearch, setAssetSearch,
                         : ''
                 }
                 value={assetSearch}
-                placeholder={t(`options.filters-labels.search-placeholder`)}
+                placeholder={placeholder ? placeholder : t(`options.filters-labels.search-placeholder`)}
             />
         </SearchWrapper>
     );

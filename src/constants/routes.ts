@@ -11,6 +11,8 @@ export const ROUTES = {
         Leaderboard: '/markets/leaderboard',
         QuickTrading: '/markets/quick-trading',
         QuickTradingCompetition: '/markets/competition-orders',
+        TradeHistory: '/markets/trade-history',
+        AmmMining: '/markets/amm-rewards',
         Token: '/token',
         Royal: '/royale',
     },

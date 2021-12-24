@@ -7,12 +7,13 @@ import ethBurnedOracleInstance from 'utils/contracts/ethBurnedOracleInstance';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { keyBy } from 'lodash';
+import { keyBy, orderBy } from 'lodash';
 import { sortOptionsMarkets } from 'utils/options';
+import { NetworkId } from 'utils/network';
 
-const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOptions<ExtendedTrades>) => {
+const useBinaryOptionsAllTradesQuery = (networkId: NetworkId, options?: UseQueryOptions<ExtendedTrades>) => {
     return useQuery<ExtendedTrades>(
-        QUERY_KEYS.BinaryOptions.AllTrades(),
+        QUERY_KEYS.BinaryOptions.AllTrades(networkId),
         async () => {
             const [trades, rawOptionsMarkets] = await Promise.all([
                 thalesData.binaryOptions.trades({
@@ -77,7 +78,7 @@ const useBinaryOptionsAllTradesQuery = (networkId: number, options?: UseQueryOpt
                 trade.marketItem = optionsMarketsMap[trade.market];
             });
 
-            return trades;
+            return orderBy(trades, ['timestamp', 'blockNumber'], ['desc', 'desc']);
         },
         {
             refetchInterval: 5000,

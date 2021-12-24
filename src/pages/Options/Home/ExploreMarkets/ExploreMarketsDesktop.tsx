@@ -3,7 +3,6 @@ import competitionImg from 'assets/images/filters/competition.svg';
 import customMarketsImg from 'assets/images/filters/custom-markets.svg';
 import ethereum from 'assets/images/filters/ethereum.svg';
 import myAssets from 'assets/images/filters/my-assets.svg';
-import myMarkets from 'assets/images/filters/my-markets.svg';
 import myOpenOrders from 'assets/images/filters/my-open-orders.svg';
 import myWatchlist from 'assets/images/filters/my-watchlist.svg';
 import recentlyAdded from 'assets/images/filters/recently-added.svg';
@@ -55,7 +54,6 @@ export enum PhaseFilterEnum {
 
 export enum PrimaryFilters {
     all = 'all',
-    MyMarkets = 'my-markets',
     MyOrders = 'my-orders',
     MyAssets = 'my-assets',
     MyWatchlist = 'watchlist',
@@ -167,11 +165,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
     const filteredOptionsMarkets = useMemo(() => {
         let filteredMarkets = optionsMarkets;
         switch (userFilter) {
-            case PrimaryFilters.MyMarkets:
-                filteredMarkets = filteredMarkets.filter(
-                    ({ creator }) => creator.toLowerCase() === walletAddress.toLowerCase()
-                );
-                break;
             case PrimaryFilters.MyWatchlist:
                 filteredMarkets = filteredMarkets.filter(({ address }) => watchlistedMarkets?.includes(address));
                 break;
@@ -416,8 +409,6 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
 
     const getImage = (filter: PrimaryFilters | SecondaryFilters) => {
         switch (filter) {
-            case PrimaryFilters.MyMarkets:
-                return myMarkets;
             case PrimaryFilters.MyWatchlist:
                 return myWatchlist;
             case PrimaryFilters.Recent:
@@ -621,28 +612,12 @@ const ExploreMarketsDesktop: React.FC<ExploreMarketsProps> = ({ optionsMarkets, 
                     setOrderDirection={setOrderDirection}
                 >
                     <NoMarkets>
-                        {userFilter !== PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-l bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-found')}
-                                </Text>
-                                <Button className="primary" onClick={resetFilters}>
-                                    {t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
-                            </>
-                        )}
-                        {userFilter === PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-l bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-created')}
-                                </Text>
-                                <FlexDiv style={{ justifyContent: 'space-around', alignItems: 'center' }}>
-                                    <Button className="primary" onClick={resetFilters}>
-                                        {t('options.home.explore-markets.table.view-all-markets')}
-                                    </Button>
-                                </FlexDiv>
-                            </>
-                        )}
+                        <Text className="text-l bold pale-grey">
+                            {t('options.home.explore-markets.table.no-markets-found')}
+                        </Text>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.home.explore-markets.table.view-all-markets')}
+                        </Button>
                     </NoMarkets>
                 </MarketsTable>
             </div>

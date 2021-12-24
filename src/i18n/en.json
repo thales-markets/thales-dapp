@@ -6,7 +6,8 @@
             "community": "Community",
             "blog": "Blog",
             "docs": "Docs",
-            "tokenomics": "Tokenomics"
+            "tokenomics": "Tokenomics",
+            "test": "Test"
         }
     },
     "user-info": {
@@ -159,7 +160,9 @@
             "quick-trading-label-competition": "Comp. quick trading",
             "earn-label": "THALES",
             "royale-label": "Thales Royale",
-            "governance-label": "Governance"
+            "governance-label": "Governance",
+            "trade-history-label": "Trading history",
+            "amm-mining-label": "AMM rewards"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -209,6 +212,7 @@
             "option": "Option",
             "show": "Show",
             "search-placeholder": "Try ETH",
+            "search-placeholder-for-mining": "Try an address",
             "all": "All",
             "trading": "Trading",
             "maturity": "Maturity",
@@ -225,7 +229,11 @@
             "competition": "Trading Competition",
             "custom": "Custom Markets",
             "long": "Long",
-            "short": "Short"
+            "short": "Short",
+            "my-trades": "My Trades",
+            "amm": "AMM",
+            "orderbook": "Order book",
+            "trade-type": "Trade type"
         },
         "home": {
             "market-card": {
@@ -753,6 +761,9 @@
         },
         "quick-trading": {
             "title": "Quick Trading",
+            "subtitle-1": "Quick trading routes through the order book and does not include the AMM.",
+            "subtitle-2": "Volume generated on Quick trading will not be subject to the current",
+            "subtitle-3": "AMM incentive program",
             "mode-label": "I want to",
             "cancel-tooltip": "Click to cancel your order",
             "counter-offer-button-label": "Counter",
@@ -825,15 +836,16 @@
                 "volume": "Volume",
                 "view-all-trades": "View all trades",
                 "no-trades-found": "No trades found",
+                "unique-traders": "Unique traders",
                 "table": {
-                    "date-time-col": "date | time",
-                    "market-col": "market",
-                    "asset-col": "asset",
-                    "type-col": "type",
-                    "tx-type-col": "tx type",
-                    "amount-col": "amount",
-                    "price-col": "price",
-                    "tx-status-col": "tx status"
+                    "date-time-col": "Date | time",
+                    "market-col": "Market",
+                    "asset-col": "Asset",
+                    "type-col": "Type",
+                    "tx-type-col": "Tx type",
+                    "amount-col": "Amount",
+                    "price-col": "Price",
+                    "tx-status-col": "Tx status"
                 }
             },
             "profile": {
@@ -943,7 +955,12 @@
             "not-supported": " Swap is not supported on Test networks",
             "tx-success": "Successfully bought sUSD",
             "tx-failed": "Transaction failed",
-            "tx-user-rejected": "User rejected transaction"
+            "tx-user-rejected": "User rejected transaction",
+            "from": "From",
+            "balance": "Balance",
+            "max": "Max",
+            "to": "To",
+            "estimated-gas": "Estimated Gas"
         },
         "royale": {
             "header": {
@@ -1035,8 +1052,20 @@
                 "message": "Please connect your wallet to continue",
                 "button": "Connect wallet"
             }
+        },
+        "amm-mining": {
+            "title": "AMM rewards",
+            "subtitle1": "The <a>first batch of Thales markets</a> on Optimism it's currently being incentivized with 20,000 THALES. This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
+            "subtitle2": "This incentive will run until January 7th, 8:00am UTC. The THALES tokens rewards will be distributed as soon as the token is available on Optimism L2.  For more information please <b>read our blog post</b>",
+            "subtitle3": "You can check the expected amount of THALES rewards on the table below.",
+            "subtitle4": "The results presented are provisional and subject to final corrections by Thales CCs and Thales Council",
+            "address": "Address",
+            "volume": "Volume",
+            "share": "Share",
+            "rewards": "Rewards"
         }
     },
+
     "governance": {
         "title": "Governance",
         "you": "You",

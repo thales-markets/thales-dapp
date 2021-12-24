@@ -77,7 +77,6 @@ const Trades: React.FC = () => {
         () => {
             return assetSearch
                 ? filteredTrades.filter((trade: ExtendedTrade) => {
-                      console.log('asset', trade.marketItem);
                       return (
                           trade.marketItem.asset.toLowerCase().includes(assetSearch.toLowerCase()) ||
                           getSynthName(trade.marketItem.currencyKey)
@@ -138,6 +137,7 @@ const Trades: React.FC = () => {
                 orderDirection={orderDirection}
                 setOrderBy={setOrderBy}
                 setOrderDirection={setOrderDirection}
+                deps={[orderBy, orderDirection]}
             >
                 <NoTrades>
                     <>

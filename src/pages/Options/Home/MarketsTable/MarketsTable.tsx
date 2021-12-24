@@ -502,6 +502,10 @@ export const StyledTableRow = withStyles(() => ({
         '&:last-child a:last-child td': {
             borderBottomRightRadius: '23px',
         },
+
+        '&:last-child td:last-child': {
+            borderBottomRightRadius: '23px',
+        },
         '&.clickable': {
             cursor: 'pointer',
             '&:hover': {

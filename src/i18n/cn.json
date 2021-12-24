@@ -6,7 +6,8 @@
             "community": "社区",
             "blog": "博客",
             "docs": "文件",
-            "tokenomics": "代币经济学"
+            "tokenomics": "代币经济学",
+            "test": "测试"
         }
     },
     "user-info": {
@@ -159,7 +160,9 @@
             "quick-trading-label-competition": "竞赛订单",
             "earn-label": "泰雷兹",
             "royale-label": "Thales Royale",
-            "governance-label": "治理"
+            "governance-label": "治理",
+            "trade-history-label": "交易历史",
+            "amm-mining-label": "AMM奖励"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -225,7 +228,12 @@
             "competition": "交易竞赛",
             "custom": "自定义市场",
             "long": "多头",
-            "short": "空头"
+            "short": "空头",
+            "my-trades": "我的交易",
+            "amm": "AMM",
+            "orderbook": "订单簿",
+            "trade-type": "交易类型",
+            "search-placeholder-for-mining": "试试地址"
         },
         "home": {
             "market-card": {
@@ -543,7 +551,7 @@
                     "customize-layout": "自定义视图",
                     "reset-layout": "重置布局"
                 },
-                "amm-widget": "ADM"
+                "amm-widget": "AMM"
             },
             "chart-card": {
                 "no-chart-data": "无图表数据"
@@ -748,7 +756,7 @@
             },
             "header": {
                 "orderbook": "订单簿",
-                "amm": "ADM"
+                "amm": "AMM"
             }
         },
         "quick-trading": {
@@ -771,7 +779,10 @@
                 "options-to-sell-col": "出售期权",
                 "options-in-wallet-col": "已有期权",
                 "actions-col": "操作"
-            }
+            },
+            "subtitle-3": "AMM激励计划",
+            "subtitle-2": "快速交易产生的交易量将不受当前",
+            "subtitle-1": "通过订单簿的快速交易路线，不包括 AMM。"
         },
         "competition-quick-trading": {
             "title": "竞赛订单"
@@ -834,7 +845,8 @@
                     "amount-col": "金额",
                     "price-col": "价格",
                     "tx-status-col": "交易状态"
-                }
+                },
+                "unique-traders": "独特的交易者"
             },
             "profile": {
                 "tab-title": "账户信息",
@@ -943,7 +955,12 @@
             "not-supported": " 测试网络不支持交换",
             "tx-failed": "交易失败",
             "tx-success": "成功买入sUSD",
-            "tx-user-rejected": "用户拒绝交易"
+            "tx-user-rejected": "用户拒绝交易",
+            "balance": "平衡",
+            "to": "到",
+            "max": "最大限度",
+            "from": "从",
+            "estimated-gas": "估计气体"
         },
         "royale": {
             "header": {
@@ -1035,6 +1052,17 @@
                 "message": "请连接您的钱包继续",
                 "button": "连接钱包"
             }
+        },
+        "amm-mining": {
+            "share": "分享",
+            "volume": "体积",
+            "address": "地址",
+            "title": "AMM奖励",
+            "rewards": "奖励",
+            "subtitle4": "所提供的结果是临时性的，最终将由泰雷兹 CCs 和泰雷兹委员会进行更正",
+            "subtitle3": "您可以在下表中查看预期的泰雷兹奖励金额。",
+            "subtitle1": "<a>第一批泰雷兹</a>在 Optimism 上上市，目前有 20,000 个泰雷兹激励。该奖励将根据数量按比例分配给所有<b>AMM 买家。</b>",
+            "subtitle2": "此奖励将持续到 UTC 时间 1 月 7 日上午 8 点。一旦令牌在 Optimism L2 上可用，THALES 令牌奖励将立即分发。有关更多信息，请<b>阅读我们的博客文章</b>"
         }
     },
     "governance": {
@@ -1079,7 +1107,7 @@
             "view-all-proposals": "“查看所有提案",
             "vote-label": "投票",
             "submit-vote-label": "投票",
-            "vote-note": "{{approvalVotes}} of {{totalVotes}} votes needed for approval",
+            "vote-note": "{{approvalVotes}} 的 {{totalVotes}} 票需要批准",
             "voting-power-label": "您的投票权",
             "vote-progress-label": "正在投票",
             "vote-confirmation-message": "投票成功",

@@ -25,6 +25,8 @@ import snxJSConnector from 'utils/snxJSConnector';
 import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
+import TradeHistory from 'pages/Options/TradeHistory';
+import AmmMining from 'pages/Options/AmmMining';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -204,6 +206,20 @@ const App = () => {
                                 <QuickTradingPage />
                             </MainLayout>
                         </Route>
+
+                        <Route exact path={ROUTES.Options.TradeHistory}>
+                            <MainLayout>
+                                <TradeHistory />
+                            </MainLayout>
+                        </Route>
+
+                        {isL2 && (
+                            <Route exact path={ROUTES.Options.AmmMining}>
+                                <MainLayout>
+                                    <AmmMining />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         {!isL2 && (
                             <Route exact path={ROUTES.Options.QuickTradingCompetition}>

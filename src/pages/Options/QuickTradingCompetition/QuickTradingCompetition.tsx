@@ -482,7 +482,7 @@ const getOrderImage = (filter: OrderFilterEnum) => {
     }
 };
 
-const getCoinImage = (filter: CoinFilterEnum) => {
+export const getCoinImage = (filter: CoinFilterEnum) => {
     switch (filter) {
         case CoinFilterEnum.Bitcoin:
             return bitcoin;
@@ -495,7 +495,7 @@ const getCoinImage = (filter: CoinFilterEnum) => {
     }
 };
 
-const getOptionImage = (filter: OptionFilterEnum) => {
+export const getOptionImage = (filter: OptionFilterEnum) => {
     switch (filter) {
         case OptionFilterEnum.Long:
             return long;

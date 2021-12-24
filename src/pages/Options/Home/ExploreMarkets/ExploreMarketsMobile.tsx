@@ -356,34 +356,12 @@ export const ExploreMarketsMobile: React.FC<ExploreMarketsMobileProps> = ({
             ) : (
                 <NoMarkets>
                     <Container>
-                        {userFilter !== PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-m bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-found')}
-                                </Text>
-                                <Button className="primary" onClick={resetFilters}>
-                                    {t('options.home.explore-markets.table.view-all-markets')}
-                                </Button>
-                            </>
-                        )}
-                        {userFilter === PrimaryFilters.MyMarkets && (
-                            <>
-                                <Text className="text-m bold pale-grey">
-                                    {t('options.home.explore-markets.table.no-markets-created')}
-                                </Text>
-                                <FlexDiv
-                                    style={{
-                                        justifyContent: 'space-around',
-                                        alignItems: 'center',
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    <Button className="primary" onClick={resetFilters}>
-                                        {t('options.home.explore-markets.table.view-all-markets')}
-                                    </Button>
-                                </FlexDiv>
-                            </>
-                        )}
+                        <Text className="text-m bold pale-grey">
+                            {t('options.home.explore-markets.table.no-markets-found')}
+                        </Text>
+                        <Button className="primary" onClick={resetFilters}>
+                            {t('options.home.explore-markets.table.view-all-markets')}
+                        </Button>
                     </Container>
                 </NoMarkets>
             )}

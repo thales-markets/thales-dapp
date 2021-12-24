@@ -47,7 +47,7 @@ type TradingModeFiltersProps = {
     filter: string;
     onClick: () => void;
     text: string;
-    disabled: boolean;
+    disabled?: boolean;
 };
 
 export const TradingModeFilters: React.FC<TradingModeFiltersProps> = ({
