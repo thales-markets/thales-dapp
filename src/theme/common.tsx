@@ -260,16 +260,17 @@ export const Logo = styled(Link)`
     flex: 1;
     content: ' ';
     background-image: url(${logo});
-    height: 52px;
+    height: 77px;
     @media (max-width: 468px) {
-        height: 36px;
+        height: 54px;
+        margin-top: 6px;
         &.footer_logo {
             margin-right: -50px;
         }
     }
-    width: 214px;
+    width: 230px;
     margin-right: 20px;
-    margin-top: 6px;
+    margin-bottom: 12px;
     background-repeat: no-repeat;
 `;
 
