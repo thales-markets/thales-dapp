@@ -93,7 +93,9 @@ const AmmTable: React.FC<AmmTableInputData> = ({
         }
     };
 
-    useEffect(() => setPage(0), deps);
+    useEffect(() => {
+        setPage(0);
+    }, [...deps, assetSearch]);
 
     const slicedData = useMemo(() => {
         return dataForUi
