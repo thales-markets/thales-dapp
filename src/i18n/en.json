@@ -6,7 +6,8 @@
             "community": "Community",
             "blog": "Blog",
             "docs": "Docs",
-            "tokenomics": "Tokenomics"
+            "tokenomics": "Tokenomics",
+            "test": "Test"
         }
     },
     "user-info": {
