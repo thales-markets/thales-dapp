@@ -222,6 +222,8 @@ const TradeHistory: React.FC = () => {
                     setOrderBy={setOrderBy}
                     isLoading={tradesQuery.isLoading}
                     resetFilters={resetFilters}
+                    volume={volume}
+                    numberOfTrades={numberOfTrades}
                 />
 
                 <FlexDivColumnCentered id="trade-history" className="trade-history-desktop" style={{ width: '100%' }}>

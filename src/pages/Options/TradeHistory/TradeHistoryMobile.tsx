@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected } from 'redux/modules/wallet';
-import { Button, FlexDiv, FlexDivColumn, Text } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, Text } from 'theme/common';
 import styled from 'styled-components';
 import { Overlay } from 'components/Header/Header';
 import { TradeTypeFilterEnum, TradeFilterEnum, CoinFilterEnum, OptionFilterEnum } from './TradeHistory';
@@ -14,6 +14,8 @@ import { SortyByMobile } from '../Home/ExploreMarkets/Mobile/SortByMobile';
 import { ExtendedTrades } from 'types/options';
 import SimpleLoader from 'components/SimpleLoader';
 import TradeCardMobile from '../Home/ExploreMarkets/Mobile/TradeCardMobile';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
+import { USD_SIGN } from 'constants/currency';
 
 type TradeHistoryMobileProps = {
     trades: ExtendedTrades;
@@ -31,6 +33,8 @@ type TradeHistoryMobileProps = {
     setOrderBy: (data: any) => void;
     isLoading: boolean;
     resetFilters: any;
+    volume: number;
+    numberOfTrades: number;
 };
 
 export enum SortByEnum {
@@ -58,6 +62,8 @@ const TradeHistoryMobile: React.FC<TradeHistoryMobileProps> = ({
     setOrderBy,
     isLoading,
     resetFilters,
+    volume,
+    numberOfTrades,
 }) => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const { t } = useTranslation();
@@ -201,7 +207,7 @@ const TradeHistoryMobile: React.FC<TradeHistoryMobileProps> = ({
                                 className={`${
                                     mapOrderByToEnum(orderBy) === filterItem ? 'selected' : ''
                                 } text-s lh32 pale-grey`}
-                                onClick={() => setOrderBy(index + 2)}
+                                onClick={() => setOrderBy(index + 1)}
                                 key={filterItem}
                             >
                                 {t(`options.leaderboard.trades.table.${filterItem}`)}
@@ -211,6 +217,16 @@ const TradeHistoryMobile: React.FC<TradeHistoryMobileProps> = ({
                 </DropDownWrapper>
             </SortyByMobile>
 
+            <InfoContainer>
+                <Info>
+                    {`${t('options.leaderboard.trades.number-of-trades')}: ${isLoading ? '-' : numberOfTrades}`}
+                </Info>
+                <Info>
+                    {`${t('options.leaderboard.trades.volume')}: ${
+                        isLoading ? '-' : formatCurrencyWithSign(USD_SIGN, volume)
+                    }`}
+                </Info>
+            </InfoContainer>
             {isLoading && (
                 <LoaderContainer>
                     <Container>
@@ -283,6 +299,18 @@ const Container = styled.div`
     background: #04045a;
     flex: 1;
     border-radius: 23px;
+`;
+
+const InfoContainer = styled(FlexDivColumnCentered)`
+    margin-top: 30px;
+    text-align: center;
+`;
+
+const Info = styled.span`
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 32px;
+    color: #f6f6fe;
 `;
 
 export default TradeHistoryMobile;
