@@ -19,6 +19,7 @@ export const SearchWrapper = styled(FlexDiv)`
 `;
 
 export const SearchInput = styled.input`
+    padding-right: 50px;
     height: 40px;
     width: 204px;
     border-radius: 23px;
