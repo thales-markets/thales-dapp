@@ -161,7 +161,7 @@
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "trade-history-label": "Trading history",
-            "amm-mining-label": "AMM trading incentives"
+            "amm-mining-label": "AMM rewards"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -1053,7 +1053,7 @@
             }
         },
         "amm-mining": {
-            "title": "AMM trading incentives",
+            "title": "AMM rewards",
             "subtitle1": "The <a>first batch of Thales markets</a> on Optimism it's currently being incentivized with 20,000 THALES. This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
             "subtitle2": "This incentive will run until January 7th, 8:00am UTC. The THALES tokens rewards will be distributed as soon as the token is available on Optimism L2.  For more information please <b>read our blog post</b>",
             "subtitle3": "You can check the expected amount of THALES rewards on the table below.",
