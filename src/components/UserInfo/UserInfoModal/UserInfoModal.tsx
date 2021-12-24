@@ -12,7 +12,6 @@ import { RootState } from 'redux/rootReducer';
 import { truncateAddress } from 'utils/formatters/string';
 import UsersAssets from './UsersAssets';
 import UsersOrders from './UsersOrders';
-import UsersMarkets from './UsersMarkets';
 import Web3 from 'web3';
 import { FilterButton, Input, InputLabel, ShortInputContainer } from 'pages/Options/Market/components';
 import axios from 'axios';
@@ -29,7 +28,6 @@ type UserInfoModalProps = {
 };
 
 enum Filters {
-    MARKETS = 'Markets',
     ORDERS = 'Orders',
     ASSETS = 'Assets',
 }
@@ -82,16 +80,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
 
     const [displayName, setName] = useState(currentDisplayName);
 
-    const [filter, setFilter] = useState(Filters.MARKETS);
-
-    const usersMarkets = useMemo(
-        () =>
-            optionsMarkets.filter((market) => {
-                return market.creator.toLowerCase() === walletAddress.toLowerCase();
-            }),
-
-        [optionsMarkets, filter]
-    );
+    const [filter, setFilter] = useState(Filters.ASSETS);
 
     const isNameValid = useMemo(() => {
         return DISPLAY_NAME_REGEX.test(displayName);
@@ -186,10 +175,10 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                 <FilterWrapper>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.MARKETS ? 'selected' : ''}
-                        onClick={() => setFilter(Filters.MARKETS)}
+                        className={filter === Filters.ASSETS ? 'selected' : ''}
+                        onClick={() => setFilter(Filters.ASSETS)}
                     >
-                        {t(`user-info.tabs.my-markets`)}
+                        {t(`user-info.tabs.my-assets`)}
                     </FilterButton>
                     <FilterButton
                         style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
@@ -198,30 +187,20 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     >
                         {t(`user-info.tabs.my-open-orders`)}
                     </FilterButton>
-                    <FilterButton
-                        style={{ width: 'auto', margin: '24px 10px 10px 0px' }}
-                        className={filter === Filters.ASSETS ? 'selected' : ''}
-                        onClick={() => setFilter(Filters.ASSETS)}
-                    >
-                        {t(`user-info.tabs.my-assets`)}
-                    </FilterButton>
                 </FilterWrapper>
                 <DataWrapper>
-                    {filter === Filters.MARKETS && (
-                        <UsersMarkets usersMarkets={usersMarkets} onClose={() => handleClose(false)} />
+                    {filter === Filters.ASSETS && (
+                        <UsersAssets
+                            optionsMarkets={optionsMarkets}
+                            walletAddress={walletAddress}
+                            onClose={() => handleClose(false)}
+                        />
                     )}
                     {filter === Filters.ORDERS && (
                         <UsersOrders
                             optionsMarkets={optionsMarkets}
                             walletAddress={walletAddress}
                             networkId={networkId}
-                            onClose={() => handleClose(false)}
-                        />
-                    )}
-                    {filter === Filters.ASSETS && (
-                        <UsersAssets
-                            optionsMarkets={optionsMarkets}
-                            walletAddress={walletAddress}
                             onClose={() => handleClose(false)}
                         />
                     )}
