@@ -125,7 +125,11 @@ const AmmTable: React.FC<AmmTableInputData> = ({
                     width: '100%',
                 }}
             >
-                <SearchMarket assetSearch={assetSearch} setAssetSearch={setAssetSearch} />
+                <SearchMarket
+                    assetSearch={assetSearch}
+                    setAssetSearch={setAssetSearch}
+                    placeholder={t(`options.filters-labels.search-placeholder-for-mining`)}
+                />
             </FlexDiv>
 
             {!isLoading && (
@@ -179,7 +183,7 @@ const AmmTable: React.FC<AmmTableInputData> = ({
                             {slicedData.map((trade: any, index: any) => {
                                 return (
                                     <StyledTableRow key={index}>
-                                        <StyledTableCell>
+                                        <StyledTableCell style={{ maxWidth: 200 }}>
                                             <StyledLink
                                                 href={getEtherscanAddressLink(networkId, trade[0])}
                                                 target="_blank"
@@ -192,7 +196,9 @@ const AmmTable: React.FC<AmmTableInputData> = ({
                                             {formatCurrencyWithSign(USD_SIGN, trade[1], 1)}
                                         </StyledTableCell>
                                         <StyledTableCell>{((trade[1] / volume) * 100).toFixed(2)} %</StyledTableCell>
-                                        <StyledTableCell>{((trade[1] / volume) * 20000).toFixed(2)}</StyledTableCell>
+                                        <StyledTableCell>
+                                            {((trade[1] / volume) * 20000).toFixed(2)} THALES
+                                        </StyledTableCell>
                                     </StyledTableRow>
                                 );
                             })}
