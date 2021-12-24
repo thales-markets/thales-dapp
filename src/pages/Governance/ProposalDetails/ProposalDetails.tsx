@@ -143,8 +143,8 @@ const ProposalDetails: React.FC<ProposalDetailsProps> = ({ proposal }) => {
                                 <VoteNote>
                                     (
                                     {t(`governance.proposal.vote-note`, {
-                                        approvalVotes: numberOfCouncilMembers,
-                                        totalVotes: proposalApprovalVotes,
+                                        approvalVotes: proposalApprovalVotes,
+                                        totalVotes: numberOfCouncilMembers,
                                     })}
                                     )
                                 </VoteNote>
