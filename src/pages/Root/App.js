@@ -25,6 +25,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 import MainLayout from '../../components/MainLayout';
 import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
+import TradeHistory from 'pages/Options/TradeHistory';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -202,6 +203,12 @@ const App = () => {
                         <Route exact path={ROUTES.Options.QuickTrading}>
                             <MainLayout>
                                 <QuickTradingPage />
+                            </MainLayout>
+                        </Route>
+
+                        <Route exact path={ROUTES.Options.TradeHistory}>
+                            <MainLayout>
+                                <TradeHistory />
                             </MainLayout>
                         </Route>
 
