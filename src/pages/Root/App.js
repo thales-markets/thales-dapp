@@ -213,11 +213,13 @@ const App = () => {
                             </MainLayout>
                         </Route>
 
-                        <Route exact path={ROUTES.Options.AmmMining}>
-                            <MainLayout>
-                                <AmmMining />
-                            </MainLayout>
-                        </Route>
+                        {isL2 && (
+                            <Route exact path={ROUTES.Options.AmmMining}>
+                                <MainLayout>
+                                    <AmmMining />
+                                </MainLayout>
+                            </Route>
+                        )}
 
                         {!isL2 && (
                             <Route exact path={ROUTES.Options.QuickTradingCompetition}>
