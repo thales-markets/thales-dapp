@@ -951,7 +951,12 @@
             "not-supported": " Swap is not supported on Test networks",
             "tx-success": "Successfully bought sUSD",
             "tx-failed": "Transaction failed",
-            "tx-user-rejected": "User rejected transaction"
+            "tx-user-rejected": "User rejected transaction",
+            "from": "From",
+            "balance": "Balance",
+            "max": "Max",
+            "to": "To",
+            "estimated-gas": "Estimated Gas"
         },
         "royale": {
             "header": {

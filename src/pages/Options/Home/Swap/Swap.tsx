@@ -18,6 +18,7 @@ import {
     Button,
     FlexDivCentered,
     FlexDivColumn,
+    FlexDivRow,
     FlexDivRowCentered,
     Image,
     LoaderContainer,
@@ -240,10 +241,28 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                         className={` ${isLoading ? 'loading' : ''} ${txErrorMessage !== null ? 'error' : ''}`}
                     >
                         <CloseButton onClick={handleClose.bind(this, false)} />
-                        <SectionWrapper>
+                        <SectionWrapper style={{ paddingTop: 14 }}>
                             <FlexDivRowCentered>
-                                <Text className="text-xxs white">From:</Text>
-                                <Text className="text-xxs white">Balance: {Number(balance).toFixed(4)}</Text>
+                                <Text className="text-xxs white">{t('options.swap.from')}:</Text>
+                                <FlexDivRow>
+                                    <Text
+                                        className="text-xxs white"
+                                        style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
+                                        onClick={() => {
+                                            setAmount(Number(Number(balance).toFixed(4)));
+                                        }}
+                                    >
+                                        {t('options.swap.balance')}: {Number(balance).toFixed(4)}
+                                    </Text>
+                                    <MaxButton
+                                        className="text-xxs"
+                                        onClick={() => {
+                                            setAmount(Number(Number(balance).toFixed(4)));
+                                        }}
+                                    >
+                                        {t('options.swap.max')}
+                                    </MaxButton>
+                                </FlexDivRow>
                             </FlexDivRowCentered>
                             <FlexDivRowCentered>
                                 <Select
@@ -298,9 +317,9 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                         </SceletonWrapper>
                         <SectionWrapper className={showSceleton ? 'hide' : ''}>
                             <FlexDivRowCentered>
-                                <Text className="text-xxs white">To:</Text>
+                                <Text className="text-xxs white">{t('options.swap.to')}:</Text>
                                 <Text className="text-xxs white">
-                                    Estimated Gas:{' '}
+                                    {t('options.swap.estimated-gas')}:{' '}
                                     {previewData
                                         ? formatCurrencyWithSign(
                                               USD_SIGN,
@@ -487,6 +506,18 @@ const ImageSceleton = styled.div`
     border-radius: 50%;
     background: #6984ad;
     margin-right: 6px;
+`;
+
+const MaxButton = styled.button`
+    cursor: pointer;
+    background-color: #04045a;
+    color: white;
+    border: transparent;
+    border-radius: 20px;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0.4px;
+    font-weight: bold;
 `;
 
 const CloseButton = styled(XButton)`
