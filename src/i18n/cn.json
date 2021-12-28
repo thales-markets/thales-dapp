@@ -162,7 +162,8 @@
             "royale-label": "Thales Royale",
             "governance-label": "治理",
             "trade-history-label": "交易历史",
-            "amm-mining-label": "AMM奖励"
+            "amm-mining-label": "AMM奖励",
+            "amm-reporting-label": "AMM报告"
         },
         "coming-soon": "即将到来…",
         "of": "之",
@@ -1063,6 +1064,23 @@
             "subtitle3": "您可以在下表中查看预期的泰雷兹奖励金额。",
             "subtitle1": "<a>第一批泰雷兹</a>在 Optimism 上上市，目前有 20,000 个泰雷兹激励。该奖励将根据数量按比例分配给所有<b>AMM 买家。</b>",
             "subtitle2": "此奖励将持续到 UTC 时间 1 月 7 日上午 8 点。一旦令牌在 Optimism L2 上可用，THALES 令牌奖励将立即分发。有关更多信息，请<b>阅读我们的博客文章</b>"
+        },
+        "amm-reporting": {
+            "market": "市场",
+            "volume": "体积",
+            "long-price": "长价",
+            "spent-on-market": "在市场上花费",
+            "available-to-buy-short": "可以买短线",
+            "short-price": "短价",
+            "sell-volume": "总销量",
+            "longs-held": "持有多头",
+            "total-volume": "总购买量",
+            "shorts-held": "举行的短裤",
+            "available-to-sell-short": "可卖空",
+            "longs-volume": "多头买入量",
+            "available-to-buy-long": "可长期购买",
+            "shorts-volume": "短裤购买量",
+            "available-to-sell-long": "可长期出售"
         }
     },
     "governance": {

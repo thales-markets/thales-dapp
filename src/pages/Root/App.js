@@ -27,6 +27,7 @@ import ROUTES from '../../constants/routes';
 import GovernancePage from 'pages/Governance';
 import TradeHistory from 'pages/Options/TradeHistory';
 import AmmMining from 'pages/Options/AmmMining';
+import AmmReporting from '../Options/AmmReporting';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../Home'));
@@ -220,6 +221,12 @@ const App = () => {
                                 </MainLayout>
                             </Route>
                         )}
+
+                        <Route exact path={ROUTES.Options.AmmReporting}>
+                            <MainLayout>
+                                <AmmReporting />
+                            </MainLayout>
+                        </Route>
 
                         {!isL2 && (
                             <Route exact path={ROUTES.Options.QuickTradingCompetition}>

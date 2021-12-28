@@ -162,7 +162,8 @@
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "trade-history-label": "Trading history",
-            "amm-mining-label": "AMM rewards"
+            "amm-mining-label": "AMM rewards",
+            "amm-reporting-label": "AMM reporting"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -1063,6 +1064,23 @@
             "volume": "Volume",
             "share": "Share",
             "rewards": "Rewards"
+        },
+        "amm-reporting": {
+            "market": "Market",
+            "volume": "Volume",
+            "long-price": "Long price",
+            "short-price": "Short price",
+            "longs-volume": "Longs buy volume",
+            "shorts-volume": "Shorts buy volume",
+            "total-volume": "Total Buy volume",
+            "sell-volume": "Total Sell volume",
+            "spent-on-market": "Spent on Market",
+            "longs-held": "Longs held",
+            "shorts-held": "Shorts held",
+            "available-to-sell-long": "Available to sell long",
+            "available-to-sell-short": "Available to sell short",
+            "available-to-buy-long": "Available to buy long",
+            "available-to-buy-short": "Available to buy short"
         }
     },
 
