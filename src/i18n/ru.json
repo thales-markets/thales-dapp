@@ -234,7 +234,8 @@
             "amm": "AMM",
             "orderbook": "Таблица заказов",
             "trade-type": "Тип торговли",
-            "search-placeholder-for-mining": "Попробуйте адрес"
+            "search-placeholder-for-mining": "Попробуйте адрес",
+            "search-placeholder-for-reporting": "Попробуйте рынок"
         },
         "home": {
             "market-card": {
@@ -1080,7 +1081,9 @@
             "available-to-buy-short": "Доступно для короткой покупки",
             "longs-volume": "Объем покупок в длинных позициях",
             "available-to-buy-long": "Доступно для покупки на длительный срок",
-            "sell-volume": "Общий объем продаж"
+            "sell-volume": "Общий объем продаж",
+            "longs-sell-volume": "Объем продаж длинных позиций",
+            "shorts-sell-volume": "Объем продаж шорт"
         }
     },
     "governance": {

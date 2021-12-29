@@ -17,7 +17,6 @@ import { getIsAppReady } from '../../../redux/modules/app';
 import snxJSConnector from '../../../utils/snxJSConnector';
 import { bigNumberFormatter } from '../../../utils/formatters/ethers';
 import { SIDE } from '../../../constants/options';
-import { ethers } from 'ethers';
 import useAssetsBalanceQuery from '../../../queries/user/useUserAssetsBalanceQuery';
 
 const DEFAULT_ORDER_BY = 2;
@@ -115,19 +114,9 @@ const AmmReporting: React.FC = () => {
                             spentOnMarket: bigNumberFormatter(
                                 await ammContractWithSigner.spentOnMarket(market.address)
                             ),
-                            longPrice: bigNumberFormatter(
-                                await ammContractWithSigner.buyFromAmmQuote(
-                                    market.address,
-                                    SIDE.long,
-                                    ethers.utils.parseEther('1')
-                                )
-                            ),
+                            longPrice: bigNumberFormatter(await ammContractWithSigner.price(market.address, SIDE.long)),
                             shortPrice: bigNumberFormatter(
-                                await ammContractWithSigner.buyFromAmmQuote(
-                                    market.address,
-                                    SIDE.short,
-                                    ethers.utils.parseEther('1')
-                                )
+                                await ammContractWithSigner.price(market.address, SIDE.short)
                             ),
                             availableToBuyLong: bigNumberFormatter(
                                 await ammContractWithSigner.availableToBuyFromAMM(market.address, SIDE.long)
@@ -168,7 +157,7 @@ const AmmReporting: React.FC = () => {
     return (
         <Background>
             <Wrapper>
-                <MarketHeader route={ROUTES.Options.AmmMining} />
+                <MarketHeader route={ROUTES.Options.AmmReporting} />
                 <Title className="pale-grey">{t('common.sidebar.amm-reporting-label')}</Title>
                 <AmmReportingTable
                     dataForUi={optionsMarkets}

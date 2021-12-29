@@ -1,8 +1,18 @@
-import { Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@material-ui/core';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow,
+    withStyles,
+} from '@material-ui/core';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { OrderDirection } from '../Home/ExploreMarkets/ExploreMarketsDesktop';
-import { Arrow, ArrowsWrapper, StyledTableCell, TableHeaderLabel } from '../Home/MarketsTable/components';
+import { Arrow, ArrowsWrapper, TableHeaderLabel } from '../Home/MarketsTable/components';
 import down from 'assets/images/down.svg';
 import up from 'assets/images/up.svg';
 import downSelected from 'assets/images/down-selected.svg';
@@ -22,6 +32,7 @@ import { getMarketTitleWithDate } from '../../../utils/formatters/market';
 import Currency from '../../../components/Currency';
 import { formatCurrencyWithSign } from '../../../utils/formatters/number';
 import { USD_SIGN } from '../../../constants/currency';
+import { getSynthName } from '../../../utils/currency';
 
 interface HeadCell {
     id: number;
@@ -38,6 +49,57 @@ type AmmTableInputData = {
 };
 
 const DEFAULT_ORDER_BY = 2;
+
+const getRowValueMap: Record<number, (data: any) => number> = {
+    '2': (data: any) => {
+        return data.volume.total;
+    },
+    '3': (data: any) => {
+        return data.longPrice;
+    },
+    '4': (data: any) => {
+        return data.shortPrice;
+    },
+    '5': (data: any) => {
+        return data.volume.longBuyTotal;
+    },
+    '6': (data: any) => {
+        return data.volume.shortBuyTotal;
+    },
+    '7': (data: any) => {
+        return data.volume.shortBuyTotal + data.volume.longBuyTotal;
+    },
+    '8': (data: any) => {
+        return data.volume.longSellTotal;
+    },
+    '9': (data: any) => {
+        return data.volume.shortSellTotal;
+    },
+    '10': (data: any) => {
+        return data.volume.shortSellTotal + data.volume.longSellTotal;
+    },
+    '11': (data: any) => {
+        return data.spentOnMarket;
+    },
+    '12': (data: any) => {
+        return data.longsHeld;
+    },
+    '13': (data: any) => {
+        return data.shortsHeld;
+    },
+    '14': (data: any) => {
+        return data.availableToBuyLong;
+    },
+    '15': (data: any) => {
+        return data.availableToBuyShort;
+    },
+    '16': (data: any) => {
+        return data.availableToSellLong;
+    },
+    '17': (data: any) => {
+        return data.availableToSellLong;
+    },
+};
 
 const AmmReportingTable: React.FC<AmmTableInputData> = ({
     dataForUi,
@@ -57,6 +119,26 @@ const AmmReportingTable: React.FC<AmmTableInputData> = ({
 
     const [rowsPerPage, setRowsPerPage] = useState(15);
     const numberOfPages = Math.ceil(dataForUi.length / rowsPerPage) || 1;
+
+    const headCells: HeadCell[] = [
+        { id: 1, label: t('options.amm-reporting.market'), sortable: false },
+        { id: 2, label: t('options.amm-reporting.volume'), sortable: true },
+        { id: 3, label: t('options.amm-reporting.long-price'), sortable: true },
+        { id: 4, label: t('options.amm-reporting.short-price'), sortable: true },
+        { id: 5, label: t('options.amm-reporting.longs-volume'), sortable: true },
+        { id: 6, label: t('options.amm-reporting.shorts-volume'), sortable: true },
+        { id: 7, label: t('options.amm-reporting.total-volume'), sortable: true },
+        { id: 8, label: t('options.amm-reporting.longs-sell-volume'), sortable: true },
+        { id: 9, label: t('options.amm-reporting.shorts-sell-volume'), sortable: true },
+        { id: 10, label: t('options.amm-reporting.sell-volume'), sortable: true },
+        { id: 11, label: t('options.amm-reporting.spent-on-market'), sortable: true },
+        { id: 12, label: t('options.amm-reporting.longs-held'), sortable: true },
+        { id: 13, label: t('options.amm-reporting.shorts-held'), sortable: true },
+        { id: 14, label: t('options.amm-reporting.available-to-buy-long'), sortable: true },
+        { id: 15, label: t('options.amm-reporting.available-to-buy-short'), sortable: true },
+        { id: 16, label: t('options.amm-reporting.available-to-sell-long'), sortable: true },
+        { id: 17, label: t('options.amm-reporting.available-to-sell-short'), sortable: true },
+    ];
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -92,31 +174,17 @@ const AmmReportingTable: React.FC<AmmTableInputData> = ({
 
     const slicedData = useMemo(() => {
         return dataForUi
-            .filter(() => {
+            .filter((market) => {
                 if (assetSearch === '') return true;
-                return false;
+                return getSynthName(market.currencyKey).toLowerCase().includes(assetSearch.toLowerCase());
             })
-            .sort((a, b) => (orderDirection === OrderDirection.ASC ? a[1] - b[1] : b[1] - a[1]))
+            .sort((a, b) => {
+                return orderDirection === OrderDirection.ASC
+                    ? getRowValueMap[orderBy](a) - getRowValueMap[orderBy](b)
+                    : getRowValueMap[orderBy](b) - getRowValueMap[orderBy](a);
+            })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
     }, [dataForUi, orderBy, orderDirection, memoizedPage, rowsPerPage, assetSearch]);
-
-    const headCells: HeadCell[] = [
-        { id: 1, label: t('options.amm-reporting.market'), sortable: true },
-        { id: 2, label: t('options.amm-reporting.volume'), sortable: true },
-        { id: 3, label: t('options.amm-reporting.long-price'), sortable: true },
-        { id: 4, label: t('options.amm-reporting.short-price'), sortable: true },
-        { id: 5, label: t('options.amm-reporting.longs-volume'), sortable: true },
-        { id: 6, label: t('options.amm-reporting.shorts-volume'), sortable: true },
-        { id: 7, label: t('options.amm-reporting.total-volume'), sortable: true },
-        { id: 8, label: t('options.amm-reporting.sell-volume'), sortable: true },
-        { id: 9, label: t('options.amm-reporting.spent-on-market'), sortable: true },
-        { id: 10, label: t('options.amm-reporting.longs-held'), sortable: true },
-        { id: 11, label: t('options.amm-reporting.shorts-held'), sortable: true },
-        { id: 12, label: t('options.amm-reporting.available-to-buy-long'), sortable: true },
-        { id: 13, label: t('options.amm-reporting.available-to-buy-short'), sortable: true },
-        { id: 14, label: t('options.amm-reporting.available-to-sell-long'), sortable: true },
-        { id: 15, label: t('options.amm-reporting.available-to-sell-short'), sortable: true },
-    ];
 
     return (
         <>
@@ -134,7 +202,7 @@ const AmmReportingTable: React.FC<AmmTableInputData> = ({
                 <SearchMarket
                     assetSearch={assetSearch}
                     setAssetSearch={setAssetSearch}
-                    placeholder={t(`options.filters-labels.search-placeholder-for-mining`)}
+                    placeholder={t(`options.filters-labels.search-placeholder-for-reporting`)}
                 />
             </FlexDiv>
 
@@ -229,6 +297,12 @@ const AmmReportingTable: React.FC<AmmTableInputData> = ({
                                             )}
                                         </StyledTableCell>
                                         <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, market.volume.longSellTotal)}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
+                                            {formatCurrencyWithSign(USD_SIGN, market.volume.shortSellTotal)}
+                                        </StyledTableCell>
+                                        <StyledTableCell>
                                             {formatCurrencyWithSign(
                                                 USD_SIGN,
                                                 market.volume.longSellTotal + market.volume.shortSellTotal
@@ -290,5 +364,27 @@ const NoTrades = styled(FlexDiv)`
     min-height: 400px;
     background: #04045a;
 `;
+
+const StyledTableCell = withStyles(() => ({
+    head: {
+        position: 'relative',
+        border: '1px solid #f6f6fe38',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        lineHeight: '16px',
+        letterSpacing: ' 0.5px',
+        color: '#b8c6e5',
+    },
+    body: {
+        border: '1px solid #f6f6fe38',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        lineHeight: '24px',
+        letterSpacing: ' 0.25px',
+        color: '#F6F6FE',
+    },
+}))(TableCell);
 
 export default AmmReportingTable;
