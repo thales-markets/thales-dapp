@@ -9,52 +9,61 @@ import Header from './components/Header';
 const Home: React.FC = () => {
     const { t } = useTranslation();
     return (
-        <Wrapper>
-            <Header />
-            <TitleContainer>
-                <Title> {t('landing-page.title')}</Title>
-                <Subtitle> {t('landing-page.subtitle')}</Subtitle>
-            </TitleContainer>
-            <ThalesButton>
-                <i className="icon icon--logo" />
-            </ThalesButton>
-            <LearnButton></LearnButton>
-            <ContI>
-                <ContTitle>{t('landing-page.q1')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a1')}</ContSubTitle>
-            </ContI>
-            <ContII>
-                <ContTitle>{t('landing-page.q2')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a2')}</ContSubTitle>
-            </ContII>
-            <ContIII>
-                <ContTitle>{t('landing-page.q3')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a3')}</ContSubTitle>
-            </ContIII>
-            <ContIV>
-                <ContTitle>{t('landing-page.q4')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a4')}</ContSubTitle>
-            </ContIV>
-            <ThalesImageI>
-                <img src={thalesI}></img>
-            </ThalesImageI>
-            <ThalesImageII>
-                <img src={thalesII}></img>
-            </ThalesImageII>
-            <ThalesImageIII>
-                <img src={thalesIII}></img>
-            </ThalesImageIII>
-        </Wrapper>
+        <Background>
+            <Wrapper>
+                <Header />
+                <TitleContainer>
+                    <Title> {t('landing-page.title')}</Title>
+                    <Subtitle> {t('landing-page.subtitle')}</Subtitle>
+                </TitleContainer>
+                <ThalesButton>
+                    <i className="icon icon--logo" />
+                </ThalesButton>
+                <LearnButton></LearnButton>
+                <ContI>
+                    <ContTitle>{t('landing-page.q1')}</ContTitle>
+                    <ContSubTitle>{t('landing-page.a1')}</ContSubTitle>
+                </ContI>
+                <ContII>
+                    <ContTitle>{t('landing-page.q2')}</ContTitle>
+                    <ContSubTitle>{t('landing-page.a2')}</ContSubTitle>
+                </ContII>
+                <ContIII>
+                    <ContTitle>{t('landing-page.q3')}</ContTitle>
+                    <ContSubTitle>{t('landing-page.a3')}</ContSubTitle>
+                </ContIII>
+                <ContIV>
+                    <ContTitle>{t('landing-page.q4')}</ContTitle>
+                    <ContSubTitle>{t('landing-page.a4')}</ContSubTitle>
+                </ContIV>
+                <ThalesImageI>
+                    <img src={thalesI}></img>
+                </ThalesImageI>
+                <ThalesImageII>
+                    <img src={thalesII}></img>
+                </ThalesImageII>
+                <ThalesImageIII>
+                    <img src={thalesIII}></img>
+                </ThalesImageIII>
+            </Wrapper>
+        </Background>
     );
 };
 
 export default Home;
 
+const Background = styled.div`
+    width: 100%;
+    background: #052040;
+`;
+
 const Wrapper = styled.div`
     display: grid;
+    width: 100%;
+    margin: auto;
+    max-width: 1440px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(110, 28.125px);
-    background: #052040;
 `;
 
 const CenteredDiv = styled.div`
@@ -148,6 +157,7 @@ const ContIV = styled(ContWrapper)`
     grid-column-end: 49;
     grid-row-start: 82;
     grid-row-end: 103;
+    padding: 130px 40px 60px 90px;
 `;
 
 const ThalesImageI = styled.div`
@@ -165,7 +175,7 @@ const ThalesImageII = styled.div`
 `;
 
 const ThalesImageIII = styled.div`
-    grid-column-start: 20;
+    grid-column-start: 12;
     grid-column-end: 44;
     grid-row-start: 60;
     grid-row-end: 95;
