@@ -20,35 +20,36 @@ const useEscrowThalesQuery = (
     return useQuery<EscrowThalesQueryResponse>(
         QUERY_KEYS.Staking.Escrow(walletAddress, networkId),
         async () => {
-            try {
-                const [
-                    escrowedBalance,
-                    claimable,
-                    totalEscrowBalanceNotIncludedInStaking,
-                    totalEscrowedRewards,
-                ] = await Promise.all([
-                    await (snxJSConnector as any).escrowThalesContract.totalAccountEscrowedAmount(walletAddress),
-                    await (snxJSConnector as any).escrowThalesContract.claimable(walletAddress),
-                    await (snxJSConnector as any).escrowThalesContract.totalEscrowBalanceNotIncludedInStaking(),
-                    await (snxJSConnector as any).escrowThalesContract.totalEscrowedRewards(),
-                ]);
-
-                return {
-                    escrowedBalance: bigNumberFormatter(escrowedBalance),
-                    claimable: ethers.utils.formatEther(claimable),
-                    totalEscrowBalanceNotIncludedInStaking: ethers.utils.formatEther(
-                        totalEscrowBalanceNotIncludedInStaking
-                    ),
-                    totalEscrowedRewards: ethers.utils.formatEther(totalEscrowedRewards),
-                };
-            } catch {}
-
-            return {
+            const escrow = {
                 escrowedBalance: 0,
                 claimable: '0',
                 totalEscrowBalanceNotIncludedInStaking: '0',
                 totalEscrowedRewards: '0',
             };
+
+            try {
+                const [totalEscrowBalanceNotIncludedInStaking, totalEscrowedRewards] = await Promise.all([
+                    (snxJSConnector as any).escrowThalesContract.totalEscrowBalanceNotIncludedInStaking(),
+                    (snxJSConnector as any).escrowThalesContract.totalEscrowedRewards(),
+                ]);
+
+                escrow.totalEscrowBalanceNotIncludedInStaking = ethers.utils.formatEther(
+                    totalEscrowBalanceNotIncludedInStaking
+                );
+                escrow.totalEscrowedRewards = ethers.utils.formatEther(totalEscrowedRewards);
+
+                if (walletAddress !== '') {
+                    const [escrowedBalance, claimable] = await Promise.all([
+                        (snxJSConnector as any).escrowThalesContract.totalAccountEscrowedAmount(walletAddress),
+                        (snxJSConnector as any).escrowThalesContract.claimable(walletAddress),
+                    ]);
+
+                    escrow.escrowedBalance = bigNumberFormatter(escrowedBalance);
+                    escrow.claimable = ethers.utils.formatEther(claimable);
+                }
+            } catch {}
+
+            return escrow;
         },
         {
             refetchInterval: 5000,
