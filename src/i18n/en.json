@@ -40,12 +40,19 @@
         }
     },
     "landing-page": {
-        "title": "Binary Options Trading,\nRe-Imagined",
+        "title": "Predict, participate and have fun",
+        "subtitle": "Novel on-chain, permissionless, and non-custodial Parimutuel Markets.",
         "description": "Create, trade, and exercise binary options on Ethereum",
-        "use-app": "Use dApp",
+        "use-app": "DAPP",
         "launch": "Launch app",
-        "who-is-thales": "Who is Thales?",
-        "thales-is1": "Thales was a thinker born in ancient Greece who liked to collect data and study natural phenomena, but others taunted him about the uselessness of philosophy due to his poverty.",
+        "q1": "What is Thales?",
+        "q2": "How does it work?",
+        "q3": "How is it structured?",
+        "q4": "Why does it matter?",
+        "a1": "Thales is an Ethereum protocol that allows the creation of peer-to-peer parimutuel markets that anyone can join. This building block is the foundation of novel on-chain initiatives, from order book based positional markets platform to survival betting games.",
+        "a2": "The set of smart contracts composing Thales leverages uncensorable sUSD as collateral, an immutable source of truth for market settlement from Chainlink data feeds, and all the advantages (speed, costs, and security) of a rollup-centric network like Optimism.",
+        "a3": "Decentralization is key to resiliency. This is why ThalesDAO, as a collective, is the owner of the protocol and it conducts governance through the Thales Council, elected by THALES token holders.",
+        "a4": "Because building on the right foundations attracts like-minded people who care deeply about the open finance vision. With the support of bright minds, talented souls, and passionate people from the Thales community the protocol gets iterated, battle-tested, and more resilient every day.We are on our way to becoming unstoppable.",
         "thales-is2": "One year, Thales used his studies of the heavenly bodies to predict that next season's harvest would be bountiful. Armed with his knowledge, he placed a small bet by paying deposits for all of the olive presses in Miletus. This cost him very little, as nobody else was bidding.",
         "thales-is3": "When the harvests arrived he realized a large sum of money by renting the presses on his terms. Through growing demand, he became the <strong>first known person to exercise an options contract.</strong>",
         "markets": {

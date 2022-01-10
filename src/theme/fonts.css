@@ -42,3 +42,13 @@
     font-family: 'basis33';
     src: local('basis33'), url(../assets/fonts/Basis33/basis33.ttf) format('truetype');
 }
+
+@font-face {
+    font-family: 'Nunito';
+    src: local('Nunito'), url(../assets/fonts/Nunito/Nunito.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src: local('Playfair Display'), url(../assets/fonts/PlayfairDisplay/Playfair-Display.ttf) format('truetype');
+}

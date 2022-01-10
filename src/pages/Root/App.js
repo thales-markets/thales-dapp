@@ -30,7 +30,7 @@ import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../Home'));
+const Home = lazy(() => import('../V2/Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
