@@ -31,6 +31,7 @@ import {
 import styled from 'styled-components';
 import { FlexDivColumnCentered, FlexDivCentered } from 'theme/common';
 import { dispatchMarketNotification } from '../../../../../utils/options';
+import { L2_EXERCISE_GAS_LIMIT } from 'constants/options';
 
 type MaturityPhaseCardProps = TradeCardPhaseProps;
 
@@ -80,11 +81,12 @@ const MaturityPhaseCard: React.FC<MaturityPhaseCardProps> = ({ optionsMarket, ac
                 const BOMContractWithSigner = BOMContract.connect((snxJSConnector as any).signer);
 
                 if (isL2) {
-                    const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        BOMContractWithSigner.estimateGas.exerciseOptions(),
-                        fetchL1Fee(BOMContractWithSigner),
-                    ]);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    // const [gasEstimate, l1FeeInWei] = await Promise.all([
+                    //     BOMContractWithSigner.estimateGas.exerciseOptions(),
+                    //     fetchL1Fee(BOMContractWithSigner),
+                    // ]);
+                    const l1FeeInWei = await fetchL1Fee(BOMContractWithSigner);
+                    setGasLimit(L2_EXERCISE_GAS_LIMIT);
                     setL1Fee(l1FeeInWei);
                 } else {
                     const gasEstimate = await BOMContractWithSigner.estimateGas.exerciseOptions();

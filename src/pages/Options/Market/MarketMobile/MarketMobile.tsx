@@ -62,7 +62,7 @@ const MarketMobile: React.FC<MarketMobileProps> = ({ side, market, accountInfo }
                                 : 'linear-gradient(90deg, #3936C7 -8.53%, #2D83D2 52.71%, #23A5DD 105.69%, #35DADB 127.72%)'
                         }
                     >
-                        {ammSelected && isL2 ? (
+                        {ammSelected && isL2 && market.phase !== 'maturity' ? (
                             <AMM />
                         ) : market.phase === 'maturity' ? (
                             <MaturityPhaseCard optionsMarket={market} accountMarketInfo={accountInfo} />
