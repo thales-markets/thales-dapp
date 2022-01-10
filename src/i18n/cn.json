@@ -362,7 +362,8 @@
                     "confirmation-message": "代币成功认领",
                     "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
                     "learn-more": "了解更多",
-                    "button-tooltip": "奖励有10周的解锁期."
+                    "button-tooltip": "奖励有10周的解锁期.",
+                    "snx-rewards-paused-tooltip": "<0>暂时停止向 SNX 质押者进行的 THALES 分发。更多详情 </0><1 />."
                 }
             },
             "vesting": {
