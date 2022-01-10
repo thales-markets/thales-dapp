@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import thalesI from 'assets/images/landing-page/thales1.png';
 import thalesII from 'assets/images/landing-page/thales2.png';
 import thalesIII from 'assets/images/landing-page/thales3.png';
+import thalesIV from 'assets/images/landing-page/thales4.png';
 import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 
@@ -45,6 +46,9 @@ const Home: React.FC = () => {
                 <ThalesImageIII>
                     <img src={thalesIII}></img>
                 </ThalesImageIII>
+                <ThalesImageIV>
+                    <img src={thalesIV}></img>
+                </ThalesImageIV>
             </Wrapper>
         </Background>
     );
@@ -131,6 +135,7 @@ const ContWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    z-index: 2;
 `;
 
 const ContI = styled(ContWrapper)`
@@ -165,6 +170,7 @@ const ThalesImageI = styled.div`
     grid-column-end: 46;
     grid-row-start: 23;
     grid-row-end: 52;
+    z-index: 3;
 `;
 
 const ThalesImageII = styled.div`
@@ -172,6 +178,7 @@ const ThalesImageII = styled.div`
     grid-column-end: 24;
     grid-row-start: 43;
     grid-row-end: 75;
+    z-index: 3;
 `;
 
 const ThalesImageIII = styled.div`
@@ -179,6 +186,15 @@ const ThalesImageIII = styled.div`
     grid-column-end: 44;
     grid-row-start: 60;
     grid-row-end: 95;
+    z-index: 3;
+`;
+
+const ThalesImageIV = styled.div`
+    grid-column-start: 2;
+    grid-column-end: 22;
+    grid-row-start: 74;
+    grid-row-end: 110;
+    z-index: 1;
 `;
 
 const ContTitle = styled.p`
