@@ -91,7 +91,9 @@ export const Home: React.FC = () => {
                             }
                         />
 
-                        {hotMarkets.length && <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />}
+                        {hotMarkets.length > 0 && (
+                            <HotMarkets optionsMarkets={hotMarkets} exchangeRates={exchangeRates} />
+                        )}
 
                         <MarketCreation />
 
