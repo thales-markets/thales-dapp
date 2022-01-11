@@ -1,14 +1,22 @@
 import React from 'react';
-import styled from 'styled-components';
-import logo from 'assets/images/logo.svg';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from 'components/LanguageSelector';
+import styled from 'styled-components';
+import { Theme } from '../Home';
+import Cookies from 'universal-cookie';
 
-const Header: React.FC = () => {
+type HeaderInput = {
+    theme: Theme;
+    setTheme: (data: any) => void;
+};
+
+const cookies = new Cookies();
+
+const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
     const { t } = useTranslation();
     return (
         <>
-            <Logo src={logo} />
+            <Logo className="icon-home icon-home--thales" />
             <Links>
                 <Link target="_blank" rel="noreferrer" href="https://docs.thales.market/">
                     {t('header.links.docs')}
@@ -31,8 +39,18 @@ const Header: React.FC = () => {
                     {t('header.links.blog')}
                 </Link>
             </Links>
-            <ToggleContainer>
-                <ToggleWrapper />
+            <ToggleContainer
+                onClick={() => {
+                    console.log('clicked');
+                    cookies.set('home-theme', theme === Theme.Light ? Theme.Dark : Theme.Light);
+                    setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
+                }}
+            >
+                <ToggleIcon
+                    className={`icon-home ${
+                        theme === Theme.Light ? 'icon-home--toggle-white' : 'icon-home--toggle-dark'
+                    }`}
+                />
             </ToggleContainer>
             <LanguageContainer>
                 <LanguageSelector isLandingPage />
@@ -47,17 +65,22 @@ const Header: React.FC = () => {
     );
 };
 
-const Logo = styled.img`
+const Logo = styled.i`
     grid-column-start: 4;
     grid-column-end: 9;
     grid-row-start: 3;
     grid-row-end: 4;
+    font-size: 140px;
+    line-height: 34px;
+    color: var(--color);
+    z-index: 2;
 `;
 
 const CenteredDiv = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
 `;
 
 const Links = styled(CenteredDiv)`
@@ -66,6 +89,7 @@ const Links = styled(CenteredDiv)`
     grid-row-start: 3;
     grid-row-end: 4;
     justify-content: space-between;
+    z-index: 2;
 `;
 
 const ToggleContainer = styled(CenteredDiv)`
@@ -73,6 +97,8 @@ const ToggleContainer = styled(CenteredDiv)`
     grid-column-end: 43;
     grid-row-start: 3;
     grid-row-end: 4;
+    z-index: 2;
+    cursor: pointer;
 `;
 
 const LanguageContainer = styled(CenteredDiv)`
@@ -80,6 +106,7 @@ const LanguageContainer = styled(CenteredDiv)`
     grid-column-end: 46;
     grid-row-start: 3;
     grid-row-end: 4;
+    z-index: 2;
 `;
 
 const ButtonContainer = styled(CenteredDiv)`
@@ -87,7 +114,8 @@ const ButtonContainer = styled(CenteredDiv)`
     grid-column-end: 49;
     grid-row-start: 3;
     grid-row-end: 4;
-    color: #f7f7f7;
+    color: var(--color);
+    z-index: 2;
 `;
 
 const Link = styled.a`
@@ -96,19 +124,17 @@ const Link = styled.a`
     font-weight: 300;
     font-size: 16px;
     line-height: 91.91%;
-
+    z-index: 2;
     text-align: center;
     text-transform: uppercase;
-
-    color: #f7f7f7;
+    color: var(--color);
 `;
 
-const ToggleWrapper = styled.div`
-    border: 1.5px solid #f7f7f7;
-    box-sizing: border-box;
-    border-radius: 30px;
-    width: 63px;
-    height: 26px;
+const ToggleIcon = styled.i`
+    font-size: 64px;
+    line-height: 26px;
+    z-index: 2;
+    color: var(--color);
 `;
 
 export default Header;

@@ -6,6 +6,90 @@
     color: var(--color);
 }
 
+.icon-home {
+    display: inline-block;
+    font-family: Homepage Icons !important;
+    vertical-align: middle;
+    font-size: 20px;
+    color: var(--color);
+}
+
+.icon-home--toggle-dark:before {
+    content: '\0041';
+}
+
+.icon-home--toggle-white:before {
+    content: '\0042';
+}
+
+.icon-home--github:before {
+    content: '\0043';
+}
+
+.icon-home--discord:before {
+    content: '\0044';
+}
+
+.icon-home--twitter:before {
+    content: '\0045';
+}
+
+.icon-home--docs:before {
+    content: '\0046';
+}
+
+.icon-home--medium:before {
+    content: '\0047';
+}
+
+.icon-home--left:before {
+    content: '\0048';
+}
+
+.icon-home--thales:before {
+    content: '\0049';
+}
+
+.icon-home--right:before {
+    content: '\0050';
+}
+
+.icon-home--ch:before {
+    content: '\0051';
+}
+
+.icon-home--en:before {
+    content: '\0052';
+}
+
+.icon-home--ru:before {
+    content: '\0053';
+}
+
+.icon-home--optimism:before {
+    content: '\004e';
+}
+
+.icon-home--snx:before {
+    content: '\004f';
+}
+
+.icon-home--link:before {
+    content: '\0050';
+}
+
+.icon-home--royale:before {
+    content: '\0051';
+}
+
+.icon-home--game:before {
+    content: '\0052';
+}
+
+.icon-home--inch:before {
+    content: '\0053';
+}
+
 .icon--triangle:before {
     content: '\0034';
 }

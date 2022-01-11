@@ -19,6 +19,11 @@
 }
 
 @font-face {
+    font-family: 'Homepage Icons';
+    src: local('Homepage Icons'), url(../assets/fonts/HomepageIcons/homepage.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'SansationLight';
     src: local('SansationLight'), url(../assets/fonts/SansationLight/Sansation-Light.ttf) format('truetype');
 }

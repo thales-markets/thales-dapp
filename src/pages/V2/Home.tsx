@@ -1,55 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import thalesI from 'assets/images/landing-page/thales1.png';
-import thalesII from 'assets/images/landing-page/thales2.png';
-import thalesIII from 'assets/images/landing-page/thales3.png';
-import thalesIV from 'assets/images/landing-page/thales4.png';
+import GridLayout from './components/GridLayout';
 import { useTranslation } from 'react-i18next';
-import Header from './components/Header';
+import Cookies from 'universal-cookie';
+
+export enum Theme {
+    Light,
+    Dark,
+}
+
+const cookies = new Cookies();
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
+    const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
+
     return (
-        <Background>
-            <Wrapper>
-                <Header />
-                <TitleContainer>
-                    <Title> {t('landing-page.title')}</Title>
-                    <Subtitle> {t('landing-page.subtitle')}</Subtitle>
-                </TitleContainer>
-                <ThalesButton>
-                    <i className="icon icon--logo" />
-                </ThalesButton>
-                <LearnButton></LearnButton>
-                <ContI>
-                    <ContTitle>{t('landing-page.q1')}</ContTitle>
-                    <ContSubTitle>{t('landing-page.a1')}</ContSubTitle>
-                </ContI>
-                <ContII>
-                    <ContTitle>{t('landing-page.q2')}</ContTitle>
-                    <ContSubTitle>{t('landing-page.a2')}</ContSubTitle>
-                </ContII>
-                <ContIII>
-                    <ContTitle>{t('landing-page.q3')}</ContTitle>
-                    <ContSubTitle>{t('landing-page.a3')}</ContSubTitle>
-                </ContIII>
-                <ContIV>
-                    <ContTitle>{t('landing-page.q4')}</ContTitle>
-                    <ContSubTitle>{t('landing-page.a4')}</ContSubTitle>
-                </ContIV>
-                <ThalesImageI>
-                    <img src={thalesI}></img>
-                </ThalesImageI>
-                <ThalesImageII>
-                    <img src={thalesII}></img>
-                </ThalesImageII>
-                <ThalesImageIII>
-                    <img src={thalesIII}></img>
-                </ThalesImageIII>
-                <ThalesImageIV>
-                    <img src={thalesIV}></img>
-                </ThalesImageIV>
-            </Wrapper>
+        <Background className={theme === Theme.Light ? 'light' : 'dark'}>
+            <GridLayout theme={theme} setTheme={setTheme} />
+            <FlexWrapper>
+                <Title> {t('landing-page.initiatives')}</Title>
+                <FlexDiv>
+                    <Thales className="icon-home icon-home--thales" />
+                    <ThalesRoyale className="icon-home icon-home--royale" />
+                    <ThalesGame className="icon-home icon-home--game" />
+                </FlexDiv>
+                <Title> {t('landing-page.integrations')}</Title>
+                <FlexDiv style={{ marginBottom: 50 }}>
+                    <SNX className="icon-home icon-home--snx" />
+                    <INCH className="icon-home icon-home--inch" />
+                </FlexDiv>
+                <FlexDiv>
+                    <LINK className="icon-home icon-home--link" />
+                    <OPTIMISM className="icon-home icon-home--optimism" />
+                </FlexDiv>
+                <Title> {t('landing-page.newest-blog-posts')}</Title>
+            </FlexWrapper>
         </Background>
     );
 };
@@ -58,161 +44,72 @@ export default Home;
 
 const Background = styled.div`
     width: 100%;
-    background: #052040;
+    &.light {
+        background: #f7f7f7;
+        --color: #052040;
+        --background: #ffffff;
+    }
+    &.dark {
+        background: #052040;
+        --color: #f7f7f7;
+        --background: #1b314f;
+    }
 `;
 
-const Wrapper = styled.div`
-    display: grid;
-    width: 100%;
+const FlexWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
     margin: auto;
     max-width: 1440px;
-    grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(110, 28.125px);
-`;
-
-const CenteredDiv = styled.div`
-    display: flex;
-    justify-content: center;
     align-items: center;
-`;
-
-const TitleContainer = styled(CenteredDiv)`
-    flex-direction: column;
-    grid-column-start: 11;
-    grid-column-end: 42;
-    grid-row-start: 4;
-    grid-row-end: 23;
 `;
 
 const Title = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 88px;
-    line-height: 92.3%;
-    /* or 81px */
-
+    font-size: 70px;
+    line-height: 91.91%;
     text-align: center;
-
-    color: #f7f7f7;
-`;
-const Subtitle = styled.p`
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 39.5px;
-    line-height: 45px;
-    text-align: center;
-
-    color: #f7f7f7;
+    color: var(--color);
+    margin-bottom: 90px;
 `;
 
-const Button = styled.div`
-    background: #1b314f;
-    width: 100%;
-    height: 100%;
-`;
-
-const ThalesButton = styled(Button)`
-    grid-column-start: 20;
-    grid-column-end: 26;
-    grid-row-start: 23;
-    grid-row-end: 25;
-`;
-
-const LearnButton = styled(Button)`
-    grid-column-start: 27;
-    grid-column-end: 33;
-    grid-row-start: 23;
-    grid-row-end: 25;
-`;
-
-const ContWrapper = styled.div`
-    background: #1b314f;
-    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
-    border-radius: 7px;
-    padding: 60px 40px 60px 60px;
+const FlexDiv = styled.div`
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 2;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+    color: var(--color);
+    margin-bottom: 90px;
 `;
 
-const ContI = styled(ContWrapper)`
-    grid-column-start: 7;
-    grid-column-end: 32;
-    grid-row-start: 28;
-    grid-row-end: 44;
+const Thales = styled.i`
+    font-size: 400px;
+    line-height: 92px;
+`;
+const ThalesRoyale = styled.i`
+    font-size: 220px;
+    line-height: 110px;
+`;
+const ThalesGame = styled.i`
+    font-size: 320px;
+    line-height: 124px;
 `;
 
-const ContII = styled(ContWrapper)`
-    grid-column-start: 24;
-    grid-column-end: 49;
-    grid-row-start: 46;
-    grid-row-end: 62;
+const SNX = styled.i`
+    font-size: 400px;
+    line-height: 40px;
 `;
-const ContIII = styled(ContWrapper)`
-    grid-column-start: 4;
-    grid-column-end: 29;
-    grid-row-start: 64;
-    grid-row-end: 80;
+const OPTIMISM = styled.i`
+    font-size: 440px;
+    line-height: 60px;
 `;
-const ContIV = styled(ContWrapper)`
-    grid-column-start: 24;
-    grid-column-end: 49;
-    grid-row-start: 82;
-    grid-row-end: 103;
-    padding: 130px 40px 60px 90px;
+const LINK = styled.i`
+    font-size: 440px;
+    line-height: 140px;
 `;
-
-const ThalesImageI = styled.div`
-    grid-column-start: 30;
-    grid-column-end: 46;
-    grid-row-start: 23;
-    grid-row-end: 52;
-    z-index: 3;
-`;
-
-const ThalesImageII = styled.div`
-    grid-column-start: 1;
-    grid-column-end: 24;
-    grid-row-start: 43;
-    grid-row-end: 75;
-    z-index: 3;
-`;
-
-const ThalesImageIII = styled.div`
-    grid-column-start: 12;
-    grid-column-end: 44;
-    grid-row-start: 60;
-    grid-row-end: 95;
-    z-index: 3;
-`;
-
-const ThalesImageIV = styled.div`
-    grid-column-start: 2;
-    grid-column-end: 22;
-    grid-row-start: 74;
-    grid-row-end: 110;
-    z-index: 1;
-`;
-
-const ContTitle = styled.p`
-    font-family: Playfair Display;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 77px;
-    line-height: 95%;
-    color: #f7f7f7;
-`;
-const ContSubTitle = styled.p`
-    font-family: Nunito;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 20px;
-    line-height: 27px;
-    text-align: justify;
-    text-transform: capitalize;
-
-    color: #f7f7f7;
+const INCH = styled.i`
+    font-size: 420px;
+    line-height: 210px;
 `;
