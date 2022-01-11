@@ -162,7 +162,8 @@
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
             "trade-history-label": "Trading history",
-            "amm-mining-label": "AMM rewards"
+            "amm-mining-label": "AMM rewards",
+            "amm-reporting-label": "AMM reporting"
         },
         "coming-soon": "Coming soon...",
         "of": "of",
@@ -213,6 +214,7 @@
             "show": "Show",
             "search-placeholder": "Try ETH",
             "search-placeholder-for-mining": "Try an address",
+            "search-placeholder-for-reporting": "Try a market",
             "all": "All",
             "trading": "Trading",
             "maturity": "Maturity",
@@ -360,7 +362,8 @@
                     "confirmation-message": "Tokens successfully claimed",
                     "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
                     "learn-more": "Learn more",
-                    "button-tooltip": "Claimed rewards are subject to a 10-week vesting period."
+                    "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
+                    "snx-rewards-paused-tooltip": "<0>Ongoing THALES distribution towards SNX stakers is temporarily paused. More details under </0><1 />."
                 }
             },
             "vesting": {
@@ -1063,6 +1066,25 @@
             "volume": "Volume",
             "share": "Share",
             "rewards": "Rewards"
+        },
+        "amm-reporting": {
+            "market": "Market",
+            "volume": "Volume",
+            "long-price": "Long price",
+            "short-price": "Short price",
+            "longs-volume": "Longs buy volume",
+            "shorts-volume": "Shorts buy volume",
+            "total-volume": "Total Buy volume",
+            "longs-sell-volume": "Longs sell volume",
+            "shorts-sell-volume": "Shorts sell volume",
+            "sell-volume": "Total Sell volume",
+            "spent-on-market": "Spent on Market",
+            "longs-held": "Longs held",
+            "shorts-held": "Shorts held",
+            "available-to-sell-long": "Available to sell long",
+            "available-to-sell-short": "Available to sell short",
+            "available-to-buy-long": "Available to buy long",
+            "available-to-buy-short": "Available to buy short"
         }
     },
 

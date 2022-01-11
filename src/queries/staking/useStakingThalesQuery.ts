@@ -37,22 +37,22 @@ const useStakingThalesQuery = (
 
             try {
                 const [unstakeDurationPeriod, fixedPeriodReward, totalStakedAmount] = await Promise.all([
-                    await (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
-                    await (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
-                    await (snxJSConnector as any).stakingThalesContract.totalStakedAmount(),
+                    (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
+                    (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
+                    (snxJSConnector as any).stakingThalesContract.totalStakedAmount(),
                 ]);
 
                 staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
                 staking.fixedPeriodReward = ethers.utils.formatEther(fixedPeriodReward);
                 staking.totalStakedAmount = ethers.utils.formatEther(totalStakedAmount);
 
-                if (walletAddress != null) {
+                if (walletAddress !== '') {
                     const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([
-                        await (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
-                        await (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
-                        await (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress),
-                        await (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
-                        await (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
+                        (snxJSConnector as any).stakingThalesContract.unstaking(walletAddress),
+                        (snxJSConnector as any).stakingThalesContract.lastUnstakeTime(walletAddress),
+                        (snxJSConnector as any).stakingThalesContract.stakedBalanceOf(walletAddress),
+                        (snxJSConnector as any).stakingThalesContract.unstakingAmount(walletAddress),
+                        (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
                     ]);
 
                     staking.isUnstaking = isUnstaking;

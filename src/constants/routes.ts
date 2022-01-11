@@ -13,6 +13,7 @@ export const ROUTES = {
         QuickTradingCompetition: '/markets/competition-orders',
         TradeHistory: '/markets/trade-history',
         AmmMining: '/markets/amm-rewards',
+        AmmReporting: '/markets/amm-reporting',
         Token: '/token',
         Royal: '/royale',
     },

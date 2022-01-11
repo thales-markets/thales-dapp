@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, FlexDivColumn, FlexDivColumnCentered, FlexDivSpaceBetween, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -23,7 +23,9 @@ import {
     PieChartContainer,
     SectionContentContainer,
     SectionHeader,
+    StyledInfoIcon,
     StyledMaterialTooltip,
+    TooltipLink,
 } from '../../components';
 import { formatGasLimit } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -39,6 +41,7 @@ import {
     WEEKLY_REWARDS_SNX,
     WEEKLY_REWARDS_THALES,
 } from '../../../../../constants/token';
+import { LINKS } from 'constants/links';
 
 type Properties = {
     escrowedBalance: number;
@@ -298,6 +301,18 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             </StakingRewardsInfoTitle>
                             <StakingRewardsInfoContent>
                                 {formatCurrencyWithKey(THALES_CURRENCY, WEEKLY_REWARDS_SNX, 0, true)}
+                                <StyledMaterialTooltip
+                                    arrow={true}
+                                    title={
+                                        <Trans
+                                            i18nKey="options.earn.thales-staking.staking-rewards.snx-rewards-paused-tooltip"
+                                            components={[<span key="1" />, <TipLink key="2" />]}
+                                        />
+                                    }
+                                    interactive
+                                >
+                                    <SnxRewardsPausedInfoIcon />
+                                </StyledMaterialTooltip>
                             </StakingRewardsInfoContent>
                         </PeriodInfo>
                     </SnxStakedDiv>
@@ -453,12 +468,15 @@ const StakingRewardsInfoContent = styled.div`
     font-weight: bold;
     font-size: 16px;
     line-height: 24px;
-    width: 35%;
+    width: 45%;
     text-align: end;
     @media (max-width: 767px) {
         width: 100%;
         text-align: center;
         padding-top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 `;
 
@@ -518,6 +536,25 @@ const PeriodInfo = styled(FlexDivSpaceBetween)`
     @media (max-width: 767px) {
         flex-direction: column;
         text-align: center;
+    }
+`;
+
+const TipLink: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP18}>
+            TIP-18
+        </TooltipLink>
+    );
+};
+
+const SnxRewardsPausedInfoIcon = styled(StyledInfoIcon)`
+    min-width: 18px;
+    min-height: 18px;
+    max-width: 18px;
+    max-height: 18px;
+    margin-left: 6px;
+    @media (max-width: 1024px) {
+        display: inline;
     }
 `;
 

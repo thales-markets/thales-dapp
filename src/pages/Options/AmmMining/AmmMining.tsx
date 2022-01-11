@@ -116,7 +116,7 @@ const AmmMining: React.FC = () => {
                     setOrderDirection={setOrderDirection}
                     isLoading={tradesQuery.isLoading}
                     deps={[orderBy, dataForUI, volume, orderDirection]}
-                ></AmmTable>
+                />
             </Wrapper>
         </Background>
     );

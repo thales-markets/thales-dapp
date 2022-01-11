@@ -7,7 +7,7 @@ import useEscrowThalesQuery from '../../../../../queries/staking/useEscrowThales
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
-import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
 import { FlexDivColumnCentered, GradientText } from '../../../../../theme/common';
 import ComingSoon from 'components/ComingSoon';
@@ -43,7 +43,6 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
@@ -52,7 +51,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
     });
 
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady,
     });
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
     const [fixedPeriodReward, setFixedPeriodReward] = useState<string>('0');
