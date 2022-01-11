@@ -35,7 +35,19 @@ export const formattedDuration = (
         }`;
     }
     if (duration.days) {
-        return `${duration.days} ${duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']}`;
+        if (duration.days === 1 && duration.hours === 0) {
+            return `24 ${dateTimeTranslationMap['hours']}`;
+        }
+
+        return `${duration.days} ${
+            duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']
+        } ${
+            duration.hours
+                ? `${duration.hours} ${
+                      duration.hours > 1 ? dateTimeTranslationMap['hours'] : dateTimeTranslationMap['hour']
+                  }`
+                : ''
+        }`;
     }
     if (duration.hours) {
         return `${duration.hours} ${
