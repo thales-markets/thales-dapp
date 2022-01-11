@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import GridLayout from './components/GridLayout';
 import { useTranslation } from 'react-i18next';
 import Cookies from 'universal-cookie';
+import BlogPosts from './components/BlogPosts';
 
 export enum Theme {
     Light,
@@ -35,6 +36,7 @@ const Home: React.FC = () => {
                     <OPTIMISM className="icon-home icon-home--optimism" />
                 </FlexDiv>
                 <Title> {t('landing-page.newest-blog-posts')}</Title>
+                <BlogPosts />
             </FlexWrapper>
         </Background>
     );
