@@ -12,6 +12,10 @@ const limitBlogMeta = (text: string, limit: number) => {
     return text?.length > limit ? text.substring(0, limit) + '...' : text;
 };
 
+const formatDate = (timestamp: Date) => {
+    return timestamp.toString().split(' ')[0];
+};
+
 const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
@@ -38,6 +42,7 @@ const BlogPosts: React.FC = () => {
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
                         <BlogDescription>{limitBlogMeta(blog.description, 250)}</BlogDescription>
+                        <MediumDate>{formatDate(blog.pubDate)}</MediumDate>
                         <MediumIcon className="icon-home icon-home--medium" />
                     </BlogCard>
                 );
@@ -92,6 +97,15 @@ const MediumIcon = styled.i`
     font-size: 23px;
     bottom: 10px;
     right: 10px;
+`;
+
+const MediumDate = styled.i`
+    position: absolute;
+    font-size: 15px;
+    bottom: 10px;
+    left: 30px;
+    color: var(--color);
+    font-style: italic;
 `;
 
 const Arrow = styled.img`
