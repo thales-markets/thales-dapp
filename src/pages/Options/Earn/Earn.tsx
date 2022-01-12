@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { getNetworkId } from '../../../redux/modules/wallet';
 import { isNetworkSupported } from '../../../utils/network';
+import Migration from './Migration';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -49,6 +50,11 @@ const EarnPage: React.FC = () => {
         {
             id: 'lp-staking',
             name: t('options.earn.lp-staking.tab-title'),
+            disabled: false,
+        },
+        {
+            id: 'migration',
+            name: t('migration.title'),
             disabled: false,
         },
     ];
@@ -113,6 +119,7 @@ const EarnPage: React.FC = () => {
                                     {selectedTab === 'staking' && <ThalesStaking />}
                                     {selectedTab === 'vesting' && <Vesting />}
                                     {selectedTab === 'lp-staking' && <LPStaking />}
+                                    {selectedTab === 'migration' && <Migration />}
                                 </WidgetsContainer>
                             </MainContentContainer>
                         </FlexDivColumn>
@@ -220,9 +227,9 @@ const OptionsTabContainer = styled.div`
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     position: absolute;
     top: 0;
-    left: ${(props) => props.index * 24.5 + '% '};
+    left: ${(props) => props.index * 19.5 + '% '};
     background: linear-gradient(90deg, #141874, #04045a);
-    width: 26%;
+    width: 22%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
     transition: 0.5s;
     transition-property: color;

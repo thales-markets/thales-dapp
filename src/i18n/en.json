@@ -1186,5 +1186,14 @@
         "beta": "BETA",
         "price-changed-warning": "Price changed, please review",
         "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
+    },
+    "migration": {
+        "title": "Migration",
+        "migration-amount-label": "Amount to migrate",
+        "migration-confirmation-message": "Tokens successfully migrated to L2",
+        "migration-button": {
+            "label": "Migrate",
+            "progress-label": "Migration in progress..."
+        }
     }
 }
