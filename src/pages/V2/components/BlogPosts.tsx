@@ -29,7 +29,7 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: space-around;
     width: 100%;
-    padding: 50px 90px;
+    padding: 2em;
 `;
 
 const Thumbnail = styled.img`

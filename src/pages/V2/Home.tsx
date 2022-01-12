@@ -38,7 +38,14 @@ const Home: React.FC = () => {
                 <Title style={{ marginTop: 50 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
                 <Title style={{ marginTop: 50 }}> {t('landing-page.faq.title')}</Title>
-                <Faq></Faq>
+                <Faq>
+                    <FaqQuestion>{t('landing-page.faq.firstQ')}</FaqQuestion>
+                    <FaqAnswer>{t('landing-page.faq.firstA')}</FaqAnswer>
+                    <FaqQuestion>{t('landing-page.faq.secondQ')}</FaqQuestion>
+                    <FaqAnswer>{t('landing-page.faq.secondA')}</FaqAnswer>
+                    <FaqQuestion>{t('landing-page.faq.thirdQ')}</FaqQuestion>
+                    <FaqAnswer>{t('landing-page.faq.thirdA')}</FaqAnswer>
+                </Faq>
             </FlexWrapper>
         </Background>
     );
@@ -130,5 +137,29 @@ const Faq = styled.div`
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
     border-radius: 7px;
     margin: 3em 4em;
-    height: 40em;
+    padding: 2em;
+`;
+
+const FaqQuestion = styled.p`
+    font-family: Playfair Display !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.5em;
+    line-height: 91.91%;
+    color: var(--color);
+    margin-bottom: 1em;
+`;
+
+const FaqAnswer = styled.p`
+    font-family: Nunito !important;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 1em;
+    line-height: 91.91%;
+    color: var(--color);
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--color);
+        padding-bottom: 2em;
+        margin-bottom: 2em;
+    }
 `;
