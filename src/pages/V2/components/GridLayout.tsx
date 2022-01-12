@@ -120,8 +120,8 @@ const Button = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 56px;
     z-index: 2;
 `;
 

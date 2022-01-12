@@ -57,7 +57,26 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: space-around;
     width: 100%;
+    overflow: hidden;
     padding: 2em;
+    @media (max-width: 500px) {
+        & > div:not(:nth-child(2)) {
+            display: none;
+        }
+        & > div:nth-child(2) {
+            min-width: 95% !important;
+            min-height: 345px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        & > div:not(:nth-child(-n + 3)) {
+            display: none;
+        }
+        & > div:nth-child(-n + 3) {
+            min-width: 47%;
+        }
+    }
 `;
 
 const BlogCard = styled.div`
@@ -70,6 +89,7 @@ const BlogCard = styled.div`
     border-radius: 7px;
     position: relative;
     cursor: pointer;
+    overflow: hidden;
 `;
 
 const BlogTitle = styled.p`
