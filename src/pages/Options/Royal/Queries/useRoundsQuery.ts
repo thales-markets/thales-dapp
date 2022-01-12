@@ -4,8 +4,8 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 
 type RoundData = {
-    eliminatedPerRound: string;
-    totalPlayersPerRound: string;
+    eliminatedPerRoundPerSeason: string;
+    totalPlayersPerRoundPerSeason: string;
 };
 
 const useRoundsQuery = (networkId: NetworkId, options?: UseQueryOptions<RoundData[]>) => {

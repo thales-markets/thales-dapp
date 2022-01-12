@@ -3,7 +3,7 @@ import { NetworkId } from 'utils/network';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { ethers } from 'ethers';
-import thalesRoyal from 'utils/contracts/thalesRoyalContract';
+import snxJSConnector from 'utils/snxJSConnector';
 
 export type Positions = {
     up: number;
@@ -26,7 +26,10 @@ const usePositionsQuery = (networkId: NetworkId, options?: UseQueryOptions<Posit
             console.log('Positions Query');
             const positions = await thalesData.binaryOptions.thalesRoyalePositions({ network: networkId });
             const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-            const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, provider);
+            const { thalesRoyaleContract } = snxJSConnector;
+            const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
+            const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
+            const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, provider);
             const round = await RoyalContract.round();
             console.log(round);
             return (

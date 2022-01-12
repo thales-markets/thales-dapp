@@ -37,11 +37,19 @@ const ThalesRoyal: React.FC = () => {
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
     const [showStats, setShowStats] = useState(true);
+    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [allSeasons, setAllSeasons] = useState([] as any);
 
-    const royaleDataQuery = useThalesRoyaleData(walletAddress as any, { enabled: networkId === 69 });
-    const thalesRoyalData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
+    const royaleDataQuery = useThalesRoyaleData(walletAddress as any, {
+        enabled: networkId === 69 || networkId === 10,
+    });
 
-    const usersQuery = useRoyalePlayersQuery({ enabled: networkId === 69 });
+    console.log(selectedSeason);
+    const thalesRoyaleDataMap = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
+
+    const thalesRoyaleData = thalesRoyaleDataMap ? Array.from(thalesRoyaleDataMap.values()).pop() : undefined;
+
+    const usersQuery = useRoyalePlayersQuery(networkId, { enabled: networkId === 69 || networkId === 10 });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
     const user = users.filter(
         (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
@@ -50,8 +58,8 @@ const ThalesRoyal: React.FC = () => {
     const positionsQuery = usePositionsQuery(networkId, { enabled: networkId !== undefined });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
 
-    const ethPriceQuery = useEthPriceQuery(thalesRoyalData?.priceFeedAddress as any, {
-        enabled: thalesRoyalData !== undefined,
+    const ethPriceQuery = useEthPriceQuery(thalesRoyaleData?.priceFeedAddress as any, {
+        enabled: thalesRoyaleData !== undefined,
     });
     const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
 
@@ -66,9 +74,17 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (thalesRoyalData) {
+        if (thalesRoyaleDataMap) {
+            setSelectedSeason(Number(Array.from(thalesRoyaleDataMap.keys()).pop()));
+            setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
+            console.log(allSeasons);
+        }
+    }, [thalesRoyaleDataMap]);
+
+    useEffect(() => {
+        if (thalesRoyaleData) {
             if (selectedPage === 'royale') {
-                if (thalesRoyalData.round > 0) {
+                if (thalesRoyaleData.roundInASeason > 0) {
                     history.push({
                         pathname: location.pathname,
                         search: queryString.stringify({
@@ -93,7 +109,7 @@ const ThalesRoyal: React.FC = () => {
                 });
             }
         }
-    }, [selectedPage, thalesRoyalData]);
+    }, [selectedPage, thalesRoyaleData]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -138,15 +154,18 @@ const ThalesRoyal: React.FC = () => {
                 <Scoreboard
                     ethPrice={ethPrice}
                     positions={positions}
-                    royaleData={thalesRoyalData as any}
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                    allSeasons={allSeasons}
+                    royaleData={thalesRoyaleData as any}
                     user={user}
                     users={users}
                 />
-                {thalesRoyalData && (
+                {thalesRoyaleData && (
                     <BattleRoyale
                         ethPrice={ethPrice}
                         positions={positions}
-                        royaleData={thalesRoyalData}
+                        royaleData={thalesRoyaleData}
                         showBattle={selectedPage === 'royale'}
                         user={user}
                     />
@@ -168,9 +187,9 @@ const ThalesRoyal: React.FC = () => {
                     )}
                     {selectedPage !== 'royale' && (
                         <NavButton
-                            className={thalesRoyalData?.round === 0 ? 'disabled' : ''}
+                            className={thalesRoyaleData?.roundInASeason === 0 ? 'disabled' : ''}
                             onClick={() => {
-                                if (thalesRoyalData && thalesRoyalData.round > 0) {
+                                if (thalesRoyaleData && thalesRoyaleData.roundInASeason > 0) {
                                     setSelectedPage('royale');
                                 }
                             }}
@@ -217,11 +236,11 @@ const ThalesRoyal: React.FC = () => {
                 </div>
                 <div>
                     <span>{t('options.royale.footer.current-reward-per-player')}:</span>
-                    <span>{(10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
+                    <span>{(10000 / (Number(thalesRoyaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
                 </div>
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>{thalesRoyalData?.alivePlayers?.length + ' / ' + thalesRoyalData?.players?.length}</span>
+                    <span>{thalesRoyaleData?.alivePlayers?.length + ' / ' + thalesRoyaleData?.players?.length}</span>
                 </div>
             </InfoSection>
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />

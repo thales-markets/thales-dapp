@@ -1,6 +1,7 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
+import { NetworkId } from '@synthetixio/contracts-interface';
 
 export enum UserStatus {
     RDY,
@@ -18,7 +19,7 @@ export type User = {
     deathRound?: string;
 };
 
-const useRoyalePlayersQuery = (options?: UseQueryOptions<User[]>) => {
+const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<User[]>) => {
     return useQuery<User[]>(
         QUERY_KEYS.Royale.Players(),
         async () => {
@@ -27,7 +28,7 @@ const useRoyalePlayersQuery = (options?: UseQueryOptions<User[]>) => {
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const map = new Map(result);
-            const data = await thalesData.binaryOptions.thalesRoyalePlayers({ network: 69 });
+            const data = await thalesData.binaryOptions.thalesRoyalePlayers({ network: networkId });
             const verified: User[] = [];
             const unverified: User[] = [];
             const unasigned: User[] = [];

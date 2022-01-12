@@ -21,7 +21,7 @@ import { truncateAddress } from 'utils/formatters/string';
 import { signUp, startRoyale } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
-import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
+import { ThalesRoyaleData } from '../../Queries/useThalesRoyaleData';
 import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
 import DiscordImage from 'assets/images/royale/discord.png';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
@@ -30,9 +30,12 @@ import i18n from '../../../../../i18n';
 type ScoreboardProps = {
     ethPrice: string;
     positions: Positions;
-    royaleData: ThalesRoyalData;
+    royaleData: ThalesRoyaleData;
     users: User[];
     user: User;
+    selectedSeason: number;
+    setSelectedSeason: any;
+    allSeasons: number[];
 };
 
 type HeadCell = {
@@ -51,7 +54,16 @@ const defaultOrderBy = 1;
 
 const PerPageOption = [15, 25, 50, 100];
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData, users, user }) => {
+const Scoreboard: React.FC<ScoreboardProps> = ({
+    ethPrice,
+    positions,
+    royaleData,
+    users,
+    user,
+    selectedSeason,
+    setSelectedSeason,
+    allSeasons,
+}) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
@@ -64,6 +76,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
     const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
     const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
 
@@ -166,8 +179,9 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
             setPage(1);
         }
     };
+    console.log(allSeasons);
 
-    const getFooter = (user: User | undefined, royaleData: ThalesRoyalData) => {
+    const getFooter = (user: User | undefined, royaleData: ThalesRoyaleData) => {
         if (!royaleData) return;
         if (royaleData.signUpPeriod > new Date()) {
             if (user) {
@@ -212,6 +226,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
             <OverlayForDropDown
                 onClick={() => {
                     if (showDropdown) setShowDropdown(false);
+                    if (showSelectDropdown) setShowSelectDropdown(false);
                 }}
             ></OverlayForDropDown>
             <Modal
@@ -241,6 +256,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
             <Wrapper
                 onClick={() => {
                     if (showDropdown) setShowDropdown(false);
+                    if (showSelectDropdown) setShowSelectDropdown(false);
                 }}
                 className="scoreboard"
             >
@@ -318,6 +334,24 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                         {getFooter(user, royaleData)}
                     </UserWrapper>
                     <TableWrapper>
+                        <SeasonSelector>
+                            <Text onClick={setShowSelectDropdown.bind(this, true)}>Season {selectedSeason} </Text>
+                            {showSelectDropdown &&
+                                [1, 2, 3, 4, 5]
+                                    .filter((number) => number !== selectedSeason)
+                                    .map((option: number, key: number) => (
+                                        <Text
+                                            onClick={() => {
+                                                setSelectedSeason(option);
+                                                setShowSelectDropdown(false);
+                                            }}
+                                            key={key}
+                                        >
+                                            Season {option}
+                                        </Text>
+                                    ))}
+                        </SeasonSelector>
+                        <SeasonSelectorText>Select Season</SeasonSelectorText>
                         <TableRow style={{ justifyContent: 'flex-end', position: 'relative' }}>
                             <SearchWrapper
                                 onChange={(e) => setSearchString(e.target.value)}
@@ -362,15 +396,15 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                     className={user.isAlive ? 'alive' : 'dead'}
                                     style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
                                 >
-                                    <HeadCellUi winner={user.isAlive && royaleData.finished}>
+                                    <HeadCellUi winner={user.isAlive && royaleData.seasonFinished}>
                                         <Status>
                                             <StatusAvatar
-                                                winner={user.isAlive && royaleData.finished}
+                                                winner={user.isAlive && royaleData.seasonFinished}
                                                 className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
                                             />
                                             <span>
                                                 {user.isAlive
-                                                    ? royaleData.finished
+                                                    ? royaleData.seasonFinished
                                                         ? t('options.royale.scoreboard.winner')
                                                         : t('options.royale.scoreboard.alive')
                                                     : t('options.royale.scoreboard.dead')}
@@ -382,11 +416,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                             </span>
                                         </Status>
                                     </HeadCellUi>
-                                    <HeadCellUi winner={user.isAlive && royaleData.finished}>
+                                    <HeadCellUi winner={user.isAlive && royaleData.seasonFinished}>
                                         {getAvatar(user, royaleData)}
                                     </HeadCellUi>
                                     <HeadCellUi
-                                        winner={user.isAlive && royaleData.finished}
+                                        winner={user.isAlive && royaleData.seasonFinished}
                                         style={{
                                             marginRight: 6,
                                             textDecoration: '',
@@ -396,7 +430,10 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
                                     >
                                         {user.name}
                                     </HeadCellUi>
-                                    <HeadCellUi winner={user.isAlive && royaleData.finished} style={{ marginLeft: 6 }}>
+                                    <HeadCellUi
+                                        winner={user.isAlive && royaleData.seasonFinished}
+                                        style={{ marginLeft: 6 }}
+                                    >
                                         #{user.number}
                                     </HeadCellUi>
                                 </TableRow>
@@ -477,10 +514,10 @@ const Scoreboard: React.FC<ScoreboardProps> = ({ ethPrice, positions, royaleData
     );
 };
 
-const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
+const Intro: React.FC<{ royaleData: ThalesRoyaleData }> = ({ royaleData }) => {
     const { t } = useTranslation();
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
-        royaleData ? getTimeLeft(royaleData.roundStartTime, royaleData.roundChoosingLength) : null
+        royaleData ? getTimeLeft(royaleData.roundInASeasonStartTime, royaleData.roundChoosingLength) : null
     );
     const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
         ? i18n.language
@@ -489,8 +526,8 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     const [timeLeftInRound, setTimeLeftInRound] = useState<Date | null>(
         royaleData
             ? getTimeLeft(
-                  royaleData.roundStartTime,
-                  (royaleData.roundEndTime.getTime() - royaleData.roundStartTime.getTime()) / 1000
+                  royaleData.roundInASeasonStartTime,
+                  (royaleData.roundInASeasonEndTime.getTime() - royaleData.roundInASeasonStartTime.getTime()) / 1000
               )
             : null
     );
@@ -503,17 +540,17 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
 
     useInterval(async () => {
         if (!royaleData) return;
-        setTimeLeftForPositioning(getTimeLeft(royaleData.roundStartTime, royaleData.roundChoosingLength));
+        setTimeLeftForPositioning(getTimeLeft(royaleData.roundInASeasonStartTime, royaleData.roundChoosingLength));
         setTimeLeftInRound(
             getTimeLeft(
-                royaleData.roundStartTime,
-                (royaleData.roundEndTime.getTime() - royaleData.roundStartTime.getTime()) / 1000
+                royaleData.roundInASeasonStartTime,
+                (royaleData.roundInASeasonEndTime.getTime() - royaleData.roundInASeasonStartTime.getTime()) / 1000
             )
         );
     }, 1000);
 
     useEffect(() => {
-        const round = royaleData?.round;
+        const round = royaleData?.roundInASeason;
         timeLeftForPositioning && timeLeftForPositioning?.getHours() === 0
             ? (document.title =
                   format(timeLeftForPositioning, 'mm:ss') +
@@ -529,7 +566,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
 
     const getTitle = () => {
         if (!royaleData) return;
-        if (royaleData.round === 0) {
+        if (royaleData.roundInASeason === 0) {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
@@ -555,12 +592,12 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                     )}
                 </>
             );
-        } else if (royaleData.round === royaleData.rounds) {
+        } else if (royaleData.roundInASeason === royaleData.rounds) {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.ends')}</Title>
                     <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                        <TimeRemaining end={royaleData.roundEndTime} showFullCounter />
+                        <TimeRemaining end={royaleData.roundInASeasonEndTime} showFullCounter />
                     </SubTitle>
                 </>
             );
@@ -568,7 +605,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
             return timeLeftForPositioning ? (
                 <>
                     <Title>
-                        {t('options.royale.scoreboard.position-period')} {royaleData.round}:
+                        {t('options.royale.scoreboard.position-period')} {royaleData.roundInASeason}:
                     </Title>
                     <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                         {timeLeftForPositioning
@@ -578,7 +615,7 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
                 </>
             ) : (
                 <>
-                    <Title>{t('options.royale.scoreboard.round-period', { round: royaleData.round })}:</Title>
+                    <Title>{t('options.royale.scoreboard.round-period', { round: royaleData.roundInASeason })}:</Title>
                     <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                         {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
                     </SubTitle>
@@ -634,9 +671,9 @@ const Intro: React.FC<{ royaleData: ThalesRoyalData }> = ({ royaleData }) => {
     );
 };
 
-const getAvatar = (user: User, royaleData: ThalesRoyalData) => {
+const getAvatar = (user: User, royaleData: ThalesRoyaleData) => {
     if (user.status === UserStatus.RDY) {
-        return <UserAvatar winner={user.isAlive && royaleData.finished} src={user.avatar || DiscordImage} />;
+        return <UserAvatar winner={user.isAlive && royaleData.seasonFinished} src={user.avatar || DiscordImage} />;
     }
     if (user.status === UserStatus.NOTVERIFIED) {
         return (
@@ -804,6 +841,53 @@ const PaginationUsers = styled.div`
     }
 `;
 
+const SeasonSelector = styled.div`
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: -17px;
+    width: 171px;
+    border: 2px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 18px;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    text-align: center;
+    background: var(--color-wrapper);
+    z-index: 1;
+    p:first-child {
+        font-weight: bold;
+        font-size: 20px;
+    }
+`;
+
+const SeasonSelectorText = styled.p`
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: -23px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 86px;
+    text-align: center;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 13px;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    background: var(--color-wrapper);
+    z-index: 2;
+`;
+
 const Pagination = styled.div`
     position: relative;
     display: flex;
@@ -850,7 +934,7 @@ const UserWrapper = styled.div`
     box-sizing: border-box;
     border-radius: 5px;
     margin-top: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 50px;
     @media (max-width: 1024px) {
         padding: 15px;
         height: auto;

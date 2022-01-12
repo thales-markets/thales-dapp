@@ -1,29 +1,29 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import format from 'date-fns/format';
+import winnerCard from 'assets/images/royale/winner-card.svg';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
-import useInterval from '../../../../../hooks/useInterval';
+import format from 'date-fns/format';
 import { BigNumber, ethers } from 'ethers';
-import thalesRoyal from '../../../../../utils/contracts/thalesRoyalContract';
-import { dispatchMarketNotification } from '../../../../../utils/options';
-import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
-import useRoundsQuery from '../../Queries/useRoundsQuery';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
-import { ThalesRoyalData } from '../../Queries/useThalesRoyaleData';
-import { Positions } from '../../Queries/usePositionsQuery';
-import { User } from '../../Queries/useRoyalePlayersQuery';
-import winnerCard from 'assets/images/royale/winner-card.svg';
+import { RootState } from 'redux/rootReducer';
+import styled from 'styled-components';
+import snxJSConnector from 'utils/snxJSConnector';
 import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
+import useInterval from '../../../../../hooks/useInterval';
+import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
+import { dispatchMarketNotification } from '../../../../../utils/options';
 import { RoyaleTooltip } from '../../../Market/components';
+import { Positions } from '../../Queries/usePositionsQuery';
+import useRoundsQuery from '../../Queries/useRoundsQuery';
+import { User } from '../../Queries/useRoyalePlayersQuery';
+import { ThalesRoyaleData } from '../../Queries/useThalesRoyaleData';
 
 type BattleRoyaleProps = {
     ethPrice: string;
     positions: Positions;
-    royaleData: ThalesRoyalData;
+    royaleData: ThalesRoyaleData;
     showBattle: boolean;
     user: User;
 };
@@ -41,12 +41,12 @@ export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
 };
 
 const renderRounds = (
-    royaleData: ThalesRoyalData,
+    royaleData: ThalesRoyaleData,
     timeLeftForPositioning: Date | null,
     timeLeftInRound: Date | null
 ) => {
     const { t } = useTranslation();
-    const { round, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
+    const { roundInASeason, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
     const cards = [];
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -55,12 +55,15 @@ const renderRounds = (
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
     const vote = (option: number) => async () => {
-        if (option === roundsInformation[round - 1].positionInRound) {
+        if (option === roundsInformation[roundInASeason - 1].positionInRound) {
             return;
         }
         const provider = new ethers.providers.Web3Provider((window as any).ethereum);
         const signer = provider.getSigner();
-        const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, signer);
+        const { thalesRoyaleContract } = snxJSConnector;
+        const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
+        const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
+        const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
 
         const tx = await RoyalContract.takeAPosition(BigNumber.from(option));
 
@@ -71,10 +74,10 @@ const renderRounds = (
         }
     };
 
-    const isWinner = isPlayerAlive && royaleData.finished;
+    const isWinner = isPlayerAlive && royaleData.seasonFinished;
 
     for (let index = 1; index <= rounds; index++) {
-        index === round
+        index === roundInASeason
             ? cards.push(
                   <CurrentRound id={`round${index}`} key={index}>
                       <LongButton
@@ -120,7 +123,7 @@ const renderRounds = (
                       </ShortButton>
                   </CurrentRound>
               )
-            : index < round
+            : index < roundInASeason
             ? cards.push(
                   <PrevRound id={`round${index}`} key={index}>
                       <LongButton selected={roundsInformation[index - 1].positionInRound === 2} disabled={true}>
@@ -141,8 +144,8 @@ const renderRounds = (
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`${roundsGraphInfo[index - 1]?.eliminatedPerRound || 0}/${
-                                  roundsGraphInfo[index - 1]?.totalPlayersPerRound || 0
+                              <PrevRoundText>{`${roundsGraphInfo[index - 1]?.eliminatedPerRoundPerSeason || 0}/${
+                                  roundsGraphInfo[index - 1]?.totalPlayersPerRoundPerSeason || 0
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
@@ -173,26 +176,43 @@ const renderRounds = (
 
 const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, user, positions, ethPrice }) => {
     const { t } = useTranslation();
-    const { roundStartTime, roundEndTime, roundChoosingLength, round, canCloseRound } = royaleData;
+    const {
+        roundInASeasonStartTime,
+        roundInASeasonEndTime,
+        roundChoosingLength,
+        roundInASeason,
+        canCloseRound,
+    } = royaleData;
 
     const [currentScrollRound, setCurrentScrollRound] = useState<number>(0);
     const [timeLeftForPositioning, setTimeLeftForPositioning] = useState<Date | null>(
-        getTimeLeft(roundStartTime, roundChoosingLength)
+        getTimeLeft(roundInASeasonStartTime, roundChoosingLength)
     );
     const [timeLeftInRound, setTimeLeftInRound] = useState<Date | null>(
-        getTimeLeft(roundStartTime, (roundEndTime.getTime() - roundStartTime.getTime()) / 1000)
+        getTimeLeft(
+            roundInASeasonStartTime,
+            (roundInASeasonEndTime.getTime() - roundInASeasonStartTime.getTime()) / 1000
+        )
     );
-    const isWinner = useMemo(() => royaleData.isPlayerAlive && royaleData.finished, [royaleData]);
+    const isWinner = useMemo(() => royaleData.isPlayerAlive && royaleData.seasonFinished, [royaleData]);
 
     useInterval(async () => {
-        setTimeLeftForPositioning(getTimeLeft(roundStartTime, roundChoosingLength));
-        setTimeLeftInRound(getTimeLeft(roundStartTime, (roundEndTime.getTime() - roundStartTime.getTime()) / 1000));
+        setTimeLeftForPositioning(getTimeLeft(roundInASeasonStartTime, roundChoosingLength));
+        setTimeLeftInRound(
+            getTimeLeft(
+                roundInASeasonStartTime,
+                (roundInASeasonEndTime.getTime() - roundInASeasonStartTime.getTime()) / 1000
+            )
+        );
     }, 1000);
 
     const closeRound = async () => {
         const provider = new ethers.providers.Web3Provider((window as any).ethereum);
         const signer = provider.getSigner();
-        const RoyalContract = new ethers.Contract(thalesRoyal.address, thalesRoyal.abi, signer);
+        const { thalesRoyaleContract } = snxJSConnector;
+        const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
+        const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
+        const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
 
         const tx = await RoyalContract.closeRound();
 
@@ -205,23 +225,23 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
 
     useEffect(() => {
         if (!currentScrollRound) {
-            setCurrentScrollRound(round);
+            setCurrentScrollRound(roundInASeason);
             return;
         }
         const currentRoundElement = document.getElementById(`round${currentScrollRound}`);
         if (currentRoundElement) {
             currentRoundElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
         }
-    }, [round, currentScrollRound]);
+    }, [roundInASeason, currentScrollRound]);
 
     useEffect(() => {
-        const roundToJumpTo = isWinner ? 7 : round;
+        const roundToJumpTo = isWinner ? 7 : roundInASeason;
         const currentRoundElement = document.getElementById(`round${roundToJumpTo}`);
         if (currentRoundElement) {
             currentRoundElement.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
             setCurrentScrollRound(roundToJumpTo);
         }
-    }, [round, showBattle, isWinner]);
+    }, [roundInASeason, showBattle, isWinner]);
 
     return (
         <>
