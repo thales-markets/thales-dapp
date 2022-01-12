@@ -13,9 +13,7 @@ const BlogPosts: React.FC = () => {
                 return (
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{blog.title}</BlogTitle>
-                        <BlogDescription>
-                            <Thumbnail src={blog.thumbnail}></Thumbnail>
-                        </BlogDescription>
+                        <BlogDescription></BlogDescription>
                         <MediumIcon className="icon-home icon-home--medium" />
                     </BlogCard>
                 );
@@ -30,12 +28,6 @@ const Wrapper = styled.div`
     justify-content: space-around;
     width: 100%;
     padding: 2em;
-`;
-
-const Thumbnail = styled.img`
-    object-fit: contain;
-    max-height: 150px;
-    margin-top: 50px;
 `;
 
 const BlogCard = styled.div`
