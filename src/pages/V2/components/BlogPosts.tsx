@@ -1,23 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import mediumPostsQuery from '../mediumPostsQuery';
 
+import nextArrow from 'assets/images/arrow-next.svg';
+import backArrow from 'assets/images/arrow-previous.svg';
+
+const limitBlogMeta = (text: string, limit: number) => {
+    //Remove html tags from text
+    text = text.replace(/<\/?[^>]+(>|$)/g, '');
+
+    return text?.length > limit ? text.substring(0, limit) + '...' : text;
+};
+
 const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
-    const blogPosts = blogPostsQuery.isSuccess ? blogPostsQuery.data.slice(0, 3) : [];
+    const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
+    const blogPosts = blogPostsQuery.isSuccess ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount) : [];
     console.log(blogPosts);
+
+    const carouselChangeHandler = (change: number) => {
+        if (change < 0) {
+            return blogPostsCount + change < 3 ? setBlogPostsCount(3) : setBlogPostsCount(blogPostsCount + change);
+        }
+
+        setBlogPostsCount(blogPostsCount + change);
+
+        if (blogPostsQuery?.data)
+            if (blogPostsCount == blogPostsQuery?.data.length)
+                setBlogPostsCount(blogPostsQuery?.data.length ? blogPostsQuery?.data.length : 3);
+    };
 
     return (
         <Wrapper>
+            <Arrow style={{ marginLeft: '-25px' }} src={backArrow} onClick={() => carouselChangeHandler(-1)} />
             {blogPosts.map((blog, index) => {
                 return (
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
-                        <BlogTitle>{blog.title}</BlogTitle>
-                        <BlogDescription></BlogDescription>
+                        <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
+                        <BlogDescription>{limitBlogMeta(blog.description, 250)}</BlogDescription>
                         <MediumIcon className="icon-home icon-home--medium" />
                     </BlogCard>
                 );
             })}
+            <Arrow style={{ marginRight: '-25px' }} src={nextArrow} onClick={() => carouselChangeHandler(1)} />
         </Wrapper>
     );
 };
@@ -50,6 +75,7 @@ const BlogTitle = styled.p`
     line-height: 91.91%;
     text-transform: capitalize;
     color: var(--color);
+    margin-bottom: 15px;
 `;
 
 const BlogDescription = styled.div`
@@ -57,15 +83,20 @@ const BlogDescription = styled.div`
     font-style: normal;
     font-weight: 300;
     font-size: 17px;
-    line-height: 91.91%;
-    text-transform: capitalize;
+    line-height: 15.63px;
     color: var(--color);
 `;
 
 const MediumIcon = styled.i`
     position: absolute;
+    font-size: 23px;
     bottom: 10px;
     right: 10px;
+`;
+
+const Arrow = styled.img`
+    width: 25px;
+    fill: white;
 `;
 
 export default BlogPosts;
