@@ -6,7 +6,7 @@ import thalesIII from 'assets/images/landing-page/thales3.png';
 import stars from 'assets/images/landing-page/stars.svg';
 import system from 'assets/images/landing-page/system.svg';
 import Header from './Header';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
 
 type GridLayoutProps = {
@@ -32,19 +32,27 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
             <LearnButton> {t('landing-page.learn-more')}</LearnButton>
             <ContI>
                 <ContTitle>{t('landing-page.q1')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a1')}</ContSubTitle>
+                <ContSubTitle>
+                    <Trans i18nKey="landing-page.a1" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                </ContSubTitle>
             </ContI>
             <ContII>
                 <ContTitle>{t('landing-page.q2')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a2')}</ContSubTitle>
+                <ContSubTitle>
+                    <Trans i18nKey="landing-page.a2" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                </ContSubTitle>
             </ContII>
             <ContIII>
                 <ContTitle>{t('landing-page.q3')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a3')}</ContSubTitle>
+                <ContSubTitle>
+                    <Trans i18nKey="landing-page.a3" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                </ContSubTitle>
             </ContIII>
             <ContIV>
                 <ContTitle>{t('landing-page.q4')}</ContTitle>
-                <ContSubTitle>{t('landing-page.a4')}</ContSubTitle>
+                <ContSubTitle>
+                    <Trans i18nKey="landing-page.a4" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                </ContSubTitle>
             </ContIV>
             <ThalesImageI>
                 <Image src={thalesI}></Image>
@@ -68,7 +76,7 @@ const Wrapper = styled.div`
     margin: auto;
     max-width: 1080px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(81, 2em);
+    grid-template-rows: repeat(77, 2em);
 `;
 
 const CenteredDiv = styled.div`
@@ -129,7 +137,7 @@ const LearnButton = styled(Button)`
     grid-column-end: 33;
     grid-row-start: 16;
     grid-row-end: 18;
-    font-family: Nunito;
+    font-family: Nunito !important;
     font-style: normal;
     font-weight: bold;
     font-size: 1em;
@@ -143,16 +151,13 @@ const ContWrapper = styled.div`
     background: var(--background);
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
     border-radius: 7px;
-    padding: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    padding: 2em;
     z-index: 2;
 `;
 
 const ContI = styled(ContWrapper)`
     grid-column-start: 7;
-    grid-column-end: 32;
+    grid-column-end: 31;
     grid-row-start: 21;
     grid-row-end: 33;
 `;
@@ -160,20 +165,23 @@ const ContI = styled(ContWrapper)`
 const ContII = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
-    grid-row-start: 35;
-    grid-row-end: 47;
+    grid-row-start: 34;
+    grid-row-end: 46;
 `;
 const ContIII = styled(ContWrapper)`
     grid-column-start: 4;
     grid-column-end: 29;
-    grid-row-start: 49;
-    grid-row-end: 61;
+    grid-row-start: 47;
+    grid-row-end: 58;
+    padding-right: 60px;
 `;
 const ContIV = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
-    grid-row-start: 63;
-    grid-row-end: 80;
+    grid-row-start: 59;
+    grid-row-end: 74;
+    padding-top: 5em;
+    padding-left: 50px;
 `;
 
 const Image = styled.img`
@@ -182,43 +190,44 @@ const Image = styled.img`
 `;
 
 const ThalesImageI = styled.div`
-    grid-column-start: 29;
+    grid-column-start: 30;
     grid-column-end: 46;
     grid-row-start: 16;
-    grid-row-end: 38;
+    grid-row-end: 36;
     z-index: 3;
 `;
 
 const ThalesImageII = styled.div`
     position: relative;
-    left: -280px;
+    left: -14em;
     grid-column-start: 1;
     grid-column-end: 23;
     grid-row-start: 33;
-    grid-row-end: 57;
+    grid-row-end: 54;
     z-index: 3;
 `;
 
 const ThalesImageIII = styled.div`
-    grid-column-start: 19;
+    grid-column-start: 20;
     grid-column-end: 45;
-    grid-row-start: 51;
-    grid-row-end: 71;
+    grid-row-start: 47;
+    grid-row-end: 67;
     z-index: 3;
 `;
 
 const StarsImage = styled.div`
-    grid-column-start: 1;
+    grid-column-start: 4;
     grid-column-end: 18;
-    grid-row-start: 59;
-    grid-row-end: 82;
+    grid-row-start: 56;
+    grid-row-end: 76;
     z-index: 1;
 `;
 
 const SystemImage = styled.div`
     position: relative;
-    top: -630px;
-    left: -900px;
+    top: -35em;
+    left: -50em;
+    opacity: 0.5;
     grid-column-start: 1;
     grid-column-end: 22;
     grid-row-start: 1;
@@ -227,21 +236,22 @@ const SystemImage = styled.div`
 `;
 
 const ContTitle = styled.p`
-    font-family: Playfair Display;
+    font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 3.8em;
+    font-size: 3.5em;
     line-height: 95%;
     color: var(--color);
+    margin-bottom: 0.75em;
 `;
 const ContSubTitle = styled.p`
-    font-family: Nunito;
+    font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
-    font-size: 1em;
-    line-height: 95%;
+    font-size: 1.1em;
+    line-height: 1.2em;
     text-align: justify;
-    text-transform: capitalize;
+    white-space: pre-line;
     color: var(--color);
 `;
 
