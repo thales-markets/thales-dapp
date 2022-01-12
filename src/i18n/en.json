@@ -83,12 +83,12 @@
         },
         "faq": {
             "title": "FAQ",
-            "firstQ": "What are binary options?",
-            "firstA": "Binary options are a simple and intuitive derivative offering fixed payoffs for a wide variety of markets in a limited risk environment, making risk management more precise.",
-            "secondQ": "What is the utility of the THALES token?",
-            "secondA": "Thales DAO governance token (THALES) is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in Thales governance. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocol's community governance structure.",
-            "thirdQ": "Which asset do users need to mint or buy options on Thales?",
-            "thirdA": "Synthetic USD, or sUSD, is the only asset supported by Thales for minting or swapping options right now."
+            "firstQ": "What is a Parimutuel Market?",
+            "firstA": "The definition of a Parimutuel Market is a market where collateral is placed in a pool and final payout to participants is not determined until the market-settling event is finalized.",
+            "secondQ": "What type of collateral do Thales' Parimutuel Markets support?",
+            "secondA": "Thales smart contracts exclusively support sUSD, an uncensorable and decentralized stablecoin, as collateral. This stablecoin is the flagship product of Synthetix.",
+            "thirdQ": "What is the utility of the THALES token?",
+            "thirdA": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in the Thales governance functions. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocols community governance structure."
         },
         "discord": "Join Discord"
     },

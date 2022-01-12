@@ -66,9 +66,9 @@ const Wrapper = styled.div`
     display: grid;
     width: 100%;
     margin: auto;
-    max-width: 1440px;
+    max-width: 1080px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(110, 28.125px);
+    grid-template-rows: repeat(81, 2em);
 `;
 
 const CenteredDiv = styled.div`
@@ -80,17 +80,17 @@ const CenteredDiv = styled.div`
 
 const TitleContainer = styled(CenteredDiv)`
     flex-direction: column;
-    grid-column-start: 11;
-    grid-column-end: 42;
+    grid-column-start: 9;
+    grid-column-end: 44;
     grid-row-start: 4;
-    grid-row-end: 23;
+    grid-row-end: 16;
 `;
 
 const Title = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 88px;
+    font-size: 4.2em;
     line-height: 92.3%;
     text-align: center;
     color: var(--color);
@@ -99,10 +99,11 @@ const Subtitle = styled.p`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
-    font-size: 39.5px;
-    line-height: 45px;
+    font-size: 2em;
+    line-height: 95%;
     text-align: center;
     color: var(--color);
+    margin-top: 20px;
 `;
 
 const Button = styled.div`
@@ -119,19 +120,19 @@ const Button = styled.div`
 const ThalesButton = styled(Button)`
     grid-column-start: 20;
     grid-column-end: 26;
-    grid-row-start: 23;
-    grid-row-end: 25;
+    grid-row-start: 16;
+    grid-row-end: 18;
 `;
 
 const LearnButton = styled(Button)`
     grid-column-start: 27;
     grid-column-end: 33;
-    grid-row-start: 23;
-    grid-row-end: 25;
+    grid-row-start: 16;
+    grid-row-end: 18;
     font-family: Nunito;
     font-style: normal;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1em;
     line-height: 91.91%;
     text-align: center;
     text-transform: capitalize;
@@ -152,28 +153,27 @@ const ContWrapper = styled.div`
 const ContI = styled(ContWrapper)`
     grid-column-start: 7;
     grid-column-end: 32;
-    grid-row-start: 28;
-    grid-row-end: 44;
+    grid-row-start: 21;
+    grid-row-end: 33;
 `;
 
 const ContII = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
-    grid-row-start: 46;
-    grid-row-end: 62;
+    grid-row-start: 35;
+    grid-row-end: 47;
 `;
 const ContIII = styled(ContWrapper)`
     grid-column-start: 4;
     grid-column-end: 29;
-    grid-row-start: 64;
-    grid-row-end: 80;
+    grid-row-start: 49;
+    grid-row-end: 61;
 `;
 const ContIV = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
-    grid-row-start: 82;
-    grid-row-end: 103;
-    padding-top: 120px;
+    grid-row-start: 63;
+    grid-row-end: 80;
 `;
 
 const Image = styled.img`
@@ -182,37 +182,36 @@ const Image = styled.img`
 `;
 
 const ThalesImageI = styled.div`
-    grid-column-start: 31;
+    grid-column-start: 29;
     grid-column-end: 46;
-    grid-row-start: 23;
-    grid-row-end: 47;
+    grid-row-start: 16;
+    grid-row-end: 38;
     z-index: 3;
 `;
 
 const ThalesImageII = styled.div`
     position: relative;
-    left: -270px;
+    left: -280px;
     grid-column-start: 1;
     grid-column-end: 23;
-    grid-row-start: 44;
-    grid-row-end: 75;
+    grid-row-start: 33;
+    grid-row-end: 57;
     z-index: 3;
 `;
 
 const ThalesImageIII = styled.div`
     grid-column-start: 19;
-    grid-column-end: 44;
-    grid-row-start: 63;
-    grid-row-end: 95;
+    grid-column-end: 45;
+    grid-row-start: 51;
+    grid-row-end: 71;
     z-index: 3;
-}
 `;
 
 const StarsImage = styled.div`
-    grid-column-start: 2;
-    grid-column-end: 22;
-    grid-row-start: 74;
-    grid-row-end: 110;
+    grid-column-start: 1;
+    grid-column-end: 18;
+    grid-row-start: 59;
+    grid-row-end: 82;
     z-index: 1;
 `;
 
@@ -223,7 +222,7 @@ const SystemImage = styled.div`
     grid-column-start: 1;
     grid-column-end: 22;
     grid-row-start: 1;
-    grid-row-end: 62;
+    grid-row-end: 46;
     z-index: 1;
 `;
 
@@ -231,7 +230,7 @@ const ContTitle = styled.p`
     font-family: Playfair Display;
     font-style: normal;
     font-weight: bold;
-    font-size: 77px;
+    font-size: 3.8em;
     line-height: 95%;
     color: var(--color);
 `;
@@ -239,16 +238,16 @@ const ContSubTitle = styled.p`
     font-family: Nunito;
     font-style: normal;
     font-weight: 300;
-    font-size: 20px;
-    line-height: 27px;
+    font-size: 1em;
+    line-height: 95%;
     text-align: justify;
     text-transform: capitalize;
     color: var(--color);
 `;
 
 const Logo = styled.i`
-    font-size: 94px;
-    line-height: 24px;
+    font-size: 5.2em;
+    line-height: 1.75em;
     color: #ffffff !important;
 `;
 

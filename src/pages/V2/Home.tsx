@@ -26,8 +26,8 @@ const Home: React.FC = () => {
                     <ThalesRoyale className="icon-home icon-home--royale" />
                     <ThalesGame className="icon-home icon-home--game" />
                 </FlexDiv>
-                <Title> {t('landing-page.integrations')}</Title>
-                <FlexDiv style={{ marginBottom: 50 }}>
+                <Title style={{ marginBottom: '1em' }}> {t('landing-page.integrations')}</Title>
+                <FlexDiv>
                     <SNX className="icon-home icon-home--snx" />
                     <INCH className="icon-home icon-home--inch" />
                 </FlexDiv>
@@ -35,8 +35,10 @@ const Home: React.FC = () => {
                     <LINK className="icon-home icon-home--link" />
                     <OPTIMISM className="icon-home icon-home--optimism" />
                 </FlexDiv>
-                <Title> {t('landing-page.newest-blog-posts')}</Title>
+                <Title style={{ marginTop: 50 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
+                <Title style={{ marginTop: 50 }}> {t('landing-page.faq.title')}</Title>
+                <Faq></Faq>
             </FlexWrapper>
         </Background>
     );
@@ -46,6 +48,17 @@ export default Home;
 
 const Background = styled.div`
     width: 100%;
+    font-size: 18px;
+    @media (max-width: 512px) {
+        font-size: 10px;
+    }
+    @media (max-width: 1024px) {
+        font-size: 12px;
+    }
+    @media (max-width: 1440px) {
+        font-size: 14px;
+    }
+
     &.light {
         background: #f7f7f7;
         --color: #052040;
@@ -62,7 +75,7 @@ const FlexWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin: auto;
-    max-width: 1440px;
+    max-width: 1080px;
     align-items: center;
 `;
 
@@ -70,11 +83,10 @@ const Title = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 70px;
+    font-size: 3em;
     line-height: 91.91%;
     text-align: center;
     color: var(--color);
-    margin-bottom: 90px;
 `;
 
 const FlexDiv = styled.div`
@@ -83,35 +95,40 @@ const FlexDiv = styled.div`
     justify-content: space-evenly;
     align-items: center;
     color: var(--color);
-    margin-bottom: 90px;
 `;
 
 const Thales = styled.i`
-    font-size: 400px;
-    line-height: 92px;
+    font-size: 16em;
 `;
 const ThalesRoyale = styled.i`
-    font-size: 220px;
-    line-height: 110px;
+    font-size: 12em;
 `;
 const ThalesGame = styled.i`
-    font-size: 320px;
-    line-height: 124px;
+    font-size: 16em;
 `;
 
-const SNX = styled.i`
-    font-size: 400px;
-    line-height: 40px;
+const IconAbs = styled.i`
+    line-height: 0.5em;
 `;
-const OPTIMISM = styled.i`
-    font-size: 440px;
-    line-height: 60px;
+
+const SNX = styled(IconAbs)`
+    font-size: 16em;
 `;
-const LINK = styled.i`
-    font-size: 440px;
-    line-height: 140px;
+const OPTIMISM = styled(IconAbs)`
+    font-size: 20em;
 `;
-const INCH = styled.i`
-    font-size: 420px;
-    line-height: 210px;
+const LINK = styled(IconAbs)`
+    font-size: 20em;
+`;
+const INCH = styled(IconAbs)`
+    font-size: 20em;
+`;
+
+const Faq = styled.div`
+    width: 100%;
+    background: var(--background);
+    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.4);
+    border-radius: 7px;
+    margin: 3em 4em;
+    height: 40em;
 `;
