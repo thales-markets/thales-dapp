@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Unity, { UnityContext } from 'react-unity-webgl';
 import styled from 'styled-components';
 import { isNetworkSupported } from '../../../utils/network';
@@ -24,21 +24,30 @@ const Game: React.FC = () => {
         unityContext.setFullscreen(true);
     };
 
+    useEffect(function () {
+        unityContext.on('StartGame', function (username, score) {
+            console.log(username, score);
+            console.log('game started');
+        });
+    }, []);
+
     return isNetworkSupported(networkId) ? (
         <Background style={{ minHeight: '100vh' }}>
             <Wrapper>
                 <Container className="game" style={{ zIndex: 10 }}>
                     <MarketHeader route={ROUTES.Options.Game} />
-                    <GameWrapper>
-                        <Unity
-                            unityContext={unityContext}
-                            style={{
-                                height: 'auto',
-                                width: '100%',
-                            }}
-                        />
-                        <FullScreenButton onClick={handleOnClickFullscreen}>⛶</FullScreenButton>
-                    </GameWrapper>
+                    <CenterGame>
+                        <GameWrapper>
+                            <Unity
+                                unityContext={unityContext}
+                                style={{
+                                    height: 'auto',
+                                    width: '100%',
+                                }}
+                            />
+                            <FullScreenButton onClick={handleOnClickFullscreen}>⛶</FullScreenButton>
+                        </GameWrapper>
+                    </CenterGame>
                 </Container>
             </Wrapper>
         </Background>
@@ -56,11 +65,18 @@ const FullScreenButton = styled.span`
     color: white;
 `;
 
+const CenterGame = styled.div`
+    display: flex;
+    flex: 1;
+    align-items: center;
+`;
+
 const GameWrapper = styled.div`
     position: relative;
     display: flex;
     flex: 1;
     justify-content: center;
+    aspect-ratio: 16/9;
 `;
 
 const Container = styled(FlexDivColumn)`
