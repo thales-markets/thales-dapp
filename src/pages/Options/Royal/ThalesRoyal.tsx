@@ -15,7 +15,7 @@ import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/Wall
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
 import queryString from 'query-string';
 import usePositionsQuery from './Queries/usePositionsQuery';
-import useThalesRoyaleData from './Queries/useThalesRoyaleData';
+import useThalesRoyaleData, { ThalesRoyaleData } from './Queries/useThalesRoyaleData';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
 import useRoyalePlayersQuery, { User } from './Queries/useRoyalePlayersQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
@@ -37,17 +37,15 @@ const ThalesRoyal: React.FC = () => {
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
     const [showStats, setShowStats] = useState(true);
-    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState<number>();
     const [allSeasons, setAllSeasons] = useState([] as any);
+    const [thalesRoyaleData, setThalesRoyaleData] = useState<ThalesRoyaleData>();
 
     const royaleDataQuery = useThalesRoyaleData(walletAddress as any, {
         enabled: networkId === 69 || networkId === 10,
     });
 
-    console.log(selectedSeason);
     const thalesRoyaleDataMap = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
-
-    const thalesRoyaleData = thalesRoyaleDataMap ? Array.from(thalesRoyaleDataMap.values()).pop() : undefined;
 
     const usersQuery = useRoyalePlayersQuery(networkId, { enabled: networkId === 69 || networkId === 10 });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
@@ -74,12 +72,19 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        console.log(thalesRoyaleDataMap);
         if (thalesRoyaleDataMap) {
             setSelectedSeason(Number(Array.from(thalesRoyaleDataMap.keys()).pop()));
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
+            setThalesRoyaleData(Array.from(thalesRoyaleDataMap.values()).pop());
             console.log(allSeasons);
         }
     }, [thalesRoyaleDataMap]);
+
+    useEffect(() => {
+        console.log(selectedSeason);
+        selectedSeason ? setThalesRoyaleData(thalesRoyaleDataMap?.get(selectedSeason)) : '';
+    }, [selectedSeason]);
 
     useEffect(() => {
         if (thalesRoyaleData) {

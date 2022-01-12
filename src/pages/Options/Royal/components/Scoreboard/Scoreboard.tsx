@@ -33,7 +33,7 @@ type ScoreboardProps = {
     royaleData: ThalesRoyaleData;
     users: User[];
     user: User;
-    selectedSeason: number;
+    selectedSeason: any;
     setSelectedSeason: any;
     allSeasons: number[];
 };
