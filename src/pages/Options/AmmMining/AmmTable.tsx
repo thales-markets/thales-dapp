@@ -38,6 +38,7 @@ interface HeadCell {
     label: string;
     sortable: boolean;
 }
+
 type AmmTableInputData = {
     dataForUi: [string, number | Round2Trades][];
     volume: number;
@@ -52,9 +53,11 @@ type AmmTableInputData = {
     setSelectedRound: (round: number) => void;
 };
 
+type Options = 'long' | 'short' | 'all';
+
 const DEFAULT_ORDER_BY = 2;
 const ROUNDS = [1, 2];
-const OPTIONS = ['long', 'short'];
+const OPTIONS = ['long', 'short', 'all'];
 
 const AmmTable: React.FC<AmmTableInputData> = ({
     dataForUi,
@@ -128,18 +131,16 @@ const AmmTable: React.FC<AmmTableInputData> = ({
             })
             .sort((a: [string, number | Round2Trades], b: [string, number | Round2Trades]) => {
                 const aValue = (selectedRound === 2
-                    ? (a[1] as Round2Trades)[OPTIONS[selectedOptionSide] as 'long' | 'short']
+                    ? (a[1] as Round2Trades)[OPTIONS[selectedOptionSide] as Options]
                     : a[1]) as number;
                 const bValue = (selectedRound === 2
-                    ? (b[1] as Round2Trades)[OPTIONS[selectedOptionSide] as 'long' | 'short']
+                    ? (b[1] as Round2Trades)[OPTIONS[selectedOptionSide] as Options]
                     : b[1]) as number;
                 return orderDirection === OrderDirection.ASC ? aValue - bValue : bValue - aValue;
             })
             .filter((trade) => {
                 const tradeVolume =
-                    selectedRound === 2
-                        ? (trade[1] as Round2Trades)[OPTIONS[selectedOptionSide] as 'long' | 'short']
-                        : trade[1];
+                    selectedRound === 2 ? (trade[1] as Round2Trades)[OPTIONS[selectedOptionSide] as Options] : trade[1];
                 return !!tradeVolume;
             })
             .slice(memoizedPage * rowsPerPage, rowsPerPage * (memoizedPage + 1));
@@ -152,8 +153,7 @@ const AmmTable: React.FC<AmmTableInputData> = ({
         { id: 4, label: t('options.amm-mining.rewards'), sortable: false },
     ];
 
-    const totalVolume =
-        selectedRound === 2 ? volumeByOptionSide[OPTIONS[selectedOptionSide] as 'long' | 'short'] : volume;
+    const totalVolume = selectedRound === 2 ? volumeByOptionSide[OPTIONS[selectedOptionSide] as Options] : volume;
 
     return (
         <>
@@ -260,7 +260,7 @@ const AmmTable: React.FC<AmmTableInputData> = ({
                             dataForUi.filter((trade) => {
                                 const tradeVolume =
                                     selectedRound === 2
-                                        ? (trade[1] as Round2Trades)[OPTIONS[selectedOptionSide] as 'long' | 'short']
+                                        ? (trade[1] as Round2Trades)[OPTIONS[selectedOptionSide] as Options]
                                         : trade[1];
                                 return !!tradeVolume;
                             }).length
@@ -321,9 +321,7 @@ const AmmTable: React.FC<AmmTableInputData> = ({
                         <TableBody>
                             {slicedData.map((trade: any, index: any) => {
                                 const tradeVolume =
-                                    selectedRound === 2
-                                        ? trade[1][OPTIONS[selectedOptionSide] as 'long' | 'short']
-                                        : trade[1];
+                                    selectedRound === 2 ? trade[1][OPTIONS[selectedOptionSide] as Options] : trade[1];
 
                                 const rewards = selectedRound === 2 ? 10000 : 20000;
 
@@ -345,7 +343,12 @@ const AmmTable: React.FC<AmmTableInputData> = ({
                                             {((tradeVolume / totalVolume) * 100).toFixed(2)} %
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {((tradeVolume / totalVolume) * rewards).toFixed(2)} THALES
+                                            {(selectedRound === 2 && selectedOptionSide === 2
+                                                ? (trade[1].short / volumeByOptionSide.short) * rewards +
+                                                  (trade[1].long / volumeByOptionSide.long) * rewards
+                                                : (tradeVolume / totalVolume) * rewards
+                                            ).toFixed(2)}{' '}
+                                            THALES
                                         </StyledTableCell>
                                     </StyledTableRow>
                                 );
