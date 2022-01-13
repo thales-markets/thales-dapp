@@ -156,6 +156,7 @@
             "approve-progress-label": "Approving {{currencyKey}}..."
         },
         "sidebar": {
+            "markets": "Markets",
             "trending-label": "Trending markets",
             "overview-label": "Markets overview",
             "olympics-label": "Olympics markets",

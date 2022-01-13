@@ -21,6 +21,8 @@
 @font-face {
     font-family: 'Homepage Icons';
     src: local('Homepage Icons'), url(../assets/fonts/HomepageIcons/homepage.ttf) format('truetype');
+    font-family: 'SidebarIcons';
+    src: local('SidebarIcons'), url(../assets/fonts/ThalesIcons/sidebar.ttf) format('truetype');
 }
 
 @font-face {

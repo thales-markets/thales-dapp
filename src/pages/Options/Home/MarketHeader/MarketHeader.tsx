@@ -8,27 +8,10 @@ import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
-// import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
-import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
-// import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
-import marketOverviewSelectedIcon from 'assets/images/sidebar/market-overview-selected.svg';
-import tradeExerciseDefaultIcon from 'assets/images/sidebar/trade-default.svg';
-import tradeExerciseSelectedIcon from 'assets/images/sidebar/trade-selected.svg';
-import leaderboardDefaultIcon from 'assets/images/sidebar/leaderboard-default.svg';
-import leaderboardSelectedIcon from 'assets/images/sidebar/leaderboard-selected.svg';
 import burger from 'assets/images/burger.svg';
-import earnDefaultIcon from 'assets/images/sidebar/thales-token-blue.svg';
-import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
-import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
-import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
-// import competitionMarketsDefaultIcon from 'assets/images/sidebar/competition-default.svg';
-// import competitionMarketsSelectedIcon from 'assets/images/sidebar/competition-selected.svg';
-// import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
-// import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
-import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
-import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
-import logoSmallIcon from 'assets/images/logo-small-dark.svg';
-import logoIcon from 'assets/images/logo-dark.svg';
+
+import logoSmallIcon from 'assets/images/logo-small-light.svg';
+import logoIcon from 'assets/images/logo-light.svg';
 import ROUTES from 'constants/routes';
 import { useState } from 'react';
 import './media.scss';
@@ -39,6 +22,7 @@ import { buildHref } from '../../../../utils/routes';
 import { Modal } from '@material-ui/core';
 import Swap from '../Swap';
 import { getIsOVM } from 'utils/network';
+import MarketHeaderItem from './MarketHeaderItem';
 import NetworkSwitch from 'components/NetworkSwitch';
 
 type MarketHeaderProps = {
@@ -147,161 +131,42 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     <SPAAnchor href={buildHref(ROUTES.Home)}>
                         <LogoLocal className="logo" />
                     </SPAAnchor>
-                    {/* {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.CompetitionMarkets)}>
-                            <SidebarItem
-                                imgSrc={competitionMarketsDefaultIcon}
-                                imgSrcHoverSelected={competitionMarketsSelectedIcon}
-                                className={route === ROUTES.Options.CompetitionMarkets ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.competition-markets-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
+                    {!isL2 && (
+                        <MarketHeaderItem
+                            iconName="markets"
+                            label={t('common.sidebar.markets')}
+                            submenuItems={[
+                                {
+                                    className: route === ROUTES.Options.Overview ? 'selected' : '',
+                                    href: buildHref(ROUTES.Options.Overview),
+                                    iconName: 'markets-overview',
+                                    label: t('common.sidebar.overview-label'),
+                                },
+                                {
+                                    className: route === ROUTES.Options.CreateMarket ? 'selected' : '',
+                                    href: buildHref(ROUTES.Options.CreateMarket),
+                                    iconName: 'create-market',
+                                    label: t('common.sidebar.create-market-label'),
+                                },
+                            ]}
+                        />
                     )}
                     {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.QuickTradingCompetition)}>
-                            <SidebarItem
-                                imgSrc={competitionMarketsDefaultIcon}
-                                imgSrcHoverSelected={competitionMarketsSelectedIcon}
-                                className={route === ROUTES.Options.QuickTradingCompetition ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.quick-trading-label-competition')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )} */}
-                    <SPAAnchor href={buildHref(ROUTES.Options.Overview)}>
-                        <SidebarItem
-                            imgSrc={marketOverviewDefaultIcon}
-                            imgSrcHoverSelected={marketOverviewSelectedIcon}
-                            className={route === ROUTES.Options.Overview ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
-                    {/* <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
-                        <SidebarItem
-                            imgSrc={royaleDefaultIcon}
-                            imgSrcHoverSelected={royaleSelectedIcon}
+                        <MarketHeaderItem
+                            className={route === ROUTES.Options.Token ? 'selected' : ''}
+                            href={buildHref(ROUTES.Options.Token)}
+                            iconName="token"
+                            label={t('common.sidebar.earn-label')}
+                        />
+                    )}
+                    {!isL2 && (
+                        <MarketHeaderItem
                             className={route === ROUTES.Options.Royal ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor> */}
-                    {/* {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
-                            <SidebarItem
-                                imgSrc={customMarketsDefaultIcon}
-                                imgSrcHoverSelected={customMarketsSelectedIcon}
-                                className={route === ROUTES.Options.CustomMarkets ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.custom-markets-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )} */}
-                    {/* <SPAAnchor href={buildHref(ROUTES.Options.CreateMarket)}>
-                        <SidebarItem
-                            imgSrc={createMarketDefaultIcon}
-                            imgSrcHoverSelected={createMarketSelectedIcon}
-                            className={route === ROUTES.Options.CreateMarket ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.create-market-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor> */}
-                    <SPAAnchor href={buildHref(ROUTES.Options.QuickTrading)}>
-                        <SidebarItem
-                            imgSrc={tradeExerciseDefaultIcon}
-                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
-                            className={route === ROUTES.Options.QuickTrading ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.quick-trading-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
-                    <SPAAnchor href={buildHref(ROUTES.Options.TradeHistory)}>
-                        <SidebarItem
-                            imgSrc={customMarketsDefaultIcon}
-                            imgSrcHoverSelected={customMarketsSelectedIcon}
-                            className={route === ROUTES.Options.TradeHistory ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.trade-history-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
-                    {isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.AmmMining)}>
-                            <SidebarItem
-                                imgSrc={customMarketsDefaultIcon}
-                                imgSrcHoverSelected={customMarketsSelectedIcon}
-                                className={route === ROUTES.Options.AmmMining ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.amm-mining-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
+                            href={buildHref(ROUTES.Options.Royal)}
+                            iconName="thales-royale"
+                            label={t('common.sidebar.royale-label')}
+                        />
                     )}
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Leaderboard)}>
-                            <SidebarItem
-                                imgSrc={leaderboardDefaultIcon}
-                                imgSrcHoverSelected={leaderboardSelectedIcon}
-                                className={route === ROUTES.Options.Leaderboard ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.leaderboard-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
-                    {phase === 'trading' && (
-                        <SidebarItem
-                            imgSrc={tradeExerciseDefaultIcon}
-                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
-                            className={'selected'}
-                            style={{ cursor: 'default' }}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.trade-label')}</SidebarText>
-                        </SidebarItem>
-                    )}
-                    {phase === 'maturity' && (
-                        <SidebarItem
-                            imgSrc={tradeExerciseDefaultIcon}
-                            imgSrcHoverSelected={tradeExerciseSelectedIcon}
-                            className={'selected'}
-                            style={{ cursor: 'default' }}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.maturity-label')}</SidebarText>
-                        </SidebarItem>
-                    )}
-                    <Divider />
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
-                            <SidebarItem
-                                imgSrc={earnDefaultIcon}
-                                imgSrcHoverSelected={earnSelectedIcon}
-                                className={route === ROUTES.Options.Token ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
-                    <SPAAnchor href={buildHref(ROUTES.Governance.Home)}>
-                        <SidebarItem
-                            imgSrc={governanceDefaultIcon}
-                            imgSrcHoverSelected={governanceSelectedIcon}
-                            className={route === ROUTES.Governance.Home ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor>
                 </ItemsContainer>
             </Sidebar>
             <Overlay
@@ -343,16 +208,19 @@ const Sidebar = styled.nav`
     position: fixed;
     top: 0;
     left: 0;
-    width: 88px;
+    width: 58px;
     min-height: 100vh;
     z-index: 100;
-    background: #748bc6;
-    padding: 35px 19px;
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    padding: 35px 0;
     transition: width 0.3s ease;
     overflow: hidden;
     &:hover {
         width: 300px;
         span {
+            display: block;
+        }
+        i {
             display: block;
         }
         .logo {
@@ -383,7 +251,7 @@ const ItemsContainer = styled.ul``;
 const SidebarItem = styled.li<{ imgSrc: string; imgSrcHoverSelected: string }>`
     cursor: pointer;
     border-radius: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     height: 50px;
     padding: 14px;
     color: #04045a;

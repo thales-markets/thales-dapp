@@ -163,7 +163,8 @@
             "governance-label": "治理",
             "trade-history-label": "交易历史",
             "amm-mining-label": "AMM奖励",
-            "amm-reporting-label": "AMM报告"
+            "amm-reporting-label": "AMM报告",
+            "markets": "市场"
         },
         "coming-soon": "即将到来…",
         "of": "之",
