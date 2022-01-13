@@ -46,12 +46,13 @@ const RetroAirdrop: React.FC = () => {
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [openQuiz, setOpenQuiz] = useState(false);
     const quizData: QuizQuestion[] = airdropClaimQuizQuestions;
+    const { retroAirdropContract } = snxJSConnector as any;
 
     const isClaimAvailable =
         retroAirdrop && retroAirdrop.accountInfo && retroAirdrop.hasClaimRights && !retroAirdrop.claimed;
 
     const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!retroAirdropContract,
     });
 
     useEffect(() => {

@@ -54,6 +54,7 @@ const RetroRewards: React.FC = () => {
     const [vestingInfo, setVestingInfo] = useState<VestingInfo>(initialVestingInfo);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const { vestingEscrowContract } = snxJSConnector as any;
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
 
@@ -62,7 +63,7 @@ const RetroRewards: React.FC = () => {
         : DEFAULT_LANGUAGE;
 
     const vestingQuery = useVestingBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!vestingEscrowContract,
     });
 
     useEffect(() => {

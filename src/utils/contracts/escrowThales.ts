@@ -9,7 +9,7 @@ export const escrowThales = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: 'TBD',
+        [NetworkId['Kovan-Ovm']]: '0xb9615f837E60EdBECe26A91670FA42b02c9881D7',
     },
     abi: [
         {

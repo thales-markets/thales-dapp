@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import {
     Container,
     DefaultSubmitButton,
+    Divider,
     InputContainer,
     InputLabel,
     SubmitButtonContainer,
@@ -20,6 +21,7 @@ import { useSelector } from 'react-redux';
 import { formatGasLimit } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import { THALES_CURRENCY } from 'constants/currency';
+import NetworkFees from 'pages/Options/components/NetworkFees';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();
@@ -42,48 +44,56 @@ const Migration: React.FC = () => {
 
     useEffect(() => {
         const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
-        const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
-        const addressToApprove = thalesExchangerContract.address;
 
-        const getAllowance = async () => {
-            try {
-                const allowance = await thalesTokenContractWithSigner.allowance(walletAddress, addressToApprove);
-                setAllowance(!!bigNumberFormatter(allowance));
-            } catch (e) {
-                console.log(e);
-            }
-        };
+        if (thalesTokenContract && thalesExchangerContract) {
+            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
+            const addressToApprove = thalesExchangerContract.address;
 
-        const registerAllowanceListener = () => {
-            thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
-                if (owner === walletAddress && spender === getAddress(addressToApprove)) {
-                    setAllowance(true);
-                    setIsAllowing(false);
+            const getAllowance = async () => {
+                try {
+                    const allowance = await thalesTokenContractWithSigner.allowance(walletAddress, addressToApprove);
+                    setAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
                 }
-            });
-        };
-        if (isWalletConnected) {
-            getAllowance();
-            registerAllowanceListener();
+            };
+
+            const registerAllowanceListener = () => {
+                thalesTokenContractWithSigner.on(APPROVAL_EVENTS.APPROVAL, (owner: string, spender: string) => {
+                    if (owner === walletAddress && spender === getAddress(addressToApprove)) {
+                        setAllowance(true);
+                        setIsAllowing(false);
+                    }
+                });
+            };
+            if (isWalletConnected) {
+                getAllowance();
+                registerAllowanceListener();
+            }
+            return () => {
+                thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
+            };
         }
-        return () => {
-            thalesTokenContractWithSigner.removeAllListeners(APPROVAL_EVENTS.APPROVAL);
-        };
     }, [walletAddress, isWalletConnected, hasAllowance]);
 
     useEffect(() => {
         const fetchGasLimit = async () => {
             const { thalesExchangerContract } = snxJSConnector as any;
-            const thalesExchangerContractWithSigner = thalesExchangerContract.connect((snxJSConnector as any).signer);
-            const amount = ethers.utils.parseEther(amountToMigrate.toString());
-            try {
-                const gasEstimate = await thalesExchangerContractWithSigner.estimateGas.exchangeThalesToL2OpThales(
-                    amount
-                );
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
-            } catch (e) {
-                console.log(e);
-                setGasLimit(null);
+
+            if (thalesExchangerContract) {
+                try {
+                    const thalesExchangerContractWithSigner = thalesExchangerContract.connect(
+                        (snxJSConnector as any).signer
+                    );
+                    const parsedAmount = ethers.utils.parseEther(amountToMigrate.toString());
+                    const gasEstimate = await thalesExchangerContractWithSigner.estimateGas.exchangeThalesToL2OpThales(
+                        parsedAmount
+                    );
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                } catch (e) {
+                    console.log(e);
+                    setGasLimit(null);
+                }
             }
         };
         if (isButtonDisabled) return;
@@ -92,28 +102,31 @@ const Migration: React.FC = () => {
 
     const handleAllowance = async () => {
         const { thalesTokenContract, thalesExchangerContract } = snxJSConnector as any;
-        const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
-        const addressToApprove = thalesExchangerContract.address;
 
-        try {
-            setIsAllowing(true);
-            const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
-                addressToApprove,
-                ethers.constants.MaxUint256
-            );
-            const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
-                gasLimit: formatGasLimit(gasEstimate, networkId),
-            })) as ethers.ContractTransaction;
+        if (thalesTokenContract && thalesExchangerContract) {
+            const thalesTokenContractWithSigner = thalesTokenContract.connect((snxJSConnector as any).signer);
+            const addressToApprove = thalesExchangerContract.address;
 
-            const txResult = await tx.wait();
-            if (txResult && txResult.transactionHash) {
-                setAllowance(true);
+            try {
+                setIsAllowing(true);
+                const gasEstimate = await thalesTokenContractWithSigner.estimateGas.approve(
+                    addressToApprove,
+                    ethers.constants.MaxUint256
+                );
+                const tx = (await thalesTokenContractWithSigner.approve(addressToApprove, ethers.constants.MaxUint256, {
+                    gasLimit: formatGasLimit(gasEstimate, networkId),
+                })) as ethers.ContractTransaction;
+
+                const txResult = await tx.wait();
+                if (txResult && txResult.transactionHash) {
+                    setAllowance(true);
+                    setIsAllowing(false);
+                }
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
                 setIsAllowing(false);
             }
-        } catch (e) {
-            console.log(e);
-            setTxErrorMessage(t('common.errors.unknown-error-try-again'));
-            setIsAllowing(false);
         }
     };
 
@@ -126,7 +139,6 @@ const Migration: React.FC = () => {
             const thalesExchangerContractWithSigner = thalesExchangerContract.connect((snxJSConnector as any).signer);
 
             const parsedAmount = ethers.utils.parseEther(amountToMigrate.toString());
-
             const tx = await thalesExchangerContractWithSigner.exchangeThalesToL2OpThales(parsedAmount);
             const txResult = await tx.wait();
 
@@ -173,6 +185,8 @@ const Migration: React.FC = () => {
                 <NumericInput value={amountToMigrate} onChange={(_, value) => setAmountToMigrate(value)} />
                 <InputLabel>{t('migration.migration-amount-label')}</InputLabel>
             </InputContainer>
+            <Divider />
+            <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}

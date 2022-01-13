@@ -280,18 +280,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         </SidebarItem>
                     )}
                     <Divider />
-                    {!isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
-                            <SidebarItem
-                                imgSrc={earnDefaultIcon}
-                                imgSrcHoverSelected={earnSelectedIcon}
-                                className={route === ROUTES.Options.Token ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
+                    <SPAAnchor href={buildHref(ROUTES.Options.Token)}>
+                        <SidebarItem
+                            imgSrc={earnDefaultIcon}
+                            imgSrcHoverSelected={earnSelectedIcon}
+                            className={route === ROUTES.Options.Token ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.earn-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
                     <SPAAnchor href={buildHref(ROUTES.Governance.Home)}>
                         <SidebarItem
                             imgSrc={governanceDefaultIcon}
