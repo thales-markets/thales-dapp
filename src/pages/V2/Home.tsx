@@ -108,6 +108,7 @@ const FlexWrapper = styled.div`
     margin: auto;
     max-width: 1080px;
     align-items: center;
+    padding: 0 20px;
 `;
 
 const Title = styled.p`
@@ -200,9 +201,9 @@ const Image = styled.img`
 
 const FooterIconsWrapper = styled(FlexDiv)`
     position: absolute;
-    bottom: 2em;
+    bottom: 2.4em;
 `;
 const FooterIcon = styled.i`
-    font-size: 2em;
+    font-size: 3.4em;
     color: #f7f7f7;
 `;

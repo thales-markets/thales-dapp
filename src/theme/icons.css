@@ -51,19 +51,19 @@
 }
 
 .icon-home--right:before {
-    content: '\0050';
+    content: '\004a';
 }
 
 .icon-home--ch:before {
-    content: '\0051';
+    content: '\004b';
 }
 
 .icon-home--en:before {
-    content: '\0052';
+    content: '\004c';
 }
 
 .icon-home--ru:before {
-    content: '\0053';
+    content: '\004d';
 }
 
 .icon-home--optimism:before {

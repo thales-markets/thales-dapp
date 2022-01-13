@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from 'components/LanguageSelector';
+import LanguageSelector from 'components/LanguageSelector/V2';
 import styled from 'styled-components';
 import { Theme } from '../Home';
 import Cookies from 'universal-cookie';
@@ -65,7 +65,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 >
                     {t('landing-page.use-app')}
                 </Link>
-                <i className="icon icon--right" />
+                <i className="icon-home icon-home--right" />
             </ButtonContainer>
         </>
     );
@@ -76,7 +76,7 @@ const Logo = styled.i`
     grid-column-end: 9;
     grid-row-start: 3;
     grid-row-end: 4;
-    font-size: 140px;
+    font-size: 8.3em;
     line-height: 34px;
     color: var(--color);
     z-index: 2;
@@ -112,12 +112,12 @@ const LanguageContainer = styled(CenteredDiv)`
     grid-column-end: 46;
     grid-row-start: 3;
     grid-row-end: 4;
-    z-index: 2;
+    z-index: 1000;
 `;
 
 const ButtonContainer = styled(CenteredDiv)`
-    grid-column-start: 46;
-    grid-column-end: 49;
+    grid-column-start: 47;
+    grid-column-end: 50;
     grid-row-start: 3;
     grid-row-end: 4;
     color: var(--color);
@@ -128,7 +128,7 @@ const Link = styled.a`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
-    font-size: 16px;
+    font-size: 1em;
     line-height: 91.91%;
     z-index: 2;
     text-align: center;
@@ -137,7 +137,7 @@ const Link = styled.a`
 `;
 
 const ToggleIcon = styled.i`
-    font-size: 64px;
+    font-size: 3.4em;
     line-height: 26px;
     z-index: 2;
     color: var(--color);
