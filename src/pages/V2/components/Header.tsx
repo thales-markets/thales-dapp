@@ -4,6 +4,8 @@ import LanguageSelector from 'components/LanguageSelector';
 import styled from 'styled-components';
 import { Theme } from '../Home';
 import Cookies from 'universal-cookie';
+import { navigateTo } from 'utils/routes';
+import ROUTES from 'constants/routes';
 
 type HeaderInput = {
     theme: Theme;
@@ -56,7 +58,11 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <LanguageSelector isLandingPage />
             </LanguageContainer>
             <ButtonContainer>
-                <Link target="_blank" rel="noreferrer" href="https://thalesmarket.io/markets">
+                <Link
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
+                >
                     {t('landing-page.use-app')}
                 </Link>
                 <i className="icon icon--right" />

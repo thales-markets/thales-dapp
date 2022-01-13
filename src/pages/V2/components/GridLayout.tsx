@@ -8,6 +8,8 @@ import system from 'assets/images/landing-page/system.svg';
 import Header from './Header';
 import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
+import { navigateTo } from 'utils/routes';
+import ROUTES from 'constants/routes';
 
 type GridLayoutProps = {
     theme: Theme;
@@ -27,7 +29,10 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 <Subtitle> {t('landing-page.subtitle')}</Subtitle>
             </TitleContainer>
             <ThalesButton>
-                <Logo className="icon icon--logo" />
+                <Logo
+                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
+                    className="icon icon--logo"
+                />
             </ThalesButton>
             <LearnButton> {t('landing-page.learn-more')}</LearnButton>
             <ContI>
