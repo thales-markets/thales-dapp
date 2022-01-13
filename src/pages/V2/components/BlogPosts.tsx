@@ -12,6 +12,10 @@ const limitBlogMeta = (text: string, limit: number) => {
     return text?.length > limit ? text.substring(0, limit) + '...' : text;
 };
 
+const formatDate = (timestamp: Date) => {
+    return timestamp.toString().split(' ')[0];
+};
+
 const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
@@ -38,6 +42,7 @@ const BlogPosts: React.FC = () => {
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
                         <BlogDescription>{limitBlogMeta(blog.description, 250)}</BlogDescription>
+                        <MediumDate>{formatDate(blog.pubDate)}</MediumDate>
                         <MediumIcon className="icon-home icon-home--medium" />
                     </BlogCard>
                 );
@@ -52,7 +57,26 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: space-around;
     width: 100%;
+    overflow: hidden;
     padding: 2em;
+    @media (max-width: 500px) {
+        & > div:not(:nth-child(2)) {
+            display: none;
+        }
+        & > div:nth-child(2) {
+            min-width: 95% !important;
+            min-height: 345px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        & > div:not(:nth-child(-n + 3)) {
+            display: none;
+        }
+        & > div:nth-child(-n + 3) {
+            min-width: 47%;
+        }
+    }
 `;
 
 const BlogCard = styled.div`
@@ -65,6 +89,7 @@ const BlogCard = styled.div`
     border-radius: 7px;
     position: relative;
     cursor: pointer;
+    overflow: hidden;
 `;
 
 const BlogTitle = styled.p`
@@ -92,6 +117,15 @@ const MediumIcon = styled.i`
     font-size: 23px;
     bottom: 10px;
     right: 10px;
+`;
+
+const MediumDate = styled.i`
+    position: absolute;
+    font-size: 15px;
+    bottom: 10px;
+    left: 30px;
+    color: var(--color);
+    font-style: italic;
 `;
 
 const Arrow = styled.img`
