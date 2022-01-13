@@ -9,7 +9,7 @@ export const thalesContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0x1C618b01ae0ef1A4C64ef8E6fb90c279D067e9E7',
+        [NetworkId['Kovan-Ovm']]: '0xf584fF99F97B5ABB1872af1AA7924Fedf3e1b53d',
     },
     abi: [
         {
