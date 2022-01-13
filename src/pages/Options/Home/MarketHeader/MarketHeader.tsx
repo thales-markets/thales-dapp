@@ -248,56 +248,56 @@ const LogoLocal = styled.div`
 
 const ItemsContainer = styled.ul``;
 
-const SidebarItem = styled.li<{ imgSrc: string; imgSrcHoverSelected: string }>`
-    cursor: pointer;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    height: 50px;
-    padding: 14px;
-    color: #04045a;
-    transition: background 300ms;
-    div {
-        background: url(${(props) => props.imgSrc}) center no-repeat;
-    }
-    &.selected {
-        color: #f6f6fe;
-        background: #04045a;
-        div {
-            background: url(${(props) => props.imgSrcHoverSelected}) center no-repeat;
-        }
-    }
-    &:hover {
-        color: #f6f6fe;
-        background: #141c7f;
+// const SidebarItem = styled.li<{ imgSrc: string; imgSrcHoverSelected: string }>`
+//     cursor: pointer;
+//     border-radius: 12px;
+//     margin-bottom: 20px;
+//     height: 50px;
+//     padding: 14px;
+//     color: #04045a;
+//     transition: background 300ms;
+//     div {
+//         background: url(${(props) => props.imgSrc}) center no-repeat;
+//     }
+//     &.selected {
+//         color: #f6f6fe;
+//         background: #04045a;
+//         div {
+//             background: url(${(props) => props.imgSrcHoverSelected}) center no-repeat;
+//         }
+//     }
+//     &:hover {
+//         color: #f6f6fe;
+//         background: #141c7f;
 
-        div {
-            background: url(${(props) => props.imgSrcHoverSelected}) center no-repeat;
-        }
-    }
-`;
+//         div {
+//             background: url(${(props) => props.imgSrcHoverSelected}) center no-repeat;
+//         }
+//     }
+// `;
 
-const SidebarIcon = styled.div`
-    z-index: 1;
-    position: relative;
-    width: 22px;
-    height: 22px;
-    background-size: contain !important;
-`;
+// const SidebarIcon = styled.div`
+//     z-index: 1;
+//     position: relative;
+//     width: 22px;
+//     height: 22px;
+//     background-size: contain !important;
+// `;
 
-const SidebarText = styled.span`
-    z-index: 0;
-    position: relative;
-    display: block;
-    top: -27px;
-    margin-left: 36px;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 32px;
-    letter-spacing: 0.35px;
-    white-space: nowrap;
-    display: none;
-`;
+// const SidebarText = styled.span`
+//     z-index: 0;
+//     position: relative;
+//     display: block;
+//     top: -27px;
+//     margin-left: 36px;
+//     font-style: normal;
+//     font-weight: 600;
+//     font-size: 16px;
+//     line-height: 32px;
+//     letter-spacing: 0.35px;
+//     white-space: nowrap;
+//     display: none;
+// `;
 
 const BurdgerIcon = styled.img`
     position: absolute;
@@ -306,10 +306,10 @@ const BurdgerIcon = styled.img`
     padding: 10px;
 `;
 
-const Divider = styled.hr`
-    width: 100%;
-    border: none;
-    border-top: 2px solid #04045a;
-`;
+// const Divider = styled.hr`
+//     width: 100%;
+//     border: none;
+//     border-top: 2px solid #04045a;
+// `;
 
 export default MarketHeader;
