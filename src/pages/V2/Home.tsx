@@ -126,6 +126,7 @@ const FlexDiv = styled.div`
     justify-content: space-evenly;
     align-items: center;
     color: var(--color);
+    flex-wrap: wrap;
 `;
 
 const Thales = styled.i`

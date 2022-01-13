@@ -5,6 +5,11 @@ import thalesII from 'assets/images/landing-page/thales2.png';
 import thalesIII from 'assets/images/landing-page/thales3.png';
 import stars from 'assets/images/landing-page/stars.svg';
 import system from 'assets/images/landing-page/system.svg';
+import thalesIW from 'assets/images/landing-page/thales1-white.png';
+import thalesIIW from 'assets/images/landing-page/thales2-white.png';
+import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
+import starsW from 'assets/images/landing-page/stars-white.svg';
+import systemW from 'assets/images/landing-page/system-white.svg';
 import Header from './Header';
 import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
@@ -22,7 +27,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
         <Wrapper>
             <Header theme={theme} setTheme={setTheme} />
             <SystemImage>
-                <Image src={system}></Image>
+                <Image src={theme === Theme.Dark ? system : systemW}></Image>
             </SystemImage>
             <TitleContainer>
                 <Title> {t('landing-page.title')}</Title>
@@ -60,16 +65,16 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={thalesI}></Image>
+                <Image src={theme === Theme.Dark ? thalesI : thalesIW}></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={thalesII}></Image>
+                <Image src={theme === Theme.Dark ? thalesII : thalesIIW}></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={thalesIII}></Image>
+                <Image src={theme === Theme.Dark ? thalesIII : thalesIIIW}></Image>
             </ThalesImageIII>
             <StarsImage>
-                <Image src={stars}></Image>
+                <Image src={theme === Theme.Dark ? stars : starsW}></Image>
             </StarsImage>
         </Wrapper>
     );
