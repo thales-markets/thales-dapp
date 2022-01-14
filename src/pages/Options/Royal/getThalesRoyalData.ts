@@ -26,7 +26,7 @@ export const startRoyale = async () => {
     const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
     const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
     try {
-        const tx = await RoyalContract.startRoyale();
+        const tx = await RoyalContract.startRoyaleInASeason();
         await tx.wait();
         dispatchMarketNotification('Royale Started');
     } catch (e) {

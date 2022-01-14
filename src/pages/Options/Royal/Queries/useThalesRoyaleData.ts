@@ -130,7 +130,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             RoyaleContract.rewardPerSeason(i),
             RoyaleContract.unclaimedRewardPerSeason(i),
             RoyaleContract.seasonStart(i),
-            RoyaleContract.seasonFinish(i),
+            RoyaleContract.seasonFinished(i),
         ]);
 
         const roundsInformation = [];

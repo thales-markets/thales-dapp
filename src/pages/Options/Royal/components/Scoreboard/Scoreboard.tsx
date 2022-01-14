@@ -186,7 +186,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
         if (royaleData.signUpPeriod > new Date()) {
             if (user) {
                 if (user.status === UserStatus.NOTSIGNED) {
-                    return <Button onClick={signUp}>{t('options.royale.scoreboard.sign-up')}</Button>;
+                    return <Button onClick={signUp}>Buy in: X sUSD</Button>;
                 }
                 if (user.status === UserStatus.NOTVERIFIED) {
                     return (
@@ -335,7 +335,15 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     </UserWrapper>
                     <TableWrapper>
                         <SeasonSelector>
-                            <Text onClick={setShowSelectDropdown.bind(this, true)}>Season {selectedSeason} </Text>
+                            <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                Season {selectedSeason}{' '}
+                                {!showSelectDropdown && (
+                                    <Arrow
+                                        style={{ display: 'inline-block', marginLeft: 20 }}
+                                        className="icon icon--arrow-down"
+                                    />
+                                )}
+                            </Text>
                             {showSelectDropdown &&
                                 [1, 2, 3, 4, 5]
                                     .filter((number) => number !== selectedSeason)
@@ -351,7 +359,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                         </Text>
                                     ))}
                         </SeasonSelector>
-                        <SeasonSelectorText>Select Season</SeasonSelectorText>
+
                         <TableRow style={{ justifyContent: 'flex-end', position: 'relative' }}>
                             <SearchWrapper
                                 onChange={(e) => setSearchString(e.target.value)}
@@ -868,25 +876,25 @@ const SeasonSelector = styled.div`
     }
 `;
 
-const SeasonSelectorText = styled.p`
-    position: absolute;
-    right: 0;
-    left: 0;
-    top: -23px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 86px;
-    text-align: center;
-    font-family: Sansation !important;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 13px;
-    letter-spacing: -0.4px;
-    color: var(--color);
-    background: var(--color-wrapper);
-    z-index: 2;
-`;
+// const SeasonSelectorText = styled.p`
+//     position: absolute;
+//     right: 0;
+//     left: 0;
+//     top: -23px;
+//     margin-left: auto;
+//     margin-right: auto;
+//     width: 86px;
+//     text-align: center;
+//     font-family: Sansation !important;
+//     font-style: normal;
+//     font-weight: normal;
+//     font-size: 12px;
+//     line-height: 13px;
+//     letter-spacing: -0.4px;
+//     color: var(--color);
+//     background: var(--color-wrapper);
+//     z-index: 2;
+// `;
 
 const Pagination = styled.div`
     position: relative;
