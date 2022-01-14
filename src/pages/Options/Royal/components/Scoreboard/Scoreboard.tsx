@@ -18,7 +18,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, LoaderContainer, Text } from 'theme/common';
 import { truncateAddress } from 'utils/formatters/string';
-import { signUp, startRoyale } from '../../getThalesRoyalData';
+import { signUp, startRoyale, startRoyaleSeason } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyaleData } from '../../Queries/useThalesRoyaleData';
@@ -577,9 +577,9 @@ const Intro: React.FC<{ royaleData: ThalesRoyaleData }> = ({ royaleData }) => {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
-                    {royaleData.signUpPeriod > new Date() && royaleData.canStartNewSeason ? (
+                    {royaleData.canStartNewSeason ? (
                         <Button
-                            onClick={startRoyale}
+                            onClick={startRoyaleSeason}
                             disabled={!royaleData.canStartNewSeason}
                             className={!royaleData.canStartNewSeason ? 'disabled' : ''}
                             style={{

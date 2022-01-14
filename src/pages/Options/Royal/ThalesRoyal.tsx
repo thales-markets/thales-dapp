@@ -55,13 +55,10 @@ const ThalesRoyal: React.FC = () => {
 
     const positionsQuery = usePositionsQuery(networkId, { enabled: networkId !== undefined });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
-
     const ethPriceQuery = useEthPriceQuery(thalesRoyaleData?.priceFeedAddress as any, {
         enabled: thalesRoyaleData !== undefined,
     });
     const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
-
-    console.log(ethPriceQuery.isSuccess);
 
     useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
@@ -78,7 +75,6 @@ const ThalesRoyal: React.FC = () => {
             setSelectedSeason(Number(Array.from(thalesRoyaleDataMap.keys()).pop()));
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
             setThalesRoyaleData(Array.from(thalesRoyaleDataMap.values()).pop());
-            console.log(allSeasons);
         }
     }, [thalesRoyaleDataMap]);
 
