@@ -120,6 +120,7 @@ export const QUERY_KEYS = {
         Data: (walletAddress: string) => ['royale', 'data', walletAddress],
         Players: () => ['royale', 'layers'],
         Rounds: (networkId: NetworkId) => ['royale', 'rounds', networkId],
+        Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
         Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: (contractAddress: string) => ['royale', 'ethBalance', contractAddress],

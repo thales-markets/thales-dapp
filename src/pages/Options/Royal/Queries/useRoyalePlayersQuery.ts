@@ -16,6 +16,7 @@ export type User = {
     name: string;
     avatar: string;
     status: UserStatus;
+    season: number;
     deathRound?: string;
 };
 
@@ -36,6 +37,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<U
                 const isAlive = player.isAlive;
                 const address = player.address;
                 const number = player.number;
+                const season = player.season;
                 const deathRound = player.deathRound;
 
                 if (map.has(player.address.toLowerCase())) {
@@ -44,6 +46,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<U
                         isAlive,
                         address,
                         number,
+                        season,
                         deathRound,
                         name: discordUser.name,
                         avatar: discordUser.avatar,
@@ -58,6 +61,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<U
                         deathRound,
                         name: '',
                         number,
+                        season,
                         avatar: '',
                         status: UserStatus.NOTVERIFIED,
                     };
@@ -69,6 +73,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<U
                     isAlive: true,
                     address: player[0],
                     number: 0,
+                    season: player[1].season,
                     name: player[1].name,
                     avatar: player[1].avatar,
                     status: UserStatus.NOTSIGNED,

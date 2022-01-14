@@ -223,6 +223,23 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
         }
     };
 
+    const claimReward = async () => {
+        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+        const signer = provider.getSigner();
+        const { thalesRoyaleContract } = snxJSConnector;
+        const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
+        const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
+        const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
+
+        const tx = await RoyalContract.claimRewardForSeason(royaleData.season);
+
+        const txResult = await tx.wait();
+
+        if (txResult && txResult.events) {
+            dispatchMarketNotification('Reward claimed');
+        }
+    };
+
     useEffect(() => {
         if (!currentScrollRound) {
             setCurrentScrollRound(roundInASeason);
@@ -261,12 +278,18 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     }
                     className="icon icon--right"
                 />
-                <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
-                    <RoyaleTooltip title={t('options.royale.battle.optimism-timestamp-message')}>
-                        <StyledInfoIcon />
-                    </RoyaleTooltip>
-                    {t('options.royale.battle.close-round')}
-                </Button>
+                {isWinner ? (
+                    <Button style={{ zIndex: 1000 }} onClick={claimReward}>
+                        Claim reward
+                    </Button>
+                ) : (
+                    <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
+                        <RoyaleTooltip title={t('options.royale.battle.optimism-timestamp-message')}>
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                        {t('options.royale.battle.close-round')}
+                    </Button>
+                )}
             </StyledWrapper>
             <BattleInfoSection className="battle">
                 <div>
@@ -289,14 +312,14 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     </span>
                     <span>${ethPrice}</span>
                 </div>
-                <div>
+                {/* <div>
                     <span>{t('options.royale.footer.reward-per-player')}:</span>
                     <span>{(10000 / (Number(royaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
                 </div>
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
                     <span>{royaleData?.alivePlayers?.length + ' / ' + royaleData?.players?.length}</span>
-                </div>
+                </div> */}
             </BattleInfoSection>
         </>
     );

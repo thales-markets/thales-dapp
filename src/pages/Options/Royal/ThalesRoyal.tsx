@@ -126,7 +126,9 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+            walletAddress && networkId !== 69 && networkId !== 10
+                ? setOpenNetworkWarningDialog(true)
+                : setOpenNetworkWarningDialog(false);
         }, 2000);
 
         return () => clearTimeout(timeout);
@@ -239,14 +241,14 @@ const ThalesRoyal: React.FC = () => {
                         </RoyaleTooltip>
                     </InfoIconContainer>
                 </div>
-                <div>
+                {/* <div>
                     <span>{t('options.royale.footer.current-reward-per-player')}:</span>
                     <span>{(10000 / (Number(thalesRoyaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
                 </div>
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
                     <span>{thalesRoyaleData?.alivePlayers?.length + ' / ' + thalesRoyaleData?.players?.length}</span>
-                </div>
+                </div> */}
             </InfoSection>
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />
             <WalletNotConnectedDialog open={openWalletNotConnectedDialog} setOpen={setOpenWalletNotConnectedDialog} />

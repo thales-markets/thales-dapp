@@ -317,7 +317,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     </span>
                                     <span>${ethPrice}</span>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <span>{t('options.royale.footer.reward-per-player')}:</span>
                                     <span>
                                         {(10000 / (Number(royaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES
@@ -328,7 +328,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     <span>
                                         {royaleData?.alivePlayers?.length + ' / ' + royaleData?.players?.length}
                                     </span>
-                                </div>
+                                </div> */}
                             </ScoreboardInfoSection>
                         </FlexDivColumn>
                         {getFooter(user, royaleData)}
@@ -578,6 +578,24 @@ const Intro: React.FC<{ royaleData: ThalesRoyaleData }> = ({ royaleData }) => {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
+                    {royaleData.signUpPeriod > new Date() && royaleData.canStartNewSeason ? (
+                        <Button
+                            onClick={startRoyale}
+                            disabled={!royaleData.canStartNewSeason}
+                            className={!royaleData.canStartNewSeason ? 'disabled' : ''}
+                            style={{
+                                margin: '30px auto',
+                                fontSize: 30,
+                                lineHeight: '30px',
+                            }}
+                        >
+                            <Title style={{ color: 'var(--color-wrapper)' }}>Start Season</Title>
+                        </Button>
+                    ) : (
+                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                            <TimeRemaining end={royaleData.pauseBetweenSeasonsTime} showFullCounter />
+                        </SubTitle>
+                    )}
                     {royaleData.signUpPeriod < new Date() ? (
                         <Button
                             onClick={startRoyale}
