@@ -345,7 +345,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                 )}
                             </Text>
                             {showSelectDropdown &&
-                                [1, 2, 3, 4, 5]
+                                allSeasons
                                     .filter((number) => number !== selectedSeason)
                                     .map((option: number, key: number) => (
                                         <Text

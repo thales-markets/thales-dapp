@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const thalesRoyaleContract = {
     addresses: {
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0x4B1305521a6ecb30C86E22eB3414609624c2f773',
+        [NetworkId['Kovan-Ovm']]: '0xb7146827d866B0d39037c3C578416FF1EF83DD76',
     },
     abi: [
         {
@@ -40,6 +40,18 @@ export const thalesRoyaleContract = {
             anonymous: false,
             inputs: [{ indexed: false, internalType: 'uint256', name: 'roundLength', type: 'uint256' }],
             name: 'NewRoundLength',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'address', name: '_safeBox', type: 'address' }],
+            name: 'NewSafeBox',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [{ indexed: false, internalType: 'uint256', name: '_safeBoxPercentage', type: 'uint256' }],
+            name: 'NewSafeBoxPercentage',
             type: 'event',
         },
         {
@@ -480,6 +492,20 @@ export const thalesRoyaleContract = {
         },
         {
             inputs: [],
+            name: 'safeBox',
+            outputs: [{ internalType: 'address', name: '', type: 'address' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'safeBoxPercentage',
+            outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
             name: 'season',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
             stateMutability: 'view',
@@ -551,6 +577,20 @@ export const thalesRoyaleContract = {
         {
             inputs: [{ internalType: 'uint256', name: '_roundLength', type: 'uint256' }],
             name: 'setRoundLength',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'address', name: '_safeBox', type: 'address' }],
+            name: 'setSafeBox',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: '_safeBoxPercentage', type: 'uint256' }],
+            name: 'setSafeBoxPercentage',
             outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
