@@ -2,7 +2,7 @@ import winnerCard from 'assets/images/royale/winner-card.svg';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import format from 'date-fns/format';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -58,19 +58,17 @@ const renderRounds = (
         if (option === roundsInformation[roundInASeason - 1].positionInRound) {
             return;
         }
-        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-        const signer = provider.getSigner();
         const { thalesRoyaleContract } = snxJSConnector;
-        const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
-        const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
-        const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
+        if (thalesRoyaleContract) {
+            const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-        const tx = await RoyalContract.takeAPosition(BigNumber.from(option));
+            const tx = await RoyalContract.takeAPosition(BigNumber.from(option));
 
-        const txResult = await tx.wait();
+            const txResult = await tx.wait();
 
-        if (txResult && txResult.events) {
-            dispatchMarketNotification('Successfully submitted');
+            if (txResult && txResult.events) {
+                dispatchMarketNotification('Successfully submitted');
+            }
         }
     };
 
@@ -207,36 +205,32 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
     }, 1000);
 
     const closeRound = async () => {
-        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-        const signer = provider.getSigner();
         const { thalesRoyaleContract } = snxJSConnector;
-        const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
-        const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
-        const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
+        if (thalesRoyaleContract) {
+            const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-        const tx = await RoyalContract.closeRound();
+            const tx = await RoyalContract.closeRound();
 
-        const txResult = await tx.wait();
+            const txResult = await tx.wait();
 
-        if (txResult && txResult.events) {
-            dispatchMarketNotification('Round closed');
+            if (txResult && txResult.events) {
+                dispatchMarketNotification('Round closed');
+            }
         }
     };
 
     const claimReward = async () => {
-        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-        const signer = provider.getSigner();
         const { thalesRoyaleContract } = snxJSConnector;
-        const thalesRoyaleContractAddress = thalesRoyaleContract ? thalesRoyaleContract.address : '';
-        const thalesRoyaleContractAbi = thalesRoyaleContract ? thalesRoyaleContract.abi : '';
-        const RoyalContract = new ethers.Contract(thalesRoyaleContractAddress, thalesRoyaleContractAbi, signer);
+        if (thalesRoyaleContract) {
+            const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-        const tx = await RoyalContract.claimRewardForSeason(royaleData.season);
+            const tx = await RoyalContract.claimRewardForSeason(royaleData.season);
 
-        const txResult = await tx.wait();
+            const txResult = await tx.wait();
 
-        if (txResult && txResult.events) {
-            dispatchMarketNotification('Reward claimed');
+            if (txResult && txResult.events) {
+                dispatchMarketNotification('Reward claimed');
+            }
         }
     };
 

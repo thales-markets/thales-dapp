@@ -179,7 +179,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
             setPage(1);
         }
     };
-    console.log(allSeasons);
 
     const getFooter = (user: User | undefined, royaleData: ThalesRoyaleData) => {
         if (!royaleData) return;
