@@ -43,25 +43,25 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
             <ContI>
                 <ContTitle>{t('landing-page.q1')}</ContTitle>
                 <ContSubTitle>
-                    <Trans i18nKey="landing-page.a1" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                    <Trans i18nKey="landing-page.a1" components={{ bold: <span style={{ fontWeight: 700 }} /> }} />
                 </ContSubTitle>
             </ContI>
             <ContII>
                 <ContTitle>{t('landing-page.q2')}</ContTitle>
                 <ContSubTitle>
-                    <Trans i18nKey="landing-page.a2" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                    <Trans i18nKey="landing-page.a2" components={{ bold: <span style={{ fontWeight: 700 }} /> }} />
                 </ContSubTitle>
             </ContII>
             <ContIII>
                 <ContTitle>{t('landing-page.q3')}</ContTitle>
                 <ContSubTitle>
-                    <Trans i18nKey="landing-page.a3" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                    <Trans i18nKey="landing-page.a3" components={{ bold: <span style={{ fontWeight: 700 }} /> }} />
                 </ContSubTitle>
             </ContIII>
             <ContIV>
                 <ContTitle>{t('landing-page.q4')}</ContTitle>
                 <ContSubTitle>
-                    <Trans i18nKey="landing-page.a4" components={{ bold: <strong style={{ fontWeight: 700 }} /> }} />
+                    <Trans i18nKey="landing-page.a4" components={{ bold: <span style={{ fontWeight: 700 }} /> }} />
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
@@ -336,17 +336,20 @@ const ContTitle = styled.p`
     }
 `;
 const ContSubTitle = styled.p`
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 1.1em;
-    line-height: 1.2em;
-    text-align: justify;
-    white-space: pre-line;
-    color: var(--color);
-    @media (max-width: 600px) {
-        font-size: 15px;
-        padding-top: 20px;
+    &,
+    & * {
+        font-family: Nunito !important;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 1.1em;
+        line-height: 1.2em;
+        text-align: justify;
+        white-space: pre-line;
+        color: var(--color);
+        @media (max-width: 600px) {
+            font-size: 15px;
+            padding-top: 20px;
+        }
     }
 `;
 
