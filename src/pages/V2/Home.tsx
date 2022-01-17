@@ -79,7 +79,7 @@ export default Home;
 
 const Background = styled.div`
     width: 100%;
-    font-size: 18px;
+    font-size: 16px;
     @media (max-width: 512px) {
         font-size: 10px;
     }
@@ -92,11 +92,13 @@ const Background = styled.div`
 
     &.light {
         background: #f7f7f7;
+        --main-background: #f7f7f7;
         --color: #052040;
         --background: #ffffff;
     }
     &.dark {
         background: #052040;
+        --main-background: #052040;
         --color: #f7f7f7;
         --background: #1b314f;
     }
@@ -106,7 +108,7 @@ const FlexWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin: auto;
-    max-width: 1080px;
+    max-width: 1122px;
     align-items: center;
     padding: 0 20px;
 `;

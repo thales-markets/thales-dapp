@@ -84,7 +84,7 @@ const Wrapper = styled.div`
     display: grid;
     width: 100%;
     margin: auto;
-    max-width: 1080px;
+    max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(77, 2em);
     @media (max-width: 600px) {
