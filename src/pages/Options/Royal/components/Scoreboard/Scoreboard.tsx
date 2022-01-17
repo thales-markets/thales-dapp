@@ -211,12 +211,21 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     }
                 }
             }
-            return (
-                <DeadText>
-                    <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                    {t('options.royale.scoreboard.period-expired')}
-                </DeadText>
-            );
+            if (royaleData.seasonStarted === false) {
+                return (
+                    <DeadText>
+                        <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                        Season did not start yet
+                    </DeadText>
+                );
+            } else {
+                return (
+                    <DeadText>
+                        <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                        {t('options.royale.scoreboard.period-expired')}
+                    </DeadText>
+                );
+            }
         }
     };
 
@@ -316,18 +325,27 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     </span>
                                     <span>${ethPrice}</span>
                                 </div>
-                                {/* <div>
+                                <div>
                                     <span>{t('options.royale.footer.reward-per-player')}:</span>
                                     <span>
-                                        {(10000 / (Number(royaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES
+                                        {(
+                                            10000 /
+                                            (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                                ?.totalPlayersPerRoundPerSeason || 1)
+                                        ).toFixed(2)}{' '}
+                                        THALES
                                     </span>
                                 </div>
                                 <div>
                                     <span>{t('options.royale.footer.players-alive')}:</span>
                                     <span>
-                                        {royaleData?.alivePlayers?.length + ' / ' + royaleData?.players?.length}
+                                        {}
+                                        {royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                            ?.totalPlayersPerRoundPerSeason +
+                                            ' / ' +
+                                            royaleData?.players?.length}
                                     </span>
-                                </div> */}
+                                </div>
                             </ScoreboardInfoSection>
                         </FlexDivColumn>
                         {getFooter(user, royaleData)}
@@ -335,7 +353,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     <TableWrapper>
                         <SeasonSelector>
                             <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                                Season {selectedSeason}{' '}
+                                Season {selectedSeason !== 0 ? selectedSeason : 1}{' '}
                                 {!showSelectDropdown && (
                                     <Arrow
                                         style={{ display: 'inline-block', marginLeft: 20 }}
@@ -573,29 +591,37 @@ const Intro: React.FC<{ royaleData: ThalesRoyaleData }> = ({ royaleData }) => {
 
     const getTitle = () => {
         if (!royaleData) return;
-        if (royaleData.roundInASeason === 0) {
+        if (!royaleData.seasonStarted && !royaleData.canStartNewSeason) {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
-                    {royaleData.canStartNewSeason ? (
-                        <Button
-                            onClick={startRoyaleSeason}
-                            disabled={!royaleData.canStartNewSeason}
-                            className={!royaleData.canStartNewSeason ? 'disabled' : ''}
-                            style={{
-                                margin: '30px auto',
-                                fontSize: 30,
-                                lineHeight: '30px',
-                            }}
-                        >
-                            <Title style={{ color: 'var(--color-wrapper)' }}>Start Season</Title>
-                        </Button>
-                    ) : (
-                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                            <TimeRemaining end={royaleData.pauseBetweenSeasonsTime} showFullCounter />
-                        </SubTitle>
-                    )}
-                    {royaleData.signUpPeriod < new Date() ? (
+                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                        <TimeRemaining end={royaleData.pauseBetweenSeasonsTime} showFullCounter />
+                    </SubTitle>
+                </>
+            );
+        } else if (!royaleData.seasonStarted && royaleData.canStartNewSeason) {
+            return (
+                <>
+                    <Title>{t('options.royale.scoreboard.starts')}</Title>
+                    <Button
+                        onClick={startRoyaleSeason}
+                        disabled={!royaleData.canStartNewSeason}
+                        className={!royaleData.canStartNewSeason ? 'disabled' : ''}
+                        style={{
+                            margin: '30px auto',
+                            fontSize: 30,
+                            lineHeight: '30px',
+                        }}
+                    >
+                        <Title style={{ color: 'var(--color-wrapper)' }}>Start Season</Title>
+                    </Button>
+                </>
+            );
+        } else if (royaleData.seasonStarted) {
+            if (royaleData.roundInASeason === 0) {
+                {
+                    return royaleData.signUpPeriod < new Date() ? (
                         <Button
                             onClick={startRoyale}
                             disabled={!royaleData.canStartRoyale}
@@ -614,38 +640,40 @@ const Intro: React.FC<{ royaleData: ThalesRoyaleData }> = ({ royaleData }) => {
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             <TimeRemaining end={royaleData.signUpPeriod} showFullCounter />
                         </SubTitle>
-                    )}
-                </>
-            );
-        } else if (royaleData.roundInASeason === royaleData.rounds) {
-            return (
-                <>
-                    <Title>{t('options.royale.scoreboard.ends')}</Title>
-                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                        <TimeRemaining end={royaleData.roundInASeasonEndTime} showFullCounter />
-                    </SubTitle>
-                </>
-            );
-        } else {
-            return timeLeftForPositioning ? (
-                <>
-                    <Title>
-                        {t('options.royale.scoreboard.position-period')} {royaleData.roundInASeason}:
-                    </Title>
-                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                        {timeLeftForPositioning
-                            ? format(timeLeftForPositioning, 'HH:mm:ss')
-                            : t('options.royale.battle.ended')}
-                    </SubTitle>
-                </>
-            ) : (
-                <>
-                    <Title>{t('options.royale.scoreboard.round-period', { round: royaleData.roundInASeason })}:</Title>
-                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                        {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
-                    </SubTitle>
-                </>
-            );
+                    );
+                }
+            } else if (royaleData.roundInASeason === royaleData.rounds) {
+                return (
+                    <>
+                        <Title>{t('options.royale.scoreboard.ends')}</Title>
+                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                            <TimeRemaining end={royaleData.roundInASeasonEndTime} showFullCounter />
+                        </SubTitle>
+                    </>
+                );
+            } else {
+                return timeLeftForPositioning ? (
+                    <>
+                        <Title>
+                            {t('options.royale.scoreboard.position-period')} {royaleData.roundInASeason}:
+                        </Title>
+                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                            {timeLeftForPositioning
+                                ? format(timeLeftForPositioning, 'HH:mm:ss')
+                                : t('options.royale.battle.ended')}
+                        </SubTitle>
+                    </>
+                ) : (
+                    <>
+                        <Title>
+                            {t('options.royale.scoreboard.round-period', { round: royaleData.roundInASeason })}:
+                        </Title>
+                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                            {timeLeftInRound ? format(timeLeftInRound, 'HH:mm:ss') : t('options.royale.battle.ended')}
+                        </SubTitle>
+                    </>
+                );
+            }
         }
     };
 

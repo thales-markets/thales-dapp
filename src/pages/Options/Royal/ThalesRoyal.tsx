@@ -37,7 +37,7 @@ const ThalesRoyal: React.FC = () => {
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
     const [showStats, setShowStats] = useState(true);
-    const [selectedSeason, setSelectedSeason] = useState<number>();
+    const [selectedSeason, setSelectedSeason] = useState<number>(0);
     const [allSeasons, setAllSeasons] = useState([] as any);
     const [thalesRoyaleData, setThalesRoyaleData] = useState<ThalesRoyaleData>();
 
@@ -47,13 +47,15 @@ const ThalesRoyal: React.FC = () => {
 
     const thalesRoyaleDataMap = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
 
-    const usersQuery = useRoyalePlayersQuery(networkId, { enabled: networkId === 69 || networkId === 10 });
+    const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
+        enabled: networkId === 69 || networkId === 10,
+    });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
     const user = users.filter(
         (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
     )[0];
 
-    const positionsQuery = usePositionsQuery(networkId, { enabled: networkId !== undefined });
+    const positionsQuery = usePositionsQuery(selectedSeason, networkId, { enabled: networkId !== undefined });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
     const ethPriceQuery = useEthPriceQuery(thalesRoyaleData?.priceFeedAddress as any, {
         enabled: thalesRoyaleData !== undefined,
@@ -72,9 +74,11 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         if (thalesRoyaleDataMap) {
-            setSelectedSeason(Number(Array.from(thalesRoyaleDataMap.keys()).pop()));
+            if (selectedSeason === 0) {
+                setSelectedSeason(Number(Array.from(thalesRoyaleDataMap.keys()).pop()));
+            }
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
-            setThalesRoyaleData(Array.from(thalesRoyaleDataMap.values()).pop());
+            setThalesRoyaleData(thalesRoyaleDataMap.get(selectedSeason));
         }
     }, [thalesRoyaleDataMap]);
 
@@ -171,6 +175,7 @@ const ThalesRoyal: React.FC = () => {
                         royaleData={thalesRoyaleData}
                         showBattle={selectedPage === 'royale'}
                         user={user}
+                        selectedSeason={selectedSeason}
                     />
                 )}
             </Wrapper>
@@ -237,14 +242,27 @@ const ThalesRoyal: React.FC = () => {
                         </RoyaleTooltip>
                     </InfoIconContainer>
                 </div>
-                {/* <div>
-                    <span>{t('options.royale.footer.current-reward-per-player')}:</span>
-                    <span>{(10000 / (Number(thalesRoyaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
+                <div>
+                    <span>{t('options.royale.footer.reward-per-player')}:</span>
+                    <span>
+                        {(
+                            10000 /
+                            (thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
+                                ?.totalPlayersPerRoundPerSeason || 1)
+                        ).toFixed(2)}{' '}
+                        THALES
+                    </span>
                 </div>
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>{thalesRoyaleData?.alivePlayers?.length + ' / ' + thalesRoyaleData?.players?.length}</span>
-                </div> */}
+                    <span>
+                        {}
+                        {thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
+                            ?.totalPlayersPerRoundPerSeason +
+                            ' / ' +
+                            thalesRoyaleData?.players?.length}
+                    </span>
+                </div>
             </InfoSection>
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />
             <WalletNotConnectedDialog open={openWalletNotConnectedDialog} setOpen={setOpenWalletNotConnectedDialog} />

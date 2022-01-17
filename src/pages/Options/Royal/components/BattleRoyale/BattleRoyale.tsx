@@ -26,6 +26,7 @@ type BattleRoyaleProps = {
     royaleData: ThalesRoyaleData;
     showBattle: boolean;
     user: User;
+    selectedSeason: number;
 };
 
 export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
@@ -43,14 +44,15 @@ export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
 const renderRounds = (
     royaleData: ThalesRoyaleData,
     timeLeftForPositioning: Date | null,
-    timeLeftInRound: Date | null
+    timeLeftInRound: Date | null,
+    selectedSeason: number
 ) => {
     const { t } = useTranslation();
     const { roundInASeason, rounds, token, targetPrice, roundsInformation, isPlayerAlive } = royaleData;
     const cards = [];
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const roundsQuery = useRoundsQuery(networkId, { enabled: networkId !== undefined });
+    const roundsQuery = useRoundsQuery(selectedSeason, networkId, { enabled: networkId !== undefined });
 
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
@@ -172,7 +174,14 @@ const renderRounds = (
     return cards;
 };
 
-const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, user, positions, ethPrice }) => {
+const BattleRoyale: React.FC<BattleRoyaleProps> = ({
+    royaleData,
+    showBattle,
+    user,
+    positions,
+    ethPrice,
+    selectedSeason,
+}) => {
     const { t } = useTranslation();
     const {
         roundInASeasonStartTime,
@@ -263,7 +272,11 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                 />
                 <CardWrapper>
                     <ScrollWrapper id="battle-royale-wrapper">
-                        {royaleData ? renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound) : <></>}
+                        {royaleData ? (
+                            renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound, selectedSeason)
+                        ) : (
+                            <></>
+                        )}
                     </ScrollWrapper>
                 </CardWrapper>
                 <ArrowRight
@@ -306,14 +319,26 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({ royaleData, showBattle, use
                     </span>
                     <span>${ethPrice}</span>
                 </div>
-                {/* <div>
+                <div>
                     <span>{t('options.royale.footer.reward-per-player')}:</span>
-                    <span>{(10000 / (Number(royaleData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
+                    <span>
+                        {(
+                            10000 /
+                            (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                ?.totalPlayersPerRoundPerSeason || 1)
+                        ).toFixed(2)}{' '}
+                        THALES
+                    </span>
                 </div>
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>{royaleData?.alivePlayers?.length + ' / ' + royaleData?.players?.length}</span>
-                </div> */}
+                    <span>
+                        {}
+                        {royaleData?.roundsInformation[royaleData.roundInASeason - 1]?.totalPlayersPerRoundPerSeason +
+                            ' / ' +
+                            royaleData?.players?.length}
+                    </span>
+                </div>
             </BattleInfoSection>
         </>
     );

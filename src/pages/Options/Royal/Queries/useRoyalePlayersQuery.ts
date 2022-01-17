@@ -20,7 +20,7 @@ export type User = {
     deathRound?: string;
 };
 
-const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<User[]>) => {
+const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, options?: UseQueryOptions<User[]>) => {
     return useQuery<User[]>(
         QUERY_KEYS.Royale.Players(),
         async () => {
@@ -29,7 +29,10 @@ const useRoyalePlayersQuery = (networkId: NetworkId, options?: UseQueryOptions<U
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const map = new Map(result);
-            const data = await thalesData.binaryOptions.thalesRoyalePlayers({ network: networkId });
+            const data = await thalesData.binaryOptions.thalesRoyalePlayers({
+                season: selectedSeason,
+                network: networkId,
+            });
             const verified: User[] = [];
             const unverified: User[] = [];
             const unasigned: User[] = [];

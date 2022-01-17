@@ -18,17 +18,19 @@ type GraphPosition = {
     timestamp: number;
 };
 
-const usePositionsQuery = (networkId: NetworkId, options?: UseQueryOptions<Positions>) => {
+const usePositionsQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<Positions>) => {
     return useQuery<Positions>(
         QUERY_KEYS.Royale.Positions(networkId),
         async () => {
             console.log('Positions Query');
-            const positions = await thalesData.binaryOptions.thalesRoyalePositions({ network: networkId });
+            const positions = await thalesData.binaryOptions.thalesRoyalePositions({
+                season: selectedSeason,
+                network: networkId,
+            });
             const { thalesRoyaleContract } = snxJSConnector;
 
             if (thalesRoyaleContract) {
                 const currentSeason = Number(await thalesRoyaleContract.season());
-                console.log(currentSeason);
                 const round = await thalesRoyaleContract.roundInASeason(currentSeason);
                 return (
                     positions.reduce(

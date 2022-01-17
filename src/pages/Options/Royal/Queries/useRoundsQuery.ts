@@ -8,12 +8,15 @@ type RoundData = {
     totalPlayersPerRoundPerSeason: string;
 };
 
-const useRoundsQuery = (networkId: NetworkId, options?: UseQueryOptions<RoundData[]>) => {
+const useRoundsQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<RoundData[]>) => {
     return useQuery<RoundData[]>(
         QUERY_KEYS.Royale.Rounds(networkId),
         async () => {
             console.log('Round Query');
-            const data = await thalesData.binaryOptions.thalesRoyaleRounds({ network: networkId });
+            const data = await thalesData.binaryOptions.thalesRoyaleRounds({
+                season: selectedSeason,
+                network: networkId,
+            });
             const sortedRounds = data.sort((a: any, b: any) => (a.round > b.round ? 1 : -1));
             return sortedRounds;
         },

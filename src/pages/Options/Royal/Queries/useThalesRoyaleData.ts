@@ -39,6 +39,7 @@ type RoundInformation = {
     targetPriceInRound: string;
     finalPriceInRound: string;
     roundResultPerSeason: number;
+    totalPlayersPerRoundPerSeason: number;
 };
 
 const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Map<number, ThalesRoyaleData>>) => {
@@ -216,12 +217,14 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             const targetPriceInRound = await RoyaleContract.targetPricePerRoundPerSeason(i, j);
             const finalPriceInRound = await RoyaleContract.finalPricePerRoundPerSeason(i, j);
             const roundResultPerSeason = await RoyaleContract.roundResultPerSeason(i, j);
+            const totalPlayersPerRoundPerSeason = await RoyaleContract.totalPlayersPerRoundPerSeason(i, j);
 
             roundsInformation.push({
                 positionInRound: Number(positionAInRoundPerSeason ?? 0),
                 targetPriceInRound: ethers.utils.formatEther(targetPriceInRound),
                 finalPriceInRound: ethers.utils.formatEther(finalPriceInRound),
                 roundResultPerSeason: Number(roundResultPerSeason ?? 0),
+                totalPlayersPerRoundPerSeason: Number(totalPlayersPerRoundPerSeason ?? 0),
             });
         }
 
