@@ -65,13 +65,13 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 </ContSubTitle>
             </ContIV>
             <ThalesImageI>
-                <Image src={theme === Theme.Dark ? thalesI : thalesIW}></Image>
+                <Image src={theme !== Theme.Dark ? thalesI : thalesIW}></Image>
             </ThalesImageI>
             <ThalesImageII>
-                <Image src={theme === Theme.Dark ? thalesII : thalesIIW}></Image>
+                <Image src={theme !== Theme.Dark ? thalesII : thalesIIW}></Image>
             </ThalesImageII>
             <ThalesImageIII>
-                <Image src={theme === Theme.Dark ? thalesIII : thalesIIIW}></Image>
+                <Image src={theme !== Theme.Dark ? thalesIII : thalesIIIW}></Image>
             </ThalesImageIII>
             <StarsImage>
                 <Image src={theme === Theme.Dark ? stars : starsW}></Image>
