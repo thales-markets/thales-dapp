@@ -256,11 +256,12 @@ const ThalesRoyal: React.FC = () => {
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
                     <span>
-                        {}
                         {thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
-                            ?.totalPlayersPerRoundPerSeason +
-                            ' / ' +
-                            thalesRoyaleData?.players?.length}
+                            ?.totalPlayersPerRoundPerSeason
+                            ? thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
+                                  ?.totalPlayersPerRoundPerSeason
+                            : '0'}
+                        {' / ' + thalesRoyaleData?.players?.length}
                     </span>
                 </div>
             </InfoSection>

@@ -339,11 +339,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                 <div>
                                     <span>{t('options.royale.footer.players-alive')}:</span>
                                     <span>
-                                        {}
                                         {royaleData?.roundsInformation[royaleData.roundInASeason - 1]
-                                            ?.totalPlayersPerRoundPerSeason +
-                                            ' / ' +
-                                            royaleData?.players?.length}
+                                            ?.totalPlayersPerRoundPerSeason
+                                            ? royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                                  ?.totalPlayersPerRoundPerSeason
+                                            : '0'}
+                                        {' / ' + royaleData?.players?.length}
                                     </span>
                                 </div>
                             </ScoreboardInfoSection>

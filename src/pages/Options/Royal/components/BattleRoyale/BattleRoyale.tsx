@@ -333,10 +333,11 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
                 <div>
                     <span>{t('options.royale.footer.players-alive')}:</span>
                     <span>
-                        {}
-                        {royaleData?.roundsInformation[royaleData.roundInASeason - 1]?.totalPlayersPerRoundPerSeason +
-                            ' / ' +
-                            royaleData?.players?.length}
+                        {royaleData?.roundsInformation[royaleData.roundInASeason - 1]?.totalPlayersPerRoundPerSeason
+                            ? royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                  ?.totalPlayersPerRoundPerSeason
+                            : '0'}
+                        {' / ' + royaleData?.players?.length}
                     </span>
                 </div>
             </BattleInfoSection>
