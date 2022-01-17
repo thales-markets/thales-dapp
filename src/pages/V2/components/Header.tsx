@@ -115,7 +115,11 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
 
 const ThalesButton = styled.div`
     background: #1b314f;
-    color: #f7f7f7;
+    &,
+    & * {
+        color: #f7f7f7 !important;
+    }
+
     display: flex;
     justify-content: center;
     align-items: center;
