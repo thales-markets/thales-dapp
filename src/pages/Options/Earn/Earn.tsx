@@ -7,7 +7,6 @@ import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
 import Vesting from './Vesting';
-import LPStaking from './LPStaking';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
@@ -45,11 +44,6 @@ const EarnPage: React.FC = () => {
         {
             id: 'vesting',
             name: t('options.earn.vesting.tab-title'),
-            disabled: false,
-        },
-        {
-            id: 'lp-staking',
-            name: t('options.earn.lp-staking.tab-title'),
             disabled: false,
         },
         {
@@ -118,7 +112,6 @@ const EarnPage: React.FC = () => {
                                     {selectedTab === 'retro-rewards' && <SnxStaking />}
                                     {selectedTab === 'staking' && <ThalesStaking />}
                                     {selectedTab === 'vesting' && <Vesting />}
-                                    {selectedTab === 'lp-staking' && <LPStaking />}
                                     {selectedTab === 'migration' && <Migration />}
                                 </WidgetsContainer>
                             </MainContentContainer>

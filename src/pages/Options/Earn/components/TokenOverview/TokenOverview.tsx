@@ -92,29 +92,6 @@ export const TokentOverview: React.FC = () => {
                             : EMPTY_VALUE}
                     </Content>
                 </ItemContainer>
-                <ItemContainer>
-                    <FlexDivCentered>
-                        <LightTooltip title={t('options.earn.overview.earn-tooltip')}>
-                            <StyledLink
-                                href="https://app.dodoex.io/liquidity?poolAddress=0x031816fd297228e4fd537c1789d51509247d0b43"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                <CryptoName>{t('options.earn.overview.earn-label')}</CryptoName>
-                                <ArrowIcon style={{ marginLeft: 4, marginRight: 10 }} width="10" height="10" />
-                            </StyledLink>
-                        </LightTooltip>
-                        <LightTooltip title={t('options.earn.overview.earn-info-tooltip')}>
-                            <StyledLink
-                                href="https://docs.thales.market/using-thales/thales+dodo-lp-rewards-guide"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                <StyledInfoIcon />
-                            </StyledLink>
-                        </LightTooltip>
-                    </FlexDivCentered>
-                </ItemContainer>
             </Container>
         </>
     );
