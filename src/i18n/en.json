@@ -1194,6 +1194,7 @@
         "migration-button": {
             "label": "Migrate",
             "progress-label": "Migration in progress..."
-        }
+        },
+        "migration-message": "Staking logic has been migrated to L2."
     }
 }
