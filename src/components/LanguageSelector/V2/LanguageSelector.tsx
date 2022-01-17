@@ -122,9 +122,6 @@ const LanguageName = styled.div`
     color: var(--color);
     margin-left: 10px;
     display: block;
-    @media screen and (max-width: 767px) {
-        display: none;
-    }
 `;
 
 const LanguageFlag = (language: SupportedLanguages | any) => {
