@@ -1190,11 +1190,18 @@
     "migration": {
         "title": "Migration",
         "migration-amount-label": "Amount to migrate",
+        "from-label": "From",
+        "to-label": "To",
         "migration-confirmation-message": "Tokens successfully migrated to L2",
         "migration-button": {
             "label": "Migrate",
             "progress-label": "Migration in progress..."
         },
-        "migration-message": "Staking logic has been migrated to L2."
+        "migration-message": "Staking logic has been migrated to L2.",
+        "tabs": {
+            "migrate": "Migrate",
+            "withdraw": "Withdraw",
+            "swap": "Swap"
+        }
     }
 }
