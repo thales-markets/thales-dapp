@@ -58,7 +58,7 @@ export const TokentOverview: React.FC = () => {
                     <Content>
                         {tokenInfo && tokenInfo.price ? (
                             <LightTooltip title={t('options.earn.overview.price-tooltip')}>
-                                <StyledLink href={LINKS.Token.DodoPool} target="_blank" rel="noreferrer">
+                                <StyledLink href={LINKS.Token.UniswapInfo} target="_blank" rel="noreferrer">
                                     {formatCurrencyWithSign(USD_SIGN, tokenInfo.price)}
                                     <ArrowIcon style={{ marginLeft: 4 }} width="10" height="10" />
                                 </StyledLink>

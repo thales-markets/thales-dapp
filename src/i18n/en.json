@@ -439,7 +439,7 @@
             "overview": {
                 "token-tooltip": "View THALES contract",
                 "price-label": "Price",
-                "price-tooltip": "View DODO pool",
+                "price-tooltip": "View on Uniswap",
                 "market-cap-label": "Market cap",
                 "earn-label": "Earn LP rewards",
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",

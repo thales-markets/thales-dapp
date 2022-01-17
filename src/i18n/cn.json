@@ -439,7 +439,7 @@
             "overview": {
                 "token-tooltip": "查看泰雷兹合同",
                 "price-label": "价格",
-                "price-tooltip": "查看DODO池",
+                "price-tooltip": "在Uniswap上查看 ",
                 "market-cap-label": "市值",
                 "earn-label": "赢取LP奖励",
                 "earn-tooltip": "为泰雷兹/ETH对提供流动性，赚取泰雷兹+DODO双倍奖励",
