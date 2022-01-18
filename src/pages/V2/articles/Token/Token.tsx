@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import pic from 'assets/images/landing-page/articles/token.png';
 import picBlack from 'assets/images/landing-page/articles/token-black.png';
 import { Background, Theme } from '../../Home';
+import Footer from 'pages/V2/components/Footer';
 
 const cookies = new Cookies();
 
@@ -93,6 +94,7 @@ const Token: React.FC = () => {
                             components={{ bold: <span style={{ fontWeight: 700 }} /> }}
                         />
                     </Paragraph>
+                    <Footer className="article" theme={theme} />
                 </Content>
             </Wrapper>
         </Background>
@@ -105,57 +107,68 @@ const Wrapper = styled.div`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(77, 2em);
-    @media (max-width: 600px) {
-        grid-template-rows: repeat(104, 2em);
-    }
+    grid-template-rows: repeat(82, 2em);
 `;
 
 const Content = styled.div`
     grid-column-start: 7;
     grid-column-end: 48;
     grid-row-start: 8;
-    grid-row-end: 76;
+    grid-row-end: 80;
+    @media (max-width: 1024px) {
+        position: absolute;
+        display: block;
+        top: 140px;
+        width: 100vw;
+        padding: 0 40px;
+        z-index: 10;
+        grid-column-start: unset;
+        grid-column-end: unset;
+        grid-row-start: unset;
+        grid-row-end: unset;
+    }
 `;
 
 const Image = styled.img`
-    margin: 80px 0;
+    padding: 0 20px;
     object-fit: contain;
+    width: 100%;
+    margin: 4em auto;
 `;
 
 const H1 = styled.h1`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 50px;
+    font-size: 3.8em;
     line-height: 91.91%;
     text-align: justify;
     text-transform: uppercase;
     color: var(--color);
-    margin-top: 80px;
-    margin-bottom: 40px;
+    margin-top: 2em;
+    margin-bottom: 1.6em;
 `;
 const H2 = styled.h2`
-    font-family: Nunito;
-    font-size: 20px;
+    font-family: Nunito !important;
+    font-size: 1.4em;
     font-style: normal;
     font-weight: 700;
-    line-height: 20px;
+    line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
     color: var(--color);
-    margin-top: 40px;
-    margin-bottom: 20px;
+    margin-top: 2em;
+    margin-bottom: 1em;
 `;
 const Paragraph = styled.p`
+    font-size: 1.4em;
+    line-height: 1em;
     &,
     & * {
         color: var(--color);
-        font-family: Nunito;
-        font-size: 20px;
+        font-family: Nunito !important;
         font-style: normal;
         font-weight: 300;
-        line-height: 20px;
         letter-spacing: 0em;
         text-align: justified;
         white-space: pre-line;
@@ -166,14 +179,18 @@ const List = styled.ul`
     list-style: disc;
 `;
 const ListItem = styled.li`
-    &,
-    & a {
+    height: 3em;
+    & > a {
         font-family: Nunito !important;
         font-style: normal;
         font-weight: bold;
-        font-size: 20px;
+        font-size: 1.4em;
         line-height: 170%;
         color: var(--color);
+        &:hover {
+            font-size: 1.6em;
+            transition: 0.2s;
+        }
     }
 `;
 
