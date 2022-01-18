@@ -25,6 +25,8 @@ import { getIsOVM } from 'utils/network';
 import MarketHeaderItem from './MarketHeaderItem';
 import NetworkSwitch from 'components/NetworkSwitch';
 
+import UserCard from 'components/UserInfo/v2/UserCard';
+
 type MarketHeaderProps = {
     showCustomizeLayout?: boolean;
     phase?: string;
@@ -65,6 +67,7 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
 
     return (
         <FlexDivColumn style={{ width: '100%', flex: 'unset' }}>
+            <UserCard />
             <MarketHeaderWrapper
                 id="dapp-header"
                 className={`dapp-header ${className}`}
@@ -198,7 +201,7 @@ const MarketHeaderWrapper = styled.div<{ showCustomizeLayout?: boolean }>`
     height: 100px;
     display: flex;
     align-items: center;
-    justify-content: ${(props) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
+    justify-content: ${(props: any) => (props.showCustomizeLayout ? 'space-between' : 'flex-end')};
     @media screen and (max-width: 767px) {
         height: 100%;
     }

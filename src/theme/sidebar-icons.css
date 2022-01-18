@@ -29,3 +29,43 @@
 .icon--thales-royale:before {
     content: '\005A';
 }
+
+.icon--optimism:before {
+    content: '\0067';
+}
+
+.icon--ethereum:before {
+    content: '\0065';
+}
+
+.icon--card-menu:before {
+    content: '\0064';
+}
+
+.icon--wallet:before {
+    content: '\0063';
+}
+
+.icon--ethereum-icon:before {
+    content: '\0050';
+}
+
+.icon--gb-flag:before {
+    content: '\006E';
+}
+
+.icon--cn-flag:before {
+    content: '\006F';
+}
+
+.icon--ru-flag:before {
+    content: '\006D';
+}
+
+.icon--light-mode:before {
+    content: '\0053';
+}
+
+.icon--dark-mode:before {
+    content: '\0052';
+}

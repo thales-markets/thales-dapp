@@ -57,7 +57,7 @@
         "react-select": "^4.2.1",
         "react-table": "^7.6.3",
         "react-tradingview-widget": "^1.3.2",
-        "recharts": "^2.0.8",
+        "recharts": "^2.1.8",
         "redux": "^4.0.5",
         "remarkable": "^2.0.1",
         "remarkable-external-link": "^2.0.0",

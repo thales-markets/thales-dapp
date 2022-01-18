@@ -36,6 +36,9 @@ export const QUERY_KEYS = {
     Medium: {
         Posts: ['medium', 'posts'],
     },
+    PriceData: {
+        Data: ['pricedata'],
+    },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
         EthGasPriceEip1559: (networkId: NetworkId) => ['network', 'ethGasPriceEip1559', networkId],

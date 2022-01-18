@@ -62,3 +62,8 @@
     font-family: 'Playfair Display';
     src: local('Playfair Display'), url(../assets/fonts/PlayfairDisplay/Playfair-Display.ttf) format('truetype');
 }
+
+@font-face {
+    font-family: 'Titillium Regular';
+    src: local('TitilliumRegular'), url(../assets/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf) format('truetype');
+}

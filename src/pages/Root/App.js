@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Router, Switch } from 'react-router-dom';
 import { getIsAppReady, setAppReady } from 'redux/modules/app';
 import { getNetworkId, updateNetworkSettings, updateWallet } from 'redux/modules/wallet';
+import { setTheme } from 'redux/modules/ui';
 import { getEthereumNetwork, getIsOVM, isNetworkSupported, SUPPORTED_NETWORKS_NAMES } from 'utils/network';
 import onboardConnector from 'utils/onboardConnector';
 import queryConnector from 'utils/queryConnector';
@@ -28,6 +29,7 @@ import GovernancePage from 'pages/Governance';
 import TradeHistory from 'pages/Options/TradeHistory';
 import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
+import Cookies from 'universal-cookie';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../V2/Home'));
@@ -43,6 +45,8 @@ const App = () => {
     const [snackbarDetails, setSnackbarDetails] = useState({ message: '', isOpen: false, type: 'success' });
 
     queryConnector.setQueryClient();
+
+    const cookies = new Cookies();
 
     useEffect(() => {
         const init = async () => {
@@ -70,6 +74,11 @@ const App = () => {
     }, []);
 
     useEffect(() => {
+        // Init value of theme selected from the cookie
+        if (isAppReady) {
+            dispatch(setTheme(Number(cookies.get('home-theme')) == 0 ? 0 : 1));
+        }
+
         if (isAppReady && networkId && isNetworkSupported(networkId)) {
             const onboard = initOnboard(networkId, {
                 address: (walletAddress) => {

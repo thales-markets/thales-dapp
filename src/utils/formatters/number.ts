@@ -87,3 +87,15 @@ export const formatNumberShort = (value: number) => {
         ? formatCurrency(value / 1.0e3, 2, true) + 'k'
         : formatCurrency(value, 2, true);
 };
+
+// export const convertToCurrency = (amount: number, valueInCurrency: number, currencySymbol: string) => {
+
+// }
+
+export const formatPricePercentageGrowth = (priceChange: number) => {
+    return priceChange > 0 ? `+ ${Math.abs(priceChange).toFixed(2)}%` : `- ${Math.abs(priceChange).toFixed(2)}%`;
+};
+
+export const calculatePercentageChange = (lastPrice: number, firstPrice: number) => {
+    return ((lastPrice - firstPrice) / lastPrice) * 100;
+};

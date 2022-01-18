@@ -191,6 +191,13 @@
                 "mainnet": "Switch to Mainnet",
                 "optimism": "Switch to Optimism"
             }
+        },
+        "user-info-card": {
+            "wallet": "Wallet",
+            "theme": "Theme",
+            "change": "Change",
+            "network": "Network",
+            "language": "Language"
         }
     },
     "modals": {

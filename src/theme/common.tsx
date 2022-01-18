@@ -383,3 +383,13 @@ export const GradientText = styled.span<{ gradient: string; fontSize: number; fo
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
 `;
+
+export const UserCardSectionHeader = styled.span`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 20px;
+    color: #64d9fe;
+    text-transform: uppercase;
+`;
