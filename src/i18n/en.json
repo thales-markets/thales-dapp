@@ -1192,10 +1192,15 @@
         "migration-amount-label": "Amount to migrate",
         "from-label": "From",
         "to-label": "To",
-        "migration-confirmation-message": "Tokens successfully migrated to L2",
-        "migration-button": {
+        "migrate-button": {
             "label": "Migrate",
-            "progress-label": "Migration in progress..."
+            "progress-label": "Migration in progress...",
+            "confirmation-message": "Tokens successfully migrated to L2"
+        },
+        "swap-button": {
+            "label": "Swap",
+            "progress-label": "Swapping in progress...",
+            "confirmation-message": "Tokens successfully swapped"
         },
         "migration-messages": {
             "retro-airdrop": "Retro airdrop is available on L2.",

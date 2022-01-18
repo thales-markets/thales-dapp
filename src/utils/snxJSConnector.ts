@@ -11,6 +11,7 @@ import priceFeedContract from './contracts/priceFeedContract';
 import limitOrderProtocol1inchContract from './contracts/limitOrderProtocol1inchContract';
 import ammContract from './contracts/ammContract';
 import thalesExchangerContract from './contracts/thalesExchangerContract';
+import opThalesContract from './contracts/opThalesContract';
 import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
 
 type SnxJSConnector = {
@@ -30,6 +31,7 @@ type SnxJSConnector = {
     limitOrderProtocol1inchContract?: ethers.Contract;
     ammContract?: ethers.Contract;
     thalesExchangerContract?: ethers.Contract;
+    opThalesTokenContract?: ethers.Contract;
     setContractSettings: (contractSettings: Config) => void;
 };
 
@@ -60,6 +62,7 @@ const snxJSConnector: SnxJSConnector = {
         );
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
         this.thalesExchangerContract = conditionalInitializeContract(thalesExchangerContract, contractSettings);
+        this.opThalesTokenContract = conditionalInitializeContract(opThalesContract, contractSettings);
     },
 };
 

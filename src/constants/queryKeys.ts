@@ -19,6 +19,12 @@ export const QUERY_KEYS = {
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
         Thales: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'thales', walletAddress, networkId],
+        OpThales: (walletAddress: string, networkId: NetworkId) => [
+            'walletBalances',
+            'opThales',
+            walletAddress,
+            networkId,
+        ],
         Vesting: (walletAddress: string, networkId: NetworkId) => [
             'walletBalances',
             'vesting',

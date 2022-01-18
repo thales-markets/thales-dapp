@@ -148,6 +148,7 @@ export const OPTIONS_CURRENCY_MAP = {
     short: 'sSHORT',
 };
 export const THALES_CURRENCY = 'THALES';
+export const OP_THALES_CURRENCY = 'opTHALES';
 
 export const currencyKeyToAssetIconMap = {
     [SYNTHS_MAP.sBTC]: sBTCIcon,
