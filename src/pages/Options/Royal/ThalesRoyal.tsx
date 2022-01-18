@@ -82,7 +82,8 @@ const ThalesRoyal: React.FC = () => {
             }
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
             setThalesRoyaleData(thalesRoyaleDataMap.get(selectedSeason));
-            const latestSeason = Number(Array.from(thalesRoyaleDataMap.keys()).pop());
+            const latestSeason = Math.max(...Array.from(thalesRoyaleDataMap.keys()));
+            setSelectedSeason(latestSeason);
             setLatestSeasonData(thalesRoyaleDataMap.get(latestSeason));
         }
     }, [thalesRoyaleDataMap]);

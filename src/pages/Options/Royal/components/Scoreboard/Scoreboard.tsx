@@ -29,8 +29,8 @@ import i18n from '../../../../../i18n';
 import { ethers } from 'ethers';
 import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
 import { getIsOVM } from 'utils/network';
-import useApproveSpender from 'pages/Options/Home/Swap/useApproveSpender';
 import { erc20Contract } from 'utils/contracts/erc20Contract';
+import snxJSConnector from 'utils/snxJSConnector';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -94,10 +94,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
     const signer = provider.getSigner();
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
 
-    const approveSpenderQuery = useApproveSpender(networkId, {
-        enabled: false,
-    });
-
     useEffect(() => {
         updateBalanceAndAllowance(buyInToken);
     }, [buyInToken]);
@@ -106,31 +102,30 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
         if (token) {
             const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
 
-            const spender = approveSpenderQuery.refetch().then((resp: any) => {
-                return resp.data.address;
-            });
+            const { thalesRoyaleContract } = snxJSConnector;
+            if (thalesRoyaleContract) {
+                erc20Instance
+                    .allowance(walletAddress, thalesRoyaleContract.address)
+                    .then((data: any) =>
+                        setAllowance(Number(ethers.utils.formatUnits(data, (token as any).decimals)) > 0)
+                    );
 
-            erc20Instance
-                .allowance(walletAddress, spender)
-                .then((data: any) => setAllowance(Number(ethers.utils.formatUnits(data, (token as any).decimals)) > 0));
-
-            erc20Instance
-                .balanceOf(walletAddress)
-                .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+                erc20Instance
+                    .balanceOf(walletAddress)
+                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+            }
         }
     };
 
     const approve = async () => {
         const erc20Instance = new ethers.Contract((buyInToken as any).address, erc20Contract.abi, signer);
         try {
-            const req = await approveSpenderQuery.refetch();
-            const tx = await erc20Instance.approve(req.data?.address, ethers.constants.MaxUint256);
-            await tx.wait();
-            setAllowance(true);
-            return {
-                data: (req.data as any).data,
-                to: (req.data as any).to,
-            };
+            const { thalesRoyaleContract } = snxJSConnector;
+            if (thalesRoyaleContract) {
+                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256);
+                await tx.wait();
+                setAllowance(true);
+            }
         } catch (e) {
             console.log('failed: ', e);
         }
@@ -245,11 +240,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                 </Button>
             );
         }
-        if (royaleData.signUpPeriod > new Date()) {
+
+        if (latestSeason.signUpPeriod > new Date()) {
             if (user) {
                 if (user.status === UserStatus.NOTSIGNED) {
                     if (allowance) {
-                        const buyInAmount = royaleData.buyInAmount;
+                        const buyInAmount = latestSeason.buyInAmount;
                         return (
                             <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
                                 {t('options.royale.scoreboard.buy-in', { buyInAmount })}
@@ -680,7 +676,6 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
 
     const getTitle = () => {
         if (!latestSeason) return;
-        console.log(timeLeftUntilNewSeason);
         if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
             if (timeLeftUntilNewSeason) {
                 return (
@@ -1032,26 +1027,6 @@ const SeasonSelector = styled.div`
         font-size: 20px;
     }
 `;
-
-// const SeasonSelectorText = styled.p`
-//     position: absolute;
-//     right: 0;
-//     left: 0;
-//     top: -23px;
-//     margin-left: auto;
-//     margin-right: auto;
-//     width: 86px;
-//     text-align: center;
-//     font-family: Sansation !important;
-//     font-style: normal;
-//     font-weight: normal;
-//     font-size: 12px;
-//     line-height: 13px;
-//     letter-spacing: -0.4px;
-//     color: var(--color);
-//     background: var(--color-wrapper);
-//     z-index: 2;
-// `;
 
 const Pagination = styled.div`
     position: relative;
