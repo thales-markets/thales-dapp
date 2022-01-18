@@ -81,7 +81,21 @@
             "thirdQ": "用户需要在泰雷兹上创造或购买哪些资产？",
             "thirdA": "合成美元，或sUSD，是泰雷兹目前唯一支持铸造或交换期权的资产。"
         },
-        "discord": "加入Discord"
+        "discord": "加入Discord",
+        "language": "语",
+        "learn-more": "学到更多",
+        "q4": "为什么这有关系？",
+        "q2": "它是如何工作的？",
+        "q3": "它的结构如何？",
+        "a4": "因为建立在正确的基础上会吸引志同道合的人，他们非常关心开放金融的愿景。\n\n 在来自泰雷兹社区的聪明才智、才华横溢的灵魂和热情的人们的支持下，该协议每天都在不断迭代、经过实战考验并且更具弹性。\n\n 我们正朝着<bold>不可阻挡的方向前进。</bold>",
+        "a3": "<bold>去中心化</bold> 是弹性的关键。\n\n 这就是为什么 <bold>ThalesDAO</bold> 作为一个集体，是协议的所有者，它通过由 THALES 代币持有者选举产生的 <bold>Thales 委员会<bold> 进行 <bold>治理</bold>。",
+        "q1": "什么是泰利斯？",
+        "newest-blog-posts": "最新的博客文章",
+        "subtitle": "新颖的链上、无需许可和非托管的 Parimutuel 市场。",
+        "integrations": "集成",
+        "initiatives": "倡议",
+        "a2": "构成泰雷兹的智能合约集利用不可审查的 <bold>sUSD 作为抵押品</bold>、来自 <bold>Chainlink</bold> 数据馈送的市场结算的不可改变的事实来源，以及所有优势（速度、成本和安全性）以汇总为中心的网络，如 <bold>Optimism.</bold>",
+        "a1": "Thales 是一种以太坊协议，允许创建任何人都可以加入的点对点 <bold>parimutuel 市场</bold>。这个构建块是新颖的链上计划的基础，从<bold>基于订单簿的位置市场平台</bold>到<bold>生存博彩游戏。</bold>"
     },
     "maintenance-page": {
         "title": "敬请关注，马上就来…",
@@ -181,6 +195,13 @@
                 "mainnet": "切换到主网",
                 "optimism": "转为乐观"
             }
+        },
+        "user-info-card": {
+            "network": "网络",
+            "wallet": "钱包",
+            "language": "语",
+            "theme": "主题",
+            "change": "改变"
         }
     },
     "modals": {
