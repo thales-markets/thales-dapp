@@ -680,7 +680,6 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
 
     const getTitle = () => {
         if (!latestSeason) return;
-        console.log(latestSeason.pauseBetweenSeasonsTime);
         if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
             return (
                 <>
