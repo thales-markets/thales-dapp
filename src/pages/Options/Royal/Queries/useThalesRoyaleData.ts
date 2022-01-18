@@ -24,7 +24,7 @@ export type ThalesRoyaleData = {
     canCloseRound: boolean;
     canStartRoyale: boolean;
     canStartNewSeason: boolean;
-    pauseBetweenSeasonsTime: Date;
+    pauseBetweenSeasonsTime: number;
     priceFeedAddress: string;
     playerSignedUpPerSeason: boolean;
     rewardCollectedPerSeason: number;
@@ -138,7 +138,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             canCloseRound,
             canStartRoyale,
             canStartNewSeason,
-            pauseBetweenSeasonsTime: new Date(Number(pauseBetweenSeasonsTime) * 1000),
+            pauseBetweenSeasonsTime: Number(pauseBetweenSeasonsTime),
             priceFeedAddress,
             playerSignedUpPerSeason: false,
             rewardCollectedPerSeason: 0,
@@ -252,7 +252,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             canCloseRound,
             canStartRoyale,
             canStartNewSeason,
-            pauseBetweenSeasonsTime: new Date(Number(pauseBetweenSeasonsTime) * 1000),
+            pauseBetweenSeasonsTime: Number(pauseBetweenSeasonsTime),
             priceFeedAddress,
             playerSignedUpPerSeason,
             rewardCollectedPerSeason,

@@ -639,6 +639,10 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
             : null
     );
 
+    const [timeLeftUntilNewSeason, setTimeLeftUntilNewSeason] = useState<Date | null>(
+        latestSeason ? getTimeLeft(latestSeason.roundInASeasonStartTime, latestSeason.pauseBetweenSeasonsTime) : null
+    );
+
     const [counter, setCounter] = useState(0);
 
     useInterval(async () => {
@@ -648,6 +652,9 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
     useInterval(async () => {
         if (!latestSeason) return;
         setTimeLeftForPositioning(getTimeLeft(latestSeason.roundInASeasonStartTime, latestSeason.roundChoosingLength));
+        setTimeLeftUntilNewSeason(
+            getTimeLeft(latestSeason.roundInASeasonStartTime, latestSeason.pauseBetweenSeasonsTime)
+        );
         setTimeLeftInRound(
             getTimeLeft(
                 latestSeason.roundInASeasonStartTime,
@@ -673,12 +680,15 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
 
     const getTitle = () => {
         if (!latestSeason) return;
-        if (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason) {
+        console.log(latestSeason.pauseBetweenSeasonsTime);
+        if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
             return (
                 <>
                     <Title>{t('options.royale.scoreboard.starts')}</Title>
                     <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                        <TimeRemaining end={latestSeason.pauseBetweenSeasonsTime} showFullCounter />
+                        {timeLeftUntilNewSeason
+                            ? format(timeLeftUntilNewSeason, 'HH:mm:ss')
+                            : t('options.royale.battle.ended')}
                     </SubTitle>
                 </>
             );
