@@ -292,7 +292,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     }
                 }
             }
-            if (royaleData.seasonStarted === false) {
+            if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
                 return (
                     <DeadText>
                         <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
