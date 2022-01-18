@@ -238,7 +238,6 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
 
     const getFooter = (user: User | undefined, royaleData: ThalesRoyaleData) => {
         if (!royaleData) return;
-        console.log(user);
         if (user && user.status === UserStatus.NOTVERIFIED) {
             return (
                 <Button onClick={setShowPopup.bind(this, true)}>
@@ -250,9 +249,10 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
             if (user) {
                 if (user.status === UserStatus.NOTSIGNED) {
                     if (allowance) {
+                        const buyInAmount = royaleData.buyInAmount;
                         return (
-                            <Button disabled={royaleData.buyInAmount > Number(balance)} onClick={signUp}>
-                                Buy in: {royaleData.buyInAmount} sUSD
+                            <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
+                                {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                             </Button>
                         );
                     } else {
@@ -263,7 +263,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     updateBalanceAndAllowance(buyInToken);
                                 }}
                             >
-                                Approve sUSD
+                                {t('options.royale.scoreboard.approve-susd')}
                             </Button>
                         );
                     }
@@ -296,7 +296,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                 return (
                     <DeadText>
                         <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                        Season did not start yet
+                        {t('options.royale.scoreboard.season-not-started')}
                     </DeadText>
                 );
             } else {

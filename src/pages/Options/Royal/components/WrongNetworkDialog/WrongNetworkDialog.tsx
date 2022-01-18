@@ -23,7 +23,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
             try {
                 await (window.ethereum as any).request({
                     method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0x45' }],
+                    params: [{ chainId: '0xA' }],
                 });
                 onClose();
             } catch (switchError: any) {
@@ -33,21 +33,21 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                             method: 'wallet_addEthereumChain',
                             params: [
                                 {
-                                    chainId: '0x45',
-                                    chainName: 'Optimism Kovan',
-                                    rpcUrls: ['https://kovan.optimism.io/'],
+                                    chainId: '0xA',
+                                    chainName: 'Optimistic Ethereum',
+                                    rpcUrls: ['https://mainnet.optimism.io'],
                                     nativeCurrency: {
                                         name: 'Ether',
                                         symbol: 'ETH',
                                         decimals: 18,
                                     },
-                                    blockExplorerUrls: ['https://kovan-optimistic.etherscan.io/'],
+                                    blockExplorerUrls: ['https://optimistic.etherscan.io/'],
                                 },
                             ],
                         });
                         await (window.ethereum as any).request({
                             method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x45' }],
+                            params: [{ chainId: '0xA' }],
                         });
                         onClose();
                     } catch (addError) {
@@ -154,7 +154,7 @@ export const WrongNetworkDialog: React.FC<WrongNetworkDialogProps> = ({ open, se
                                     display: 'block',
                                     color: 'var(--color-wrapper)',
                                 }}
-                                href="https://community.optimism.io/docs/infra/networks.html#optimistic-kovan"
+                                href="https://community.optimism.io/docs/infra/networks.html#optimism-mainnet"
                                 target="_blank"
                             >
                                 {t('options.royale.wrong-network-dialog.parameters')}

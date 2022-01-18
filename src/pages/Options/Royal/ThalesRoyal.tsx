@@ -20,6 +20,7 @@ import useEthPriceQuery from './Queries/useEthPriceQuery';
 import useRoyalePlayersQuery, { User } from './Queries/useRoyalePlayersQuery';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { RoyaleTooltip } from '../Market/components';
+import { getIsOVM } from 'utils/network';
 
 export enum Theme {
     Light,
@@ -41,6 +42,7 @@ const ThalesRoyal: React.FC = () => {
     const [allSeasons, setAllSeasons] = useState([] as any);
     const [latestSeasonData, setLatestSeasonData] = useState<ThalesRoyaleData>();
     const [thalesRoyaleData, setThalesRoyaleData] = useState<ThalesRoyaleData>();
+    const isL2 = getIsOVM(networkId);
 
     const royaleDataQuery = useThalesRoyaleData(walletAddress as any, {
         enabled: networkId === 69 || networkId === 10,
@@ -58,7 +60,7 @@ const ThalesRoyal: React.FC = () => {
 
     const positionsQuery = usePositionsQuery(selectedSeason, networkId, { enabled: networkId !== undefined });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
-    const ethPriceQuery = useEthPriceQuery(thalesRoyaleData?.priceFeedAddress as any, {
+    const ethPriceQuery = useEthPriceQuery({
         enabled: thalesRoyaleData !== undefined,
     });
     const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
@@ -129,9 +131,7 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            walletAddress && networkId !== 69 && networkId !== 10
-                ? setOpenNetworkWarningDialog(true)
-                : setOpenNetworkWarningDialog(false);
+            walletAddress && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
         }, 2000);
 
         return () => clearTimeout(timeout);

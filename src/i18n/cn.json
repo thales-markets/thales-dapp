@@ -1016,6 +1016,9 @@
                 "player-no": "玩家  <sans>№<sans>: ",
                 "eliminated": "你被淘汰了",
                 "period-expired": "注册期限已过",
+                "season-not-started": "赛季还没有开始",
+                "approve-susd": "批准 sUSD",
+                "buy-in": "买入: {{buyInAmount}}sUSD",
                 "table-header": {
                     "status": "状态",
                     "avatar": "头像",
@@ -1045,10 +1048,10 @@
             },
             "wrong-network-dialog": {
                 "title": "错误的网络！",
-                "message": "请切换到Optimism Kovan 继续",
+                "message": "请切换到Optimistic Ethereum 继续",
                 "return-to-dapp": "返回泰雷兹dApp",
-                "button": "切换到Optimism Kovan",
-                "parameters": "OP Kovan参数"
+                "button": "切换到Optimistic Ethereum",
+                "parameters": "OP Ethereum参数"
             },
             "wallet-not-connected-dialog": {
                 "title": "钱包未连接",

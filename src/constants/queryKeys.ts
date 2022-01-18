@@ -123,7 +123,7 @@ export const QUERY_KEYS = {
         Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
         Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
-        EthPrice: (contractAddress: string) => ['royale', 'ethBalance', contractAddress],
+        EthPrice: () => ['royale', 'ethPrice'],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],

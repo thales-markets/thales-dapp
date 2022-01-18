@@ -1016,6 +1016,9 @@
                 "player-no": "Player  <sans>№<sans>: ",
                 "eliminated": "You have been eliminated",
                 "period-expired": "Sign up period has expired",
+                "season-not-started": "Season did not start yet",
+                "approve-susd": "Approve sUSD",
+                "buy-in": "Buy-in: {{buyInAmount}}sUSD",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1045,10 +1048,10 @@
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",
-                "message": "Please switch to Optimism Kovan to continue",
+                "message": "Please switch to Optimistic Ethereum to continue",
                 "return-to-dapp": "Return to the Thales dApp",
-                "button": "Switch to Optimism Kovan",
-                "parameters": "OP Kovan parameters"
+                "button": "Switch to Optimistic Ethereum",
+                "parameters": "OP Ethereum parameters"
             },
             "wallet-not-connected-dialog": {
                 "title": "Wallet not connected",

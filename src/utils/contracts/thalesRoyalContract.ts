@@ -2,6 +2,12 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const thalesRoyaleContract = {
     addresses: {
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: 'TBD',
+        [NetworkId.Rinkeby]: 'TBD',
+        [NetworkId.Kovan]: 'TBD',
+        // added to resolve error with typings
+        [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
         [NetworkId['Kovan-Ovm']]: '0x3A219D05a72D1c4f26DC5442baEAbe6943576D5A',
     },

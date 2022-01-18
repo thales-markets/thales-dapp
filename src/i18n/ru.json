@@ -1021,6 +1021,9 @@
                 "verify": "# thales-royale-verify и введите:",
                 "starts": "Thales Royale начинается в:",
                 "period-expired": "Срок регистрации истек",
+                "season-not-started": "Сезон еще не начался",
+                "approve-susd": "Одобрить sUSD",
+                "buy-in": "Бай-ин: {{buyInAmount}}sUSD",
                 "dead": "мертвых",
                 "round-starts": "Следующий раунд начинается через:",
                 "start-royale": "Запустить Thales Royale",
@@ -1044,11 +1047,11 @@
                 "title": "Вы в сети Optimism Kovan"
             },
             "wrong-network-dialog": {
-                "parameters": "Параметры ОП Кован",
+                "parameters": "Параметры ОП Ethereum",
                 "return-to-dapp": "Вернуться в приложение Thales dApp",
                 "title": "Неправильная сеть!",
-                "button": "Переключиться на Optimism Kovan",
-                "message": "Пожалуйста, переключитесь на Optimism Kovan, чтобы продолжить"
+                "button": "Переключиться на Optimistic Ethereum",
+                "message": "Пожалуйста, переключитесь на Optimistic Ethereum, чтобы продолжить"
             },
             "wallet-not-connected-dialog": {
                 "button": "Подключить кошелек",
