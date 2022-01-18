@@ -177,9 +177,11 @@ const Paragraph = styled.p`
 
 const List = styled.ul`
     list-style: disc;
+    color: var(--color);
 `;
 const ListItem = styled.li`
     height: 3em;
+    color: var(--color);
     & > a {
         font-family: Nunito !important;
         font-style: normal;
