@@ -680,17 +680,38 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
 
     const getTitle = () => {
         if (!latestSeason) return;
+        console.log(timeLeftUntilNewSeason);
         if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
-            return (
-                <>
-                    <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
-                    <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                        {timeLeftUntilNewSeason
-                            ? format(timeLeftUntilNewSeason, 'HH:mm:ss')
-                            : t('options.royale.battle.ended')}
-                    </SubTitle>
-                </>
-            );
+            if (timeLeftUntilNewSeason) {
+                return (
+                    <>
+                        <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
+                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                            {timeLeftUntilNewSeason
+                                ? format(timeLeftUntilNewSeason, 'HH:mm:ss')
+                                : t('options.royale.battle.ended')}
+                        </SubTitle>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <Title>{t('options.royale.scoreboard.starts')}</Title>
+                        <Button
+                            onClick={startRoyaleSeason}
+                            disabled={!latestSeason.canStartNewSeason}
+                            className={!latestSeason.canStartNewSeason ? 'disabled' : ''}
+                            style={{
+                                margin: '30px auto',
+                                fontSize: 30,
+                                lineHeight: '30px',
+                            }}
+                        >
+                            <Title style={{ color: 'var(--color-wrapper)' }}>Start Season</Title>
+                        </Button>
+                    </>
+                );
+            }
         } else if (!latestSeason.seasonStarted && latestSeason.canStartNewSeason) {
             return (
                 <>
