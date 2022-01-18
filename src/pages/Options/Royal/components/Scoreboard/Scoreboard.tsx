@@ -683,7 +683,7 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
         if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
             return (
                 <>
-                    <Title>{t('options.royale.scoreboard.starts')}</Title>
+                    <Title>{t('options.royale.scoreboard.season-ready-in')}</Title>
                     <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                         {timeLeftUntilNewSeason
                             ? format(timeLeftUntilNewSeason, 'HH:mm:ss')
