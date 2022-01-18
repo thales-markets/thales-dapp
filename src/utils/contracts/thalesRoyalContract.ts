@@ -3,7 +3,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 export const thalesRoyaleContract = {
     addresses: {
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0xb7146827d866B0d39037c3C578416FF1EF83DD76',
+        [NetworkId['Kovan-Ovm']]: '0x3A219D05a72D1c4f26DC5442baEAbe6943576D5A',
     },
     abi: [
         {
@@ -480,6 +480,13 @@ export const thalesRoyaleContract = {
             inputs: [],
             name: 'rounds',
             outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+            name: 'royaleInSeasonStarted',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
         },

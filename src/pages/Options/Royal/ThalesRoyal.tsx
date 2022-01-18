@@ -39,6 +39,7 @@ const ThalesRoyal: React.FC = () => {
     const [showStats, setShowStats] = useState(true);
     const [selectedSeason, setSelectedSeason] = useState<number>(0);
     const [allSeasons, setAllSeasons] = useState([] as any);
+    const [latestSeasonData, setLatestSeasonData] = useState<ThalesRoyaleData>();
     const [thalesRoyaleData, setThalesRoyaleData] = useState<ThalesRoyaleData>();
 
     const royaleDataQuery = useThalesRoyaleData(walletAddress as any, {
@@ -79,6 +80,8 @@ const ThalesRoyal: React.FC = () => {
             }
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
             setThalesRoyaleData(thalesRoyaleDataMap.get(selectedSeason));
+            const latestSeason = Number(Array.from(thalesRoyaleDataMap.keys()).pop());
+            setLatestSeasonData(thalesRoyaleDataMap.get(latestSeason));
         }
     }, [thalesRoyaleDataMap]);
 
@@ -167,6 +170,7 @@ const ThalesRoyal: React.FC = () => {
                     royaleData={thalesRoyaleData as any}
                     user={user}
                     users={users}
+                    latestSeason={latestSeasonData as any}
                 />
                 {thalesRoyaleData && (
                     <BattleRoyale
