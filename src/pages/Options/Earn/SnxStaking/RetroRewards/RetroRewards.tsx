@@ -35,7 +35,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
 import i18n from '../../../../../i18n';
-import MigrationInfo from '../../MigrationInfo';
+import MigrationInfo from '../../components/MigrationInfo';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -151,7 +151,7 @@ const RetroRewards: React.FC = () => {
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 6', minHeight: '533px' }}>
+        <RetroRewardsSection>
             <SectionHeader>
                 <div>
                     {t('options.earn.snx-stakers.retro-rewards.title')}
@@ -289,9 +289,17 @@ const RetroRewards: React.FC = () => {
                 </SectionContentContainer>
             )}
             {isL2 && <MigrationInfo messageKey="retro-unlock" />}
-        </EarnSection>
+        </RetroRewardsSection>
     );
 };
+
+const RetroRewardsSection = styled(EarnSection)`
+    grid-column: span 6;
+    min-height: 533px;
+    @media (max-width: 767px) {
+        min-height: 200px;
+    }
+`;
 
 const InfoDiv = styled(FlexDivColumn)`
     padding-bottom: 10px;

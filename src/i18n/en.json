@@ -1208,6 +1208,10 @@
             "staking": "Staking logic has been migrated to L2.",
             "vesting": "Staking logic has been migrated to L2."
         },
+        "migration-notice": {
+            "text": " As THALES token holder you have option to migrate your token to L2 (Optimistic Etherium network)",
+            "button-label": "Migrate THALES"
+        },
         "tabs": {
             "migrate": "Migrate",
             "withdraw": "Withdraw",

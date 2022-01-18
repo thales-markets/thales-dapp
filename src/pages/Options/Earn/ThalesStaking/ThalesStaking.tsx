@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Stake from './Stake';
 import MyStake from './MyStake';
 import Unstake from './Unstake';
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
-import MigrationInfo from '../MigrationInfo';
+import MigrationInfo from '../components/MigrationInfo';
 
 const ThalesStaking: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -17,10 +17,6 @@ const ThalesStaking: React.FC = () => {
     const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
     const [thalesBalance, setThalesBalance] = useState('0');
     const [escrowedBalance, setEscrowedBalance] = useState(0);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
 
     return (
         <>

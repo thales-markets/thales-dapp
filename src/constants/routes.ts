@@ -16,6 +16,7 @@ export const ROUTES = {
         AmmReporting: '/markets/amm-reporting',
         Token: '/token',
         Royal: '/royale',
+        TokenMigration: '/token?tab=migration&action=migrate',
     },
     Governance: {
         Home: '/governance',

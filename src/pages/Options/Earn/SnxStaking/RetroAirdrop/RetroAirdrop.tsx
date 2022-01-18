@@ -33,7 +33,7 @@ import { airdropClaimQuizQuestions } from 'i18n/quizQuestions';
 import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
-import MigrationInfo from '../../MigrationInfo';
+import MigrationInfo from '../../components/MigrationInfo';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();

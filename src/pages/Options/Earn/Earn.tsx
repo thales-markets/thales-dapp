@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Background, FlexDivCentered, FlexDivColumn, FlexDivRowCentered, Image } from '../../../theme/common';
@@ -23,6 +23,7 @@ import { RootState } from '../../../redux/rootReducer';
 import { getNetworkId } from '../../../redux/modules/wallet';
 import { isNetworkSupported } from '../../../utils/network';
 import Migration from './Migration';
+import MigrationNotice from './components/MigrationNotice';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -67,6 +68,13 @@ const EarnPage: React.FC = () => {
         disabled: boolean;
     }> = useMemo(() => tabs, [t]);
 
+    useEffect(() => {
+        const paramTab = queryString.parse(location.search).tab;
+        if (paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab)) {
+            setSelectedTab(paramTab);
+        }
+    }, [location]);
+
     return (
         <Background style={{ minHeight: '100vh' }}>
             {networkId && isNetworkSupported(networkId) ? (
@@ -79,6 +87,7 @@ const EarnPage: React.FC = () => {
                     <Container>
                         <FlexDivColumn>
                             <TokenOverview />
+                            <MigrationNotice />
                             <MainContentContainer>
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab, index) => (

@@ -4,35 +4,45 @@ import styled from 'styled-components';
 import { FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDiv } from 'theme/common';
 import Migrate from './Migrate';
 import Swap from './Swap';
+import { useLocation } from 'react-router-dom';
+import { history } from 'utils/routes';
+import queryString from 'query-string';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();
-    const [selectedTab, setSelectedTab] = useState<string>('migrate');
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+    const tabs = [
+        {
+            id: 'migrate',
+            name: t(`migration.tabs.migrate`),
+        },
+        // {
+        //     id: 'withdraw',
+        //     name: t(`migration.tabs.withdraw`),
+        // },
+        {
+            id: 'swap',
+            name: t(`migration.tabs.swap`),
+        },
+    ];
+    const tabIds = tabs.map((tab) => tab.id);
+
+    const location = useLocation();
+    const paramAction = queryString.parse(location.search).action;
+    const isTabAvailable = paramAction !== null && tabIds.includes(paramAction);
+    const [selectedTab, setSelectedTab] = useState(isTabAvailable ? paramAction : 'migrate');
 
     const optionsTabContent: Array<{
         id: string;
         name: string;
-    }> = useMemo(
-        () => [
-            {
-                id: 'migrate',
-                name: t(`migration.tabs.migrate`),
-            },
-            {
-                id: 'withdraw',
-                name: t(`migration.tabs.withdraw`),
-            },
-            {
-                id: 'swap',
-                name: t(`migration.tabs.swap`),
-            },
-        ],
-        [t]
-    );
+    }> = useMemo(() => tabs, [t]);
+
+    useEffect(() => {
+        const paramAction = queryString.parse(location.search).action;
+        if (paramAction !== null && tabIds.includes(paramAction)) {
+            setSelectedTab(paramAction);
+        }
+    }, [location]);
 
     return (
         <Wrapper>
@@ -44,6 +54,13 @@ const Migration: React.FC = () => {
                             key={index}
                             index={index}
                             onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'migration',
+                                        action: tab.id,
+                                    }),
+                                });
                                 setSelectedTab(tab.id);
                             }}
                             className={`${tab.id === selectedTab ? 'selected' : ''}`}

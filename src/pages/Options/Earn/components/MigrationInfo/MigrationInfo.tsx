@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import { FlexDivCentered } from '../../../../theme/common';
+import { FlexDivCentered } from '../../../../../theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
 
 type MigrationInfoProps = {
@@ -11,13 +11,9 @@ type MigrationInfoProps = {
 const MigrationInfo: React.FC<MigrationInfoProps> = ({ messageKey }) => {
     const { t } = useTranslation();
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
     return (
         <Conatiner>
-            <LPStakingTitle>{t(`migration.migration-messages.${messageKey}`)}</LPStakingTitle>
+            <Message>{t(`migration.migration-messages.${messageKey}`)}</Message>
             <FlexDivCentered>
                 <NetworkSwitch hideL2DropDown />
             </FlexDivCentered>
@@ -40,9 +36,9 @@ const Conatiner = styled.section`
     }
 `;
 
-const LPStakingTitle = styled(FlexDivCentered)`
+const Message = styled(FlexDivCentered)`
     font-weight: 600;
-    font-size: 30px;
+    font-size: 24px;
     line-height: 44px;
     padding: 20px 0;
     text-align: center;
