@@ -1204,5 +1204,26 @@
         "beta": "BETA",
         "price-changed-warning": "Price changed, please review",
         "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
+    },
+    "articles": {
+        "token": {
+            "list": {
+                "1": "What’s THALES token?",
+                "2": "How it is distributed?",
+                "3": "How to get THALES token?",
+                "4": "How to stake THALES token?",
+                "5": "Why does this protocol need a token?"
+            },
+            "title": "THALES TOKEN",
+            "paragraphs": {
+                "1": "On the technical side, THALES is a <bold>fixed-supply standard ERC-20 token</bold> on the Ethereum network.\n\n Its only purpose is to <bold>govern the Thales protocol</bold>, granting voting power for DAO elections to those who stake it.\n\n This voting power for stakers is shown on the <bold>governance site</bold> and it can currently be used to participate in Thales Council elections.\n\n Any further utility of the token that could be relevant to the protocol can also be decided and voted on by the ThalesDAO governance structures, more specifically the Thales Council.",
+                "2": "For a more detailed breakdown and explanation of the different allocations we highly suggest you grab a cup of your favorite hot beverage and dive into the <bold>THALES tokenomics blog post.</bold>",
+                "3": "You can obtain THALES tokens in both <bold>DODO exchange</bold> and <bold2>Uniswap</bold2> on Ethereum main net. It is also possible to do so via aggregators like 1inch and Matcha.\n\n THALES token will soon be available on Optimism network (Ethereum Layer 2).",
+                "4": "Staking your THALES tokens means that you are <bold>locking them up in a smart contract to receive voting power</bold>, effectively making those tokens “untransferable” as long as they remain staked. To unstake them there’s a 7-day cool-off period after which the THALES tokens can be transferred again.\n\n Follow <bold>this detailed guide</bold> with step-by-step instructions and screenshots to stake your THALES tokens.",
+                "5": "THALES token is at the core of governance structures and it’s a key component in achieving an <bold>effective pace of developments and innovations in the Parimutuel markets niche, while still maintaining a decentralized organizational structure.</bold>"
+            }
+        },
+        "governance": {},
+        "whitepaper": {}
     }
 }

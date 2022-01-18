@@ -20,7 +20,10 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
     const [openBurger, setBurgerState] = useState(false);
     return (
         <Wrapper>
-            <Logo className="icon-home icon-home--thales" />
+            <Logo
+                onClick={() => navigateTo(ROUTES.Home, false, false, 'show')}
+                className="icon-home icon-home--thales"
+            />
             <Links>
                 <PositionedContainer>
                     <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
@@ -33,7 +36,10 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                         <Link target="_blank" rel="noreferrer">
                             {t('header.links.learn.guides')}
                         </Link>
-                        <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
+                        <Link
+                            rel="noreferrer"
+                            onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}
+                        >
                             {t('header.links.learn.whitepaper')}
                         </Link>
 
@@ -46,14 +52,10 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                     {t('header.links.blog')}
                 </Link>
-                <Link target="_blank" rel="noreferrer">
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
                     {t('header.links.governance')}
                 </Link>
-                <Link
-                    target="_blank"
-                    rel="noreferrer"
-                    href="https://thalesmarket.medium.com/thales-tokenomics-introducing-thales-token-3aab321174e7"
-                >
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
                     {t('header.links.token')}
                 </Link>
             </Links>
@@ -313,6 +315,7 @@ const Link = styled.a`
     z-index: 2;
     text-align: center;
     text-transform: uppercase;
+    cursor: pointer;
     color: var(--color);
     @media (max-width: 1024px) {
         margin-bottom: 60px;

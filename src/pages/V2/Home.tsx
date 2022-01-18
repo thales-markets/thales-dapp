@@ -91,7 +91,7 @@ const Home: React.FC = () => {
 
 export default Home;
 
-const Background = styled.div`
+export const Background = styled.div`
     width: 100%;
     font-size: 16px;
     @media (max-width: 512px) {
