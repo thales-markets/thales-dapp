@@ -218,7 +218,7 @@ const RetroAirdrop: React.FC = () => {
                     />
                 </SectionContentContainer>
             )}
-            {!isL2 && <MigrationInfo />}
+            {!isL2 && <MigrationInfo messageKey="retro-airdrop" />}
             <Quiz quizData={quizData} openQuiz={openQuiz} setOpenQuiz={setOpenQuiz}></Quiz>
         </EarnSection>
     );

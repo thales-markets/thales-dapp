@@ -29,6 +29,7 @@ import { ReactComponent as ArrowDown } from 'assets/images/arrow-down-blue.svg';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import { getIsAppReady } from 'redux/modules/app';
 import { formatCurrencyWithKey, truncToDecimals } from 'utils/formatters/number';
+import FieldValidationMessage from 'components/FieldValidationMessage';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();
@@ -38,6 +39,7 @@ const Migration: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const network = useSelector((state: RootState) => getNetwork(state));
     const [amount, setAmount] = useState<number | string>('');
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [thalesBalance, setThalesBalance] = useState<number | string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
@@ -233,6 +235,10 @@ const Migration: React.FC = () => {
         setAmount(truncToDecimals(thalesBalance));
     };
 
+    useEffect(() => {
+        setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= thalesBalance));
+    }, [amount, thalesBalance]);
+
     return (
         <Wrapper>
             <Container>
@@ -252,18 +258,27 @@ const Migration: React.FC = () => {
                     ))}
                 </OptionsTabContainer>
                 <InputContainer>
-                    <NumericInput value={amount} onChange={(_, value) => setAmount(value)} />
+                    <NumericInput
+                        value={amount}
+                        onChange={(_, value) => setAmount(value)}
+                        disabled={isSubmitting}
+                        className={isAmountValid ? '' : 'error'}
+                    />
                     <InputLabel>
                         {t('migration.from-label')}
                         <NetworkLabel>{network.networkName}</NetworkLabel>
                     </InputLabel>
-                    <CurrencyLabel>{THALES_CURRENCY}</CurrencyLabel>
+                    <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
                     <ThalesWalletAmountLabel>
                         {formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}
-                        <MaxButton>
+                        <MaxButton disabled={isSubmitting}>
                             <InnerButton onClick={onMaxClick}>{t('common.max')}</InnerButton>
                         </MaxButton>
                     </ThalesWalletAmountLabel>
+                    <FieldValidationMessage
+                        showValidation={!isAmountValid}
+                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
+                    />
                 </InputContainer>
                 <ArrowContainer>
                     <ArrowDown />

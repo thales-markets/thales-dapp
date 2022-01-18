@@ -1197,7 +1197,12 @@
             "label": "Migrate",
             "progress-label": "Migration in progress..."
         },
-        "migration-message": "Staking logic has been migrated to L2.",
+        "migration-messages": {
+            "retro-airdrop": "Retro airdrop is available on L2.",
+            "retro-unlock": "This distribution is available on L1.",
+            "staking": "Staking logic has been migrated to L2.",
+            "vesting": "Staking logic has been migrated to L2."
+        },
         "tabs": {
             "migrate": "Migrate",
             "withdraw": "Withdraw",

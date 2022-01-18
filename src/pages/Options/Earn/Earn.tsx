@@ -15,8 +15,6 @@ import snxStakingActiveIcon from '../../../assets/images/snx-staking-active.png'
 import snxStakingIcon from '../../../assets/images/snx-staking.png';
 import stakingActiveIcon from '../../../assets/images/staking-active.svg';
 import stakingIcon from '../../../assets/images/staking.svg';
-import lpActiveIcon from '../../../assets/images/lp-active.svg';
-import lpIcon from '../../../assets/images/lp.svg';
 import vestingActiveIcon from '../../../assets/images/vesting-active.svg';
 import vestingIcon from '../../../assets/images/vesting.svg';
 import Loader from '../../../components/Loader';
@@ -160,7 +158,7 @@ const EarnPage: React.FC = () => {
                             }}
                             src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
                         />
-                        <Icon
+                        {/* <Icon
                             width={50}
                             height={30}
                             onClick={() => {
@@ -173,7 +171,7 @@ const EarnPage: React.FC = () => {
                                 setSelectedTab('lp-staking');
                             }}
                             src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
-                        />
+                        /> */}
                     </NavFooter>
                 </>
             ) : (
@@ -220,9 +218,9 @@ const OptionsTabContainer = styled.div`
 const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
     position: absolute;
     top: 0;
-    left: ${(props) => props.index * 19.5 + '% '};
+    left: ${(props) => props.index * 24.5 + '% '};
     background: linear-gradient(90deg, #141874, #04045a);
-    width: 22%;
+    width: 26%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
     transition: 0.5s;
     transition-property: color;

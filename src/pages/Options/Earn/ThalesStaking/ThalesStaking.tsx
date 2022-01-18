@@ -50,7 +50,7 @@ const ThalesStaking: React.FC = () => {
                     />
                 </>
             )}
-            {!isL2 && <MigrationInfo />}
+            {!isL2 && <MigrationInfo messageKey="staking" />}
             <YourTransactions />
         </>
     );

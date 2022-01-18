@@ -151,7 +151,7 @@ const RetroRewards: React.FC = () => {
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 6', minHeight: '500px' }}>
+        <EarnSection style={{ gridColumn: 'span 6', minHeight: '533px' }}>
             <SectionHeader>
                 <div>
                     {t('options.earn.snx-stakers.retro-rewards.title')}
@@ -288,7 +288,7 @@ const RetroRewards: React.FC = () => {
                     />
                 </SectionContentContainer>
             )}
-            {isL2 && <MigrationInfo />}
+            {isL2 && <MigrationInfo messageKey="retro-unlock" />}
         </EarnSection>
     );
 };

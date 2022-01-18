@@ -26,7 +26,7 @@ const Vesting: React.FC = () => {
                     <Schedule />
                 </>
             )}
-            {!isL2 && <MigrationInfo />}
+            {!isL2 && <MigrationInfo messageKey="vesting" />}
             <YourTransactions />
         </>
     );
