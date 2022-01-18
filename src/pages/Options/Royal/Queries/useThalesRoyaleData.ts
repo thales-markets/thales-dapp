@@ -150,7 +150,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
         });
     }
 
-    for (let i = lastSeason; i >= 1; i--) {
+    for (let i = 1; i <= lastSeason; i++) {
         const isPlayerAliveInSpecificSeason = walletAddress
             ? await RoyaleContract.isPlayerAliveInASpecificSeason(walletAddress, i)
             : false;

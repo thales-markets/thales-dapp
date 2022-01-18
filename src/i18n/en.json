@@ -1019,7 +1019,7 @@
                 "season-not-started": "Season did not start yet",
                 "season-ready-in": "Next season ready to start in:",
                 "approve-susd": "Approve sUSD",
-                "buy-in": "Buy-in: {{buyInAmount}}sUSD",
+                "buy-in": "Buy-in: {{buyInAmount}} sUSD",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",

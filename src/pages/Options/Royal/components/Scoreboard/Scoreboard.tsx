@@ -729,20 +729,23 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
             if (latestSeason.roundInASeason === 0) {
                 {
                     return latestSeason.signUpPeriod < new Date() ? (
-                        <Button
-                            onClick={startRoyale}
-                            disabled={!latestSeason.canStartRoyale}
-                            className={!latestSeason.canStartRoyale ? 'disabled' : ''}
-                            style={{
-                                margin: '30px auto',
-                                fontSize: 30,
-                                lineHeight: '30px',
-                            }}
-                        >
-                            <Title style={{ color: 'var(--color-wrapper)' }}>
-                                {t('options.royale.scoreboard.start-royale')}
-                            </Title>
-                        </Button>
+                        <>
+                            <Title>{t('options.royale.scoreboard.starts')}</Title>
+                            <Button
+                                onClick={startRoyale}
+                                disabled={!latestSeason.canStartRoyale}
+                                className={!latestSeason.canStartRoyale ? 'disabled' : ''}
+                                style={{
+                                    margin: '30px auto',
+                                    fontSize: 30,
+                                    lineHeight: '30px',
+                                }}
+                            >
+                                <Title style={{ color: 'var(--color-wrapper)' }}>
+                                    {t('options.royale.scoreboard.start-royale')}
+                                </Title>
+                            </Button>
+                        </>
                     ) : (
                         <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
                             <TimeRemaining end={latestSeason.signUpPeriod} showFullCounter />

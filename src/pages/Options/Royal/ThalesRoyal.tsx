@@ -45,13 +45,12 @@ const ThalesRoyal: React.FC = () => {
     const isL2 = getIsOVM(networkId);
 
     const royaleDataQuery = useThalesRoyaleData(walletAddress as any, {
-        enabled: networkId === 69 || networkId === 10,
+        enabled: isL2,
     });
 
     const thalesRoyaleDataMap = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
-
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
-        enabled: networkId === 69 || networkId === 10,
+        enabled: isL2,
     });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
     const user = users.filter(
