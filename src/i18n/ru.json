@@ -1039,7 +1039,8 @@
                 "info2": "Thales Royale - это <bold> игра с последовательным предсказанием, где победитель получает все </bold>, в которую играют в 6 раундов.",
                 "ends": "Thales Royale заканчивается:",
                 "round-ending": " до конца раунда {{round}}",
-                "season-ready-in": "Следующий сезон готов начать через:"
+                "season-ready-in": "Следующий сезон готов начать через:",
+                "start-season": "Начать сезон"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

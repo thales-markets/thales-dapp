@@ -702,7 +702,9 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
                                 lineHeight: '30px',
                             }}
                         >
-                            <Title style={{ color: 'var(--color-wrapper)' }}>Start Season</Title>
+                            <Title style={{ color: 'var(--color-wrapper)' }}>
+                                {t('options.royale.scoreboard.start-season')}
+                            </Title>
                         </Button>
                     </>
                 );
@@ -721,7 +723,9 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
                             lineHeight: '30px',
                         }}
                     >
-                        <Title style={{ color: 'var(--color-wrapper)' }}>Start Season</Title>
+                        <Title style={{ color: 'var(--color-wrapper)' }}>
+                            {t('options.royale.scoreboard.start-season')}
+                        </Title>
                     </Button>
                 </>
             );
@@ -1264,7 +1268,8 @@ const Title = styled(Text)`
     text-align: center;
     letter-spacing: -0.4px;
     color: var(--color);
-    padding-bottom: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
 `;
 
 const SubTitle = styled(Text)<{ lineHeight: number }>`

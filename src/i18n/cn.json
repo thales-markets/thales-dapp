@@ -1039,7 +1039,8 @@
                 "alive": "活着",
                 "winner": "获胜者",
                 "users-per-page": "每页用户数",
-                "season-ready-in": "下个赛季准备开始："
+                "season-ready-in": "下个赛季准备开始：",
+                "start-season": "开始赛季"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

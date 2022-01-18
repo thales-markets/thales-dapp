@@ -1018,6 +1018,7 @@
                 "period-expired": "Sign up period has expired",
                 "season-not-started": "Season did not start yet",
                 "season-ready-in": "Next season ready to start in:",
+                "start-season": "Start season",
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in: {{buyInAmount}} sUSD",
                 "table-header": {
