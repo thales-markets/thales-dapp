@@ -31,16 +31,30 @@ const Home: React.FC = () => {
                 </FlexDiv>
                 <Title style={{ marginBottom: '1em' }}> {t('landing-page.integrations')}</Title>
                 <FlexDiv>
-                    <SNX className="icon-home icon-home--snx" />
-                    <INCH className="icon-home icon-home--inch" />
+                    <SNX
+                        className="icon-home icon-home--snx"
+                        onClick={() => window.open('https://synthetix.io/', '_blank')}
+                    />
+                    <INCH
+                        className="icon-home icon-home--inch"
+                        onClick={() => window.open('https://1inch.io/', '_blank')}
+                    />
                 </FlexDiv>
                 <FlexDiv>
-                    <LINK className="icon-home icon-home--link" />
-                    <OPTIMISM className="icon-home icon-home--optimism" />
+                    <LINK
+                        className="icon-home icon-home--link"
+                        onClick={() => window.open('https://chain.link/', '_blank')}
+                    />
+                    <OPTIMISM
+                        className="icon-home icon-home--optimism"
+                        onClick={() => window.open('https://www.optimism.io/', '_blank')}
+                    />
                 </FlexDiv>
                 <Title style={{ marginTop: 50 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
-                <Title style={{ marginTop: 50 }}> {t('landing-page.faq.title')}</Title>
+                <Title id="faq-section" style={{ marginTop: 50 }}>
+                    {t('landing-page.faq.title')}
+                </Title>
                 <Faq>
                     <FaqQuestion>{t('landing-page.faq.firstQ')}</FaqQuestion>
                     <FaqAnswer>{t('landing-page.faq.firstA')}</FaqAnswer>
@@ -144,6 +158,11 @@ const ThalesGame = styled.i`
 
 const IconAbs = styled.i`
     line-height: 0.5em;
+    cursor: pointer;
+    &:hover {
+        transform: scale(1.2);
+        transition: 0.2s;
+    }
 `;
 
 const SNX = styled(IconAbs)`

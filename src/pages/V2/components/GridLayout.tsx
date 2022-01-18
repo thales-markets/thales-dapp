@@ -117,7 +117,7 @@ const Title = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 4.2em;
+    font-size: 5.5em;
     line-height: 92.3%;
     text-align: center;
     color: var(--color);
@@ -129,7 +129,7 @@ const Subtitle = styled.p`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
-    font-size: 2em;
+    font-size: 2.5em;
     line-height: 95%;
     text-align: center;
     color: var(--color);

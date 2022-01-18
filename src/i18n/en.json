@@ -1,12 +1,19 @@
 {
     "header": {
         "links": {
+            "learn": {
+                "title": "Learn",
+                "docs": "Documentation",
+                "guides": "Guides",
+                "whitepaper": "Whitepaper"
+            },
+            "governance": "Governance",
             "faq": "FAQ",
             "partners": "Integrations",
             "community": "Community",
             "blog": "Blog",
-            "docs": "Docs",
-            "tokenomics": "Tokenomics",
+            "docs": "Learn",
+            "token": "Token",
             "test": "Test"
         }
     },

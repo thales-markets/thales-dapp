@@ -22,25 +22,39 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
         <Wrapper>
             <Logo className="icon-home icon-home--thales" />
             <Links>
-                <Link target="_blank" rel="noreferrer" href="https://docs.thales.market/">
-                    {t('header.links.docs')}
+                <PositionedContainer>
+                    <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
+                        {t('header.links.learn.title')}
+                    </Link>
+                    <DropDownContainer>
+                        <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
+                            {t('header.links.learn.docs')}
+                        </Link>
+                        <Link target="_blank" rel="noreferrer">
+                            {t('header.links.learn.guides')}
+                        </Link>
+                        <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
+                            {t('header.links.learn.whitepaper')}
+                        </Link>
+
+                        <Link href="#faq-section">{t('header.links.faq')}</Link>
+                    </DropDownContainer>
+                </PositionedContainer>
+                <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
+                    {t('header.links.community')}
+                </Link>
+                <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
+                    {t('header.links.blog')}
+                </Link>
+                <Link target="_blank" rel="noreferrer">
+                    {t('header.links.governance')}
                 </Link>
                 <Link
                     target="_blank"
                     rel="noreferrer"
                     href="https://thalesmarket.medium.com/thales-tokenomics-introducing-thales-token-3aab321174e7"
                 >
-                    {t('header.links.tokenomics')}
-                </Link>
-                <Link target="_blank" rel="noreferrer">
-                    {t('header.links.partners')}
-                </Link>
-                <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
-                    {t('header.links.community')}
-                </Link>
-
-                <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
-                    {t('header.links.blog')}
+                    {t('header.links.token')}
                 </Link>
             </Links>
             <ToggleContainer
@@ -77,7 +91,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <i className="icon-home icon-home--right" />
             </ButtonContainer>
             <BurgerContainer className={openBurger ? '' : 'hide'}>
-                <Link target="_blank" rel="noreferrer" href="https://docs.thales.market/">
+                <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                     {t('header.links.docs')}
                 </Link>
                 <Link
@@ -143,6 +157,48 @@ const Wrapper = styled.div`
     }
 `;
 
+const PositionedContainer = styled.div`
+    position: relative;
+    display: block;
+    top: 50px;
+    padding-bottom: 100px;
+    &:hover {
+        div {
+            display: flex;
+        }
+    }
+`;
+
+const DropDownContainer = styled.div`
+    position: absolute;
+    top: 2em;
+    left: 0;
+    background: var(--background);
+    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px;
+    & > a {
+        width: 100%;
+        font-family: Nunito !important;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 1em;
+        line-height: 1.6em;
+        text-align: left;
+        text-transform: uppercase;
+        color: var(--color);
+        padding: 10px;
+        border-radius: 7px;
+        &:hover {
+            background: rgba(196, 196, 196, 0.1);
+        }
+    }
+`;
+
 const BurgerContainer = styled.div`
     &.hide {
         display: none;
@@ -184,7 +240,7 @@ const Links = styled(CenteredDiv)`
     grid-row-start: 3;
     grid-row-end: 4;
     justify-content: space-between;
-    z-index: 2;
+    z-index: 10;
     @media (max-width: 1024px) {
         display: none;
     }
