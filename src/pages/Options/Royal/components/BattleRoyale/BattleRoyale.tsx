@@ -286,7 +286,11 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
                     className="icon icon--right"
                 />
                 {isWinner ? (
-                    <Button style={{ zIndex: 1000 }} onClick={claimReward}>
+                    <Button
+                        style={{ zIndex: 1000 }}
+                        disabled={royaleData.rewardCollectedPerSeason}
+                        onClick={claimReward}
+                    >
                         Claim reward
                     </Button>
                 ) : (

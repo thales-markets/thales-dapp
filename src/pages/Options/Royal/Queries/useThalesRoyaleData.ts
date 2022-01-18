@@ -27,7 +27,7 @@ export type ThalesRoyaleData = {
     pauseBetweenSeasonsTime: number;
     priceFeedAddress: string;
     playerSignedUpPerSeason: boolean;
-    rewardCollectedPerSeason: number;
+    rewardCollectedPerSeason: boolean;
     rewardPerWinnerPerSeason: number;
     rewardPerSeason: number;
     unclaimedRewardPerSeason: number;
@@ -141,7 +141,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             pauseBetweenSeasonsTime: Number(pauseBetweenSeasonsTime),
             priceFeedAddress,
             playerSignedUpPerSeason: false,
-            rewardCollectedPerSeason: 0,
+            rewardCollectedPerSeason: false,
             rewardPerWinnerPerSeason,
             rewardPerSeason,
             unclaimedRewardPerSeason,
