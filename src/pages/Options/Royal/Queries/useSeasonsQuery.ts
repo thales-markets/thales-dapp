@@ -11,7 +11,6 @@ const useSeasonsQuery = (networkId: NetworkId, options?: UseQueryOptions<SeasonD
     return useQuery<SeasonData[]>(
         QUERY_KEYS.Royale.Seasons(networkId),
         async () => {
-            console.log('Seasons Query');
             const data = await thalesData.binaryOptions.thalesRoyaleSeasons({ network: networkId });
             const sortedSeasons = data.sort((a: any, b: any) => (a.round > b.round ? 1 : -1));
             return sortedSeasons;

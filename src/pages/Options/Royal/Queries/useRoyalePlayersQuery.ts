@@ -24,7 +24,6 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
     return useQuery<User[]>(
         QUERY_KEYS.Royale.Players(),
         async () => {
-            console.log('Players  Query');
             const baseUrl = 'https://api.thales.market/thales-royale/';
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());

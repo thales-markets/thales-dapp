@@ -22,7 +22,6 @@ const usePositionsQuery = (selectedSeason: number, networkId: NetworkId, options
     return useQuery<Positions>(
         QUERY_KEYS.Royale.Positions(networkId),
         async () => {
-            console.log('Positions Query');
             const positions = await thalesData.binaryOptions.thalesRoyalePositions({
                 season: selectedSeason,
                 network: networkId,

@@ -13,7 +13,7 @@ import { RoyaleTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, LoaderContainer, Text } from 'theme/common';
@@ -26,6 +26,11 @@ import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
 import DiscordImage from 'assets/images/royale/discord.png';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
 import i18n from '../../../../../i18n';
+import { ethers } from 'ethers';
+import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
+import { getIsOVM } from 'utils/network';
+import useApproveSpender from 'pages/Options/Home/Swap/useApproveSpender';
+import { erc20Contract } from 'utils/contracts/erc20Contract';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -66,6 +71,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
     allSeasons,
     latestSeason,
 }) => {
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const { t } = useTranslation();
@@ -81,6 +87,54 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
+    const [allowance, setAllowance] = useState(false);
+    const [balance, setBalance] = useState('0');
+    const isL2 = getIsOVM(networkId);
+    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+    const signer = provider.getSigner();
+    const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
+
+    const approveSpenderQuery = useApproveSpender(networkId, {
+        enabled: false,
+    });
+
+    useEffect(() => {
+        updateBalanceAndAllowance(buyInToken);
+    }, [buyInToken]);
+
+    const updateBalanceAndAllowance = (token: any) => {
+        if (token) {
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
+
+            const spender = approveSpenderQuery.refetch().then((resp: any) => {
+                return resp.data.address;
+            });
+
+            erc20Instance
+                .allowance(walletAddress, spender)
+                .then((data: any) => setAllowance(Number(ethers.utils.formatUnits(data, (token as any).decimals)) > 0));
+
+            erc20Instance
+                .balanceOf(walletAddress)
+                .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+        }
+    };
+
+    const approve = async () => {
+        const erc20Instance = new ethers.Contract((buyInToken as any).address, erc20Contract.abi, signer);
+        try {
+            const req = await approveSpenderQuery.refetch();
+            const tx = await erc20Instance.approve(req.data?.address, ethers.constants.MaxUint256);
+            await tx.wait();
+            setAllowance(true);
+            return {
+                data: (req.data as any).data,
+                to: (req.data as any).to,
+            };
+        } catch (e) {
+            console.log('failed: ', e);
+        }
+    };
 
     const usersForUi = useMemo(() => {
         if (!royaleData) return;
@@ -184,10 +238,35 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
 
     const getFooter = (user: User | undefined, royaleData: ThalesRoyaleData) => {
         if (!royaleData) return;
+        console.log(user);
+        if (user && user.status === UserStatus.NOTVERIFIED) {
+            return (
+                <Button onClick={setShowPopup.bind(this, true)}>
+                    {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
+                </Button>
+            );
+        }
         if (royaleData.signUpPeriod > new Date()) {
             if (user) {
                 if (user.status === UserStatus.NOTSIGNED) {
-                    return <Button onClick={signUp}>Buy in: X sUSD</Button>;
+                    if (allowance) {
+                        return (
+                            <Button disabled={royaleData.buyInAmount > Number(balance)} onClick={signUp}>
+                                Buy in: {royaleData.buyInAmount} sUSD
+                            </Button>
+                        );
+                    } else {
+                        return (
+                            <Button
+                                onClick={async () => {
+                                    await approve();
+                                    updateBalanceAndAllowance(buyInToken);
+                                }}
+                            >
+                                Approve sUSD
+                            </Button>
+                        );
+                    }
                 }
                 if (user.status === UserStatus.NOTVERIFIED) {
                     return (

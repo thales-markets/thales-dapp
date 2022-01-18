@@ -12,7 +12,6 @@ const useRoundsQuery = (selectedSeason: number, networkId: NetworkId, options?: 
     return useQuery<RoundData[]>(
         QUERY_KEYS.Royale.Rounds(networkId),
         async () => {
-            console.log('Round Query');
             const data = await thalesData.binaryOptions.thalesRoyaleRounds({
                 season: selectedSeason,
                 network: networkId,

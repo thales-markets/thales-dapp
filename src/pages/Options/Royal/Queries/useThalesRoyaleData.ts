@@ -10,6 +10,7 @@ export type ThalesRoyaleData = {
     isPlayerAlive: boolean;
     hasParticipatedInCurrentOrLastRoyale: boolean;
     rounds: number;
+    buyInAmount: number;
     roundInASeason: number;
     targetPrice: string;
     roundChoosingLength: number;
@@ -46,7 +47,6 @@ const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Ma
     return useQuery<Map<number, ThalesRoyaleData>>(
         QUERY_KEYS.Royale.Data(walletAddress),
         async () => {
-            console.log('Royale Data Query');
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
                 const RoyaleContract = walletAddress
@@ -74,6 +74,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
         const [
             players,
             rounds,
+            buyInAmount,
             roundInASeason,
             targetPrice,
             roundChoosingLength,
@@ -96,6 +97,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
         ] = await Promise.all([
             RoyaleContract.getPlayersForSeason(0),
             RoyaleContract.rounds(),
+            RoyaleContract.buyInAmount(),
             RoyaleContract.roundInASeason(0),
             RoyaleContract.roundTargetPrice(),
             RoyaleContract.roundChoosingLength(),
@@ -116,13 +118,13 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             RoyaleContract.seasonStarted(0),
             RoyaleContract.seasonFinished(0),
         ]);
-
         seasonsData.set(0, {
             season: 0,
             players,
             isPlayerAlive: false,
             hasParticipatedInCurrentOrLastRoyale: false,
             rounds: Number(rounds),
+            buyInAmount: Number(ethers.utils.formatEther(buyInAmount)),
             roundInASeason: Number(roundInASeason),
             targetPrice: ethers.utils.formatEther(targetPrice),
             roundChoosingLength: Number(roundChoosingLength),
@@ -164,6 +166,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
         const [
             players,
             rounds,
+            buyInAmount,
             roundInASeason,
             targetPrice,
             roundChoosingLength,
@@ -186,6 +189,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
         ] = await Promise.all([
             RoyaleContract.getPlayersForSeason(i),
             RoyaleContract.rounds(),
+            RoyaleContract.buyInAmount(),
             RoyaleContract.roundInASeason(i),
             RoyaleContract.roundTargetPrice(),
             RoyaleContract.roundChoosingLength(),
@@ -234,6 +238,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             isPlayerAlive: isPlayerAliveInSpecificSeason,
             hasParticipatedInCurrentOrLastRoyale,
             rounds: Number(rounds),
+            buyInAmount: Number(ethers.utils.formatEther(buyInAmount)),
             roundInASeason: Number(roundInASeason),
             targetPrice: ethers.utils.formatEther(targetPrice),
             roundChoosingLength: Number(roundChoosingLength),
