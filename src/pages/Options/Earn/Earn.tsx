@@ -109,17 +109,21 @@ const EarnPage: React.FC = () => {
                                                 tab.disabled ? 'disabled' : ''
                                             }`}
                                         >
-                                            {`${tab.name} ${
-                                                tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
-                                            }`}
+                                            <InnerOptionsTab>
+                                                {`${tab.name} ${
+                                                    tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
+                                                }`}
+                                            </InnerOptionsTab>
                                         </OptionsTab>
                                     ))}
                                 </OptionsTabContainer>
                                 <WidgetsContainer>
-                                    {selectedTab === 'retro-rewards' && <SnxStaking />}
-                                    {selectedTab === 'staking' && <ThalesStaking />}
-                                    {selectedTab === 'vesting' && <Vesting />}
-                                    {selectedTab === 'migration' && <Migration />}
+                                    <InnerWidgetsContainer>
+                                        {selectedTab === 'retro-rewards' && <SnxStaking />}
+                                        {selectedTab === 'staking' && <ThalesStaking />}
+                                        {selectedTab === 'vesting' && <Vesting />}
+                                        {selectedTab === 'migration' && <Migration />}
+                                    </InnerWidgetsContainer>
                                 </WidgetsContainer>
                             </MainContentContainer>
                         </FlexDivColumn>
@@ -215,7 +219,7 @@ const MainContentContainer = styled.div`
 `;
 
 const OptionsTabContainer = styled.div`
-    height: 50px;
+    height: 44px;
     position: relative;
     width: 95%;
     margin: auto;
@@ -228,32 +232,32 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     position: absolute;
     top: 0;
     left: ${(props) => props.index * 24.5 + '% '};
-    background: linear-gradient(90deg, #141874, #04045a);
+    background: linear-gradient(190.01deg, rgba(81, 106, 255, 0.6) -17.89%, rgba(130, 8, 252, 0.6) 90.41%);
     width: 26%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
     transition: 0.5s;
     transition-property: color;
-    height: 50px;
-    border-radius: 15px 15px 0 0;
-    font-style: normal;
+    height: 44px;
+    border-radius: 10px 10px 0 0;
     font-weight: 600;
     font-size: 16px;
-    line-height: 40px;
+    line-height: 24px;
     text-align: center;
-    letter-spacing: 0.15px;
-    color: rgb(116, 139, 198);
-    border-left: 1px solid rgba(116, 139, 198, 0.5);
-    border-right: 1px solid rgba(116, 139, 198, 0.5);
-    border-top: 1px solid rgba(116, 139, 198, 0.5);
+    letter-spacing: 0.25px;
+    text-align: center;
+    color: #748bc6;
+    padding-top: 1px;
+    padding-left: 1px;
+    padding-right: 1px;
     user-select: none;
     &.selected:not(.disabled) {
-        background: #121776;
+        background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
         transition: 0.2s;
         color: #f6f6fe;
-        transform: scale(1.1) translateY(-1px);
-        border-top: 1px solid rgba(202, 145, 220, 0.2);
-        border-left: 1px solid rgba(202, 145, 220, 0.2);
-        border-right: 1px solid rgba(202, 145, 220, 0.2);
+        transform: scale(1.1) translateY(-1px) translateX(-1px);
+        div {
+            background: #04045a;
+        }
     }
     &:hover:not(.selected):not(.disabled) {
         cursor: pointer;
@@ -265,27 +269,45 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
     }
     &.disabled {
         color: rgb(116, 139, 198, 0.4);
-        border-left: 1px solid rgba(116, 139, 198, 0.1);
-        border-right: 1px solid rgba(116, 139, 198, 0.1);
-        border-top: 1px solid rgba(116, 139, 198, 0.1);
         background: linear-gradient(90deg, #141874, #10126c);
     }
 `;
 
-const WidgetsContainer = styled.div`
+const InnerOptionsTab = styled(FlexDivCentered)`
+    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
+    border-radius: 10px 10px 0 0;
+    width: 100%;
+    height: 100%;
+`;
+
+const WidgetsContainer = styled(FlexDivCentered)`
+    position: relative;
+    padding: 1px;
+    border-radius: 10px;
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    z-index: 0;
+    @media (max-width: 767px) {
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+`;
+
+const InnerWidgetsContainer = styled.div`
     position: relative;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: auto min-content;
     grid-gap: 20px;
     padding: 20px;
-    border: 1px solid rgba(202, 145, 220, 0.2);
-    border-radius: 15px;
-    background: #121776;
+    border-radius: 10px;
+    background: #04045a;
     z-index: 0;
+    width: 100%;
     @media (max-width: 767px) {
+        background: transparent;
         border: none;
-        padding: 5px;
+        padding: 1px;
     }
 `;
 

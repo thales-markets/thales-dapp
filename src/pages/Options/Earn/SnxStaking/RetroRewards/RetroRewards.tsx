@@ -299,6 +299,9 @@ const RetroRewardsSection = styled(EarnSection)`
     @media (max-width: 767px) {
         min-height: 200px;
     }
+    &:before {
+        background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    }
 `;
 
 const InfoDiv = styled(FlexDivColumn)`

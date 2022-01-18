@@ -45,47 +45,55 @@ const Migration: React.FC = () => {
     }, [location]);
 
     return (
-        <Wrapper>
-            <Container>
-                <OptionsTabContainer>
-                    {optionsTabContent.map((tab, index) => (
-                        <OptionsTab
-                            isActive={tab.id === selectedTab}
-                            key={index}
-                            index={index}
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'migration',
-                                        action: tab.id,
-                                    }),
-                                });
-                                setSelectedTab(tab.id);
-                            }}
-                            className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                        >
-                            {tab.name}
-                        </OptionsTab>
-                    ))}
-                </OptionsTabContainer>
-                {selectedTab === 'migrate' && <Migrate />}
-                {selectedTab === 'swap' && <Swap />}
-            </Container>
-        </Wrapper>
+        <GridWrapper>
+            <Wrapper>
+                <Container>
+                    <OptionsTabContainer>
+                        {optionsTabContent.map((tab, index) => (
+                            <OptionsTab
+                                isActive={tab.id === selectedTab}
+                                key={index}
+                                index={index}
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: 'migration',
+                                            action: tab.id,
+                                        }),
+                                    });
+                                    setSelectedTab(tab.id);
+                                }}
+                                className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                            >
+                                {tab.name}
+                            </OptionsTab>
+                        ))}
+                    </OptionsTabContainer>
+                    {selectedTab === 'migrate' && <Migrate />}
+                    {selectedTab === 'swap' && <Swap />}
+                </Container>
+            </Wrapper>
+        </GridWrapper>
     );
 };
 
-const Wrapper = styled(FlexDivColumnCentered)`
+const GridWrapper = styled(FlexDivColumnCentered)`
     grid-column: span 10;
     align-items: center;
 `;
 
-const Container = styled(FlexDivColumn)`
+const Wrapper = styled(FlexDivColumnCentered)`
+    background: linear-gradient(150.74deg, rgba(202, 145, 220, 0.6) -7.89%, rgba(106, 193, 213, 0.6) 107.94%);
+    padding: 1px;
+    border-radius: 15px;
     margin: 60px 10px 50px 10px;
+`;
+
+const Container = styled(FlexDivColumn)`
     background: #04045a;
     box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
-    border-radius: 30px;
+    border-radius: 15px;
     padding: 30px 60px 40px 60px;
     max-width: 500px;
     @media (max-width: 767px) {

@@ -31,9 +31,9 @@ export const EarnSection = styled.section<{
         bottom: 0;
         left: 0;
         z-index: -1;
-        margin: -3px;
+        margin: -2px;
         border-radius: inherit;
-        background: linear-gradient(rgba(202, 145, 220, 0.6), rgba(106, 193, 213, 0.6));
+        background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     }
     @media screen and (max-width: 1024px) {
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
