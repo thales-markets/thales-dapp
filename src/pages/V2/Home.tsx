@@ -48,7 +48,7 @@ const Home: React.FC = () => {
                         onClick={() => window.open('https://www.optimism.io/', '_blank')}
                     />
                 </FlexDiv>
-                <Title style={{ marginTop: 50 }}> {t('landing-page.newest-blog-posts')}</Title>
+                <Title style={{ marginTop: 100 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
                 <Title id="faq-section" style={{ marginTop: 50 }}>
                     {t('landing-page.faq.title')}
@@ -72,12 +72,7 @@ export default Home;
 export const Background = styled.div`
     width: 100%;
     font-size: 16px;
-    @media (max-width: 512px) {
-        font-size: 10px;
-    }
-    @media (max-width: 1024px) {
-        font-size: 12px;
-    }
+
     @media (max-width: 1440px) {
         font-size: 14px;
     }
@@ -109,7 +104,10 @@ const Title = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 3em;
+    font-size: 4.4em;
+    @media (max-width: 600px) {
+        font-size: 2em;
+    }
     line-height: 91.91%;
     text-align: center;
     color: var(--color);
@@ -126,12 +124,23 @@ const FlexDiv = styled.div`
 
 const Thales = styled.i`
     font-size: 16em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const ThalesRoyale = styled.i`
     font-size: 12em;
+    @media (max-width: 600px) {
+        font-size: 7em;
+    }
 `;
 const ThalesGame = styled.i`
     font-size: 16em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+        line-height: 0.2em;
+        margin-bottom: 90px;
+    }
 `;
 
 const IconAbs = styled.i`
@@ -141,19 +150,33 @@ const IconAbs = styled.i`
         transform: scale(1.2);
         transition: 0.2s;
     }
+    &:before {
+    }
 `;
 
 const SNX = styled(IconAbs)`
     font-size: 16em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const OPTIMISM = styled(IconAbs)`
     font-size: 20em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const LINK = styled(IconAbs)`
     font-size: 20em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const INCH = styled(IconAbs)`
     font-size: 20em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 
 const Faq = styled.div`
@@ -162,6 +185,11 @@ const Faq = styled.div`
     border-radius: 7px;
     margin: 3em 4em;
     padding: 2em;
+    @media (max-width: 600px) {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 36px 30px 24px;
+    }
 `;
 
 const FaqQuestion = styled.p`
@@ -172,6 +200,9 @@ const FaqQuestion = styled.p`
     line-height: 91.91%;
     color: var(--color);
     margin-bottom: 1em;
+    @media (max-width: 600px) {
+        margin-bottom: 24px;
+    }
 `;
 
 const FaqAnswer = styled.p`
@@ -179,11 +210,15 @@ const FaqAnswer = styled.p`
     font-style: normal;
     font-weight: 300;
     font-size: 1em;
-    line-height: 91.91%;
+    line-height: 1.2em;
     color: var(--color);
     &:not(:last-child) {
         border-bottom: 1px solid var(--color);
         padding-bottom: 2em;
         margin-bottom: 2em;
+        @media (max-width: 600px) {
+            margin-bottom: 30px;
+            padding-bottom: 24px;
+        }
     }
 `;

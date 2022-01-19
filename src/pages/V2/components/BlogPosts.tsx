@@ -41,7 +41,9 @@ const BlogPosts: React.FC = () => {
                 return (
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
-                        <BlogDescription>{limitBlogMeta(blog.description, 250)}</BlogDescription>
+                        <BlogDescription>
+                            <p>{limitBlogMeta(blog.description, 250)}</p>
+                        </BlogDescription>
                         <MediumDate>{formatDate(blog.pubDate)}</MediumDate>
                         <MediumIcon className="icon-home icon-home--medium" />
                     </BlogCard>
@@ -96,7 +98,7 @@ const BlogTitle = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: normal;
-    font-size: 25px;
+    font-size: 1.56em;
     line-height: 91.91%;
     text-transform: capitalize;
     color: var(--color);
@@ -107,8 +109,8 @@ const BlogDescription = styled.div`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
-    font-size: 17px;
-    line-height: 15.63px;
+    font-size: 1em;
+    line-height: 1.2em;
     color: var(--color);
 `;
 

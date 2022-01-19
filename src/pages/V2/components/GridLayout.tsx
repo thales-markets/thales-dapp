@@ -33,13 +33,16 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 <Title> {t('landing-page.title')}</Title>
                 <Subtitle> {t('landing-page.subtitle')}</Subtitle>
             </TitleContainer>
-            <ThalesButton>
-                <Logo
-                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
-                    className="icon icon--logo"
-                />
-            </ThalesButton>
-            <LearnButton> {t('landing-page.learn-more')}</LearnButton>
+            <ButtonContainer>
+                <ThalesButton>
+                    <Logo
+                        onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
+                        className="icon icon--logo"
+                    />
+                </ThalesButton>
+                <LearnButton> {t('landing-page.learn-more')}</LearnButton>
+            </ButtonContainer>
+
             <ContI>
                 <ContTitle>{t('landing-page.q1')}</ContTitle>
                 <ContSubTitle>
@@ -103,13 +106,13 @@ const TitleContainer = styled(CenteredDiv)`
     flex-direction: column;
     grid-column-start: 9;
     grid-column-end: 44;
-    grid-row-start: 4;
-    grid-row-end: 16;
+    grid-row-start: 6;
+    grid-row-end: 18;
     @media (max-width: 600px) {
-        grid-column-start: 9;
-        grid-column-end: 44;
-        grid-row-start: 10;
-        grid-row-end: 16;
+        grid-column-start: 3;
+        grid-column-end: 50;
+        grid-row-start: 6;
+        grid-row-end: 18;
     }
 `;
 
@@ -151,18 +154,37 @@ const Button = styled.div`
     z-index: 2;
 `;
 
+const ButtonContainer = styled.div`
+    display: contents;
+    @media (max-width: 600px) {
+        grid-column-start: 1;
+        grid-column-end: 52;
+        grid-row-start: 13;
+        grid-row-end: 22;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 16px;
+    }
+`;
+
 const ThalesButton = styled(Button)`
-    grid-column-start: 20;
+    grid-column-start: 19;
     grid-column-end: 26;
-    grid-row-start: 18;
-    grid-row-end: 20;
+    grid-row-start: 20;
+    grid-row-end: 22;
+    @media (max-width: 600px) {
+        grid-column-start: 4;
+        grid-column-end: 20;
+    }
 `;
 
 const LearnButton = styled(Button)`
     grid-column-start: 27;
     grid-column-end: 33;
-    grid-row-start: 18;
-    grid-row-end: 20;
+    grid-row-start: 20;
+    grid-row-end: 22;
     font-family: Nunito !important;
     font-style: normal;
     font-weight: bold;
@@ -171,6 +193,10 @@ const LearnButton = styled(Button)`
     text-align: center;
     text-transform: capitalize;
     color: #ffffff;
+    @media (max-width: 600px) {
+        grid-column-start: 27;
+        grid-column-end: 50;
+    }
 `;
 
 const ContWrapper = styled.div`
@@ -184,39 +210,39 @@ const ContWrapper = styled.div`
 const ContI = styled(ContWrapper)`
     grid-column-start: 7;
     grid-column-end: 31;
-    grid-row-start: 21;
-    grid-row-end: 33;
+    grid-row-start: 24;
+    grid-row-end: 35;
     @media (max-width: 600px) {
         grid-column-start: 4;
-        grid-column-end: 48;
-        grid-row-start: 24;
-        grid-row-end: 33;
+        grid-column-end: 49;
+        grid-row-start: 21;
+        grid-row-end: 32;
     }
 `;
 
 const ContII = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
-    grid-row-start: 34;
-    grid-row-end: 46;
+    grid-row-start: 36;
+    grid-row-end: 48;
     @media (max-width: 600px) {
         grid-column-start: 4;
-        grid-column-end: 48;
-        grid-row-start: 42;
-        grid-row-end: 51;
+        grid-column-end: 49;
+        grid-row-start: 44;
+        grid-row-end: 55;
     }
 `;
 const ContIII = styled(ContWrapper)`
     grid-column-start: 4;
     grid-column-end: 29;
-    grid-row-start: 47;
-    grid-row-end: 58;
-    padding-right: 60px;
+    grid-row-start: 49;
+    grid-row-end: 60;
+    padding-right: 90px;
     @media (max-width: 600px) {
         grid-column-start: 4;
-        grid-column-end: 48;
-        grid-row-start: 61;
-        grid-row-end: 70;
+        grid-column-end: 49;
+        grid-row-start: 63;
+        grid-row-end: 74;
         padding-right: 28px;
         padding-top: 42px;
     }
@@ -224,16 +250,16 @@ const ContIII = styled(ContWrapper)`
 const ContIV = styled(ContWrapper)`
     grid-column-start: 24;
     grid-column-end: 49;
-    grid-row-start: 59;
-    grid-row-end: 74;
+    grid-row-start: 61;
+    grid-row-end: 76;
     padding-top: 5em;
     padding-left: 50px;
     @media (max-width: 600px) {
         padding-left: 28px;
         grid-column-start: 4;
-        grid-column-end: 48;
-        grid-row-start: 80;
-        grid-row-end: 95;
+        grid-column-end: 49;
+        grid-row-start: 82;
+        grid-row-end: 97;
     }
 `;
 
@@ -245,14 +271,14 @@ const Image = styled.img`
 const ThalesImageI = styled.div`
     grid-column-start: 30;
     grid-column-end: 46;
-    grid-row-start: 16;
-    grid-row-end: 36;
+    grid-row-start: 20;
+    grid-row-end: 38;
     z-index: 3;
     @media (max-width: 600px) {
-        grid-column-start: 20;
-        grid-column-end: 40;
+        grid-column-start: 21;
+        grid-column-end: 48;
         grid-row-start: 31;
-        grid-row-end: 43;
+        grid-row-end: 44;
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
     }
@@ -263,8 +289,8 @@ const ThalesImageII = styled.div`
     left: -14em;
     grid-column-start: 1;
     grid-column-end: 23;
-    grid-row-start: 33;
-    grid-row-end: 54;
+    grid-row-start: 35;
+    grid-row-end: 56;
     z-index: 3;
     @media (max-width: 600px) {
         -webkit-transform: scaleX(-1);
@@ -272,22 +298,22 @@ const ThalesImageII = styled.div`
         position: static !important;
         grid-column-start: 37;
         grid-column-end: 45;
-        grid-row-start: 53;
-        grid-row-end: 65;
+        grid-row-start: 55;
+        grid-row-end: 67;
     }
 `;
 
 const ThalesImageIII = styled.div`
     grid-column-start: 20;
     grid-column-end: 45;
-    grid-row-start: 47;
-    grid-row-end: 67;
+    grid-row-start: 49;
+    grid-row-end: 69;
     z-index: 3;
     @media (max-width: 600px) {
         grid-column-start: 10;
         grid-column-end: 35;
-        grid-row-start: 73;
-        grid-row-end: 85;
+        grid-row-start: 75;
+        grid-row-end: 87;
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
     }
@@ -296,13 +322,13 @@ const ThalesImageIII = styled.div`
 const StarsImage = styled.div`
     grid-column-start: 4;
     grid-column-end: 18;
-    grid-row-start: 56;
-    grid-row-end: 76;
+    grid-row-start: 58;
+    grid-row-end: 78;
     z-index: 1;
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 48;
-        grid-row-start: 85;
+        grid-row-start: 87;
         grid-row-end: 104;
         margin-bottom: -130px;
         & > img {
