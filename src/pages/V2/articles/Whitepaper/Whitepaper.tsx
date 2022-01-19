@@ -13,8 +13,8 @@ import { ReactComponent as Chart3White } from 'assets/images/landing-page/chart3
 import { ReactComponent as Chart3Blue } from 'assets/images/landing-page/chart3.svg';
 import { ReactComponent as Chart4White } from 'assets/images/landing-page/chart4b.svg';
 import { ReactComponent as Chart4Blue } from 'assets/images/landing-page/chart4.svg';
-import { ReactComponent as Chart5White } from 'assets/images/landing-page/chart4b.svg';
-import { ReactComponent as Chart5Blue } from 'assets/images/landing-page/chart4.svg';
+import { ReactComponent as Chart5White } from 'assets/images/landing-page/chart5b.svg';
+import { ReactComponent as Chart5Blue } from 'assets/images/landing-page/chart5.svg';
 
 import { FlexDivCentered } from '../../../../theme/common';
 import { Trans, useTranslation } from 'react-i18next';
@@ -276,7 +276,7 @@ const ChartContainer = styled(FlexDivCentered)`
 const ChartLabel = styled.span`
     font-family: Nunito !important;
     position: absolute;
-    bottom: -25px;
+    bottom: -1.55em;
     left: 0;
     right: 0;
     color: var(--color);
