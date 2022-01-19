@@ -37,6 +37,7 @@ import {
     ResultContainer,
     ThalesWalletAmountLabel,
 } from '../components';
+import SimpleLoader from '../../components/SimpleLoader';
 
 const Swap: React.FC = () => {
     const { t } = useTranslation();
@@ -251,8 +252,16 @@ const Swap: React.FC = () => {
                 </InputLabel>
                 <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{OP_THALES_CURRENCY}</CurrencyLabel>
                 <ThalesWalletAmountLabel>
-                    {formatCurrencyWithKey(OP_THALES_CURRENCY, opThalesBalance)}
-                    <MaxButton disabled={isSubmitting}>
+                    {isWalletConnected ? (
+                        thalesBalanceQuery.isLoading ? (
+                            <SimpleLoader />
+                        ) : (
+                            formatCurrencyWithKey(OP_THALES_CURRENCY, opThalesBalance)
+                        )
+                    ) : (
+                        '-'
+                    )}
+                    <MaxButton disabled={isSubmitting || !isWalletConnected}>
                         <MaxInnerButton onClick={onMaxClick}>{t('common.max')}</MaxInnerButton>
                     </MaxButton>
                 </ThalesWalletAmountLabel>
@@ -272,7 +281,15 @@ const Swap: React.FC = () => {
                 </InputLabel>
                 <CurrencyLabel>{THALES_CURRENCY}</CurrencyLabel>
                 <ThalesWalletAmountLabel>
-                    {formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}
+                    {isWalletConnected ? (
+                        thalesBalanceQuery.isLoading ? (
+                            <SimpleLoader />
+                        ) : (
+                            formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)
+                        )
+                    ) : (
+                        '-'
+                    )}
                 </ThalesWalletAmountLabel>
             </ResultContainer>
             <Divider />

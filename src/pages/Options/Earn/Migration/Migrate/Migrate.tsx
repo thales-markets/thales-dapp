@@ -37,6 +37,7 @@ import {
     ResultContainer,
     ThalesWalletAmountLabel,
 } from '../components';
+import SimpleLoader from '../../components/SimpleLoader';
 
 const Migrate: React.FC = () => {
     const { t } = useTranslation();
@@ -221,6 +222,12 @@ const Migrate: React.FC = () => {
         setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= thalesBalance));
     }, [amount, thalesBalance]);
 
+    // useEffect(() => {
+    //     if (isWalletConnected && !thalesBalanceQuery.isLoading) {
+    //         setAmount(truncToDecimals(thalesBalance));
+    //     }
+    // }, [thalesBalance]);
+
     return (
         <>
             <InputContainer>
@@ -236,8 +243,16 @@ const Migrate: React.FC = () => {
                 </InputLabel>
                 <CurrencyLabel className={isSubmitting ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
                 <ThalesWalletAmountLabel>
-                    {formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}
-                    <MaxButton disabled={isSubmitting}>
+                    {isWalletConnected ? (
+                        thalesBalanceQuery.isLoading ? (
+                            <SimpleLoader />
+                        ) : (
+                            formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)
+                        )
+                    ) : (
+                        '-'
+                    )}
+                    <MaxButton disabled={isSubmitting || !isWalletConnected}>
                         <MaxInnerButton onClick={onMaxClick}>{t('common.max')}</MaxInnerButton>
                     </MaxButton>
                 </ThalesWalletAmountLabel>

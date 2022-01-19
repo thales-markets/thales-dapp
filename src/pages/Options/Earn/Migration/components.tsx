@@ -40,6 +40,7 @@ export const ThalesWalletAmountLabel = styled(InputLabel)`
     top: 0px;
     padding: 8px 14px 0 0;
     text-transform: none;
+    display: flex;
 `;
 
 export const MaxButton = styled(DefaultSubmitButton)`
