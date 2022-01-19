@@ -47,7 +47,7 @@ const FlexDiv = styled.div`
 
 const FooterHtml = styled.div`
     position: relative;
-    top: 20px;
+    margin-top: 200px;
     &.article {
         & > img {
             display: none !important;
@@ -68,6 +68,10 @@ const FooterHtml = styled.div`
 const Image = styled.img`
     height: 100%;
     object-fit: contain;
+    @media (max-width: 600px) {
+        width: 100%;
+        transform: scale(1.52);
+    }
 `;
 
 const FooterIconsWrapper = styled(FlexDiv)`
@@ -75,7 +79,7 @@ const FooterIconsWrapper = styled(FlexDiv)`
     bottom: 2.4em;
 `;
 const FooterIcon = styled.i`
-    font-size: 3.4em;
+    font-size: 3em;
     color: #f7f7f7;
 `;
 
