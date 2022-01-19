@@ -18,6 +18,8 @@ import stakingActiveIcon from '../../../assets/images/staking-active.svg';
 import stakingIcon from '../../../assets/images/staking.svg';
 import vestingActiveIcon from '../../../assets/images/vesting-active.svg';
 import vestingIcon from '../../../assets/images/vesting.svg';
+import lpActiveIcon from '../../../assets/images/lp-active.svg';
+import lpIcon from '../../../assets/images/lp.svg';
 import migrationActiveIcon from '../../../assets/images/migration-active.svg';
 import migrationIcon from '../../../assets/images/migration.svg';
 import Loader from '../../../components/Loader';
@@ -53,8 +55,8 @@ const EarnPage: React.FC = () => {
 
     if (isL2) {
         tabs.push({
-            id: 'unclaimed-rewards',
-            name: t('migration.unclaimed-rewards-title'),
+            id: 'migrated-rewards',
+            name: t('migration.migrated-rewards-title'),
             disabled: false,
         });
     } else {
@@ -193,6 +195,22 @@ const EarnPage: React.FC = () => {
                         />
                         {!isL2 && (
                             <Icon
+                                width={50}
+                                height={30}
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: 'lp-staking',
+                                        }),
+                                    });
+                                    setSelectedTab('lp-staking');
+                                }}
+                                src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
+                            />
+                        )}
+                        {!isL2 && (
+                            <Icon
                                 width={35}
                                 height={30}
                                 onClick={() => {
@@ -207,20 +225,6 @@ const EarnPage: React.FC = () => {
                                 src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
                             />
                         )}
-                        {/* <Icon
-                            width={50}
-                            height={30}
-                            onClick={() => {
-                                history.push({
-                                    pathname: location.pathname,
-                                    search: queryString.stringify({
-                                        tab: 'lp-staking',
-                                    }),
-                                });
-                                setSelectedTab('lp-staking');
-                            }}
-                            src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
-                        /> */}
                     </NavFooter>
                 </>
             ) : (

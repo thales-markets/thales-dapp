@@ -1190,7 +1190,7 @@
     },
     "migration": {
         "title": "Migration",
-        "unclaimed-rewards-title": "Unclaimed rewards",
+        "migrated-rewards-title": "Migrated rewards",
         "migration-amount-label": "Amount to migrate",
         "from-label": "From",
         "to-label": "To",
