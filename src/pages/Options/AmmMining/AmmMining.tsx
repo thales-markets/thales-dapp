@@ -18,7 +18,7 @@ import AmmTable from './AmmTable';
 
 const DEFAULT_ORDER_BY = 2;
 
-export type Round2Trades = { long: number; short: number };
+export type Round2Trades = { long: number; short: number; all: number };
 
 const AmmMining: React.FC = () => {
     const { t } = useTranslation();
@@ -41,7 +41,7 @@ const AmmMining: React.FC = () => {
         const uniqueTradersMap = new Map<string, boolean>();
         let totalVolume = 0;
         let volume = 0;
-        const volumeByOptionSide = { long: 0, short: 0 };
+        const volumeByOptionSide = { long: 0, short: 0, all: 0 };
         const activeTrades = trades.filter((trade) => {
             if (trade.orderSide === 'buy' && trade.maker.toLowerCase() === ammContractAddress.toLowerCase()) {
                 totalVolume += trade.takerAmount;
@@ -68,15 +68,17 @@ const AmmMining: React.FC = () => {
                         return trade;
                     } else if (selectedRound === 2) {
                         if (!map.has(trade.taker.toLowerCase())) {
-                            map.set(trade.taker.toLowerCase(), { long: 0, short: 0 });
+                            map.set(trade.taker.toLowerCase(), { long: 0, short: 0, all: 0 });
                         }
                         const userVolume = map.get(trade.taker.toLowerCase());
 
                         map.set(trade.taker.toLowerCase(), {
                             ...(userVolume as Round2Trades),
                             [trade.optionSide]: (userVolume as Round2Trades)[trade.optionSide] + trade.takerAmount,
+                            all: ((userVolume as Round2Trades).all || 0) + trade.takerAmount,
                         });
                         volumeByOptionSide[trade.optionSide] = volumeByOptionSide[trade.optionSide] + trade.takerAmount;
+                        volumeByOptionSide.all += trade.takerAmount;
                         volume += trade.takerAmount;
                         return trade;
                     }
