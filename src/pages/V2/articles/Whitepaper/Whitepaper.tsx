@@ -170,6 +170,7 @@ const Wrapper = styled.div`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
+    grid-template-rows: repeat(315, 2em);
 `;
 
 const Content = styled.div`
