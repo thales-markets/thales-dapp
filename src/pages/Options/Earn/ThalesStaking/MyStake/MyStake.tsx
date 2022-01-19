@@ -111,7 +111,7 @@ const MyStake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, escrowed
         <EarnSection
             orderOnMobile={3}
             orderOnTablet={3}
-            style={{ gridColumn: 'span 7', gridRow: 'span 1', textAlign: 'center' }}
+            style={{ gridColumn: 'span 10', gridRow: 'span 1', textAlign: 'center' }}
         >
             <SectionHeader>
                 {t('options.earn.thales-staking.my-stake.my-stake')}

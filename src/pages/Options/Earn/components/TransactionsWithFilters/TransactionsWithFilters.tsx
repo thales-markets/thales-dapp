@@ -109,9 +109,6 @@ const SectionContainer = styled(EarnSection)`
     grid-row: span 3;
     height: 400px;
     margin-bottom: 0;
-    &:before {
-        background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
-    }
 `;
 
 const SectionContent = styled(FlexDivColumn)`

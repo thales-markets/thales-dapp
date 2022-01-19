@@ -213,7 +213,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
             spanOnTablet={5}
             orderOnMobile={1}
             orderOnTablet={1}
-            style={{ gridColumn: 'span 3', gridRow: 'span 2' }}
+            style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
             <SectionHeader>{t('options.earn.thales-staking.stake.stake')}</SectionHeader>
             {tokenStakingDisabled && <ComingSoon />}

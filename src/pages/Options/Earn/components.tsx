@@ -20,21 +20,9 @@ export const EarnSection = styled.section<{
     grid-column: span 5;
     grid-row: span 3;
     margin-bottom: 15px;
-    border: solid 1px transparent;
+    border: 1px solid rgba(100, 217, 254, 0.6);
     padding: 10px;
     max-width: 100%;
-    &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: -1;
-        margin: -2px;
-        border-radius: inherit;
-        background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
-    }
     @media screen and (max-width: 1024px) {
         grid-column: span ${(props) => props.spanOnTablet ?? 10} !important;
         order: ${(props) => props.orderOnTablet ?? 10};
