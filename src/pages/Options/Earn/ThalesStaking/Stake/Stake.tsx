@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-    ClaimItem,
-    EarnSection,
-    FullRow,
-    MaxButton,
-    MaxButtonContainer,
-    SectionContentContainer,
-    SectionHeader,
-} from '../../components';
+import { EarnSection, FullRow, SectionContentContainer, SectionHeader } from '../../components';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
-import { Button, FlexDiv, FlexDivCentered, GradientText } from '../../../../../theme/common';
+import { Button, FlexDivCentered } from '../../../../../theme/common';
 import NumericInput from '../../../Market/components/NumericInput';
-import { InputLabel } from '../../../Market/components';
+import { CurrencyLabel, InputContainer, InputLabel } from '../../../Market/components';
 import useThalesBalanceQuery from '../../../../../queries/walletBalances/useThalesBalanceQuery';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -30,6 +22,8 @@ import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import ComingSoon from 'components/ComingSoon';
 import { dispatchMarketNotification } from 'utils/options';
+import SimpleLoader from '../../components/SimpleLoader';
+import { MaxButton, MaxInnerButton, ThalesWalletAmountLabel } from '../../Migration/components';
 
 type Properties = {
     thalesStaked: string;
@@ -219,19 +213,8 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
             {tokenStakingDisabled && <ComingSoon />}
             {!tokenStakingDisabled && (
                 <SectionContentContainer style={{ height: '100%' }}>
-                    <StyledClaimItem>
-                        <BalanceTitle>{t('options.earn.thales-staking.stake.available-to-stake')}:</BalanceTitle>
-                        <GradientText
-                            gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                            fontSize={25}
-                            fontWeight={600}
-                        >
-                            {formatCurrencyWithKey(THALES_CURRENCY, balance)}
-                        </GradientText>
-                    </StyledClaimItem>
-                    <FlexDiv style={{ paddingBottom: '15px' }}>
+                    <InputContainer>
                         <NumericInput
-                            style={{ flex: 1, padding: '15px 0px 0 20px', maxWidth: '60%' }}
                             value={amountToStake}
                             onChange={(_, value) => {
                                 if (+value <= +balance) {
@@ -243,17 +226,30 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                             disabled={isStaking || isUnstaking}
                         />
                         <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
-                        <MaxButtonContainer>
-                            <MaxButton
-                                disabled={isStaking || isUnstaking}
-                                onClick={() => {
-                                    setAmountToStake(balance);
-                                }}
-                            >
-                                {t('common.max')}
+                        <CurrencyLabel className={isStaking || isUnstaking ? 'disabled' : ''}>
+                            {THALES_CURRENCY}
+                        </CurrencyLabel>
+                        <ThalesWalletAmountLabel>
+                            {isWalletConnected ? (
+                                thalesBalanceQuery.isLoading ? (
+                                    <SimpleLoader />
+                                ) : (
+                                    formatCurrencyWithKey(THALES_CURRENCY, balance)
+                                )
+                            ) : (
+                                '-'
+                            )}
+                            <MaxButton disabled={isStaking || isUnstaking}>
+                                <MaxInnerButton
+                                    onClick={() => {
+                                        setAmountToStake(balance);
+                                    }}
+                                >
+                                    {t('common.max')}
+                                </MaxInnerButton>
                             </MaxButton>
-                        </MaxButtonContainer>
-                    </FlexDiv>
+                        </ThalesWalletAmountLabel>
+                    </InputContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
                     <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
                     <FullRow>
@@ -269,26 +265,10 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     );
 };
 
-const BalanceTitle = styled.span`
-    font-size: 16px;
-    padding-bottom: 8px;
-`;
-
 const StakeButtonDiv = styled(FlexDivCentered)`
     padding-top: 40px;
     @media (max-width: 1024px) {
         padding-top: 15px;
-    }
-`;
-
-const StyledClaimItem = styled(ClaimItem)`
-    @media (max-width: 1024px) {
-        padding-top: 15px;
-        padding-bottom: 67px;
-    }
-    @media (max-width: 767px) {
-        padding-top: 0px;
-        padding-bottom: 0px;
     }
 `;
 

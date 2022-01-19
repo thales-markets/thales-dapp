@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, MaxButton, MaxButtonContainer, SectionContentContainer, SectionHeader } from '../../components';
-import { Button, FlexDiv, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
+import { EarnSection, SectionContentContainer, SectionHeader } from '../../components';
+import { Button, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,7 @@ import { getIsAppReady } from '../../../../../redux/modules/app';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import NumericInput from '../../../Market/components/NumericInput';
-import { InputLabel } from '../../../Market/components';
+import { CurrencyLabel, InputContainer, InputLabel } from '../../../Market/components';
 import ComingSoon from 'components/ComingSoon';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
@@ -24,6 +24,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { GasLimit } from '../../../components/NetworkFees/NetworkFees';
+import { MaxButton, MaxInnerButton, ThalesWalletAmountLabel } from '../../Migration/components';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -348,9 +349,8 @@ const Unstake: React.FC<Properties> = ({
                             )}
                         </FlexDivCentered>
                     </FlexDivColumn>
-                    <FlexDiv style={{ paddingBottom: '15px' }}>
+                    <InputContainer>
                         <NumericInput
-                            style={{ flex: 1, padding: '15px 0px 0 20px', maxWidth: '60%' }}
                             value={amountToUnstake}
                             onChange={(_, value) => {
                                 if (+value <= +thalesStaked) {
@@ -362,17 +362,22 @@ const Unstake: React.FC<Properties> = ({
                             disabled={isUnstakingInContract}
                         />
                         <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
-                        <MaxButtonContainer>
-                            <MaxButton
-                                disabled={isUnstakingInContract}
-                                onClick={() => {
-                                    setAmountToUnstake(thalesStaked);
-                                }}
-                            >
-                                {t('common.max')}
+                        <CurrencyLabel className={isUnstakingInContract ? 'disabled' : ''}>
+                            {THALES_CURRENCY}
+                        </CurrencyLabel>
+                        <ThalesWalletAmountLabel>
+                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                            <MaxButton disabled={isUnstakingInContract}>
+                                <MaxInnerButton
+                                    onClick={() => {
+                                        setAmountToUnstake(thalesStaked);
+                                    }}
+                                >
+                                    {t('common.max')}
+                                </MaxInnerButton>
                             </MaxButton>
-                        </MaxButtonContainer>
-                    </FlexDiv>
+                        </ThalesWalletAmountLabel>
+                    </InputContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
                     <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
                     <ValidationMessage
