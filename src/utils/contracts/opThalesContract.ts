@@ -14,7 +14,6 @@ export const opThalesContract = {
     abi: [
         {
             inputs: [],
-            payable: false,
             stateMutability: 'nonpayable',
             type: 'constructor',
         },
@@ -47,6 +46,51 @@ export const opThalesContract = {
             anonymous: false,
             inputs: [
                 {
+                    indexed: false,
+                    internalType: 'string',
+                    name: 'name',
+                    type: 'string',
+                },
+            ],
+            name: 'NameChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: true,
+                    internalType: 'address',
+                    name: 'previousOwner',
+                    type: 'address',
+                },
+                {
+                    indexed: true,
+                    internalType: 'address',
+                    name: 'newOwner',
+                    type: 'address',
+                },
+            ],
+            name: 'OwnershipTransferred',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'string',
+                    name: 'symbol',
+                    type: 'string',
+                },
+            ],
+            name: 'SymbolChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
                     indexed: true,
                     internalType: 'address',
                     name: 'from',
@@ -69,7 +113,6 @@ export const opThalesContract = {
             type: 'event',
         },
         {
-            constant: true,
             inputs: [
                 {
                     internalType: 'address',
@@ -90,12 +133,10 @@ export const opThalesContract = {
                     type: 'uint256',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: false,
             inputs: [
                 {
                     internalType: 'address',
@@ -104,7 +145,7 @@ export const opThalesContract = {
                 },
                 {
                     internalType: 'uint256',
-                    name: 'value',
+                    name: 'amount',
                     type: 'uint256',
                 },
             ],
@@ -116,12 +157,10 @@ export const opThalesContract = {
                     type: 'bool',
                 },
             ],
-            payable: false,
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            constant: true,
             inputs: [
                 {
                     internalType: 'address',
@@ -137,12 +176,10 @@ export const opThalesContract = {
                     type: 'uint256',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: true,
             inputs: [],
             name: 'decimals',
             outputs: [
@@ -152,12 +189,10 @@ export const opThalesContract = {
                     type: 'uint8',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: false,
             inputs: [
                 {
                     internalType: 'address',
@@ -178,12 +213,10 @@ export const opThalesContract = {
                     type: 'bool',
                 },
             ],
-            payable: false,
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            constant: false,
             inputs: [
                 {
                     internalType: 'address',
@@ -204,12 +237,10 @@ export const opThalesContract = {
                     type: 'bool',
                 },
             ],
-            payable: false,
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            constant: true,
             inputs: [],
             name: 'name',
             outputs: [
@@ -219,12 +250,56 @@ export const opThalesContract = {
                     type: 'string',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: true,
+            inputs: [],
+            name: 'owner',
+            outputs: [
+                {
+                    internalType: 'address',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'renounceOwnership',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'string',
+                    name: 'name_',
+                    type: 'string',
+                },
+            ],
+            name: 'setName',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'string',
+                    name: 'symbol_',
+                    type: 'string',
+                },
+            ],
+            name: 'setSymbol',
+            outputs: [],
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             inputs: [],
             name: 'symbol',
             outputs: [
@@ -234,12 +309,10 @@ export const opThalesContract = {
                     type: 'string',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: true,
             inputs: [],
             name: 'totalSupply',
             outputs: [
@@ -249,12 +322,10 @@ export const opThalesContract = {
                     type: 'uint256',
                 },
             ],
-            payable: false,
             stateMutability: 'view',
             type: 'function',
         },
         {
-            constant: false,
             inputs: [
                 {
                     internalType: 'address',
@@ -275,12 +346,10 @@ export const opThalesContract = {
                     type: 'bool',
                 },
             ],
-            payable: false,
             stateMutability: 'nonpayable',
             type: 'function',
         },
         {
-            constant: false,
             inputs: [
                 {
                     internalType: 'address',
@@ -306,7 +375,19 @@ export const opThalesContract = {
                     type: 'bool',
                 },
             ],
-            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'newOwner',
+                    type: 'address',
+                },
+            ],
+            name: 'transferOwnership',
+            outputs: [],
             stateMutability: 'nonpayable',
             type: 'function',
         },
