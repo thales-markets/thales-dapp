@@ -75,7 +75,7 @@ const Whitepaper: React.FC = () => {
                         <ListItem bold={true}>{t('articles.whitepaper.paragraphs.2-1.listitem1')}</ListItem>
                         <ListItem bold={true}>{t('articles.whitepaper.paragraphs.2-1.listitem2')}</ListItem>
                         <ListItem bold={true}>{t('articles.whitepaper.paragraphs.2-1.listitem3')}</ListItem>
-                        <ListItem bold={true} style={{ marginBottom: '0.6em' }}>
+                        <ListItem bold={true} style={{ marginBottom: '1em' }}>
                             {t('articles.whitepaper.paragraphs.2-1.listitem4')}
                         </ListItem>
                     </List>
@@ -115,7 +115,7 @@ const Whitepaper: React.FC = () => {
                     <List>
                         <ListItem bold={true}>{t('articles.whitepaper.paragraphs.3.listitem1')}</ListItem>
                         <ListItem bold={true}>{t('articles.whitepaper.paragraphs.3.listitem2')}</ListItem>
-                        <ListItem bold={true} style={{ marginBottom: '0.6em' }}>
+                        <ListItem bold={true} style={{ marginBottom: '1em' }}>
                             {t('articles.whitepaper.paragraphs.3.listitem3')}
                         </ListItem>
                     </List>
