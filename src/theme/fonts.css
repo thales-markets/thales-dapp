@@ -4,6 +4,15 @@
 }
 
 @font-face {
+    font-family: 'RobotoLight';
+    src: local('RobotoLight'), url(../assets/fonts/Roboto/Roboto-Light.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'RobotoThin';
+    src: local('RobotoThin'), url(../assets/fonts/Roboto/Roboto-Thin.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'Open Sans';
     src: local('Open Sans'), url(../assets/fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
 }

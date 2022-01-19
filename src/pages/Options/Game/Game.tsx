@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-import Unity, { UnityContext } from 'react-unity-webgl';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import fullScreenImage from 'assets/images/full_screen_icon.png';
 import { isNetworkSupported } from '../../../utils/network';
 import { Background, FlexDivColumn, Wrapper } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
@@ -9,67 +7,80 @@ import ROUTES from '../../../constants/routes';
 import Loader from '../../../components/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
-import { getNetworkId, getWalletAddress } from '../../../redux/modules/wallet';
-import axios from 'axios';
+import { getNetworkId } from '../../../redux/modules/wallet';
+import { ReactComponent as TaleOfThalesLogo } from 'assets/images/tale-of-thales-logo.svg';
+import useInterval from '../../../hooks/useInterval';
+import intervalToDuration from 'date-fns/intervalToDuration';
 import { useTranslation } from 'react-i18next';
+
+const getTimeLeft = () => {
+    const durationToEnd = intervalToDuration({ start: Date.now(), end: new Date('Jan 24 2022 13:00:00 UTC') });
+    return {
+        days: ('0' + durationToEnd?.days).slice(-2),
+        hours: ('0' + durationToEnd?.hours).slice(-2),
+        minutes: ('0' + durationToEnd?.minutes).slice(-2),
+        seconds: ('0' + durationToEnd?.seconds).slice(-2),
+    };
+};
 
 const Game: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
+    const [timeLeft, setTimeLeft] = useState<{ days: string; hours: string; minutes: string; seconds: string }>(
+        getTimeLeft()
+    );
 
-    const unityContext = new UnityContext({
-        loaderUrl: '/miletus-game/build.loader.js',
-        dataUrl: '/miletus-game/build.data',
-        frameworkUrl: '/miletus-game/build.framework.js',
-        codeUrl: '/miletus-game/build.wasm',
-    });
-
-    const handleOnClickFullscreen = () => {
-        unityContext.setFullscreen(true);
-    };
-
-    useEffect(() => {
-        unityContext.on('StartGame', async () => {
-            if (walletAddress) {
-                await axios.post('https://api.thales.market/game-started', {
-                    walletAddress,
-                });
-            } else {
-                await axios.post('https://api.thales.market/game-started');
-            }
-        });
-    }, [walletAddress]);
-
-    useEffect(() => {
-        unityContext.on('EndGame', async () => {
-            if (walletAddress) {
-                await axios.post('https://api.thales.market/game-ended', {
-                    walletAddress,
-                });
-            } else {
-                await axios.post('https://api.thales.market/game-ended');
-            }
-        });
-    }, [walletAddress]);
+    useInterval(() => {
+        setTimeLeft(getTimeLeft());
+    }, 1000);
 
     return isNetworkSupported(networkId) ? (
-        <Background style={{ minHeight: '100vh' }}>
+        <Background
+            style={{ minHeight: '100vh', background: 'radial-gradient(50% 50% at 50% 50%, #080960 0%, #02023E 100%)' }}
+        >
             <Wrapper>
                 <Container className="game" style={{ zIndex: 10 }}>
                     <MarketHeader route={ROUTES.Options.Game} />
-                    {!walletAddress && <WalletMessage>{t('game.connect-wallet-warning')}</WalletMessage>}
                     <CenterGame>
-                        <GameWrapper>
-                            <Unity
-                                unityContext={unityContext}
-                                style={{
-                                    height: 'auto',
-                                    width: '100%',
-                                }}
-                            />
-                            <FullScreenButton onClick={handleOnClickFullscreen} src={fullScreenImage} />
-                        </GameWrapper>
+                        <a
+                            style={{ display: 'contents' }}
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://thalesmarket.medium.com/tale-of-thales-launch-is-getting-close-and-it-comes-with-rewards-5fc26abc6c9e"
+                        >
+                            <TaleOfThalesLogo style={{ maxWidth: '100%' }} />
+                        </a>
+                        <TimerWrapper>
+                            <a
+                                style={{ display: 'contents' }}
+                                target="_blank"
+                                rel="noreferrer"
+                                href="https://thalesmarket.medium.com/tale-of-thales-launch-is-getting-close-and-it-comes-with-rewards-5fc26abc6c9e"
+                            >
+                                <EasterEgg>{t('game.easter-egg-hunt-begins-in')}</EasterEgg>
+                            </a>
+                            <Countdown>
+                                <span>
+                                    {timeLeft.days}
+                                    <CountdownLabel>{t('game.days')}</CountdownLabel>
+                                </span>
+                                <span>:</span>
+                                <span>
+                                    {timeLeft.hours}
+                                    <CountdownLabel>{t('game.hours')}</CountdownLabel>
+                                </span>
+                                <span>:</span>
+                                <span>
+                                    {timeLeft.minutes}
+                                    <CountdownLabel>{t('game.minutes')}</CountdownLabel>
+                                </span>
+                                <span>:</span>
+                                <span>
+                                    {timeLeft.seconds}
+                                    <CountdownLabel>{t('game.seconds')}</CountdownLabel>
+                                </span>
+                            </Countdown>
+                        </TimerWrapper>
                     </CenterGame>
                 </Container>
             </Wrapper>
@@ -79,40 +90,67 @@ const Game: React.FC = () => {
     );
 };
 
-const FullScreenButton = styled.img`
+const TimerWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    text-shadow: 0px 0px 60px #f7f7f7;
+    margin-top: -10px;
+`;
+
+const EasterEgg = styled.span`
+    font-style: normal;
+    font-weight: normal;
+    font-size: 30px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-family: 'RobotoLight' !important;
+    @media (max-width: 767px) {
+        font-size: 20px;
+    }
+`;
+
+const Countdown = styled.span`
+    display: flex;
+    justify-content: center;
+    > span {
+        position: relative;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 75px;
+        text-align: center;
+        text-transform: uppercase;
+        color: #ffffff;
+        font-family: 'RobotoThin' !important;
+        @media (max-width: 767px) {
+            font-size: 50px;
+        }
+    }
+`;
+
+const CountdownLabel = styled.span`
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    cursor: pointer;
-    height: 9%;
+    font-size: 15px;
+    font-family: 'RobotoThin' !important;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
 `;
 
 const CenterGame = styled.div`
     display: flex;
     flex: 1;
     align-items: center;
-`;
-
-const GameWrapper = styled.div`
-    position: relative;
-    display: flex;
-    flex: 1;
+    flex-direction: column;
     justify-content: center;
-    aspect-ratio: 16/9;
 `;
 
 const Container = styled(FlexDivColumn)`
     z-index: 10;
     width: 100%;
-`;
-
-const WalletMessage = styled.div`
-    font-size: 14px;
-    line-height: 16px;
-    letter-spacing: 0.25px;
-    color: #ffcc00;
-    margin-top: 10px;
-    text-align: center;
 `;
 
 export default Game;
