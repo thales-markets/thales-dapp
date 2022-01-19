@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -52,7 +52,13 @@ const ThalesRoyal: React.FC = () => {
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
         enabled: isL2,
     });
-    const users = usersQuery.isSuccess ? usersQuery.data : [];
+    const users = useMemo(() => {
+        if (usersQuery.isSuccess) {
+            return usersQuery.data;
+        }
+        return [];
+    }, [usersQuery]);
+
     const user = users.filter(
         (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
     )[0];
@@ -82,7 +88,6 @@ const ThalesRoyal: React.FC = () => {
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
             setThalesRoyaleData(thalesRoyaleDataMap.get(selectedSeason));
             const latestSeason = Math.max(...Array.from(thalesRoyaleDataMap.keys()));
-            setSelectedSeason(latestSeason);
             setLatestSeasonData(thalesRoyaleDataMap.get(latestSeason));
         }
     }, [thalesRoyaleDataMap]);
@@ -250,11 +255,11 @@ const ThalesRoyal: React.FC = () => {
                     <span>{t('options.royale.footer.reward-per-player')}:</span>
                     <span>
                         {(
-                            10000 /
+                            (thalesRoyaleData?.rewardPerSeason || 1) /
                             (thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
                                 ?.totalPlayersPerRoundPerSeason || 1)
-                        ).toFixed(2)}{' '}
-                        THALES
+                        ).toFixed(2)}
+                        sUSD
                     </span>
                 </div>
                 <div>

@@ -193,7 +193,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
 
             return { maxPages, usersToDisplay };
         }
-    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData]);
+    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData, selectedSeason]);
 
     const HeadCells: HeadCell[] = [
         { id: 1, text: <Trans i18nKey="options.royale.scoreboard.table-header.status" />, sortable: true },
@@ -240,31 +240,38 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                 </Button>
             );
         }
-
-        if (latestSeason.signUpPeriod > new Date()) {
-            if (user) {
-                if (user.status === UserStatus.NOTSIGNED) {
-                    if (allowance) {
-                        const buyInAmount = latestSeason.buyInAmount;
+        if (latestSeason.season === selectedSeason) {
+            if (latestSeason.signUpPeriod > new Date()) {
+                if (user) {
+                    if (user.status === UserStatus.NOTSIGNED) {
+                        if (allowance) {
+                            const buyInAmount = latestSeason.buyInAmount;
+                            return (
+                                <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
+                                    {t('options.royale.scoreboard.buy-in', { buyInAmount })}
+                                </Button>
+                            );
+                        } else {
+                            return (
+                                <Button
+                                    onClick={async () => {
+                                        await approve();
+                                        updateBalanceAndAllowance(buyInToken);
+                                    }}
+                                >
+                                    {t('options.royale.scoreboard.approve-susd')}
+                                </Button>
+                            );
+                        }
+                    }
+                    if (user.status === UserStatus.NOTVERIFIED) {
                         return (
-                            <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
-                                {t('options.royale.scoreboard.buy-in', { buyInAmount })}
-                            </Button>
-                        );
-                    } else {
-                        return (
-                            <Button
-                                onClick={async () => {
-                                    await approve();
-                                    updateBalanceAndAllowance(buyInToken);
-                                }}
-                            >
-                                {t('options.royale.scoreboard.approve-susd')}
+                            <Button onClick={setShowPopup.bind(this, true)}>
+                                {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
                             </Button>
                         );
                     }
-                }
-                if (user.status === UserStatus.NOTVERIFIED) {
+                } else {
                     return (
                         <Button onClick={setShowPopup.bind(this, true)}>
                             {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
@@ -272,36 +279,34 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     );
                 }
             } else {
-                return (
-                    <Button onClick={setShowPopup.bind(this, true)}>
-                        {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
-                    </Button>
-                );
-            }
-        } else {
-            if (user) {
-                if (user.status === UserStatus.RDY) {
-                    if (user.isAlive) {
-                        return <></>;
-                    } else {
-                        return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
+                if (user) {
+                    if (user.status === UserStatus.RDY) {
+                        if (user.isAlive) {
+                            return <></>;
+                        } else {
+                            return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
+                        }
                     }
                 }
-            }
-            if (latestSeason.seasonFinished || (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)) {
-                return (
-                    <DeadText>
-                        <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                        {t('options.royale.scoreboard.season-not-started')}
-                    </DeadText>
-                );
-            } else {
-                return (
-                    <DeadText>
-                        <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                        {t('options.royale.scoreboard.period-expired')}
-                    </DeadText>
-                );
+                if (royaleData)
+                    if (
+                        latestSeason.seasonFinished ||
+                        (!latestSeason.seasonStarted && !latestSeason.canStartNewSeason)
+                    ) {
+                        return (
+                            <DeadText>
+                                <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                                {t('options.royale.scoreboard.season-not-started')}
+                            </DeadText>
+                        );
+                    } else {
+                        return (
+                            <DeadText>
+                                <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                                {t('options.royale.scoreboard.period-expired')}
+                            </DeadText>
+                        );
+                    }
             }
         }
     };
@@ -406,11 +411,11 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     <span>{t('options.royale.footer.reward-per-player')}:</span>
                                     <span>
                                         {(
-                                            10000 /
+                                            (royaleData?.rewardPerSeason || 1) /
                                             (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
                                                 ?.totalPlayersPerRoundPerSeason || 1)
-                                        ).toFixed(2)}{' '}
-                                        THALES
+                                        ).toFixed(2)}
+                                        sUSD
                                     </span>
                                 </div>
                                 <div>
@@ -430,15 +435,20 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     </UserWrapper>
                     <TableWrapper>
                         <SeasonSelector>
-                            <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                                Season {selectedSeason !== 0 ? selectedSeason : 1}{' '}
-                                {!showSelectDropdown && (
-                                    <Arrow
-                                        style={{ display: 'inline-block', marginLeft: 20 }}
-                                        className="icon icon--arrow-down"
-                                    />
-                                )}
-                            </Text>
+                            {selectedSeason !== 0 ? (
+                                <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                    Season {selectedSeason}
+                                    {!showSelectDropdown && (
+                                        <Arrow
+                                            style={{ display: 'inline-block', marginLeft: 20 }}
+                                            className="icon icon--arrow-down"
+                                        />
+                                    )}
+                                </Text>
+                            ) : (
+                                <Text>Loading</Text>
+                            )}
+
                             {showSelectDropdown &&
                                 allSeasons
                                     .filter((number) => number !== selectedSeason)

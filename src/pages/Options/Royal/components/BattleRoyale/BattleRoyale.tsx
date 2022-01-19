@@ -327,11 +327,11 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
                     <span>{t('options.royale.footer.reward-per-player')}:</span>
                     <span>
                         {(
-                            10000 /
+                            (royaleData?.rewardPerSeason || 1) /
                             (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
                                 ?.totalPlayersPerRoundPerSeason || 1)
-                        ).toFixed(2)}{' '}
-                        THALES
+                        ).toFixed(2)}
+                        sUSD
                     </span>
                 </div>
                 <div>
