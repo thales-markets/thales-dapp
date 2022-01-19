@@ -3,13 +3,11 @@ import styled from 'styled-components';
 import thalesI from 'assets/images/landing-page/thales1.png';
 import thalesII from 'assets/images/landing-page/thales2.png';
 import thalesIII from 'assets/images/landing-page/thales3.png';
-import stars from 'assets/images/landing-page/stars.svg';
-import system from 'assets/images/landing-page/system.svg';
+import stars from 'assets/images/landing-page/animation2.svg';
+import system from 'assets/images/landing-page/animation1.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.png';
 import thalesIIW from 'assets/images/landing-page/thales2-white.png';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
-import starsW from 'assets/images/landing-page/stars-white.svg';
-import systemW from 'assets/images/landing-page/system-white.svg';
 import Header from './Header';
 import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
@@ -27,7 +25,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
         <Wrapper>
             <Header theme={theme} setTheme={setTheme} />
             <SystemImage>
-                <Image src={theme === Theme.Dark ? system : systemW}></Image>
+                <AnimationSvg type="image/svg+xml" data={system}></AnimationSvg>
             </SystemImage>
             <TitleContainer>
                 <Title> {t('landing-page.title')}</Title>
@@ -77,7 +75,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 <Image src={theme !== Theme.Dark ? thalesIII : thalesIIIW}></Image>
             </ThalesImageIII>
             <StarsImage>
-                <Image src={theme === Theme.Dark ? stars : starsW}></Image>
+                <AnimationSvg type="image/svg+xml" data={stars}></AnimationSvg>
             </StarsImage>
         </Wrapper>
     );
@@ -268,6 +266,8 @@ const Image = styled.img`
     object-fit: contain;
 `;
 
+const AnimationSvg = styled.object``;
+
 const ThalesImageI = styled.div`
     grid-column-start: 30;
     grid-column-end: 46;
@@ -339,11 +339,11 @@ const StarsImage = styled.div`
 
 const SystemImage = styled.div`
     position: relative;
-    top: -35em;
-    left: -50em;
+    top: -5em;
+    left: -20em;
     opacity: 0.5;
     grid-column-start: 1;
-    grid-column-end: 22;
+    grid-column-end: 50;
     grid-row-start: 1;
     grid-row-end: 46;
     z-index: 1;
