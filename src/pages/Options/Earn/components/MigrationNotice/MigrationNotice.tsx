@@ -28,7 +28,7 @@ const Wrapper = styled(FlexDivColumnCentered)`
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     box-shadow: -2px -2px 10px 4px rgba(100, 217, 254, 0.25), 2px 2px 10px 4px rgba(100, 217, 254, 0.25);
     border-radius: 10px;
-    padding: 2px;
+    padding: 1px;
     margin-bottom: 15px;
 `;
 

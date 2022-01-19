@@ -17,17 +17,20 @@ import stakingActiveIcon from '../../../assets/images/staking-active.svg';
 import stakingIcon from '../../../assets/images/staking.svg';
 import vestingActiveIcon from '../../../assets/images/vesting-active.svg';
 import vestingIcon from '../../../assets/images/vesting.svg';
+import migrationActiveIcon from '../../../assets/images/migration-active.svg';
+import migrationIcon from '../../../assets/images/migration.svg';
 import Loader from '../../../components/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { getNetworkId } from '../../../redux/modules/wallet';
-import { isNetworkSupported } from '../../../utils/network';
+import { getIsOVM, isNetworkSupported } from '../../../utils/network';
 import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
 
     const tabs = [
         {
@@ -45,12 +48,21 @@ const EarnPage: React.FC = () => {
             name: t('options.earn.vesting.tab-title'),
             disabled: false,
         },
-        {
-            id: 'migration',
-            name: t('migration.title'),
-            disabled: false,
-        },
     ];
+    tabs.push(
+        isL2
+            ? {
+                  id: 'unclaimed-rewards',
+                  name: t('migration.unclaimed-rewards-title'),
+                  disabled: false,
+              }
+            : {
+                  id: 'migration',
+                  name: t('migration.title'),
+                  disabled: false,
+              }
+    );
+
     const tabIds = tabs.map((tab) => tab.id);
     const isTabEnabled = (tabId: string) => {
         const tab = tabs.find((tab) => tab.id === tabId);
@@ -66,14 +78,13 @@ const EarnPage: React.FC = () => {
         id: string;
         name: string;
         disabled: boolean;
-    }> = useMemo(() => tabs, [t]);
+    }> = useMemo(() => tabs, [t, isL2]);
 
     useEffect(() => {
         const paramTab = queryString.parse(location.search).tab;
-        if (paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab)) {
-            setSelectedTab(paramTab);
-        }
-    }, [location]);
+        const isTabAvailable = paramTab !== null && tabIds.includes(paramTab) && isTabEnabled(paramTab);
+        setSelectedTab(isTabAvailable ? paramTab : 'retro-rewards');
+    }, [location, isL2]);
 
     return (
         <Background style={{ minHeight: '100vh' }}>
@@ -87,7 +98,7 @@ const EarnPage: React.FC = () => {
                     <Container>
                         <FlexDivColumn>
                             <TokenOverview />
-                            <MigrationNotice />
+                            {!isL2 && <MigrationNotice />}
                             <MainContentContainer>
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab, index) => (
@@ -122,7 +133,7 @@ const EarnPage: React.FC = () => {
                                         {selectedTab === 'retro-rewards' && <SnxStaking />}
                                         {selectedTab === 'staking' && <ThalesStaking />}
                                         {selectedTab === 'vesting' && <Vesting />}
-                                        {selectedTab === 'migration' && <Migration />}
+                                        {selectedTab === 'migration' && !isL2 && <Migration />}
                                     </InnerWidgetsContainer>
                                 </WidgetsContainer>
                             </MainContentContainer>
@@ -171,6 +182,22 @@ const EarnPage: React.FC = () => {
                             }}
                             src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
                         />
+                        {!isL2 && (
+                            <Icon
+                                width={35}
+                                height={30}
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: 'migration',
+                                        }),
+                                    });
+                                    setSelectedTab('migration');
+                                }}
+                                src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
+                            />
+                        )}
                         {/* <Icon
                             width={50}
                             height={30}
