@@ -4,7 +4,7 @@ export const LINKS = {
     },
     Token: {
         DodoPool: 'https://app.dodoex.io/pool/list/0x031816fd297228e4fd537c1789d51509247d0b43?network=mainnet',
-        UniswapInfo: 'https://info.uniswap.org/#/tokens/0x03e173ad8d1581a4802d3b532ace27a62c5b81dc',
+        CoinGecko: 'https://www.coingecko.com/en/coins/thales',
         RetroAirdropEligibilitySheet:
             'https://docs.google.com/spreadsheets/d/1naboaD-UzIMHwT2bq7jNKkglA34jXmBTa2SrbWBNScg/edit#gid=0',
         RetroUnlockEligibilitySheet:

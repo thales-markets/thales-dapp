@@ -439,7 +439,8 @@
             "overview": {
                 "token-tooltip": "Просмотреть контракт THALES",
                 "price-label": "Цена",
-                "price-tooltip": "Посмотреть на Uniswap",
+                "price-tooltip": "Просмотреть пул DODO",
+                "price-tooltip-l2": "Посмотреть на CoinGecko ",
                 "market-cap-label": "Рыночная капитализация",
                 "earn-label": "Получение вознаграждений LP",
                 "earn-tooltip": "Обеспечение ликвидности для пары THALES/ETH и получение двойных вознаграждений THALES + DODO",

@@ -7,6 +7,7 @@ import ROUTES from '../../../constants/routes';
 import ThalesStaking from './ThalesStaking';
 import SnxStaking from './SnxStaking';
 import Vesting from './Vesting';
+import LPStaking from './LPStaking';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
@@ -49,19 +50,25 @@ const EarnPage: React.FC = () => {
             disabled: false,
         },
     ];
-    tabs.push(
-        isL2
-            ? {
-                  id: 'unclaimed-rewards',
-                  name: t('migration.unclaimed-rewards-title'),
-                  disabled: false,
-              }
-            : {
-                  id: 'migration',
-                  name: t('migration.title'),
-                  disabled: false,
-              }
-    );
+
+    if (isL2) {
+        tabs.push({
+            id: 'unclaimed-rewards',
+            name: t('migration.unclaimed-rewards-title'),
+            disabled: false,
+        });
+    } else {
+        tabs.push({
+            id: 'lp-staking',
+            name: t('options.earn.lp-staking.tab-title'),
+            disabled: false,
+        });
+        tabs.push({
+            id: 'migration',
+            name: t('migration.title'),
+            disabled: false,
+        });
+    }
 
     const tabIds = tabs.map((tab) => tab.id);
     const isTabEnabled = (tabId: string) => {
@@ -106,6 +113,7 @@ const EarnPage: React.FC = () => {
                                             isActive={tab.id === selectedTab}
                                             key={index}
                                             index={index}
+                                            isL2={isL2}
                                             onClick={() => {
                                                 if (tab.disabled) return;
                                                 history.push({
@@ -133,6 +141,7 @@ const EarnPage: React.FC = () => {
                                         {selectedTab === 'retro-rewards' && <SnxStaking />}
                                         {selectedTab === 'staking' && <ThalesStaking />}
                                         {selectedTab === 'vesting' && <Vesting />}
+                                        {selectedTab === 'lp-staking' && !isL2 && <LPStaking />}
                                         {selectedTab === 'migration' && !isL2 && <Migration />}
                                     </InnerWidgetsContainer>
                                 </WidgetsContainer>
@@ -255,12 +264,12 @@ const OptionsTabContainer = styled.div`
     }
 `;
 
-const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>`
+const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number; isL2: boolean }>`
     position: absolute;
     top: 0;
-    left: ${(props) => props.index * 24.5 + '% '};
+    left: ${(props) => props.index * (props.isL2 ? 24.5 : 19.5)}%;
     background: linear-gradient(190.01deg, rgba(81, 106, 255, 0.6) -17.89%, rgba(130, 8, 252, 0.6) 90.41%);
-    width: 26%;
+    width: ${(props) => (props.isL2 ? 26 : 22)}%;
     z-index: ${(props) => (props.isActive ? 5 : 4 - props.index)};
     transition: 0.5s;
     transition-property: color;
@@ -281,7 +290,7 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number }>
         background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
         transition: 0.2s;
         color: #f6f6fe;
-        transform: scale(1.1) translateY(-1px) translateX(-1px);
+        transform: scale(1.1) translateY(-1px) translateX(${(props) => (props.isL2 ? -1 : 0)}px);
         div {
             background: #04045a;
         }
