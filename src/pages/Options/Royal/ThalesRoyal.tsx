@@ -1,26 +1,27 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import queryString from 'query-string';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
+import { Background, FlexDivCentered, LoaderContainer, Text, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
+import { getIsOVM } from 'utils/network';
 import ROUTES from '../../../constants/routes';
 import { history, navigateTo } from '../../../utils/routes';
+import { RoyaleTooltip } from '../Market/components';
 import BattleRoyale from './components/BattleRoyale';
 import Header from './components/Header';
 import Scoreboard from './components/Scoreboard';
+import SimpleLoader from './components/SimpleLoader/SimpleLoader';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
-import queryString from 'query-string';
-import usePositionsQuery from './Queries/usePositionsQuery';
-import useThalesRoyaleData, { ThalesRoyaleData } from './Queries/useThalesRoyaleData';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
+import usePositionsQuery from './Queries/usePositionsQuery';
 import useRoyalePlayersQuery, { User } from './Queries/useRoyalePlayersQuery';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { RoyaleTooltip } from '../Market/components';
-import { getIsOVM } from 'utils/network';
+import useThalesRoyaleData, { ThalesRoyaleData } from './Queries/useThalesRoyaleData';
 
 export enum Theme {
     Light,
@@ -52,12 +53,7 @@ const ThalesRoyal: React.FC = () => {
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
         enabled: isL2,
     });
-    const users = useMemo(() => {
-        if (usersQuery.isSuccess) {
-            return usersQuery.data;
-        }
-        return [];
-    }, [usersQuery]);
+    const users = usersQuery.isSuccess ? usersQuery.data : [];
 
     const user = users.filter(
         (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
@@ -225,54 +221,64 @@ const ThalesRoyal: React.FC = () => {
             </Footer>
             <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
                 <CloseStats onClick={() => setShowStats(false)}>✖</CloseStats>
-                {!!user?.deathRound && (
-                    <div>
-                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
-                        <span>
-                            {`${t('options.royale.footer.rd')} `}
-                            {user.deathRound}
-                        </span>
+                {selectedSeason === 0 ? (
+                    <div style={{ width: 341, height: 130 }}>
+                        <LoaderContainer style={{ top: 'calc(50%)', left: 'calc(50%)' }}>
+                            <SimpleLoader />
+                        </LoaderContainer>
                     </div>
+                ) : (
+                    <>
+                        {!!user?.deathRound && (
+                            <div>
+                                <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                                <span>
+                                    {`${t('options.royale.footer.rd')} `}
+                                    {user.deathRound}
+                                </span>
+                            </div>
+                        )}
+                        <div>
+                            <span>{t('options.royale.footer.current-positions')}:</span>
+                            <span>{t('options.royale.footer.up')}</span>
+                            <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
+                            <span>{t('options.royale.footer.down')}</span>
+                        </div>
+                        <div>
+                            <span>
+                                {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                            </span>
+                            <span>${ethPrice}</span>
+                            <InfoIconContainer>
+                                <RoyaleTooltip title={t('options.royale.footer.price-source')}>
+                                    <StyledInfoIcon />
+                                </RoyaleTooltip>
+                            </InfoIconContainer>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.reward-per-player')}:</span>
+                            <span>
+                                {(
+                                    (thalesRoyaleData?.rewardPerSeason || 1) /
+                                    (thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
+                                        ?.totalPlayersPerRoundPerSeason || 1)
+                                ).toFixed(2)}{' '}
+                                sUSD
+                            </span>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.players-alive')}:</span>
+                            <span>
+                                {thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
+                                    ?.totalPlayersPerRoundPerSeason
+                                    ? thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
+                                          ?.totalPlayersPerRoundPerSeason
+                                    : '0'}
+                                {' / ' + thalesRoyaleData?.players?.length}
+                            </span>
+                        </div>
+                    </>
                 )}
-                <div>
-                    <span>{t('options.royale.footer.current-positions')}:</span>
-                    <span>{t('options.royale.footer.up')}</span>
-                    <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
-                    <span>{t('options.royale.footer.down')}</span>
-                </div>
-                <div>
-                    <span>
-                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                    </span>
-                    <span>${ethPrice}</span>
-                    <InfoIconContainer>
-                        <RoyaleTooltip title={t('options.royale.footer.price-source')}>
-                            <StyledInfoIcon />
-                        </RoyaleTooltip>
-                    </InfoIconContainer>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.reward-per-player')}:</span>
-                    <span>
-                        {(
-                            (thalesRoyaleData?.rewardPerSeason || 1) /
-                            (thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
-                                ?.totalPlayersPerRoundPerSeason || 1)
-                        ).toFixed(2)}
-                        sUSD
-                    </span>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>
-                        {thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
-                            ?.totalPlayersPerRoundPerSeason
-                            ? thalesRoyaleData?.roundsInformation[thalesRoyaleData.roundInASeason - 1]
-                                  ?.totalPlayersPerRoundPerSeason
-                            : '0'}
-                        {' / ' + thalesRoyaleData?.players?.length}
-                    </span>
-                </div>
             </InfoSection>
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />
             <WalletNotConnectedDialog open={openWalletNotConnectedDialog} setOpen={setOpenWalletNotConnectedDialog} />

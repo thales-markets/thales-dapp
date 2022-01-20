@@ -1,14 +1,13 @@
-import { Modal } from '@material-ui/core';
 import circle from 'assets/images/royale/circle.svg';
-import important from 'assets/images/royale/important.svg';
+import DiscordImage from 'assets/images/royale/discord.png';
 import notSigned from 'assets/images/royale/not-signed.svg';
-import notVerified from 'assets/images/royale/not-verified.svg';
 import triangle from 'assets/images/royale/triangle.svg';
-import SimpleLoader from '../SimpleLoader';
 import format from 'date-fns/format';
+import { ethers } from 'ethers';
 import useInterval from 'hooks/useInterval';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
+import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -17,20 +16,19 @@ import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, LoaderContainer, Text } from 'theme/common';
+import { erc20Contract } from 'utils/contracts/erc20Contract';
 import { truncateAddress } from 'utils/formatters/string';
+import { getIsOVM } from 'utils/network';
+import snxJSConnector from 'utils/snxJSConnector';
+import i18n from '../../../../../i18n';
+import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
 import { signUp, startRoyale, startRoyaleSeason } from '../../getThalesRoyalData';
 import { Positions } from '../../Queries/usePositionsQuery';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyaleData } from '../../Queries/useThalesRoyaleData';
 import { getTimeLeft } from '../BattleRoyale/BattleRoyale';
-import DiscordImage from 'assets/images/royale/discord.png';
-import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
-import i18n from '../../../../../i18n';
-import { ethers } from 'ethers';
-import { OP_KOVAN_SUSD, OP_sUSD } from 'pages/Options/Home/Swap/tokens';
-import { getIsOVM } from 'utils/network';
-import { erc20Contract } from 'utils/contracts/erc20Contract';
-import snxJSConnector from 'utils/snxJSConnector';
+import SimpleLoader from '../SimpleLoader';
+import UserEditRoyaleDataDialog from '../UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -82,13 +80,13 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
-    const [showPopup, setShowPopup] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
+    const [openEditDialog, setOpenEditDialog] = useState(false);
     const isL2 = getIsOVM(networkId);
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
     const signer = provider.getSigner();
@@ -97,6 +95,10 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
     useEffect(() => {
         updateBalanceAndAllowance(buyInToken);
     }, [buyInToken]);
+
+    const handleClosingDialog = () => {
+        setOpenEditDialog(false);
+    };
 
     const updateBalanceAndAllowance = (token: any) => {
         if (token) {
@@ -233,16 +235,29 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
 
     const getFooter = (user: User | undefined, royaleData: ThalesRoyaleData) => {
         if (!royaleData) return;
-        if (user && user.status === UserStatus.NOTVERIFIED) {
-            return (
-                <Button onClick={setShowPopup.bind(this, true)}>
-                    {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
-                </Button>
-            );
-        }
         if (latestSeason.season === selectedSeason) {
             if (latestSeason.signUpPeriod > new Date()) {
-                if (user) {
+                if (walletAddress && !user) {
+                    if (allowance) {
+                        const buyInAmount = latestSeason.buyInAmount;
+                        return (
+                            <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
+                                {t('options.royale.scoreboard.buy-in', { buyInAmount })}
+                            </Button>
+                        );
+                    } else {
+                        return (
+                            <Button
+                                onClick={async () => {
+                                    await approve();
+                                    updateBalanceAndAllowance(buyInToken);
+                                }}
+                            >
+                                {t('options.royale.scoreboard.approve-susd')}
+                            </Button>
+                        );
+                    }
+                } else if (user) {
                     if (user.status === UserStatus.NOTSIGNED) {
                         if (allowance) {
                             const buyInAmount = latestSeason.buyInAmount;
@@ -264,19 +279,8 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                             );
                         }
                     }
-                    if (user.status === UserStatus.NOTVERIFIED) {
-                        return (
-                            <Button onClick={setShowPopup.bind(this, true)}>
-                                {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
-                            </Button>
-                        );
-                    }
                 } else {
-                    return (
-                        <Button onClick={setShowPopup.bind(this, true)}>
-                            {t('options.leaderboard.verify')} <Discord className="icon icon--discord" />
-                        </Button>
-                    );
+                    return <Text>Please connect your wallet to compete</Text>;
                 }
             } else {
                 if (user) {
@@ -296,7 +300,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                         return (
                             <DeadText>
                                 <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                                {t('options.royale.scoreboard.season-not-started')}
+                                {t('options.royale.scoreboard.season-finished')}
                             </DeadText>
                         );
                     } else {
@@ -319,30 +323,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                     if (showSelectDropdown) setShowSelectDropdown(false);
                 }}
             ></OverlayForDropDown>
-            <Modal
-                open={showPopup}
-                onClose={() => {
-                    setShowPopup(false);
-                }}
-                BackdropProps={{
-                    style: {
-                        backdropFilter: 'blur(20px)',
-                    },
-                }}
-            >
-                <Popup style={{ display: showPopup ? 'flex' : 'none' }}>
-                    <PopupTitle>{t('options.royale.scoreboard.verification')}</PopupTitle>
-                    <PopupImage src={important} />
-                    <PopupDescription>
-                        <PopupLink href="https://discord.gg/kMKCJ2xFmG" target="_blank">
-                            {t('options.royale.scoreboard.go-to')} <br />
-                        </PopupLink>
-                        {t('options.royale.scoreboard.verify')} <br />
-                        {t('options.royale.scoreboard.placeholder')} <br />
-                    </PopupDescription>
-                </Popup>
-            </Modal>
-
+            <UserEditRoyaleDataDialog
+                open={openEditDialog}
+                handleClose={handleClosingDialog}
+                user={user}
+                walletAddress={walletAddress}
+            ></UserEditRoyaleDataDialog>
             <Wrapper
                 onClick={() => {
                     if (showDropdown) setShowDropdown(false);
@@ -374,7 +360,22 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                         <FlexDivColumn style={{ margin: '20px 0' }}>
                             <FlexContainer>
                                 <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
-                                <InputWrapper>{user?.name}</InputWrapper>
+                                <InputWrapper>
+                                    {user?.name}{' '}
+                                    <SearchIcon
+                                        onClick={setOpenEditDialog.bind(this, true)}
+                                        className="icon icon--user-avatar"
+                                        style={{
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            top: '3.5px',
+                                            float: 'right',
+                                            marginTop: 'auto',
+                                            marginBottom: 'auto',
+                                            marginRight: '-5px',
+                                        }}
+                                    />
+                                </InputWrapper>
                             </FlexContainer>
                             <FlexContainer>
                                 <UserLabel>{t('options.leaderboard.address')}:</UserLabel>
@@ -387,48 +388,61 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                 </InputWrapper>
                             </FlexContainer>
                             <ScoreboardInfoSection style={{ paddingTop: '15px' }}>
-                                <div>
-                                    <span>{t('options.royale.footer.up')}</span>
-                                    <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
-                                    <span>{t('options.royale.footer.down')}</span>
-                                </div>
-                                {!!user?.deathRound && (
-                                    <div>
-                                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
-                                        <span>
-                                            {`${t('options.royale.footer.rd')} `}
-                                            {user.deathRound}
-                                        </span>
+                                {selectedSeason === 0 ? (
+                                    <div style={{ width: 341, height: 130 }}>
+                                        <LoaderContainer style={{ top: 'calc(50%)', left: 'calc(50%)' }}>
+                                            <SimpleLoader />
+                                        </LoaderContainer>
                                     </div>
+                                ) : (
+                                    <>
+                                        <div>
+                                            <span>{t('options.royale.footer.up')}</span>
+                                            <span>{`${positions.up} ${t('options.royale.footer.vs')} ${
+                                                positions.down
+                                            }`}</span>
+                                            <span>{t('options.royale.footer.down')}</span>
+                                        </div>
+                                        {!!user?.deathRound && (
+                                            <div>
+                                                <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                                                <span>
+                                                    {`${t('options.royale.footer.rd')} `}
+                                                    {user.deathRound}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div>
+                                            <span>
+                                                {t('options.royale.footer.current')} ETH{' '}
+                                                {t('options.royale.footer.price')}:
+                                            </span>
+                                            <span>${ethPrice}</span>
+                                        </div>
+                                        <div>
+                                            <span>{t('options.royale.footer.reward-per-player')}:</span>
+                                            <span>
+                                                {(
+                                                    (royaleData?.rewardPerSeason || 1) /
+                                                    (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                                        ?.totalPlayersPerRoundPerSeason || 1)
+                                                ).toFixed(2)}{' '}
+                                                sUSD
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span>{t('options.royale.footer.players-alive')}:</span>
+                                            <span>
+                                                {royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                                    ?.totalPlayersPerRoundPerSeason
+                                                    ? royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                                          ?.totalPlayersPerRoundPerSeason
+                                                    : '0'}
+                                                {' / ' + royaleData?.players?.length}
+                                            </span>
+                                        </div>
+                                    </>
                                 )}
-                                <div>
-                                    <span>
-                                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                                    </span>
-                                    <span>${ethPrice}</span>
-                                </div>
-                                <div>
-                                    <span>{t('options.royale.footer.reward-per-player')}:</span>
-                                    <span>
-                                        {(
-                                            (royaleData?.rewardPerSeason || 1) /
-                                            (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
-                                                ?.totalPlayersPerRoundPerSeason || 1)
-                                        ).toFixed(2)}
-                                        sUSD
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>{t('options.royale.footer.players-alive')}:</span>
-                                    <span>
-                                        {royaleData?.roundsInformation[royaleData.roundInASeason - 1]
-                                            ?.totalPlayersPerRoundPerSeason
-                                            ? royaleData?.roundsInformation[royaleData.roundInASeason - 1]
-                                                  ?.totalPlayersPerRoundPerSeason
-                                            : '0'}
-                                        {' / ' + royaleData?.players?.length}
-                                    </span>
-                                </div>
                             </ScoreboardInfoSection>
                         </FlexDivColumn>
                         {getFooter(user, royaleData)}
@@ -437,7 +451,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                         <SeasonSelector>
                             {selectedSeason !== 0 ? (
                                 <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                                    Season {selectedSeason}
+                                    {t('options.royale.scoreboard.season')} {selectedSeason}
                                     {!showSelectDropdown && (
                                         <Arrow
                                             style={{ display: 'inline-block', marginLeft: 20 }}
@@ -446,7 +460,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     )}
                                 </Text>
                             ) : (
-                                <Text>Loading</Text>
+                                <Text>{t('options.royale.scoreboard.loading-season')}</Text>
                             )}
 
                             {showSelectDropdown &&
@@ -460,7 +474,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                             }}
                                             key={key}
                                         >
-                                            Season {option}
+                                            {t('options.royale.scoreboard.season')} {option}
                                         </Text>
                                     ))}
                         </SeasonSelector>
@@ -541,7 +555,7 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                             textOverflow: 'ellipsis',
                                         }}
                                     >
-                                        {user.name}
+                                        {user.name ?? user.address}
                                     </HeadCellUi>
                                     <HeadCellUi
                                         winner={user.isAlive && royaleData.seasonFinished}
@@ -761,9 +775,12 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
                             </Button>
                         </>
                     ) : (
-                        <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
-                            <TimeRemaining end={latestSeason.signUpPeriod} showFullCounter />
-                        </SubTitle>
+                        <>
+                            <Title>{t('options.royale.scoreboard.starts')}</Title>
+                            <SubTitle lineHeight={selectedLanguage === SupportedLanguages.CHINESE ? 84 : 56}>
+                                <TimeRemaining end={latestSeason.signUpPeriod} showFullCounter />
+                            </SubTitle>
+                        </>
                     );
                 }
             } else if (latestSeason.roundInASeason === latestSeason.rounds) {
@@ -849,24 +866,27 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
 };
 
 const getAvatar = (user: User, royaleData: ThalesRoyaleData) => {
-    if (user.status === UserStatus.RDY) {
+    if (user.avatar) {
         return <UserAvatar winner={user.isAlive && royaleData.seasonFinished} src={user.avatar || DiscordImage} />;
     }
-    if (user.status === UserStatus.NOTVERIFIED) {
-        return (
-            <RoyaleTooltip title="User is not verified on Discord">
-                <UserAvatar src={notVerified} />
-            </RoyaleTooltip>
-        );
-    }
 
-    if (user.status === UserStatus.NOTSIGNED) {
-        return (
-            <RoyaleTooltip title="User is not registered for Thales Royale">
-                <UserAvatar src={notSigned} />
-            </RoyaleTooltip>
-        );
-    }
+    return (
+        <RoyaleTooltip title="User is not registered for Thales Royale">
+            <UserAvatar src={notSigned} />
+        </RoyaleTooltip>
+    );
+
+    // if (user.status === UserStatus.RDY) {
+    //     return <UserAvatar winner={user.isAlive && royaleData.seasonFinished} src={user.avatar || DiscordImage} />;
+    // }
+
+    // if (user.status === UserStatus.NOTSIGNED) {
+    //     return (
+    //         <RoyaleTooltip title="User is not registered for Thales Royale">
+    //             <UserAvatar src={notSigned} />
+    //         </RoyaleTooltip>
+    //     );
+    // }
 };
 
 const OverlayForDropDown = styled.div`
@@ -917,61 +937,61 @@ const PaginationIcon = styled.i`
     }
 `;
 
-const Popup = styled.div`
-    display: flex;
-    position: fixed;
-    top: 300px;
-    width: 420px;
-    left: calc(50% - 200px);
-    margin: auto;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: var(--color);
-    border: 5px solid var(--color);
-    box-sizing: border-box;
-    border-radius: 5px;
-    padding: 24px;
-    box-shadow: 0px 4px 50px var(--color);
-    z-index: 1000;
-`;
+// const Popup = styled.div`
+//     display: flex;
+//     position: fixed;
+//     top: 300px;
+//     width: 420px;
+//     left: calc(50% - 200px);
+//     margin: auto;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     background: var(--color);
+//     border: 5px solid var(--color);
+//     box-sizing: border-box;
+//     border-radius: 5px;
+//     padding: 24px;
+//     box-shadow: 0px 4px 50px var(--color);
+//     z-index: 1000;
+// `;
 
-const PopupTitle = styled(Text)`
-    font-family: Sansation !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 25px;
-    line-height: 28px;
-    color: var(--color-wrapper); ;
-`;
+// const PopupTitle = styled(Text)`
+//     font-family: Sansation !important;
+//     font-style: normal;
+//     font-weight: bold;
+//     font-size: 25px;
+//     line-height: 28px;
+//     color: var(--color-wrapper); ;
+// `;
 
-const PopupImage = styled(Image)`
-    width: 60px;
-    height: 60px;
-    margin: 10px 0;
-`;
+// const PopupImage = styled(Image)`
+//     width: 60px;
+//     height: 60px;
+//     margin: 10px 0;
+// `;
 
-const PopupDescription = styled(Text)`
-    font-family: Sansation !important;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 25px;
-    text-align: center;
-    letter-spacing: -0.402542px;
-    color: var(--color-wrapper);
-`;
+// const PopupDescription = styled(Text)`
+//     font-family: Sansation !important;
+//     font-style: normal;
+//     font-weight: normal;
+//     font-size: 20px;
+//     line-height: 25px;
+//     text-align: center;
+//     letter-spacing: -0.402542px;
+//     color: var(--color-wrapper);
+// `;
 
-const PopupLink = styled.a`
-    font-family: Sansation !important;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 22px;
-    letter-spacing: -0.402542px;
-    color: var(--color-wrapper);
-    text-decoration: underline var(--color-wrapper) from-font;
-`;
+// const PopupLink = styled.a`
+//     font-family: Sansation !important;
+//     font-style: normal;
+//     font-weight: normal;
+//     font-size: 20px;
+//     line-height: 22px;
+//     letter-spacing: -0.402542px;
+//     color: var(--color-wrapper);
+//     text-decoration: underline var(--color-wrapper) from-font;
+// `;
 
 const Arrow = styled.i`
     font-size: 12px;
@@ -1166,12 +1186,12 @@ const Status = styled.span`
     }
 `;
 
-const Discord = styled.i`
-    font-size: 24px;
-    line-height: 18px;
-    color: var(--color-wrapper);
-    margin-left: 14px;
-`;
+// const Discord = styled.i`
+//     font-size: 24px;
+//     line-height: 18px;
+//     color: var(--color-wrapper);
+//     margin-left: 14px;
+// `;
 
 const InputWrapper = styled.div`
     width: 220px;

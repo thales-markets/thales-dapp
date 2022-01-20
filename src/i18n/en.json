@@ -1016,9 +1016,12 @@
                 "player-no": "Player  <sans>№<sans>: ",
                 "eliminated": "You have been eliminated",
                 "period-expired": "Sign up period has expired",
+                "season": "Season",
+                "loading-season": "Loading",
                 "season-not-started": "Season did not start yet",
                 "season-ready-in": "Next season ready to start in:",
                 "start-season": "Start season",
+                "season-finished": "Season finished",
                 "approve-susd": "Approve sUSD",
                 "buy-in": "Buy-in: {{buyInAmount}} sUSD",
                 "table-header": {
@@ -1059,6 +1062,12 @@
                 "title": "Wallet not connected",
                 "message": "Please connect your wallet to continue",
                 "button": "Connect wallet"
+            },
+            "edit-user-data-dialog": {
+                "change-avatar": "Enter Avatar URL",
+                "avatar": "Avatar image",
+                "change-display-name": "Change Display Name",
+                "enter-display-name": "Enter Display Name"
             }
         },
         "amm-mining": {

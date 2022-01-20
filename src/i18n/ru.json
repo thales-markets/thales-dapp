@@ -1040,7 +1040,10 @@
                 "ends": "Thales Royale заканчивается:",
                 "round-ending": " до конца раунда {{round}}",
                 "season-ready-in": "Следующий сезон готов начать через:",
-                "start-season": "Начать сезон"
+                "start-season": "Начать сезон",
+                "season": "Время года",
+                "season-finished": "Сезон завершен",
+                "loading-season": "Загрузка"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
@@ -1059,6 +1062,12 @@
                 "button": "Подключить кошелек",
                 "title": "Кошелек не подключен",
                 "message": "Пожалуйста, подключите свой кошелек, чтобы продолжить"
+            },
+            "edit-user-data-dialog": {
+                "avatar": "Изображение аватара",
+                "change-display-name": "Изменить отображаемое имя",
+                "enter-display-name": "Введите отображаемое имя",
+                "change-avatar": "Введите URL-адрес аватара"
             }
         },
         "amm-mining": {

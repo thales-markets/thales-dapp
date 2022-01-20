@@ -24,16 +24,29 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
     return useQuery<User[]>(
         QUERY_KEYS.Royale.Players(),
         async () => {
-            const baseUrl = 'https://api.thales.market/thales-royale/';
+            if (selectedSeason === 0) return [];
+            const baseUrl = 'http://localhost:3002/thales-royale/';
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
-            const map = new Map(result);
+            const map = new Map<string, any>(result);
+            const royalePlayersDataUrl = 'http://localhost:3002/royale-users/';
+            const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
+            const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
+
+            console.log(royalePlayersDataResult);
+
+            const royalePlayersDataMap = new Map<string, any>(royalePlayersDataResult);
+
+            royalePlayersDataMap.forEach((player: string, address: any) => {
+                map.set(address, player);
+            });
+
             const data = await thalesData.binaryOptions.thalesRoyalePlayers({
                 season: selectedSeason,
                 network: networkId,
             });
+
             const verified: User[] = [];
-            const unverified: User[] = [];
             const unasigned: User[] = [];
             data.map((player: any) => {
                 const isAlive = player.isAlive;
@@ -56,18 +69,6 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                     };
                     verified.push(user);
                     map.delete(player.address.toLowerCase());
-                } else {
-                    const user = {
-                        isAlive,
-                        address,
-                        deathRound,
-                        name: '',
-                        number,
-                        season,
-                        avatar: '',
-                        status: UserStatus.NOTVERIFIED,
-                    };
-                    unverified.push(user);
                 }
             });
             Array.from(map).map((player: any) => {
@@ -82,7 +83,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                 };
                 unasigned.push(user);
             });
-            return [...verified, ...unasigned, ...unverified];
+            return [...verified, ...unasigned];
         },
         {
             refetchInterval: 5000,

@@ -22,30 +22,51 @@ const usePositionsQuery = (selectedSeason: number, networkId: NetworkId, options
     return useQuery<Positions>(
         QUERY_KEYS.Royale.Positions(networkId),
         async () => {
-            const positions = await thalesData.binaryOptions.thalesRoyalePositions({
-                season: selectedSeason,
-                network: networkId,
-            });
             const { thalesRoyaleContract } = snxJSConnector;
-
             if (thalesRoyaleContract) {
                 const currentSeason = Number(await thalesRoyaleContract.season());
                 const round = await thalesRoyaleContract.roundInASeason(currentSeason);
-                return (
-                    positions.reduce(
-                        (prev: Positions, curr: GraphPosition) => {
-                            if (curr.round === Number(round)) {
-                                if (curr.position === 2) {
-                                    prev.up++;
-                                } else if (curr.position === 1) {
-                                    prev.down++;
+                if (selectedSeason === 0) {
+                    const positions = await thalesData.binaryOptions.thalesRoyalePositions({
+                        season: currentSeason,
+                        network: networkId,
+                    });
+                    return (
+                        positions.reduce(
+                            (prev: Positions, curr: GraphPosition) => {
+                                if (curr.round === Number(round)) {
+                                    if (curr.position === 2) {
+                                        prev.up++;
+                                    } else if (curr.position === 1) {
+                                        prev.down++;
+                                    }
                                 }
-                            }
-                            return prev;
-                        },
-                        { up: 0, down: 0 }
-                    ) || { up: 0, down: 0 }
-                );
+                                return prev;
+                            },
+                            { up: 0, down: 0 }
+                        ) || { up: 0, down: 0 }
+                    );
+                } else {
+                    const positions = await thalesData.binaryOptions.thalesRoyalePositions({
+                        season: selectedSeason,
+                        network: networkId,
+                    });
+                    return (
+                        positions.reduce(
+                            (prev: Positions, curr: GraphPosition) => {
+                                if (curr.round === Number(round)) {
+                                    if (curr.position === 2) {
+                                        prev.up++;
+                                    } else if (curr.position === 1) {
+                                        prev.down++;
+                                    }
+                                }
+                                return prev;
+                            },
+                            { up: 0, down: 0 }
+                        ) || { up: 0, down: 0 }
+                    );
+                }
             }
         },
         {

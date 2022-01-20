@@ -12,13 +12,14 @@ import styled from 'styled-components';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
 import useInterval from '../../../../../hooks/useInterval';
-import { FlexDiv, FlexDivCentered, Wrapper } from '../../../../../theme/common';
+import { FlexDiv, FlexDivCentered, LoaderContainer, Wrapper } from '../../../../../theme/common';
 import { dispatchMarketNotification } from '../../../../../utils/options';
 import { RoyaleTooltip } from '../../../Market/components';
 import { Positions } from '../../Queries/usePositionsQuery';
 import useRoundsQuery from '../../Queries/useRoundsQuery';
 import { User } from '../../Queries/useRoyalePlayersQuery';
 import { ThalesRoyaleData } from '../../Queries/useThalesRoyaleData';
+import SimpleLoader from '../SimpleLoader';
 
 type BattleRoyaleProps = {
     ethPrice: string;
@@ -303,47 +304,58 @@ const BattleRoyale: React.FC<BattleRoyaleProps> = ({
                 )}
             </StyledWrapper>
             <BattleInfoSection className="battle">
-                <div>
-                    <span>{t('options.royale.footer.up')}</span>
-                    <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
-                    <span>{t('options.royale.footer.down')}</span>
-                </div>
-                {!!user?.deathRound && (
-                    <div>
-                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
-                        <span>
-                            {`${t('options.royale.footer.rd')} `}
-                            {user.deathRound}
-                        </span>
+                {selectedSeason === 0 ? (
+                    <div style={{ width: 341, height: 130 }}>
+                        <LoaderContainer style={{ top: 'calc(50%)', left: 'calc(50%)' }}>
+                            <SimpleLoader />
+                        </LoaderContainer>
                     </div>
+                ) : (
+                    <>
+                        <div>
+                            <span>{t('options.royale.footer.up')}</span>
+                            <span>{`${positions.up} ${t('options.royale.footer.vs')} ${positions.down}`}</span>
+                            <span>{t('options.royale.footer.down')}</span>
+                        </div>
+                        {!!user?.deathRound && (
+                            <div>
+                                <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                                <span>
+                                    {`${t('options.royale.footer.rd')} `}
+                                    {user.deathRound}
+                                </span>
+                            </div>
+                        )}
+                        <div>
+                            <span>
+                                {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                            </span>
+                            <span>${ethPrice}</span>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.reward-per-player')}:</span>
+                            <span>
+                                {(
+                                    (royaleData?.rewardPerSeason || 1) /
+                                    (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                        ?.totalPlayersPerRoundPerSeason || 1)
+                                ).toFixed(2)}{' '}
+                                sUSD
+                            </span>
+                        </div>
+                        <div>
+                            <span>{t('options.royale.footer.players-alive')}:</span>
+                            <span>
+                                {royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                    ?.totalPlayersPerRoundPerSeason
+                                    ? royaleData?.roundsInformation[royaleData.roundInASeason - 1]
+                                          ?.totalPlayersPerRoundPerSeason
+                                    : '0'}
+                                {' / ' + royaleData?.players?.length}
+                            </span>
+                        </div>
+                    </>
                 )}
-                <div>
-                    <span>
-                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                    </span>
-                    <span>${ethPrice}</span>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.reward-per-player')}:</span>
-                    <span>
-                        {(
-                            (royaleData?.rewardPerSeason || 1) /
-                            (royaleData?.roundsInformation[royaleData.roundInASeason - 1]
-                                ?.totalPlayersPerRoundPerSeason || 1)
-                        ).toFixed(2)}
-                        sUSD
-                    </span>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>
-                        {royaleData?.roundsInformation[royaleData.roundInASeason - 1]?.totalPlayersPerRoundPerSeason
-                            ? royaleData?.roundsInformation[royaleData.roundInASeason - 1]
-                                  ?.totalPlayersPerRoundPerSeason
-                            : '0'}
-                        {' / ' + royaleData?.players?.length}
-                    </span>
-                </div>
             </BattleInfoSection>
         </>
     );
