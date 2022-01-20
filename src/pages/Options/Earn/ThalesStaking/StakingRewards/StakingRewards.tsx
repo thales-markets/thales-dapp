@@ -42,6 +42,13 @@ import {
     WEEKLY_REWARDS_THALES,
 } from '../../../../../constants/token';
 import { LINKS } from 'constants/links';
+import {
+    GridContainer,
+    StakingRewardsContent,
+    StakingRewardsItem,
+    StakingRewardsLabel,
+    GridAction,
+} from '../../gridComponents';
 
 type Properties = {
     escrowedBalance: number;
@@ -177,7 +184,11 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
 
     return (
-        <EarnSection orderOnMobile={3} orderOnTablet={3} style={{ gridColumn: 'span 10', gridRow: 'span 3' }}>
+        <EarnSection
+            orderOnMobile={3}
+            orderOnTablet={3}
+            style={{ gridColumn: 'span 10', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
+        >
             <SectionHeader>
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
                 <div>
@@ -352,54 +363,84 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                         </StyledMaterialTooltip>
                     </LearnMore>
                 </StyledPieChartContainer>
-                <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
-                <ButtonContainer>
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
-                        open={showTooltip}
-                    >
-                        <Button
-                            onMouseOver={() => {
-                                setShowTooltip(true);
-                            }}
-                            onMouseOut={() => {
-                                setShowTooltip(false);
-                            }}
-                            onClick={handleClaimOngoingAirdrop}
-                            disabled={!isClaimAvailable || isClaiming}
-                            className="primary"
+            </SectionContentContainer>
+            <GridContainer>
+                <StakingRewardsItem>Weekly rewards</StakingRewardsItem>
+                <StakingRewardsItem style={{ gridColumn: 'span 9' }}>Bonus rewards</StakingRewardsItem>
+                <StakingRewardsItem>
+                    <StakingRewardsLabel color="#64D9FE">Thales staking</StakingRewardsLabel>
+                    <StakingRewardsContent>300 opTHALES</StakingRewardsContent>
+                </StakingRewardsItem>
+                <StakingRewardsItem>
+                    <StakingRewardsLabel color="linear-gradient(154.67deg, #1AAB9B 17.5%, #64D9FE 95.42%)">
+                        SNX staking
+                    </StakingRewardsLabel>
+                    <StakingRewardsContent>50 opTHALES</StakingRewardsContent>
+                </StakingRewardsItem>
+                <StakingRewardsItem>
+                    <StakingRewardsLabel color="linear-gradient(87.09deg, #FFB636 -1%, #F55C05 106%)">
+                        AMM
+                    </StakingRewardsLabel>
+                    <StakingRewardsContent>50 opTHALES</StakingRewardsContent>
+                </StakingRewardsItem>
+                <StakingRewardsItem>
+                    <StakingRewardsLabel color="linear-gradient(87.09deg, #9AB676 -1%, #0F803C 106.68%);">
+                        Thales Royale
+                    </StakingRewardsLabel>
+                    <StakingRewardsContent>10 opTHALES</StakingRewardsContent>
+                </StakingRewardsItem>
+                <GridAction>
+                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
+                    <ButtonContainer>
+                        <StyledMaterialTooltip
+                            arrow={true}
+                            title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
+                            open={showTooltip}
                         >
-                            {isClaiming
-                                ? t('options.earn.thales-staking.staking-rewards.claiming') +
-                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
-                                : t('options.earn.thales-staking.staking-rewards.claim') +
-                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
-                        </Button>
-                    </StyledMaterialTooltip>
-                    {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
-                        <ClaimMessage>{t('options.earn.thales-staking.staking-rewards.paused-message')}</ClaimMessage>
-                    )}
-                    {ongoingAirdrop && !ongoingAirdrop.isClaimPaused && !ongoingAirdrop.hasClaimRights && (
-                        <ClaimMessage>
-                            {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
-                        </ClaimMessage>
-                    )}
-                    {ongoingAirdrop &&
-                        ongoingAirdrop.hasClaimRights &&
-                        !ongoingAirdrop.isClaimPaused &&
-                        ongoingAirdrop.claimed && (
+                            <Button
+                                onMouseOver={() => {
+                                    setShowTooltip(true);
+                                }}
+                                onMouseOut={() => {
+                                    setShowTooltip(false);
+                                }}
+                                onClick={handleClaimOngoingAirdrop}
+                                disabled={!isClaimAvailable || isClaiming}
+                                className="primary"
+                            >
+                                {isClaiming
+                                    ? t('options.earn.thales-staking.staking-rewards.claiming') +
+                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
+                                    : t('options.earn.thales-staking.staking-rewards.claim') +
+                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
+                            </Button>
+                        </StyledMaterialTooltip>
+                        {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
                             <ClaimMessage>
-                                {t('options.earn.thales-staking.staking-rewards.claimed-message')}
+                                {t('options.earn.thales-staking.staking-rewards.paused-message')}
                             </ClaimMessage>
                         )}
-                </ButtonContainer>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
-            </SectionContentContainer>
+                        {ongoingAirdrop && !ongoingAirdrop.isClaimPaused && !ongoingAirdrop.hasClaimRights && (
+                            <ClaimMessage>
+                                {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
+                            </ClaimMessage>
+                        )}
+                        {ongoingAirdrop &&
+                            ongoingAirdrop.hasClaimRights &&
+                            !ongoingAirdrop.isClaimPaused &&
+                            ongoingAirdrop.claimed && (
+                                <ClaimMessage>
+                                    {t('options.earn.thales-staking.staking-rewards.claimed-message')}
+                                </ClaimMessage>
+                            )}
+                    </ButtonContainer>
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
+                </GridAction>
+            </GridContainer>
         </EarnSection>
     );
 };

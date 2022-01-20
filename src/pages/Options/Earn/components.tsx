@@ -37,14 +37,14 @@ export const EarnSection = styled.section<{
 export const SectionHeader = styled(FlexDivRowCentered)`
     font-weight: 600;
     font-size: 20px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.15px;
     color: #f6f6fe;
     min-height: 50px;
     padding: 0px 20px 0 20px;
     @media (max-width: 767px) {
         font-size: 16px;
-        padding: 0px 5px 0 10px;
-        min-height: 35px;
+        padding: 0px 5px 0 5px;
+        min-height: 25px;
     }
 `;
 

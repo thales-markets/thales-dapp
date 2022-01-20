@@ -8,9 +8,9 @@ import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
-import { FlexDivColumnCentered, FlexDivRow } from '../../../../../theme/common';
 import styled from 'styled-components';
 import { ClaimMessage, ClaimTitle, EarnSection, SectionHeader } from '../../components';
+import { GridContainer, StakeInfoItem, StakeInfoLabel, StakeInfoContent } from '../../gridComponents';
 
 type MyStakeProps = {
     thalesStaked: string;
@@ -58,74 +58,39 @@ const MyStake: React.FC<MyStakeProps> = ({ thalesStaked, setThalesStaked, escrow
             style={{ gridColumn: 'span 5', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
             <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
-            <Container>
-                <TopRow>
-                    <StakeItem>
-                        <StakeLabel>{t('options.earn.thales-staking.my-stake.staked-in-contract')}</StakeLabel>
-                        <StakeInfo style={notEligibleForStakingRewards ? { color: '#ffcc00' } : {}}>
-                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                        </StakeInfo>
-                        {Number(unstakingAmount) > 0 && (
-                            <StyledClaimTitle>
-                                <UnstakingConatiner>
-                                    <UnstakingTitle>{`${t(
-                                        'options.earn.thales-staking.unstake.unstaking'
-                                    )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}</UnstakingTitle>
-                                </UnstakingConatiner>
-                            </StyledClaimTitle>
-                        )}
-                    </StakeItem>
-                    <StakeItem>
-                        <StakeLabel>{t('options.earn.thales-staking.my-stake.locked-in-escrow')}</StakeLabel>
-                        <StakeInfo>{formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}</StakeInfo>
-                    </StakeItem>
-                </TopRow>
-                <StakeItem>
-                    <StakeLabel>{t('options.earn.thales-staking.my-stake.total-staked')}</StakeLabel>
-                    <StakeInfo style={{ fontSize: '25px' }}>
+            <GridContainer>
+                <StakeInfoItem>
+                    <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.staked-in-contract')}</StakeInfoLabel>
+                    <StakeInfoContent style={notEligibleForStakingRewards ? { color: '#ffcc00' } : {}}>
+                        {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                    </StakeInfoContent>
+                    {Number(unstakingAmount) > 0 && (
+                        <StyledClaimTitle>
+                            <UnstakingConatiner>
+                                <UnstakingTitle>{`${t(
+                                    'options.earn.thales-staking.unstake.unstaking'
+                                )} ${formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount)}`}</UnstakingTitle>
+                            </UnstakingConatiner>
+                        </StyledClaimTitle>
+                    )}
+                </StakeInfoItem>
+                <StakeInfoItem>
+                    <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.locked-in-escrow')}</StakeInfoLabel>
+                    <StakeInfoContent>{formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance)}</StakeInfoContent>
+                </StakeInfoItem>
+                <StakeInfoItem style={{ gridColumn: 'span 12' }}>
+                    <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.total-staked')}</StakeInfoLabel>
+                    <StakeInfoContent style={{ fontSize: '25px' }}>
                         {formatCurrencyWithKey(THALES_CURRENCY, Number(escrowedBalance) + Number(thalesStaked))}
-                    </StakeInfo>
+                    </StakeInfoContent>
                     {notEligibleForStakingRewards && (
                         <ClaimMessage>{t('options.earn.thales-staking.my-stake.not-eligible-message')}</ClaimMessage>
                     )}
-                </StakeItem>
-            </Container>
+                </StakeInfoItem>
+            </GridContainer>
         </EarnSection>
     );
 };
-
-const Container = styled(FlexDivColumnCentered)`
-    background: #04045a;
-    border-radius: 15px;
-    border: 1px solid rgba(100, 217, 254, 0.6);
-`;
-
-const TopRow = styled(FlexDivRow)`
-    border-bottom: 1px solid rgba(100, 217, 254, 0.6);
-`;
-
-const StakeItem = styled(FlexDivColumnCentered)`
-    justify-content: center;
-    text-align: center;
-    padding: 10px;
-    &:first-child {
-        border-right: 1px solid rgba(100, 217, 254, 0.6);
-    }
-`;
-
-const StakeLabel = styled.span`
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #b8c6e5;
-`;
-
-const StakeInfo = styled.span`
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #f6f6fe;
-`;
 
 const UnstakingConatiner = styled.div`
     width: 100%;

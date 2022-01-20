@@ -8,10 +8,10 @@ import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
 import { useTranslation } from 'react-i18next';
-import { FlexDivColumnCentered, FlexDivRow } from '../../../../../theme/common';
 import styled from 'styled-components';
 import { /*ClaimMessage, */ EarnSection, SectionHeader } from '../../components';
 import { WEEKLY_REWARDS_THALES } from 'constants/token';
+import { GridContainer, StakeInfoContent, StakeInfoItem, StakeInfoLabel } from '../../gridComponents';
 
 type GlobalStakeProps = {
     thalesStaked: string;
@@ -120,63 +120,28 @@ const GlobalStake: React.FC<GlobalStakeProps> = ({
                     APR: {APR.toFixed(2)}%&nbsp;&nbsp;&nbsp;&nbsp;APY: {APY}%
                 </RewardsInfo>
             </SectionHeader>
-            <Container>
-                <TopRow>
-                    <StakeItem>
-                        <StakeLabel>{t('options.earn.thales-staking.my-stake.my-staked-share')}</StakeLabel>
-                        <StakeInfo>{myStakedShare.toFixed(2)}%</StakeInfo>
-                    </StakeItem>
-                    <StakeItem>
-                        <StakeLabel>{t('options.earn.thales-staking.my-stake.estimated-rewards')}</StakeLabel>
-                        <StakeInfo>{formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}</StakeInfo>
-                    </StakeItem>
-                </TopRow>
-                <StakeItem>
-                    <StakeLabel>{t('options.earn.thales-staking.my-stake.total-thales-staked')}</StakeLabel>
-                    <StakeInfo style={{ fontSize: '25px' }}>
+            <GridContainer>
+                <StakeInfoItem>
+                    <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.my-staked-share')}</StakeInfoLabel>
+                    <StakeInfoContent>{myStakedShare.toFixed(2)}%</StakeInfoContent>
+                </StakeInfoItem>
+                <StakeInfoItem>
+                    <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.estimated-rewards')}</StakeInfoLabel>
+                    <StakeInfoContent>{formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}</StakeInfoContent>
+                </StakeInfoItem>
+                <StakeInfoItem style={{ gridColumn: 'span 12' }}>
+                    <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.total-thales-staked')}</StakeInfoLabel>
+                    <StakeInfoContent style={{ fontSize: '25px' }}>
                         {formatCurrencyWithKey(THALES_CURRENCY, totalThalesStaked)}
-                    </StakeInfo>
+                    </StakeInfoContent>
                     {/* {notEligibleForStakingRewards && (
                         <ClaimMessage>{t('options.earn.thales-staking.my-stake.not-eligible-message')}</ClaimMessage>
                     )} */}
-                </StakeItem>
-            </Container>
+                </StakeInfoItem>
+            </GridContainer>
         </EarnSection>
     );
 };
-
-const Container = styled(FlexDivColumnCentered)`
-    background: #04045a;
-    border-radius: 15px;
-    border: 1px solid rgba(100, 217, 254, 0.6);
-`;
-
-const TopRow = styled(FlexDivRow)`
-    border-bottom: 1px solid rgba(100, 217, 254, 0.6);
-`;
-
-const StakeItem = styled(FlexDivColumnCentered)`
-    justify-content: center;
-    text-align: center;
-    padding: 10px;
-    &:first-child {
-        border-right: 1px solid rgba(100, 217, 254, 0.6);
-    }
-`;
-
-const StakeLabel = styled.span`
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #b8c6e5;
-`;
-
-const StakeInfo = styled.span`
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #f6f6fe;
-`;
 
 const RewardsInfo = styled.span`
     font-weight: normal;
