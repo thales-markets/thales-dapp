@@ -53,7 +53,6 @@ const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Ma
                     ? thalesRoyaleContract.connect((snxJSConnector as any).signer)
                     : thalesRoyaleContract;
                 const data = await getFromContract(RoyaleContract, walletAddress);
-                console.log(data);
                 return data;
             }
             return new Map<any, any>();

@@ -33,8 +33,6 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
             const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
             const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
 
-            console.log(royalePlayersDataResult);
-
             const royalePlayersDataMap = new Map<string, any>(royalePlayersDataResult);
 
             royalePlayersDataMap.forEach((player: string, address: any) => {
