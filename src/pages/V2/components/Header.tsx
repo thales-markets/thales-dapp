@@ -94,25 +94,22 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
             </ButtonContainer>
             <BurgerContainer className={openBurger ? '' : 'hide'}>
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    {t('header.links.docs')}
+                    {t('header.links.learn.title')}
                 </Link>
-                <Link
-                    target="_blank"
-                    rel="noreferrer"
-                    href="https://thalesmarket.medium.com/thales-tokenomics-introducing-thales-token-3aab321174e7"
-                >
-                    {t('header.links.tokenomics')}
-                </Link>
-                <Link target="_blank" rel="noreferrer">
-                    {t('header.links.partners')}
-                </Link>
+
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
                     {t('header.links.community')}
                 </Link>
-
                 <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
                     {t('header.links.blog')}
                 </Link>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
+                    {t('header.links.governance')}
+                </Link>
+                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
+                    {t('header.links.token')}
+                </Link>
+
                 <FlexDivSpaceBetween>
                     <Text>{t('landing-page.language')}</Text>
                     <LanguageSelector isLandingPage />
@@ -124,10 +121,25 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                         className="icon icon--logo"
                     />
                 </ThalesButton>
+                <Xicon
+                    onClick={() => {
+                        setBurgerState(!openBurger);
+                    }}
+                    className="icon icon--x-sign"
+                />
             </BurgerContainer>
         </Wrapper>
     );
 };
+
+const Xicon = styled.i`
+    font-size: 20px;
+    font-weight: 100;
+    color: var(--color);
+    position: absolute;
+    top: 37px;
+    right: 25px;
+`;
 
 const ThalesButton = styled.div`
     background: #1b314f;
@@ -206,6 +218,7 @@ const BurgerContainer = styled.div`
         display: none;
     }
     position: absolute;
+    z-index: 10;
     top: -20px;
     left: 0;
     display: flex;
