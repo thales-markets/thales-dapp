@@ -311,7 +311,7 @@ const ThalesImageIII = styled.div`
     z-index: 3;
     @media (max-width: 600px) {
         grid-column-start: 10;
-        grid-column-end: 35;
+        grid-column-end: 48;
         grid-row-start: 75;
         grid-row-end: 87;
         -webkit-transform: scaleX(-1);

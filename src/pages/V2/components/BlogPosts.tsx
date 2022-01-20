@@ -50,24 +50,38 @@ const BlogPosts: React.FC = () => {
                 );
             })}
             <Arrow style={{ marginRight: '-25px' }} src={nextArrow} onClick={() => carouselChangeHandler(1)} />
+            <DotContainer>
+                {blogPosts.map((_blog, index) => {
+                    return (
+                        <Dot
+                            className={blogPostsCount === 3 + index ? 'selected' : ''}
+                            onClick={setBlogPostsCount.bind(this, 3 + index)}
+                            key={index}
+                        />
+                    );
+                })}
+            </DotContainer>
         </Wrapper>
     );
 };
 
 const Wrapper = styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-around;
     width: 100%;
     overflow: hidden;
     padding: 2em;
-    @media (max-width: 500px) {
-        & > div:not(:nth-child(2)) {
+    @media (max-width: 600px) {
+        padding: 2em 0;
+        padding-bottom: 40px;
+        margin-bottom: 40px;
+        & > img {
             display: none;
         }
-        & > div:nth-child(2) {
-            min-width: 95% !important;
-            min-height: 345px;
+        & > div:not(:nth-child(2)) {
+            display: none;
         }
     }
 
@@ -83,7 +97,8 @@ const Wrapper = styled.div`
 
 const BlogCard = styled.div`
     height: 345px;
-    max-width: 32%;
+    margin-left: 10px;
+    margin-right: 10px;
     flex: 1;
     padding: 40px 30px 50px 30px;
     background: var(--background);
@@ -92,6 +107,9 @@ const BlogCard = styled.div`
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    @media (max-width: 600px) {
+        height: 300px;
+    }
 `;
 
 const BlogTitle = styled.p`
@@ -133,6 +151,30 @@ const MediumDate = styled.i`
 const Arrow = styled.img`
     width: 25px;
     fill: white;
+`;
+
+const DotContainer = styled.div`
+    bottom: 0px;
+    @media (max-width: 600px) {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+    }
+    position: absolute;
+    display: none;
+`;
+
+const Dot = styled.div`
+    background: var(--color);
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    opacity: 0.6;
+    &.selected {
+        opacity: 1;
+    }
+    margin-right: 7px;
+    margin-left: 7px;
 `;
 
 export default BlogPosts;
