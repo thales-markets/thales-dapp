@@ -20,7 +20,6 @@ const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
     const blogPosts = blogPostsQuery.isSuccess ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount) : [];
-    console.log(blogPosts);
 
     const carouselChangeHandler = (change: number) => {
         if (change < 0) {
@@ -109,6 +108,8 @@ const BlogCard = styled.div`
     overflow: hidden;
     @media (max-width: 600px) {
         height: 300px;
+        margin-left: 0;
+        margin-right: 0;
     }
 `;
 

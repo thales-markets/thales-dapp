@@ -68,6 +68,8 @@ const FooterHtml = styled.div`
 const Image = styled.img`
     height: 100%;
     object-fit: contain;
+    position: relative;
+    top: 20px;
     @media (max-width: 600px) {
         width: 100%;
         transform: scale(1.52);
