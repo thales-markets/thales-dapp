@@ -19,7 +19,6 @@ export const EarnSection = styled.section<{
     color: white;
     grid-column: span 5;
     grid-row: span 3;
-    margin-bottom: 15px;
     border: 1px solid rgba(100, 217, 254, 0.6);
     padding: 10px;
     max-width: 100%;

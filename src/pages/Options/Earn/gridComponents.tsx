@@ -38,7 +38,6 @@ export const StakeInfoContent = styled.span`
 `;
 
 export const StakingRewardsItem = styled(StakeInfoItem)`
-    padding: 15px;
     grid-column: span 3;
 `;
 
@@ -53,7 +52,7 @@ export const StakingRewardsLabel = styled.span<{ color: string }>`
     width: fit-content;
     padding: 3px 8px;
     align-self: center;
-    margin-bottom: 10px;
+    margin: 6px 0;
 `;
 
 export const StakingRewardsContent = styled.span`

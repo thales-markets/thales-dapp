@@ -17,7 +17,6 @@ import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ethers } from 'ethers';
 import NumericInput from '../../../Market/components/NumericInput';
 import { CurrencyLabel, InputContainer, InputLabel } from '../../../Market/components';
-import ComingSoon from 'components/ComingSoon';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
@@ -304,8 +303,6 @@ const Unstake: React.FC<Properties> = ({
         );
     };
 
-    const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
-
     return (
         <EarnSection
             spanOnTablet={5}
@@ -314,79 +311,74 @@ const Unstake: React.FC<Properties> = ({
             style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
-            {tokenStakingDisabled && <ComingSoon />}
-            {!tokenStakingDisabled && (
-                <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
-                    <FlexDivColumn>
-                        <UnstakingTitleText>
-                            {isUnstakingInContract
-                                ? unstakingEnded
-                                    ? t('options.earn.thales-staking.unstake.cooldown-ended-text', {
-                                          amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
-                                      })
-                                    : t('options.earn.thales-staking.unstake.cooldown-started-text', {
-                                          amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
-                                      })
-                                : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
-                        </UnstakingTitleText>
-                        <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
-                            {!unstakingEnded && (
-                                <GradientText
-                                    gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                                    fontSize={25}
-                                    fontWeight={600}
-                                >
-                                    {!isUnstakingInContract ? (
-                                        `7 ${t('options.common.time-remaining.days')}`
-                                    ) : (
-                                        <TimeRemaining
-                                            onEnded={() => setUnstakingEnded(true)}
-                                            end={unstakeEndTime}
-                                            fontSize={25}
-                                        />
-                                    )}
-                                </GradientText>
-                            )}
-                        </FlexDivCentered>
-                    </FlexDivColumn>
-                    <InputContainer>
-                        <NumericInput
-                            value={amountToUnstake}
-                            onChange={(_, value) => {
-                                if (+value <= +thalesStaked) {
-                                    setAmountToUnstake(value);
-                                }
-                            }}
-                            step="0.01"
-                            max={thalesStaked.toString()}
-                            disabled={isUnstakingInContract}
-                        />
-                        <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
-                        <CurrencyLabel className={isUnstakingInContract ? 'disabled' : ''}>
-                            {THALES_CURRENCY}
-                        </CurrencyLabel>
-                        <ThalesWalletAmountLabel>
-                            {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                            <MaxButton disabled={isUnstakingInContract}>
-                                <MaxInnerButton
-                                    onClick={() => {
-                                        setAmountToUnstake(thalesStaked);
-                                    }}
-                                >
-                                    {t('common.max')}
-                                </MaxInnerButton>
-                            </MaxButton>
-                        </ThalesWalletAmountLabel>
-                    </InputContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
-                    <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
-                    <ValidationMessage
-                        showValidation={txErrorMessage !== null}
-                        message={txErrorMessage}
-                        onDismiss={() => setTxErrorMessage(null)}
+            <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
+                <FlexDivColumn>
+                    <UnstakingTitleText>
+                        {isUnstakingInContract
+                            ? unstakingEnded
+                                ? t('options.earn.thales-staking.unstake.cooldown-ended-text', {
+                                      amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
+                                  })
+                                : t('options.earn.thales-staking.unstake.cooldown-started-text', {
+                                      amount: formatCurrencyWithKey(THALES_CURRENCY, unstakingAmount, 0, true),
+                                  })
+                            : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
+                    </UnstakingTitleText>
+                    <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
+                        {!unstakingEnded && (
+                            <GradientText
+                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
+                                fontSize={25}
+                                fontWeight={600}
+                            >
+                                {!isUnstakingInContract ? (
+                                    `7 ${t('options.common.time-remaining.days')}`
+                                ) : (
+                                    <TimeRemaining
+                                        onEnded={() => setUnstakingEnded(true)}
+                                        end={unstakeEndTime}
+                                        fontSize={25}
+                                    />
+                                )}
+                            </GradientText>
+                        )}
+                    </FlexDivCentered>
+                </FlexDivColumn>
+                <InputContainer>
+                    <NumericInput
+                        value={amountToUnstake}
+                        onChange={(_, value) => {
+                            if (+value <= +thalesStaked) {
+                                setAmountToUnstake(value);
+                            }
+                        }}
+                        step="0.01"
+                        max={thalesStaked.toString()}
+                        disabled={isUnstakingInContract}
                     />
-                </SectionContentContainer>
-            )}
+                    <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
+                    <CurrencyLabel className={isUnstakingInContract ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
+                    <ThalesWalletAmountLabel>
+                        {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                        <MaxButton disabled={isUnstakingInContract}>
+                            <MaxInnerButton
+                                onClick={() => {
+                                    setAmountToUnstake(thalesStaked);
+                                }}
+                            >
+                                {t('common.max')}
+                            </MaxInnerButton>
+                        </MaxButton>
+                    </ThalesWalletAmountLabel>
+                </InputContainer>
+                <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
+                <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
+                <ValidationMessage
+                    showValidation={txErrorMessage !== null}
+                    message={txErrorMessage}
+                    onDismiss={() => setTxErrorMessage(null)}
+                />
+            </SectionContentContainer>
         </EarnSection>
     );
 };

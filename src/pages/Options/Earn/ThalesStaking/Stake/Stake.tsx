@@ -20,7 +20,6 @@ import NetworkFees from '../../../components/NetworkFees';
 import { formatGasLimit } from '../../../../../utils/network';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
-import ComingSoon from 'components/ComingSoon';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../components/SimpleLoader';
 import { MaxButton, MaxInnerButton, ThalesWalletAmountLabel } from '../../Migration/components';
@@ -200,8 +199,6 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
         }
     };
 
-    const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
-
     return (
         <EarnSection
             spanOnTablet={5}
@@ -210,57 +207,54 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
             style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
             <SectionHeader>{t('options.earn.thales-staking.stake.stake')}</SectionHeader>
-            {tokenStakingDisabled && <ComingSoon />}
-            {!tokenStakingDisabled && (
-                <SectionContentContainer style={{ height: '100%' }}>
-                    <InputContainer>
-                        <NumericInput
-                            value={amountToStake}
-                            onChange={(_, value) => {
-                                if (+value <= +balance) {
-                                    setAmountToStake(value);
-                                }
-                            }}
-                            step="0.01"
-                            max={balance.toString()}
-                            disabled={isStaking || isUnstaking}
-                        />
-                        <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
-                        <CurrencyLabel className={isStaking || isUnstaking ? 'disabled' : ''}>
-                            {THALES_CURRENCY}
-                        </CurrencyLabel>
-                        <ThalesWalletAmountLabel>
-                            {isWalletConnected ? (
-                                thalesBalanceQuery.isLoading ? (
-                                    <SimpleLoader />
-                                ) : (
-                                    formatCurrencyWithKey(THALES_CURRENCY, balance)
-                                )
+            <SectionContentContainer style={{ height: '100%' }}>
+                <InputContainer>
+                    <NumericInput
+                        value={amountToStake}
+                        onChange={(_, value) => {
+                            if (+value <= +balance) {
+                                setAmountToStake(value);
+                            }
+                        }}
+                        step="0.01"
+                        max={balance.toString()}
+                        disabled={isStaking || isUnstaking}
+                    />
+                    <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
+                    <CurrencyLabel className={isStaking || isUnstaking ? 'disabled' : ''}>
+                        {THALES_CURRENCY}
+                    </CurrencyLabel>
+                    <ThalesWalletAmountLabel>
+                        {isWalletConnected ? (
+                            thalesBalanceQuery.isLoading ? (
+                                <SimpleLoader />
                             ) : (
-                                '-'
-                            )}
-                            <MaxButton disabled={isStaking || isUnstaking}>
-                                <MaxInnerButton
-                                    onClick={() => {
-                                        setAmountToStake(balance);
-                                    }}
-                                >
-                                    {t('common.max')}
-                                </MaxInnerButton>
-                            </MaxButton>
-                        </ThalesWalletAmountLabel>
-                    </InputContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
-                    <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
-                    <FullRow>
-                        <ValidationMessage
-                            showValidation={txErrorMessage !== null}
-                            message={txErrorMessage}
-                            onDismiss={() => setTxErrorMessage(null)}
-                        />
-                    </FullRow>
-                </SectionContentContainer>
-            )}
+                                formatCurrencyWithKey(THALES_CURRENCY, balance)
+                            )
+                        ) : (
+                            '-'
+                        )}
+                        <MaxButton disabled={isStaking || isUnstaking}>
+                            <MaxInnerButton
+                                onClick={() => {
+                                    setAmountToStake(balance);
+                                }}
+                            >
+                                {t('common.max')}
+                            </MaxInnerButton>
+                        </MaxButton>
+                    </ThalesWalletAmountLabel>
+                </InputContainer>
+                <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
+                <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
+                <FullRow>
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
+                </FullRow>
+            </SectionContentContainer>
         </EarnSection>
     );
 };
