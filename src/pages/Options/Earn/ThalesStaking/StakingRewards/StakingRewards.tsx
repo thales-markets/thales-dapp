@@ -177,7 +177,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
 
     return (
-        <EarnSection orderOnMobile={4} orderOnTablet={4} style={{ gridColumn: 'span 10', gridRow: 'span 3' }}>
+        <EarnSection orderOnMobile={3} orderOnTablet={3} style={{ gridColumn: 'span 10', gridRow: 'span 3' }}>
             <SectionHeader>
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
                 <div>

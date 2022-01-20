@@ -9,6 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
 import MigrationInfo from '../components/MigrationInfo';
+import GlobalStake from './GlobalStake';
 
 const ThalesStaking: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -20,9 +21,15 @@ const ThalesStaking: React.FC = () => {
 
     return (
         <>
-            {isL2 && (
+            {!isL2 && (
                 <>
                     <MyStake
+                        thalesStaked={thalesStaked}
+                        setThalesStaked={setThalesStaked}
+                        escrowedBalance={escrowedBalance}
+                        setEscrowedBalance={setEscrowedBalance}
+                    />
+                    <GlobalStake
                         thalesStaked={thalesStaked}
                         setThalesStaked={setThalesStaked}
                         escrowedBalance={escrowedBalance}

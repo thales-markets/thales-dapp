@@ -309,8 +309,8 @@ const Unstake: React.FC<Properties> = ({
     return (
         <EarnSection
             spanOnTablet={5}
-            orderOnMobile={2}
-            orderOnTablet={2}
+            orderOnMobile={5}
+            orderOnTablet={5}
             style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
