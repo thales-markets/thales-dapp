@@ -257,7 +257,8 @@
             "orderbook": "Таблица заказов",
             "trade-type": "Тип торговли",
             "search-placeholder-for-mining": "Попробуйте адрес",
-            "search-placeholder-for-reporting": "Попробуйте рынок"
+            "search-placeholder-for-reporting": "Попробуйте рынок",
+            "all-markets": "Все рынки"
         },
         "home": {
             "market-card": {
@@ -293,7 +294,13 @@
                 "pool-size-col": "Размер рынка",
                 "amm-size-col": "AMM ликвидность",
                 "time-remaining-col": "Оставшееся время",
-                "competition-tooltip": "Этот рынок имеет право на торговую конкуренцию "
+                "competition-tooltip": "Этот рынок имеет право на торговую конкуренцию ",
+                "menu": {
+                    "grid": "Сетка",
+                    "table": "Таблица"
+                },
+                "current-asset-price-col": "Текущая цена актива",
+                "price-up-down-col": "Цена ВВЕРХ/ВНИЗ"
             }
         },
         "earn": {

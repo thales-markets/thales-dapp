@@ -241,6 +241,7 @@
             "my-orders": "My Orders",
             "my-assets": "My Assets",
             "watchlist": "Watchlist",
+            "all-markets": "All Markets",
             "recently-added": "Recently Added",
             "bitcoin": "Bitcoin",
             "ethereum": "Ethereum",
@@ -284,12 +285,18 @@
                 "asset-col": "Asset",
                 "strike-price-col": "Strike price",
                 "asset-price-col": "Asset price",
+                "current-asset-price-col": "Current Asset Price",
                 "open-orders-col": "Open orders",
                 "phase-col": "Phase",
                 "pool-size-col": "Pool size",
                 "amm-size-col": "AMM liquidity",
+                "price-up-down-col": "Price UP/DOWN",
                 "time-remaining-col": "Time remaining",
-                "competition-tooltip": "This market is eligible for trading competition"
+                "competition-tooltip": "This market is eligible for trading competition",
+                "menu": {
+                    "grid": "Grid",
+                    "table": "Table"
+                }
             }
         },
         "earn": {

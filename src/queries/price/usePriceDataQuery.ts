@@ -21,8 +21,6 @@ const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions
                 requestArgs?.currencyVs ? requestArgs.currencyVs : 'usd'
             }&days=${requestArgs?.days ? requestArgs.days : '1'}&interval=hourly`;
 
-            console.log('requestArgs ', requestArgs);
-
             const response = await fetch(url);
             const result = JSON.parse(await response.text());
 

@@ -22,5 +22,8 @@ export const ROUTES = {
         Space: '/governance/:space',
         Proposal: '/governance/:space/:id',
     },
+    Test: {
+        Home: '/test/markets',
+    },
 };
 export default ROUTES;

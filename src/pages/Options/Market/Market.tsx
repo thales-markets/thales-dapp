@@ -80,6 +80,8 @@ const Market: React.FC<MarketProps> = ({ marketAddress }) => {
         enabled: isAppReady,
     });
 
+    console.log('marketQuery ', marketQuery);
+
     useEffect(() => {
         if (!currentNetwork) {
             setCurrentNetwork(networkId);

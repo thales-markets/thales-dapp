@@ -257,7 +257,8 @@
             "orderbook": "订单簿",
             "trade-type": "交易类型",
             "search-placeholder-for-mining": "试试地址",
-            "search-placeholder-for-reporting": "尝试市场"
+            "search-placeholder-for-reporting": "尝试市场",
+            "all-markets": "所有市场"
         },
         "home": {
             "market-card": {
@@ -293,7 +294,13 @@
                 "pool-size-col": "市场大小",
                 "amm-size-col": "AMM流动性",
                 "time-remaining-col": "剩余时间",
-                "competition-tooltip": "该市场参与交易竞赛"
+                "competition-tooltip": "该市场参与交易竞赛",
+                "menu": {
+                    "grid": "网格",
+                    "table": "桌子"
+                },
+                "current-asset-price-col": "当前资产价格",
+                "price-up-down-col": "价格上涨/下跌"
             }
         },
         "earn": {

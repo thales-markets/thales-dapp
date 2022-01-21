@@ -157,6 +157,20 @@ export const Wrapper = styled(FlexDivColumn)`
     }
 `;
 
+export const NewWrapper = styled(FlexDivColumn)`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    @media (min-width: 1000px) {
+        padding: 40px 100px 40px 100px;
+    }
+    min-height: 100vh;
+`;
+
 type SectionProps = {
     class?: string;
     id?: string;

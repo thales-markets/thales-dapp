@@ -34,6 +34,7 @@ import Cookies from 'universal-cookie';
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../V2/Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
+const OptionsHomeV2 = lazy(() => import('../Options/Home/v2'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
     const dispatch = useDispatch();
@@ -282,6 +283,13 @@ const App = () => {
                                 <Home />
                             </MainLayout>
                         </Route>
+
+                        <Route exact path={ROUTES.Test.Home}>
+                            <MainLayout>
+                                <OptionsHomeV2 />
+                            </MainLayout>
+                        </Route>
+
                         <Route>
                             <Redirect to={ROUTES.Options.Home} />
                             <MainLayout>
