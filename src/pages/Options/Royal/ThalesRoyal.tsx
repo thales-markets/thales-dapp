@@ -41,6 +41,7 @@ const ThalesRoyal: React.FC = () => {
     const [showStats, setShowStats] = useState(true);
     const [selectedSeason, setSelectedSeason] = useState<number>(0);
     const [allSeasons, setAllSeasons] = useState([] as any);
+    const [latestSeason, setLatestSeason] = useState<number>(0);
     const [latestSeasonData, setLatestSeasonData] = useState<ThalesRoyaleData>();
     const [thalesRoyaleData, setThalesRoyaleData] = useState<ThalesRoyaleData>();
     const isL2 = getIsOVM(networkId);
@@ -83,14 +84,21 @@ const ThalesRoyal: React.FC = () => {
             }
             setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
             setThalesRoyaleData(thalesRoyaleDataMap.get(selectedSeason));
-            const latestSeason = Math.max(...Array.from(thalesRoyaleDataMap.keys()));
-            setLatestSeasonData(thalesRoyaleDataMap.get(latestSeason));
+            const lastSeason = Math.max(...Array.from(thalesRoyaleDataMap.keys()));
+            setLatestSeasonData(thalesRoyaleDataMap.get(lastSeason));
+            if (latestSeason !== lastSeason) {
+                setLatestSeason(lastSeason);
+            }
         }
     }, [thalesRoyaleDataMap]);
 
     useEffect(() => {
         selectedSeason ? setThalesRoyaleData(thalesRoyaleDataMap?.get(selectedSeason)) : '';
     }, [selectedSeason]);
+
+    useEffect(() => {
+        latestSeason ? setSelectedSeason(latestSeason) : '';
+    }, [latestSeason]);
 
     useEffect(() => {
         if (thalesRoyaleData) {

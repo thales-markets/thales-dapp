@@ -569,7 +569,12 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                                 textOverflow: 'ellipsis',
                                             }}
                                         >
-                                            {user.name ?? user.address}
+                                            {user.name ??
+                                                truncateAddress(
+                                                    walletAddress as any,
+                                                    truncateAddressNumberOfCharacters,
+                                                    truncateAddressNumberOfCharacters
+                                                )}
                                         </HeadCellUi>
                                         <HeadCellUi winner={isUserAWinner} style={{ marginLeft: 6 }}>
                                             #{user.number}
