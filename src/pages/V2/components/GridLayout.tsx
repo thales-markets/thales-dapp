@@ -363,18 +363,18 @@ const ContTitle = styled.p`
     }
 `;
 const ContSubTitle = styled.p`
+    font-size: 1.1em;
+    line-height: 1.2em;
     &,
     & * {
         font-family: Nunito !important;
         font-style: normal;
         font-weight: 300;
-        font-size: 1.1em;
-        line-height: 1.2em;
+
         text-align: justify;
         white-space: pre-line;
         color: var(--color);
         @media (max-width: 600px) {
-            font-size: 15px;
             padding-top: 20px;
         }
     }
