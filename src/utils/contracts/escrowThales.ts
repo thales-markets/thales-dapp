@@ -9,26 +9,9 @@ export const escrowThales = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0xb9615f837E60EdBECe26A91670FA42b02c9881D7',
+        [NetworkId['Kovan-Ovm']]: '0xcCD32f7EB77574bb6929e2dA9CE6c608E45BA54F',
     },
     abi: [
-        {
-            inputs: [
-                {
-                    internalType: 'address',
-                    name: '_owner',
-                    type: 'address',
-                },
-                {
-                    internalType: 'address',
-                    name: '_vestingToken',
-                    type: 'address',
-                },
-            ],
-            payable: false,
-            stateMutability: 'nonpayable',
-            type: 'constructor',
-        },
         {
             anonymous: false,
             inputs: [
@@ -346,6 +329,35 @@ export const escrowThales = {
             type: 'function',
         },
         {
+            constant: false,
+            inputs: [],
+            name: 'initNonReentrant',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_owner',
+                    type: 'address',
+                },
+                {
+                    internalType: 'address',
+                    name: '_vestingToken',
+                    type: 'address',
+                },
+            ],
+            name: 'initialize',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
             constant: true,
             inputs: [],
             name: 'lastPauseTime',
@@ -445,12 +457,12 @@ export const escrowThales = {
             constant: false,
             inputs: [
                 {
-                    internalType: 'address payable',
-                    name: 'account',
+                    internalType: 'address',
+                    name: 'AirdropContract',
                     type: 'address',
                 },
             ],
-            name: 'selfDestruct',
+            name: 'setAirdropContract',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -461,11 +473,11 @@ export const escrowThales = {
             inputs: [
                 {
                     internalType: 'address',
-                    name: 'AirdropContract',
+                    name: '_owner',
                     type: 'address',
                 },
             ],
-            name: 'setAirdropContract',
+            name: 'setOwner',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -565,6 +577,21 @@ export const escrowThales = {
             ],
             payable: false,
             stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'proxyAddress',
+                    type: 'address',
+                },
+            ],
+            name: 'transferOwnershipAtInit',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
             type: 'function',
         },
         {
