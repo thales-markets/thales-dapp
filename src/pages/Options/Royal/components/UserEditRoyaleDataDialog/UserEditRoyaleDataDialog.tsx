@@ -1,5 +1,6 @@
 import { Modal } from '@material-ui/core';
 import axios from 'axios';
+import { RoyaleTooltip } from 'pages/Options/Market/components';
 import React, { useMemo, useState, useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
@@ -10,6 +11,7 @@ import Web3 from 'web3';
 import { User } from '../../Queries/useRoyalePlayersQuery';
 import { Theme } from '../../ThalesRoyal';
 import './media.scss';
+import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
 
 type UserEditRoyaleDataDialogProps = {
     open: boolean;
@@ -119,7 +121,12 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
                             </ImageWrapper>
                         </FlexContainer>
                         <FlexContainer>
-                            <UserLabel>{t('options.royale.edit-user-data-dialog.avatar')}</UserLabel>
+                            <UserLabel>
+                                {t('options.royale.edit-user-data-dialog.avatar')}:
+                                <RoyaleTooltip title={t('options.royale.edit-user-data-dialog.avatar-tip')}>
+                                    <StyledInfoIcon />
+                                </RoyaleTooltip>
+                            </UserLabel>
                             <InputWrapper
                                 onChange={(e) => setAvatar(e.target.value)}
                                 value={avatar}
@@ -198,6 +205,23 @@ const UserWrapper = styled.div`
     @media (max-width: 1024px) {
         padding: 15px;
         height: auto;
+    }
+`;
+
+const StyledInfoIcon = styled(InfoIcon)`
+    display: inline-block;
+    position: absolute;
+    margin-left: 15px;
+    width: 15px;
+    height: 15px;
+    transform: translateX(-50%);
+    path {
+        fill: var(--color);
+    }
+    opacity: 1;
+    cursor: auto;
+    @media (max-width: 1024px) {
+        display: none;
     }
 `;
 

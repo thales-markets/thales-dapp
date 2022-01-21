@@ -1,4 +1,5 @@
 import winnerCard from 'assets/images/royale/winner-card.svg';
+import winnerCardS2 from 'assets/images/royale/winner-card-s2.svg';
 import addSeconds from 'date-fns/addSeconds';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import format from 'date-fns/format';
@@ -72,6 +73,17 @@ const renderRounds = (
             if (txResult && txResult.events) {
                 dispatchMarketNotification('Successfully submitted');
             }
+        }
+    };
+
+    const getSeasonWinnerCard = (season: number) => {
+        switch (season) {
+            case 1:
+                return winnerCard;
+            case 2:
+                return winnerCardS2;
+            default:
+                return winnerCardS2;
         }
     };
 
@@ -168,7 +180,7 @@ const renderRounds = (
     if (isWinner) {
         cards.push(
             <WinnerCard id={`round${rounds + 1}`} key={'winner'}>
-                <img style={{ height: '100%' }} src={winnerCard} />
+                <img style={{ height: '100%' }} src={getSeasonWinnerCard(royaleData.season)} />
             </WinnerCard>
         );
     }

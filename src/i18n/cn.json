@@ -1068,7 +1068,8 @@
                 "enter-display-name": "输入显示名称",
                 "change-display-name": "更改显示名称",
                 "change-avatar": "输入头像网址",
-                "avatar": "头像图片"
+                "avatar": "头像图片",
+                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL"
             }
         },
         "amm-mining": {
