@@ -135,15 +135,15 @@ const BlogDescription = styled.div`
 
 const MediumIcon = styled.i`
     position: absolute;
-    font-size: 23px;
+    font-size: 2em;
     bottom: 10px;
-    right: 10px;
+    right: 25px;
 `;
 
 const MediumDate = styled.i`
     position: absolute;
-    font-size: 15px;
-    bottom: 10px;
+    font-size: 1em;
+    bottom: 1.2em;
     left: 30px;
     color: var(--color);
     font-style: italic;

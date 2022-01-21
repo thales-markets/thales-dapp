@@ -95,6 +95,7 @@ const DropDown = styled(FlexDivColumn)`
         top: 0;
         left: 0;
         margin-top: 20px;
+        background: transparent;
     }
 `;
 
