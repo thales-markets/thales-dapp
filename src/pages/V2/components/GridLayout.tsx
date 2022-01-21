@@ -341,12 +341,13 @@ const SystemImage = styled.div`
     position: relative;
     top: -5em;
     left: -20em;
-    opacity: 0.5;
+    opacity: 0.3;
     grid-column-start: 1;
-    grid-column-end: 50;
-    grid-row-start: 1;
-    grid-row-end: 46;
+    grid-column-end: 53;
+    grid-row-start: 15;
+    grid-row-end: 66;
     z-index: 1;
+    transform: scale(1.7);
 `;
 
 const ContTitle = styled.p`
