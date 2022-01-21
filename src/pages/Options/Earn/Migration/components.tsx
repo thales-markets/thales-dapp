@@ -1,6 +1,6 @@
 import { DefaultSubmitButton, InputContainer, InputLabel } from 'pages/Options/Market/components';
 import styled from 'styled-components';
-import { FlexDivCentered, FlexDivRowCentered } from 'theme/common';
+import { FlexDivCentered } from 'theme/common';
 
 export const NetworkLabel = styled(InputLabel)`
     color: #00f9ff;
@@ -45,31 +45,17 @@ export const ThalesWalletAmountLabel = styled(InputLabel)`
 
 export const MaxButton = styled(DefaultSubmitButton)`
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
-    border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     width: 53px;
     min-height: 17px;
     text-transform: uppercase;
-    padding: 1px;
-    color: #f6f6fe;
-    &:hover:not(:disabled) {
-        cursor: pointer;
-        background: #00f9ff;
-        color: #00f9ff;
-    }
-    margin-left: 4px;
-    pointer-events: auto;
-`;
-
-export const MaxInnerButton = styled(FlexDivRowCentered)`
     font-weight: bold;
     font-size: 10px;
     line-height: 15px;
     letter-spacing: 1px;
-    text-transform: uppercase;
-    background: #0a2e66;
-    border-radius: 5px;
     text-align: center;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding: 0 12px;
+    color: #f6f6fe;
+    margin-left: 4px;
+    pointer-events: auto;
 `;

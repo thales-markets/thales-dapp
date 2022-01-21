@@ -334,6 +334,7 @@
                     "unlock-cooldown-text": "开始解锁冷却，在此期间未锁定的金额不计入您的质押余额",
                     "cooldown-started-text": "您可以取消{{amount}}的质押",
                     "cooldown-ended-text": "您现在可以领取{{amount}}",
+                    "cooldown-label": "冷却",
                     "start-unstaking": "开始取消质押",
                     "cooldown-confirmation-message": "取消质押成功启动",
                     "unstake-confirmation-message": "代币成功取消质押",

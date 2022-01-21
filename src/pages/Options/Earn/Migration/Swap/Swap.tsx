@@ -31,7 +31,6 @@ import useOpThalesBalanceQuery from 'queries/walletBalances/useOpThalesBalanceQu
 import {
     ArrowContainer,
     MaxButton,
-    MaxInnerButton,
     NetworkLabel,
     Result,
     ResultContainer,
@@ -261,8 +260,8 @@ const Swap: React.FC = () => {
                     ) : (
                         '-'
                     )}
-                    <MaxButton disabled={isSubmitting || !isWalletConnected}>
-                        <MaxInnerButton onClick={onMaxClick}>{t('common.max')}</MaxInnerButton>
+                    <MaxButton disabled={isSubmitting || !isWalletConnected} onClick={onMaxClick}>
+                        {t('common.max')}
                     </MaxButton>
                 </ThalesWalletAmountLabel>
                 <FieldValidationMessage

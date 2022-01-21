@@ -109,7 +109,7 @@ const GlobalStake: React.FC<GlobalStakeProps> = ({
 
     return (
         <EarnSection
-            spanOnTablet={5}
+            spanOnTablet={10}
             orderOnMobile={2}
             orderOnTablet={2}
             style={{ gridColumn: 'span 5', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}

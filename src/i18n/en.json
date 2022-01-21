@@ -334,6 +334,7 @@
                     "unlock-cooldown-text": "Start unlocking cooldown during which the amount being unstaked is not counted in your staked balance",
                     "cooldown-started-text": "You can unstake {{amount}} in",
                     "cooldown-ended-text": "You can now unstake {{amount}}",
+                    "cooldown-label": "Cooldown",
                     "start-unstaking": "Start unstaking",
                     "cooldown-confirmation-message": "Unstaking successfully started",
                     "unstake-confirmation-message": "Tokens successfully unstaked",

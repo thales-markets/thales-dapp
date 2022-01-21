@@ -22,7 +22,7 @@ import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../components/SimpleLoader';
-import { MaxButton, MaxInnerButton, ThalesWalletAmountLabel } from '../../Migration/components';
+import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
 
 type Properties = {
     thalesStaked: string;
@@ -234,14 +234,13 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                         ) : (
                             '-'
                         )}
-                        <MaxButton disabled={isStaking || isUnstaking}>
-                            <MaxInnerButton
-                                onClick={() => {
-                                    setAmountToStake(balance);
-                                }}
-                            >
-                                {t('common.max')}
-                            </MaxInnerButton>
+                        <MaxButton
+                            disabled={isStaking || isUnstaking}
+                            onClick={() => {
+                                setAmountToStake(balance);
+                            }}
+                        >
+                            {t('common.max')}
                         </MaxButton>
                     </ThalesWalletAmountLabel>
                 </InputContainer>

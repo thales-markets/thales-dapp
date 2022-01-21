@@ -334,6 +334,7 @@
                     "unlock-cooldown-text": "Начало периода, в течение которого сумма снятых стэйков не засчитывается в баланс стэйков",
                     "cooldown-started-text": "Вы можете снять стэйки в сумме {{amount}} через",
                     "cooldown-ended-text": "Вы можете снять стэйки в сумме {{amount}}",
+                    "cooldown-label": "Остыть",
                     "start-unstaking": "Начать снимать стэйки",
                     "cooldown-confirmation-message": "Снятие стэйков в прогрессе.",
                     "unstake-confirmation-message": "Токены успешно сняты",

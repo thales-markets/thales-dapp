@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { EarnSection, SectionContentContainer, SectionHeader } from '../../components';
-import { Button, FlexDivCentered, FlexDivColumn, GradientText } from '../../../../../theme/common';
+import { Button, FlexDivCentered, FlexDivColumnCentered, FlexDivRowCentered } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { GasLimit } from '../../../components/NetworkFees/NetworkFees';
-import { MaxButton, MaxInnerButton, ThalesWalletAmountLabel } from '../../Migration/components';
+import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -312,7 +312,7 @@ const Unstake: React.FC<Properties> = ({
         >
             <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
             <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
-                <FlexDivColumn>
+                <UnstakingContainer>
                     <UnstakingTitleText>
                         {isUnstakingInContract
                             ? unstakingEnded
@@ -324,26 +324,25 @@ const Unstake: React.FC<Properties> = ({
                                   })
                             : t('options.earn.thales-staking.unstake.unlock-cooldown-text')}
                     </UnstakingTitleText>
-                    <FlexDivCentered style={{ height: '100%', padding: '20px 0' }}>
-                        {!unstakingEnded && (
-                            <GradientText
-                                gradient="linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)"
-                                fontSize={25}
-                                fontWeight={600}
-                            >
-                                {!isUnstakingInContract ? (
-                                    `7 ${t('options.common.time-remaining.days')}`
-                                ) : (
-                                    <TimeRemaining
-                                        onEnded={() => setUnstakingEnded(true)}
-                                        end={unstakeEndTime}
-                                        fontSize={25}
-                                    />
-                                )}
-                            </GradientText>
-                        )}
-                    </FlexDivCentered>
-                </FlexDivColumn>
+                    {!unstakingEnded && (
+                        <UnstakingPeriodWrapper>
+                            <UnstakingPeriodConatiner>
+                                <CooldownText>{t('options.earn.thales-staking.unstake.cooldown-label')}</CooldownText>
+                                <CooldownCounter>
+                                    {!isUnstakingInContract ? (
+                                        `7 ${t('options.common.time-remaining.days')}`
+                                    ) : (
+                                        <TimeRemaining
+                                            onEnded={() => setUnstakingEnded(true)}
+                                            end={unstakeEndTime}
+                                            fontSize={16}
+                                        />
+                                    )}
+                                </CooldownCounter>
+                            </UnstakingPeriodConatiner>
+                        </UnstakingPeriodWrapper>
+                    )}
+                </UnstakingContainer>
                 <InputContainer>
                     <NumericInput
                         value={amountToUnstake}
@@ -360,14 +359,13 @@ const Unstake: React.FC<Properties> = ({
                     <CurrencyLabel className={isUnstakingInContract ? 'disabled' : ''}>{THALES_CURRENCY}</CurrencyLabel>
                     <ThalesWalletAmountLabel>
                         {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
-                        <MaxButton disabled={isUnstakingInContract}>
-                            <MaxInnerButton
-                                onClick={() => {
-                                    setAmountToUnstake(thalesStaked);
-                                }}
-                            >
-                                {t('common.max')}
-                            </MaxInnerButton>
+                        <MaxButton
+                            disabled={isUnstakingInContract}
+                            onClick={() => {
+                                setAmountToUnstake(thalesStaked);
+                            }}
+                        >
+                            {t('common.max')}
                         </MaxButton>
                     </ThalesWalletAmountLabel>
                 </InputContainer>
@@ -383,9 +381,52 @@ const Unstake: React.FC<Properties> = ({
     );
 };
 
+const UnstakingContainer = styled(FlexDivRowCentered)`
+    margin-bottom: 15px;
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
+`;
+
+const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
+    border: nonee;
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    border-radius: 10px;
+    padding: 1px;
+    min-width 160px;
+    max-width 160px;
+`;
+
+const UnstakingPeriodConatiner = styled(FlexDivColumnCentered)`
+    background: #04045a;
+    border-radius: 10px;
+    padding: 10px 0;
+    text-align: center;
+`;
+
+const CooldownText = styled.span`
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #b8c6e5;
+`;
+
+const CooldownCounter = styled.span`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    color: #f6f6fe;
+`;
+
 const UnstakingTitleText = styled.span`
     font-size: 16px;
     line-height: 24px;
+    margin-right: 10px;
+    @media (max-width: 767px) {
+        margin-right: 0px;
+        margin-bottom: 10px;
+    }
 `;
 
 const StyledMaterialTooltip = withStyles(() => ({
