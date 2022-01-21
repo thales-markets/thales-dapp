@@ -70,7 +70,7 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
 
             (window.web3?.eth as any).personal.sign(name, walletAddress, async (_test: any, signature: any) => {
                 try {
-                    await axios.post('http://localhost:3002/royale-user-data', {
+                    await axios.post('https://api.thales.market/royale-user-data', {
                         walletAddress,
                         name,
                         avatar,
@@ -140,6 +140,7 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
                                     setUserData();
                                 }}
                                 disabled={!isNameValid || !isAvatarLinkValid}
+                                className={!isNameValid || !isAvatarLinkValid ? 'disabled' : ''}
                             >
                                 {t('options.royale.edit-user-data-dialog.change-display-name')}
                             </ConfirmButton>
@@ -256,6 +257,7 @@ const LabelWrapper = styled.div`
 
 const ConfirmButton = styled.button`
     width: 220px;
+    cursor: pointer;
     border: 1.30233px solid var(--color);
     box-sizing: border-box;
     border-radius: 19.5349px;
@@ -277,8 +279,7 @@ const ConfirmButton = styled.button`
     }
     @media (max-width: 1024px) {
         width: 150px;
-    }\
-    cursor: pointer;
+    }
 `;
 
 const ImageWrapper = styled.div`
@@ -308,18 +309,5 @@ const UserLabel = styled.p`
     font-size: 20px;
     color: var(--color);
 `;
-
-// const DialogButton = styled(Button)`
-//     border: 1px solid var(--color);
-//     box-sizing: border-box;
-//     border-radius: 20px;
-//     height: 28px;
-//     padding: 4px 6px;
-//     flex: 1;
-//     background: var(--color-wrapper) !important;
-//     color: var(--color) !important;
-//     cursor: pointer;
-//     font-family: Sansation !important;
-// `;
 
 export default UserEditRoyaleDataDialog;

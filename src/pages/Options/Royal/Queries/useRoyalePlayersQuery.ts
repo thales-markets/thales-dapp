@@ -25,11 +25,11 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
         QUERY_KEYS.Royale.Players(),
         async () => {
             if (selectedSeason === 0) return [];
-            const baseUrl = 'http://localhost:3002/thales-royale/';
+            const baseUrl = 'https://api.thales.market/thales-royale/';
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
             const map = new Map<string, any>(result);
-            const royalePlayersDataUrl = 'http://localhost:3002/royale-users/';
+            const royalePlayersDataUrl = 'https://api.thales.market/royale-users/';
             const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
             const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
 
