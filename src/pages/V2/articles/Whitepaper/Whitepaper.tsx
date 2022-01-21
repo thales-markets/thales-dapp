@@ -3,18 +3,18 @@ import { Background, Theme } from '../../Home';
 import styled from 'styled-components';
 import Header from '../../components/Header';
 import Cookies from 'universal-cookie';
-import { ReactComponent as ThalesLogoWhitepaperBlue } from 'assets/images/landing-page/thales-logo-whitepaper-blue.svg';
-import { ReactComponent as ThalesLogoWhitepaperWhite } from 'assets/images/landing-page/thales-logo-whitepaper-white.svg';
-import { ReactComponent as Chart1White } from 'assets/images/landing-page/chart1b.svg';
-import { ReactComponent as Chart1Blue } from 'assets/images/landing-page/chart1.svg';
-import { ReactComponent as Chart2White } from 'assets/images/landing-page/chart2b.svg';
-import { ReactComponent as Chart2Blue } from 'assets/images/landing-page/chart2.svg';
-import { ReactComponent as Chart3White } from 'assets/images/landing-page/chart3b.svg';
-import { ReactComponent as Chart3Blue } from 'assets/images/landing-page/chart3.svg';
-import { ReactComponent as Chart4White } from 'assets/images/landing-page/chart4b.svg';
-import { ReactComponent as Chart4Blue } from 'assets/images/landing-page/chart4.svg';
-import { ReactComponent as Chart5White } from 'assets/images/landing-page/chart5b.svg';
-import { ReactComponent as Chart5Blue } from 'assets/images/landing-page/chart5.svg';
+import { ReactComponent as ThalesLogoWhitepaperBlue } from 'assets/images/landing-page/articles/thales-logo-whitepaper-blue.svg';
+import { ReactComponent as ThalesLogoWhitepaperWhite } from 'assets/images/landing-page/articles/thales-logo-whitepaper-white.svg';
+import { ReactComponent as Chart1White } from 'assets/images/landing-page/articles/chart1b.svg';
+import { ReactComponent as Chart1Blue } from 'assets/images/landing-page/articles/chart1.svg';
+import { ReactComponent as Chart2White } from 'assets/images/landing-page/articles/chart2b.svg';
+import { ReactComponent as Chart2Blue } from 'assets/images/landing-page/articles/chart2.svg';
+import { ReactComponent as Chart3White } from 'assets/images/landing-page/articles/chart3b.svg';
+import { ReactComponent as Chart3Blue } from 'assets/images/landing-page/articles/chart3.svg';
+import { ReactComponent as Chart4White } from 'assets/images/landing-page/articles/chart4b.svg';
+import { ReactComponent as Chart4Blue } from 'assets/images/landing-page/articles/chart4.svg';
+import { ReactComponent as Chart5White } from 'assets/images/landing-page/articles/chart5b.svg';
+import { ReactComponent as Chart5Blue } from 'assets/images/landing-page/articles/chart5.svg';
 
 import { FlexDivCentered } from '../../../../theme/common';
 import { Trans, useTranslation } from 'react-i18next';
@@ -57,13 +57,13 @@ const Whitepaper: React.FC = () => {
                     <Paragraph>{t('articles.whitepaper.paragraphs.1-3.section1')}</Paragraph>
                     <H2>{t('articles.whitepaper.paragraphs.2.title')}</H2>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2.section1')}</Paragraph>
-                    <ListItem>ParimutuelMarketManager.sol</ListItem>
+                    <ListItem bold={true}>ParimutuelMarketManager.sol</ListItem>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2.section2')}</Paragraph>
-                    <ListItem>ParimutuelMarketFactory.sol</ListItem>
+                    <ListItem bold={true}>ParimutuelMarketFactory.sol</ListItem>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2.section3')}</Paragraph>
-                    <ListItem>ParimutuelMarket.sol</ListItem>
+                    <ListItem bold={true}>ParimutuelMarket.sol</ListItem>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2.section4')}</Paragraph>
-                    <ListItem>ParimutuelPosition.sol</ListItem>
+                    <ListItem bold={true}>ParimutuelPosition.sol</ListItem>
                     <Paragraph>{t('articles.whitepaper.paragraphs.2.section5')}</Paragraph>
                     <H3>{t('articles.whitepaper.paragraphs.2-1.title')}</H3>
                     <ChartContainer>
@@ -206,10 +206,9 @@ const H1 = styled.h1`
 `;
 
 const H2 = styled.h2`
-    font-family: Nunito !important;
+    font-family: NunitoSemiBold !important;
     font-size: 1.7em;
     font-style: normal;
-    font-weight: 700;
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
@@ -219,10 +218,9 @@ const H2 = styled.h2`
 `;
 
 const H3 = styled.h3`
-    font-family: Nunito !important;
+    font-family: NunitoSemiBold !important;
     font-size: 1.4em;
     font-style: normal;
-    font-weight: 700;
     line-height: 1em;
     letter-spacing: 0em;
     text-align: justified;
@@ -238,7 +236,7 @@ const Paragraph = styled.p`
     &,
     & * {
         color: var(--color);
-        font-family: Nunito !important;
+        font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
         letter-spacing: 0em;
@@ -246,12 +244,12 @@ const Paragraph = styled.p`
         white-space: pre-line;
     }
     strong {
-        font-weight: bold;
+        font-family: NunitoSemiBold !important;
     }
 `;
 
 const Date = styled.h1`
-    font-family: Nunito !important;
+    font-family: NunitoExtraLight !important;
     color: var(--color);
     font-size: 1.2em;
 `;
@@ -263,10 +261,10 @@ const List = styled.ul`
 `;
 
 const ListItem = styled.li<{ bold?: boolean }>`
+    font-family: ${(props) => (props.bold ? 'NunitoSemiBold !important' : 'NunitoExtraLight !important')};
     margin-bottom: 0.5em;
     color: var(--color);
     font-size: 1.3em;
-    font-weight: ${(props) => (props.bold ? 'bold' : 'normal')};
 `;
 
 const ChartContainer = styled(FlexDivCentered)`
@@ -275,7 +273,7 @@ const ChartContainer = styled(FlexDivCentered)`
 `;
 
 const ChartLabel = styled.span`
-    font-family: Nunito !important;
+    font-family: NunitoExtraLight !important;
     position: absolute;
     bottom: -1.55em;
     left: 0;
