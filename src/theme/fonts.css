@@ -64,6 +64,11 @@
 }
 
 @font-face {
+    font-family: 'NunitoSemiBold';
+    src: local('NunitoSemiBold'), url(../assets/fonts/Nunito/static/Nunito-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'Playfair Display';
     src: local('Playfair Display'), url(../assets/fonts/PlayfairDisplay/Playfair-Display.ttf) format('truetype');
 }
