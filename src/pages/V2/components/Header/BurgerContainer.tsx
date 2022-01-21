@@ -2,7 +2,6 @@ import ROUTES from 'constants/routes';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivSpaceBetween } from 'theme/common';
 import { navigateTo } from 'utils/routes';
 import LanguageSelector from 'components/LanguageSelector/V2';
 
@@ -206,9 +205,9 @@ const Wrapper = styled.div`
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
 `;
 
-const LanguageContainerInBurger = styled(FlexDivSpaceBetween)`
+const LanguageContainerInBurger = styled.div`
     width: 100%;
-    align-items: flex-start;
+    display: block;
 `;
 
 const HorizontalLine = styled.div`
@@ -227,7 +226,7 @@ const Text = styled.p`
     line-height: 91.91%;
     margin-top: 12px;
     z-index: 2;
-    text-align: center;
+    text-align: left;
     text-transform: uppercase;
     color: var(--color);
 `;

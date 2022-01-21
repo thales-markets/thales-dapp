@@ -26,7 +26,7 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
     return (
         <>
             <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
-                <Container>
+                <Container className={isBurger ? 'burger' : ''}>
                     <LanguageButton
                         onClick={() => {
                             setDropdownIsOpen(!languageDropdownIsOpen);
@@ -62,6 +62,9 @@ const Container = styled(FlexDivColumnCentered)`
     position: relative;
     z-index: 1000;
     align-items: flex-end;
+    &.burger {
+        top: -27px;
+    }
 `;
 
 const LanguageButton = styled.button`
@@ -93,8 +96,9 @@ const DropDown = styled(FlexDivColumn)`
         box-shadow: none;
         border-radius: 0;
         top: 0;
-        left: 0;
+        left: -16px;
         margin-top: 20px;
+        width: 100%;
         background: transparent;
     }
 `;
@@ -102,9 +106,6 @@ const DropDown = styled(FlexDivColumn)`
 const DropDownItem = styled(FlexDiv)`
     padding: 8px 8px;
     font-size: 1em;
-    @media (max-width: 1024px) {
-        font-size: 1.15em;
-    }
     cursor: pointer;
     &:hover {
         background: rgba(196, 196, 196, 0.1);
@@ -120,6 +121,7 @@ const LanguageName = styled.div`
     color: var(--color);
     margin-left: 10px;
     display: block;
+    text-transform: uppercase;
 `;
 
 const LanguageFlag = (language: SupportedLanguages | any) => {
