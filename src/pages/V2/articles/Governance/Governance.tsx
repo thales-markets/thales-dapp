@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import { ReactComponent as Chart } from 'assets/images/landing-page/articles/governance.svg';
 import { ReactComponent as ChartBlack } from 'assets/images/landing-page/articles/governance-black.svg';
 import { Background, Theme } from '../../Home';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Background, Theme } from '../../Home';
 import styled from 'styled-components';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import Cookies from 'universal-cookie';
 import { ReactComponent as ThalesLogoWhitepaperBlue } from 'assets/images/landing-page/articles/thales-logo-whitepaper-blue.svg';
 import { ReactComponent as ThalesLogoWhitepaperWhite } from 'assets/images/landing-page/articles/thales-logo-whitepaper-white.svg';

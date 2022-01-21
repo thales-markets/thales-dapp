@@ -8,7 +8,7 @@ import system from 'assets/images/landing-page/animation1.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.png';
 import thalesIIW from 'assets/images/landing-page/thales2-white.png';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
-import Header from './Header';
+import Header from './Header/Header';
 import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
 import { navigateTo } from 'utils/routes';

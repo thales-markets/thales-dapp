@@ -7,10 +7,10 @@ import styled from 'styled-components';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
 
 type LanguageSelectorProps = {
-    isLandingPage?: boolean;
+    isBurger?: boolean;
 };
 
-export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isLandingPage }) => {
+export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }) => {
     const [languageDropdownIsOpen, setLanguageDropdownIsOpen] = useState(false);
     const setDropdownIsOpen = (isOpen: boolean) => {
         if (!isOpen && !languageDropdownIsOpen) {
@@ -26,7 +26,7 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isLandingP
     return (
         <>
             <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
-                <Container isLandingPage={isLandingPage}>
+                <Container>
                     <LanguageButton
                         onClick={() => {
                             setDropdownIsOpen(!languageDropdownIsOpen);
@@ -35,7 +35,7 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isLandingP
                         {LanguageFlag(selectedLanguage as any)}
                     </LanguageButton>
                     {languageDropdownIsOpen && (
-                        <DropDown>
+                        <DropDown className={isBurger ? 'language-dropdown' : ''}>
                             {Object.values(SupportedLanguages).map((language: string) => (
                                 <DropDownItem
                                     key={language}
@@ -58,18 +58,10 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isLandingP
     );
 };
 
-const Container = styled(FlexDivColumnCentered)<{ isLandingPage?: boolean }>`
+const Container = styled(FlexDivColumnCentered)`
     position: relative;
     z-index: 1000;
-    @media (max-width: 512px) {
-        font-size: 10px;
-    }
-    @media (max-width: 1024px) {
-        font-size: 12px;
-    }
-    @media (max-width: 1440px) {
-        font-size: 14px;
-    }
+    align-items: flex-end;
 `;
 
 const LanguageButton = styled.button`
@@ -81,6 +73,9 @@ const LanguageButton = styled.button`
 
 const FlagIcon = styled.i`
     font-size: 2.4em;
+    @media (max-width: 1024px) {
+        font-size: 2.1em;
+    }
     color: var(--color);
 `;
 
@@ -93,24 +88,26 @@ const DropDown = styled(FlexDivColumn)`
     padding: 8px;
     top: 40px;
     left: 0;
+    &.language-dropdown {
+        position: relative;
+        box-shadow: none;
+        border-radius: 0;
+        top: 0;
+        left: 0;
+        margin-top: 20px;
+    }
 `;
 
 const DropDownItem = styled(FlexDiv)`
     padding: 8px 8px;
-    font-size: 16px;
+    font-size: 1em;
+    @media (max-width: 1024px) {
+        font-size: 1.15em;
+    }
     cursor: pointer;
     &:hover {
         background: rgba(196, 196, 196, 0.1);
         border-radius: 8px;
-    }
-    @media (max-width: 512px) {
-        font-size: 10px;
-    }
-    @media (max-width: 1024px) {
-        font-size: 12px;
-    }
-    @media (max-width: 1440px) {
-        font-size: 14px;
     }
 `;
 

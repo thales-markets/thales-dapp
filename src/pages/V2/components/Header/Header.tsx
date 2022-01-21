@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from 'components/LanguageSelector/V2';
 import styled from 'styled-components';
-import { Theme } from '../Home';
+import { Theme } from '../../Home';
 import Cookies from 'universal-cookie';
 import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
-import { FlexDivSpaceBetween } from 'theme/common';
+import BurgerContainer from './BurgerContainer';
 
 type HeaderInput = {
     theme: Theme;
@@ -18,6 +18,7 @@ const cookies = new Cookies();
 const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
     const { t } = useTranslation();
     const [openBurger, setBurgerState] = useState(false);
+
     return (
         <Wrapper>
             <Logo
@@ -80,7 +81,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <DotsIcon className="icon icon--three-dots" />
             </DotsContainer>
             <LanguageContainer>
-                <LanguageSelector isLandingPage />
+                <LanguageSelector />
             </LanguageContainer>
             <ButtonContainer>
                 <Link
@@ -92,71 +93,11 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 </Link>
                 <i className="icon-home icon-home--right" />
             </ButtonContainer>
-            <BurgerContainer className={openBurger ? '' : 'hide'}>
-                <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
-                    {t('header.links.learn.title')}
-                </Link>
-
-                <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
-                    {t('header.links.community')}
-                </Link>
-                <Link target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
-                    {t('header.links.blog')}
-                </Link>
-                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Governance, false, false, 'show')}>
-                    {t('header.links.governance')}
-                </Link>
-                <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Token, false, false, 'show')}>
-                    {t('header.links.token')}
-                </Link>
-
-                <FlexDivSpaceBetween>
-                    <Text>{t('landing-page.language')}</Text>
-                    <LanguageSelector isLandingPage />
-                </FlexDivSpaceBetween>
-
-                <ThalesButton>
-                    <Logo
-                        onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
-                        className="icon icon--logo"
-                    />
-                </ThalesButton>
-                <Xicon
-                    onClick={() => {
-                        setBurgerState(!openBurger);
-                    }}
-                    className="icon icon--x-sign"
-                />
-            </BurgerContainer>
+            <BurgerContainer burgerState={openBurger} setBurgerState={setBurgerState} />
         </Wrapper>
     );
 };
 
-const Xicon = styled.i`
-    font-size: 20px;
-    font-weight: 100;
-    color: var(--color);
-    position: absolute;
-    top: 37px;
-    right: 25px;
-`;
-
-const ThalesButton = styled.div`
-    background: #1b314f;
-    &,
-    & * {
-        color: #f7f7f7 !important;
-    }
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.75em;
-    padding: 20px 26px;
-    height: 56px;
-    align-self: center;
-    margin-top: 40px;
-`;
 const Wrapper = styled.div`
     display: contents;
     @media (max-width: 1024px) {
@@ -195,6 +136,21 @@ const DropDownContainer = styled.div`
     align-items: flex-start;
     justify-content: space-between;
     padding: 10px;
+    @media (max-width: 600px) {
+        background: transparent;
+        position: relative;
+        top: -45px;
+        left: 0;
+        display: none;
+        &.open {
+            display: flex;
+        }
+        box-shadow: none;
+        border-radius: 0;
+        & > a {
+            margin-bottom: 0;
+        }
+    }
     & > a {
         width: 100%;
         font-family: Nunito !important;
@@ -211,23 +167,6 @@ const DropDownContainer = styled.div`
             background: rgba(196, 196, 196, 0.1);
         }
     }
-`;
-
-const BurgerContainer = styled.div`
-    &.hide {
-        display: none;
-    }
-    position: absolute;
-    z-index: 10;
-    top: -20px;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 100px 40px;
-    width: 100%;
-    background: var(--main-background);
-    box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
 `;
 
 const Logo = styled.i`
@@ -307,19 +246,8 @@ const ButtonContainer = styled(CenteredDiv)`
     }
 `;
 
-const Text = styled.p`
-    font-family: Nunito !important;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 1em;
-    line-height: 91.91%;
-    z-index: 2;
-    text-align: center;
-    text-transform: uppercase;
-    color: var(--color);
-`;
-
 const Link = styled.a`
+    position: relative;
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
@@ -332,6 +260,24 @@ const Link = styled.a`
     color: var(--color);
     @media (max-width: 1024px) {
         margin-bottom: 60px;
+    }
+    &.dropdown-icon {
+        :after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: -4px;
+            right: -32px;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid var(--color);
+            border-right: 2px solid var(--color);
+            transform: rotate(135deg);
+        }
+        &.open:after {
+            top: 2px;
+            transform: rotate(-45deg);
+        }
     }
 `;
 

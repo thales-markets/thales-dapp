@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header';
 import pic from 'assets/images/landing-page/articles/token.svg';
 import picBlack from 'assets/images/landing-page/articles/token-black.svg';
 import { Background, Theme } from '../../Home';
