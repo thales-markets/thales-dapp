@@ -479,7 +479,13 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                                     ))}
                         </SeasonSelector>
 
-                        <TableRow style={{ justifyContent: 'flex-end', position: 'relative' }}>
+                        <TableRow
+                            style={{
+                                justifyContent: 'flex-end',
+                                position: 'relative',
+                                marginTop: window.innerWidth < 768 ? '5%' : '5',
+                            }}
+                        >
                             <SearchWrapper
                                 onChange={(e) => setSearchString(e.target.value)}
                                 value={searchString}
