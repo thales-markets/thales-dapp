@@ -27,7 +27,7 @@ import {
     TooltipLink,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
-import { formatGasLimit, getIsOVM } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -56,6 +56,7 @@ const RetroRewards: React.FC = () => {
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const { vestingEscrowContract } = snxJSConnector as any;
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
@@ -75,12 +76,26 @@ const RetroRewards: React.FC = () => {
     }, [vestingQuery.isSuccess, vestingQuery.data]);
 
     useEffect(() => {
+        const fetchL1Fee = async (vestingContractWithSigner: any) => {
+            const txRequest = await vestingContractWithSigner.populateTransaction.claim();
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             const { vestingEscrowContract } = snxJSConnector as any;
             try {
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        vestingContractWithSigner.estimateGas.claim(),
+                        fetchL1Fee(vestingContractWithSigner),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -264,7 +279,7 @@ const RetroRewards: React.FC = () => {
                             <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
                         </div>
                     </AmountsContainer>
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainerBottom>
                         <Button
                             disabled={!isClaimAvailable || isClaiming}

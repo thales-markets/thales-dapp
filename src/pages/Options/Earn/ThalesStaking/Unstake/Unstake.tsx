@@ -5,7 +5,7 @@ import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import { useTranslation } from 'react-i18next';
 import snxJSConnector from '../../../../../utils/snxJSConnector';
-import { formatGasLimit } from '../../../../../utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from '../../../../../utils/network';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
@@ -64,8 +64,9 @@ const Unstake: React.FC<Properties> = ({
     const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
     const [unstakingEnded, setUnstakingEnded] = useState<boolean>(false);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
-
     const [gasLimit, setGasLimit] = useState<number | GasLimit[] | null>(null);
+    const [l1Fee, setL1Fee] = useState<number | number[] | null>(null);
+    const isL2 = getIsOVM(networkId);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
 
     useEffect(() => {
@@ -81,44 +82,99 @@ const Unstake: React.FC<Properties> = ({
     }, [stakingThalesQuery.isSuccess, stakingThalesQuery.data]);
 
     useEffect(() => {
+        const fetchL1FeeStartUnstake = async (stakingThalesContractWithSigner: any, amount: any) => {
+            const txRequest = await stakingThalesContractWithSigner.populateTransaction.startUnstake(amount);
+            return getL1FeeInWei(txRequest);
+        };
+        const fetchL1FeeUnstake = async (stakingThalesContractWithSigner: any) => {
+            const txRequest = await stakingThalesContractWithSigner.populateTransaction.unstake();
+            return getL1FeeInWei(txRequest);
+        };
+        const fetchL1FeeCancelUnstake = async (stakingThalesContractWithSigner: any) => {
+            const txRequest = await stakingThalesContractWithSigner.populateTransaction.cancelUnstake();
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             try {
                 const { stakingThalesContract } = snxJSConnector as any;
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                let gasEstimate = null;
                 if (isUnstakingInContract) {
                     if (unstakingEnded) {
-                        setGasLimit([
-                            {
-                                gasLimit: formatGasLimit(
-                                    await stakingThalesContractWithSigner.estimateGas.unstake(),
-                                    networkId
-                                ),
-                                label: t('options.earn.thales-staking.unstake.network-fee-unstake'),
-                            },
-                            {
-                                gasLimit: formatGasLimit(
-                                    await stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
-                                    networkId
-                                ),
-                                label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
-                            },
-                        ]);
+                        if (isL2) {
+                            const [
+                                unstakeGasEstimate,
+                                cancelUnstakeGasEstimate,
+                                l1FeeUnstakeInWei,
+                                fetchL1FeeCancelUnstakeInWei,
+                            ] = await Promise.all([
+                                stakingThalesContractWithSigner.estimateGas.unstake(),
+                                stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
+                                fetchL1FeeUnstake(stakingThalesContractWithSigner),
+                                fetchL1FeeCancelUnstake(stakingThalesContractWithSigner),
+                            ]);
+                            setGasLimit([
+                                {
+                                    gasLimit: formatGasLimit(unstakeGasEstimate, networkId),
+                                    label: t('options.earn.thales-staking.unstake.network-fee-unstake'),
+                                },
+                                {
+                                    gasLimit: formatGasLimit(cancelUnstakeGasEstimate, networkId),
+                                    label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
+                                },
+                            ]);
+                            setL1Fee([l1FeeUnstakeInWei, fetchL1FeeCancelUnstakeInWei]);
+                        } else {
+                            const unstakeGasEstimate = await stakingThalesContractWithSigner.estimateGas.unstake();
+                            const cancelUnstakeGasEstimate = await stakingThalesContractWithSigner.estimateGas.cancelUnstake();
+                            setGasLimit([
+                                {
+                                    gasLimit: formatGasLimit(unstakeGasEstimate, networkId),
+                                    label: t('options.earn.thales-staking.unstake.network-fee-unstake'),
+                                },
+                                {
+                                    gasLimit: formatGasLimit(cancelUnstakeGasEstimate, networkId),
+                                    label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
+                                },
+                            ]);
+                        }
                     } else {
-                        setGasLimit([
-                            {
-                                gasLimit: formatGasLimit(
-                                    await stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
-                                    networkId
-                                ),
-                                label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
-                            },
-                        ]);
+                        if (isL2) {
+                            const [gasEstimate, l1FeeInWei] = await Promise.all([
+                                stakingThalesContractWithSigner.estimateGas.cancelUnstake(),
+                                fetchL1FeeCancelUnstake(stakingThalesContractWithSigner),
+                            ]);
+                            setGasLimit([
+                                {
+                                    gasLimit: formatGasLimit(gasEstimate, networkId),
+                                    label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
+                                },
+                            ]);
+                            setL1Fee([l1FeeInWei]);
+                        } else {
+                            const gasEstimate = await stakingThalesContractWithSigner.estimateGas.cancelUnstake();
+                            setGasLimit([
+                                {
+                                    gasLimit: formatGasLimit(gasEstimate, networkId),
+                                    label: t('options.earn.thales-staking.unstake.network-fee-cancel'),
+                                },
+                            ]);
+                            setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        }
                     }
                 } else {
                     const amount = ethers.utils.parseEther(amountToUnstake);
-                    gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    if (isL2) {
+                        const [gasEstimate, l1FeeInWei] = await Promise.all([
+                            stakingThalesContractWithSigner.estimateGas.startUnstake(amount),
+                            fetchL1FeeStartUnstake(stakingThalesContractWithSigner, amount),
+                        ]);
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        setL1Fee(l1FeeInWei);
+                    } else {
+                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.startUnstake(amount);
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    }
                 }
             } catch (e) {
                 console.log(e);
@@ -369,7 +425,7 @@ const Unstake: React.FC<Properties> = ({
                         </MaxButton>
                     </ThalesWalletAmountLabel>
                 </InputContainer>
-                <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} />
+                <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
                 <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}

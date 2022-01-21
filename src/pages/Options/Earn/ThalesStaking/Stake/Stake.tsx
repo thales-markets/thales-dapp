@@ -17,7 +17,7 @@ import { bigNumberFormatter, getAddress } from '../../../../../utils/formatters/
 import { APPROVAL_EVENTS } from '../../../../../constants/events';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import NetworkFees from '../../../components/NetworkFees';
-import { formatGasLimit } from '../../../../../utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from '../../../../../utils/network';
 import { refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
@@ -34,23 +34,23 @@ type Properties = {
 
 const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstaking, balance, setBalance }) => {
     const { t } = useTranslation();
-
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-
-    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
-
     const [amountToStake, setAmountToStake] = useState<number | string>(0);
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
     const [isStaking, setIsStaking] = useState<boolean>(false);
     const [hasStakeAllowance, setStakeAllowance] = useState<boolean>(false);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
+
+    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     useEffect(() => {
         if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
@@ -91,12 +91,26 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     }, [walletAddress, isWalletConnected, hasStakeAllowance, stakingThalesContract]);
 
     useEffect(() => {
+        const fetchL1Fee = async (stakingThalesContractWithSigner: any, amount: any) => {
+            const txRequest = await stakingThalesContractWithSigner.populateTransaction.stake(amount);
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             const amount = ethers.utils.parseEther(amountToStake.toString());
             try {
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await stakingThalesContractWithSigner.estimateGas.stake(amount);
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        stakingThalesContractWithSigner.estimateGas.stake(amount),
+                        fetchL1Fee(stakingThalesContractWithSigner, amount),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await stakingThalesContractWithSigner.estimateGas.stake(amount);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -244,7 +258,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                         </MaxButton>
                     </ThalesWalletAmountLabel>
                 </InputContainer>
-                <NetworkFees gasLimit={gasLimit} disabled={isStaking} />
+                <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
                 <FullRow>
                     <ValidationMessage

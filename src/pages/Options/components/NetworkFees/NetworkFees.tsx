@@ -22,7 +22,7 @@ export type GasLimit = {
 type NetworkFeesProps = {
     gasLimit: number | GasLimit[] | null;
     disabled?: boolean;
-    l1Fee?: number | null;
+    l1Fee?: number | number[] | null;
 };
 
 const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
@@ -43,7 +43,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
         <>
             {Array.isArray(gasLimit) ? (
                 <>
-                    {gasLimit.map((gas) => (
+                    {gasLimit.map((gas, index: number) => (
                         <div key={gas.label}>
                             <NetworkFeeSummaryItem key={gas.label}>
                                 <NetworkFeeSummaryLabel>{`${t('common.network-fee-gas')} - ${
@@ -52,7 +52,12 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                                 <NetworkFeeSummaryContent>
                                     {formatCurrencyWithSign(
                                         USD_SIGN,
-                                        getTransactionPrice(gasPrice, gas.gasLimit, ethRate)
+                                        getTransactionPrice(
+                                            gasPrice,
+                                            gas.gasLimit,
+                                            ethRate,
+                                            l1Fee && l1Fee !== null ? (l1Fee as number[])[index] : l1Fee
+                                        )
                                     )}
                                 </NetworkFeeSummaryContent>
                             </NetworkFeeSummaryItem>
@@ -66,7 +71,12 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                         <NetworkFeeSummaryContent>
                             {formatCurrencyWithSign(
                                 USD_SIGN,
-                                getTransactionPrice(gasPrice, gasLimit as number, ethRate, l1Fee)
+                                getTransactionPrice(
+                                    gasPrice,
+                                    gasLimit as number,
+                                    ethRate,
+                                    l1Fee && l1Fee !== null ? (l1Fee as number) : l1Fee
+                                )
                             )}
                         </NetworkFeeSummaryContent>
                     </NetworkFeeSummaryItem>

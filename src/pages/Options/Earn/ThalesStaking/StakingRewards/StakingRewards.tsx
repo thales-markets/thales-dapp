@@ -14,7 +14,7 @@ import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchOngoingAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader, StyledMaterialTooltip } from '../../components';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
@@ -43,6 +43,8 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
     const { ongoingAirdropContract } = snxJSConnector as any;
 
     const isClaimAvailable =
@@ -63,18 +65,40 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
     }, [ongoingAirdropQuery.isSuccess, ongoingAirdropQuery.data]);
 
     useEffect(() => {
+        const fetchL1Fee = async (ongoingAirdropContractWithSigner: any, ongoingAirdrop: any) => {
+            const txRequest = await ongoingAirdropContractWithSigner.populateTransaction.claim(
+                ongoingAirdrop.reward.index,
+                ongoingAirdrop.reward.rawBalance,
+                ongoingAirdrop.reward.proof
+            );
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             if (ongoingAirdrop && ongoingAirdrop.reward) {
                 try {
                     const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect(
                         (snxJSConnector as any).signer
                     );
-                    const gasEstimate = await ongoingAirdropContractWithSigner.estimateGas.claim(
-                        ongoingAirdrop.reward.index,
-                        ongoingAirdrop.reward.rawBalance,
-                        ongoingAirdrop.reward.proof
-                    );
-                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    if (isL2) {
+                        const [gasEstimate, l1FeeInWei] = await Promise.all([
+                            ongoingAirdropContractWithSigner.estimateGas.claim(
+                                ongoingAirdrop.reward.index,
+                                ongoingAirdrop.reward.rawBalance,
+                                ongoingAirdrop.reward.proof
+                            ),
+                            fetchL1Fee(ongoingAirdropContractWithSigner, ongoingAirdrop),
+                        ]);
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                        setL1Fee(l1FeeInWei);
+                    } else {
+                        const gasEstimate = await ongoingAirdropContractWithSigner.estimateGas.claim(
+                            ongoingAirdrop.reward.index,
+                            ongoingAirdrop.reward.rawBalance,
+                            ongoingAirdrop.reward.proof
+                        );
+                        setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    }
                 } catch (e) {
                     console.log(e);
                     setGasLimit(null);
@@ -172,7 +196,7 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                     <StakingRewardsContent>10 opTHALES</StakingRewardsContent>
                 </StakingRewardsItem>
                 <GridAction>
-                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
+                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainer>
                         <StyledMaterialTooltip
                             arrow={true}
