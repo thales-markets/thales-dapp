@@ -517,54 +517,60 @@ const Scoreboard: React.FC<ScoreboardProps> = ({
                             ))}
                         </TableRow>
                         {usersForUi ? (
-                            usersForUi.usersToDisplay.map((user: User, key: number) => (
-                                <TableRow
-                                    key={key}
-                                    className={user.isAlive ? 'alive' : 'dead'}
-                                    style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
-                                >
-                                    <HeadCellUi winner={user.isAlive && royaleData.seasonFinished}>
-                                        <Status>
-                                            <StatusAvatar
-                                                winner={user.isAlive && royaleData.seasonFinished}
-                                                className={user.isAlive ? 'icon icon--alive' : 'icon icon--dead'}
-                                            />
-                                            <span>
-                                                {user.isAlive
-                                                    ? royaleData.seasonFinished
-                                                        ? t('options.royale.scoreboard.winner')
-                                                        : t('options.royale.scoreboard.alive')
-                                                    : t('options.royale.scoreboard.dead')}
-                                            </span>
-                                            <span>
-                                                {!user.isAlive
-                                                    ? t('options.royale.footer.rd') + ': ' + user.deathRound
-                                                    : ''}
-                                            </span>
-                                        </Status>
-                                    </HeadCellUi>
-                                    <HeadCellUi winner={user.isAlive && royaleData.seasonFinished}>
-                                        {getAvatar(user, royaleData)}
-                                    </HeadCellUi>
-                                    <HeadCellUi
-                                        winner={user.isAlive && royaleData.seasonFinished}
-                                        style={{
-                                            marginRight: 6,
-                                            textDecoration: '',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
+                            usersForUi.usersToDisplay.map((user: User, key: number) => {
+                                const lastRoundInSeason = royaleData.roundsInformation.length;
+                                const isUserAWinner =
+                                    (user.isAlive && royaleData.seasonFinished) ||
+                                    (Number(user.deathRound) === lastRoundInSeason && royaleData.seasonFinished);
+
+                                return (
+                                    <TableRow
+                                        key={key}
+                                        className={user.isAlive || isUserAWinner ? 'alive' : 'dead'}
+                                        style={{ marginBottom: 12, opacity: user.status === UserStatus.RDY ? 1 : 0.5 }}
                                     >
-                                        {user.name ?? user.address}
-                                    </HeadCellUi>
-                                    <HeadCellUi
-                                        winner={user.isAlive && royaleData.seasonFinished}
-                                        style={{ marginLeft: 6 }}
-                                    >
-                                        #{user.number}
-                                    </HeadCellUi>
-                                </TableRow>
-                            ))
+                                        <HeadCellUi winner={isUserAWinner}>
+                                            <Status>
+                                                <StatusAvatar
+                                                    winner={isUserAWinner}
+                                                    className={
+                                                        user.isAlive || isUserAWinner
+                                                            ? 'icon icon--alive'
+                                                            : 'icon icon--dead'
+                                                    }
+                                                />
+                                                <span>
+                                                    {user.isAlive || isUserAWinner
+                                                        ? royaleData.seasonFinished
+                                                            ? t('options.royale.scoreboard.winner')
+                                                            : t('options.royale.scoreboard.alive')
+                                                        : t('options.royale.scoreboard.dead')}
+                                                </span>
+                                                <span>
+                                                    {!user.isAlive
+                                                        ? t('options.royale.footer.rd') + ': ' + user.deathRound
+                                                        : ''}
+                                                </span>
+                                            </Status>
+                                        </HeadCellUi>
+                                        <HeadCellUi winner={isUserAWinner}>{getAvatar(user, royaleData)}</HeadCellUi>
+                                        <HeadCellUi
+                                            winner={isUserAWinner}
+                                            style={{
+                                                marginRight: 6,
+                                                textDecoration: '',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
+                                        >
+                                            {user.name ?? user.address}
+                                        </HeadCellUi>
+                                        <HeadCellUi winner={isUserAWinner} style={{ marginLeft: 6 }}>
+                                            #{user.number}
+                                        </HeadCellUi>
+                                    </TableRow>
+                                );
+                            })
                         ) : (
                             <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
                                 <SimpleLoader />
@@ -866,8 +872,12 @@ const Intro: React.FC<{ latestSeason: ThalesRoyaleData }> = ({ latestSeason }) =
 };
 
 const getAvatar = (user: User, royaleData: ThalesRoyaleData) => {
-    if (user.avatar) {
-        return <UserAvatar winner={user.isAlive && royaleData.seasonFinished} src={user.avatar || DiscordImage} />;
+    if (user.status === UserStatus.RDY) {
+        const lastRoundInSeason = royaleData.roundsInformation.length;
+        const isUserAWinner =
+            (user.isAlive && royaleData.seasonFinished) ||
+            (Number(user.deathRound) === lastRoundInSeason && royaleData.seasonFinished);
+        return <UserAvatar winner={isUserAWinner} src={user.avatar || DiscordImage} />;
     }
 
     return (
