@@ -59,6 +59,11 @@
 }
 
 @font-face {
+    font-family: 'NunitoExtraLight';
+    src: local('NunitoExtraLight'), url(../assets/fonts/Nunito/static/Nunito-ExtraLight.ttf) format('truetype');
+}
+
+@font-face {
     font-family: 'Playfair Display';
     src: local('Playfair Display'), url(../assets/fonts/PlayfairDisplay/Playfair-Display.ttf) format('truetype');
 }
