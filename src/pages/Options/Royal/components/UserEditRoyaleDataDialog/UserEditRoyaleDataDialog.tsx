@@ -47,7 +47,8 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
     }, [name]);
 
     const isAvatarLinkValid = useMemo(() => {
-        return AVATAR_LINK_REGEX.test(avatar ?? '');
+        const validAvatarLink = AVATAR_LINK_REGEX.test(avatar);
+        return validAvatarLink || avatar === '';
     }, [avatar]);
 
     useEffect(() => {
