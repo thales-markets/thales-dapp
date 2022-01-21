@@ -22,7 +22,7 @@ const Home: React.FC = () => {
             <GridLayout theme={theme} setTheme={setTheme} />
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
-                <FlexDiv>
+                <FlexDiv className="initiatives">
                     <Thales className="icon-home icon-home--thales" />
                     <ThalesRoyale className="icon-home icon-home--royale" />
                     <ThalesGame className="icon-home icon-home--game" />
@@ -120,21 +120,40 @@ const FlexDiv = styled.div`
     align-items: center;
     color: var(--color);
     flex-wrap: wrap;
+    &.initiatives {
+        & > i {
+            @media (max-width: 600px) {
+                flex: 1 40%;
+                text-align: center;
+            }
+        }
+    }
 `;
 
-const Thales = styled.i`
+const IconAbs = styled.i`
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+        transform: scale(1.2);
+    }
+    &:before {
+        pointer-events: none;
+    }
+`;
+
+const Thales = styled(IconAbs)`
     font-size: 16em;
     @media (max-width: 600px) {
         font-size: 10em;
     }
 `;
-const ThalesRoyale = styled.i`
+const ThalesRoyale = styled(IconAbs)`
     font-size: 12em;
     @media (max-width: 600px) {
         font-size: 7em;
     }
 `;
-const ThalesGame = styled.i`
+const ThalesGame = styled(IconAbs)`
     font-size: 16em;
     @media (max-width: 600px) {
         font-size: 10em;
@@ -143,37 +162,30 @@ const ThalesGame = styled.i`
     }
 `;
 
-const IconAbs = styled.i`
-    line-height: 0.5em;
-    cursor: pointer;
-    &:hover {
-        transform: scale(1.2);
-        transition: 0.2s;
-    }
-    &:before {
-    }
-`;
-
 const SNX = styled(IconAbs)`
     font-size: 16em;
+    line-height: 0.5em;
     @media (max-width: 600px) {
         font-size: 10em;
     }
 `;
 const OPTIMISM = styled(IconAbs)`
     font-size: 20em;
+    line-height: 0.5em;
     @media (max-width: 600px) {
         font-size: 10em;
     }
 `;
 const LINK = styled(IconAbs)`
     font-size: 20em;
+    line-height: 0.5em;
     @media (max-width: 600px) {
         font-size: 10em;
     }
 `;
 const INCH = styled(IconAbs)`
     font-size: 20em;
+    line-height: 0.5em;
     @media (max-width: 600px) {
         font-size: 10em;
     }
