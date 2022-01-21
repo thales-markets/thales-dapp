@@ -6,6 +6,7 @@ import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import GamePage from 'pages/Options/Game/Game.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
@@ -244,6 +245,11 @@ const App = () => {
                                 </MainLayout>
                             )}
                         />
+                        <Route exact path={ROUTES.Options.Game}>
+                            <MainLayout>
+                                <GamePage />
+                            </MainLayout>
+                        </Route>
                         {!isL2 && (
                             <Route exact path={ROUTES.Options.Token}>
                                 <MainLayout>

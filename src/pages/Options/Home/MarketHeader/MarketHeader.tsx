@@ -27,6 +27,8 @@ import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-sele
 // import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
 import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
 import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
+import gameDefaultIcon from 'assets/images/sidebar/game-default.svg';
+import gameSelectedIcon from 'assets/images/sidebar/game-selected.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
@@ -300,6 +302,16 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                         >
                             <SidebarIcon />
                             <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
+                    <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
+                        <SidebarItem
+                            imgSrc={gameDefaultIcon}
+                            imgSrcHoverSelected={gameSelectedIcon}
+                            className={route === ROUTES.Options.Game ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.game-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
                 </ItemsContainer>
