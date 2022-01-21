@@ -236,6 +236,9 @@ const ContIII = styled(ContWrapper)`
     grid-row-start: 49;
     grid-row-end: 60;
     padding-right: 90px;
+    @media (max-width: 800px) {
+        padding-right: 3em;
+    }
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
@@ -252,12 +255,18 @@ const ContIV = styled(ContWrapper)`
     grid-row-end: 76;
     padding-top: 5em;
     padding-left: 50px;
+    @media (max-width: 800px) {
+        grid-row-end: 77;
+    }
     @media (max-width: 600px) {
         padding-left: 28px;
         grid-column-start: 4;
         grid-column-end: 49;
         grid-row-start: 82;
         grid-row-end: 97;
+    }
+    @media (max-width: 400px) {
+        grid-row-end: 99;
     }
 `;
 
@@ -292,6 +301,13 @@ const ThalesImageII = styled.div`
     grid-row-start: 35;
     grid-row-end: 56;
     z-index: 3;
+
+    @media (max-width: 800px) {
+        grid-column-start: 1;
+        grid-column-end: 23;
+        grid-row-start: 37;
+        grid-row-end: 55;
+    }
     @media (max-width: 600px) {
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
@@ -309,6 +325,14 @@ const ThalesImageIII = styled.div`
     grid-row-start: 49;
     grid-row-end: 69;
     z-index: 3;
+
+    @media (max-width: 800px) {
+        grid-column-start: 22;
+        grid-column-end: 42;
+        grid-row-start: 51;
+        grid-row-end: 68;
+    }
+
     @media (max-width: 600px) {
         grid-column-start: 10;
         grid-column-end: 48;
@@ -326,10 +350,10 @@ const StarsImage = styled.div`
     grid-row-end: 78;
     z-index: 1;
     @media (max-width: 600px) {
-        grid-column-start: 4;
-        grid-column-end: 48;
-        grid-row-start: 87;
-        grid-row-end: 104;
+        grid-column-start: 5;
+        grid-column-end: 42;
+        grid-row-start: 75;
+        grid-row-end: 87;
         margin-bottom: -130px;
         & > img {
             width: 100%;
@@ -358,8 +382,12 @@ const ContTitle = styled.p`
     line-height: 95%;
     color: var(--color);
     margin-bottom: 0.75em;
+    @media (max-width: 800px) {
+        font-size: 3em;
+    }
     @media (max-width: 600px) {
         font-size: 28px;
+        padding-right: 120px;
     }
 `;
 const ContSubTitle = styled.p`
