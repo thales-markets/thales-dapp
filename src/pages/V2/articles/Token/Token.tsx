@@ -39,18 +39,12 @@ const Token: React.FC = () => {
                     <H1>{t('articles.token.title')}</H1>
                     <H2 id="section1">{t('articles.token.list.1')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.token.paragraphs.1"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.token.paragraphs.1" components={{ bold: <strong /> }} />
                     </Paragraph>
 
                     <H2 id="section2">{t('articles.token.list.2')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.token.paragraphs.2"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.token.paragraphs.2" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <Image src={theme !== Theme.Dark ? pic : picBlack} />
 
@@ -59,40 +53,20 @@ const Token: React.FC = () => {
                         <Trans
                             i18nKey="articles.token.paragraphs.3"
                             components={{
-                                bold: (
-                                    <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href="https://app.dodoex.io/"
-                                        style={{ fontWeight: 700, textDecoration: 'underline' }}
-                                    />
-                                ),
-                                bold2: (
-                                    <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href="https://app.uniswap.org/#/swap"
-                                        style={{ fontWeight: 700, textDecoration: 'underline' }}
-                                    />
-                                ),
+                                bold: <a target="_blank" rel="noreferrer" href="https://app.dodoex.io/" />,
+                                bold2: <a target="_blank" rel="noreferrer" href="https://app.uniswap.org/#/swap" />,
                             }}
                         />
                     </Paragraph>
 
                     <H2 id="section4">{t('articles.token.list.4')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.token.paragraphs.4"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.token.paragraphs.4" components={{ bold: <strong /> }} />
                     </Paragraph>
 
                     <H2 id="section5">{t('articles.token.list.5')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.token.paragraphs.5"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.token.paragraphs.5" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <Footer className="article" theme={theme} />
                 </Content>
@@ -107,7 +81,7 @@ const Wrapper = styled.div`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(82, 2em);
+    grid-template-rows: repeat(81, 2em);
 `;
 
 const Content = styled.div`
@@ -149,7 +123,7 @@ const H1 = styled.h1`
     margin-bottom: 1.6em;
 `;
 const H2 = styled.h2`
-    font-family: Nunito !important;
+    font-family: NunitoSemiBold !important;
     font-size: 1.4em;
     font-style: normal;
     font-weight: 700;
@@ -166,12 +140,19 @@ const Paragraph = styled.p`
     &,
     & * {
         color: var(--color);
-        font-family: Nunito !important;
+        font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
         letter-spacing: 0em;
         text-align: justified;
         white-space: pre-line;
+    }
+    strong {
+        font-family: NunitoSemiBold !important;
+    }
+    a {
+        font-family: NunitoSemiBold !important;
+        text-decoration: underline;
     }
 `;
 
@@ -183,9 +164,8 @@ const ListItem = styled.li`
     height: 3em;
     color: var(--color);
     & > a {
-        font-family: Nunito !important;
+        font-family: NunitoSemiBold !important;
         font-style: normal;
-        font-weight: bold;
         font-size: 1.4em;
         line-height: 170%;
         color: var(--color);

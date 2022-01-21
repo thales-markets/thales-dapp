@@ -3,10 +3,11 @@ import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
 import Header from '../../components/Header';
-import pic from 'assets/images/landing-page/articles/governance.svg';
-import picBlack from 'assets/images/landing-page/articles/governance-black.svg';
+import { ReactComponent as Chart } from 'assets/images/landing-page/articles/governance.svg';
+import { ReactComponent as ChartBlack } from 'assets/images/landing-page/articles/governance-black.svg';
 import { Background, Theme } from '../../Home';
 import Footer from 'pages/V2/components/Footer';
+import { FlexDivCentered } from '../../../../theme/common';
 
 const cookies = new Cookies();
 
@@ -38,73 +39,35 @@ const Governance: React.FC = () => {
 
                     <H1>{t('articles.governance.title')}</H1>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.intro1"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.intro1" components={{ bold: <strong /> }} />
                     </Paragraph>
-                    <Image src={theme !== Theme.Dark ? pic : picBlack} />
+                    <ChartWrapper>{theme !== Theme.Dark ? <Chart /> : <ChartBlack />}</ChartWrapper>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.intro2"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.intro2" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <H2 id="section1">{t('articles.governance.list.1')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.1"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.1" components={{ bold: <strong /> }} />
                     </Paragraph>
 
                     <H2 id="section2">{t('articles.governance.list.2')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.2"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.2" components={{ bold: <strong /> }} />
                     </Paragraph>
 
                     <H2 id="section3">{t('articles.governance.list.3')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.3"
-                            components={{
-                                bold: (
-                                    <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href="https://app.dodoex.io/"
-                                        style={{ fontWeight: 700, textDecoration: 'underline' }}
-                                    />
-                                ),
-                                bold2: (
-                                    <a
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        href="https://app.uniswap.org/#/swap"
-                                        style={{ fontWeight: 700, textDecoration: 'underline' }}
-                                    />
-                                ),
-                            }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.3" />
                     </Paragraph>
 
                     <H2 id="section4">{t('articles.governance.list.4')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.4"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.4" components={{ bold: <strong /> }} />
                     </Paragraph>
 
                     <H2 id="section5">{t('articles.governance.list.5')}</H2>
                     <Paragraph>
-                        <Trans
-                            i18nKey="articles.governance.paragraphs.5"
-                            components={{ bold: <span style={{ fontWeight: 700 }} /> }}
-                        />
+                        <Trans i18nKey="articles.governance.paragraphs.5" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <Footer className="article" theme={theme} />
                 </Content>
@@ -119,7 +82,7 @@ const Wrapper = styled.div`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(120, 2em);
+    grid-template-rows: repeat(104, 2em);
 `;
 
 const Content = styled.div`
@@ -141,14 +104,6 @@ const Content = styled.div`
     }
 `;
 
-const Image = styled.img`
-    padding: 0 20px;
-    object-fit: contain;
-    width: 90%;
-    margin: 4em auto;
-    display: block;
-`;
-
 const H1 = styled.h1`
     font-family: Playfair Display !important;
     font-style: normal;
@@ -161,8 +116,9 @@ const H1 = styled.h1`
     margin-top: 2em;
     margin-bottom: 1.6em;
 `;
+
 const H2 = styled.h2`
-    font-family: Nunito !important;
+    font-family: NunitoSemiBold !important;
     font-size: 1.4em;
     font-style: normal;
     font-weight: 700;
@@ -179,12 +135,15 @@ const Paragraph = styled.p`
     &,
     & * {
         color: var(--color);
-        font-family: Nunito !important;
+        font-family: NunitoExtraLight !important;
         font-style: normal;
         font-weight: 300;
         letter-spacing: 0em;
         text-align: justified;
         white-space: pre-line;
+    }
+    strong {
+        font-family: NunitoSemiBold !important;
     }
 `;
 
@@ -196,9 +155,8 @@ const ListItem = styled.li`
     height: 3em;
     color: var(--color);
     & > a {
-        font-family: Nunito !important;
+        font-family: NunitoSemiBold !important;
         font-style: normal;
-        font-weight: bold;
         font-size: 1.4em;
         line-height: 170%;
         color: var(--color);
@@ -207,6 +165,10 @@ const ListItem = styled.li`
             transition: 0.2s;
         }
     }
+`;
+
+const ChartWrapper = styled(FlexDivCentered)`
+    margin: 3em 0;
 `;
 
 export default Governance;
