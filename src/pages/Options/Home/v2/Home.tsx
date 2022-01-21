@@ -9,6 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
+import { getTheme } from 'redux/modules/ui';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
@@ -29,6 +30,8 @@ const Home: React.FC = () => {
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+
+    const theme = useSelector((state: RootState) => getTheme(state));
 
     const openOrdersMap = useMemo(() => {
         if (openOrdersQuery.isSuccess) {
@@ -60,7 +63,7 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <Background style={{ minHeight: '100vh' }}>
+            <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
                 <NewWrapper>
                     <MarketHeader
                         route={

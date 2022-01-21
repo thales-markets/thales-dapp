@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { OptionsMarkets } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
-import { useTable, useSortBy, useGlobalFilter } from 'react-table';
+import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
 import { useTranslation } from 'react-i18next';
 
 import { RootState } from 'redux/rootReducer';
@@ -21,6 +21,7 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { FlexDivRow } from 'theme/common';
 import TableGridSwitch from '../../../components/Input/TableGridSwitch';
 import SearchField from '../../../components/Input/SearchField';
+import { TablePagination } from '@material-ui/core';
 
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
@@ -105,10 +106,16 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             {
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
+                Cell: (_props: any) => {
+                    return formatCurrencyWithSign(USD_SIGN, _props?.cell?.value ? _props?.cell?.value : 0);
+                },
             },
             {
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
+                Cell: (_props: any) => {
+                    return formatCurrencyWithSign(USD_SIGN, _props?.cell?.value ? _props?.cell?.value : 0);
+                },
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
@@ -139,8 +146,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 availableShorts: market.availableShorts,
                 longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
                 shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
-                strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice),
-                currentPrice: formatCurrencyWithSign(USD_SIGN, exchangeRates?.[market.currencyKey] || 0),
+                strikePrice: market.strikePrice,
+                currentPrice: exchangeRates?.[market.currencyKey] || 0,
                 timeRemaining: market.timeRemaining,
                 phase: market.phase,
             };
@@ -149,13 +156,50 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         return processedMarkets;
     }, [optionsMarkets]);
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, state, setGlobalFilter } = useTable(
-        { columns, data, autoResetSortBy: false, autoResetGlobalFilter: false },
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        page,
+        prepareRow,
+        state,
+        setGlobalFilter,
+        // canPreviousPage,
+        // canNextPage,
+        // nextPage,
+        gotoPage,
+        // previousPage,
+        // pageCount,
+        setPageSize,
+        // pageOptions,
+    } = useTable(
+        {
+            columns,
+            data,
+            initalState: { pageIndex: 1 },
+            autoResetSortBy: false,
+            autoResetGlobalFilter: false,
+            autoResetPage: false,
+        },
         useGlobalFilter,
-        useSortBy
+        useSortBy,
+        usePagination
     );
 
-    const { globalFilter } = state;
+    const { pageIndex, pageSize, globalFilter } = state;
+
+    const handleChangePage = (_event: any, newPage: number) => {
+        gotoPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: any) => {
+        setPageSize(parseInt(event.target.value, 10));
+        gotoPage(0);
+    };
+
+    useEffect(() => {
+        gotoPage(0);
+    }, [globalFilter]);
 
     return (
         <>
@@ -210,7 +254,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     ))}
                 </thead>
                 <tbody {...getTableBodyProps()}>
-                    {rows.map((row: any) => {
+                    {page.map((row: any) => {
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
@@ -222,9 +266,61 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     })}
                 </tbody>
             </table>
+            <PaginationWrapper
+                rowsPerPageOptions={[5, 10, 25]}
+                count={data.length}
+                rowsPerPage={pageSize}
+                page={pageIndex}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </>
     );
 };
+
+const PaginationWrapper = styled(TablePagination)`
+    border: none !important;
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+    color: var(--primary-color) !important;
+    .MuiToolbar-root {
+        padding: 0;
+        display: flex;
+        .MuiSelect-icon {
+            color: #f6f6fe;
+        }
+        .MuiTablePagination-spacer {
+            display: block;
+        }
+        .MuiTablePagination-caption {
+            font-family: Titillium Regular !important;
+            font-style: normal;
+        }
+        .MuiTablePagination-toolbar {
+            overflow: visible;
+        }
+    }
+
+    .MuiTablePagination-selectRoot {
+        font-family: Titillium Regular !important;
+        font-style: normal;
+    }
+
+    .MuiIconButton-root.Mui-disabled {
+        color: var(--disabled-item);
+    }
+    .MuiTablePagination-toolbar > .MuiTablePagination-caption:last-of-type {
+        display: block;
+    }
+    .MuiTablePagination-selectRoot {
+        @media (max-width: 767px) {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+    }
+`;
 
 const Text = styled.span`
     font-family: Titillium Regular !important;
@@ -263,8 +359,8 @@ const Wrapper = styled(FlexDivRow)`
     flex-wrap: nowrap;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 39px;
     max-width: 1200px;
+    margin-bottom: 39px;
 `;
 
 const FormContainer = styled.div`
@@ -287,7 +383,7 @@ const Item = styled.span`
     text-transform: uppercase;
     padding: 6px 14px 6px 14px;
     margin-right: 20px;
-    color: white;
+    color: var(--primary-color);
     cursor: pointer;
 `;
 

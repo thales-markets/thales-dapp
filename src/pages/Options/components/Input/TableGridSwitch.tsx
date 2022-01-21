@@ -13,7 +13,12 @@ const TableGridSwitch: React.FC<TableGridSwitchProps> = ({ labels, value, clickE
     return (
         <Wrapper>
             <Label>{labels[0]}</Label>
-            <Switch active={value} handleClick={() => clickEventHandler()} />
+            <Switch
+                active={value}
+                handleClick={() => clickEventHandler()}
+                dotBackground={'var(--input-border-color)'}
+                borderColor={'var(--input-border-color)'}
+            />
             <Label>{labels[1]}</Label>
         </Wrapper>
     );
@@ -31,7 +36,7 @@ const Wrapper = styled.div`
 `;
 
 const Label = styled.span`
-    color: #64d9fe;
+    color: var(--input-border-color);
     display: block;
     margin: 0px 5px 0px 5px;
 `;

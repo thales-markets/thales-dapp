@@ -27,10 +27,10 @@ const Wrapper = styled.div`
 `;
 
 const InputField = styled.input`
-    border: 1px solid #64d9fe;
+    border: 1px solid var(--input-border-color);
     background: rgba(0, 0, 0, 0);
     border-radius: 30px;
-    color: #64d9fe;
+    color: var(--input-border-color);
     width: 180px;
     height: 28px;
     padding-left: 10px;
@@ -42,7 +42,7 @@ const InputField = styled.input`
 
 const Icon = styled.i`
     font-size: 15px;
-    color: #64d9fe;
+    color: var(--input-border-color);
     position: absolute;
     right: 8px;
 `;

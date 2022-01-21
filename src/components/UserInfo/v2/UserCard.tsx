@@ -57,7 +57,7 @@ const MenuCardButton = styled.div`
 `;
 
 const MenuIcon = styled.i`
-    color: white;
+    color: var(--primary-color);
 `;
 
 const MenuCard = styled.div<ManuCardProps>`
@@ -82,8 +82,7 @@ const MenuCard = styled.div<ManuCardProps>`
         --icon-color: #f7f7f7;
         --shadow-color: '#64D9FE';
     }
-    --deactive-opcity: 0.2;
-    box-shadow: 0px 4px 40px var(--shadow-color);
+    box-shadow: var(--shadow);
 `;
 
 const CardWrapper = styled.div`

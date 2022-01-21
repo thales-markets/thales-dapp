@@ -69,8 +69,6 @@ export const Background = styled.section`
         background-size: cover !important;
     }
 
-    background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
-
     &#landing-hero {
         min-height: 900px;
         @media (max-width: 767px) {
@@ -122,6 +120,28 @@ export const Background = styled.section`
                 flex-flow: column-reverse;
             }
         }
+    }
+    &.light {
+        background-color: #f7f7f7;
+        --background: #f7f7f7;
+        --icon-color: #04045a;
+        --shadow: 0px 0px 50px rgba(4, 4, 90, 0.4);
+        --primary-color: #04045a;
+        --input-border-color: #04045a;
+        --table-border-color: #64d9fe;
+        --disabled-item: #8181ac;
+        --enabled-item: #04045a;
+    }
+    &.dark {
+        background-color: #04045a;
+        --background: #04045a;
+        --icon-color: #f7f7f7;
+        --shadow: 0px 0px 40px #64d9fe;
+        --primary-color: #f7f7f7;
+        --input-border-color: #64d9fe;
+        --table-border-color: #f7f7f7;
+        --disabled-item: #8181ac;
+        --enabled-item: #f7f7f7;
     }
 `;
 

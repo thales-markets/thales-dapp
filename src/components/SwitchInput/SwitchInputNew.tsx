@@ -85,7 +85,7 @@ const Circle = styled.div<CircleProps>`
             ? props?.background
                 ? `background-color: ${props.background}`
                 : `background-color: #64D9FE`
-            : `background-color: #64D9FE`};
+            : `background-color:${props?.background}`};
     ${(props: any) => (props?.active ? `right: 5px;` : `left: 5px;`)};
 `;
 

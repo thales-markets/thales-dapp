@@ -1,6 +1,6 @@
 td {
     height: 43px;
-    border-bottom: 1px solid #FFFFFF;
+    border-bottom: 1px solid var(--table-border-color);
     text-align: center;
     vertical-align: middle;
     font-family: Titillium Regular !important;
@@ -8,7 +8,7 @@ td {
 
 th {
     height: 43px;
-    border-bottom: 1px solid #FFFFFF;
+    border-bottom: 1px solid var(--table-border-color);
     text-align: center;
     font-family: Titillium Regular !important;
     font-style: normal;
@@ -22,7 +22,7 @@ table {
     font-style: normal;
     font-weight: 300;
     font-size: 15px;
-    color: white;
+    color: var(--primary-color);
     width: 100%;
     table-layout: fixed !important;
     max-width: 1200px;
@@ -32,5 +32,5 @@ table {
     background: #64D9FE;
     box-shadow: 0px 3px 12px 1px rgba(100, 217, 254, 0.4);
     border-radius: 30px;
-    color: #04045A;
+    color: var(--background);
 }
