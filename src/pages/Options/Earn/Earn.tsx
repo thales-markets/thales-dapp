@@ -29,6 +29,7 @@ import { getNetworkId } from '../../../redux/modules/wallet';
 import { getIsOVM, isNetworkSupported } from '../../../utils/network';
 import Migration from './Migration';
 import MigrationNotice from './components/MigrationNotice';
+import MigratedRewards from './MigratedRewards';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -145,6 +146,7 @@ const EarnPage: React.FC = () => {
                                         {selectedTab === 'vesting' && <Vesting />}
                                         {selectedTab === 'lp-staking' && !isL2 && <LPStaking />}
                                         {selectedTab === 'migration' && !isL2 && <Migration />}
+                                        {selectedTab === 'migrated-rewards' && isL2 && <MigratedRewards />}
                                     </InnerWidgetsContainer>
                                 </WidgetsContainer>
                             </MainContentContainer>
