@@ -43,8 +43,12 @@ type RoundInformation = {
     totalPlayersPerRoundPerSeason: number;
 };
 
-const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Map<number, ThalesRoyaleData>>) => {
-    return useQuery<Map<number, ThalesRoyaleData>>(
+const useThalesRoyaleData = (
+    walletAddress: string,
+    selectedSeason: number,
+    options?: UseQueryOptions<ThalesRoyaleData>
+) => {
+    return useQuery<ThalesRoyaleData>(
         QUERY_KEYS.Royale.Data(walletAddress),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
@@ -52,10 +56,40 @@ const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Ma
                 const RoyaleContract = walletAddress
                     ? thalesRoyaleContract.connect((snxJSConnector as any).signer)
                     : thalesRoyaleContract;
-                const data = await getFromContract(RoyaleContract, walletAddress);
+                const data = await getFromContract(RoyaleContract, walletAddress, selectedSeason);
                 return data;
             }
-            return new Map<any, any>();
+            const emptyData: ThalesRoyaleData = {
+                season: 0,
+                players: [],
+                isPlayerAlive: false,
+                hasParticipatedInCurrentOrLastRoyale: false,
+                rounds: 0,
+                buyInAmount: 0,
+                roundInASeason: 0,
+                targetPrice: '',
+                roundChoosingLength: 0,
+                roundInASeasonStartTime: new Date(),
+                roundInASeasonEndTime: new Date(),
+                token: '',
+                roundsInformation: [],
+                royaleSeasonCreationTime: new Date(),
+                royaleSeasonEndTime: new Date(),
+                signUpPeriod: new Date(),
+                canCloseRound: false,
+                canStartRoyale: false,
+                canStartNewSeason: false,
+                pauseBetweenSeasonsTime: 0,
+                priceFeedAddress: '',
+                playerSignedUpPerSeason: false,
+                rewardCollectedPerSeason: false,
+                rewardPerWinnerPerSeason: 0,
+                rewardPerSeason: 0,
+                unclaimedRewardPerSeason: 0,
+                seasonStarted: false,
+                seasonFinished: false,
+            };
+            return emptyData;
         },
         {
             refetchInterval: 5000,
@@ -66,9 +100,8 @@ const useThalesRoyaleData = (walletAddress: string, options?: UseQueryOptions<Ma
 
 export default useThalesRoyaleData;
 
-const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: string) => {
+const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: string, selectedSeason: number) => {
     const lastSeason = Number(await RoyaleContract.season());
-    const seasonsData = new Map<number, ThalesRoyaleData>();
     if (lastSeason === 0) {
         const [
             players,
@@ -117,7 +150,7 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             RoyaleContract.seasonStarted(0),
             RoyaleContract.seasonFinished(0),
         ]);
-        seasonsData.set(0, {
+        return {
             season: 0,
             players,
             isPlayerAlive: false,
@@ -146,22 +179,10 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             unclaimedRewardPerSeason,
             seasonStarted,
             seasonFinished,
-        });
+        };
     }
 
-    for (let i = 1; i <= lastSeason; i++) {
-        const isPlayerAliveInSpecificSeason = walletAddress
-            ? await RoyaleContract.isPlayerAliveInASpecificSeason(walletAddress, i)
-            : false;
-        const playerSignedUpPerSeason = walletAddress
-            ? await RoyaleContract.playerSignedUpPerSeason(i, walletAddress)
-            : false;
-        const rewardCollectedPerSeason = walletAddress
-            ? await RoyaleContract.rewardCollectedPerSeason(i, walletAddress)
-            : false;
-        const hasParticipatedInCurrentOrLastRoyale = walletAddress
-            ? await RoyaleContract.hasParticipatedInCurrentOrLastRoyale(walletAddress)
-            : false;
+    if (selectedSeason === 0) {
         const [
             players,
             rounds,
@@ -185,42 +206,61 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             unclaimedRewardPerSeason,
             seasonStarted,
             seasonFinished,
+            isPlayerAliveInSpecificSeason,
+            playerSignedUpPerSeason,
+            rewardCollectedPerSeason,
+            hasParticipatedInCurrentOrLastRoyale,
         ] = await Promise.all([
-            RoyaleContract.getPlayersForSeason(i),
+            RoyaleContract.getPlayersForSeason(lastSeason),
             RoyaleContract.rounds(),
             RoyaleContract.buyInAmount(),
-            RoyaleContract.roundInASeason(i),
+            RoyaleContract.roundInASeason(lastSeason),
             RoyaleContract.roundTargetPrice(),
             RoyaleContract.roundChoosingLength(),
-            RoyaleContract.roundInASeasonStartTime(i),
-            RoyaleContract.roundInSeasonEndTime(i),
+            RoyaleContract.roundInASeasonStartTime(lastSeason),
+            RoyaleContract.roundInSeasonEndTime(lastSeason),
             RoyaleContract.oracleKey(),
             RoyaleContract.priceFeed(),
-            RoyaleContract.seasonCreationTime(i),
-            RoyaleContract.royaleSeasonEndTime(i),
+            RoyaleContract.seasonCreationTime(lastSeason),
+            RoyaleContract.royaleSeasonEndTime(lastSeason),
             RoyaleContract.signUpPeriod(),
             RoyaleContract.canCloseRound(),
             RoyaleContract.canStartRoyale(),
             RoyaleContract.canStartNewSeason(),
             RoyaleContract.pauseBetweenSeasonsTime(),
-            RoyaleContract.rewardPerWinnerPerSeason(i),
-            RoyaleContract.rewardPerSeason(i),
-            RoyaleContract.unclaimedRewardPerSeason(i),
-            RoyaleContract.seasonStarted(i),
-            RoyaleContract.seasonFinished(i),
+            RoyaleContract.rewardPerWinnerPerSeason(lastSeason),
+            RoyaleContract.rewardPerSeason(lastSeason),
+            RoyaleContract.unclaimedRewardPerSeason(lastSeason),
+            RoyaleContract.seasonStarted(lastSeason),
+            RoyaleContract.seasonFinished(lastSeason),
+            RoyaleContract.isPlayerAliveInASpecificSeason(walletAddress, lastSeason),
+            RoyaleContract.playerSignedUpPerSeason(lastSeason, walletAddress),
+            RoyaleContract.rewardCollectedPerSeason(lastSeason, walletAddress),
+            RoyaleContract.hasParticipatedInCurrentOrLastRoyale(walletAddress),
         ]);
 
         const roundsInformation = [];
 
         for (let j = 1; j <= Number(roundInASeason); j++) {
             let positionAInRoundPerSeason = undefined;
-            if (walletAddress)
-                positionAInRoundPerSeason = await RoyaleContract.positionInARoundPerSeason(i, walletAddress, j);
-
-            const targetPriceInRound = await RoyaleContract.targetPricePerRoundPerSeason(i, j);
-            const finalPriceInRound = await RoyaleContract.finalPricePerRoundPerSeason(i, j);
-            const roundResultPerSeason = await RoyaleContract.roundResultPerSeason(i, j);
-            const totalPlayersPerRoundPerSeason = await RoyaleContract.totalPlayersPerRoundPerSeason(i, j);
+            if (walletAddress) {
+                positionAInRoundPerSeason = await RoyaleContract.positionInARoundPerSeason(
+                    lastSeason,
+                    walletAddress,
+                    j
+                );
+            }
+            const [
+                targetPriceInRound,
+                finalPriceInRound,
+                roundResultPerSeason,
+                totalPlayersPerRoundPerSeason,
+            ] = await Promise.all([
+                RoyaleContract.targetPricePerRoundPerSeason(lastSeason, j),
+                RoyaleContract.finalPricePerRoundPerSeason(lastSeason, j),
+                RoyaleContract.roundResultPerSeason(lastSeason, j),
+                RoyaleContract.totalPlayersPerRoundPerSeason(lastSeason, j),
+            ]);
 
             roundsInformation.push({
                 positionInRound: Number(positionAInRoundPerSeason ?? 0),
@@ -231,8 +271,8 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             });
         }
 
-        seasonsData.set(i, {
-            season: i,
+        return {
+            season: lastSeason,
             players,
             isPlayerAlive: isPlayerAliveInSpecificSeason,
             hasParticipatedInCurrentOrLastRoyale,
@@ -260,8 +300,125 @@ const getFromContract = async (RoyaleContract: ethers.Contract, walletAddress: s
             unclaimedRewardPerSeason,
             seasonStarted,
             seasonFinished,
-        });
-    }
+        };
+    } else {
+        const [
+            players,
+            rounds,
+            buyInAmount,
+            roundInASeason,
+            targetPrice,
+            roundChoosingLength,
+            roundInASeasonStartTime,
+            roundInASeasonEndTime,
+            token,
+            priceFeedAddress,
+            royaleSeasonCreationTime,
+            royaleSeasonEndTime,
+            signUpPeriod,
+            canCloseRound,
+            canStartRoyale,
+            canStartNewSeason,
+            pauseBetweenSeasonsTime,
+            rewardPerWinnerPerSeason,
+            rewardPerSeason,
+            unclaimedRewardPerSeason,
+            seasonStarted,
+            seasonFinished,
+            isPlayerAliveInSpecificSeason,
+            playerSignedUpPerSeason,
+            rewardCollectedPerSeason,
+            hasParticipatedInCurrentOrLastRoyale,
+        ] = await Promise.all([
+            RoyaleContract.getPlayersForSeason(selectedSeason),
+            RoyaleContract.rounds(),
+            RoyaleContract.buyInAmount(),
+            RoyaleContract.roundInASeason(selectedSeason),
+            RoyaleContract.roundTargetPrice(),
+            RoyaleContract.roundChoosingLength(),
+            RoyaleContract.roundInASeasonStartTime(selectedSeason),
+            RoyaleContract.roundInSeasonEndTime(selectedSeason),
+            RoyaleContract.oracleKey(),
+            RoyaleContract.priceFeed(),
+            RoyaleContract.seasonCreationTime(selectedSeason),
+            RoyaleContract.royaleSeasonEndTime(selectedSeason),
+            RoyaleContract.signUpPeriod(),
+            RoyaleContract.canCloseRound(),
+            RoyaleContract.canStartRoyale(),
+            RoyaleContract.canStartNewSeason(),
+            RoyaleContract.pauseBetweenSeasonsTime(),
+            RoyaleContract.rewardPerWinnerPerSeason(selectedSeason),
+            RoyaleContract.rewardPerSeason(selectedSeason),
+            RoyaleContract.unclaimedRewardPerSeason(selectedSeason),
+            RoyaleContract.seasonStarted(selectedSeason),
+            RoyaleContract.seasonFinished(selectedSeason),
+            RoyaleContract.isPlayerAliveInASpecificSeason(walletAddress, selectedSeason),
+            RoyaleContract.playerSignedUpPerSeason(selectedSeason, walletAddress),
+            RoyaleContract.rewardCollectedPerSeason(selectedSeason, walletAddress),
+            RoyaleContract.hasParticipatedInCurrentOrLastRoyale(walletAddress),
+        ]);
 
-    return seasonsData;
+        const roundsInformation = [];
+
+        for (let j = 1; j <= Number(roundInASeason); j++) {
+            let positionAInRoundPerSeason = undefined;
+            if (walletAddress) {
+                positionAInRoundPerSeason = await RoyaleContract.positionInARoundPerSeason(
+                    selectedSeason,
+                    walletAddress,
+                    j
+                );
+            }
+            const [
+                targetPriceInRound,
+                finalPriceInRound,
+                roundResultPerSeason,
+                totalPlayersPerRoundPerSeason,
+            ] = await Promise.all([
+                RoyaleContract.targetPricePerRoundPerSeason(selectedSeason, j),
+                RoyaleContract.finalPricePerRoundPerSeason(selectedSeason, j),
+                RoyaleContract.roundResultPerSeason(selectedSeason, j),
+                RoyaleContract.totalPlayersPerRoundPerSeason(selectedSeason, j),
+            ]);
+
+            roundsInformation.push({
+                positionInRound: Number(positionAInRoundPerSeason ?? 0),
+                targetPriceInRound: ethers.utils.formatEther(targetPriceInRound),
+                finalPriceInRound: ethers.utils.formatEther(finalPriceInRound),
+                roundResultPerSeason: Number(roundResultPerSeason ?? 0),
+                totalPlayersPerRoundPerSeason: Number(totalPlayersPerRoundPerSeason ?? 0),
+            });
+        }
+
+        return {
+            season: selectedSeason,
+            players,
+            isPlayerAlive: isPlayerAliveInSpecificSeason,
+            hasParticipatedInCurrentOrLastRoyale,
+            rounds: Number(rounds),
+            buyInAmount: Number(ethers.utils.formatEther(buyInAmount)),
+            roundInASeason: Number(roundInASeason),
+            targetPrice: ethers.utils.formatEther(targetPrice),
+            roundChoosingLength: Number(roundChoosingLength),
+            roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
+            roundInASeasonEndTime: new Date(Number(roundInASeasonEndTime) * 1000),
+            token: parseBytes32String(token),
+            roundsInformation,
+            royaleSeasonCreationTime: new Date(Number(royaleSeasonCreationTime) * 1000),
+            royaleSeasonEndTime: new Date(Number(royaleSeasonEndTime) * 1000),
+            signUpPeriod: new Date((Number(royaleSeasonCreationTime) + Number(signUpPeriod)) * 1000),
+            canCloseRound,
+            canStartRoyale,
+            canStartNewSeason,
+            pauseBetweenSeasonsTime: Number(pauseBetweenSeasonsTime),
+            priceFeedAddress,
+            playerSignedUpPerSeason,
+            rewardCollectedPerSeason,
+            rewardPerWinnerPerSeason,
+            rewardPerSeason: Number(ethers.utils.formatEther(rewardPerSeason)),
+            unclaimedRewardPerSeason,
+            seasonStarted,
+            seasonFinished,
+        };
+    }
 };

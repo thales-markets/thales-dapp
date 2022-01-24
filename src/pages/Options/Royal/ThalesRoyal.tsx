@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { getIsAppReady } from 'redux/modules/app';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -34,6 +35,7 @@ const ThalesRoyal: React.FC = () => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
@@ -46,13 +48,13 @@ const ThalesRoyal: React.FC = () => {
     const [thalesRoyaleData, setThalesRoyaleData] = useState<ThalesRoyaleData>();
     const isL2 = getIsOVM(networkId);
 
-    const royaleDataQuery = useThalesRoyaleData(walletAddress as any, {
-        enabled: isL2,
+    const royaleDataQuery = useThalesRoyaleData(walletAddress as any, selectedSeason, {
+        enabled: isL2 && isAppReady,
     });
 
-    const thalesRoyaleDataMap = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
+    const thalesRoyaleDataResponse = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
-        enabled: isL2,
+        enabled: isL2 && isAppReady,
     });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
 
@@ -60,7 +62,9 @@ const ThalesRoyal: React.FC = () => {
         (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
     )[0];
 
-    const positionsQuery = usePositionsQuery(selectedSeason, networkId, { enabled: networkId !== undefined });
+    const positionsQuery = usePositionsQuery(selectedSeason, networkId, {
+        enabled: networkId !== undefined && isAppReady,
+    });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
     const ethPriceQuery = useEthPriceQuery({
         enabled: thalesRoyaleData !== undefined,
@@ -78,23 +82,33 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (thalesRoyaleDataMap) {
+        if (thalesRoyaleDataResponse) {
             if (selectedSeason === 0) {
-                setSelectedSeason(Number(Array.from(thalesRoyaleDataMap.keys()).pop()));
+                setSelectedSeason(thalesRoyaleDataResponse.season);
+                const seasonArray: number[] = [];
+                for (let i = thalesRoyaleDataResponse.season; i >= 1; i--) {
+                    seasonArray.push(i);
+                }
+                setAllSeasons(seasonArray);
             }
-            setAllSeasons(Array.from(thalesRoyaleDataMap.keys()));
-            setThalesRoyaleData(thalesRoyaleDataMap.get(selectedSeason));
-            const lastSeason = Math.max(...Array.from(thalesRoyaleDataMap.keys()));
-            setLatestSeasonData(thalesRoyaleDataMap.get(lastSeason));
-            if (latestSeason !== lastSeason) {
-                setLatestSeason(lastSeason);
-            }
-        }
-    }, [thalesRoyaleDataMap]);
 
-    useEffect(() => {
-        selectedSeason ? setThalesRoyaleData(thalesRoyaleDataMap?.get(selectedSeason)) : '';
-    }, [selectedSeason]);
+            setThalesRoyaleData(thalesRoyaleDataResponse);
+            const lastSeason = Math.max(allSeasons) < thalesRoyaleDataResponse.season;
+            if (lastSeason) {
+                setLatestSeason(thalesRoyaleDataResponse.season);
+                setLatestSeasonData(thalesRoyaleDataResponse);
+            }
+            // setLatestSeasonData(thalesRoyaleDataResponse);
+            // if (latestSeason !== lastSeason) {
+            //     setLatestSeason(lastSeason);
+            // }
+        }
+    }, [thalesRoyaleDataResponse]);
+
+    //TODO : SWITCHING SEASONS AND UPDATING DATA
+    // useEffect(() => {
+    //     selectedSeason ? setThalesRoyaleData(thalesRoyaleDataMap?.get(selectedSeason)) : '';
+    // }, [selectedSeason]);
 
     useEffect(() => {
         latestSeason ? setSelectedSeason(latestSeason) : '';
