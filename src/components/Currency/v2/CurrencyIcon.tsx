@@ -6,12 +6,14 @@ type CurrencyIconProps = {
     currencyKey: CurrencyKey;
     synthIconStyle?: CSSProperties;
     type?: 'synth' | 'asset';
+    width?: string;
+    height?: string;
 };
 
-export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, synthIconStyle, ...rest }) => {
+export const CurrencyIcon: React.FC<CurrencyIconProps> = ({ currencyKey, width, height, synthIconStyle, ...rest }) => {
     const props = {
-        width: '24px',
-        height: '24px',
+        width: width ? width : '24px',
+        height: height ? height : '24px',
         alt: currencyKey,
         ...rest,
     };

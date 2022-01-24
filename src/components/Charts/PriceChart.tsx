@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import { ResponsiveContainer, AreaChart, Area, YAxis } from 'recharts';
 import { formatPricePercentageGrowth, calculatePercentageChange } from 'utils/formatters/number';
@@ -19,9 +19,18 @@ type PriceChartProps = {
     width?: number;
     height?: number;
     showHeading?: boolean;
+    containerStyle?: CSSProperties;
 };
 
-const PriceChart: React.FC<PriceChartProps> = ({ coin, currencyVs, days, width, height, showHeading }) => {
+const PriceChart: React.FC<PriceChartProps> = ({
+    coin,
+    currencyVs,
+    days,
+    width,
+    height,
+    showHeading,
+    containerStyle,
+}) => {
     const { t } = useTranslation();
 
     const priceData = usePriceDataQuery({ coin, currencyVs, days }, { enabled: true });
@@ -46,7 +55,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ coin, currencyVs, days, width, 
     const lastPrice = processedPriceData ? processedPriceData[0].price : 0;
 
     return (
-        <ChartWrapper>
+        <ChartWrapper style={{ ...containerStyle }}>
             {processedPriceData && showHeading && (
                 <ChartHeader>
                     <CoinName>{coin + ' price:'}</CoinName>
@@ -99,7 +108,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ coin, currencyVs, days, width, 
 const ChartWrapper = styled.div`
     width: 100%;
     text-align: center;
-    margin: 18px 0px 18px 0px;
+    margin: 0px 0px 0px 0px;
 `;
 
 const ChartHeader = styled.div`

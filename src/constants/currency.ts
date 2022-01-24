@@ -255,5 +255,34 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
 };
 
+export const currencyKeyToCoinGeckoIndexMap = {
+    [CRYPTO_CURRENCY_MAP.KNC]: 'kyber-network-crystal',
+    [CRYPTO_CURRENCY_MAP.COMP]: 'compound-coin',
+    [CRYPTO_CURRENCY_MAP.REN]: 'republic-protocol',
+    [CRYPTO_CURRENCY_MAP.LEND]: 'ethlend',
+    [CRYPTO_CURRENCY_MAP.SNX]: 'havven',
+    [CRYPTO_CURRENCY_MAP.BTC]: 'bitcoin',
+    [CRYPTO_CURRENCY_MAP.ETH]: 'ethereum',
+    [CRYPTO_CURRENCY_MAP.XRP]: 'ripple',
+    [CRYPTO_CURRENCY_MAP.BCH]: 'binance-peg-bitcoin-cash',
+    [CRYPTO_CURRENCY_MAP.LTC]: 'binance-peg-litecoin',
+    [CRYPTO_CURRENCY_MAP.EOS]: 'eos',
+    [CRYPTO_CURRENCY_MAP.BNB]: 'oec-binance-coin',
+    [CRYPTO_CURRENCY_MAP.XTZ]: 'tezos',
+    [CRYPTO_CURRENCY_MAP.XMR]: 'monero',
+    [CRYPTO_CURRENCY_MAP.ADA]: 'binance-peg-cardano',
+    [CRYPTO_CURRENCY_MAP.LINK]: 'chainlink',
+    [CRYPTO_CURRENCY_MAP.TRX]: 'tron',
+    [CRYPTO_CURRENCY_MAP.DASH]: 'dash',
+    [CRYPTO_CURRENCY_MAP.ETC]: 'ethereum-classic',
+    [CRYPTO_CURRENCY_MAP.BAT]: 'basic-attention-token',
+    [CRYPTO_CURRENCY_MAP.DAI]: 'dai',
+    [CRYPTO_CURRENCY_MAP.REP]: 'augur',
+    [CRYPTO_CURRENCY_MAP.USDC]: 'usd-coin',
+    [CRYPTO_CURRENCY_MAP.USDT]: 'tether',
+    [CRYPTO_CURRENCY_MAP.VELO]: 'velo',
+    [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
+};
+
 export const sUSD_EXCHANGE_RATE = 1;
 export const SYNTH_DECIMALS = 18;
