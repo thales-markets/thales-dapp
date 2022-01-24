@@ -2,34 +2,35 @@ import React, { useEffect } from 'react';
 import Unity, { UnityContext } from 'react-unity-webgl';
 import styled from 'styled-components';
 import fullScreenImage from 'assets/images/full_screen_icon.png';
-import { isNetworkSupported } from '../../../utils/network';
 import { Background, FlexDivColumn, Wrapper } from '../../../theme/common';
 import MarketHeader from '../Home/MarketHeader';
 import ROUTES from '../../../constants/routes';
-import Loader from '../../../components/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { getNetworkId, getWalletAddress } from '../../../redux/modules/wallet';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { isNetworkSupported } from '../../../utils/network';
+import Loader from '../../../components/Loader';
+
+const unityContext = new UnityContext({
+    loaderUrl: '/miletus-game/build.loader.js',
+    dataUrl: '/miletus-game/build.data.unityweb',
+    frameworkUrl: '/miletus-game/build.framework.js.unityweb',
+    codeUrl: '/miletus-game/build.wasm.unityweb',
+});
 
 const Game: React.FC = () => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-
-    const unityContext = new UnityContext({
-        loaderUrl: '/miletus-game/build.loader.js',
-        dataUrl: '/miletus-game/build.data',
-        frameworkUrl: '/miletus-game/build.framework.js',
-        codeUrl: '/miletus-game/build.wasm',
-    });
+    const networkId = useSelector((state: RootState) => getNetworkId(state));
 
     const handleOnClickFullscreen = () => {
         unityContext.setFullscreen(true);
     };
 
     useEffect(() => {
+        unityContext.removeEventListener('StartGame');
         unityContext.on('StartGame', async () => {
             if (walletAddress) {
                 await axios.post('https://api.thales.market/game-started', {
@@ -42,6 +43,7 @@ const Game: React.FC = () => {
     }, [walletAddress]);
 
     useEffect(() => {
+        unityContext.removeEventListener('EndGame');
         unityContext.on('EndGame', async () => {
             if (walletAddress) {
                 await axios.post('https://api.thales.market/game-ended', {
@@ -53,29 +55,31 @@ const Game: React.FC = () => {
         });
     }, [walletAddress]);
 
-    return isNetworkSupported(networkId) ? (
+    return (
         <Background style={{ minHeight: '100vh' }}>
             <Wrapper>
-                <Container className="game" style={{ zIndex: 10 }}>
-                    <MarketHeader route={ROUTES.Options.Game} />
-                    {!walletAddress && <WalletMessage>{t('game.connect-wallet-warning')}</WalletMessage>}
-                    <CenterGame>
-                        <GameWrapper>
-                            <Unity
-                                unityContext={unityContext}
-                                style={{
-                                    height: 'auto',
-                                    width: '100%',
-                                }}
-                            />
-                            <FullScreenButton onClick={handleOnClickFullscreen} src={fullScreenImage} />
-                        </GameWrapper>
-                    </CenterGame>
-                </Container>
+                {!walletAddress || (networkId && isNetworkSupported(networkId)) ? (
+                    <Container className="game" style={{ zIndex: 10 }}>
+                        <MarketHeader route={ROUTES.Options.Game} />
+                        {!walletAddress && <WalletMessage>{t('game.connect-wallet-warning')}</WalletMessage>}
+                        <CenterGame>
+                            <GameWrapper>
+                                <Unity
+                                    unityContext={unityContext}
+                                    style={{
+                                        height: 'auto',
+                                        width: '100%',
+                                    }}
+                                />
+                                <FullScreenButton onClick={handleOnClickFullscreen} src={fullScreenImage} />
+                            </GameWrapper>
+                        </CenterGame>
+                    </Container>
+                ) : (
+                    <Loader />
+                )}
             </Wrapper>
         </Background>
-    ) : (
-        <Loader />
     );
 };
 
