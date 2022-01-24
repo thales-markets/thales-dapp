@@ -1192,5 +1192,16 @@
     },
     "game": {
         "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
+    },
+    "migration": {
+        "migration-opt-out-notice": {
+            "opt-out-text": "As a THALES staker, we will automatically migrate your THALES tokens to L2. If you want to keep them on L1, you have 7 days to inform us by opting out.",
+            "cancel-opt-out-text": "You have agreed to migrate your tokens manually. You still have time to cancel and allow us to migrate your THALES tokens automatically.",
+            "button": {
+                "opt-out-label": "Opt-out",
+                "cancel-opt-out-label": "Cancel opt-out",
+                "progress-label": "Submitting in progress..."
+            }
+        }
     }
 }
