@@ -9,7 +9,7 @@ export const thalesRoyaleContract = {
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: '0x3A219D05a72D1c4f26DC5442baEAbe6943576D5A',
+        [NetworkId['Kovan-Ovm']]: '0x1Bd47601C17cEfFbd2e0D72c9Df1B6C9f9300303',
     },
     abi: [
         {
@@ -119,6 +119,10 @@ export const thalesRoyaleContract = {
                 { indexed: false, internalType: 'uint256', name: 'season', type: 'uint256' },
                 { indexed: false, internalType: 'uint256', name: 'round', type: 'uint256' },
                 { indexed: false, internalType: 'uint256', name: 'result', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'strikePrice', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'finalPrice', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'numberOfEliminatedPlayers', type: 'uint256' },
+                { indexed: false, internalType: 'uint256', name: 'numberOfWinningPlayers', type: 'uint256' },
             ],
             name: 'RoundClosed',
             type: 'event',
@@ -194,6 +198,13 @@ export const thalesRoyaleContract = {
         {
             inputs: [],
             name: 'canCloseRound',
+            outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            inputs: [],
+            name: 'canSeasonBeAutomaticallyStartedAfterSomePeriod',
             outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
             stateMutability: 'view',
             type: 'function',
