@@ -8,6 +8,8 @@ import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
+import gameDefaultIcon from 'assets/images/sidebar/game-default.svg';
+import gameSelectedIcon from 'assets/images/sidebar/game-selected.svg';
 // import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
 // import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
@@ -304,8 +306,8 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     </SPAAnchor>
                     <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
                         <SidebarItem
-                            imgSrc={marketOverviewDefaultIcon}
-                            imgSrcHoverSelected={marketOverviewSelectedIcon}
+                            imgSrc={gameDefaultIcon}
+                            imgSrcHoverSelected={gameSelectedIcon}
                             className={route === ROUTES.Options.Game ? 'selected' : ''}
                         >
                             <SidebarIcon />
