@@ -8,6 +8,8 @@ import { Button, FlexDiv, FlexDivColumn, Logo } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
 import UserInfo from 'components/UserInfo';
 import CustomizeLayout from 'pages/Options/Market/components/CustomizeLayout';
+import gameDefaultIcon from 'assets/images/sidebar/game-default.svg';
+import gameSelectedIcon from 'assets/images/sidebar/game-selected.svg';
 // import createMarketDefaultIcon from 'assets/images/sidebar/create-market-default.svg';
 import marketOverviewDefaultIcon from 'assets/images/sidebar/market-overview-default.svg';
 // import createMarketSelectedIcon from 'assets/images/sidebar/create-market-selected.svg';
@@ -27,8 +29,6 @@ import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-sele
 // import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
 import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
 import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
-import gameDefaultIcon from 'assets/images/sidebar/game-default.svg';
-import gameSelectedIcon from 'assets/images/sidebar/game-selected.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
 import logoIcon from 'assets/images/logo-dark.svg';
 import ROUTES from 'constants/routes';
