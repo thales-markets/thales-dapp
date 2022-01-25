@@ -17,6 +17,19 @@ export const stakingThales = {
             inputs: [
                 {
                     indexed: false,
+                    internalType: 'uint256',
+                    name: 'ammVolumeRewardsMultiplier',
+                    type: 'uint256',
+                },
+            ],
+            name: 'AMMVolumeRewardsMultiplierChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
                     internalType: 'address',
                     name: 'account',
                     type: 'address',
@@ -158,6 +171,45 @@ export const stakingThales = {
                 },
             ],
             name: 'FixedPeriodRewardChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'maxAmmVolumeRewardsPercentage',
+                    type: 'uint256',
+                },
+            ],
+            name: 'MaxAMMVolumeRewardsPercentageChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'maxSnxRewardsPercentage',
+                    type: 'uint256',
+                },
+            ],
+            name: 'MaxSNXRewardsPercentageChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'uint256',
+                    name: 'maxThalesRewardsPercentage',
+                    type: 'uint256',
+                },
+            ],
+            name: 'MaxThalesRoyaleRewardsPercentageChanged',
             type: 'event',
         },
         {
@@ -358,6 +410,19 @@ export const stakingThales = {
                 {
                     indexed: false,
                     internalType: 'address',
+                    name: 'thalesStakingRewardsPool',
+                    type: 'address',
+                },
+            ],
+            name: 'ThalesStakingRewardsPoolChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
                     name: 'account',
                     type: 'address',
                 },
@@ -412,10 +477,40 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
+            name: 'AMMVolumeRewardsMultiplier',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'SNXRewards',
             outputs: [
                 {
                     internalType: 'contract ISNXRewards',
+                    name: '',
+                    type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'ThalesStakingRewardsPool',
+            outputs: [
+                {
+                    internalType: 'contract IThalesStakingRewardsPool',
                     name: '',
                     type: 'address',
                 },
@@ -431,6 +526,21 @@ export const stakingThales = {
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'canClosePeriod',
+            outputs: [
+                {
+                    internalType: 'bool',
+                    name: '',
+                    type: 'bool',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
             type: 'function',
         },
         {
@@ -983,6 +1093,51 @@ export const stakingThales = {
             type: 'function',
         },
         {
+            constant: true,
+            inputs: [],
+            name: 'maxAMMVolumeRewardsPercentage',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'maxSNXRewardsPercentage',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'maxThalesRoyaleRewardsPercentage',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
             constant: false,
             inputs: [
                 {
@@ -1091,6 +1246,21 @@ export const stakingThales = {
             constant: false,
             inputs: [
                 {
+                    internalType: 'uint256',
+                    name: '_AMMVolumeRewardsMultiplier',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setAMMVolumeRewardsMultiplier',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
                     internalType: 'bool',
                     name: '_claimEnabled',
                     type: 'bool',
@@ -1172,6 +1342,51 @@ export const stakingThales = {
                 },
             ],
             name: 'setFixedPeriodReward',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_maxAMMVolumeRewardsPercentage',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setMaxAMMVolumeRewardsPercentage',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_maxSNXRewardsPercentage',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setMaxSNXRewardsPercentage',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_maxThalesRoyaleRewardsPercentage',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setMaxThalesRoyaleRewardsPercentage',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',
@@ -1277,6 +1492,21 @@ export const stakingThales = {
                 },
             ],
             name: 'setThalesRoyale',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_thalesStakingRewardsPool',
+                    type: 'address',
+                },
+            ],
+            name: 'setThalesStakingRewardsPool',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

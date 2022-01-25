@@ -445,7 +445,7 @@ const UnstakingContainer = styled(FlexDivRowCentered)`
 `;
 
 const UnstakingPeriodWrapper = styled(FlexDivColumnCentered)`
-    border: nonee;
+    border: none;
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     border-radius: 10px;
     padding: 1px;

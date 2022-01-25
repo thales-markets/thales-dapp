@@ -7,12 +7,11 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
-import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
 import { ethers } from 'ethers';
-import { StakingReward } from 'types/token';
+import { MigratedReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { refetchOngoingAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchMigratedRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
 import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader, StyledMaterialTooltip } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -25,6 +24,7 @@ import {
     StakingRewardsLabel,
     GridAction,
 } from '../../gridComponents';
+import useMigratedRewardsQuery from 'queries/token/useMigratedRewardsQuery';
 
 type Properties = {
     escrowedBalance: number;
@@ -38,7 +38,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
+    const [migratedRewards, setMigratedRewards] = useState<MigratedReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
@@ -47,34 +47,34 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
     const { ongoingAirdropContract } = snxJSConnector as any;
 
     const isClaimAvailable =
-        ongoingAirdrop &&
-        ongoingAirdrop.reward &&
-        ongoingAirdrop.hasClaimRights &&
-        !ongoingAirdrop.claimed &&
-        !ongoingAirdrop.isClaimPaused;
+        migratedRewards &&
+        migratedRewards.reward &&
+        migratedRewards.hasClaimRights &&
+        !migratedRewards.claimed &&
+        !migratedRewards.isClaimPaused;
 
-    const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
+    const migratedRewardsQuery = useMigratedRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
     });
 
     useEffect(() => {
-        if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
-            setOngoingAirdrop(ongoingAirdropQuery.data);
+        if (migratedRewardsQuery.isSuccess && migratedRewardsQuery.data) {
+            setMigratedRewards(migratedRewardsQuery.data);
         }
-    }, [ongoingAirdropQuery.isSuccess, ongoingAirdropQuery.data]);
+    }, [migratedRewardsQuery.isSuccess, migratedRewardsQuery.data]);
 
     useEffect(() => {
-        const fetchL1Fee = async (ongoingAirdropContractWithSigner: any, ongoingAirdrop: any) => {
+        const fetchL1Fee = async (ongoingAirdropContractWithSigner: any, migratedRewards: any) => {
             const txRequest = await ongoingAirdropContractWithSigner.populateTransaction.claim(
-                ongoingAirdrop.reward.index,
-                ongoingAirdrop.reward.rawBalance,
-                ongoingAirdrop.reward.proof
+                migratedRewards.reward.index,
+                migratedRewards.reward.rawBalance,
+                migratedRewards.reward.proof
             );
             return getL1FeeInWei(txRequest);
         };
 
         const fetchGasLimit = async () => {
-            if (ongoingAirdrop && ongoingAirdrop.reward) {
+            if (migratedRewards && migratedRewards.reward) {
                 try {
                     const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect(
                         (snxJSConnector as any).signer
@@ -82,19 +82,19 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                     if (isL2) {
                         const [gasEstimate, l1FeeInWei] = await Promise.all([
                             ongoingAirdropContractWithSigner.estimateGas.claim(
-                                ongoingAirdrop.reward.index,
-                                ongoingAirdrop.reward.rawBalance,
-                                ongoingAirdrop.reward.proof
+                                migratedRewards.reward.index,
+                                migratedRewards.reward.rawBalance,
+                                migratedRewards.reward.proof
                             ),
-                            fetchL1Fee(ongoingAirdropContractWithSigner, ongoingAirdrop),
+                            fetchL1Fee(ongoingAirdropContractWithSigner, migratedRewards),
                         ]);
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setL1Fee(l1FeeInWei);
                     } else {
                         const gasEstimate = await ongoingAirdropContractWithSigner.estimateGas.claim(
-                            ongoingAirdrop.reward.index,
-                            ongoingAirdrop.reward.rawBalance,
-                            ongoingAirdrop.reward.proof
+                            migratedRewards.reward.index,
+                            migratedRewards.reward.rawBalance,
+                            migratedRewards.reward.proof
                         );
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                     }
@@ -110,15 +110,15 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
 
     const handleClaimOngoingAirdrop = async () => {
         setShowTooltip(false);
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward) {
+        if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
                 const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
                 const tx = (await ongoingAirdropContractWithSigner.claim(
-                    ongoingAirdrop.reward.index,
-                    ongoingAirdrop.reward.rawBalance,
-                    ongoingAirdrop.reward.proof,
+                    migratedRewards.reward.index,
+                    migratedRewards.reward.rawBalance,
+                    migratedRewards.reward.proof,
                     {
                         gasLimit,
                     }
@@ -127,13 +127,13 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(t('options.earn.thales-staking.staking-rewards.confirmation-message'));
-                    refetchOngoingAirdrop(walletAddress, networkId);
+                    refetchMigratedRewards(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
-                    setOngoingAirdrop({
-                        ...ongoingAirdrop,
+                    setMigratedRewards({
+                        ...migratedRewards,
                         claimed: true,
                     });
-                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(ongoingAirdrop.reward.rawBalance));
+                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(migratedRewards.reward.rawBalance));
                     setIsClaiming(false);
                 }
             } catch (e) {
@@ -144,7 +144,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
         }
     };
 
-    const balance = isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.balance : 0;
+    const balance = isClaimAvailable && migratedRewards && migratedRewards.reward ? migratedRewards.reward.balance : 0;
 
     return (
         <EarnSection
@@ -159,7 +159,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
             <GridContainer>
                 <StakingRewardsItem style={{ gridColumn: 'span 12' }}>
                     <StakingRewardsLabel color="#64D9FE">Thales staking</StakingRewardsLabel>
-                    <StakingRewardsContent>300 opTHALES</StakingRewardsContent>
+                    <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
                 </StakingRewardsItem>
                 <GridAction>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
@@ -187,20 +187,20 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                                       ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
                             </Button>
                         </StyledMaterialTooltip>
-                        {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
+                        {migratedRewards && migratedRewards.isClaimPaused && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}
                             </ClaimMessage>
                         )}
-                        {ongoingAirdrop && !ongoingAirdrop.isClaimPaused && !ongoingAirdrop.hasClaimRights && (
+                        {migratedRewards && !migratedRewards.isClaimPaused && !migratedRewards.hasClaimRights && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
                             </ClaimMessage>
                         )}
-                        {ongoingAirdrop &&
-                            ongoingAirdrop.hasClaimRights &&
-                            !ongoingAirdrop.isClaimPaused &&
-                            ongoingAirdrop.claimed && (
+                        {migratedRewards &&
+                            migratedRewards.hasClaimRights &&
+                            !migratedRewards.isClaimPaused &&
+                            migratedRewards.claimed && (
                                 <ClaimMessage>
                                     {t('options.earn.thales-staking.staking-rewards.claimed-message')}
                                 </ClaimMessage>

@@ -349,22 +349,15 @@
                 },
                 "staking-rewards": {
                     "title": "质押奖励",
-                    "amount-to-claim-snx": "作为snx质押用户",
-                    "amount-to-claim-thales": "作为",
                     "period": "期间",
-                    "weekly-rewards": "每周奖励",
                     "total": "总计",
-                    "previous-period": "来自上期",
                     "claim": "领取",
                     "claiming": "领取",
                     "claimed-message": "您已经声明了本周的奖励，请下周再来。",
                     "not-eligible-message": "您没有资格获得这些奖励。",
                     "paused-message": "已暂停，请稍后再试。",
                     "confirmation-message": "代币成功认领",
-                    "learn-more-text": "奖励每周发放。如果您在给定的一周内没有申领，您的奖励将结转并在下周提供给您。申领的奖励将有10周的解锁期。在解锁期内，您的托管金额将包含在您的质押金额中，从而有效地为您赢得更多的投票权和奖励。",
-                    "learn-more": "了解更多",
-                    "button-tooltip": "奖励有10周的解锁期.",
-                    "snx-rewards-paused-tooltip": "<0>暂时停止向 SNX 质押者进行的 THALES 分发。更多详情 </0><1 />."
+                    "button-tooltip": "奖励有10周的解锁期."
                 }
             },
             "vesting": {

@@ -54,8 +54,12 @@ export const refetchRetroAirdrop = (walletAddress: string, networkId: NetworkId)
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.RetroAirdrop(walletAddress, networkId));
 };
 
-export const refetchOngoingAirdrop = (walletAddress: string, networkId: NetworkId) => {
-    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId));
+export const refetchStakingRewards = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingRewards(walletAddress, networkId));
+};
+
+export const refetchMigratedRewards = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId));
 };
 
 export const refetchVestingBalance = (walletAddress: string, networkId: NetworkId) => {

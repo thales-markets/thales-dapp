@@ -3,18 +3,18 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
-import { StakingReward } from 'types/token';
+import { MigratedReward } from 'types/token';
 import { getOngoingAirdropHashesURL } from 'utils/token';
 
 const BALANCE_THRESHOLD = 0.0001;
 
-const useOngoingAirdropQuery = (
+const useMigratedRewardsQuery = (
     walletAddress: string,
     networkId: NetworkId,
-    options?: UseQueryOptions<StakingReward>
+    options?: UseQueryOptions<MigratedReward>
 ) => {
-    return useQuery<StakingReward>(
-        QUERY_KEYS.WalletBalances.OngoingAirdrop(walletAddress, networkId),
+    return useQuery<MigratedReward>(
+        QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId),
         async () => {
             const [paused, period, lastPeriodTimeStamp, durationPeriod] = await Promise.all([
                 (snxJSConnector as any).ongoingAirdropContract.paused(),
@@ -35,7 +35,7 @@ const useOngoingAirdropQuery = (
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
             );
 
-            const airdrop: StakingReward = {
+            const migratedRewards: MigratedReward = {
                 isClaimPaused: paused || !isHashFileAvailable,
                 hasClaimRights: ongoingAirdropHash !== undefined && ongoingAirdropHash.balance !== '0',
                 claimed: true,
@@ -50,7 +50,7 @@ const useOngoingAirdropQuery = (
                     bigNumberFormatter(ongoingAirdropHash.balance) -
                     bigNumberFormatter(ongoingAirdropHash.stakingBalance || 0) -
                     bigNumberFormatter(ongoingAirdropHash.previousBalance || 0);
-                airdrop.reward = {
+                migratedRewards.reward = {
                     rawBalance: ongoingAirdropHash.balance,
                     balance,
                     previousBalance,
@@ -59,12 +59,12 @@ const useOngoingAirdropQuery = (
                     index: ongoingAirdropHash.index,
                     proof: ongoingAirdropHash.proof,
                 };
-                airdrop.claimed = !(await (snxJSConnector as any).ongoingAirdropContract.canClaim(
+                migratedRewards.claimed = !(await (snxJSConnector as any).ongoingAirdropContract.canClaim(
                     ongoingAirdropHash.index
                 ));
             }
 
-            return airdrop;
+            return migratedRewards;
         },
         {
             refetchInterval: 5000,
@@ -73,4 +73,4 @@ const useOngoingAirdropQuery = (
     );
 };
 
-export default useOngoingAirdropQuery;
+export default useMigratedRewardsQuery;

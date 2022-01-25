@@ -9,12 +9,6 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
-        OngoingAirdrop: (walletAddress: string, networkId: NetworkId) => [
-            'walletBalances',
-            'ongoingAirdrop',
-            walletAddress,
-            networkId,
-        ],
         Synths: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'synths', walletAddress, networkId],
         ETH: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'ETH', walletAddress, networkId],
         Tokens: (walletAddress: string, networkId: NetworkId) => ['walletBalances', 'tokens', walletAddress, networkId],
@@ -115,6 +109,18 @@ export const QUERY_KEYS = {
             networkId,
         ],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
+        StakingRewards: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'stakingRewards',
+            walletAddress,
+            networkId,
+        ],
+        MigratedRewards: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'migratedRewards',
+            walletAddress,
+            networkId,
+        ],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],

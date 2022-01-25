@@ -61,6 +61,27 @@ export type VestingScheduleItem = {
 
 export type VestingSchedule = VestingScheduleItem[];
 
+export type StakingReward = {
+    closingDate: number;
+    period: number;
+    isClaimPaused: boolean;
+    hasClaimRights: boolean;
+    claimed: boolean;
+    rewards: number;
+    rawRewards: string;
+    baseRewards: number;
+    totalBonus: number;
+    snxBonus: number;
+    ammBonus: number;
+    thalesRoyaleBonus: number;
+    maxSnxBonusPercentage: number;
+    maxAmmBonusPercentage: number;
+    maxThalesRoyaleBonusPercentage: number;
+    maxSnxBonus: number;
+    maxAmmBonus: number;
+    maxThalesRoyaleBonus: number;
+};
+
 type Reward = {
     balance: number;
     rawBalance: string;
@@ -71,7 +92,7 @@ type Reward = {
     proof: string[];
 };
 
-export type StakingReward = {
+export type MigratedReward = {
     closingDate: number;
     period: number;
     isClaimPaused: boolean;

@@ -7,16 +7,22 @@ import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modu
 import { getIsAppReady } from 'redux/modules/app';
 import snxJSConnector from 'utils/snxJSConnector';
 import ValidationMessage from 'components/ValidationMessage/ValidationMessage';
-import useOngoingAirdropQuery from 'queries/walletBalances/useOngoingAirdropQuery';
 import { ethers } from 'ethers';
 import { StakingReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { refetchOngoingAirdrop, refetchUserTokenTransactions } from 'utils/queryConnector';
-import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader, StyledMaterialTooltip } from '../../components';
+import { refetchStakingRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
+import {
+    BonusRewardButton,
+    BonusRewardInnerButton,
+    ButtonContainer,
+    ClaimMessage,
+    EarnSection,
+    SectionHeader,
+    StyledMaterialTooltip,
+} from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import {
@@ -25,78 +31,65 @@ import {
     StakingRewardsItem,
     StakingRewardsLabel,
     GridAction,
+    StakingRewardsNotice,
+    StakingRewardsHeaderLabel,
 } from '../../gridComponents';
+import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';
 
-type Properties = {
+type StakingRewardsProps = {
     escrowedBalance: number;
     setEscrowedBalance: (escrowed: number) => void;
 };
 
-const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBalance }) => {
+const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEscrowedBalance }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
-    const [ongoingAirdrop, setOngoingAirdrop] = useState<StakingReward | undefined>(undefined);
+    const [stakingRewards, setStakingRewards] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
     const isL2 = getIsOVM(networkId);
-    const { ongoingAirdropContract } = snxJSConnector as any;
+    const { stakingThalesContract } = snxJSConnector as any;
 
     const isClaimAvailable =
-        ongoingAirdrop &&
-        ongoingAirdrop.reward &&
-        ongoingAirdrop.hasClaimRights &&
-        !ongoingAirdrop.claimed &&
-        !ongoingAirdrop.isClaimPaused;
+        stakingRewards && stakingRewards.hasClaimRights && !stakingRewards.claimed && !stakingRewards.isClaimPaused;
 
-    const ongoingAirdropQuery = useOngoingAirdropQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
+    const stakingRewardsQuery = useStakingRewardsQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected && !!stakingThalesContract,
     });
 
     useEffect(() => {
-        if (ongoingAirdropQuery.isSuccess && ongoingAirdropQuery.data) {
-            setOngoingAirdrop(ongoingAirdropQuery.data);
+        if (stakingRewardsQuery.isSuccess && stakingRewardsQuery.data) {
+            setStakingRewards(stakingRewardsQuery.data);
         }
-    }, [ongoingAirdropQuery.isSuccess, ongoingAirdropQuery.data]);
+    }, [stakingRewardsQuery.isSuccess, stakingRewardsQuery.data]);
 
     useEffect(() => {
-        const fetchL1Fee = async (ongoingAirdropContractWithSigner: any, ongoingAirdrop: any) => {
-            const txRequest = await ongoingAirdropContractWithSigner.populateTransaction.claim(
-                ongoingAirdrop.reward.index,
-                ongoingAirdrop.reward.rawBalance,
-                ongoingAirdrop.reward.proof
-            );
+        const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
+            const txRequest = await stakingThalesContractWithSigner.populateTransaction.claimReward();
             return getL1FeeInWei(txRequest);
         };
 
         const fetchGasLimit = async () => {
-            if (ongoingAirdrop && ongoingAirdrop.reward) {
+            if (stakingRewards) {
                 try {
-                    const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect(
+                    const stakingThalesContractWithSigner = stakingThalesContract.connect(
                         (snxJSConnector as any).signer
                     );
                     if (isL2) {
                         const [gasEstimate, l1FeeInWei] = await Promise.all([
-                            ongoingAirdropContractWithSigner.estimateGas.claim(
-                                ongoingAirdrop.reward.index,
-                                ongoingAirdrop.reward.rawBalance,
-                                ongoingAirdrop.reward.proof
-                            ),
-                            fetchL1Fee(ongoingAirdropContractWithSigner, ongoingAirdrop),
+                            stakingThalesContractWithSigner.estimateGas.claimReward(),
+                            fetchL1Fee(stakingThalesContractWithSigner),
                         ]);
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                         setL1Fee(l1FeeInWei);
                     } else {
-                        const gasEstimate = await ongoingAirdropContractWithSigner.estimateGas.claim(
-                            ongoingAirdrop.reward.index,
-                            ongoingAirdrop.reward.rawBalance,
-                            ongoingAirdrop.reward.proof
-                        );
+                        const gasEstimate = await stakingThalesContractWithSigner.estimateGas.claimReward();
                         setGasLimit(formatGasLimit(gasEstimate, networkId));
                     }
                 } catch (e) {
@@ -105,36 +98,31 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                 }
             }
         };
-        if (!isWalletConnected || !isClaimAvailable || !ongoingAirdropContract) return;
+        if (!isWalletConnected || !isClaimAvailable || !stakingThalesContract) return;
         fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable, ongoingAirdropContract]);
+    }, [isWalletConnected, isClaimAvailable, stakingThalesContract]);
 
     const handleClaimOngoingAirdrop = async () => {
         setShowTooltip(false);
-        if (isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward) {
+        if (isClaimAvailable && stakingRewards) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
-                const ongoingAirdropContractWithSigner = ongoingAirdropContract.connect((snxJSConnector as any).signer);
-                const tx = (await ongoingAirdropContractWithSigner.claim(
-                    ongoingAirdrop.reward.index,
-                    ongoingAirdrop.reward.rawBalance,
-                    ongoingAirdrop.reward.proof,
-                    {
-                        gasLimit,
-                    }
-                )) as ethers.ContractTransaction;
+                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+                const tx = (await stakingThalesContractWithSigner.claimReward({
+                    gasLimit,
+                })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(t('options.earn.thales-staking.staking-rewards.confirmation-message'));
-                    refetchOngoingAirdrop(walletAddress, networkId);
+                    refetchStakingRewards(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
-                    setOngoingAirdrop({
-                        ...ongoingAirdrop,
+                    setStakingRewards({
+                        ...stakingRewards,
                         claimed: true,
                     });
-                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(ongoingAirdrop.reward.rawBalance));
+                    setEscrowedBalance(escrowedBalance + stakingRewards.rewards);
                     setIsClaiming(false);
                 }
             } catch (e) {
@@ -145,13 +133,14 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
         }
     };
 
-    const balance = isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.balance : 0;
-    // const stakingBalance =
-    //     isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.stakingBalance : 0;
-    // const snxBalance =
-    //     isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.snxBalance : 0;
-    // const previousBalance =
-    //     isClaimAvailable && ongoingAirdrop && ongoingAirdrop.reward ? ongoingAirdrop.reward.previousBalance : 0;
+    const rewards = isClaimAvailable && stakingRewards ? stakingRewards.rewards : 0;
+    const baseRewards = isClaimAvailable && stakingRewards ? stakingRewards.baseRewards : 0;
+    const snxBonus = isClaimAvailable && stakingRewards ? stakingRewards.snxBonus : 0;
+    const ammBonus = isClaimAvailable && stakingRewards ? stakingRewards.ammBonus : 0;
+    const thalesRoyaleBonus = isClaimAvailable && stakingRewards ? stakingRewards.thalesRoyaleBonus : 0;
+    const maxSnxBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxSnxBonus : 0;
+    const maxAmmBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonus : 0;
+    const maxThalesRoyaleBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonus : 0;
 
     return (
         <EarnSection
@@ -163,37 +152,81 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                 <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
                 <div>
                     {t('options.earn.thales-staking.staking-rewards.period')}:{' '}
-                    {ongoingAirdrop ? (
-                        <TimeRemaining end={ongoingAirdrop.closingDate} fontSize={20} showFullCounter />
+                    {stakingRewards ? (
+                        <TimeRemaining end={stakingRewards.closingDate} fontSize={20} showFullCounter />
                     ) : (
                         '-'
                     )}
                 </div>
             </SectionHeader>
             <GridContainer>
-                <StakingRewardsItem style={{ padding: 15 }}>Weekly rewards</StakingRewardsItem>
-                <StakingRewardsItem style={{ gridColumn: 'span 9', padding: 15 }}>Bonus rewards</StakingRewardsItem>
+                <StakingRewardsItem style={{ padding: 15 }}>
+                    <StakingRewardsHeaderLabel>
+                        {t('options.earn.thales-staking.staking-rewards.weekly-base-rewards')}
+                    </StakingRewardsHeaderLabel>
+                    <StakingRewardsNotice>70.000 THALES</StakingRewardsNotice>
+                </StakingRewardsItem>
+                <StakingRewardsItem style={{ gridColumn: 'span 9', padding: 15 }}>
+                    <StakingRewardsHeaderLabel>
+                        {t('options.earn.thales-staking.staking-rewards.weekly-bonus-rewards')}
+                    </StakingRewardsHeaderLabel>
+                    <StakingRewardsNotice>21.000 THALES</StakingRewardsNotice>
+                </StakingRewardsItem>
                 <StakingRewardsItem>
-                    <StakingRewardsLabel color="#64D9FE">Thales staking</StakingRewardsLabel>
-                    <StakingRewardsContent>300 opTHALES</StakingRewardsContent>
+                    <StakingRewardsLabel color="#64D9FE">
+                        {t('options.earn.thales-staking.staking-rewards.thales-staking-label')}
+                    </StakingRewardsLabel>
+                    <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, baseRewards)}</StakingRewardsContent>
                 </StakingRewardsItem>
                 <StakingRewardsItem>
                     <StakingRewardsLabel color="linear-gradient(154.67deg, #1AAB9B 17.5%, #64D9FE 95.42%)">
-                        SNX staking
+                        {t('options.earn.thales-staking.staking-rewards.snx-staking-label')}
                     </StakingRewardsLabel>
-                    <StakingRewardsContent>50 opTHALES</StakingRewardsContent>
+                    <StakingRewardsNotice>
+                        {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
+                            max: formatCurrencyWithKey(THALES_CURRENCY, maxSnxBonus),
+                        })}
+                    </StakingRewardsNotice>
+                    <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, snxBonus)}</StakingRewardsContent>
+                    <BonusRewardButton>
+                        <BonusRewardInnerButton>
+                            {t('options.earn.thales-staking.staking-rewards.bonus-button.snx-staking-label')}
+                        </BonusRewardInnerButton>
+                    </BonusRewardButton>
                 </StakingRewardsItem>
                 <StakingRewardsItem>
                     <StakingRewardsLabel color="linear-gradient(87.09deg, #FFB636 -1%, #F55C05 106%)">
-                        AMM
+                        {t('options.earn.thales-staking.staking-rewards.amm-label')}
                     </StakingRewardsLabel>
-                    <StakingRewardsContent>50 opTHALES</StakingRewardsContent>
+                    <StakingRewardsNotice>
+                        {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
+                            max: formatCurrencyWithKey(THALES_CURRENCY, maxAmmBonus),
+                        })}
+                    </StakingRewardsNotice>
+                    <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, ammBonus)}</StakingRewardsContent>
+                    <BonusRewardButton>
+                        <BonusRewardInnerButton>
+                            {t('options.earn.thales-staking.staking-rewards.bonus-button.amm-label')}
+                        </BonusRewardInnerButton>
+                    </BonusRewardButton>
                 </StakingRewardsItem>
                 <StakingRewardsItem>
-                    <StakingRewardsLabel color="linear-gradient(87.09deg, #9AB676 -1%, #0F803C 106.68%);">
-                        Thales Royale
+                    <StakingRewardsLabel color="linear-gradient(87.09deg, #9AB676 -1%, #0F803C 106.68%)">
+                        {t('options.earn.thales-staking.staking-rewards.thales-royale-label')}
                     </StakingRewardsLabel>
-                    <StakingRewardsContent>10 opTHALES</StakingRewardsContent>
+                    <StakingRewardsNotice>
+                        {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
+                            max: formatCurrencyWithKey(THALES_CURRENCY, maxThalesRoyaleBonus),
+                        })}
+                    </StakingRewardsNotice>
+                    <StakingRewardsContent>
+                        {formatCurrencyWithKey(THALES_CURRENCY, thalesRoyaleBonus)}
+                    </StakingRewardsContent>
+                    <BonusRewardButton>
+                        <BonusRewardInnerButton>
+                            {t('options.earn.thales-staking.staking-rewards.bonus-button.thales-royale-label')}
+                        </BonusRewardInnerButton>
+                    </BonusRewardButton>
                 </StakingRewardsItem>
                 <GridAction>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
@@ -216,25 +249,25 @@ const StakingRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBala
                             >
                                 {isClaiming
                                     ? t('options.earn.thales-staking.staking-rewards.claiming') +
-                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
+                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}...`
                                     : t('options.earn.thales-staking.staking-rewards.claim') +
-                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
+                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}`}
                             </Button>
                         </StyledMaterialTooltip>
-                        {ongoingAirdrop && ongoingAirdrop.isClaimPaused && (
+                        {stakingRewards && stakingRewards.isClaimPaused && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}
                             </ClaimMessage>
                         )}
-                        {ongoingAirdrop && !ongoingAirdrop.isClaimPaused && !ongoingAirdrop.hasClaimRights && (
+                        {stakingRewards && !stakingRewards.isClaimPaused && !stakingRewards.hasClaimRights && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
                             </ClaimMessage>
                         )}
-                        {ongoingAirdrop &&
-                            ongoingAirdrop.hasClaimRights &&
-                            !ongoingAirdrop.isClaimPaused &&
-                            ongoingAirdrop.claimed && (
+                        {stakingRewards &&
+                            stakingRewards.hasClaimRights &&
+                            !stakingRewards.isClaimPaused &&
+                            stakingRewards.claimed && (
                                 <ClaimMessage>
                                     {t('options.earn.thales-staking.staking-rewards.claimed-message')}
                                 </ClaimMessage>

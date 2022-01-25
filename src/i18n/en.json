@@ -349,22 +349,27 @@
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
-                    "amount-to-claim-snx": "As SNX staker",
-                    "amount-to-claim-thales": "As THALES staker",
                     "period": "Period",
-                    "weekly-rewards": "Weekly rewards",
                     "total": "Total",
-                    "previous-period": "From previous period",
                     "claim": "Claim",
                     "claiming": "Claiming",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
                     "not-eligible-message": "You are not eligible for these rewards.",
                     "paused-message": "Claiming is paused, please try later.",
                     "confirmation-message": "Tokens successfully claimed",
-                    "learn-more-text": "Rewards are distributed weekly. If you dont claim in a given week, your rewards are carried over and made available to you for next week. Claimed rewards are subject to a 10 weeks vesting period. During the vesting period your escrowed amount will be included in your staked amount and thus effectively earning you more voting power and rewards.",
-                    "learn-more": "Learn more",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
-                    "snx-rewards-paused-tooltip": "<0>Ongoing THALES distribution towards SNX stakers is temporarily paused. More details under </0><1 />."
+                    "weekly-base-rewards": "Weekly base rewards",
+                    "weekly-bonus-rewards": "Weekly bonus rewards",
+                    "thales-staking-label": "Thales staking",
+                    "snx-staking-label": "SNX staking",
+                    "amm-label": "AMM",
+                    "thales-royale-label": "Thales Royale",
+                    "max-reward-label": "Max reward: {{max}}",
+                    "bonus-button": {
+                        "snx-staking-label": "Stake SNX and get bonus THALES",
+                        "amm-label": "Trade more and get bonus THALES",
+                        "thales-royale-label": "Join Thales Royale and get bonus THALES"
+                    }
                 }
             },
             "vesting": {

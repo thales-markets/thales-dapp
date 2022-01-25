@@ -3,6 +3,7 @@ import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDiv
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { DefaultSubmitButton } from '../Market/components';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -220,4 +221,36 @@ export const StyledInfoIcon = styled(InfoIcon)`
     @media (max-width: 1024px) {
         display: none;
     }
+`;
+
+export const BonusRewardButton = styled(DefaultSubmitButton)`
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    border: none;
+    border-radius: 15px;
+    min-height: 24px;
+    text-transform: uppercase;
+    padding: 1px;
+    color: #f6f6fe;
+    &:hover:not(:disabled) {
+        cursor: pointer;
+        background: #00f9ff;
+        color: #00f9ff;
+    }
+    pointer-events: auto;
+    width: fit-content;
+    align-self: center;
+    margin-top: 15px;
+`;
+
+export const BonusRewardInnerButton = styled(FlexDivRowCentered)`
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 24px;
+    font-variant: small-caps;
+    text-transform: uppercase;
+    background: #04045a;
+    border-radius: 15px;
+    text-align: center;
+    padding-left: 12px;
+    padding-right: 12px;
 `;

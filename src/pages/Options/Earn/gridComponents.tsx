@@ -41,6 +41,9 @@ export const StakingRewardsItem = styled(StakeInfoItem)`
     grid-column: span 3;
 `;
 
+export const StakingRewardsHeaderLabel = styled(StakeInfoContent)``;
+export const StakingRewardsNotice = styled(StakeInfoLabel)``;
+
 export const StakingRewardsLabel = styled.span<{ color: string }>`
     height: 30px;
     font-weight: 600;
