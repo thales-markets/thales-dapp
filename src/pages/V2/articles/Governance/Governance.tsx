@@ -20,7 +20,7 @@ const Governance: React.FC = () => {
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
                     <List>
-                        <ListItem>
+                        <ListItem orderNo={1}>
                             <a href="#section1">{t('articles.governance.list.1')}</a>
                         </ListItem>
                         <ListItem>
@@ -151,17 +151,17 @@ const List = styled.ul`
     list-style: disc;
     color: var(--color);
 `;
-const ListItem = styled.li`
-    height: 3em;
+const ListItem = styled.li<{ orderNo?: number }>`
+    height: 3m;
     color: var(--color);
     & > a {
         font-family: NunitoSemiBold !important;
         font-style: normal;
-        font-size: 1.4em;
+        font-size: ${(props) => (props.orderNo === 1 ? '2em' : '1.4em')};
         line-height: 170%;
         color: var(--color);
         &:hover {
-            font-size: 1.6em;
+            font-size: ${(props) => (props.orderNo === 1 ? '2.2em' : '1.6em')};
             transition: 0.2s;
         }
     }
