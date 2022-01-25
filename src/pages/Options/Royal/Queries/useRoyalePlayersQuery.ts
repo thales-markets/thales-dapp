@@ -33,27 +33,19 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                 }
             }
 
-            const baseUrl = 'https://api.thales.market/thales-royale/';
-            const response = await fetch(baseUrl);
-            const result = JSON.parse(await response.text());
-            const map = new Map<string, any>(result);
             const royalePlayersDataUrl = 'https://api.thales.market/royale-users/';
             const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
             const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
 
             const royalePlayersDataMap = new Map<string, any>(royalePlayersDataResult);
 
-            royalePlayersDataMap.forEach((player: string, address: any) => {
-                map.set(address, player);
-            });
-
             const data = await thalesData.binaryOptions.thalesRoyalePlayers({
                 season,
                 network: networkId,
             });
 
-            const verified: User[] = [];
-            const unasigned: User[] = [];
+            const users: User[] = [];
+
             data.map((player: any) => {
                 const isAlive = player.isAlive;
                 const address = player.address;
@@ -61,8 +53,8 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                 const season = player.season;
                 const deathRound = player.deathRound;
 
-                if (map.has(player.address.toLowerCase())) {
-                    const discordUser: any = map.get(player.address.toLowerCase());
+                if (royalePlayersDataMap.has(player.address.toLowerCase())) {
+                    const discordUser: any = royalePlayersDataMap.get(player.address.toLowerCase());
                     const user = {
                         isAlive,
                         address,
@@ -73,23 +65,23 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                         avatar: discordUser.avatar,
                         status: UserStatus.RDY,
                     };
-                    verified.push(user);
-                    map.delete(player.address.toLowerCase());
+                    users.push(user);
+                } else {
+                    const user = {
+                        isAlive,
+                        address,
+                        number,
+                        season,
+                        deathRound,
+                        name: address,
+                        avatar: '',
+                        status: UserStatus.RDY,
+                    };
+                    users.push(user);
                 }
             });
-            Array.from(map).map((player: any) => {
-                const user = {
-                    isAlive: true,
-                    address: player[0],
-                    number: 0,
-                    season: player[1].season,
-                    name: player[1].name,
-                    avatar: player[1].avatar,
-                    status: UserStatus.NOTSIGNED,
-                };
-                unasigned.push(user);
-            });
-            return [...verified, ...unasigned];
+
+            return users;
         },
         {
             refetchInterval: 5000,

@@ -27,7 +27,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
-    const userQuery = useUserRoyalQuery(walletAddress as any, { enabled: isL2 && isAppReady });
+    const userQuery = useUserRoyalQuery(walletAddress as any, networkId, selectedSeason, {
+        enabled: isL2 && isAppReady,
+    });
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
     const royaleQuery = useLatestRoyaleForUserInfo({ enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};

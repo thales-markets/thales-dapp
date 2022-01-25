@@ -1,5 +1,7 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { useQuery, UseQueryOptions } from 'react-query';
+import thalesData from 'thales-data';
+import { NetworkId } from 'utils/network';
 
 enum UserStatus {
     RDY,
@@ -30,8 +32,14 @@ export const AnonimUser: User = {
 };
 
 const BASE_URL = 'https://api.thales.market/royale-user/';
+// const gruja = '0x36688C92700618f1D676698220F1AF44492811FE';
 
-const useUserRoyalQuery = (walletAddress: string, options?: UseQueryOptions<User>) => {
+const useUserRoyalQuery = (
+    walletAddress: string,
+    networkId: NetworkId,
+    selectedSeason: number,
+    options?: UseQueryOptions<User>
+) => {
     return useQuery<User>(
         QUERY_KEYS.Royale.User(walletAddress),
         async () => {
@@ -39,8 +47,37 @@ const useUserRoyalQuery = (walletAddress: string, options?: UseQueryOptions<User
                 const royalePlayersDataUrl = BASE_URL + walletAddress;
                 const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
                 const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
-
-                return royalePlayersDataResult.user;
+                const royalePlayerFromGraph = await thalesData.binaryOptions.thalesRoyalePlayers({
+                    season: selectedSeason,
+                    network: networkId,
+                    address: walletAddress,
+                });
+                if (royalePlayerFromGraph.length > 0) {
+                    const userFromGraph = royalePlayerFromGraph[0];
+                    const user: User = {
+                        isAlive: userFromGraph.isAlive,
+                        address: walletAddress,
+                        number: userFromGraph.number,
+                        avatar: royalePlayersDataResult.user.avatar,
+                        name: royalePlayersDataResult.user.name,
+                        status: UserStatus.RDY,
+                        season: selectedSeason,
+                        deathRound: userFromGraph.deathRound,
+                    };
+                    return user;
+                } else {
+                    const user: User = {
+                        isAlive: false,
+                        address: walletAddress,
+                        number: 0,
+                        avatar: royalePlayersDataResult.user.avatar,
+                        name: royalePlayersDataResult.user.name,
+                        status: UserStatus.NOTSIGNED,
+                        season: selectedSeason,
+                        deathRound: '',
+                    };
+                    return user;
+                }
             }
             return AnonimUser;
         },
