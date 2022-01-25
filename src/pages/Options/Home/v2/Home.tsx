@@ -4,7 +4,6 @@ import { Background, NewWrapper } from 'theme/common';
 
 import MarketsTable from '../MarketsTable/v2/MarketsTable';
 import MarketHeader from '../MarketHeader/v2/MarketHeader';
-import MarketCard from '../MarketCard/v2/MarketCard';
 
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -77,7 +76,6 @@ const Home: React.FC = () => {
                                 : ROUTES.Options.Overview
                         }
                     />
-                    <MarketCard optionMarket={optionsMarkets[0]} exchangeRates={exchangeRates} />
                     <MarketsTable
                         optionsMarkets={optionsMarkets}
                         exchangeRates={exchangeRates}

@@ -95,6 +95,8 @@ const MarketCardWrapper = styled.div`
     box-sizing: border-box;
     border-radius: 15px;
     padding: 31px;
+    margin: 7.5px;
+    flex: 1 0 30%;
 `;
 
 const InsideContainer = styled.div`
@@ -107,7 +109,7 @@ const InsideContainer = styled.div`
 
 const LeftContainer = styled.div`
     display: block;
-    margin-right: 41px;
+    margin-right: 30px;
     flex: 1;
 `;
 

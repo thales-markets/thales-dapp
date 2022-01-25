@@ -26,6 +26,8 @@ import { TablePagination } from '@material-ui/core';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 
+import MarketsGrid from '../../MarketsGrid';
+
 import './main.scss';
 
 type MarketsTableProps = {
@@ -278,9 +280,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     />
                 </>
             )}
-            {!tableView && (
-               
-            )}
+            {!tableView && <MarketsGrid optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />}
         </>
     );
 };
