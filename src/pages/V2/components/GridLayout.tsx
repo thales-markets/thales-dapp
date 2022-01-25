@@ -43,7 +43,11 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                         className="icon icon--logo"
                     />
                 </ThalesButton>
-                <LearnButton> {t('landing-page.learn-more')}</LearnButton>
+                <LearnButton>
+                    <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
+                        {t('landing-page.learn-more')}
+                    </Link>
+                </LearnButton>
             </ButtonContainer>
 
             <ContI>
@@ -177,6 +181,14 @@ const ThalesButton = styled(Button)`
     grid-column-end: 26;
     grid-row-start: 20;
     grid-row-end: 22;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+        transform: scale(1.2);
+    }
+    &:before {
+        pointer-events: none;
+    }
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 20;
@@ -196,6 +208,14 @@ const LearnButton = styled(Button)`
     text-align: center;
     text-transform: capitalize;
     color: #ffffff;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+        transform: scale(1.2);
+    }
+    &:before {
+        pointer-events: none;
+    }
     @media (max-width: 600px) {
         grid-column-start: 27;
         grid-column-end: 50;
@@ -413,7 +433,21 @@ const ContSubTitle = styled.p`
     }
 `;
 
+const Link = styled.a`
+    position: relative;
+    font-family: Nunito !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 91.91%;
+    text-align: center;
+    text-transform: capitalize;
+    color: #ffffff;
+    cursor: pointer;
+`;
+
 const Logo = styled.i`
+    margin-top: 4px;
     font-size: 5.2em;
     line-height: 1.75em;
     color: #ffffff !important;
