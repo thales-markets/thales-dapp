@@ -21,7 +21,6 @@ import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 type MarketCardPros = {
     exchangeRates: Rates | null;
     optionMarket: HistoricalOptionsMarketInfo;
-    args?: <{  }>
 };
 
 type StrongTextProps = {

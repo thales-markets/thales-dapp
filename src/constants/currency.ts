@@ -132,6 +132,7 @@ export const CRYPTO_CURRENCY = [
     'USDT',
     'VELO',
     'ZRX',
+    'THALES',
 ];
 export const CRYPTO_CURRENCY_MAP = keyBy(CRYPTO_CURRENCY);
 
@@ -282,6 +283,7 @@ export const currencyKeyToCoinGeckoIndexMap = {
     [CRYPTO_CURRENCY_MAP.USDT]: 'tether',
     [CRYPTO_CURRENCY_MAP.VELO]: 'velo',
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
+    [CRYPTO_CURRENCY_MAP.THALES]: 'thales',
 };
 
 export const sUSD_EXCHANGE_RATE = 1;

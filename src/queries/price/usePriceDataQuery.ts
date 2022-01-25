@@ -15,7 +15,7 @@ interface PriceData {
 
 const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions<PriceData>) => {
     return useQuery<PriceData>(
-        QUERY_KEYS.PriceData.Data,
+        QUERY_KEYS.PriceData.Currency(requestArgs.coin),
         async () => {
             const url = `https://api.coingecko.com/api/v3/coins/${requestArgs.coin}/market_chart?vs_currency=${
                 requestArgs?.currencyVs ? requestArgs.currencyVs : 'usd'
@@ -27,7 +27,6 @@ const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions
             return result;
         },
         {
-            enabled: false,
             ...options,
         }
     );

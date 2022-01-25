@@ -14,7 +14,7 @@ type PriceData = {
 
 const useLastPriceQuery = (requestArgs: RequestParams, options?: UseQueryOptions<PriceData>) => {
     return useQuery<PriceData>(
-        QUERY_KEYS.PriceData.Data,
+        QUERY_KEYS.PriceData.Latest(requestArgs.coins.join(',')),
         async () => {
             try {
                 const url = `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(

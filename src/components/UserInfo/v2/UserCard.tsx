@@ -14,6 +14,8 @@ import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected } from 'redux/modules/wallet';
 import { getTheme } from 'redux/modules/ui';
 
+import { currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
+
 export const UserCard: React.FC = () => {
     const [showCard, setShowCard] = useState(false);
 
@@ -33,7 +35,7 @@ export const UserCard: React.FC = () => {
                     </LogoContainer>
                     <UserWallet />
                     {isWalletConnected && <PieChartUserBalance />}
-                    <PriceChart coin={'thales'} showHeading={true} />
+                    <PriceChart coin={currencyKeyToCoinGeckoIndexMap['THALES']} showHeading={true} />
                     <ThemeSelector />
                     {isWalletConnected && <NetworkSwitchSection />}
                     <LanguageCardSelector />

@@ -77,7 +77,7 @@ const Home: React.FC = () => {
                                 : ROUTES.Options.Overview
                         }
                     />
-                    <MarketCard />
+                    <MarketCard optionMarket={optionsMarkets[0]} exchangeRates={exchangeRates} />
                     <MarketsTable
                         optionsMarkets={optionsMarkets}
                         exchangeRates={exchangeRates}

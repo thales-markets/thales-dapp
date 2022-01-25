@@ -37,7 +37,8 @@ export const QUERY_KEYS = {
         Posts: ['medium', 'posts'],
     },
     PriceData: {
-        Data: ['pricedata'],
+        Currency: (currencyKey: string) => ['pricedata', currencyKey],
+        Latest: (currencyKey: string) => ['latest', 'price', currencyKey],
     },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
