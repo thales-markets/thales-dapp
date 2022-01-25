@@ -1195,11 +1195,11 @@
     },
     "migration": {
         "migration-opt-out-notice": {
-            "opt-out-text": "As a THALES staker, we will automatically migrate your THALES tokens to L2. If you want to keep them on L1, you have 7 days to inform us by opting out.",
-            "cancel-opt-out-text": "You have agreed to migrate your tokens manually. You still have time to cancel and allow us to migrate your THALES tokens automatically.",
+            "opt-out-text": "<0>All staked, escrowed and unclaimed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> If you would like to opt out of this migration, and keep your THALES on L1 Mainnet, you may do so by signing the following message with your wallet.</0>",
+            "cancel-opt-out-text": "<0>All staked, escrowed and unclaimed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> You have chosen to opt out of this migration, and keep your THALES on L1 Mainnet. If instead you do want to be included in the migration, you can cancel your opt out.</0>",
             "button": {
-                "opt-out-label": "Opt-out",
-                "cancel-opt-out-label": "Cancel opt-out",
+                "opt-out-label": "Opt out",
+                "cancel-opt-out-label": "Cancel opt out",
                 "progress-label": "Submitting in progress..."
             }
         }
