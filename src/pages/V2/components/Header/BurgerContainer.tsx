@@ -31,7 +31,7 @@ const BurgerContainer: React.FC<BurgerInput> = ({ burgerState, setBurgerState })
                 <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                     {t('header.links.learn.docs')}
                 </Link>
-                <Link target="_blank" rel="noreferrer">
+                <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/using-thales/why-use-thales">
                     {t('header.links.learn.guides')}
                 </Link>
                 <Link rel="noreferrer" onClick={() => navigateTo(ROUTES.Article.Whitepaper, false, false, 'show')}>

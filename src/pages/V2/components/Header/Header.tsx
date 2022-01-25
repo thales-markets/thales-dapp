@@ -34,7 +34,11 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                         <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                             {t('header.links.learn.docs')}
                         </Link>
-                        <Link target="_blank" rel="noreferrer">
+                        <Link
+                            target="_blank"
+                            rel="noreferrer"
+                            href="https://docs.thalesmarket.io/using-thales/why-use-thales"
+                        >
                             {t('header.links.learn.guides')}
                         </Link>
                         <Link
