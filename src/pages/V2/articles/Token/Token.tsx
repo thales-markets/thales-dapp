@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import Cookies from 'universal-cookie';
 import Header from '../../components/Header/Header';
-import pic from 'assets/images/landing-page/articles/token.svg';
+import pic from 'assets/images/landing-page/articles/token-white.svg';
 import picBlack from 'assets/images/landing-page/articles/token-black.svg';
 import { Background, Theme } from '../../Home';
 import Footer from 'pages/V2/components/Footer';
@@ -46,7 +46,9 @@ const Token: React.FC = () => {
                     <Paragraph>
                         <Trans i18nKey="articles.token.paragraphs.2" components={{ bold: <strong /> }} />
                     </Paragraph>
-                    <Image src={theme !== Theme.Dark ? pic : picBlack} />
+                    <PieChart>
+                        <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? pic : picBlack}></AnimationSvg>
+                    </PieChart>
 
                     <H2 id="section3">{t('articles.token.list.3')}</H2>
                     <Paragraph>
@@ -103,7 +105,7 @@ const Content = styled.div`
     }
 `;
 
-const Image = styled.img`
+const PieChart = styled.div`
     padding: 0 20px;
     object-fit: contain;
     width: 100%;
@@ -155,6 +157,8 @@ const Paragraph = styled.p`
         text-decoration: underline;
     }
 `;
+
+const AnimationSvg = styled.object``;
 
 const List = styled.ul`
     list-style: disc;
