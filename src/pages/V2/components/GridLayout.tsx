@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import thalesI from 'assets/images/landing-page/thales1.png';
 import thalesII from 'assets/images/landing-page/thales2.png';
 import thalesIII from 'assets/images/landing-page/thales3.png';
-import stars from 'assets/images/landing-page/animation2.svg';
-import system from 'assets/images/landing-page/animation1.svg';
+import starsBlack from 'assets/images/landing-page/stars-black.svg';
+import starsWhite from 'assets/images/landing-page/stars-white.svg';
+import systemBlack from 'assets/images/landing-page/system-black.svg';
+import systemWhite from 'assets/images/landing-page/system-white.svg';
 import thalesIW from 'assets/images/landing-page/thales1-white.png';
 import thalesIIW from 'assets/images/landing-page/thales2-white.png';
 import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
@@ -25,7 +27,10 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
         <Wrapper>
             <Header theme={theme} setTheme={setTheme} />
             <SystemImage>
-                <AnimationSvg type="image/svg+xml" data={system}></AnimationSvg>
+                <AnimationSvg
+                    type="image/svg+xml"
+                    data={theme !== Theme.Dark ? systemWhite : systemBlack}
+                ></AnimationSvg>
             </SystemImage>
             <TitleContainer>
                 <Title> {t('landing-page.title')}</Title>
@@ -75,7 +80,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
                 <Image src={theme !== Theme.Dark ? thalesIII : thalesIIIW}></Image>
             </ThalesImageIII>
             <StarsImage>
-                <AnimationSvg type="image/svg+xml" data={stars}></AnimationSvg>
+                <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? starsWhite : starsBlack}></AnimationSvg>
             </StarsImage>
         </Wrapper>
     );
