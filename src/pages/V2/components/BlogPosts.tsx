@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import mediumPostsQuery from '../mediumPostsQuery';
 
-import nextArrow from 'assets/images/arrow-next.svg';
-import backArrow from 'assets/images/arrow-previous.svg';
+// import nextArrow from 'assets/images/arrow-next.svg';
+// import backArrow from 'assets/images/arrow-previous.svg';
 
 const limitBlogMeta = (text: string, limit: number) => {
     //Remove html tags from text
@@ -35,7 +35,11 @@ const BlogPosts: React.FC = () => {
 
     return (
         <Wrapper>
-            <Arrow style={{ marginLeft: '-25px' }} src={backArrow} onClick={() => carouselChangeHandler(-1)} />
+            <Arrow
+                className="icon icon--left"
+                style={{ marginLeft: '-25px', fontSize: 35 }}
+                onClick={() => carouselChangeHandler(-1)}
+            />
             {blogPosts.map((blog, index) => {
                 return (
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
@@ -48,7 +52,11 @@ const BlogPosts: React.FC = () => {
                     </BlogCard>
                 );
             })}
-            <Arrow style={{ marginRight: '-25px' }} src={nextArrow} onClick={() => carouselChangeHandler(1)} />
+            <Arrow
+                className="icon icon--right"
+                style={{ marginRight: '-25px', fontSize: 35 }}
+                onClick={() => carouselChangeHandler(1)}
+            />
             <DotContainer>
                 {blogPosts.map((_blog, index) => {
                     return (
@@ -149,9 +157,9 @@ const MediumDate = styled.i`
     font-style: italic;
 `;
 
-const Arrow = styled.img`
-    width: 25px;
-    fill: white;
+const Arrow = styled.i`
+    color: 'var(--color)';
+    cursor: pointer;
 `;
 
 const DotContainer = styled.div`
