@@ -133,8 +133,6 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
         }
     }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData, selectedSeason]);
 
-    console.log(usersForUi);
-
     const HeadCells: HeadCell[] = [
         { id: 1, text: <Trans i18nKey="options.royale.scoreboard.table-header.status" />, sortable: true },
         { id: 2, text: <Trans i18nKey="options.royale.scoreboard.table-header.avatar" />, sortable: false },

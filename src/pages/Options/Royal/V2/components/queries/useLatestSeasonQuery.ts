@@ -9,7 +9,6 @@ const useLatestSeasonQuery = (options?: UseQueryOptions<number>) => {
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
                 const season = Number(await thalesRoyaleContract.season());
-                console.log('season: ', season);
                 return season;
             }
             return 0;
