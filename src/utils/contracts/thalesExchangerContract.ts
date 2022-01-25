@@ -2,7 +2,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const thalesExchangerContract = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Mainnet]: '0x3124a11216273018c8f37181b4505d36573d9701',
         [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x5647946fC3a3A582d7c1300B86b9ef3A3da9B9A7',

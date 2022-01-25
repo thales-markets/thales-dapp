@@ -2,7 +2,7 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const opThalesContract = {
     addresses: {
-        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Mainnet]: '0x8947da500Eb47F82df21143D0C01A29862a8C3c5',
         [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
         [NetworkId.Kovan]: '0x8e801fb67436dae72af6eeb50e3f70d50019530f',
