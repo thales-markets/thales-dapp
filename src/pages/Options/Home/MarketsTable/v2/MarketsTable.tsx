@@ -228,52 +228,59 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     <SearchField text={globalFilter} handleChange={(value) => setGlobalFilter(value)} />
                 </FormContainer>
             </Wrapper>
-            <table {...getTableProps()}>
-                <thead>
-                    {headerGroups.map((headerGroup: any) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column: any) => (
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                    {column.render('Header')}
-                                    {
-                                        <Arrow
-                                            className={`icon ${
-                                                column.canSort
-                                                    ? column.isSorted
-                                                        ? column.isSortedDesc
-                                                            ? 'icon--arrow-down'
-                                                            : 'icon--arrow-up'
-                                                        : 'icon--double-arrow'
-                                                    : ''
-                                            }`}
-                                        />
-                                    }
-                                </th>
+            {tableView && (
+                <>
+                    <table {...getTableProps()}>
+                        <thead>
+                            {headerGroups.map((headerGroup: any) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map((column: any) => (
+                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                            {column.render('Header')}
+                                            {
+                                                <Arrow
+                                                    className={`icon ${
+                                                        column.canSort
+                                                            ? column.isSorted
+                                                                ? column.isSortedDesc
+                                                                    ? 'icon--arrow-down'
+                                                                    : 'icon--arrow-up'
+                                                                : 'icon--double-arrow'
+                                                            : ''
+                                                    }`}
+                                                />
+                                            }
+                                        </th>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row: any) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell: any) => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                                })}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-            <PaginationWrapper
-                rowsPerPageOptions={[5, 10, 25]}
-                count={data.length}
-                rowsPerPage={pageSize}
-                page={pageIndex}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {page.map((row: any) => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map((cell: any) => {
+                                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    <PaginationWrapper
+                        rowsPerPageOptions={[5, 10, 25]}
+                        count={data.length}
+                        rowsPerPage={pageSize}
+                        page={pageIndex}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </>
+            )}
+            {!tableView && (
+               
+            )}
         </>
     );
 };
