@@ -7,9 +7,10 @@ import styled from 'styled-components';
 export const LanguageSelectorRoyale: React.FC = () => {
     return (
         <>
-            {Object.values(SupportedLanguages).map((language: string) => (
+            {Object.values(SupportedLanguages).map((language: string, key: number) => (
                 <>
                     <LanguageSelect
+                        key={key}
                         onClick={() => {
                             i18n.changeLanguage(language);
                         }}

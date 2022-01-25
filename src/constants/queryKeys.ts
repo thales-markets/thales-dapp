@@ -118,12 +118,17 @@ export const QUERY_KEYS = {
     },
     Royale: {
         Data: (walletAddress: string) => ['royale', 'data', walletAddress],
+        User: (walletAddress: string) => ['royale', 'user', walletAddress],
         Players: () => ['royale', 'layers'],
         Rounds: (networkId: NetworkId) => ['royale', 'rounds', networkId],
         Seasons: (networkId: NetworkId) => ['royale', 'Seasons', networkId],
         Positions: (networkId: NetworkId) => ['royale', 'positions', networkId],
         EthBalance: (walletAddress: string) => ['royale', 'ethBalance', walletAddress],
         EthPrice: () => ['royale', 'ethPrice'],
+        LatestRoyaleData: () => ['royale', 'latestRoyaleData'],
+        LatestRoyaleDataForUserCard: () => ['royale', 'LatestRoyaleDataForUserCard'],
+        LatestSeason: () => ['royale', 'latestSeason'],
+        RoyaleDataForScoreboard: (season: number) => ['royale', 'royaleDataForScoreboad', season],
     },
     Governance: {
         Proposals: (spaceKey: SpaceKey) => ['governance', 'proposals', spaceKey],

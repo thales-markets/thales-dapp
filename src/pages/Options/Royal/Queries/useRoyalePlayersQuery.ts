@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { NetworkId } from '@synthetixio/contracts-interface';
+import snxJSConnector from 'utils/snxJSConnector';
 
 export enum UserStatus {
     RDY,
@@ -24,7 +25,14 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
     return useQuery<User[]>(
         QUERY_KEYS.Royale.Players(),
         async () => {
-            if (selectedSeason === 0) return [];
+            let season = 0;
+            if (selectedSeason === 0) {
+                const { thalesRoyaleContract } = snxJSConnector;
+                if (thalesRoyaleContract) {
+                    season = Number(await thalesRoyaleContract.season());
+                }
+            }
+
             const baseUrl = 'https://api.thales.market/thales-royale/';
             const response = await fetch(baseUrl);
             const result = JSON.parse(await response.text());
@@ -40,7 +48,7 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
             });
 
             const data = await thalesData.binaryOptions.thalesRoyalePlayers({
-                season: selectedSeason,
+                season,
                 network: networkId,
             });
 
