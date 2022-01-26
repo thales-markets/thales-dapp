@@ -18,7 +18,7 @@ const ThalesRoyaleTooltip: React.FC<ThalesRoyaleTooltipProps> = ({ maxPercentage
                     max: maxPercentage,
                 })}
             </Description>
-            <Link target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.SnxStaking}>
+            <Link target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.ThalesRoyale}>
                 {t('options.earn.thales-staking.staking-rewards.bonus-button.thales-royale-label')}
             </Link>
         </Conatiner>
