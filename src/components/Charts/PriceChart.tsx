@@ -69,7 +69,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
 
     return (
         <>
-            {processedPriceData && (
+            {processedPriceData?.length > 0 && (
                 <ChartWrapper style={{ ...containerStyle }}>
                     {processedPriceData && showHeading && (
                         <ChartHeader>
