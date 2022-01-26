@@ -6,11 +6,10 @@ import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
+import { getNetworkId } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Image, LoaderContainer, Text } from 'theme/common';
-import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
 import SimpleLoader from '../../components/SimpleLoader';
 import useRoyalePlayersQuery, { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
@@ -40,7 +39,6 @@ type ScoreboardProps = {
 const defaultOrderBy = 1;
 
 export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSelectedSeason }) => {
-    const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
@@ -66,8 +64,6 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
     const users = usersQuery.isSuccess ? usersQuery.data : [];
 
     const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
-
-    const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
     const usersForUi = useMemo(() => {
         if (!royaleData) return;
@@ -288,12 +284,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
                                     textOverflow: 'ellipsis',
                                 }}
                             >
-                                {user.name ??
-                                    truncateAddress(
-                                        walletAddress as any,
-                                        truncateAddressNumberOfCharacters,
-                                        truncateAddressNumberOfCharacters
-                                    )}
+                                {user.name}
                             </HeadCellUi>
                             <HeadCellUi winner={isUserAWinner} style={{ marginLeft: 6 }}>
                                 #{user.number}

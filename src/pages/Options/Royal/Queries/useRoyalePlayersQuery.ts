@@ -3,6 +3,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 import { NetworkId } from '@synthetixio/contracts-interface';
 import snxJSConnector from 'utils/snxJSConnector';
+import { truncateAddress } from 'utils/formatters/string';
 
 export enum UserStatus {
     RDY,
@@ -20,6 +21,7 @@ export type User = {
     season: number;
     deathRound?: string;
 };
+const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
 const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, options?: UseQueryOptions<User[]>) => {
     return useQuery<User[]>(
@@ -73,7 +75,12 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
                         number,
                         season,
                         deathRound,
-                        name: address,
+                        name:
+                            truncateAddress(
+                                address as any,
+                                truncateAddressNumberOfCharacters,
+                                truncateAddressNumberOfCharacters
+                            ) ?? address,
                         avatar: '',
                         status: UserStatus.RDY,
                     };
