@@ -3,7 +3,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { OptionsMarkets } from 'types/options';
+import { OptionsMarkets, PrimaryOptionsFilter } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
@@ -65,8 +65,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     };
 
     const [tableView, setTableView] = useState<boolean>(false);
-    const [primaryFilter, setPrimaryFilter] = useState<'allMarkets' | 'watchlist' | 'recentlyAdded'>(
-        PrimaryFiltersEnum.allMarkets
+    const [primaryFilter, setPrimaryFilter] = useState<PrimaryOptionsFilter>(
+        PrimaryFiltersEnum.allMarkets as PrimaryOptionsFilter
     );
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
 
@@ -190,6 +190,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
     const { pageIndex, pageSize, globalFilter } = state;
 
+    console.log('GlobalFilter ', globalFilter);
+
     const handleChangePage = (_event: any, newPage: number) => {
         gotoPage(newPage);
     };
@@ -202,6 +204,13 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     useEffect(() => {
         gotoPage(0);
     }, [globalFilter]);
+
+    const filters = useMemo(() => {
+        return {
+            searchQuery: globalFilter,
+            primaryFilter: 'allMarkets' as PrimaryOptionsFilter,
+        };
+    }, [pageSize, pageIndex, globalFilter]);
 
     return (
         <>
@@ -280,12 +289,14 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     />
                 </>
             )}
-            {!tableView && <MarketsGrid optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} />}
+            {!tableView && (
+                <MarketsGrid optionsMarkets={optionsMarkets} exchangeRates={exchangeRates} filters={filters} />
+            )}
         </>
     );
 };
 
-const PaginationWrapper = styled(TablePagination)`
+export const PaginationWrapper = styled(TablePagination)`
     border: none !important;
     display: flex;
     width: 100%;

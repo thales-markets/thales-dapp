@@ -247,3 +247,16 @@ export type ETHBurned = {
 };
 
 export type ExpirationOptions = ExpirationOption[];
+
+export type GridFilters = {
+    searchQuery: string;
+    sort?: {
+        column: GridSortOption;
+        type: 'asc' | 'desc';
+    };
+    primaryFilter: PrimaryOptionsFilter;
+};
+
+export type PrimaryOptionsFilter = 'allMarkets' | 'watchlist' | 'recentlyAdded';
+
+export type GridSortOption = 'byName' | 'byTimeRemaining';
