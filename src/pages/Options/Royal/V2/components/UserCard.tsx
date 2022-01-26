@@ -37,9 +37,6 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
 
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
 
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
-
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
@@ -165,12 +162,14 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
 
     return (
         <UserWrapper>
-            <OverlayForDropDown
-                onClick={() => {
-                    if (showDropdown) setShowDropdown(false);
-                    if (showSelectDropdown) setShowSelectDropdown(false);
-                }}
-            ></OverlayForDropDown>
+            {!openEditDialog ?? (
+                <OverlayForDropDown
+                    onClick={() => {
+                        if (openEditDialog) setOpenEditDialog(false);
+                    }}
+                ></OverlayForDropDown>
+            )}
+
             <UserEditRoyaleDataDialog
                 open={openEditDialog}
                 handleClose={setOpenEditDialog.bind(this, false)}
