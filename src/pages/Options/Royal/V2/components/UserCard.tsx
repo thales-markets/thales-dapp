@@ -9,6 +9,7 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text } from 'theme/common';
 import erc20Contract from 'utils/contracts/erc20Contract';
+import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
@@ -35,36 +36,40 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
     const royaleQuery = useLatestRoyaleForUserInfo({ enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
-    const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
     const [openEditDialog, setOpenEditDialog] = useState(false);
-    const signer = provider.getSigner();
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
 
-    const updateBalanceAndAllowance = (token: any) => {
+    const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
-            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, signer);
-
+            const erc20Instance = new ethers.Contract((token as any).address, erc20Contract.abi, snxJSConnector.signer);
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
-                erc20Instance
-                    .allowance(walletAddress, thalesRoyaleContract.address)
-                    .then((data: any) =>
-                        setAllowance(Number(ethers.utils.formatUnits(data, (token as any).decimals)) > 0)
-                    );
+                try {
+                    const allowance = await erc20Instance.allowance(walletAddress, thalesRoyaleContract.address);
+                    setAllowance(!!bigNumberFormatter(allowance));
+                } catch (e) {
+                    console.log(e);
+                }
 
-                erc20Instance
-                    .balanceOf(walletAddress)
-                    .then((data: any) => setBalance(ethers.utils.formatUnits(data, (token as any).decimals)));
+                try {
+                    const balance = await erc20Instance.balanceOf(walletAddress);
+                    setBalance(ethers.utils.formatUnits(balance, (token as any).decimals));
+                } catch (e) {
+                    console.log(e);
+                }
             }
         }
     };
 
     const approve = async () => {
-        const erc20Instance = new ethers.Contract((buyInToken as any).address, erc20Contract.abi, signer);
+        const erc20Instance = new ethers.Contract(
+            (buyInToken as any).address,
+            erc20Contract.abi,
+            snxJSConnector.signer
+        );
         try {
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
@@ -78,8 +83,8 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
     };
 
     useEffect(() => {
-        updateBalanceAndAllowance(buyInToken);
-    }, [buyInToken]);
+        if (buyInToken && snxJSConnector.signer) updateBalanceAndAllowance(buyInToken).then();
+    }, [buyInToken, snxJSConnector.signer]);
 
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;

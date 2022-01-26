@@ -1,4 +1,5 @@
 import QUERY_KEYS from 'constants/queryKeys';
+import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
 
@@ -48,7 +49,7 @@ const getFromContract = async (RoyaleContract: any): Promise<LatestRoyaleSeasonI
         signUpPeriod: new Date((Number(royaleSeasonCreationTime) + Number(signUpPeriod)) * 1000),
         seasonStarted,
         seasonFinished,
-        buyInAmount,
+        buyInAmount: Number(ethers.utils.formatEther(buyInAmount)),
     };
 };
 

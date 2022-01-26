@@ -30,13 +30,12 @@ export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedP
         enabled: networkId !== undefined && isAppReady,
     });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
-    console.log(positions);
+
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
     const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
 
     const royaleDataQuery = useRoyaleFooterQuery({ enabled: isAppReady });
     const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
-    console.log(royaleData);
 
     const [showStats, setShowStats] = useState(true);
 
