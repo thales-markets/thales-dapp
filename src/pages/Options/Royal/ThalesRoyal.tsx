@@ -1,8 +1,6 @@
-import queryString from 'query-string';
 import React, { useEffect, useState } from 'react';
-
+import queryString from 'query-string';
 import { useSelector } from 'react-redux';
-
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
@@ -12,6 +10,7 @@ import { getIsOVM } from 'utils/network';
 import Header from './components/Header';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
+import { FooterV2 } from './V2/components/Footer';
 
 import { ScoreboardPage } from './V2/components/ScoreboardPage';
 
@@ -41,36 +40,6 @@ const ThalesRoyal: React.FC = () => {
             setSelectedPage(selectedPageParameter);
         }
     }, []);
-
-    // useEffect(() => {
-    //     if (thalesRoyaleData) {
-    //         if (selectedPage === 'royale') {
-    //             if (thalesRoyaleData.roundInASeason > 0) {
-    //                 history.push({
-    //                     pathname: location.pathname,
-    //                     search: queryString.stringify({
-    //                         page: selectedPage,
-    //                     }),
-    //                 });
-    //             } else {
-    //                 history.push({
-    //                     pathname: location.pathname,
-    //                     search: queryString.stringify({
-    //                         page: 'scoreboard',
-    //                     }),
-    //                 });
-    //                 setSelectedPage('scoreboard');
-    //             }
-    //         } else {
-    //             history.push({
-    //                 pathname: location.pathname,
-    //                 search: queryString.stringify({
-    //                     page: selectedPage,
-    //                 }),
-    //             });
-    //         }
-    //     }
-    // }, [selectedPage, thalesRoyaleData]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -113,6 +82,7 @@ const ThalesRoyal: React.FC = () => {
             >
                 <Header theme={theme} setTheme={setTheme} />
                 <ScoreboardPage />
+                <FooterV2 selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
             </Wrapper>
 
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />

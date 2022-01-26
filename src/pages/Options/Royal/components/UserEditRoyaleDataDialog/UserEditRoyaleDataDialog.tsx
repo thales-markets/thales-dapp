@@ -171,6 +171,10 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
 };
 
 const ModalWrapper = styled(FlexDivColumn)`
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 600px;
     max-height: min(90%, 800px);
     overflow-y: auto;

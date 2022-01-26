@@ -12,6 +12,7 @@ import erc20Contract from 'utils/contracts/erc20Contract';
 import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
+import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
 import { signUp } from '../../getThalesRoyalData';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
@@ -35,8 +36,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
     const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
+    const [openEditDialog, setOpenEditDialog] = useState(false);
     const signer = provider.getSigner();
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
@@ -159,6 +165,18 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
 
     return (
         <UserWrapper>
+            <OverlayForDropDown
+                onClick={() => {
+                    if (showDropdown) setShowDropdown(false);
+                    if (showSelectDropdown) setShowSelectDropdown(false);
+                }}
+            ></OverlayForDropDown>
+            <UserEditRoyaleDataDialog
+                open={openEditDialog}
+                handleClose={setOpenEditDialog.bind(this, false)}
+                user={user}
+                walletAddress={walletAddress}
+            ></UserEditRoyaleDataDialog>
             <FlexDiv style={{ alignItems: 'center' }}>
                 {user?.avatar ? (
                     <UserAvatar src={user.avatar} style={{ marginRight: 14 }} />
@@ -181,7 +199,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
                     <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
                     <InputWrapper>
                         {user.name}
-                        {/* <SearchIcon
+                        <SearchIcon
                             onClick={setOpenEditDialog.bind(this, true)}
                             className="icon icon--user-avatar"
                             style={{
@@ -193,7 +211,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
                                 marginBottom: 'auto',
                                 marginRight: '-5px',
                             }}
-                        /> */}
+                        />
                     </InputWrapper>
                 </FlexContainer>
                 <FlexContainer>
@@ -222,6 +240,15 @@ const UserAvatar = styled(Image)<{ winner?: boolean }>`
         width: 40px;
         height: 40px;
     }
+`;
+
+const OverlayForDropDown = styled.div`
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
 `;
 
 const DeadText = styled(Text)`
@@ -281,6 +308,15 @@ const Button = styled.button`
         opacity: 0.7;
         cursor: not-allowed;
     }
+`;
+
+const SearchIcon = styled.i`
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    font-size: 17px;
+    line-height: 20px;
+    min-width: 17px !important;
 `;
 
 const InputWrapper = styled.div`
