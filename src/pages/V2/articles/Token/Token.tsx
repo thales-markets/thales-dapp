@@ -15,7 +15,7 @@ const Token: React.FC = () => {
     const { t } = useTranslation();
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Wrapper>
+            <Wrapper size={window.innerWidth}>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
                     <List>
@@ -100,13 +100,22 @@ const Token: React.FC = () => {
     );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ size: number }>`
     display: grid;
     width: 100%;
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(81, 2em);
+    grid-template-rows: repeat(85, 2em);
+    @media (max-width: 1025px) {
+        grid-template-rows: repeat(${(props) => Math.round((1024 - props.size) / 8) + 85}, 2em);
+    }
+    @media (max-width: 768px) {
+        grid-template-rows: repeat(${(props) => Math.round((768 - props.size) / 8) + 85}, 2em);
+    }
+    @media (max-width: 450px) {
+        grid-template-rows: repeat(${(props) => Math.round((450 - props.size) / 2) + 85}, 2em);
+    }
 `;
 
 const Content = styled.div`

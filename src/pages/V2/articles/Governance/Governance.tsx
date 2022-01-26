@@ -16,7 +16,7 @@ const Governance: React.FC = () => {
     const { t } = useTranslation();
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Wrapper>
+            <Wrapper size={window.innerWidth}>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
                     <List>
@@ -47,12 +47,29 @@ const Governance: React.FC = () => {
                     </Paragraph>
                     <H2 id="section1">{t('articles.governance.list.1')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.governance.paragraphs.1" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.governance.paragraphs.1"
+                            components={{
+                                bold: <strong />,
+                            }}
+                        />
                     </Paragraph>
 
                     <H2 id="section2">{t('articles.governance.list.2')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.governance.paragraphs.2" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.governance.paragraphs.2"
+                            components={{
+                                bold: <strong />,
+                                url: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://github.com/thales-markets/thales-improvement-proposals/tree/main/TIPs"
+                                    />
+                                ),
+                            }}
+                        />
                     </Paragraph>
 
                     <H2 id="section3">{t('articles.governance.list.3')}</H2>
@@ -82,13 +99,19 @@ const Governance: React.FC = () => {
     );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ size: number }>`
     display: grid;
     width: 100%;
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(104, 2em);
+    @media (max-width: 880px) {
+        grid-template-rows: repeat(${(props) => Math.round((880 - props.size) / 15) + 104}, 2em);
+    }
+    @media (max-width: 450px) {
+        grid-template-rows: repeat(${(props) => Math.round(880 - props.size / 10) + 104}, 2em);
+    }
 `;
 
 const Content = styled.div`
