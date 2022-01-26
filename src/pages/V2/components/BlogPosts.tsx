@@ -79,7 +79,7 @@ const Wrapper = styled.div`
     justify-content: space-around;
     width: 100%;
     overflow: hidden;
-    padding: 2em;
+    padding: 2.2em;
     @media (max-width: 600px) {
         padding: 2em 0;
         padding-bottom: 40px;
@@ -160,6 +160,9 @@ const MediumDate = styled.i`
 const Arrow = styled.i`
     color: 'var(--color)';
     cursor: pointer;
+    @media (max-width: 600px) {
+        display: none !important;
+    }
 `;
 
 const DotContainer = styled.div`
