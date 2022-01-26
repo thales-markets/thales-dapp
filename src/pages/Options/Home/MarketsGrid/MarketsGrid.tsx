@@ -56,6 +56,8 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
         return data;
     }, [optionsMarkets, exchangeRates, filters, pageIndex, rowsPerPage]);
 
+    console.log('Data ', options);
+
     return (
         <Wrapper>
             {options &&

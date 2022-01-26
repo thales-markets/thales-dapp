@@ -109,7 +109,7 @@ const InsideContainer = styled.div`
 
 const LeftContainer = styled.div`
     display: block;
-    margin-right: 30px;
+    margin-right: 20px;
     flex: 1;
 `;
 

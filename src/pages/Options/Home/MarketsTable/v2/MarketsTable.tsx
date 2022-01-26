@@ -190,8 +190,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
     const { pageIndex, pageSize, globalFilter } = state;
 
-    console.log('GlobalFilter ', globalFilter);
-
     const handleChangePage = (_event: any, newPage: number) => {
         gotoPage(newPage);
     };

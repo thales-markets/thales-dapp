@@ -118,15 +118,10 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                     )}
                 </ItemsContainer>
             </Sidebar>
-            {/* <Overlay
-                onClick={() => {
-                    setShowBurdgerMenu(BurgerState.Hide);
-                }}
-                className={showBurgerMenu === BurgerState.Show ? 'show' : 'hide'}
-            /> */}
         </FlexDivColumn>
     );
 };
+
 const Sidebar = styled.nav`
     position: fixed;
     top: 0;

@@ -8,6 +8,7 @@ import PriceChart from 'components/Charts/PriceChart';
 import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSelector';
 import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
+import OutsideClickHandler from 'react-outside-click-handler';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -22,25 +23,30 @@ export const UserCard: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const theme = useSelector((state: RootState) => getTheme(state));
 
+    console.log('ShowCard ', showCard);
+
     return (
         <>
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
                 <MenuIcon className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
-            <MenuCard visibility={showCard} className={theme == 0 ? 'light' : 'dark'}>
-                <CloseIcon className="icon icon--x-sign" onClick={() => setShowCard(!showCard)} />
-                <CardWrapper>
-                    <LogoContainer>
-                        <ThalesLogo className="icon icon--logo" />
-                    </LogoContainer>
-                    <UserWallet />
-                    {isWalletConnected && <PieChartUserBalance />}
-                    <PriceChart coin={currencyKeyToCoinGeckoIndexMap['THALES']} showHeading={true} />
-                    <ThemeSelector />
-                    {isWalletConnected && <NetworkSwitchSection />}
-                    <LanguageCardSelector />
-                </CardWrapper>
-            </MenuCard>
+            <OutsideClickHandler onOutsideClick={() => (showCard ? setShowCard(!showCard) : '')}>
+                <MenuCard visibility={showCard} className={theme == 0 ? 'light' : 'dark'}>
+                    <CloseIcon className="icon icon--x-sign" onClick={() => setShowCard(!showCard)} />
+                    <CardWrapper>
+                        <LogoContainer>
+                            <ThalesLogo className="icon icon--logo" />
+                        </LogoContainer>
+                        <UserWallet />
+                        {isWalletConnected && <PieChartUserBalance />}
+                        <PriceChart coin={currencyKeyToCoinGeckoIndexMap['THALES']} showHeading={true} />
+                        <ThemeSelector />
+                        {isWalletConnected && <NetworkSwitchSection />}
+                        <LanguageCardSelector />
+                    </CardWrapper>
+                </MenuCard>
+            </OutsideClickHandler>
+            <Overlay className={showCard ? 'show' : 'hide'} />
         </>
     );
 };
@@ -48,6 +54,24 @@ export const UserCard: React.FC = () => {
 interface ManuCardProps {
     visibility: boolean;
 }
+
+export const Overlay = styled.div`
+    position: fixed;
+    min-height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background: #748bc6;
+    opacity: 0.4;
+    z-index: 1;
+    backdrop-filter: blur(10px);
+    &.show {
+        display: block;
+    }
+    &.hide {
+        display: none;
+    }
+`;
 
 const MenuCardButton = styled.div`
     position: absolute;

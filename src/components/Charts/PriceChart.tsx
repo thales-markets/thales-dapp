@@ -36,7 +36,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
     const priceData = usePriceDataQuery({ coin, currencyVs, days }, { enabled: true });
 
     const processedPriceData: Array<{ name: number; price: number }> | null =
-        priceData.isSuccess && priceData.data
+        priceData.isSuccess && priceData.data && priceData?.data?.prices
             ? priceData?.data?.prices.map((item: Array<number>) => {
                   return {
                       name: Number(item[0]),
