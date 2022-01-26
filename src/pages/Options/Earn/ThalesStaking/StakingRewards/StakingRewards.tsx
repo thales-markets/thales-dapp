@@ -115,9 +115,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 setTxErrorMessage(null);
                 setIsClaiming(true);
                 const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-                const tx = (await stakingThalesContractWithSigner.claimReward({
-                    gasLimit,
-                })) as ethers.ContractTransaction;
+                const tx = (await stakingThalesContractWithSigner.claimReward()) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
                 if (txResult && txResult.transactionHash) {
@@ -297,17 +295,17 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}
                             </ClaimMessage>
                         )}
-                        {stakingRewards && !stakingRewards.isClaimPaused && !stakingRewards.hasClaimRights && (
+                        {stakingRewards && !stakingRewards.isClaimPaused && stakingRewards.claimed && (
                             <ClaimMessage>
-                                {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
+                                {t('options.earn.thales-staking.staking-rewards.claimed-message')}
                             </ClaimMessage>
                         )}
                         {stakingRewards &&
-                            stakingRewards.hasClaimRights &&
                             !stakingRewards.isClaimPaused &&
-                            stakingRewards.claimed && (
+                            !stakingRewards.claimed &&
+                            !stakingRewards.hasClaimRights && (
                                 <ClaimMessage>
-                                    {t('options.earn.thales-staking.staking-rewards.claimed-message')}
+                                    {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
                                 </ClaimMessage>
                             )}
                     </ButtonContainer>

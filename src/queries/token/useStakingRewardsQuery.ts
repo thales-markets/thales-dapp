@@ -55,9 +55,9 @@ const useStakingRewardsQuery = (
                 isClaimPaused: paused,
                 hasClaimRights: bigNumberFormatter(rewards) > 0,
                 claimed:
-                    (await (snxJSConnector as any).stakingThalesContract.getLastPeriodOfClaimedRewards(
-                        walletAddress
-                    )) === period,
+                    Number(
+                        await (snxJSConnector as any).stakingThalesContract.getLastPeriodOfClaimedRewards(walletAddress)
+                    ) === Number(period),
                 canClosePeriod,
                 rewards: bigNumberFormatter(rewards),
                 rawRewards: rewards,

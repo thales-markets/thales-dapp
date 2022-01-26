@@ -158,9 +158,7 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
             setIsStaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const toStake = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await stakingThalesContractWithSigner.stake(toStake, {
-                gasLimit,
-            });
+            const tx = await stakingThalesContractWithSigner.stake(toStake);
             const txResult = await tx.wait();
 
             if (txResult && txResult.events) {

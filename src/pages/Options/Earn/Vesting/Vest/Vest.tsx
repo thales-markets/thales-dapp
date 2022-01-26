@@ -88,9 +88,7 @@ const Vest: React.FC = () => {
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
             const toVest = ethers.utils.parseEther(claimable.toString());
 
-            const tx = (await escrowThalesContractWithSigner.vest(toVest, {
-                gasLimit,
-            })) as ethers.ContractTransaction;
+            const tx = (await escrowThalesContractWithSigner.vest(toVest)) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

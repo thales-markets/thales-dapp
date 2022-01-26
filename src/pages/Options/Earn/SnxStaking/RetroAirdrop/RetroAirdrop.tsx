@@ -96,10 +96,7 @@ const RetroAirdrop: React.FC = () => {
                 const tx = (await airdropContractWithSigner.claim(
                     retroAirdrop.accountInfo.index,
                     retroAirdrop.accountInfo.rawBalance,
-                    retroAirdrop.accountInfo.proof,
-                    {
-                        gasLimit,
-                    }
+                    retroAirdrop.accountInfo.proof
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 

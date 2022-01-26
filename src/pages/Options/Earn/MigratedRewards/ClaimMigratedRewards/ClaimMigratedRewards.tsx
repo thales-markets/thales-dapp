@@ -118,10 +118,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                 const tx = (await ongoingAirdropContractWithSigner.claim(
                     migratedRewards.reward.index,
                     migratedRewards.reward.rawBalance,
-                    migratedRewards.reward.proof,
-                    {
-                        gasLimit,
-                    }
+                    migratedRewards.reward.proof
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 

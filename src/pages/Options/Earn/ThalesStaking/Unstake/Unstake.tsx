@@ -194,9 +194,7 @@ const Unstake: React.FC<Properties> = ({
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake);
-            const tx = await stakingThalesContractWithSigner.startUnstake(amount, {
-                gasLimit,
-            });
+            const tx = await stakingThalesContractWithSigner.startUnstake(amount);
             const txResult = await tx.wait();
 
             if (txResult && txResult.events) {
@@ -226,11 +224,7 @@ const Unstake: React.FC<Properties> = ({
             setTxErrorMessage(null);
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.unstake({
-                gasLimit: (gasLimit as GasLimit[])?.find(
-                    (gas) => gas.label === t('options.earn.thales-staking.unstake.network-fee-unstake')
-                )?.gasLimit,
-            });
+            const tx = await stakingThalesContractWithSigner.unstake();
             const txResult = await tx.wait();
 
             if (txResult && txResult.events) {
@@ -262,11 +256,7 @@ const Unstake: React.FC<Properties> = ({
             setTxErrorMessage(null);
             setIsCanceling(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.cancelUnstake({
-                gasLimit: (gasLimit as GasLimit[])?.find(
-                    (gas) => gas.label === t('options.earn.thales-staking.unstake.network-fee-cancel')
-                )?.gasLimit,
-            });
+            const tx = await stakingThalesContractWithSigner.cancelUnstake();
             const txResult = await tx.wait();
 
             if (txResult && txResult.events) {
