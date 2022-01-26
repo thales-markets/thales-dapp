@@ -27,17 +27,25 @@ const useLatestRoyaleForUserInfo = (options?: UseQueryOptions<LatestRoyaleSeason
 
 const getFromContract = async (RoyaleContract: any): Promise<LatestRoyaleSeasonInfo> => {
     const season = Number(await RoyaleContract.season());
-    const [seasonStarted, seasonFinished, signUpPeriod, canStartNewSeason, buyInAmount] = await Promise.all([
+    const [
+        seasonStarted,
+        seasonFinished,
+        signUpPeriod,
+        canStartNewSeason,
+        buyInAmount,
+        royaleSeasonCreationTime,
+    ] = await Promise.all([
         RoyaleContract.seasonStarted(season),
         RoyaleContract.seasonFinished(season),
         RoyaleContract.signUpPeriod(),
         RoyaleContract.canStartNewSeason(),
         RoyaleContract.buyInAmount(),
+        RoyaleContract.seasonCreationTime(season),
     ]);
     return {
         season,
         canStartNewSeason,
-        signUpPeriod,
+        signUpPeriod: new Date((Number(royaleSeasonCreationTime) + Number(signUpPeriod)) * 1000),
         seasonStarted,
         seasonFinished,
         buyInAmount,
