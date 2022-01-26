@@ -46,7 +46,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     const signer = provider.getSigner();
     const [fromToken, _setFromToken] = useState(isL2 ? OP_Eth : ETH_Eth);
     const [toToken, _setToToken] = useState(isL2 ? OP_sUSD : ETH_sUSD);
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState('');
     const [previewData, setPreviewData] = useState(undefined);
     const [allowance, setAllowance] = useState(false);
     const [balance, setBalance] = useState('0');
@@ -85,14 +85,14 @@ const Swap: React.FC<any> = ({ handleClose }) => {
     );
 
     useEffect(() => {
-        if (fromToken && amount > 0) {
+        if (fromToken && Number(amount) > 0) {
             setShowSceleton(true);
             quoteQuery.refetch().then((resp) => {
                 setPreviewData(resp.data as any);
                 setShowSceleton(false);
             });
         } else if (fromToken) {
-            setAmount(0);
+            Number(amount) !== 0 ? setAmount('') : '';
             setPreviewData(undefined);
             setShowSceleton(false);
         }
@@ -249,7 +249,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                         className="text-xxs white"
                                         style={{ alignSelf: 'center', marginRight: 5, cursor: 'pointer' }}
                                         onClick={() => {
-                                            setAmount(Number(Number(balance).toFixed(4)));
+                                            setAmount(Number(Number(balance).toFixed(4)).toString());
                                         }}
                                     >
                                         {t('options.swap.balance')}: {Number(balance).toFixed(4)}
@@ -257,7 +257,7 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                     <MaxButton
                                         className="text-xxs"
                                         onClick={() => {
-                                            setAmount(Number(Number(balance).toFixed(4)));
+                                            setAmount(Number(Number(balance).toFixed(4)).toString());
                                         }}
                                     >
                                         {t('options.swap.max')}
@@ -295,7 +295,8 @@ const Swap: React.FC<any> = ({ handleClose }) => {
                                         width: window.innerWidth <= 500 ? 130 : 150,
                                         textAlign: 'right',
                                     }}
-                                    value={amount}
+                                    placeholder="0"
+                                    value={amount !== '' ? Number(amount) : ''}
                                     onChange={(_, value) => {
                                         setAmount(value as any);
                                     }}

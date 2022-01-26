@@ -554,7 +554,7 @@ const SnxRewardsPausedInfoIcon = styled(StyledInfoIcon)`
     max-height: 18px;
     margin-left: 6px;
     @media (max-width: 1024px) {
-        display: block;
+        display: inline;
     }
 `;
 

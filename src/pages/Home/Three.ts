@@ -8,7 +8,7 @@ const MIN_SPEED = 0.5;
 const MAX_SPEED = 10;
 const ACCELERATION = 0.1;
 const CAM_POSITION = 400;
-const STAR = LOADER.load(window.location.origin + '/three/snowflake.png');
+const STAR = LOADER.load(window.location.origin + '/three/star.png');
 const SMOKE = LOADER.load(window.location.origin + '/three/smoke.png');
 const PARTICLES_CNT = window.innerWidth > window.screen.height ? 5 * window.innerWidth : 5 * window.screen.height;
 const SMOKE_SIZE = 200;
@@ -73,7 +73,7 @@ export const setupThreeJS = (renderer: WebGLRenderer) => {
         const particlesGeo = new THREE.BufferGeometry();
         const posArr = new Float32Array(PARTICLES_CNT * 3);
         const material = new THREE.PointsMaterial({
-            size: 2.5,
+            size: 6.5,
             map: STAR,
             color: '#f6f6fe',
             transparent: true,
