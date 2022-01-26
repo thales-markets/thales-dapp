@@ -50,10 +50,26 @@ const Token: React.FC = () => {
                         <AnimationSvg type="image/svg+xml" data={theme !== Theme.Dark ? pic : picBlack}></AnimationSvg>
                     </PieChart>
 
-                    <H2 id="section3">{t('articles.token.list.3')}</H2>
                     <Paragraph>
                         <Trans
                             i18nKey="articles.token.paragraphs.3"
+                            components={{
+                                bold: <strong />,
+                                bold2: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-18.md"
+                                    />
+                                ),
+                            }}
+                        />
+                    </Paragraph>
+
+                    <H2 id="section3">{t('articles.token.list.3')}</H2>
+                    <Paragraph>
+                        <Trans
+                            i18nKey="articles.token.paragraphs.4"
                             components={{
                                 bold: <a target="_blank" rel="noreferrer" href="https://app.dodoex.io/" />,
                                 bold2: <a target="_blank" rel="noreferrer" href="https://app.uniswap.org/#/swap" />,
@@ -70,12 +86,12 @@ const Token: React.FC = () => {
 
                     <H2 id="section4">{t('articles.token.list.4')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.token.paragraphs.4" components={{ bold: <strong /> }} />
+                        <Trans i18nKey="articles.token.paragraphs.5" components={{ bold: <strong /> }} />
                     </Paragraph>
 
                     <H2 id="section5">{t('articles.token.list.5')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.token.paragraphs.5" components={{ bold: <strong /> }} />
+                        <Trans i18nKey="articles.token.paragraphs.6" components={{ bold: <strong /> }} />
                     </Paragraph>
                     <Footer className="article" theme={theme} />
                 </Content>
