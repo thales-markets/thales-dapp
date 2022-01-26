@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 
 import { ResponsiveContainer, AreaChart, Area, YAxis } from 'recharts';
 import { formatPricePercentageGrowth, calculatePercentageChange } from 'utils/formatters/number';
@@ -9,11 +9,12 @@ import styled from 'styled-components';
 import { USD_SIGN } from 'constants/currency';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { formatPriceChangeInterval } from 'utils/formatters/string';
+import { CurrencyKey } from 'constants/currency';
 
 import { useTranslation } from 'react-i18next';
 
 type PriceChartProps = {
-    coin: string;
+    currencyKey: CurrencyKey;
     currencyVs?: string;
     days?: number;
     width?: number;
@@ -23,7 +24,7 @@ type PriceChartProps = {
 };
 
 const PriceChart: React.FC<PriceChartProps> = ({
-    coin,
+    currencyKey,
     currencyVs,
     days,
     width,
@@ -33,37 +34,49 @@ const PriceChart: React.FC<PriceChartProps> = ({
 }) => {
     const { t } = useTranslation();
 
-    const priceData = usePriceDataQuery({ coin, currencyVs, days }, { enabled: true });
+    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days }, { enabled: true });
+    const processedPriceData = useMemo(() => {
+        let data: any = [];
 
-    const processedPriceData: Array<{ name: number; price: number }> | null =
-        priceData.isSuccess && priceData.data && priceData?.data?.prices
-            ? priceData?.data?.prices.map((item: Array<number>) => {
-                  return {
-                      name: Number(item[0]),
-                      price: Number(item[1]),
-                  };
-              })
-            : null;
+        if (priceData.isSuccess && priceData.data && priceData?.data?.prices) {
+            data = priceData?.data?.prices.map((item: Array<number>) => {
+                return {
+                    name: Number(item[0]),
+                    price: Number(item[1]),
+                };
+            });
+        }
 
-    const percentagePriceChange = processedPriceData
-        ? calculatePercentageChange(
-              processedPriceData[processedPriceData.length - 1].price,
-              processedPriceData[0].price
-          )
-        : 0;
+        return data;
+    }, [priceData]);
 
-    const lastPrice = processedPriceData ? processedPriceData[0].price : 0;
+    const percentagePriceChange = useMemo(() => {
+        if (processedPriceData?.length) {
+            return calculatePercentageChange(
+                processedPriceData[processedPriceData.length - 1].price,
+                processedPriceData[0].price
+            );
+        }
+        return 0;
+    }, [processedPriceData]);
+
+    const lastPrice = useMemo(() => {
+        if (processedPriceData?.length) {
+            return processedPriceData[processedPriceData?.length - 1]?.price;
+        }
+        return 0;
+    }, [processedPriceData]);
 
     return (
-        <ChartWrapper style={{ ...containerStyle }}>
-            {processedPriceData && showHeading && (
-                <ChartHeader>
-                    <CoinName>{coin + ' price:'}</CoinName>
-                    <Price>{formatCurrencyWithSign(USD_SIGN, lastPrice)}</Price>
-                </ChartHeader>
-            )}
-            {percentagePriceChange && processedPriceData && (
-                <>
+        <>
+            {processedPriceData && (
+                <ChartWrapper style={{ ...containerStyle }}>
+                    {processedPriceData && showHeading && (
+                        <ChartHeader>
+                            <CoinName>{currencyKey + ' price:'}</CoinName>
+                            <Price>{formatCurrencyWithSign(USD_SIGN, lastPrice)}</Price>
+                        </ChartHeader>
+                    )}
                     <ResponsiveContainer height={height ? height : 50}>
                         <AreaChart
                             data={processedPriceData ? processedPriceData : []}
@@ -99,9 +112,9 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             {formatPricePercentageGrowth(percentagePriceChange)}
                         </PriceChange>
                     </ChartFooter>
-                </>
+                </ChartWrapper>
             )}
-        </ChartWrapper>
+        </>
     );
 };
 

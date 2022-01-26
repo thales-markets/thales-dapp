@@ -1,8 +1,10 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
+import { CurrencyKey } from 'constants/currency';
+import { currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
 
 type RequestParams = {
-    coin: string;
+    currencyKey: CurrencyKey;
     currencyVs?: string;
     days?: number;
 };
@@ -14,10 +16,12 @@ interface PriceData {
 }
 
 const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions<PriceData>) => {
+    const coinGeckoKey = currencyKeyToCoinGeckoIndexMap[requestArgs.currencyKey];
+
     return useQuery<PriceData>(
-        QUERY_KEYS.PriceData.Currency(requestArgs.coin),
+        QUERY_KEYS.PriceData.Currency(requestArgs.currencyKey),
         async () => {
-            const url = `https://api.coingecko.com/api/v3/coins/${requestArgs.coin}/market_chart?vs_currency=${
+            const url = `https://api.coingecko.com/api/v3/coins/${coinGeckoKey}/market_chart?vs_currency=${
                 requestArgs?.currencyVs ? requestArgs.currencyVs : 'usd'
             }&days=${requestArgs?.days ? requestArgs.days : '1'}&interval=hourly`;
 

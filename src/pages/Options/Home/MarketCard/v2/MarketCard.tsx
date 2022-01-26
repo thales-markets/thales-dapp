@@ -16,7 +16,7 @@ import PriceChart from 'components/Charts/PriceChart';
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
 import { getSynthName } from 'utils/currency';
-import { USD_SIGN, currencyKeyToCoinGeckoIndexMap } from 'constants/currency';
+import { USD_SIGN } from 'constants/currency';
 
 type MarketCardPros = {
     exchangeRates: Rates | null;
@@ -75,10 +75,7 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                             <StrongHeaderText>{formatShortDate(optionMarket.maturityDate)}</StrongHeaderText>
                         </LeftContainer>
                         <RightContainer>
-                            <PriceChart
-                                key={optionMarket.currencyKey}
-                                coin={currencyKeyToCoinGeckoIndexMap[optionMarket.currencyKey]}
-                            />
+                            <PriceChart key={optionMarket.currencyKey} currencyKey={optionMarket.currencyKey} />
                         </RightContainer>
                     </InsideContainer>
                 </MarketCardWrapper>
