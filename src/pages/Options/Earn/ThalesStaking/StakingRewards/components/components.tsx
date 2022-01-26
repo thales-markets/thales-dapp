@@ -9,7 +9,7 @@ export const Title = styled(FlexDivColumnCentered)`
     line-height: 16px;
     letter-spacing: 0.25px;
     color: #ffffff;
-    text-align: center;
+    text-align: start;
     margin-bottom: 15px;
 `;
 

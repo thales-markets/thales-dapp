@@ -358,8 +358,8 @@
                     "paused-message": "Claiming is paused, please try later.",
                     "confirmation-message": "Tokens successfully claimed",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
-                    "weekly-base-rewards": "Weekly base rewards",
-                    "weekly-bonus-rewards": "Weekly bonus rewards",
+                    "weekly-base-rewards": "Weekly base rewards pool",
+                    "weekly-bonus-rewards": "Weekly bonus rewards pool",
                     "thales-staking-label": "Thales staking",
                     "snx-staking-label": "SNX staking",
                     "amm-label": "AMM",
@@ -377,6 +377,11 @@
                         "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{ammVolumeRewardsMultiplier}} sUSD AMM volume in last 4 epochs per THALES he gets as base reward. If he did less he gets amount calculated according to formula below:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
+                    },
+                    "close-period": {
+                        "label": "Close period",
+                        "progress-label": "Closing period...",
+                        "confirmation-message": "Period successfully closed"
                     }
                 }
             },

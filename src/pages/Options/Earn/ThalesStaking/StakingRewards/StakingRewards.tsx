@@ -56,6 +56,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [stakingRewards, setStakingRewards] = useState<StakingReward | undefined>(undefined);
     const [isClaiming, setIsClaiming] = useState(false);
+    const [isClosingPeriod, setIsClosingPeriod] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [showTooltip, setShowTooltip] = useState<boolean>(false);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
@@ -108,7 +109,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
         fetchGasLimit();
     }, [isWalletConnected, isClaimAvailable, stakingThalesContract]);
 
-    const handleClaimOngoingAirdrop = async () => {
+    const handleClaimStakingRewards = async () => {
         setShowTooltip(false);
         if (isClaimAvailable && stakingRewards) {
             try {
@@ -137,6 +138,30 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
         }
     };
 
+    const handleClosePeriod = async () => {
+        if (stakingRewards && stakingRewards.canClosePeriod) {
+            try {
+                setTxErrorMessage(null);
+                setIsClosingPeriod(true);
+                const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
+                const tx = (await stakingThalesContractWithSigner.closePeriod()) as ethers.ContractTransaction;
+                const txResult = await tx.wait();
+
+                if (txResult && txResult.transactionHash) {
+                    dispatchMarketNotification(
+                        t('options.earn.thales-staking.staking-rewards.close-period.confirmation-message')
+                    );
+                    refetchStakingRewards(walletAddress, networkId);
+                    setIsClosingPeriod(false);
+                }
+            } catch (e) {
+                console.log(e);
+                setTxErrorMessage(t('common.errors.unknown-error-try-again'));
+                setIsClosingPeriod(false);
+            }
+        }
+    };
+
     const rewards = isClaimAvailable && stakingRewards ? stakingRewards.rewards : 0;
     const baseRewards = isClaimAvailable && stakingRewards ? stakingRewards.baseRewards : 0;
     const snxBonus = isClaimAvailable && stakingRewards ? stakingRewards.snxBonus : 0;
@@ -149,6 +174,8 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
     const maxThalesRoyaleBonusPercentage = stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
     const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
+    const baseRewardsPool = stakingRewards ? stakingRewards.baseRewardsPool : 0;
+    const bonusRewardsPool = stakingRewards ? stakingRewards.bonusRewardsPool : 0;
 
     return (
         <EarnSection
@@ -165,6 +192,18 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                     ) : (
                         '-'
                     )}
+                    {stakingRewards && stakingRewards.canClosePeriod && (
+                        <Button
+                            onClick={handleClosePeriod}
+                            disabled={isClosingPeriod}
+                            className="primary"
+                            style={{ marginLeft: 10, padding: '6px 20px' }}
+                        >
+                            {isClosingPeriod
+                                ? t('options.earn.thales-staking.staking-rewards.close-period.progress-label')
+                                : t('options.earn.thales-staking.staking-rewards.close-period.label')}
+                        </Button>
+                    )}
                 </div>
             </SectionHeader>
             <GridContainer>
@@ -172,13 +211,17 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                     <StakingRewardsHeaderLabel>
                         {t('options.earn.thales-staking.staking-rewards.weekly-base-rewards')}
                     </StakingRewardsHeaderLabel>
-                    <StakingRewardsNotice>70.000 THALES</StakingRewardsNotice>
+                    <StakingRewardsNotice>
+                        {formatCurrencyWithKey(THALES_CURRENCY, baseRewardsPool, 0, true)}
+                    </StakingRewardsNotice>
                 </StakingRewardsItem>
                 <StakingRewardsItem style={{ gridColumn: 'span 9', padding: 15 }}>
                     <StakingRewardsHeaderLabel>
                         {t('options.earn.thales-staking.staking-rewards.weekly-bonus-rewards')}
                     </StakingRewardsHeaderLabel>
-                    <StakingRewardsNotice>21.000 THALES</StakingRewardsNotice>
+                    <StakingRewardsNotice>
+                        {formatCurrencyWithKey(THALES_CURRENCY, bonusRewardsPool, 0, true)}
+                    </StakingRewardsNotice>
                 </StakingRewardsItem>
                 <StakingRewardsItem>
                     <StakingRewardsLabel color="#64D9FE">
@@ -277,8 +320,8 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                                 onMouseOut={() => {
                                     setShowTooltip(false);
                                 }}
-                                onClick={handleClaimOngoingAirdrop}
-                                disabled={!isClaimAvailable || isClaiming}
+                                onClick={handleClaimStakingRewards}
+                                disabled={!isClaimAvailable || isClaiming || isClosingPeriod}
                                 className="primary"
                             >
                                 {isClaiming

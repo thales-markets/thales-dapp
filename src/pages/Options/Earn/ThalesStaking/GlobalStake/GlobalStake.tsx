@@ -10,7 +10,6 @@ import { getNetworkId, getWalletAddress } from '../../../../../redux/modules/wal
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { /*ClaimMessage, */ EarnSection, SectionHeader } from '../../components';
-import { WEEKLY_REWARDS_THALES } from 'constants/token';
 import { GridContainer, StakeInfoContent, StakeInfoItem, StakeInfoLabel } from '../../gridComponents';
 
 type GlobalStakeProps = {
@@ -82,7 +81,7 @@ const GlobalStake: React.FC<GlobalStakeProps> = ({
         escrowedBalance,
     ]);
 
-    const estimatedRewards = useMemo(() => (myStakedShare / 100) * WEEKLY_REWARDS_THALES, [myStakedShare]);
+    const estimatedRewards = useMemo(() => (myStakedShare / 100) * Number(fixedPeriodReward), [myStakedShare]);
 
     useEffect(() => {
         if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {

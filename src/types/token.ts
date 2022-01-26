@@ -68,8 +68,9 @@ export type StakingReward = {
     hasClaimRights: boolean;
     claimed: boolean;
     canClosePeriod: boolean;
+    baseRewardsPool: number;
+    bonusRewardsPool: number;
     rewards: number;
-    rawRewards: string;
     baseRewards: number;
     totalBonus: number;
     snxBonus: number;
