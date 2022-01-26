@@ -13,6 +13,7 @@ import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetwork
 import { FooterV2 } from './V2/components/Footer';
 
 import { ScoreboardPage } from './V2/components/ScoreboardPage';
+import { RoyaleArena } from './V2/components/RoyaleArena';
 
 export enum Theme {
     Light,
@@ -82,6 +83,7 @@ const ThalesRoyal: React.FC = () => {
             >
                 <Header theme={theme} setTheme={setTheme} />
                 <ScoreboardPage />
+                <RoyaleArena showBattle={selectedPage === 'royale'} />
                 <FooterV2 selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
             </Wrapper>
 

@@ -4,6 +4,11 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 
 type RoundData = {
+    round: number;
+    season: number;
+    result?: number;
+    strikePrice?: number;
+    finalPrice?: number;
     eliminatedPerRoundPerSeason: string;
     totalPlayersPerRoundPerSeason: string;
 };

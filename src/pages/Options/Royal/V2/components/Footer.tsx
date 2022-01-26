@@ -30,7 +30,6 @@ export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedP
         enabled: networkId !== undefined && isAppReady,
     });
     const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
-
     const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
     const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
 
@@ -124,7 +123,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedP
                         <div>
                             <span>{t('options.royale.footer.current-positions')}:</span>
                             <span>{t('options.royale.footer.up')}</span>
-                            <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
+                            <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
                             <span>{t('options.royale.footer.down')}</span>
                         </div>
                         <div>
@@ -173,6 +172,7 @@ const Footer = styled.div`
     width: 100%;
     padding: 50px;
     align-items: flex-end;
+    z-index: 100;
     @media (max-width: 1024px) {
         position: absolute;
         top: 0;
