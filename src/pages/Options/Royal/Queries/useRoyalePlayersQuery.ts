@@ -27,8 +27,8 @@ const useRoyalePlayersQuery = (networkId: NetworkId, selectedSeason: number, opt
     return useQuery<User[]>(
         QUERY_KEYS.Royale.Players(),
         async () => {
-            let season = 0;
-            if (selectedSeason === 0) {
+            let season = selectedSeason;
+            if (season === 0) {
                 const { thalesRoyaleContract } = snxJSConnector;
                 if (thalesRoyaleContract) {
                     season = Number(await thalesRoyaleContract.season());
