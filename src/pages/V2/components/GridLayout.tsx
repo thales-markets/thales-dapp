@@ -210,6 +210,7 @@ const LearnButton = styled(Button)`
     color: #ffffff;
     cursor: pointer;
     transition: 0.2s;
+    z-index: 4;
     &:hover {
         transform: scale(1.2);
     }
@@ -434,7 +435,6 @@ const ContSubTitle = styled.p`
 `;
 
 const Link = styled.a`
-    position: relative;
     font-family: Nunito !important;
     font-style: normal;
     font-weight: bold;
@@ -444,6 +444,9 @@ const Link = styled.a`
     text-transform: capitalize;
     color: #ffffff;
     cursor: pointer;
+    display: flex;
+    align-items: inherit;
+    justify-content: center;
 `;
 
 const Logo = styled.i`

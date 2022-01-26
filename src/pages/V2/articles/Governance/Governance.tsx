@@ -67,7 +67,13 @@ const Governance: React.FC = () => {
 
                     <H2 id="section5">{t('articles.governance.list.5')}</H2>
                     <Paragraph>
-                        <Trans i18nKey="articles.governance.paragraphs.5" components={{ bold: <strong /> }} />
+                        <Trans
+                            i18nKey="articles.governance.paragraphs.5"
+                            components={{
+                                bold: <strong />,
+                                url: <a target="_blank" rel="noreferrer" href="https://discord.com/invite/thales" />,
+                            }}
+                        />
                     </Paragraph>
                     <Footer className="article" theme={theme} />
                 </Content>
