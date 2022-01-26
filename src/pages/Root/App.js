@@ -6,6 +6,7 @@ import { initOnboard } from 'config/onboard';
 import { LOCAL_STORAGE_KEYS } from 'constants/storage';
 import useLocalStorage from 'hooks/useLocalStorage';
 import EarnPage from 'pages/Options/Earn/Earn.tsx';
+import GamePage from 'pages/Options/Game/Game.tsx';
 import LeaderboardPage from 'pages/Options/Home/Leaderboard';
 import QuickTradingPage from 'pages/Options/QuickTrading';
 import QuickTradingCompetitionPage from 'pages/Options/QuickTradingCompetition';
@@ -28,9 +29,12 @@ import GovernancePage from 'pages/Governance';
 import TradeHistory from 'pages/Options/TradeHistory';
 import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
+import Token from '../V2/articles/Token';
+import Governance from '../V2/articles/Governance';
+import Whitepaper from '../V2/articles/Whitepaper';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../Home'));
+const Home = lazy(() => import('../V2/Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
@@ -244,6 +248,11 @@ const App = () => {
                                 </MainLayout>
                             )}
                         />
+                        <Route exact path={ROUTES.Options.Game}>
+                            <MainLayout>
+                                <GamePage />
+                            </MainLayout>
+                        </Route>
 
                         <Route exact path={ROUTES.Options.Token}>
                             <MainLayout>
@@ -270,6 +279,21 @@ const App = () => {
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>
                                 <Home />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Token}>
+                            <MainLayout>
+                                <Token />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Governance}>
+                            <MainLayout>
+                                <Governance />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Whitepaper}>
+                            <MainLayout>
+                                <Whitepaper />
                             </MainLayout>
                         </Route>
                         <Route>

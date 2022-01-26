@@ -33,6 +33,9 @@ export const QUERY_KEYS = {
     Synths: {
         FrozenSynths: ['synths', 'frozenSynths'],
     },
+    Medium: {
+        Posts: ['medium', 'posts'],
+    },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
         EthGasPriceEip1559: (networkId: NetworkId) => ['network', 'ethGasPriceEip1559', networkId],

@@ -1,5 +1,10 @@
 export const ROUTES = {
     Home: '/',
+    Article: {
+        Token: '/article/token',
+        Governance: '/article/governance',
+        Whitepaper: '/article/whitepaper',
+    },
     Options: {
         Home: '/markets',
         HotMarkets: '/markets?anchor=hot-markets',
@@ -16,6 +21,7 @@ export const ROUTES = {
         AmmReporting: '/markets/amm-reporting',
         Token: '/token',
         Royal: '/royale',
+        Game: '/tale-of-thales',
         TokenMigration: '/token?tab=migration&action=migrate',
     },
     Governance: {
