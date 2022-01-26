@@ -58,13 +58,13 @@ const getFromContract = async (RoyaleContract: any): Promise<LatestRoyaleSeasonI
         RoyaleContract.seasonCreationTime(season),
         RoyaleContract.royaleSeasonEndTime(season),
         RoyaleContract.signUpPeriod(),
-        RoyaleContract.canCloseRound(),
         RoyaleContract.canStartRoyale(),
         RoyaleContract.canStartNewSeason(),
         RoyaleContract.pauseBetweenSeasonsTime(),
         RoyaleContract.seasonStarted(season),
         RoyaleContract.seasonFinished(season),
     ]);
+
     return {
         season,
         rounds,
