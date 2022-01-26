@@ -102,7 +102,7 @@ const Content = styled.div`
         top: 140px;
         width: 100vw;
         padding: 0 40px;
-        z-index: 10;
+        z-index: 9;
         grid-column-start: unset;
         grid-column-end: unset;
         grid-row-start: unset;
