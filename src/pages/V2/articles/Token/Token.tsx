@@ -57,6 +57,13 @@ const Token: React.FC = () => {
                             components={{
                                 bold: <a target="_blank" rel="noreferrer" href="https://app.dodoex.io/" />,
                                 bold2: <a target="_blank" rel="noreferrer" href="https://app.uniswap.org/#/swap" />,
+                                bold3: (
+                                    <a
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        href="https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-17.md"
+                                    />
+                                ),
                             }}
                         />
                     </Paragraph>

@@ -151,6 +151,10 @@ const Paragraph = styled.p`
     strong {
         font-family: NunitoSemiBold !important;
     }
+    a {
+        font-family: NunitoSemiBold !important;
+        text-decoration: underline;
+    }
 `;
 
 const List = styled.ul`
