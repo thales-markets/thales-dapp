@@ -23,8 +23,6 @@ export const UserCard: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const theme = useSelector((state: RootState) => getTheme(state));
 
-    console.log('ShowCard ', showCard);
-
     return (
         <>
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
