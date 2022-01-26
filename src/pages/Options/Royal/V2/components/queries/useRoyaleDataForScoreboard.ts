@@ -4,7 +4,6 @@ import snxJSConnector from 'utils/snxJSConnector';
 
 type LatestRoyaleSeasonInfo = {
     seasonFinished: boolean;
-    signUpPeriod: Date;
     round: number;
     allSeasons: number[];
 };
@@ -24,10 +23,9 @@ const useRoyaleDataForScoreboard = (selectedSeason: number, options?: UseQueryOp
 };
 
 const getFromContract = async (selectedSeason: number, RoyaleContract: any): Promise<LatestRoyaleSeasonInfo> => {
-    const [season, seasonFinished, signUpPeriod, round] = await Promise.all([
+    const [season, seasonFinished, round] = await Promise.all([
         RoyaleContract.season(),
         RoyaleContract.seasonFinished(selectedSeason),
-        RoyaleContract.signUpPeriod(),
         RoyaleContract.roundInASeason(selectedSeason),
     ]);
     const allSeasons = [];
@@ -36,7 +34,6 @@ const getFromContract = async (selectedSeason: number, RoyaleContract: any): Pro
     }
     return {
         seasonFinished,
-        signUpPeriod,
         round,
         allSeasons,
     };

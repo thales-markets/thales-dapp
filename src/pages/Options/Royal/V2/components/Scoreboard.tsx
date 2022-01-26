@@ -68,28 +68,15 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
     const usersForUi = useMemo(() => {
         if (!royaleData) return;
         if (users.length > 0) {
-            let usersToShow: any =
-                royaleData.signUpPeriod < new Date()
-                    ? users.filter((user: User) => user.status === UserStatus.RDY)
-                    : users;
+            let usersToShow: any = users;
 
             switch (orderBy) {
                 case 1:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
-                        if (a.status !== b.status) {
-                            return orderDirection === OrderDirection.ASC ? a.status - b.status : b.status - a.status;
+                        if (orderDirection === OrderDirection.ASC) {
+                            return a.isAlive && b.isAlive ? 0 : a.isAlive ? -1 : 1;
                         } else {
-                            if (a.isAlive && b.isAlive) {
-                                orderDirection === OrderDirection.ASC ? a.number - b.number : b.number - a.number;
-                            } else {
-                                return a.isAlive
-                                    ? orderDirection === OrderDirection.ASC
-                                        ? -1
-                                        : 1
-                                    : orderDirection === OrderDirection.DESC
-                                    ? 1
-                                    : -1;
-                            }
+                            return a.isAlive && b.isAlive ? 0 : a.isAlive ? 1 : -1;
                         }
                     });
                     break;
