@@ -15,7 +15,7 @@ type RoundData = {
 
 const useRoundsQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<RoundData[]>) => {
     return useQuery<RoundData[]>(
-        QUERY_KEYS.Royale.Rounds(networkId),
+        QUERY_KEYS.Royale.Rounds(networkId, selectedSeason),
         async () => {
             if (selectedSeason === 0) return [];
             const data = await thalesData.binaryOptions.thalesRoyaleRounds({

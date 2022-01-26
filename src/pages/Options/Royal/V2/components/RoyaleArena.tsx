@@ -40,7 +40,7 @@ const renderRounds = (
     const cards = [];
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
-    const roundsQuery = useRoundsQuery(3, networkId, { enabled: networkId !== undefined });
+    const roundsQuery = useRoundsQuery(selectedSeason, networkId, { enabled: networkId !== undefined });
 
     const roundsGraphInfo = roundsQuery.isSuccess ? roundsQuery.data : [];
 
@@ -52,13 +52,13 @@ const renderRounds = (
     const roundsInformation = useMemo(
         () =>
             roundsGraphInfo.map((r) => {
-                return { ...r, ...positions.find((p) => p.round === r.round) };
+                return { ...r, position: positions.find((p) => p.round === r.round)?.position || 0 };
             }),
         [positions, roundsGraphInfo]
     );
 
     const vote = (option: number) => async () => {
-        if (option === roundsInformation[roundInASeason - 1].position) {
+        if (option === roundsInformation[roundInASeason - 1]?.position) {
             return;
         }
         const { thalesRoyaleContract } = snxJSConnector;
@@ -93,10 +93,10 @@ const renderRounds = (
             ? cards.push(
                   <CurrentRound id={`round${index}`} key={index}>
                       <LongButton
-                          selected={roundsInformation[index - 1].position === 2}
+                          selected={roundsInformation[index - 1]?.position === 2}
                           onClick={vote(2)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
-                          notSelected={roundsInformation[index - 1].position === 1}
+                          notSelected={roundsInformation[index - 1]?.position === 1}
                       >
                           △
                       </LongButton>
@@ -123,13 +123,13 @@ const renderRounds = (
                           </CurrentRoundText>
                       </div>
                       <ShortButton
-                          selected={roundsInformation[index - 1].position === 1}
+                          selected={roundsInformation[index - 1]?.position === 1}
                           onClick={vote(1)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
-                          notSelected={roundsInformation[index - 1].position === 2}
+                          notSelected={roundsInformation[index - 1]?.position === 2}
                       >
                           <Circle
-                              selected={roundsInformation[index - 1].position === 1}
+                              selected={roundsInformation[index - 1]?.position === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -138,7 +138,7 @@ const renderRounds = (
             : index < roundInASeason
             ? cards.push(
                   <PrevRound id={`round${index}`} key={index}>
-                      <LongButton selected={roundsInformation[index - 1].position === 2} disabled={true}>
+                      <LongButton selected={roundsInformation[index - 1]?.position === 2} disabled={true}>
                           △
                       </LongButton>
                       <div>
@@ -161,9 +161,9 @@ const renderRounds = (
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
-                      <ShortButton selected={roundsInformation[index - 1].position === 1} disabled={true}>
+                      <ShortButton selected={roundsInformation[index - 1]?.position === 1} disabled={true}>
                           <Circle
-                              selected={roundsInformation[index - 1].position === 1}
+                              selected={roundsInformation[index - 1]?.position === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -213,7 +213,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle }) => {
 
     const selectedSeason = useMemo(() => latestSeason, [latestSeason]);
 
-    const royaleDataQuery = useRoyaleArenaContractQuery(3, walletAddress ?? '', {
+    const royaleDataQuery = useRoyaleArenaContractQuery(selectedSeason, walletAddress ?? '', {
         enabled: isAppReady && isL2,
     });
 
