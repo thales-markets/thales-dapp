@@ -6,7 +6,7 @@ import snxJSConnector from 'utils/snxJSConnector';
 type FooterData = {
     reward: number;
     round: number;
-    playersAlive: number;
+    playersAlive: string;
 };
 
 const useRoyaleFooterQuery = (options?: UseQueryOptions<FooterData>) => {
@@ -29,12 +29,19 @@ const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
         RoyaleContract.roundInASeason(season),
         RoyaleContract.rewardPerSeason(season),
     ]);
-    const totalPlayersPerRound = await RoyaleContract.totalPlayersPerRoundPerSeason(season, round);
+    const totalPlayers = await RoyaleContract.signedUpPlayersCount(season);
+    const totalPlayersPerRoundPerSeason =
+        Number(round) !== 0 ? await RoyaleContract.totalPlayersPerRoundPerSeason(season, round) : undefined;
+    const playersAlive = Number(round) === 0 ? totalPlayers : totalPlayersPerRoundPerSeason;
 
     return {
         round: Number(round),
-        reward: Number(ethers.utils.formatEther(reward)) / Number(totalPlayersPerRound),
-        playersAlive: Number(totalPlayersPerRound),
+        reward: Number(ethers.utils.formatEther(reward)) / Number(playersAlive),
+        playersAlive:
+            '' +
+            playersAlive +
+            '  /  ' +
+            (totalPlayersPerRoundPerSeason ? totalPlayersPerRoundPerSeason : totalPlayers),
     };
 };
 
