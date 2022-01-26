@@ -35,6 +35,12 @@ import {
     StakingRewardsHeaderLabel,
 } from '../../gridComponents';
 import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';
+import { LINKS } from 'constants/links';
+import { ReactComponent as InfoIcon } from 'assets/images/info-circle-blue.svg';
+import styled from 'styled-components';
+import SnxStakingTooltip from './components/SnxStakingTooltip';
+import AmmTooltip from './components/AmmTooltip';
+import ThalesRoyaleTooltip from './components/ThalesRoyaleTooltip';
 
 type StakingRewardsProps = {
     escrowedBalance: number;
@@ -141,6 +147,10 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const maxSnxBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxSnxBonus : 0;
     const maxAmmBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonus : 0;
     const maxThalesRoyaleBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonus : 0;
+    const maxSnxBonusPercentage = isClaimAvailable && stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
+    const maxAmmBonusPercentage = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
+    const maxThalesRoyaleBonusPercentage =
+        isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
 
     return (
         <EarnSection
@@ -181,6 +191,13 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 <StakingRewardsItem>
                     <StakingRewardsLabel color="linear-gradient(154.67deg, #1AAB9B 17.5%, #64D9FE 95.42%)">
                         {t('options.earn.thales-staking.staking-rewards.snx-staking-label')}
+                        <StyledMaterialTooltip
+                            arrow
+                            interactive
+                            title={<SnxStakingTooltip maxPercentage={maxSnxBonusPercentage} />}
+                        >
+                            <BonusInfoIcon />
+                        </StyledMaterialTooltip>
                     </StakingRewardsLabel>
                     <StakingRewardsNotice>
                         {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
@@ -188,7 +205,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                         })}
                     </StakingRewardsNotice>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, snxBonus)}</StakingRewardsContent>
-                    <BonusRewardButton>
+                    <BonusRewardButton target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.SnxStaking}>
                         <BonusRewardInnerButton>
                             {t('options.earn.thales-staking.staking-rewards.bonus-button.snx-staking-label')}
                         </BonusRewardInnerButton>
@@ -197,6 +214,13 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 <StakingRewardsItem>
                     <StakingRewardsLabel color="linear-gradient(87.09deg, #FFB636 -1%, #F55C05 106%)">
                         {t('options.earn.thales-staking.staking-rewards.amm-label')}
+                        <StyledMaterialTooltip
+                            arrow
+                            interactive
+                            title={<AmmTooltip maxPercentage={maxAmmBonusPercentage} />}
+                        >
+                            <BonusInfoIcon />
+                        </StyledMaterialTooltip>
                     </StakingRewardsLabel>
                     <StakingRewardsNotice>
                         {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
@@ -204,7 +228,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                         })}
                     </StakingRewardsNotice>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, ammBonus)}</StakingRewardsContent>
-                    <BonusRewardButton>
+                    <BonusRewardButton target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.AMM}>
                         <BonusRewardInnerButton>
                             {t('options.earn.thales-staking.staking-rewards.bonus-button.amm-label')}
                         </BonusRewardInnerButton>
@@ -213,6 +237,13 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 <StakingRewardsItem>
                     <StakingRewardsLabel color="linear-gradient(87.09deg, #9AB676 -1%, #0F803C 106.68%)">
                         {t('options.earn.thales-staking.staking-rewards.thales-royale-label')}
+                        <StyledMaterialTooltip
+                            arrow
+                            interactive
+                            title={<ThalesRoyaleTooltip maxPercentage={maxThalesRoyaleBonusPercentage} />}
+                        >
+                            <BonusInfoIcon />
+                        </StyledMaterialTooltip>
                     </StakingRewardsLabel>
                     <StakingRewardsNotice>
                         {t('options.earn.thales-staking.staking-rewards.max-reward-label', {
@@ -222,7 +253,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                     <StakingRewardsContent>
                         {formatCurrencyWithKey(THALES_CURRENCY, thalesRoyaleBonus)}
                     </StakingRewardsContent>
-                    <BonusRewardButton>
+                    <BonusRewardButton target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.ThalesRoyale}>
                         <BonusRewardInnerButton>
                             {t('options.earn.thales-staking.staking-rewards.bonus-button.thales-royale-label')}
                         </BonusRewardInnerButton>
@@ -283,5 +314,12 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
         </EarnSection>
     );
 };
+
+const BonusInfoIcon = styled(InfoIcon)`
+    min-width: 16px;
+    min-height: 16px;
+    margin-left: 4px;
+    margin-bottom: -3px;
+`;
 
 export default StakingRewards;

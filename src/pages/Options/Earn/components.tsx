@@ -3,7 +3,6 @@ import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDiv
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { DefaultSubmitButton } from '../Market/components';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -166,20 +165,22 @@ export const LearnMore = styled.span<{ top: string }>`
 export const StyledMaterialTooltip = withStyles(() => ({
     arrow: {
         '&:before': {
-            border: '1px solid #00D1FF',
+            border: '1px solid #64D9FE',
         },
-        color: '#04045A',
+        color: '#0d1069',
+        marginLeft: '0px!important',
     },
     tooltip: {
         background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
-        borderRadius: '23px',
-        border: '1px solid #00D1FF',
+        borderRadius: '15px',
+        border: '1px solid #64D9FE',
         padding: '20px',
         fontSize: '16px',
         lineHeight: '24px',
         letterSpacing: '0.4px',
         color: '#F6F6FE',
-        maxWidth: window.innerWidth < 768 ? 350 : 700,
+        maxWidth: window.innerWidth < 768 ? 350 : 400,
+        boxShadow: '-2px -2px 10px rgba(100, 217, 254, 0.25), 2px 2px 10px rgba(100, 217, 254, 0.25)',
     },
 }))(MaterialTooltip);
 
@@ -223,7 +224,7 @@ export const StyledInfoIcon = styled(InfoIcon)`
     }
 `;
 
-export const BonusRewardButton = styled(DefaultSubmitButton)`
+export const BonusRewardButton = styled.a`
     background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
     border: none;
     border-radius: 15px;

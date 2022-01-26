@@ -11,6 +11,11 @@ export const LINKS = {
             'https://docs.google.com/spreadsheets/d/1nuTg7dL2BjMTbNAp_gnjjtXuhzNyw-DTy3PaZwsIXS0/edit#gid=0',
         TIP18:
             'https://thalesmarket.io/governance/thalesgov.eth/0x2b9f3fadf2bc92af007845b8d2e941e26428ddb965d24f985f7b969b87e58d9c',
+        Bonus: {
+            SnxStaking: 'https://staking.synthetix.io/',
+            AMM: 'https://thalesmarket.io/markets',
+            ThalesRoyale: 'https://thalesmarket.io/royale',
+        },
     },
     AMM: {
         Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',
