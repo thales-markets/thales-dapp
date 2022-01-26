@@ -16,9 +16,10 @@ import { useTranslation } from 'react-i18next';
 
 type AmmTooltipProps = {
     maxPercentage: number;
+    ammVolumeRewardsMultiplier: number;
 };
 
-const AmmTooltip: React.FC<AmmTooltipProps> = ({ maxPercentage }) => {
+const AmmTooltip: React.FC<AmmTooltipProps> = ({ maxPercentage, ammVolumeRewardsMultiplier }) => {
     const { t } = useTranslation();
 
     return (
@@ -27,12 +28,13 @@ const AmmTooltip: React.FC<AmmTooltipProps> = ({ maxPercentage }) => {
             <Description>
                 {t('options.earn.thales-staking.staking-rewards.bonus-tooltip.amm-description', {
                     max: maxPercentage,
+                    ammVolumeRewardsMultiplier: ammVolumeRewardsMultiplier,
                 })}
             </Description>
             <Formula>
                 <FormulaLeftSide>
                     <FormulaAmount style={{ paddingLeft: 12, paddingRight: 12 }}>amountTraded</FormulaAmount>
-                    <FormulaRequiredAmount>baseReward x 10</FormulaRequiredAmount>
+                    <FormulaRequiredAmount>{`baseReward x ${ammVolumeRewardsMultiplier}`}</FormulaRequiredAmount>
                 </FormulaLeftSide>
                 <FormulaSign>X</FormulaSign>
                 <FormulaRightSide>{maxPercentage}</FormulaRightSide>

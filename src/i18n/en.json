@@ -374,7 +374,7 @@
                         "snx-staking-title": "SNX staking bonus",
                         "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least 1 SNX staked per THALES he would receive as base reward. If he has less SNX staked he gets amount calculated according to formula below:",
                         "amm-title": "AMM bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least 10 sUSD AMM volume in last 4 epochs per THALES he gets as base reward. If he did less he gets amount calculated according to formula below:",
+                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{ammVolumeRewardsMultiplier}} sUSD AMM volume in last 4 epochs per THALES he gets as base reward. If he did less he gets amount calculated according to formula below:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
                     }

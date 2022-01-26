@@ -67,6 +67,7 @@ export type StakingReward = {
     isClaimPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;
+    canClosePeriod: boolean;
     rewards: number;
     rawRewards: string;
     baseRewards: number;
@@ -80,6 +81,7 @@ export type StakingReward = {
     maxSnxBonus: number;
     maxAmmBonus: number;
     maxThalesRoyaleBonus: number;
+    ammVolumeRewardsMultiplier: number;
 };
 
 type Reward = {

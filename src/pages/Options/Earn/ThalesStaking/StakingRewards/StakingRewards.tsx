@@ -151,6 +151,8 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const maxAmmBonusPercentage = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
     const maxThalesRoyaleBonusPercentage =
         isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
+    const ammVolumeRewardsMultiplier =
+        isClaimAvailable && stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
 
     return (
         <EarnSection
@@ -217,7 +219,12 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                         <StyledMaterialTooltip
                             arrow
                             interactive
-                            title={<AmmTooltip maxPercentage={maxAmmBonusPercentage} />}
+                            title={
+                                <AmmTooltip
+                                    maxPercentage={maxAmmBonusPercentage}
+                                    ammVolumeRewardsMultiplier={ammVolumeRewardsMultiplier}
+                                />
+                            }
                         >
                             <BonusInfoIcon />
                         </StyledMaterialTooltip>
