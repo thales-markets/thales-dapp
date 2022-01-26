@@ -145,12 +145,10 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const maxSnxBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxSnxBonus : 0;
     const maxAmmBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonus : 0;
     const maxThalesRoyaleBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonus : 0;
-    const maxSnxBonusPercentage = isClaimAvailable && stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
-    const maxAmmBonusPercentage = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
-    const maxThalesRoyaleBonusPercentage =
-        isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
-    const ammVolumeRewardsMultiplier =
-        isClaimAvailable && stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
+    const maxSnxBonusPercentage = stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
+    const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
+    const maxThalesRoyaleBonusPercentage = stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
+    const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
 
     return (
         <EarnSection
