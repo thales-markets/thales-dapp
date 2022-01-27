@@ -37,11 +37,11 @@ const getFromContract = async (
     season: number,
     address: string | null
 ): Promise<RoyaleArenaData> => {
+    const roundInASeason = await RoyaleContract.roundInASeason(season);
     const [
         roundInASeasonStartTime,
         roundInASeasonEndTime,
         roundChoosingLength,
-        roundInASeason,
         canCloseRound,
         isPlayerAlive,
         seasonFinished,
@@ -53,14 +53,13 @@ const getFromContract = async (
         RoyaleContract.roundInASeasonStartTime(season),
         RoyaleContract.roundInSeasonEndTime(season),
         RoyaleContract.roundChoosingLength(),
-        RoyaleContract.roundInASeason(season),
         RoyaleContract.canCloseRound(),
         RoyaleContract.isPlayerAliveInASpecificSeason(address, season),
         RoyaleContract.seasonFinished(season),
         RoyaleContract.rewardCollectedPerSeason(season, address),
         RoyaleContract.rounds(),
         RoyaleContract.oracleKey(),
-        RoyaleContract.roundTargetPrice(),
+        RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
     ]);
     return {
         roundChoosingLength: Number(roundChoosingLength),
