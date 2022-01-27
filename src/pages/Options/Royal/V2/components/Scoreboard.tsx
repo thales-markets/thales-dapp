@@ -64,15 +64,15 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
         enabled: isL2 && isAppReady && !invalidate,
     });
-    const users = usersQuery.isFetching ? [] : usersQuery.isSuccess ? usersQuery.data : [];
+    const users = usersQuery.isSuccess ? usersQuery.data : [];
 
     const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
 
     useEffect(() => {
         if (invalidate) {
             setInvalidate(false);
-            usersQuery.refetch();
-            royaleDataQuery.refetch();
+            usersQuery.remove();
+            royaleDataQuery.remove();
         }
     }, [invalidate]);
 
