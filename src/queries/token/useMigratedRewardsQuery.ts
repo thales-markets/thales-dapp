@@ -4,7 +4,7 @@ import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { MigratedReward } from 'types/token';
-import { getOngoingAirdropHashesURL } from 'utils/token';
+import ongoingAirdropMigrationHashes from 'utils/json/OngoingAirdropMigration.json';
 
 const BALANCE_THRESHOLD = 0.0001;
 
@@ -16,31 +16,25 @@ const useMigratedRewardsQuery = (
     return useQuery<MigratedReward>(
         QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId),
         async () => {
-            const [paused, period, lastPeriodTimeStamp, durationPeriod] = await Promise.all([
+            const [paused, period, lastPeriodTimeStamp, durationPeriod, rewards] = await Promise.all([
                 (snxJSConnector as any).ongoingAirdropContract.paused(),
                 (snxJSConnector as any).ongoingAirdropContract.period(),
                 (snxJSConnector as any).stakingThalesContract.lastPeriodTimeStamp(),
                 (snxJSConnector as any).stakingThalesContract.durationPeriod(),
+                (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
             ]);
 
-            let ongoingAirdropHashes: any = [];
-            let isHashFileAvailable = true;
-            try {
-                const ongoingAirdropHashesResponse = await fetch(getOngoingAirdropHashesURL(period));
-                ongoingAirdropHashes = await ongoingAirdropHashesResponse.json();
-            } catch {
-                isHashFileAvailable = false;
-            }
-            const ongoingAirdropHash = ongoingAirdropHashes.find(
+            const ongoingAirdropHash = ongoingAirdropMigrationHashes.find(
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
             );
 
             const migratedRewards: MigratedReward = {
-                isClaimPaused: paused || !isHashFileAvailable,
+                isClaimPaused: paused,
                 hasClaimRights: ongoingAirdropHash !== undefined && ongoingAirdropHash.balance !== '0',
                 claimed: true,
                 period: period,
                 closingDate: Number(lastPeriodTimeStamp) * 1000 + Number(durationPeriod) * 1000,
+                hasStakingRewardsToClaim: bigNumberFormatter(rewards) > 0,
             };
             if (ongoingAirdropHash) {
                 const balance = bigNumberFormatter(ongoingAirdropHash.balance);

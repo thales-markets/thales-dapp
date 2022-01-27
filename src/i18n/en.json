@@ -401,7 +401,9 @@
                         "label": "Close period",
                         "progress-label": "Closing period...",
                         "confirmation-message": "Period successfully closed"
-                    }
+                    },
+                    "claimed-migrated-rewards-message": "You have already claimed migrated rewards.",
+                    "claim-staking-rewards-message": "You have to claim your staking rewards first."
                 }
             },
             "vesting": {

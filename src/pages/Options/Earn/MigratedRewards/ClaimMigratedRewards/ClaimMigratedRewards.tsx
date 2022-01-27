@@ -51,7 +51,8 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
         migratedRewards.reward &&
         migratedRewards.hasClaimRights &&
         !migratedRewards.claimed &&
-        !migratedRewards.isClaimPaused;
+        !migratedRewards.isClaimPaused &&
+        !migratedRewards.hasStakingRewardsToClaim;
 
     const migratedRewardsQuery = useMigratedRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
@@ -141,7 +142,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
         }
     };
 
-    const balance = isClaimAvailable && migratedRewards && migratedRewards.reward ? migratedRewards.reward.balance : 0;
+    const balance = migratedRewards && migratedRewards.reward ? migratedRewards.reward.balance : 0;
 
     return (
         <EarnSection
@@ -195,11 +196,20 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                             </ClaimMessage>
                         )}
                         {migratedRewards &&
-                            migratedRewards.hasClaimRights &&
                             !migratedRewards.isClaimPaused &&
+                            migratedRewards.hasClaimRights &&
                             migratedRewards.claimed && (
                                 <ClaimMessage>
-                                    {t('options.earn.thales-staking.staking-rewards.claimed-message')}
+                                    {t('options.earn.thales-staking.staking-rewards.claimed-migrated-rewards-message')}
+                                </ClaimMessage>
+                            )}
+                        {migratedRewards &&
+                            !migratedRewards.isClaimPaused &&
+                            migratedRewards.hasClaimRights &&
+                            !migratedRewards.claimed &&
+                            migratedRewards.hasStakingRewardsToClaim && (
+                                <ClaimMessage>
+                                    {t('options.earn.thales-staking.staking-rewards.claim-staking-rewards-message')}
                                 </ClaimMessage>
                             )}
                     </ButtonContainer>
