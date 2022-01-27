@@ -16,6 +16,7 @@ export type RoyaleArenaData = {
     rounds: number;
     token: string;
     targetPrice: string;
+    position: number;
 };
 
 const useRoyaleArenaContractQuery = (season: number, address: string, options?: UseQueryOptions<RoyaleArenaData>) => {
@@ -49,6 +50,7 @@ const getFromContract = async (
         rounds,
         token,
         targetPrice,
+        position,
     ] = await Promise.all([
         RoyaleContract.roundInASeasonStartTime(season),
         RoyaleContract.roundInSeasonEndTime(season),
@@ -60,7 +62,9 @@ const getFromContract = async (
         RoyaleContract.rounds(),
         RoyaleContract.oracleKey(),
         RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
+        RoyaleContract.positionInARoundPerSeason(season, address, roundInASeason),
     ]);
+    console.log('', season, roundInASeason, Number(position));
     return {
         roundChoosingLength: Number(roundChoosingLength),
         roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
@@ -73,6 +77,7 @@ const getFromContract = async (
         rounds: Number(rounds),
         token: parseBytes32String(token),
         targetPrice: ethers.utils.formatEther(targetPrice),
+        position: Number(position),
     };
 };
 

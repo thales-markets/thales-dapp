@@ -32,7 +32,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: flex-start;
     width: 570px;
-    z-index: 1;
+    z-index: 1000;
     text-align: center;
     @media (max-width: 1024px) {
         width: 100%;

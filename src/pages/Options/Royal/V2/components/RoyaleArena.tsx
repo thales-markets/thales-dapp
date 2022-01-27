@@ -32,12 +32,13 @@ const renderRounds = (
     royaleData: RoyaleArenaData,
     timeLeftForPositioning: Date | null,
     timeLeftInRound: Date | null,
-    selectedSeason: number
+    selectedSeason: number,
+    latestSeason: number
 ) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
-    const { roundInASeason, rounds, token, targetPrice, isPlayerAlive } = royaleData;
+    const { roundInASeason, rounds, token, targetPrice, isPlayerAlive, position } = royaleData;
     const cards = [];
     const networkId = useSelector((state: RootState) => getNetworkId(state));
 
@@ -90,14 +91,18 @@ const renderRounds = (
     const isWinner = isPlayerAlive && royaleData.seasonFinished;
 
     for (let index = 1; index <= rounds; index++) {
+        const selectedPosition =
+            index === roundInASeason && selectedSeason === latestSeason
+                ? position
+                : roundsInformation[index - 1]?.position;
         index === roundInASeason
             ? cards.push(
                   <CurrentRound id={`round${index}`} key={index}>
                       <LongButton
-                          selected={roundsInformation[index - 1]?.position === 2}
+                          selected={selectedPosition === 2}
                           onClick={vote(2)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
-                          notSelected={roundsInformation[index - 1]?.position === 1}
+                          notSelected={selectedPosition === 1}
                       >
                           △
                       </LongButton>
@@ -124,13 +129,13 @@ const renderRounds = (
                           </CurrentRoundText>
                       </div>
                       <ShortButton
-                          selected={roundsInformation[index - 1]?.position === 1}
+                          selected={selectedPosition === 1}
                           onClick={vote(1)}
                           disabled={!timeLeftForPositioning || !isPlayerAlive}
-                          notSelected={roundsInformation[index - 1]?.position === 2}
+                          notSelected={selectedPosition === 2}
                       >
                           <Circle
-                              selected={roundsInformation[index - 1]?.position === 1}
+                              selected={selectedPosition === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -139,7 +144,7 @@ const renderRounds = (
             : index < roundInASeason
             ? cards.push(
                   <PrevRound id={`round${index}`} key={index}>
-                      <LongButton selected={roundsInformation[index - 1]?.position === 2} disabled={true}>
+                      <LongButton selected={selectedPosition === 2} disabled={true}>
                           △
                       </LongButton>
                       <div>
@@ -166,9 +171,9 @@ const renderRounds = (
                               } ${t('options.royale.battle.players')}`}</PrevRoundText>
                           </FlexDiv>
                       </RoundHistoryInfo>
-                      <ShortButton selected={roundsInformation[index - 1]?.position === 1} disabled={true}>
+                      <ShortButton selected={selectedPosition === 1} disabled={true}>
                           <Circle
-                              selected={roundsInformation[index - 1]?.position === 1}
+                              selected={selectedPosition === 1}
                               disabled={!timeLeftForPositioning || !isPlayerAlive}
                           />
                       </ShortButton>
@@ -232,6 +237,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle, selectedSe
                 rounds: 6,
                 token: '',
                 targetPrice: '',
+                position: 0,
             };
         }
     }, [royaleDataQuery.isSuccess, royaleDataQuery.data]);
@@ -326,7 +332,13 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle, selectedSe
                 <CardWrapper>
                     <ScrollWrapper id="battle-royale-wrapper">
                         {royaleData ? (
-                            renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound, memoizedSelectedSeason)
+                            renderRounds(
+                                royaleData,
+                                timeLeftForPositioning,
+                                timeLeftInRound,
+                                memoizedSelectedSeason,
+                                latestSeason
+                            )
                         ) : (
                             <></>
                         )}

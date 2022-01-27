@@ -315,6 +315,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                     <UsersPerPageText top={selectedLanguage === SupportedLanguages.RUSSIAN ? -3 : 12}>
                         {t('options.royale.scoreboard.users-per-page')}
                     </UsersPerPageText>
+                    {showDropdown && <Overlay onClick={() => setShowDropdown(false)} />}
                 </Pagination>
             ) : (
                 ''
@@ -398,6 +399,7 @@ const UsersPerPageText = styled.p<{ top: number }>`
     letter-spacing: -0.4px;
     color: var(--color);
     background: var(--color-wrapper);
+    z-index: 6;
 `;
 
 const PaginationUsers = styled.div`
@@ -417,6 +419,7 @@ const PaginationUsers = styled.div`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
+    z-index: 5;
     p:first-child {
         font-weight: bold;
         font-size: 20px;
@@ -546,4 +549,13 @@ const HeadCellUi = styled(Text)<{ winner?: boolean }>`
     @media (max-width: 1024px) {
         font-size: 15px;
     }
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
 `;

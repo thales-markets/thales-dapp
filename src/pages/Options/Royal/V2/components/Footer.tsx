@@ -55,7 +55,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
 
     const allSeasons = useMemo(() => {
         const seasons = [];
-        for (let j = 1; j <= Number(latestSeason); j++) {
+        for (let j = Number(latestSeason); j >= 1; j--) {
             seasons.push(j);
         }
         return seasons;
@@ -125,15 +125,6 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                 <div />
                 <FooterButtonsWrapper>
                     <SeasonSelector isOpen={showSelectDropdown}>
-                        {selectedSeason !== 0 ? (
-                            <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                                {t('options.royale.scoreboard.season')} {selectedSeason}
-                                {!showSelectDropdown && <Arrow className="icon icon--arrow-up" />}
-                            </Text>
-                        ) : (
-                            <Text>{t('options.royale.scoreboard.loading-season')}</Text>
-                        )}
-
                         {showSelectDropdown &&
                             allSeasons
                                 .filter((number) => number !== selectedSeason)
@@ -148,6 +139,15 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                         {t('options.royale.scoreboard.season')} {option}
                                     </Text>
                                 ))}
+
+                        {selectedSeason !== 0 ? (
+                            <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                {t('options.royale.scoreboard.season')} {selectedSeason}
+                                {!showSelectDropdown && <Arrow className="icon icon--arrow-up" />}
+                            </Text>
+                        ) : (
+                            <Text>{t('options.royale.scoreboard.loading-season')}</Text>
+                        )}
                     </SeasonSelector>
                     <StatsIcon onClick={() => setShowStats(true)} className="icon icon--stats" />
                     <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
@@ -181,7 +181,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                             </InfoIconContainer>
                         </div>
                         <div>
-                            <span>{t('options.royale.footer.reward-per-player')}:</span>
+                            <span>{t('options.royale.footer.current-reward-per-player')}:</span>
                             <span>{royaleData?.reward.toFixed(2)} sUSD</span>
                         </div>
                         <div>
@@ -191,6 +191,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                     </>
                 )}
             </InfoSection>
+            {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
         </>
     );
 };
@@ -363,7 +364,7 @@ const SeasonSelector = styled.div<{ isOpen: boolean }>`
     text-align: center;
     background: var(--color-wrapper);
     z-index: 1;
-    p:first-child {
+    p:last-child {
         font-weight: bold;
         font-size: 20px;
     }
@@ -375,4 +376,13 @@ const Arrow = styled.i`
     display: inline-block;
     padding-bottom: 3px;
     margin-left: 20px;
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
 `;
