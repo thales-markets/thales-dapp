@@ -1352,5 +1352,16 @@
     },
     "game": {
         "connect-wallet-warning": "为了启用进度跟踪，请在开始游戏前连接您的以太坊钱包。"
+    },
+    "migration": {
+        "migration-opt-out-notice": {
+            "button": {
+                "opt-out-label": "选择退出",
+                "cancel-opt-out-label": "取消退出",
+                "progress-label": "提交中..."
+            },
+            "opt-out-text": "<0>所有质押、托管和无人认领的 THALES 计划按照 </0><1 /> 自动迁移到 L2 Optimism 主网。<0>如果您想退出此迁移，并将您的 THALES 保留在 L1 主网上，您可以使用您的钱包在以下消息上签名。</0>",
+            "cancel-opt-out-text": "<0>所有质押、托管和无人认领的 THALES 计划按 </0><1 /> 自动迁移到 L2 Optimism 主网。<0>您已选择退出此迁移，并将您的 THALES 保留在 L1 主网上。如果您确实希望参与迁移，则可以取消选择退出。</0>"
+        }
     }
 }

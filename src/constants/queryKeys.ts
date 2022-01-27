@@ -112,6 +112,12 @@ export const QUERY_KEYS = {
             networkId,
         ],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
+        StakingMigrationOptout: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'stakingMigrationOptout',
+            walletAddress,
+            networkId,
+        ],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],

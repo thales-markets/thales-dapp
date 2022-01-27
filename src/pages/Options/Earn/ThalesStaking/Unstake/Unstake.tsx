@@ -24,6 +24,8 @@ import { dispatchMarketNotification } from 'utils/options';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { GasLimit } from '../../../components/NetworkFees/NetworkFees';
+import intervalToDuration from 'date-fns/intervalToDuration';
+import { formattedDuration } from 'utils/formatters/date';
 
 type Properties = {
     isUnstakingInContract: boolean;
@@ -35,7 +37,7 @@ type Properties = {
 };
 
 const addDurationPeriod = (date: Date, unstakeDurationPeriod: number) => {
-    return new Date(date.getTime() + unstakeDurationPeriod + 30000); // 30 seconds buffer for time discrepancies
+    return new Date(date.getTime() + unstakeDurationPeriod); // 30 seconds buffer for time discrepancies
 };
 
 const Unstake: React.FC<Properties> = ({
@@ -305,6 +307,33 @@ const Unstake: React.FC<Properties> = ({
 
     const tokenStakingDisabled = process.env.REACT_APP_TOKEN_STAKING_DISABLED === 'true';
 
+    const dateTimeTranslationMap = {
+        years: t('options.common.time-remaining.years'),
+        year: t('options.common.time-remaining.year'),
+        months: t('options.common.time-remaining.months'),
+        month: t('options.common.time-remaining.month'),
+        weeks: t('options.common.time-remaining.weeks'),
+        week: t('options.common.time-remaining.week'),
+        days: t('options.common.time-remaining.days'),
+        day: t('options.common.time-remaining.day'),
+        hours: t('options.common.time-remaining.hours'),
+        hour: t('options.common.time-remaining.hour'),
+        minutes: t('options.common.time-remaining.minutes'),
+        minute: t('options.common.time-remaining.minute'),
+        seconds: t('options.common.time-remaining.seconds'),
+        second: t('options.common.time-remaining.second'),
+        'days-short': t('options.common.time-remaining.days-short'),
+        'hours-short': t('options.common.time-remaining.hours-short'),
+        'minutes-short': t('options.common.time-remaining.minutes-short'),
+        'seconds-short': t('options.common.time-remaining.seconds-short'),
+    };
+
+    const unstakeIntervalToDuration = intervalToDuration({
+        start: Date.now(),
+        end: Date.now() + unstakeDurationPeriod,
+    });
+    const unstakeDuration = formattedDuration(unstakeIntervalToDuration, dateTimeTranslationMap, false);
+
     return (
         <EarnSection
             spanOnTablet={5}
@@ -336,7 +365,7 @@ const Unstake: React.FC<Properties> = ({
                                     fontWeight={600}
                                 >
                                     {!isUnstakingInContract ? (
-                                        `7 ${t('options.common.time-remaining.days')}`
+                                        unstakeDuration
                                     ) : (
                                         <TimeRemaining
                                             onEnded={() => setUnstakingEnded(true)}
