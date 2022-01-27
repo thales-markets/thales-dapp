@@ -66,7 +66,6 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
             </Links>
             <ToggleContainer
                 onClick={() => {
-                    console.log('clicked');
                     cookies.set('home-theme', theme === Theme.Light ? Theme.Dark : Theme.Light);
                     setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
                 }}

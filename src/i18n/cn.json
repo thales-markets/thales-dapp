@@ -103,7 +103,16 @@
         "subtitle": "新颖的链上、无需许可和非托管的 Parimutuel 市场。",
         "a2": "构成泰雷兹的智能合约集利用不可审查的 <bold>sUSD 作为抵押品</bold>、来自 <bold>Chainlink</bold> 数据馈送的市场结算的不可改变的事实来源，以及所有优势（速度、成本和安全性）以汇总为中心的网络，如 <bold>Optimism.</bold>",
         "a3": "<bold>去中心化</bold> 是弹性的关键。\n\n 这就是为什么 <bold>ThalesDAO</bold> 作为一个集体是协议的所有者，它通过由 THALES 代币持有者选举产生的 <bold>Thales 委员会<bold> 进行 <bold>治理</bold>。",
-        "a4": "因为建立在正确的基础上会吸引志同道合的人，他们非常关心开放金融的愿景。\n\n 在来自泰雷兹社区的聪明才智、才华横溢的灵魂和热情的人们的支持下，该协议每天都在不断迭代、经过实战考验并且更具弹性。\n\n 我们正朝着<bold>不可阻挡的方向前进。</bold>"
+        "a4": "因为建立在正确的基础上会吸引志同道合的人，他们非常关心开放金融的愿景。\n\n 在来自泰雷兹社区的聪明才智、才华横溢的灵魂和热情的人们的支持下，该协议每天都在不断迭代、经过实战考验并且更具弹性。\n\n 我们正朝着<bold>不可阻挡的方向前进。</bold>",
+        "footer": {
+            "privacy-policy": "隐私政策",
+            "terms-of-use": "使用条款",
+            "theme": "主题",
+            "language": "语",
+            "etherscan": "以太扫描",
+            "brand-assets": "品牌资产",
+            "all-rights-reserved": "© {{year}} THALES DAO 保留所有权利。"
+        }
     },
     "maintenance-page": {
         "title": "敬请关注，马上就来…",

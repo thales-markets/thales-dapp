@@ -18,25 +18,30 @@ const Token: React.FC = () => {
             <Wrapper size={window.innerWidth}>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
-                    <List>
-                        <ListItem>
-                            <a href="#section1">{t('articles.token.list.1')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section2">{t('articles.token.list.2')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section3">{t('articles.token.list.3')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section4">{t('articles.token.list.4')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section5">{t('articles.token.list.5')}</a>
-                        </ListItem>
-                    </List>
-
                     <H1>{t('articles.token.title')}</H1>
+                    <ListWrapper>
+                        <List>
+                            <ListItem>THALES Token</ListItem>
+                            <NestedList>
+                                <ListItem>
+                                    <a href="#section1">{t('articles.token.list.1')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section2">{t('articles.token.list.2')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section3">{t('articles.token.list.3')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section4">{t('articles.token.list.4')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section5">{t('articles.token.list.5')}</a>
+                                </ListItem>
+                            </NestedList>
+                        </List>
+                    </ListWrapper>
+
                     <H2 id="section1">{t('articles.token.list.1')}</H2>
                     <Paragraph>
                         <Trans i18nKey="articles.token.paragraphs.1" components={{ bold: <strong /> }} />
@@ -93,7 +98,7 @@ const Token: React.FC = () => {
                     <Paragraph>
                         <Trans i18nKey="articles.token.paragraphs.6" components={{ bold: <strong /> }} />
                     </Paragraph>
-                    <Footer className="article" theme={theme} />
+                    <Footer className="article" theme={theme} setTheme={setTheme} />
                 </Content>
             </Wrapper>
         </Background>
@@ -106,15 +111,15 @@ const Wrapper = styled.div<{ size: number }>`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(85, 2em);
+    grid-template-rows: repeat(89, 2em);
     @media (max-width: 1025px) {
-        grid-template-rows: repeat(${(props) => Math.round((1024 - props.size) / 8) + 85}, 2em);
+        grid-template-rows: repeat(${(props) => Math.round((1024 - props.size) / 8) + 89}, 2em);
     }
     @media (max-width: 768px) {
-        grid-template-rows: repeat(${(props) => Math.round((768 - props.size) / 8) + 85}, 2em);
+        grid-template-rows: repeat(${(props) => Math.round((768 - props.size) / 8) + 89}, 2em);
     }
     @media (max-width: 450px) {
-        grid-template-rows: repeat(${(props) => Math.round((450 - props.size) / 2) + 85}, 2em);
+        grid-template-rows: repeat(${(props) => Math.round((450 - props.size) / 2) + 89}, 2em);
     }
 `;
 
@@ -153,8 +158,8 @@ const H1 = styled.h1`
     text-align: justify;
     text-transform: uppercase;
     color: var(--color);
-    margin-top: 2em;
-    margin-bottom: 1.6em;
+    margin-top: 1em;
+    margin-bottom: 1.3em;
 `;
 const H2 = styled.h2`
     font-family: NunitoSemiBold !important;
@@ -192,24 +197,72 @@ const Paragraph = styled.p`
 
 const AnimationSvg = styled.object``;
 
+// const List = styled.ul`
+//     list-style: disc;
+//     color: var(--color);
+// `;
+// const ListItem = styled.li`
+//     height: 3em;
+//     color: var(--color);
+//     & > a {
+//         font-family: NunitoSemiBold !important;
+//         font-style: normal;
+//         font-size: 1.4em;
+//         line-height: 170%;
+//         color: var(--color);
+//         &:hover {
+//             font-size: 1.6em;
+//             transition: 0.2s;
+//         }
+//     }
+// `;
+
+const ListWrapper = styled.div`
+    border: 1px solid var(--color);
+    border-radius: 7px;
+    width: 60%;
+    margin-bottom: 4em;
+}
+`;
+
 const List = styled.ul`
     list-style: disc;
     color: var(--color);
+    margin-left: 2em;
+    padding: 1.5em;
+    & > li {
+        font-family: Nunito !important;
+        font-style: normal;
+        font-size: 1.4em;
+        font-weight: 700;
+        line-height: 170%;
+        height: 2em;
+    }
 `;
+
+const NestedList = styled.ul`
+    list-style: disc;
+    color: var(--color);
+    & li {
+        margin-left: 1em;
+        & > a {
+            font-family: Nunito !important;
+            font-style: normal;
+            font-size: 1.4em;
+            font-weight: 300;
+            line-height: 170%;
+            color: var(--color);
+            &:hover {
+                font-size: 1.6em;
+                transition: 0.2s;
+            }
+        }
+    }
+`;
+
 const ListItem = styled.li`
     height: 3em;
     color: var(--color);
-    & > a {
-        font-family: NunitoSemiBold !important;
-        font-style: normal;
-        font-size: 1.4em;
-        line-height: 170%;
-        color: var(--color);
-        &:hover {
-            font-size: 1.6em;
-            transition: 0.2s;
-        }
-    }
 `;
 
 export default Token;

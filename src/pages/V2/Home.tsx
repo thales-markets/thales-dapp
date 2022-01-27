@@ -61,7 +61,7 @@ const Home: React.FC = () => {
                     <FaqQuestion>{t('landing-page.faq.thirdQ')}</FaqQuestion>
                     <FaqAnswer>{t('landing-page.faq.thirdA')}</FaqAnswer>
                 </Faq>
-                <Footer theme={theme} />
+                <Footer theme={theme} setTheme={setTheme} />
             </FlexWrapper>
         </Background>
     );

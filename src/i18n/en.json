@@ -98,7 +98,16 @@
             "thirdQ": "What is the utility of the THALES token?",
             "thirdA": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in the Thales governance functions. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocols community governance structure."
         },
-        "discord": "Join Discord"
+        "discord": "Join Discord",
+        "footer": {
+            "privacy-policy": "Privacy Policy",
+            "terms-of-use": "Terms of Use",
+            "brand-assets": "Brand assets",
+            "etherscan": "Etherscan",
+            "theme": "theme",
+            "language": "Language",
+            "all-rights-reserved": "© {{year}} THALES DAO All rights reserved."
+        }
     },
     "maintenance-page": {
         "title": "Stay tuned, coming soon...",
@@ -1231,7 +1240,7 @@
                 "1": "THALES DAOs",
                 "2": "THALES Council (Aka “the Brain”)",
                 "3": "Treasury DAO (Aka “the Pocket”)",
-                "4": "Protocol DAO (Aka “The Hearth”)",
+                "4": "Protocol DAO (Aka “The Heart”)",
                 "5": "How to Start Participating"
             },
             "title": "THALES GOVERNANCE",

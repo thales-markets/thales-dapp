@@ -157,7 +157,7 @@ const Whitepaper: React.FC = () => {
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section1')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section2')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section3')}</Paragraph>
-                    <Footer className="article" theme={theme} />
+                    <Footer className="article" theme={theme} setTheme={setTheme} />
                 </Content>
             </Wrapper>
         </Background>

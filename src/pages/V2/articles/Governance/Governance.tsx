@@ -19,25 +19,30 @@ const Governance: React.FC = () => {
             <Wrapper size={window.innerWidth}>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
-                    <List>
-                        <ListItem orderNo={1}>
-                            <a href="#section1">{t('articles.governance.list.1')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section2">{t('articles.governance.list.2')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section3">{t('articles.governance.list.3')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section4">{t('articles.governance.list.4')}</a>
-                        </ListItem>
-                        <ListItem>
-                            <a href="#section5">{t('articles.governance.list.5')}</a>
-                        </ListItem>
-                    </List>
-
                     <H1>{t('articles.governance.title')}</H1>
+                    <ListWrapper>
+                        <List>
+                            <ListItem>Governance</ListItem>
+                            <NestedList>
+                                <ListItem>
+                                    <a href="#section1">{t('articles.governance.list.1')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section2">{t('articles.governance.list.2')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section3">{t('articles.governance.list.3')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section4">{t('articles.governance.list.4')}</a>
+                                </ListItem>
+                                <ListItem>
+                                    <a href="#section5">{t('articles.governance.list.5')}</a>
+                                </ListItem>
+                            </NestedList>
+                        </List>
+                    </ListWrapper>
+
                     <Paragraph>
                         <Trans i18nKey="articles.governance.paragraphs.intro1" components={{ bold: <strong /> }} />
                     </Paragraph>
@@ -92,7 +97,7 @@ const Governance: React.FC = () => {
                             }}
                         />
                     </Paragraph>
-                    <Footer className="article" theme={theme} />
+                    <Footer className="article" theme={theme} setTheme={setTheme} />
                 </Content>
             </Wrapper>
         </Background>
@@ -105,12 +110,12 @@ const Wrapper = styled.div<{ size: number }>`
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
-    grid-template-rows: repeat(104, 2em);
+    grid-template-rows: repeat(110, 2em);
     @media (max-width: 880px) {
-        grid-template-rows: repeat(${(props) => Math.round((880 - props.size) / 15) + 104}, 2em);
+        grid-template-rows: repeat(${(props) => Math.round((880 - props.size) / 15) + 110}, 2em);
     }
     @media (max-width: 450px) {
-        grid-template-rows: repeat(${(props) => Math.round(880 - props.size / 10) + 104}, 2em);
+        grid-template-rows: repeat(${(props) => Math.round(880 - props.size / 10) + 110}, 2em);
     }
 `;
 
@@ -142,8 +147,8 @@ const H1 = styled.h1`
     text-align: justify;
     text-transform: uppercase;
     color: var(--color);
-    margin-top: 2em;
-    margin-bottom: 1.6em;
+    margin-top: 1em;
+    margin-bottom: 1.3em;
 `;
 
 const H2 = styled.h2`
@@ -180,24 +185,52 @@ const Paragraph = styled.p`
     }
 `;
 
+const ListWrapper = styled.div`
+    border: 1px solid var(--color);
+    border-radius: 7px;
+    width: 60%;
+    margin-bottom: 4em;
+}
+`;
+
 const List = styled.ul`
     list-style: disc;
     color: var(--color);
-`;
-const ListItem = styled.li<{ orderNo?: number }>`
-    height: 3em;
-    color: var(--color);
-    & > a {
-        font-family: NunitoSemiBold !important;
+    margin-left: 2em;
+    padding: 1.5em;
+    & > li {
+        font-family: Nunito !important;
         font-style: normal;
-        font-size: ${(props) => (props.orderNo === 1 ? '2em' : '1.4em')};
+        font-size: 1.4em;
+        font-weight: 700;
         line-height: 170%;
-        color: var(--color);
-        &:hover {
-            font-size: ${(props) => (props.orderNo === 1 ? '2.2em' : '1.6em')};
-            transition: 0.2s;
+        height: 2em;
+    }
+`;
+
+const NestedList = styled.ul`
+    list-style: disc;
+    color: var(--color);
+    & li {
+        margin-left: 1em;
+        & > a {
+            font-family: Nunito !important;
+            font-style: normal;
+            font-size: 1.4em;
+            font-weight: 300;
+            line-height: 170%;
+            color: var(--color);
+            &:hover {
+                font-size: 1.6em;
+                transition: 0.2s;
+            }
         }
     }
+`;
+
+const ListItem = styled.li`
+    height: 3em;
+    color: var(--color);
 `;
 
 const ChartWrapper = styled(FlexDivCentered)`
