@@ -32,13 +32,13 @@ enum OrderDirection {
 }
 
 type ScoreboardProps = {
-    selectedSeason: any;
-    setSelectedSeason: any;
+    selectedSeason: number;
+    setSelectedSeason: (season: number) => void;
 };
 
 const defaultOrderBy = 1;
 
-export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSelectedSeason }) => {
+export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
@@ -47,37 +47,30 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
         ? i18n.language
         : DEFAULT_LANGUAGE;
 
-    const [invalidate, setInvalidate] = useState(false);
-
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
 
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
     const royaleDataQuery = useRoyaleDataForScoreboard(selectedSeason, {
-        enabled: isL2 && isAppReady && !invalidate,
+        enabled: isL2 && isAppReady,
     });
 
     const usersQuery = useRoyalePlayersQuery(networkId, selectedSeason, {
-        enabled: isL2 && isAppReady && !invalidate,
+        enabled: isL2 && isAppReady,
     });
     const users = usersQuery.isSuccess ? usersQuery.data : [];
 
     const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
 
     useEffect(() => {
-        if (invalidate) {
-            setInvalidate(false);
-            usersQuery.remove();
-            royaleDataQuery.remove();
-        }
-    }, [invalidate]);
+        usersQuery.remove();
+        royaleDataQuery.remove();
+    }, [selectedSeason]);
 
     const usersForUi = useMemo(() => {
-        if (invalidate) return;
         if (!royaleData) return;
         if (users.length > 0) {
             let usersToShow: any = users;
@@ -126,7 +119,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
 
             return { maxPages, usersToDisplay };
         }
-    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData, selectedSeason, invalidate]);
+    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData, selectedSeason]);
 
     const HeadCells: HeadCell[] = [
         { id: 1, text: <Trans i18nKey="options.royale.scoreboard.table-header.status" />, sortable: true },
@@ -166,38 +159,6 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
 
     return (
         <TableWrapper>
-            <SeasonSelector>
-                {selectedSeason !== 0 ? (
-                    <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                        {t('options.royale.scoreboard.season')} {selectedSeason}
-                        {!showSelectDropdown && (
-                            <Arrow
-                                style={{ display: 'inline-block', marginLeft: 20 }}
-                                className="icon icon--arrow-down"
-                            />
-                        )}
-                    </Text>
-                ) : (
-                    <Text>{t('options.royale.scoreboard.loading-season')}</Text>
-                )}
-
-                {showSelectDropdown &&
-                    royaleData?.allSeasons
-                        .filter((number) => number !== selectedSeason)
-                        .map((option: number, key: number) => (
-                            <Text
-                                onClick={() => {
-                                    setSelectedSeason(option);
-                                    setInvalidate(true);
-                                    setShowSelectDropdown(false);
-                                }}
-                                key={key}
-                            >
-                                {t('options.royale.scoreboard.season')} {option}
-                            </Text>
-                        ))}
-            </SeasonSelector>
-
             <TableRow
                 style={{
                     justifyContent: 'flex-end',
@@ -241,7 +202,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
                     </HeadCellUi>
                 ))}
             </TableRow>
-            {!invalidate && usersForUi ? (
+            {usersForUi ? (
                 usersForUi.usersToDisplay.map((user: User, key: number) => {
                     const lastRoundInSeason = royaleData?.round;
                     const isUserAWinner =
@@ -297,7 +258,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
                     <SimpleLoader />
                 </LoaderContainer>
             )}
-            {!invalidate && usersForUi?.usersToDisplay ? (
+            {usersForUi?.usersToDisplay ? (
                 <Pagination>
                     <PaginationIcon
                         className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
@@ -456,33 +417,6 @@ const PaginationUsers = styled.div`
     cursor: pointer;
     text-align: center;
     background: var(--color-wrapper);
-    p:first-child {
-        font-weight: bold;
-        font-size: 20px;
-    }
-`;
-
-const SeasonSelector = styled.div`
-    position: absolute;
-    right: 0;
-    left: 0;
-    margin-left: auto;
-    margin-right: auto;
-    top: -17px;
-    width: 171px;
-    border: 2px solid var(--color);
-    box-sizing: border-box;
-    border-radius: 18px;
-    font-family: Sansation !important;
-    font-style: normal;
-    font-size: 20px;
-    line-height: 26px;
-    letter-spacing: -0.4px;
-    color: var(--color);
-    cursor: pointer;
-    text-align: center;
-    background: var(--color-wrapper);
-    z-index: 1;
     p:first-child {
         font-weight: bold;
         font-size: 20px;

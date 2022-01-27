@@ -14,6 +14,8 @@ import { FooterV2 } from './V2/components/Footer';
 
 import { ScoreboardPage } from './V2/components/ScoreboardPage';
 import { RoyaleArena } from './V2/components/RoyaleArena';
+import useLatestSeasonQuery from './V2/components/queries/useLatestSeasonQuery';
+import { getIsAppReady } from '../../../redux/modules/app';
 
 export enum Theme {
     Light,
@@ -25,12 +27,24 @@ const cookies = new Cookies();
 const ThalesRoyal: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
-
     const isL2 = getIsOVM(networkId);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const latestSeasonQuery = useLatestSeasonQuery({
+        enabled: isAppReady && isL2,
+    });
+    const [selectedSeason, setSelectedSeason] = useState(0);
+
+    const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
+
     const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
+
+    useEffect(() => {
+        setSelectedSeason(latestSeasonQuery.data || 0);
+    }, [latestSeasonQuery.isSuccess, latestSeasonQuery.data]);
 
     useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
@@ -82,9 +96,23 @@ const ThalesRoyal: React.FC = () => {
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
                 <Header theme={theme} setTheme={setTheme} />
-                <ScoreboardPage />
-                <RoyaleArena showBattle={selectedPage === 'royale'} />
-                <FooterV2 selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
+                <ScoreboardPage
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                    latestSeason={latestSeason}
+                />
+                <RoyaleArena
+                    latestSeason={latestSeason}
+                    selectedSeason={selectedSeason}
+                    showBattle={selectedPage === 'royale'}
+                />
+                <FooterV2
+                    latestSeason={latestSeason}
+                    selectedPage={selectedPage}
+                    setSelectedPage={setSelectedPage}
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                />
             </Wrapper>
 
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />

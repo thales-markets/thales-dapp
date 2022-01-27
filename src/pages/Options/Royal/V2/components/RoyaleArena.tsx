@@ -20,10 +20,11 @@ import winnerCardS2 from '../../../../../assets/images/royale/winner-card-s2.svg
 import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyaleArenaContractQuery';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsOVM } from '../../../../../utils/network';
-import useLatestSeasonQuery from './queries/useLatestSeasonQuery';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
 
 type RoyaleArenaProps = {
+    latestSeason: number;
+    selectedSeason: number;
     showBattle: boolean;
 };
 
@@ -106,7 +107,7 @@ const renderRounds = (
                       </div>
                       <div style={{ marginTop: '10px' }}>
                           <CurrentRoundTitle>{`${t('options.royale.battle.will-be', { token })}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`$${targetPrice}`}</CurrentRoundText>
+                          <CurrentRoundText>{`$${Number(targetPrice).toFixed(2)}`}</CurrentRoundText>
                       </div>
                       <div style={{ marginBottom: '10px' }}>
                           <CurrentRoundTitle>{t('options.royale.battle.in')}</CurrentRoundTitle>
@@ -147,12 +148,16 @@ const renderRounds = (
                       </div>
                       <div style={{ textDecoration: 'line-through' }}>
                           <CurrentRoundTitle>{`${token} ${t('options.royale.battle.will-be')}`}</CurrentRoundTitle>
-                          <CurrentRoundText>{`$${roundsInformation[index - 1]?.strikePrice}`}</CurrentRoundText>
+                          <CurrentRoundText>{`$${Number(roundsInformation[index - 1]?.strikePrice).toFixed(
+                              2
+                          )}`}</CurrentRoundText>
                       </div>
                       <RoundHistoryInfo>
                           <FlexDiv>
                               <PrevRoundTitle>{`${token} ${t('options.royale.battle.was')}`}</PrevRoundTitle>
-                              <PrevRoundText>{`$${roundsInformation[index - 1]?.finalPrice}`}</PrevRoundText>
+                              <PrevRoundText>{`$${Number(roundsInformation[index - 1]?.finalPrice).toFixed(
+                                  2
+                              )}`}</PrevRoundText>
                           </FlexDiv>
                           <FlexDiv>
                               <PrevRoundTitle>{`${t('options.royale.battle.eliminated')}`}</PrevRoundTitle>
@@ -198,22 +203,16 @@ export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
     return beginningOfTime;
 };
 
-export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle }) => {
+export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle, selectedSeason, latestSeason }) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const isL2 = getIsOVM(networkId);
 
-    const latestSeasonQuery = useLatestSeasonQuery({
-        enabled: isAppReady && isL2,
-    });
+    const memoizedSelectedSeason = useMemo(() => selectedSeason || latestSeason, [latestSeason, selectedSeason]);
 
-    const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
-
-    const selectedSeason = useMemo(() => latestSeason, [latestSeason]);
-
-    const royaleDataQuery = useRoyaleArenaContractQuery(selectedSeason, walletAddress ?? '', {
+    const royaleDataQuery = useRoyaleArenaContractQuery(memoizedSelectedSeason, walletAddress ?? '', {
         enabled: isAppReady && isL2,
     });
 
@@ -287,7 +286,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle }) => {
         if (thalesRoyaleContract) {
             const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
 
-            const tx = await RoyalContract.claimRewardForSeason(selectedSeason);
+            const tx = await RoyalContract.claimRewardForSeason(memoizedSelectedSeason);
 
             const txResult = await tx.wait();
 
@@ -327,7 +326,7 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle }) => {
                 <CardWrapper>
                     <ScrollWrapper id="battle-royale-wrapper">
                         {royaleData ? (
-                            renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound, selectedSeason)
+                            renderRounds(royaleData, timeLeftForPositioning, timeLeftInRound, memoizedSelectedSeason)
                         ) : (
                             <></>
                         )}

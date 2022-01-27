@@ -17,11 +17,20 @@ import useRoyaleFooterQuery from './queries/useRoyaleFooterQuery';
 import queryString from 'query-string';
 
 type ScoreboardProps = {
-    selectedPage: any;
-    setSelectedPage: any;
+    latestSeason: number;
+    selectedPage: string;
+    setSelectedPage: (page: string) => void;
+    selectedSeason: number;
+    setSelectedSeason: (season: number) => void;
 };
 
-export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedPage }) => {
+export const FooterV2: React.FC<ScoreboardProps> = ({
+    selectedPage,
+    setSelectedPage,
+    selectedSeason,
+    setSelectedSeason,
+    latestSeason,
+}) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -36,12 +45,21 @@ export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedP
     const royaleDataQuery = useRoyaleFooterQuery({ enabled: isAppReady });
     const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
 
-    const [showStats, setShowStats] = useState(true);
+    const [showStats, setShowStats] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
 
     const loading = useMemo(() => {
         if (positionsQuery.isSuccess && ethPriceQuery.isSuccess) return false;
         return true;
     }, [positionsQuery, ethPriceQuery]);
+
+    const allSeasons = useMemo(() => {
+        const seasons = [];
+        for (let j = 1; j <= Number(latestSeason); j++) {
+            seasons.push(j);
+        }
+        return seasons;
+    }, [latestSeason]);
 
     useEffect(() => {
         if (royaleData) {
@@ -105,10 +123,35 @@ export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedP
                     )}
                 </Nav>
                 <div />
-                <StatsButtonWrapper>
+                <FooterButtonsWrapper>
+                    <SeasonSelector isOpen={showSelectDropdown}>
+                        {selectedSeason !== 0 ? (
+                            <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                {t('options.royale.scoreboard.season')} {selectedSeason}
+                                {!showSelectDropdown && <Arrow className="icon icon--arrow-up" />}
+                            </Text>
+                        ) : (
+                            <Text>{t('options.royale.scoreboard.loading-season')}</Text>
+                        )}
+
+                        {showSelectDropdown &&
+                            allSeasons
+                                .filter((number) => number !== selectedSeason)
+                                .map((option: number, key: number) => (
+                                    <Text
+                                        onClick={() => {
+                                            setSelectedSeason(option);
+                                            setShowSelectDropdown(false);
+                                        }}
+                                        key={key}
+                                    >
+                                        {t('options.royale.scoreboard.season')} {option}
+                                    </Text>
+                                ))}
+                    </SeasonSelector>
                     <StatsIcon onClick={() => setShowStats(true)} className="icon icon--stats" />
                     <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
-                </StatsButtonWrapper>
+                </FooterButtonsWrapper>
             </Footer>
             <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
                 <CloseStats onClick={() => setShowStats(false)}>✖</CloseStats>
@@ -233,7 +276,8 @@ const NavButton = styled(FlexDivCentered)`
     }
 `;
 
-const StatsButtonWrapper = styled.div`
+const FooterButtonsWrapper = styled.div`
+    position: relative;
     font-style: normal;
     font-weight: 300;
     font-size: 20px;
@@ -297,4 +341,38 @@ const InfoSection = styled.div`
     @media (max-width: 1024px) {
         display: none;
     }
+`;
+
+const SeasonSelector = styled.div<{ isOpen: boolean }>`
+    transform: ${(props) => (props.isOpen ? 'translateY(calc(-100% + 30px))' : '')};
+    position: absolute;
+    top: -3px;
+    right: 100px;
+    margin-right: 5px;
+    width: 171px;
+    border: 2px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 18px;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    text-align: center;
+    background: var(--color-wrapper);
+    z-index: 1;
+    p:first-child {
+        font-weight: bold;
+        font-size: 20px;
+    }
+`;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 8px;
+    display: inline-block;
+    padding-bottom: 3px;
+    margin-left: 20px;
 `;

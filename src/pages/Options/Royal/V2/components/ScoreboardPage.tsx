@@ -1,27 +1,16 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
+import React from 'react';
 import styled from 'styled-components';
-import { getIsOVM } from 'utils/network';
 import { Intro } from './IntroInfo';
-import useLatestSeasonQuery from './queries/useLatestSeasonQuery';
 import { ScoreboardV2 } from './Scoreboard';
 import { UserCard } from './UserCard';
 
-export const ScoreboardPage: React.FC = () => {
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-    const isL2 = getIsOVM(networkId);
-    const latestSeasonQuery = useLatestSeasonQuery({
-        enabled: isAppReady && isL2,
-    });
+type Properties = {
+    selectedSeason: number;
+    setSelectedSeason: (season: number) => void;
+    latestSeason: number;
+};
 
-    const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
-
-    const [selectedSeason, setSelectedSeason] = useState<number>(0);
-
+export const ScoreboardPage: React.FC<Properties> = ({ latestSeason, setSelectedSeason, selectedSeason }) => {
     return (
         <Wrapper className="scoreboard">
             <div />
