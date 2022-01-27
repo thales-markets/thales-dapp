@@ -100,7 +100,6 @@ export type MigratedReward = {
     isClaimPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;
-    hasStakingRewardsToClaim: boolean;
     reward?: Reward;
 };
 

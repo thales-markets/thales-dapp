@@ -16,10 +16,7 @@ const useMigratedRewardsQuery = (
     return useQuery<MigratedReward>(
         QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId),
         async () => {
-            const [paused, rewards] = await Promise.all([
-                (snxJSConnector as any).ongoingAirdropContract.paused(),
-                (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
-            ]);
+            const paused = (snxJSConnector as any).ongoingAirdropContract.paused();
 
             const ongoingAirdropHash = ongoingAirdropMigrationHashes.find(
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
@@ -29,7 +26,6 @@ const useMigratedRewardsQuery = (
                 isClaimPaused: paused,
                 hasClaimRights: ongoingAirdropHash !== undefined && ongoingAirdropHash.balance !== '0',
                 claimed: true,
-                hasStakingRewardsToClaim: bigNumberFormatter(rewards) > 0,
             };
             if (ongoingAirdropHash) {
                 const balance = bigNumberFormatter(ongoingAirdropHash.balance);

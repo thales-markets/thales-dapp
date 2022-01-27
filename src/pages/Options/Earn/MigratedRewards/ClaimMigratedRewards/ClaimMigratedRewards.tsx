@@ -53,8 +53,6 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
         !migratedRewards.claimed &&
         !migratedRewards.isClaimPaused;
 
-    const hasStakingRewardsToClaim = migratedRewards && migratedRewards.hasStakingRewardsToClaim;
-
     const migratedRewardsQuery = useMigratedRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
     });
@@ -106,13 +104,13 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                 }
             }
         };
-        if (!isWalletConnected || !isClaimAvailable || hasStakingRewardsToClaim || !ongoingAirdropContract) return;
+        if (!isWalletConnected || !isClaimAvailable || !ongoingAirdropContract) return;
         fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable, hasStakingRewardsToClaim, ongoingAirdropContract]);
+    }, [isWalletConnected, isClaimAvailable, ongoingAirdropContract]);
 
     const handleClaimOngoingAirdrop = async () => {
         setShowTooltip(false);
-        if (isClaimAvailable && !hasStakingRewardsToClaim && migratedRewards && migratedRewards.reward) {
+        if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
@@ -177,7 +175,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                                     setShowTooltip(false);
                                 }}
                                 onClick={handleClaimOngoingAirdrop}
-                                disabled={!isClaimAvailable || hasStakingRewardsToClaim || isClaiming}
+                                disabled={!isClaimAvailable || isClaiming}
                                 className="primary"
                             >
                                 {isClaiming
@@ -203,17 +201,6 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                             migratedRewards.claimed && (
                                 <ClaimMessage>
                                     {t('options.earn.thales-staking.staking-rewards.migrated-rewards.claimed-message')}
-                                </ClaimMessage>
-                            )}
-                        {migratedRewards &&
-                            !migratedRewards.isClaimPaused &&
-                            migratedRewards.hasClaimRights &&
-                            !migratedRewards.claimed &&
-                            migratedRewards.hasStakingRewardsToClaim && (
-                                <ClaimMessage>
-                                    {t(
-                                        'options.earn.thales-staking.staking-rewards.migrated-rewards.claim-staking-rewards-message'
-                                    )}
                                 </ClaimMessage>
                             )}
                     </ButtonContainer>
