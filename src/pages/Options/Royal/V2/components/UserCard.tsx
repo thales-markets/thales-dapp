@@ -149,7 +149,15 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
                         if (user.isAlive) {
                             return <></>;
                         } else {
-                            return <DeadText>{t('options.royale.scoreboard.eliminated')}</DeadText>;
+                            return (
+                                <DeadText>
+                                    <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                                    <span>
+                                        {` ${t('options.royale.footer.rd')} `}
+                                        {user.deathRound}
+                                    </span>
+                                </DeadText>
+                            );
                         }
                     }
                 }
