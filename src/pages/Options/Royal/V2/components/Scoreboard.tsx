@@ -2,7 +2,7 @@ import i18n from 'i18n';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
 import { ArrowsWrapper } from 'pages/Options/Home/MarketsTable/components';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getIsAppReady } from 'redux/modules/app';
@@ -47,11 +47,14 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
         ? i18n.language
         : DEFAULT_LANGUAGE;
 
+    const [invalidate, setInvalidate] = useState(false);
+
     const [page, setPage] = useState(1);
     const [orderBy, setOrderBy] = useState(defaultOrderBy);
     const [orderDirection, setOrderDirection] = useState(OrderDirection.ASC);
     const [showDropdown, setShowDropdown] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
+
     const [showPerPage, setShowPerPage] = useState(15);
     const [searchString, setSearchString] = useState('');
     const royaleDataQuery = useRoyaleDataForScoreboard(selectedSeason, {
@@ -65,7 +68,16 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
 
     const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
 
+    useEffect(() => {
+        if (invalidate) {
+            usersQuery.refetch();
+            royaleDataQuery.refetch();
+            setInvalidate(false);
+        }
+    }, [invalidate]);
+
     const usersForUi = useMemo(() => {
+        if (invalidate) return;
         if (!royaleData) return;
         if (users.length > 0) {
             let usersToShow: any = users;
@@ -114,7 +126,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
 
             return { maxPages, usersToDisplay };
         }
-    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData, selectedSeason]);
+    }, [page, orderBy, orderDirection, users, showPerPage, searchString, royaleData, selectedSeason, invalidate]);
 
     const HeadCells: HeadCell[] = [
         { id: 1, text: <Trans i18nKey="options.royale.scoreboard.table-header.status" />, sortable: true },
@@ -176,6 +188,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
                             <Text
                                 onClick={() => {
                                     setSelectedSeason(option);
+                                    setInvalidate(true);
                                     setShowSelectDropdown(false);
                                 }}
                                 key={key}
@@ -228,7 +241,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
                     </HeadCellUi>
                 ))}
             </TableRow>
-            {usersForUi ? (
+            {!invalidate && usersForUi ? (
                 usersForUi.usersToDisplay.map((user: User, key: number) => {
                     const lastRoundInSeason = royaleData?.round;
                     const isUserAWinner =
@@ -284,7 +297,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason, setSel
                     <SimpleLoader />
                 </LoaderContainer>
             )}
-            {usersForUi?.usersToDisplay ? (
+            {!invalidate && usersForUi?.usersToDisplay ? (
                 <Pagination>
                     <PaginationIcon
                         className={`icon icon--double-left ${page <= 1 ? 'disabled' : ''}`}
