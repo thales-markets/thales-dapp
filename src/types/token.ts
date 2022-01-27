@@ -97,8 +97,6 @@ type Reward = {
 };
 
 export type MigratedReward = {
-    closingDate: number;
-    period: number;
     isClaimPaused: boolean;
     hasClaimRights: boolean;
     claimed: boolean;

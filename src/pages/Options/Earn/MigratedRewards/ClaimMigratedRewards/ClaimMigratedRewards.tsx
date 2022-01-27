@@ -152,12 +152,13 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
             style={{ gridColumn: 'span 10', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
             <SectionHeader>
-                {/* <div>{t('options.earn.thales-staking.staking-rewards.title')}</div> */}
-                <div>Migrated rewards</div>
+                <div>{t('options.earn.thales-staking.staking-rewards.migrated-rewards.title')}</div>
             </SectionHeader>
             <GridContainer>
                 <StakingRewardsItem style={{ gridColumn: 'span 12' }}>
-                    <StakingRewardsLabel color="#64D9FE">Thales staking</StakingRewardsLabel>
+                    <StakingRewardsLabel color="#64D9FE">
+                        {t('options.earn.thales-staking.staking-rewards.migrated-rewards.rewards-label')}
+                    </StakingRewardsLabel>
                     <StakingRewardsContent>{formatCurrencyWithKey(THALES_CURRENCY, balance)}</StakingRewardsContent>
                 </StakingRewardsItem>
                 <GridAction>
@@ -201,7 +202,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                             migratedRewards.hasClaimRights &&
                             migratedRewards.claimed && (
                                 <ClaimMessage>
-                                    {t('options.earn.thales-staking.staking-rewards.claimed-migrated-rewards-message')}
+                                    {t('options.earn.thales-staking.staking-rewards.migrated-rewards.claimed-message')}
                                 </ClaimMessage>
                             )}
                         {migratedRewards &&
@@ -210,7 +211,9 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                             !migratedRewards.claimed &&
                             migratedRewards.hasStakingRewardsToClaim && (
                                 <ClaimMessage>
-                                    {t('options.earn.thales-staking.staking-rewards.claim-staking-rewards-message')}
+                                    {t(
+                                        'options.earn.thales-staking.staking-rewards.migrated-rewards.claim-staking-rewards-message'
+                                    )}
                                 </ClaimMessage>
                             )}
                     </ButtonContainer>
