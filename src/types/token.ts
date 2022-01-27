@@ -50,6 +50,7 @@ export enum TransactionFilterEnum {
     UNSTAKE = 'unstake',
     ADD_TO_ESCROW = 'addToEscrow',
     VEST = 'vest',
+    CLAIM_MIGRATED_REWARDS = 'claimMigratedRewards',
 }
 
 export type TokenTransactions = TokenTransaction[];
