@@ -16,7 +16,7 @@ const useMigratedRewardsQuery = (
     return useQuery<MigratedReward>(
         QUERY_KEYS.Token.MigratedRewards(walletAddress, networkId),
         async () => {
-            const paused = (snxJSConnector as any).ongoingAirdropContract.paused();
+            const paused = await (snxJSConnector as any).ongoingAirdropContract.paused();
 
             const ongoingAirdropHash = ongoingAirdropMigrationHashes.find(
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
