@@ -33,7 +33,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
         enabled: isL2 && isAppReady,
     });
     const user = userQuery.isSuccess ? userQuery.data : AnonimUser;
-    const royaleQuery = useLatestRoyaleForUserInfo({ enabled: isL2 && isAppReady });
+    const royaleQuery = useLatestRoyaleForUserInfo(selectedSeason, { enabled: isL2 && isAppReady });
     const royaleData = royaleQuery.isSuccess ? royaleQuery.data : {};
 
     const [allowance, setAllowance] = useState(false);
@@ -41,6 +41,13 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
     const [openEditDialog, setOpenEditDialog] = useState(false);
     const buyInToken = isL2 ? (networkId === 10 ? OP_sUSD : OP_KOVAN_SUSD) : '';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
+
+    useEffect(() => {
+        if (selectedSeason !== 0) {
+            royaleQuery.remove();
+            userQuery.remove();
+        }
+    }, [selectedSeason]);
 
     const updateBalanceAndAllowance = async (token: any) => {
         if (token) {
@@ -88,6 +95,7 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
 
     const getFooter = (user: User | undefined, royaleData: any) => {
         if (!royaleData) return;
+        if (!user) return;
         if (royaleData.season === selectedSeason) {
             if (royaleData.signUpPeriod > new Date()) {
                 if (walletAddress && !user) {

@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
 
-type LatestRoyaleSeasonInfo = {
+type LatestRoyaleForUserInfo = {
     season: number;
     seasonStarted: boolean;
     seasonFinished: boolean;
@@ -12,12 +12,20 @@ type LatestRoyaleSeasonInfo = {
     buyInAmount: number;
 };
 
-const useLatestRoyaleForUserInfo = (options?: UseQueryOptions<LatestRoyaleSeasonInfo>) => {
-    return useQuery<LatestRoyaleSeasonInfo>(
-        QUERY_KEYS.Royale.LatestRoyaleDataForUserCard(),
+const useLatestRoyaleForUserInfo = (selectedSeason: number, options?: UseQueryOptions<LatestRoyaleForUserInfo>) => {
+    return useQuery<LatestRoyaleForUserInfo>(
+        QUERY_KEYS.Royale.LatestRoyaleDataForUserCard(selectedSeason),
         async () => {
             const { thalesRoyaleContract } = snxJSConnector;
-            return getFromContract(thalesRoyaleContract);
+            let season = selectedSeason;
+            if (season === 0) {
+                const { thalesRoyaleContract } = snxJSConnector;
+                if (thalesRoyaleContract) {
+                    season = Number(await thalesRoyaleContract.season());
+                }
+            }
+
+            return getFromContract(thalesRoyaleContract, season);
         },
         {
             refetchInterval: 5000,
@@ -26,8 +34,7 @@ const useLatestRoyaleForUserInfo = (options?: UseQueryOptions<LatestRoyaleSeason
     );
 };
 
-const getFromContract = async (RoyaleContract: any): Promise<LatestRoyaleSeasonInfo> => {
-    const season = Number(await RoyaleContract.season());
+const getFromContract = async (RoyaleContract: any, season: number): Promise<LatestRoyaleForUserInfo> => {
     const [
         seasonStarted,
         seasonFinished,
