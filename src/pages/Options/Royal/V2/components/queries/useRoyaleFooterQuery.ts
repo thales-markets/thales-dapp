@@ -28,20 +28,21 @@ const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
     const [round, reward] = await Promise.all([
         RoyaleContract.roundInASeason(season),
         RoyaleContract.rewardPerSeason(season),
+        RoyaleContract.seasonFinished(season),
     ]);
+
     const totalPlayers = await RoyaleContract.signedUpPlayersCount(season);
     const totalPlayersPerRoundPerSeason =
-        Number(round) !== 0 ? await RoyaleContract.totalPlayersPerRoundPerSeason(season, round) : undefined;
-    const playersAlive = Number(round) === 0 ? totalPlayers : totalPlayersPerRoundPerSeason;
+        Number(round) > 1 ? await RoyaleContract.totalPlayersPerRoundPerSeason(season, round) : totalPlayers;
+
+    let playersAlive = '';
+
+    playersAlive = totalPlayersPerRoundPerSeason + '/' + totalPlayers;
 
     return {
         round: Number(round),
-        reward: Number(ethers.utils.formatEther(reward)) / Number(playersAlive),
-        playersAlive:
-            '' +
-            playersAlive +
-            '  /  ' +
-            (totalPlayersPerRoundPerSeason ? totalPlayersPerRoundPerSeason : totalPlayers),
+        reward: Number(ethers.utils.formatEther(reward)) / Number(totalPlayersPerRoundPerSeason),
+        playersAlive,
     };
 };
 
