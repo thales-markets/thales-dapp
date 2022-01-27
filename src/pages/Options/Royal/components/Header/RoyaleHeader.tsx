@@ -56,7 +56,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                         <RoyaleLogo className="icon icon--royale-logo" />
                         <MeatballsIcon
                             position="absolute"
-                            className="icon icon--three-dots"
+                            className="icon icon--x-sign"
                             onClick={() =>
                                 setShowBurgerMenu(
                                     showBurgerMenu === BurgerState.Show ? BurgerState.Hide : BurgerState.Show
@@ -189,8 +189,12 @@ const MeatballsIcon = styled.i<{ position: string }>`
     position: ${(props) => props.position};
     top: 15px;
     right: 15px;
+    &.icon--x-sign {
+        font-size: 20px;
+    }
     @media (max-width: 1024px) {
         position: absolute;
+        z-index: 999;
     }
 `;
 
@@ -273,6 +277,11 @@ const BurgerMenu = styled.div`
     @media (max-width: 1024px) {
         left: 0;
         right: 0;
+        z-index: 1000;
+        .icon--royale-logo {
+            font-size: 78px !important;
+            line-height: 52px !important;
+        }
     }
 `;
 
