@@ -130,7 +130,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({ selectedPage, setSelectedP
                             <span>
                                 {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
                             </span>
-                            <span>${ethPrice}</span>
+                            <span>${Number(ethPrice).toFixed(2)}</span>
                             <InfoIconContainer>
                                 <RoyaleTooltip title={t('options.royale.footer.price-source')}>
                                     <StyledInfoIcon />
