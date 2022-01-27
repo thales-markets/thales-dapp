@@ -333,6 +333,19 @@ export const stakingThales = {
             inputs: [
                 {
                     indexed: false,
+                    internalType: 'uint256',
+                    name: 'ammVolumeRewardsMultiplier',
+                    type: 'uint256',
+                },
+            ],
+            name: 'SNXVolumeRewardsMultiplierChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
                     internalType: 'address',
                     name: 'user',
                     type: 'address',
@@ -498,6 +511,21 @@ export const stakingThales = {
                     internalType: 'contract ISNXRewards',
                     name: '',
                     type: 'address',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'SNXVolumeRewardsMultiplier',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
                 },
             ],
             payable: false,
@@ -720,6 +748,27 @@ export const stakingThales = {
                     type: 'address',
                 },
             ],
+            name: 'getAMMBonusPercentage',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
             name: 'getAMMVolume',
             outputs: [
                 {
@@ -784,6 +833,27 @@ export const stakingThales = {
                 },
             ],
             name: 'getBaseReward',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
+            name: 'getCRatio',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -918,7 +988,79 @@ export const stakingThales = {
                     type: 'address',
                 },
             ],
+            name: 'getSNXBonusPercentage',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
+            name: 'getSNXDebt',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'getSNXRateForCurrency',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
             name: 'getSNXStaked',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'getSNXTargetRatio',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -960,7 +1102,49 @@ export const stakingThales = {
                     type: 'address',
                 },
             ],
+            name: 'getThalesRoyaleBonusPercentage',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
             name: 'getTotalBonus',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: 'account',
+                    type: 'address',
+                },
+            ],
+            name: 'getTotalBonusPercentage',
             outputs: [
                 {
                     internalType: 'uint256',
@@ -1462,6 +1646,21 @@ export const stakingThales = {
                 },
             ],
             name: 'setSNXRewards',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'uint256',
+                    name: '_SNXVolumeRewardsMultiplier',
+                    type: 'uint256',
+                },
+            ],
+            name: 'setSNXVolumeRewardsMultiplier',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

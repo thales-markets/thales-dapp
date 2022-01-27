@@ -25,6 +25,7 @@ const useStakingRewardsQuery = (
                 maxAMMVolumeRewardsPercentage,
                 maxThalesRoyaleRewardsPercentage,
                 ammVolumeRewardsMultiplier,
+                snxVolumeRewardsMultiplier,
                 baseRewardsPool,
                 bonusRewardsPool,
                 rewards,
@@ -43,6 +44,7 @@ const useStakingRewardsQuery = (
                 (snxJSConnector as any).stakingThalesContract.maxAMMVolumeRewardsPercentage(),
                 (snxJSConnector as any).stakingThalesContract.maxThalesRoyaleRewardsPercentage(),
                 (snxJSConnector as any).stakingThalesContract.AMMVolumeRewardsMultiplier(),
+                (snxJSConnector as any).stakingThalesContract.SNXVolumeRewardsMultiplier(),
                 (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
                 (snxJSConnector as any).stakingThalesContract.periodExtraReward(),
                 (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
@@ -75,6 +77,7 @@ const useStakingRewardsQuery = (
                 maxAmmBonusPercentage: Number(maxAMMVolumeRewardsPercentage),
                 maxThalesRoyaleBonusPercentage: Number(maxThalesRoyaleRewardsPercentage),
                 ammVolumeRewardsMultiplier: Number(ammVolumeRewardsMultiplier),
+                snxVolumeRewardsMultiplier: Number(snxVolumeRewardsMultiplier),
                 maxSnxBonus: (bigNumberFormatter(baseRewards) * Number(maxSNXRewardsPercentage)) / 100,
                 maxAmmBonus: (bigNumberFormatter(baseRewards) * Number(maxAMMVolumeRewardsPercentage)) / 100,
                 maxThalesRoyaleBonus:

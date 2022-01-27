@@ -83,6 +83,7 @@ export type StakingReward = {
     maxAmmBonus: number;
     maxThalesRoyaleBonus: number;
     ammVolumeRewardsMultiplier: number;
+    snxVolumeRewardsMultiplier: number;
 };
 
 type Reward = {

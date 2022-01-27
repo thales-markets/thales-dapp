@@ -174,6 +174,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
     const maxThalesRoyaleBonusPercentage = stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
     const ammVolumeRewardsMultiplier = stakingRewards ? stakingRewards.ammVolumeRewardsMultiplier : 0;
+    const snxVolumeRewardsMultiplier = stakingRewards ? stakingRewards.snxVolumeRewardsMultiplier : 0;
     const baseRewardsPool = stakingRewards ? stakingRewards.baseRewardsPool : 0;
     const bonusRewardsPool = stakingRewards ? stakingRewards.bonusRewardsPool : 0;
 
@@ -235,7 +236,12 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                         <StyledMaterialTooltip
                             arrow
                             interactive
-                            title={<SnxStakingTooltip maxPercentage={maxSnxBonusPercentage} />}
+                            title={
+                                <SnxStakingTooltip
+                                    maxPercentage={maxSnxBonusPercentage}
+                                    snxVolumeRewardsMultiplier={snxVolumeRewardsMultiplier}
+                                />
+                            }
                         >
                             <BonusInfoIcon />
                         </StyledMaterialTooltip>
