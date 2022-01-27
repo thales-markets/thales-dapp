@@ -51,8 +51,9 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
         migratedRewards.reward &&
         migratedRewards.hasClaimRights &&
         !migratedRewards.claimed &&
-        !migratedRewards.isClaimPaused &&
-        !migratedRewards.hasStakingRewardsToClaim;
+        !migratedRewards.isClaimPaused;
+
+    const hasStakingRewardsToClaim = migratedRewards && migratedRewards.hasStakingRewardsToClaim;
 
     const migratedRewardsQuery = useMigratedRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!ongoingAirdropContract,
@@ -105,13 +106,13 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                 }
             }
         };
-        if (!isWalletConnected || !isClaimAvailable || !ongoingAirdropContract) return;
+        if (!isWalletConnected || !isClaimAvailable || hasStakingRewardsToClaim || !ongoingAirdropContract) return;
         fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable, ongoingAirdropContract]);
+    }, [isWalletConnected, isClaimAvailable, hasStakingRewardsToClaim, ongoingAirdropContract]);
 
     const handleClaimOngoingAirdrop = async () => {
         setShowTooltip(false);
-        if (isClaimAvailable && migratedRewards && migratedRewards.reward) {
+        if (isClaimAvailable && !hasStakingRewardsToClaim && migratedRewards && migratedRewards.reward) {
             try {
                 setTxErrorMessage(null);
                 setIsClaiming(true);
@@ -142,7 +143,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
         }
     };
 
-    const balance = migratedRewards && migratedRewards.reward ? migratedRewards.reward.balance : 0;
+    const balance = isClaimAvailable && migratedRewards && migratedRewards.reward ? migratedRewards.reward.balance : 0;
 
     return (
         <EarnSection
@@ -175,7 +176,7 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                                     setShowTooltip(false);
                                 }}
                                 onClick={handleClaimOngoingAirdrop}
-                                disabled={!isClaimAvailable || isClaiming}
+                                disabled={!isClaimAvailable || hasStakingRewardsToClaim || isClaiming}
                                 className="primary"
                             >
                                 {isClaiming
