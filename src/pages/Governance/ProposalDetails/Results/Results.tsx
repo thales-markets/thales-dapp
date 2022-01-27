@@ -62,6 +62,8 @@ const Results: React.FC<ResultsProps> = ({
         return [];
     }, [proposalResults]);
 
+    const numberOfCouncilMemebers = isCouncilResults ? NUMBER_OF_COUNCIL_MEMBERS + 1 : NUMBER_OF_COUNCIL_MEMBERS;
+
     return (
         <>
             {!isLoading && proposalResults && (
@@ -70,7 +72,7 @@ const Results: React.FC<ResultsProps> = ({
                         const results = proposalResults.results;
                         const label = truncateText(
                             choice.choice,
-                            isCouncilResults && index < NUMBER_OF_COUNCIL_MEMBERS ? 18 : 12
+                            isCouncilResults && index < numberOfCouncilMemebers ? 18 : 12
                         );
                         const percentage = results.sumOfResultsBalance
                             ? results.resultsByVoteBalance[choice.i] / results.sumOfResultsBalance
@@ -80,22 +82,32 @@ const Results: React.FC<ResultsProps> = ({
                             <ResultRow
                                 key={label}
                                 backgroundColor={
-                                    (isCouncilVoting || isCouncilResults) && index < NUMBER_OF_COUNCIL_MEMBERS
+                                    (isCouncilVoting || isCouncilResults) && index < numberOfCouncilMemebers
                                         ? '#03044e'
                                         : '#04045a'
                                 }
-                                opacity={isCouncilResults && index >= NUMBER_OF_COUNCIL_MEMBERS ? 0.5 : 1}
+                                opacity={isCouncilResults && index >= numberOfCouncilMemebers ? 0.5 : 1}
                                 borderColor={
-                                    (isCouncilVoting || isCouncilResults) && index === NUMBER_OF_COUNCIL_MEMBERS - 1
+                                    (isCouncilVoting || isCouncilResults) && index === numberOfCouncilMemebers - 1
                                         ? '#3f1fb4'
                                         : undefined
                                 }
                                 paddingBottom={
-                                    (isCouncilVoting && index === NUMBER_OF_COUNCIL_MEMBERS - 1) ||
+                                    (isCouncilVoting && index === numberOfCouncilMemebers - 1) ||
                                     (isCouncilResults &&
-                                        (index === NUMBER_OF_COUNCIL_MEMBERS - 1 || index === choices.length - 1))
+                                        (index === numberOfCouncilMemebers - 1 || index === choices.length - 1))
                                         ? 20
                                         : 10
+                                }
+                                style={
+                                    isCouncilResults && index === 4
+                                        ? {
+                                              textDecoration: 'line-through',
+                                              textDecorationColor: '#B8C6E5',
+                                              textDecorationThickness: '2px',
+                                              opacity: '0.5',
+                                          }
+                                        : {}
                                 }
                             >
                                 <SidebarRowData>
