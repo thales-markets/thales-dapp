@@ -1192,5 +1192,16 @@
     },
     "game": {
         "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
+    },
+    "migration": {
+        "migration-opt-out-notice": {
+            "opt-out-text": "<0>All staked, escrowed and unclaimed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> If you would like to opt out of this migration, and keep your THALES on L1 Mainnet, you may do so by signing the following message with your wallet.</0>",
+            "cancel-opt-out-text": "<0>All staked, escrowed and unclaimed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> You have chosen to opt out of this migration, and keep your THALES on L1 Mainnet. If instead you do want to be included in the migration, you can cancel your opt out.</0>",
+            "button": {
+                "opt-out-label": "Opt out",
+                "cancel-opt-out-label": "Cancel opt out",
+                "progress-label": "Submitting in progress..."
+            }
+        }
     }
 }
