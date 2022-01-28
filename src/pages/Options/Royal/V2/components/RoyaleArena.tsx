@@ -591,14 +591,15 @@ const LongButton = styled.button<{ selected?: boolean; notSelected?: boolean }>`
     width: 90px;
     height: 90px;
     border-radius: 50px;
-    background: ${(props) => (props.notSelected ? '#b9c7c2' : '#59cda3')};
-    border: 5px solid #e5e5e5;
+    background: ${(props) => (props.notSelected ? '#b9c7c2' : '#59CDA3')};
+    border: 5px solid ${(props) => (props.selected ? '#1A6658' : '#e5e5e5')};
     box-sizing: border-box;
     box-shadow: inset 0 4px 30px #137b9b;
-    color: white;
+    color: ${(props) => (props.selected ? '#1A6658' : '#e5e5e5')};
     font-size: 55px;
     cursor: pointer;
     line-height: 55px;
+    filter: ${(props) => (props.selected ? 'drop-shadow(0px 0px 10px #54C7A2)' : '')};
     &:disabled {
         background: #b9c7c2;
         cursor: not-allowed;
@@ -615,14 +616,15 @@ const ShortButton = styled.button<{ selected?: boolean; notSelected?: boolean }>
     height: 90px;
     border-radius: 50px;
     background: ${(props) => (props.notSelected ? '#977980' : '#8e1d38')};
-    border: ${(props) => (props.selected ? '4px solid #e5e5e5' : '5px solid #e5e5e5')};
+    border: ${(props) => (props.selected ? '5px solid #CA7070' : '5px solid #e5e5e5')};
     box-sizing: border-box;
-    color: white;
+    color: ${(props) => (props.selected ? '#1A6658' : '#e5e5e5')};
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     z-index: 100;
+    filter: ${(props) => (props.selected ? 'drop-shadow(0px 0px 10px #CA7070)' : '')};
     &:disabled {
         background: #977980;
         cursor: not-allowed;
@@ -635,7 +637,7 @@ const Circle = styled.div<{ disabled?: boolean; selected?: boolean }>`
     border-radius: 50px;
     background: transparent;
     box-sizing: border-box;
-    border: ${(props) => (props.selected ? '4px solid #e5e5e5' : '4px solid #e5e5e5')};
+    border: ${(props) => (props.selected ? '3px solid #CA7070' : '3px solid #e5e5e5')};
 `;
 
 const Button = styled.button`
