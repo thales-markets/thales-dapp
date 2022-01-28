@@ -176,6 +176,9 @@ const FooterIconsWrapper = styled(FlexDiv)`
         font-size: 15px;
         line-height: 36px;
     }
+    @media (max-width: 900px) {
+        gap: 4em;
+    }
     @media (max-width: 600px) {
         gap: 5em;
     }
@@ -194,6 +197,9 @@ const FooterButtonsWrapper = styled(FlexDiv)`
     justify-content: center;
     gap: 6em;
     margin-bottom: 10px;
+    @media (max-width: 900px) {
+        gap: 4em;
+    }
     @media (max-width: 600px) {
         gap: 3em;
     }

@@ -191,6 +191,9 @@ const ListWrapper = styled.div`
     border-radius: 7px;
     width: 38em;
     margin-bottom: 4em;
+    @media (max-width: 600px) {
+        width: 28em;
+    }
 }
 `;
 
@@ -206,6 +209,9 @@ const List = styled.ul`
         font-weight: 700;
         line-height: 170%;
         height: 2em;
+    }
+    @media (max-width: 600px) {
+        margin-left: 1em;
     }
 `;
 
