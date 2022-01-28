@@ -39,13 +39,14 @@ const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
     let playersAlive = '';
 
     playersAlive = totalPlayersPerRoundPerSeason + '/' + totalPlayers;
+    const numberOfPlayers = Number(totalPlayersPerRoundPerSeason) > 0 ? Number(totalPlayersPerRoundPerSeason) : 1;
 
     return {
         round: Number(round),
         reward:
             season === 0
                 ? Number(ethers.utils.formatEther(reward))
-                : Number(ethers.utils.formatEther(reward)) / Number(totalPlayersPerRoundPerSeason),
+                : Number(ethers.utils.formatEther(reward)) / numberOfPlayers,
         playersAlive,
         season,
     };
