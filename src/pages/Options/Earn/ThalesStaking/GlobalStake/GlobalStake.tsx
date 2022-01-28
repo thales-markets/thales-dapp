@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
@@ -11,13 +11,6 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { /*ClaimMessage, */ EarnSection, SectionHeader } from '../../components';
 import { GridContainer, StakeInfoContent, StakeInfoItem, StakeInfoLabel } from '../../gridComponents';
-
-type GlobalStakeProps = {
-    thalesStaked: string;
-    setThalesStaked: (staked: string) => void;
-    escrowedBalance: number;
-    setEscrowedBalance: (escrowed: number) => void;
-};
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -37,12 +30,7 @@ function getNumberLabel(labelValue: number) {
 
 const aprToApy = (interest: number, frequency: number) => ((1 + interest / 100 / frequency) ** frequency - 1) * 100;
 
-const GlobalStake: React.FC<GlobalStakeProps> = ({
-    thalesStaked,
-    setThalesStaked,
-    escrowedBalance,
-    setEscrowedBalance,
-}) => {
+const GlobalStake: React.FC = () => {
     const { t } = useTranslation();
 
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -56,10 +44,21 @@ const GlobalStake: React.FC<GlobalStakeProps> = ({
     const escrowThalesQuery = useEscrowThalesQuery(walletAddress, networkId, {
         enabled: isAppReady,
     });
-    const [fixedPeriodReward, setFixedPeriodReward] = useState<string>('0');
-    const [totalStakedAmount, setTotalStakedAmount] = useState<string>('0');
-    const [totalEscrowedRewards, setTotalEscrowedRewards] = useState<string>('0');
-    const [totalEscrowBalanceNotIncludedInStaking, setTotalEscrowBalanceNotIncludedInStaking] = useState<string>('0');
+
+    const thalesStaked =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.thalesStaked) : 0;
+    const fixedPeriodReward =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.fixedPeriodReward) : 0;
+    const totalStakedAmount =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.totalStakedAmount) : 0;
+    const escrowedBalance =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
+    const totalEscrowedRewards =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.totalEscrowedRewards) : 0;
+    const totalEscrowBalanceNotIncludedInStaking =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data
+            ? Number(escrowThalesQuery.data.totalEscrowBalanceNotIncludedInStaking)
+            : 0;
 
     const APR = useMemo(
         () =>
@@ -82,25 +81,6 @@ const GlobalStake: React.FC<GlobalStakeProps> = ({
     ]);
 
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * Number(fixedPeriodReward), [myStakedShare]);
-
-    useEffect(() => {
-        if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { thalesStaked, fixedPeriodReward, totalStakedAmount } = stakingThalesQuery.data;
-            setThalesStaked(thalesStaked);
-            setFixedPeriodReward(fixedPeriodReward);
-            setTotalStakedAmount(totalStakedAmount);
-        }
-        if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
-            const {
-                escrowedBalance,
-                totalEscrowedRewards,
-                totalEscrowBalanceNotIncludedInStaking,
-            } = escrowThalesQuery.data;
-            setEscrowedBalance(escrowedBalance);
-            setTotalEscrowedRewards(totalEscrowedRewards);
-            setTotalEscrowBalanceNotIncludedInStaking(totalEscrowBalanceNotIncludedInStaking);
-        }
-    }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
 
     // const notEligibleForStakingRewards = useMemo(() => {
     //     return !+thalesStaked && !!+escrowedBalance;

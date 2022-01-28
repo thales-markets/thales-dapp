@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import useStakingThalesQuery from '../../../../../queries/staking/useStakingThalesQuery';
@@ -12,19 +12,11 @@ import styled from 'styled-components';
 import { ClaimMessage, ClaimTitle, EarnSection, SectionHeader } from '../../components';
 import { GridContainer, StakeInfoItem, StakeInfoLabel, StakeInfoContent } from '../../gridComponents';
 
-type MyStakeProps = {
-    thalesStaked: string;
-    setThalesStaked: (staked: string) => void;
-    escrowedBalance: number;
-    setEscrowedBalance: (escrowed: number) => void;
-};
-
-const MyStake: React.FC<MyStakeProps> = ({ thalesStaked, setThalesStaked, escrowedBalance, setEscrowedBalance }) => {
+const MyStake: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const [unstakingAmount, setUnstakingAmount] = useState<string>('0');
 
     const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
         enabled: isAppReady,
@@ -34,21 +26,14 @@ const MyStake: React.FC<MyStakeProps> = ({ thalesStaked, setThalesStaked, escrow
         enabled: isAppReady,
     });
 
-    useEffect(() => {
-        if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
-            const { thalesStaked, unstakingAmount } = stakingThalesQuery.data;
-            setThalesStaked(thalesStaked);
-            setUnstakingAmount(unstakingAmount);
-        }
-        if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
-            const { escrowedBalance } = escrowThalesQuery.data;
-            setEscrowedBalance(escrowedBalance);
-        }
-    }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
+    const thalesStaked =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.thalesStaked) : 0;
+    const unstakingAmount =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
+    const escrowedBalance =
+        escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
 
-    const notEligibleForStakingRewards = useMemo(() => {
-        return !+thalesStaked && !!+escrowedBalance;
-    }, [thalesStaked, escrowedBalance]);
+    const notEligibleForStakingRewards = thalesStaked === 0 && escrowedBalance > 0;
 
     return (
         <EarnSection
@@ -64,7 +49,7 @@ const MyStake: React.FC<MyStakeProps> = ({ thalesStaked, setThalesStaked, escrow
                     <StakeInfoContent style={notEligibleForStakingRewards ? { color: '#ffcc00' } : {}}>
                         {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
                     </StakeInfoContent>
-                    {Number(unstakingAmount) > 0 && (
+                    {unstakingAmount > 0 && (
                         <StyledClaimTitle>
                             <UnstakingConatiner>
                                 <UnstakingTitle>{`${t(
@@ -81,7 +66,7 @@ const MyStake: React.FC<MyStakeProps> = ({ thalesStaked, setThalesStaked, escrow
                 <StakeInfoItem style={{ gridColumn: 'span 12' }}>
                     <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.total-staked')}</StakeInfoLabel>
                     <StakeInfoContent style={{ fontSize: '25px' }}>
-                        {formatCurrencyWithKey(THALES_CURRENCY, Number(escrowedBalance) + Number(thalesStaked))}
+                        {formatCurrencyWithKey(THALES_CURRENCY, escrowedBalance + thalesStaked)}
                     </StakeInfoContent>
                     {notEligibleForStakingRewards && (
                         <ClaimMessage>{t('options.earn.thales-staking.my-stake.not-eligible-message')}</ClaimMessage>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -11,7 +10,7 @@ import { ethers } from 'ethers';
 import { StakingReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
-import { refetchStakingRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import {
     BonusRewardButton,
     BonusRewardInnerButton,
@@ -41,13 +40,10 @@ import styled from 'styled-components';
 import SnxStakingTooltip from './components/SnxStakingTooltip';
 import AmmTooltip from './components/AmmTooltip';
 import ThalesRoyaleTooltip from './components/ThalesRoyaleTooltip';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import onboardConnector from 'utils/onboardConnector';
 
-type StakingRewardsProps = {
-    escrowedBalance: number;
-    setEscrowedBalance: (escrowed: number) => void;
-};
-
-const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEscrowedBalance }) => {
+const StakingRewards: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -63,9 +59,6 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
     const isL2 = getIsOVM(networkId);
     const { stakingThalesContract } = snxJSConnector as any;
 
-    const isClaimAvailable =
-        stakingRewards && stakingRewards.hasClaimRights && !stakingRewards.claimed && !stakingRewards.isClaimPaused;
-
     const stakingRewardsQuery = useStakingRewardsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!stakingThalesContract,
     });
@@ -75,6 +68,18 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
             setStakingRewards(stakingRewardsQuery.data);
         }
     }, [stakingRewardsQuery.isSuccess, stakingRewardsQuery.data]);
+
+    const isClaimAvailable =
+        stakingRewards &&
+        stakingRewards.hasClaimRights &&
+        !stakingRewards.claimed &&
+        !stakingRewards.isClaimPaused &&
+        isWalletConnected &&
+        !!stakingThalesContract &&
+        !isClaiming &&
+        !isClosingPeriod;
+
+    const isClosingPeriodAvailable = isWalletConnected && !!stakingThalesContract && !isClaiming && !isClosingPeriod;
 
     useEffect(() => {
         const fetchL1Fee = async (stakingThalesContractWithSigner: any) => {
@@ -105,9 +110,9 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 }
             }
         };
-        if (!isWalletConnected || !isClaimAvailable || !stakingThalesContract) return;
+        if (!isClaimAvailable) return;
         fetchGasLimit();
-    }, [isWalletConnected, isClaimAvailable, stakingThalesContract]);
+    }, [walletAddress, isClaimAvailable]);
 
     const handleClaimStakingRewards = async () => {
         setShowTooltip(false);
@@ -121,13 +126,8 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
 
                 if (txResult && txResult.transactionHash) {
                     dispatchMarketNotification(t('options.earn.thales-staking.staking-rewards.confirmation-message'));
-                    refetchStakingRewards(walletAddress, networkId);
+                    refetchTokenQueries(walletAddress, networkId);
                     refetchUserTokenTransactions(walletAddress, networkId);
-                    setStakingRewards({
-                        ...stakingRewards,
-                        claimed: true,
-                    });
-                    setEscrowedBalance(escrowedBalance + stakingRewards.rewards);
                     setIsClaiming(false);
                 }
             } catch (e) {
@@ -151,7 +151,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                     dispatchMarketNotification(
                         t('options.earn.thales-staking.staking-rewards.close-period.confirmation-message')
                     );
-                    refetchStakingRewards(walletAddress, networkId);
+                    refetchTokenQueries(walletAddress, networkId);
                     setIsClosingPeriod(false);
                 }
             } catch (e) {
@@ -160,6 +160,41 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 setIsClosingPeriod(false);
             }
         }
+    };
+
+    const getClaimButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </DefaultSubmitButton>
+            );
+        }
+
+        return (
+            <StyledMaterialTooltip
+                arrow
+                title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
+                open={showTooltip}
+            >
+                <DefaultSubmitButton
+                    onMouseOver={() => {
+                        setShowTooltip(true);
+                    }}
+                    onMouseOut={() => {
+                        setShowTooltip(false);
+                    }}
+                    onClick={handleClaimStakingRewards}
+                    disabled={!isClaimAvailable}
+                >
+                    {isClaiming
+                        ? t('options.earn.thales-staking.staking-rewards.claiming') +
+                          ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}...`
+                        : t('options.earn.thales-staking.staking-rewards.claim') +
+                          ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}`}
+                </DefaultSubmitButton>
+            </StyledMaterialTooltip>
+        );
     };
 
     const rewards = isClaimAvailable && stakingRewards ? stakingRewards.rewards : 0;
@@ -194,16 +229,16 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                         '-'
                     )}
                     {stakingRewards && stakingRewards.canClosePeriod && (
-                        <Button
+                        <DefaultSubmitButton
                             onClick={handleClosePeriod}
-                            disabled={isClosingPeriod}
+                            disabled={!isClosingPeriodAvailable}
                             className="primary"
-                            style={{ marginLeft: 10, padding: '6px 20px' }}
+                            style={{ marginLeft: 10, padding: '6px 20px', minHeight: 0 }}
                         >
                             {isClosingPeriod
                                 ? t('options.earn.thales-staking.staking-rewards.close-period.progress-label')
                                 : t('options.earn.thales-staking.staking-rewards.close-period.label')}
-                        </Button>
+                        </DefaultSubmitButton>
                     )}
                 </div>
             </SectionHeader>
@@ -314,29 +349,7 @@ const StakingRewards: React.FC<StakingRewardsProps> = ({ escrowedBalance, setEsc
                 <GridAction>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainer>
-                        <StyledMaterialTooltip
-                            arrow={true}
-                            title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
-                            open={showTooltip}
-                        >
-                            <Button
-                                onMouseOver={() => {
-                                    setShowTooltip(true);
-                                }}
-                                onMouseOut={() => {
-                                    setShowTooltip(false);
-                                }}
-                                onClick={handleClaimStakingRewards}
-                                disabled={!isClaimAvailable || isClaiming || isClosingPeriod}
-                                className="primary"
-                            >
-                                {isClaiming
-                                    ? t('options.earn.thales-staking.staking-rewards.claiming') +
-                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}...`
-                                    : t('options.earn.thales-staking.staking-rewards.claim') +
-                                      ` ${formatCurrencyWithKey(THALES_CURRENCY, rewards)}`}
-                            </Button>
-                        </StyledMaterialTooltip>
+                        {getClaimButton()}
                         {stakingRewards && stakingRewards.isClaimPaused && (
                             <ClaimMessage>
                                 {t('options.earn.thales-staking.staking-rewards.paused-message')}

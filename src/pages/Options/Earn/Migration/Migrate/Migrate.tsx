@@ -214,18 +214,12 @@ const Migrate: React.FC = () => {
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(thalesBalance));
+        setAmount(truncToDecimals(thalesBalance, 4));
     };
 
     useEffect(() => {
         setIsAmountValid(Number(amount) === 0 || (Number(amount) > 0 && Number(amount) <= thalesBalance));
     }, [amount, thalesBalance]);
-
-    // useEffect(() => {
-    //     if (isWalletConnected && !thalesBalanceQuery.isLoading) {
-    //         setAmount(truncToDecimals(thalesBalance));
-    //     }
-    // }, [thalesBalance]);
 
     return (
         <>

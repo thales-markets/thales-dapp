@@ -137,6 +137,7 @@
             "unknown-error-try-again": "An unknown error occurred after you submitted. Please try again.",
             "unknown-error-try-again-general": "An unknown error occurred. Please try again.",
             "insufficient-balance": "Insufficient balance",
+            "insufficient-staking-balance": "Insufficient staking balance",
             "insufficient-liquidity": "Insufficient liquidity",
             "insufficient-liquidity-for-trade": "Insufficient liquidity for this trade",
             "insufficient-order-amount": "Insufficient order amount",

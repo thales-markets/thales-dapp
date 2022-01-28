@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { EarnSection, FullRow, SectionContentContainer, SectionHeader } from '../../components';
-import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
+import { formatCurrencyWithKey, truncToDecimals } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
-import { Button, FlexDivCentered } from '../../../../../theme/common';
+import { FlexDivCentered } from '../../../../../theme/common';
 import NumericInput from '../../../Market/components/NumericInput';
-import { CurrencyLabel, InputContainer, InputLabel } from '../../../Market/components';
+import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from '../../../Market/components';
 import useThalesBalanceQuery from '../../../../../queries/walletBalances/useThalesBalanceQuery';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -18,27 +18,23 @@ import { APPROVAL_EVENTS } from '../../../../../constants/events';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
 import NetworkFees from '../../../components/NetworkFees';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from '../../../../../utils/network';
-import { refetchUserTokenTransactions } from 'utils/queryConnector';
+import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
 import styled from 'styled-components';
 import { dispatchMarketNotification } from 'utils/options';
 import SimpleLoader from '../../components/SimpleLoader';
 import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
+import onboardConnector from 'utils/onboardConnector';
+import FieldValidationMessage from 'components/FieldValidationMessage';
+import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 
-type Properties = {
-    thalesStaked: string;
-    setThalesStaked: (staked: string) => void;
-    balance: string;
-    setBalance: (staked: string) => void;
-    isUnstaking: boolean;
-};
-
-const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstaking, balance, setBalance }) => {
+const Stake: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-    const [amountToStake, setAmountToStake] = useState<number | string>(0);
+    const [amountToStake, setAmountToStake] = useState<number | string>('');
+    const [isAmountValid, setIsAmountValid] = useState<boolean>(true);
     const [isAllowingStake, setIsAllowingStake] = useState<boolean>(false);
     const [isStaking, setIsStaking] = useState<boolean>(false);
     const [hasStakeAllowance, setStakeAllowance] = useState<boolean>(false);
@@ -51,12 +47,23 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
     const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+    const stakingThalesQuery = useStakingThalesQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
-    useEffect(() => {
-        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
-            setBalance(thalesBalanceQuery.data.balance);
-        }
-    }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+    const thalesBalance =
+        thalesBalanceQuery.isSuccess && thalesBalanceQuery.data ? Number(thalesBalanceQuery.data.balance) : 0;
+    const isUnstaking = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.isUnstaking;
+
+    const isAmountEntered = Number(amountToStake) > 0;
+    const insufficientBalance = Number(amountToStake) > thalesBalance || !thalesBalance;
+    const isButtonDisabled =
+        isStaking ||
+        !stakingThalesContract ||
+        isUnstaking ||
+        !isAmountEntered ||
+        insufficientBalance ||
+        !isWalletConnected;
 
     useEffect(() => {
         if (!!stakingThalesContract) {
@@ -116,67 +123,25 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 setGasLimit(null);
             }
         };
-        if (!amountToStake || isStaking || !!stakingThalesContract) return;
+        if (isButtonDisabled) return;
         fetchGasLimit();
-    }, [amountToStake, isStaking, hasStakeAllowance, walletAddress]);
-
-    const getStakeButton = () => {
-        if (!hasStakeAllowance) {
-            return (
-                <Button disabled={isAllowingStake} onClick={handleAllowance} className="primary">
-                    {!isAllowingStake
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: THALES_CURRENCY })
-                        : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: THALES_CURRENCY,
-                          })}
-                </Button>
-            );
-        }
-
-        return (
-            <Button
-                disabled={!amountToStake || isStaking || isUnstaking}
-                onClick={handleStakeThales}
-                className="primary"
-            >
-                {!isStaking
-                    ? `${t('options.earn.thales-staking.stake.stake')} ${formatCurrencyWithKey(
-                          THALES_CURRENCY,
-                          amountToStake
-                      )}`
-                    : `${t('options.earn.thales-staking.stake.staking')} ${formatCurrencyWithKey(
-                          THALES_CURRENCY,
-                          amountToStake
-                      )}...`}
-            </Button>
-        );
-    };
+    }, [isButtonDisabled, amountToStake, hasStakeAllowance, walletAddress]);
 
     const handleStakeThales = async () => {
         try {
             setTxErrorMessage(null);
             setIsStaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const toStake = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await stakingThalesContractWithSigner.stake(toStake);
+            const amount = ethers.utils.parseEther(amountToStake.toString());
+            const tx = await stakingThalesContractWithSigner.stake(amount);
             const txResult = await tx.wait();
 
-            if (txResult && txResult.events) {
+            if (txResult && txResult.transactionHash) {
                 dispatchMarketNotification(t('options.earn.thales-staking.stake.confirmation-message'));
-                const rawData = txResult.events[txResult.events?.length - 1];
-                if (rawData && rawData.decode) {
-                    const netThalesBalance = ethers.utils
-                        .parseEther(balance)
-                        .sub(ethers.utils.parseEther(amountToStake.toString()));
-                    const netThalesStaked = ethers.utils
-                        .parseEther(thalesStaked)
-                        .add(ethers.utils.parseEther(amountToStake.toString()));
-                    refetchUserTokenTransactions(walletAddress, networkId);
-                    setBalance(ethers.utils.formatEther(netThalesBalance));
-                    setAmountToStake(0);
-                    setThalesStaked(ethers.utils.formatEther(netThalesStaked));
-                    setIsStaking(false);
-                }
+                refetchTokenQueries(walletAddress, networkId);
+                refetchUserTokenTransactions(walletAddress, networkId);
+                setAmountToStake('');
+                setIsStaking(false);
             }
         } catch (e) {
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));
@@ -211,6 +176,57 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
         }
     };
 
+    const getStakeButton = () => {
+        if (!isWalletConnected) {
+            return (
+                <DefaultSubmitButton onClick={() => onboardConnector.connectWallet()}>
+                    {t('common.wallet.connect-your-wallet')}
+                </DefaultSubmitButton>
+            );
+        }
+        if (insufficientBalance) {
+            return <DefaultSubmitButton disabled={true}>{t(`common.errors.insufficient-balance`)}</DefaultSubmitButton>;
+        }
+        if (!isAmountEntered) {
+            return <DefaultSubmitButton disabled={true}>{t(`common.errors.enter-amount`)}</DefaultSubmitButton>;
+        }
+        if (!hasStakeAllowance) {
+            return (
+                <DefaultSubmitButton disabled={isAllowingStake} onClick={handleAllowance}>
+                    {!isAllowingStake
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: THALES_CURRENCY })
+                        : t('common.enable-wallet-access.approve-progress-label', {
+                              currencyKey: THALES_CURRENCY,
+                          })}
+                </DefaultSubmitButton>
+            );
+        }
+
+        return (
+            <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleStakeThales}>
+                {!isStaking
+                    ? `${t('options.earn.thales-staking.stake.stake')} ${formatCurrencyWithKey(
+                          THALES_CURRENCY,
+                          amountToStake
+                      )}`
+                    : `${t('options.earn.thales-staking.stake.staking')} ${formatCurrencyWithKey(
+                          THALES_CURRENCY,
+                          amountToStake
+                      )}...`}
+            </DefaultSubmitButton>
+        );
+    };
+
+    const onMaxClick = () => {
+        setAmountToStake(truncToDecimals(thalesBalance, 4));
+    };
+
+    useEffect(() => {
+        setIsAmountValid(
+            Number(amountToStake) === 0 || (Number(amountToStake) > 0 && Number(amountToStake) <= thalesBalance)
+        );
+    }, [amountToStake, thalesBalance]);
+
     return (
         <EarnSection
             spanOnTablet={5}
@@ -223,14 +239,9 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                 <InputContainer>
                     <NumericInput
                         value={amountToStake}
-                        onChange={(_, value) => {
-                            if (+value <= +balance) {
-                                setAmountToStake(value);
-                            }
-                        }}
-                        step="0.01"
-                        max={balance.toString()}
+                        onChange={(_, value) => setAmountToStake(value)}
                         disabled={isStaking || isUnstaking}
+                        className={isAmountValid ? '' : 'error'}
                     />
                     <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
                     <CurrencyLabel className={isStaking || isUnstaking ? 'disabled' : ''}>
@@ -241,20 +252,19 @@ const Stake: React.FC<Properties> = ({ thalesStaked, setThalesStaked, isUnstakin
                             thalesBalanceQuery.isLoading ? (
                                 <SimpleLoader />
                             ) : (
-                                formatCurrencyWithKey(THALES_CURRENCY, balance)
+                                formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)
                             )
                         ) : (
                             '-'
                         )}
-                        <MaxButton
-                            disabled={isStaking || isUnstaking}
-                            onClick={() => {
-                                setAmountToStake(balance);
-                            }}
-                        >
+                        <MaxButton disabled={isStaking || isUnstaking || !isWalletConnected} onClick={onMaxClick}>
                             {t('common.max')}
                         </MaxButton>
                     </ThalesWalletAmountLabel>
+                    <FieldValidationMessage
+                        showValidation={!isAmountValid}
+                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: THALES_CURRENCY })}
+                    />
                 </InputContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
                 <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
