@@ -21,36 +21,38 @@ const ThalesStaking: React.FC = () => {
 
     return (
         <>
-            <>
-                <MyStake
-                    thalesStaked={thalesStaked}
-                    setThalesStaked={setThalesStaked}
-                    escrowedBalance={escrowedBalance}
-                    setEscrowedBalance={setEscrowedBalance}
-                />
-                <GlobalStake
-                    thalesStaked={thalesStaked}
-                    setThalesStaked={setThalesStaked}
-                    escrowedBalance={escrowedBalance}
-                    setEscrowedBalance={setEscrowedBalance}
-                />
-                <StakingRewards escrowedBalance={escrowedBalance} setEscrowedBalance={setEscrowedBalance} />
-                <Stake
-                    balance={thalesBalance}
-                    setBalance={setThalesBalance}
-                    isUnstaking={isUnstaking}
-                    thalesStaked={thalesStaked}
-                    setThalesStaked={setThalesStaked}
-                />
-                <Unstake
-                    isUnstakingInContract={isUnstaking}
-                    setIsUnstakingInContract={setIsUnstaking}
-                    thalesStaked={thalesStaked}
-                    setThalesStaked={setThalesStaked}
-                    thalesBalance={thalesBalance}
-                    setThalesBalance={setThalesBalance}
-                />
-            </>
+            {isL2 && (
+                <>
+                    <MyStake
+                        thalesStaked={thalesStaked}
+                        setThalesStaked={setThalesStaked}
+                        escrowedBalance={escrowedBalance}
+                        setEscrowedBalance={setEscrowedBalance}
+                    />
+                    <GlobalStake
+                        thalesStaked={thalesStaked}
+                        setThalesStaked={setThalesStaked}
+                        escrowedBalance={escrowedBalance}
+                        setEscrowedBalance={setEscrowedBalance}
+                    />
+                    <StakingRewards escrowedBalance={escrowedBalance} setEscrowedBalance={setEscrowedBalance} />
+                    <Stake
+                        balance={thalesBalance}
+                        setBalance={setThalesBalance}
+                        isUnstaking={isUnstaking}
+                        thalesStaked={thalesStaked}
+                        setThalesStaked={setThalesStaked}
+                    />
+                    <Unstake
+                        isUnstakingInContract={isUnstaking}
+                        setIsUnstakingInContract={setIsUnstaking}
+                        thalesStaked={thalesStaked}
+                        setThalesStaked={setThalesStaked}
+                        thalesBalance={thalesBalance}
+                        setThalesBalance={setThalesBalance}
+                    />
+                </>
+            )}
             {!isL2 && <MigrationInfo messageKey="staking" />}
             <YourTransactions />
         </>

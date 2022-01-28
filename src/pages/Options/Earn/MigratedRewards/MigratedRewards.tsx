@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ClaimMigratedRewards from './ClaimMigratedRewards';
 import YourTransactions from './Transactions';
 
 const ThalesStaking: React.FC = () => {
-    const [escrowedBalance, setEscrowedBalance] = useState(0);
-
     return (
         <>
-            <ClaimMigratedRewards escrowedBalance={escrowedBalance} setEscrowedBalance={setEscrowedBalance} />
+            <ClaimMigratedRewards />
             <YourTransactions />
         </>
     );

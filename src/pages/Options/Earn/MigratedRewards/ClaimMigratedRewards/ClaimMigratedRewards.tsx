@@ -15,7 +15,6 @@ import { refetchMigratedRewards, refetchUserTokenTransactions } from 'utils/quer
 import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader, StyledMaterialTooltip } from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
-import { bigNumberFormatter } from '../../../../../utils/formatters/ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import {
     GridContainer,
@@ -26,12 +25,7 @@ import {
 } from '../../gridComponents';
 import useMigratedRewardsQuery from 'queries/token/useMigratedRewardsQuery';
 
-type Properties = {
-    escrowedBalance: number;
-    setEscrowedBalance: (escrowed: number) => void;
-};
-
-const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrowedBalance }) => {
+const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -130,7 +124,6 @@ const ClaimMigratedRewards: React.FC<Properties> = ({ escrowedBalance, setEscrow
                         ...migratedRewards,
                         claimed: true,
                     });
-                    setEscrowedBalance(escrowedBalance + bigNumberFormatter(migratedRewards.reward.rawBalance));
                     setIsClaiming(false);
                 }
             } catch (e) {
