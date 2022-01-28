@@ -286,6 +286,7 @@ const DAPPLink = styled.a`
     line-height: 36px;
     width: 100%;
     text-align: center;
+    color: var(--color);
     &:visited {
         color: var(--color);
     }
