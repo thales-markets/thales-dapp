@@ -198,7 +198,7 @@ const ListWrapper = styled.div`
     width: 38em;
     margin-bottom: 4em;
     @media (max-width: 600px) {
-        width: 28em;
+        width: 100%;
     }
 }
 `;

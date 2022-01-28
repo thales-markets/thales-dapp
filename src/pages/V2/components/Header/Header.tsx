@@ -48,7 +48,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                             {t('header.links.learn.whitepaper')}
                         </Link>
 
-                        <Link href="#faq-section">{t('header.links.faq')}</Link>
+                        <Link href="../#faq-section">{t('header.links.faq')}</Link>
                     </DropDownContainer>
                 </PositionedContainer>
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
@@ -87,11 +87,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <LanguageSelector />
             </LanguageContainer>
             <ButtonContainer>
-                <Link
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
-                >
+                <Link target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
                     {t('landing-page.use-app')}
                 </Link>
                 <i className="icon-home icon-home--right" />

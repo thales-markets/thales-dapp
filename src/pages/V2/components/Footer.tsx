@@ -28,20 +28,6 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
             <Lines src={theme === Theme.Dark ? footerW2 : footer2} />
             <FooterContainer>
                 <FooterIconLogo className="icon-home icon-home--thales" />
-                <FooterLegalWrapper>
-                    <FooterLinkWrapper>
-                        <FooterLink>{t('landing-page.footer.privacy-policy').toUpperCase()}</FooterLink>
-                    </FooterLinkWrapper>
-                    <FooterLinkWrapper>
-                        <FooterLink>{t('landing-page.footer.terms-of-use').toUpperCase()}</FooterLink>
-                    </FooterLinkWrapper>
-                    <FooterLinkWrapper>
-                        <FooterLink>{t('landing-page.footer.brand-assets').toUpperCase()}</FooterLink>
-                    </FooterLinkWrapper>
-                    <FooterLinkWrapper>
-                        <FooterLink>{t('landing-page.footer.etherscan').toUpperCase()}</FooterLink>
-                    </FooterLinkWrapper>
-                </FooterLegalWrapper>
                 <FooterButtonsWrapper>
                     <ButtonWrapper>
                         <Label>{t('landing-page.footer.theme').toUpperCase()}</Label>
@@ -88,6 +74,21 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                         <FooterIcon className="icon-home icon-home--docs" />
                     </IconLink>
                 </FooterIconsWrapper>
+                <FooterLegalWrapper>
+                    <FooterLinkWrapper>
+                        <FooterLink>{t('landing-page.footer.privacy-policy').toUpperCase()}</FooterLink>
+                    </FooterLinkWrapper>
+                    <FooterLinkWrapper>
+                        <FooterLink>{t('landing-page.footer.terms-of-use').toUpperCase()}</FooterLink>
+                    </FooterLinkWrapper>
+                    <FooterLinkWrapper>
+                        <FooterLink>{t('landing-page.footer.brand-assets').toUpperCase()}</FooterLink>
+                    </FooterLinkWrapper>
+                    <FooterLinkWrapper>
+                        <FooterLink>{t('landing-page.footer.etherscan').toUpperCase()}</FooterLink>
+                    </FooterLinkWrapper>
+                </FooterLegalWrapper>
+
                 <FooterIconsWrapper>
                     {t('landing-page.footer.all-rights-reserved', { year: new Date().getFullYear() }).toUpperCase()}
                 </FooterIconsWrapper>
@@ -125,6 +126,14 @@ const Lines = styled.img`
 const FooterHtml = styled.div`
     position: relative;
     margin-top: 200px;
+    & > div {
+        & > div:nth-child(2) {
+            margin-top: 2em;
+        }
+        & > i {
+            display: none;
+        }
+    }
     &.article {
         margin-top: 10px;
         display: flex;
@@ -140,6 +149,12 @@ const FooterHtml = styled.div`
             background: var(--main-background);
             & > a > i {
                 color: var(--color) !important;
+            }
+            & > i {
+                display: inline-block;
+            }
+            & > div:nth-child(2) {
+                margin-top: 0;
             }
         }
     }
@@ -188,6 +203,7 @@ const FooterLegalWrapper = styled(FlexDiv)`
     position: relative;
     display: flex;
     justify-content: center;
+    margin-top: 10px;
     margin-bottom: 10px;
 `;
 

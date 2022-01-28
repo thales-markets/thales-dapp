@@ -211,6 +211,10 @@ const LearnButton = styled(Button)`
     cursor: pointer;
     transition: 0.2s;
     z-index: 4;
+    & > a {
+        width: 100%;
+        height: 100%;
+    }
     &:hover {
         transform: scale(1.2);
     }
