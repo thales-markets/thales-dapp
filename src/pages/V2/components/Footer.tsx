@@ -173,6 +173,9 @@ const FooterIconsWrapper = styled(FlexDiv)`
         font-size: 15px;
         line-height: 36px;
     }
+    @media (max-width: 600px) {
+        gap: 5em;
+    }
 `;
 
 const FooterLegalWrapper = styled(FlexDiv)`
@@ -188,13 +191,18 @@ const FooterButtonsWrapper = styled(FlexDiv)`
     justify-content: center;
     gap: 6em;
     margin-bottom: 10px;
+    @media (max-width: 600px) {
+        gap: 3em;
+    }
 `;
 
 const FooterContainer = styled(FlexDiv)`
     position: relative;
     display: grid;
     width: 100vw;
-    margin-top: 17px;
+    left: 0;
+    right: 0;
+    margin: 17px auto 0;
     z-index: 3;
     background: var(--main-background);
 `;
@@ -222,6 +230,12 @@ const FooterLinkWrapper = styled.div`
     &:before {
         content: ' | ';
         padding: 0 1.5em;
+    }
+    @media (max-width: 600px) {
+        &:before {
+            content: ' | ';
+            padding: 0 0.5em;
+        }
     }
 `;
 
