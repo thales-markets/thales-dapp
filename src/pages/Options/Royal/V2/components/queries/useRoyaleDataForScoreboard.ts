@@ -3,6 +3,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
 
 type LatestRoyaleSeasonInfo = {
+    seasonStarted: boolean;
     seasonFinished: boolean;
     round: number;
     allSeasons: number[];
@@ -23,8 +24,9 @@ const useRoyaleDataForScoreboard = (selectedSeason: number, options?: UseQueryOp
 };
 
 const getFromContract = async (selectedSeason: number, RoyaleContract: any): Promise<LatestRoyaleSeasonInfo> => {
-    const [season, seasonFinished, round] = await Promise.all([
+    const [season, seasonStarted, seasonFinished, round] = await Promise.all([
         RoyaleContract.season(),
+        RoyaleContract.seasonStarted(selectedSeason),
         RoyaleContract.seasonFinished(selectedSeason),
         RoyaleContract.roundInASeason(selectedSeason),
     ]);
@@ -33,6 +35,7 @@ const getFromContract = async (selectedSeason: number, RoyaleContract: any): Pro
         allSeasons.push(j);
     }
     return {
+        seasonStarted,
         seasonFinished,
         round,
         allSeasons,

@@ -202,7 +202,14 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                     </HeadCellUi>
                 ))}
             </TableRow>
-            {usersForUi ? (
+            {!royaleData?.seasonStarted ? (
+                <NoUsers>
+                    <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>{' '}
+                    {t('options.royale.scoreboard.season-not-started')}
+                </NoUsers>
+            ) : royaleData?.seasonStarted && users.length <= 0 ? (
+                <NoUsers>No users</NoUsers>
+            ) : usersForUi ? (
                 usersForUi.usersToDisplay.map((user: User, key: number) => {
                     const lastRoundInSeason = royaleData?.round;
                     const isUserAWinner =
@@ -258,6 +265,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                     <SimpleLoader />
                 </LoaderContainer>
             )}
+
             {usersForUi?.usersToDisplay ? (
                 <Pagination>
                     <PaginationIcon
@@ -488,12 +496,16 @@ const Status = styled.span`
     }
 `;
 
-// const Discord = styled.i`
-//     font-size: 24px;
-//     line-height: 18px;
-//     color: var(--color-wrapper);
-//     margin-left: 14px;
-// `;
+const NoUsers = styled(Text)`
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 126px;
+    color: var(--color);
+    text-shadow: 0px 0px 30px var(--color);
+    text-align: center;
+`;
 
 const TableWrapper = styled.div`
     position: relative;

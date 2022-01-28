@@ -166,22 +166,26 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                         }
                     }
                 }
-                if (royaleData)
-                    if (royaleData.seasonFinished || (!royaleData.seasonStarted && !royaleData.canStartNewSeason)) {
-                        return (
-                            <DeadText>
-                                <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                                {t('options.royale.scoreboard.season-finished')}
-                            </DeadText>
-                        );
-                    } else {
-                        return (
-                            <DeadText>
-                                <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
-                                {t('options.royale.scoreboard.period-expired')}
-                            </DeadText>
-                        );
+                if (royaleData) {
+                    if (!royaleData.seasonStarted) {
+                        return;
                     }
+                }
+                if (royaleData.seasonFinished || (!royaleData.seasonStarted && !royaleData.canStartNewSeason)) {
+                    return (
+                        <DeadText>
+                            <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                            {t('options.royale.scoreboard.season-finished')}
+                        </DeadText>
+                    );
+                } else {
+                    return (
+                        <DeadText>
+                            <i className="icon icon--clock" style={{ paddingRight: 10 }}></i>
+                            {t('options.royale.scoreboard.period-expired')}
+                        </DeadText>
+                    );
+                }
             }
         }
     };
