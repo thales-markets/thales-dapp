@@ -1,6 +1,7 @@
 import QUERY_KEYS from 'constants/queryKeys';
 import { useQuery, UseQueryOptions } from 'react-query';
 import thalesData from 'thales-data';
+import { truncateAddress } from 'utils/formatters/string';
 import { NetworkId } from 'utils/network';
 
 enum UserStatus {
@@ -31,6 +32,8 @@ export const AnonimUser: User = {
     deathRound: '',
 };
 
+const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
+
 const BASE_URL = 'https://api.thales.market/royale-user/';
 // const gruja = '0x36688C92700618f1D676698220F1AF44492811FE';
 
@@ -47,6 +50,7 @@ const useUserRoyalQuery = (
                 const royalePlayersDataUrl = BASE_URL + walletAddress;
                 const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
                 const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
+                console.log(royalePlayersDataResult);
                 const royalePlayerFromGraph = await thalesData.binaryOptions.thalesRoyalePlayers({
                     season: selectedSeason,
                     network: networkId,
@@ -58,8 +62,14 @@ const useUserRoyalQuery = (
                         isAlive: userFromGraph.isAlive,
                         address: walletAddress,
                         number: userFromGraph.number,
-                        avatar: royalePlayersDataResult.user.avatar,
-                        name: royalePlayersDataResult.user.name,
+                        avatar: royalePlayersDataResult.user?.avatar ?? '',
+                        name:
+                            royalePlayersDataResult.user?.name ??
+                            truncateAddress(
+                                walletAddress as any,
+                                truncateAddressNumberOfCharacters,
+                                truncateAddressNumberOfCharacters
+                            ),
                         status: UserStatus.RDY,
                         season: selectedSeason,
                         deathRound: userFromGraph.deathRound,
