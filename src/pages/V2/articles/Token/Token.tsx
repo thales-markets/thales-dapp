@@ -197,26 +197,6 @@ const Paragraph = styled.p`
 
 const AnimationSvg = styled.object``;
 
-// const List = styled.ul`
-//     list-style: disc;
-//     color: var(--color);
-// `;
-// const ListItem = styled.li`
-//     height: 3em;
-//     color: var(--color);
-//     & > a {
-//         font-family: NunitoSemiBold !important;
-//         font-style: normal;
-//         font-size: 1.4em;
-//         line-height: 170%;
-//         color: var(--color);
-//         &:hover {
-//             font-size: 1.6em;
-//             transition: 0.2s;
-//         }
-//     }
-// `;
-
 const ListWrapper = styled.div`
     border: 1px solid var(--color);
     border-radius: 7px;
@@ -241,10 +221,14 @@ const List = styled.ul`
 `;
 
 const NestedList = styled.ul`
-    list-style: disc;
+    list-style: none;
     color: var(--color);
     & li {
-        margin-left: 1em;
+        &:before {
+            content: '\\25BA \\0020';
+            padding-right: 0.5em;
+            vertical-align: text-top;
+        }
         & > a {
             font-family: Nunito !important;
             font-style: normal;

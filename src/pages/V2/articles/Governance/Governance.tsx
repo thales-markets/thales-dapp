@@ -209,10 +209,14 @@ const List = styled.ul`
 `;
 
 const NestedList = styled.ul`
-    list-style: disc;
+    list-style: none;
     color: var(--color);
     & li {
-        margin-left: 1em;
+        &:before {
+            content: '\\25BA \\0020';
+            padding-right: 0.5em;
+            vertical-align: text-top;
+        }
         & > a {
             font-family: Nunito !important;
             font-style: normal;
