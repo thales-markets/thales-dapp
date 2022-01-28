@@ -107,35 +107,38 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                 </Nav>
                 <div />
                 <FooterButtonsWrapper>
-                    <SeasonSelector isOpen={showSelectDropdown}>
-                        {showSelectDropdown &&
-                            allSeasons
-                                .filter((number) => number !== selectedSeason)
-                                .map((option: number, key: number) => (
-                                    <Text
-                                        onClick={() => {
-                                            if (allSeasons.length > 1) {
-                                                setSelectedSeason(option);
-                                                setShowSelectDropdown(false);
-                                            }
-                                        }}
-                                        key={key}
-                                    >
-                                        {t('options.royale.scoreboard.season')} {option}
-                                    </Text>
-                                ))}
+                    {royaleData?.season !== 0 && (
+                        <SeasonSelector isOpen={showSelectDropdown}>
+                            {showSelectDropdown &&
+                                allSeasons
+                                    .filter((number) => number !== selectedSeason)
+                                    .map((option: number, key: number) => (
+                                        <Text
+                                            onClick={() => {
+                                                if (allSeasons.length > 1) {
+                                                    setSelectedSeason(option);
+                                                    setShowSelectDropdown(false);
+                                                }
+                                            }}
+                                            key={key}
+                                        >
+                                            {t('options.royale.scoreboard.season')} {option}
+                                        </Text>
+                                    ))}
 
-                        {selectedSeason !== 0 ? (
-                            <Text onClick={setShowSelectDropdown.bind(this, true)}>
-                                {t('options.royale.scoreboard.season')} {selectedSeason}
-                                {!showSelectDropdown && allSeasons.length > 1 && (
-                                    <Arrow className="icon icon--arrow-up" />
-                                )}
-                            </Text>
-                        ) : (
-                            <Text>{t('options.royale.scoreboard.loading-season')}</Text>
-                        )}
-                    </SeasonSelector>
+                            {selectedSeason !== 0 ? (
+                                <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                    {t('options.royale.scoreboard.season')} {selectedSeason}
+                                    {!showSelectDropdown && allSeasons.length > 1 && (
+                                        <Arrow className="icon icon--arrow-up" />
+                                    )}
+                                </Text>
+                            ) : (
+                                <Text>{t('options.royale.scoreboard.loading-season')}</Text>
+                            )}
+                        </SeasonSelector>
+                    )}
+
                     <StatsIcon onClick={() => setShowStats(true)} className="icon icon--stats" />
                     <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
                 </FooterButtonsWrapper>

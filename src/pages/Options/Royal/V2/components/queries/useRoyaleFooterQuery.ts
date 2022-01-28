@@ -7,6 +7,7 @@ export type FooterData = {
     reward: number;
     round: number;
     playersAlive: string;
+    season: number;
 };
 
 const useRoyaleFooterQuery = (options?: UseQueryOptions<FooterData>) => {
@@ -27,7 +28,7 @@ const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
     const season = Number(await RoyaleContract.season());
     const [round, reward] = await Promise.all([
         RoyaleContract.roundInASeason(season),
-        RoyaleContract.rewardPerSeason(season),
+        RoyaleContract.rewardPerSeason(season === 0 ? 1 : season),
         RoyaleContract.seasonFinished(season),
     ]);
 
@@ -41,8 +42,12 @@ const getFromContract = async (RoyaleContract: any): Promise<FooterData> => {
 
     return {
         round: Number(round),
-        reward: Number(ethers.utils.formatEther(reward)) / Number(totalPlayersPerRoundPerSeason),
+        reward:
+            season === 0
+                ? Number(ethers.utils.formatEther(reward))
+                : Number(ethers.utils.formatEther(reward)) / Number(totalPlayersPerRoundPerSeason),
         playersAlive,
+        season,
     };
 };
 
