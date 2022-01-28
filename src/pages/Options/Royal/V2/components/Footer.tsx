@@ -131,8 +131,10 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                 .map((option: number, key: number) => (
                                     <Text
                                         onClick={() => {
-                                            setSelectedSeason(option);
-                                            setShowSelectDropdown(false);
+                                            if (allSeasons.length > 1) {
+                                                setSelectedSeason(option);
+                                                setShowSelectDropdown(false);
+                                            }
                                         }}
                                         key={key}
                                     >
@@ -143,7 +145,9 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                         {selectedSeason !== 0 ? (
                             <Text onClick={setShowSelectDropdown.bind(this, true)}>
                                 {t('options.royale.scoreboard.season')} {selectedSeason}
-                                {!showSelectDropdown && <Arrow className="icon icon--arrow-up" />}
+                                {!showSelectDropdown && allSeasons.length > 1 && (
+                                    <Arrow className="icon icon--arrow-up" />
+                                )}
                             </Text>
                         ) : (
                             <Text>{t('options.royale.scoreboard.loading-season')}</Text>
