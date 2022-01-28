@@ -386,9 +386,9 @@
                     "thales-royale-label": "Thales Royale",
                     "max-reward-label": "Max reward: {{max}}",
                     "bonus-info": {
-                        "current-snx-staking-label": "SNX staked",
+                        "current-snx-staking-label": "Current SNX staked",
                         "additional-snx-staking-label": "Additional SNX to stake for max bonus",
-                        "current-amm-label": "AMM volume",
+                        "current-amm-label": "Current AMM volume",
                         "additional-amm-label": "Additional AMM volume for max bonus",
                         "current-thales-royale-label": "Current participation",
                         "thales-royale-participation-yes": "YES",

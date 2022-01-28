@@ -305,7 +305,7 @@ const StakingRewards: React.FC = () => {
                     <BonusInfo>
                         <BonusCurrent>
                             <BonusCurrentLabel>
-                                {t('options.earn.thales-staking.staking-rewards.bonus-info.current-snx-staking-label')}
+                                {t('options.earn.thales-staking.staking-rewards.bonus-info.current-snx-staking-label')}:
                             </BonusCurrentLabel>
                             <BonusCurrentContent>
                                 {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, snxStaked)}
@@ -363,7 +363,7 @@ const StakingRewards: React.FC = () => {
                     <BonusInfo>
                         <BonusCurrent>
                             <BonusCurrentLabel>
-                                {t('options.earn.thales-staking.staking-rewards.bonus-info.current-amm-label')}
+                                {t('options.earn.thales-staking.staking-rewards.bonus-info.current-amm-label')}:
                             </BonusCurrentLabel>
 
                             <BonusCurrentContent>
@@ -423,6 +423,7 @@ const StakingRewards: React.FC = () => {
                                 {t(
                                     'options.earn.thales-staking.staking-rewards.bonus-info.current-thales-royale-label'
                                 )}
+                                :
                             </BonusCurrentLabel>
                             <BonusCurrentContent>
                                 {t(
