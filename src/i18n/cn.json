@@ -1044,7 +1044,8 @@
                 "start-season": "开始赛季",
                 "season": "季节",
                 "season-finished": "赛季结束",
-                "loading-season": "正在加载"
+                "loading-season": "正在加载",
+                "no-users": "没有用户"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",

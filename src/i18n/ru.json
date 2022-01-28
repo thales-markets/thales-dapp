@@ -1044,7 +1044,8 @@
                 "start-season": "Начать сезон",
                 "season": "Время года",
                 "season-finished": "Сезон завершен",
-                "loading-season": "Загрузка"
+                "loading-season": "Загрузка",
+                "no-users": "Нет пользователей"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

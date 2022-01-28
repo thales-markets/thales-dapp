@@ -216,7 +216,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                     {t('options.royale.scoreboard.season-not-started')}
                 </NoUsers>
             ) : royaleData?.seasonStarted && users.length <= 0 ? (
-                <NoUsers>No users</NoUsers>
+                <NoUsers>{t('options.royale.scoreboard.no-users')}</NoUsers>
             ) : usersForUi ? (
                 usersForUi.usersToDisplay.map((user: User, key: number) => {
                     const lastRoundInSeason = royaleData?.round;
