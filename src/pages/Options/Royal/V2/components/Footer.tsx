@@ -3,20 +3,17 @@ import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { RoyaleTooltip } from 'pages/Options/Market/components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { getIsAppReady } from 'redux/modules/app';
-import { getNetworkId } from 'redux/modules/wallet';
-import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDivCentered, LoaderContainer, Text } from 'theme/common';
+import { FlexDivCentered, Text } from 'theme/common';
 import { navigateTo, history } from 'utils/routes';
-import SimpleLoader from '../../components/SimpleLoader';
-import useEthPriceQuery from '../../Queries/useEthPriceQuery';
-import usePositionsQuery from '../../Queries/usePositionsQuery';
-import useRoyaleFooterQuery from './queries/useRoyaleFooterQuery';
+import { Positions } from '../../Queries/usePositionsQuery';
+import { FooterData } from './queries/useRoyaleFooterQuery';
 import queryString from 'query-string';
 
 type ScoreboardProps = {
+    ethPrice: string;
+    positions: Positions;
+    royaleData: FooterData | undefined;
     latestSeason: number;
     selectedPage: string;
     setSelectedPage: (page: string) => void;
@@ -25,6 +22,9 @@ type ScoreboardProps = {
 };
 
 export const FooterV2: React.FC<ScoreboardProps> = ({
+    ethPrice,
+    positions,
+    royaleData,
     selectedPage,
     setSelectedPage,
     selectedSeason,
@@ -32,26 +32,9 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     latestSeason,
 }) => {
     const { t } = useTranslation();
-    const networkId = useSelector((state: RootState) => getNetworkId(state));
-    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
-
-    const positionsQuery = usePositionsQuery(0, networkId, {
-        enabled: networkId !== undefined && isAppReady,
-    });
-    const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
-    const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
-    const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
-
-    const royaleDataQuery = useRoyaleFooterQuery({ enabled: isAppReady });
-    const royaleData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
 
     const [showStats, setShowStats] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
-
-    const loading = useMemo(() => {
-        if (positionsQuery.isSuccess && ethPriceQuery.isSuccess) return false;
-        return true;
-    }, [positionsQuery, ethPriceQuery]);
 
     const allSeasons = useMemo(() => {
         const seasons = [];
@@ -159,41 +142,31 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
             </Footer>
             <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
                 <CloseStats onClick={() => setShowStats(false)}>✖</CloseStats>
-                {loading ? (
-                    <div style={{ width: 341, height: 130 }}>
-                        <LoaderContainer style={{ top: 'calc(50%)', left: 'calc(50%)' }}>
-                            <SimpleLoader />
-                        </LoaderContainer>
-                    </div>
-                ) : (
-                    <>
-                        <div>
-                            <span>{t('options.royale.footer.current-positions')}:</span>
-                            <span>{t('options.royale.footer.up')}</span>
-                            <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
-                            <span>{t('options.royale.footer.down')}</span>
-                        </div>
-                        <div>
-                            <span>
-                                {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                            </span>
-                            <span>${Number(ethPrice).toFixed(2)}</span>
-                            <InfoIconContainer>
-                                <RoyaleTooltip title={t('options.royale.footer.price-source')}>
-                                    <StyledInfoIcon />
-                                </RoyaleTooltip>
-                            </InfoIconContainer>
-                        </div>
-                        <div>
-                            <span>{t('options.royale.footer.current-reward-per-player')}:</span>
-                            <span>{royaleData?.reward.toFixed(2)} sUSD</span>
-                        </div>
-                        <div>
-                            <span>{t('options.royale.footer.players-alive')}:</span>
-                            <span>{royaleData?.playersAlive}</span>
-                        </div>
-                    </>
-                )}
+                <div>
+                    <span>{t('options.royale.footer.current-positions')}:</span>
+                    <span>{t('options.royale.footer.up')}</span>
+                    <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
+                    <span>{t('options.royale.footer.down')}</span>
+                </div>
+                <div>
+                    <span>
+                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                    </span>
+                    <span>${Number(ethPrice).toFixed(2)}</span>
+                    <InfoIconContainer>
+                        <RoyaleTooltip title={t('options.royale.footer.price-source')}>
+                            <StyledInfoIcon />
+                        </RoyaleTooltip>
+                    </InfoIconContainer>
+                </div>
+                <div>
+                    <span>{t('options.royale.footer.current-reward-per-player')}:</span>
+                    <span>{royaleData?.reward.toFixed(2)} sUSD</span>
+                </div>
+                <div>
+                    <span>{t('options.royale.footer.players-alive')}:</span>
+                    <span>{royaleData?.playersAlive}</span>
+                </div>
             </InfoSection>
             {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
         </>

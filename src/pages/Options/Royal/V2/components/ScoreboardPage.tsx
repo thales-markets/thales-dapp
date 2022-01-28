@@ -3,20 +3,37 @@ import styled from 'styled-components';
 import { Intro } from './IntroInfo';
 import { ScoreboardV2 } from './Scoreboard';
 import { UserCard } from './UserCard';
+import { FooterData } from './queries/useRoyaleFooterQuery';
+import { Positions } from '../../Queries/usePositionsQuery';
 
 type Properties = {
+    ethPrice: string;
+    positions: Positions;
+    royaleFooterData: FooterData | undefined;
     selectedSeason: number;
     setSelectedSeason: (season: number) => void;
     latestSeason: number;
 };
 
-export const ScoreboardPage: React.FC<Properties> = ({ latestSeason, setSelectedSeason, selectedSeason }) => {
+export const ScoreboardPage: React.FC<Properties> = ({
+    ethPrice,
+    positions,
+    royaleFooterData,
+    latestSeason,
+    setSelectedSeason,
+    selectedSeason,
+}) => {
     return (
         <Wrapper className="scoreboard">
             <div />
             <div style={{ maxWidth: '100%', padding: '5px' }}>
                 <Intro />
-                <UserCard selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason} />
+                <UserCard
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleFooterData={royaleFooterData}
+                    selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}
+                />
                 <ScoreboardV2
                     selectedSeason={selectedSeason === 0 ? latestSeason : selectedSeason}
                     setSelectedSeason={setSelectedSeason}

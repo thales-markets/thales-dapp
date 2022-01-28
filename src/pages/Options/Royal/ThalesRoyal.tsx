@@ -16,6 +16,9 @@ import { ScoreboardPage } from './V2/components/ScoreboardPage';
 import { RoyaleArena } from './V2/components/RoyaleArena';
 import useLatestSeasonQuery from './V2/components/queries/useLatestSeasonQuery';
 import { getIsAppReady } from '../../../redux/modules/app';
+import useRoyaleFooterQuery, { FooterData } from './V2/components/queries/useRoyaleFooterQuery';
+import useEthPriceQuery from './Queries/useEthPriceQuery';
+import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
 
 export enum Theme {
     Light,
@@ -34,13 +37,40 @@ const ThalesRoyal: React.FC = () => {
         enabled: isAppReady && isL2,
     });
     const [selectedSeason, setSelectedSeason] = useState(0);
+    const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
+    const [ethPrice, setEthPrice] = useState<string>('');
+    const [positions, setPositions] = useState<Positions>({ up: 0, down: 0 });
 
     const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
+
+    const royaleFooterQuery = useRoyaleFooterQuery({ enabled: isAppReady });
+    const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
+    const positionsQuery = usePositionsQuery(0, networkId, {
+        enabled: networkId !== undefined && isAppReady,
+    });
 
     const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
+
+    useEffect(() => {
+        if (positionsQuery.isSuccess) {
+            setPositions(positionsQuery.data);
+        }
+    }, [positionsQuery.isSuccess, positionsQuery.data]);
+
+    useEffect(() => {
+        if (ethPriceQuery.isSuccess) {
+            setEthPrice(ethPriceQuery.data);
+        }
+    }, [ethPriceQuery.isSuccess, ethPriceQuery.data]);
+
+    useEffect(() => {
+        if (royaleFooterQuery.isSuccess) {
+            setRoyaleStatsData(royaleFooterQuery.data);
+        }
+    }, [royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
 
     useEffect(() => {
         setSelectedSeason(latestSeasonQuery.data || 0);
@@ -97,6 +127,9 @@ const ThalesRoyal: React.FC = () => {
             >
                 <Header theme={theme} setTheme={setTheme} />
                 <ScoreboardPage
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleFooterData={royaleFooterData}
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
                     latestSeason={latestSeason}
@@ -107,6 +140,9 @@ const ThalesRoyal: React.FC = () => {
                     showBattle={selectedPage === 'royale'}
                 />
                 <FooterV2
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleData={royaleFooterData}
                     latestSeason={latestSeason}
                     selectedPage={selectedPage}
                     setSelectedPage={setSelectedPage}

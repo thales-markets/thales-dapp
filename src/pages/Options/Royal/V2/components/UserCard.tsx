@@ -18,12 +18,17 @@ import { signUp } from '../../getThalesRoyalData';
 import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
 import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
+import { FooterData } from './queries/useRoyaleFooterQuery';
+import { Positions } from '../../Queries/usePositionsQuery';
 
 type UserCardProps = {
+    ethPrice: string;
+    positions: Positions;
+    royaleFooterData: FooterData | undefined;
     selectedSeason: number;
 };
 
-export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
+export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -244,6 +249,27 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason }) => {
                         )}
                     </InputWrapper>
                 </FlexContainer>
+                <InfoSection>
+                    <div>
+                        <span>{t('options.royale.footer.up')}</span>
+                        <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
+                        <span>{t('options.royale.footer.down')}</span>
+                    </div>
+                    <div>
+                        <span>
+                            {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                        </span>
+                        <span>${Number(ethPrice).toFixed(2)}</span>
+                    </div>
+                    <div>
+                        <span>{t('options.royale.footer.reward-per-player')}:</span>
+                        <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
+                    </div>
+                    <div>
+                        <span>{t('options.royale.footer.players-alive')}:</span>
+                        <span>{royaleFooterData?.playersAlive}</span>
+                    </div>
+                </InfoSection>
             </FlexDivColumn>
             {getFooter(user, royaleData)}
         </UserWrapper>
@@ -296,7 +322,7 @@ const UserWrapper = styled.div`
     margin-bottom: 50px;
     @media (max-width: 1024px) {
         padding: 15px;
-        height: auto;
+        height: 400px;
     }
 `;
 
@@ -363,4 +389,42 @@ const InputWrapper = styled.div`
 const FlexContainer = styled(FlexDivCentered)`
     justify-content: space-between;
     margin: 7px 0;
+`;
+
+const InfoSection = styled.div`
+    color: var(--color);
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 30px;
+    padding-top: 1em;
+    z-index: 1000;
+    right: 30px;
+    bottom: 30px;
+    > * {
+        &:first-child {
+            justify-content: center;
+        }
+        margin-bottom: 0.1em;
+        display: flex;
+        justify-content: space-between;
+        > * {
+            font-family: SansationLight !important;
+            &:nth-child(2),
+            &:first-child {
+                padding-right: 7px;
+            }
+            &:nth-child(2) {
+                font-weight: bold;
+                font-family: basis33 !important;
+                font-size: 28px;
+            }
+            &:nth-child(4) {
+                padding-left: 7px;
+            }
+        }
+    }
+    @media (min-width: 1025px) {
+        display: none;
+    }
 `;

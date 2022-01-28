@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { useQuery, UseQueryOptions } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
 
-type FooterData = {
+export type FooterData = {
     reward: number;
     round: number;
     playersAlive: string;

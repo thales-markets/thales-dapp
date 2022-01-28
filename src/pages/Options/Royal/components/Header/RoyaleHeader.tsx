@@ -277,7 +277,7 @@ const BurgerMenu = styled.div`
     @media (max-width: 1024px) {
         left: 0;
         right: 0;
-        z-index: 1000;
+        z-index: 10000;
         .icon--royale-logo {
             font-size: 78px !important;
             line-height: 52px !important;
