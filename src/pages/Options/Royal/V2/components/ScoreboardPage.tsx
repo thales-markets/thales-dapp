@@ -34,6 +34,7 @@ const Wrapper = styled.div`
     width: 570px;
     z-index: 1000;
     text-align: center;
+    z-index: 1;
     @media (max-width: 1024px) {
         width: 100%;
         padding-bottom: 60px;
