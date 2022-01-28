@@ -227,6 +227,22 @@ const EarnPage: React.FC = () => {
                                 src={selectedTab === 'migration' ? migrationActiveIcon : migrationIcon}
                             />
                         )}
+                        {isL2 && (
+                            <Icon
+                                width={35}
+                                height={30}
+                                onClick={() => {
+                                    history.push({
+                                        pathname: location.pathname,
+                                        search: queryString.stringify({
+                                            tab: 'migrated-rewards',
+                                        }),
+                                    });
+                                    setSelectedTab('migrated-rewards');
+                                }}
+                                src={selectedTab === 'migrated-rewards' ? migrationActiveIcon : migrationIcon}
+                            />
+                        )}
                     </NavFooter>
                 </>
             ) : (

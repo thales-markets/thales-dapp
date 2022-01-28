@@ -70,4 +70,7 @@ export const GridAction = styled(FlexDivColumnCentered)`
     grid-column: span 12;
     background: #04045a;
     padding: 20px 100px;
+    @media (max-width: 767px) {
+        padding: 20px 20px;
+    }
 `;
