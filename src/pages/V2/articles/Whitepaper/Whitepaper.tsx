@@ -27,7 +27,7 @@ const Whitepaper: React.FC = () => {
     const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Wrapper size={window.innerWidth}>
+            <Wrapper>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
                     <FlexDivCentered>
@@ -164,24 +164,15 @@ const Whitepaper: React.FC = () => {
     );
 };
 
-const Wrapper = styled.div<{ size: number }>`
+const Wrapper = styled.div`
     display: grid;
     width: 100%;
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(325, 2em);
-    @media (max-width: 1025px) {
-        grid-template-rows: repeat(${(props) => Math.round((1024 - props.size) / 3.5) + 325}, 2em);
-    }
-    @media (max-width: 850px) {
-        grid-template-rows: repeat(${(props) => Math.round((860 - props.size) / 3) + 325}, 2em);
-    }
-    @media (max-width: 769px) {
-        grid-template-rows: repeat(${(props) => Math.round((850 - props.size) / 2.5) + 325}, 2em);
-    }
-    @media (max-width: 451px) {
-        grid-template-rows: repeat(${(props) => Math.round((768 - props.size) / 1.6) + 325}, 2em);
+    @media (max-width: 600px) {
+        grid-template-rows: repeat(12, 20vmax);
     }
 `;
 

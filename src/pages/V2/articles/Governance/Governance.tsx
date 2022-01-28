@@ -16,7 +16,7 @@ const Governance: React.FC = () => {
     const { t } = useTranslation();
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Wrapper size={window.innerWidth}>
+            <Wrapper>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
                     <H1>{t('articles.governance.title')}</H1>
@@ -104,18 +104,15 @@ const Governance: React.FC = () => {
     );
 };
 
-const Wrapper = styled.div<{ size: number }>`
+const Wrapper = styled.div`
     display: grid;
     width: 100%;
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(110, 2em);
-    @media (max-width: 880px) {
-        grid-template-rows: repeat(${(props) => Math.round((880 - props.size) / 15) + 110}, 2em);
-    }
-    @media (max-width: 450px) {
-        grid-template-rows: repeat(${(props) => Math.round(880 - props.size / 10) + 110}, 2em);
+    @media (max-width: 600px) {
+        grid-template-rows: repeat(18, 20vmax);
     }
 `;
 
