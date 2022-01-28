@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
@@ -12,8 +12,12 @@ import { Theme } from '../../ThalesRoyal';
 import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
+import { Text } from '../../../../../theme/common';
 
 type RoyaleHeaderInput = {
+    latestSeason: number;
+    selectedSeason: number;
+    setSelectedSeason: (season: number) => void;
     theme: Theme;
     setTheme: (data: any) => void;
 };
@@ -26,14 +30,29 @@ enum BurgerState {
 
 const cookies = new Cookies();
 
-const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
+const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
+    theme,
+    setTheme,
+    selectedSeason,
+    setSelectedSeason,
+    latestSeason,
+}) => {
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const [openUserInfo, setOpenUserInfo] = useState(false);
+    const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
 
     const [showBurgerMenu, setShowBurgerMenu] = useState<BurgerState>(BurgerState.Init);
+
+    const allSeasons = useMemo(() => {
+        const seasons = [];
+        for (let j = 1; j <= Number(latestSeason); j++) {
+            seasons.push(j);
+        }
+        return seasons;
+    }, [latestSeason]);
 
     return (
         <>
@@ -42,6 +61,36 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                 <InfoWrapper>
                     <UtilWrapper>
                         <RoyaleLogo className="icon icon--royale-logo" />
+                        {selectedSeason !== 0 && (
+                            <SeasonSelector isOpen={showSelectDropdown}>
+                                {selectedSeason !== 0 ? (
+                                    <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                        {t('options.royale.scoreboard.season')} {selectedSeason}
+                                        {!showSelectDropdown && allSeasons.length > 1 && (
+                                            <Arrow className="icon icon--arrow-down" />
+                                        )}
+                                    </Text>
+                                ) : (
+                                    <Text>{t('options.royale.scoreboard.loading-season')}</Text>
+                                )}
+                                {showSelectDropdown &&
+                                    allSeasons
+                                        .filter((number) => number !== selectedSeason)
+                                        .map((option: number, key: number) => (
+                                            <Text
+                                                onClick={() => {
+                                                    if (allSeasons.length > 1) {
+                                                        setSelectedSeason(option);
+                                                        setShowSelectDropdown(false);
+                                                    }
+                                                }}
+                                                key={key}
+                                            >
+                                                {t('options.royale.scoreboard.season')} {option}
+                                            </Text>
+                                        ))}
+                            </SeasonSelector>
+                        )}
                         <MeatballsIcon
                             position="initial"
                             className="icon icon--three-dots"
@@ -101,6 +150,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({ theme, setTheme }) => {
                     {showBurgerMenu === BurgerState.Show && (
                         <Overlay onClick={() => setShowBurgerMenu(BurgerState.Hide)} />
                     )}
+                    {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
                 </InfoWrapper>
                 <UserInfoRoyaleDialog
                     walletAddress={walletAddress}
@@ -123,6 +173,7 @@ const Header = styled.div`
     align-items: flex-start;
     @media (max-width: 1024px) {
         justify-content: center;
+        margin-bottom: 20px;
     }
 `;
 
@@ -283,6 +334,42 @@ const BurgerMenu = styled.div`
             line-height: 52px !important;
         }
     }
+`;
+
+const SeasonSelector = styled.div<{ isOpen: boolean }>`
+    transform: ${(props) => (props.isOpen ? 'translateY(calc(100% - 30px))' : '')};
+    position: absolute;
+    bottom: -10px;
+    margin-right: 5px;
+    width: 171px;
+    border: 2px solid var(--color);
+    box-sizing: border-box;
+    border-radius: 18px;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.4px;
+    color: var(--color);
+    cursor: pointer;
+    text-align: center;
+    background: var(--color-wrapper);
+    z-index: 5;
+    p:first-child {
+        font-weight: bold;
+        font-size: 20px;
+    }
+    @media (min-width: 1025px) {
+        display: none;
+    }
+`;
+
+const Arrow = styled.i`
+    font-size: 12px;
+    line-height: 8px;
+    display: inline-block;
+    padding-bottom: 3px;
+    margin-left: 20px;
 `;
 
 const Overlay = styled.div`

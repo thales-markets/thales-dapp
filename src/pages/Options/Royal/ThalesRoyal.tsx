@@ -125,7 +125,13 @@ const ThalesRoyal: React.FC = () => {
                 className={selectedPage === 'royale' ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
-                <Header theme={theme} setTheme={setTheme} />
+                <Header
+                    latestSeason={latestSeason}
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                    theme={theme}
+                    setTheme={setTheme}
+                />
                 <ScoreboardPage
                     ethPrice={ethPrice}
                     positions={positions}
@@ -135,6 +141,9 @@ const ThalesRoyal: React.FC = () => {
                     latestSeason={latestSeason}
                 />
                 <RoyaleArena
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleFooterData={royaleFooterData}
                     latestSeason={latestSeason}
                     selectedSeason={selectedSeason}
                     showBattle={selectedPage === 'royale'}

@@ -21,8 +21,13 @@ import useRoyaleArenaContractQuery, { RoyaleArenaData } from './queries/useRoyal
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getIsOVM } from '../../../../../utils/network';
 import usePlayerPositionsQuery from './queries/usePlayerPositionsQuery';
+import { Positions } from '../../Queries/usePositionsQuery';
+import { FooterData } from './queries/useRoyaleFooterQuery';
 
 type RoyaleArenaProps = {
+    ethPrice: string;
+    positions: Positions;
+    royaleFooterData: FooterData | undefined;
     latestSeason: number;
     selectedSeason: number;
     showBattle: boolean;
@@ -208,7 +213,14 @@ export const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
     return beginningOfTime;
 };
 
-export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle, selectedSeason, latestSeason }) => {
+export const RoyaleArena: React.FC<RoyaleArenaProps> = ({
+    showBattle,
+    selectedSeason,
+    latestSeason,
+    ethPrice,
+    positions,
+    royaleFooterData,
+}) => {
     const { t } = useTranslation();
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -344,6 +356,27 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle, selectedSe
                         )}
                     </ScrollWrapper>
                 </CardWrapper>
+                <InfoSection>
+                    <div>
+                        <span>{t('options.royale.footer.up')}</span>
+                        <span>{`${positions?.up} ${t('options.royale.footer.vs')}  ${positions?.down}`}</span>
+                        <span>{t('options.royale.footer.down')}</span>
+                    </div>
+                    <div>
+                        <span>
+                            {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
+                        </span>
+                        <span>${Number(ethPrice).toFixed(2)}</span>
+                    </div>
+                    <div>
+                        <span>{t('options.royale.footer.reward-per-player')}:</span>
+                        <span>{royaleFooterData?.reward.toFixed(2)} sUSD</span>
+                    </div>
+                    <div>
+                        <span>{t('options.royale.footer.players-alive')}:</span>
+                        <span>{royaleFooterData?.playersAlive}</span>
+                    </div>
+                </InfoSection>
                 <ArrowRight
                     onMouseDown={() =>
                         setCurrentScrollRound(Math.min(currentScrollRound + 1, royaleData.rounds + (isWinner ? 1 : 0)))
@@ -359,7 +392,11 @@ export const RoyaleArena: React.FC<RoyaleArenaProps> = ({ showBattle, selectedSe
                         Claim reward
                     </Button>
                 ) : (
-                    <Button style={{ zIndex: 1000 }} disabled={!canCloseRound} onClick={closeRound}>
+                    <Button
+                        style={{ zIndex: 1000, marginBottom: '1em' }}
+                        disabled={!canCloseRound}
+                        onClick={closeRound}
+                    >
                         <RoyaleTooltip title={t('options.royale.battle.optimism-timestamp-message')}>
                             <StyledInfoIcon />
                         </RoyaleTooltip>
@@ -647,6 +684,44 @@ const StyledInfoIcon = styled(InfoIcon)`
     opacity: 1;
     cursor: auto;
     @media (max-width: 1024px) {
+        display: none;
+    }
+`;
+
+const InfoSection = styled.div`
+    color: var(--color);
+    font-style: normal;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 30px;
+    padding-bottom: 1em;
+    z-index: 1000;
+    right: 30px;
+    bottom: 30px;
+    > * {
+        &:first-child {
+            justify-content: center;
+        }
+        margin-bottom: 0.1em;
+        display: flex;
+        justify-content: space-between;
+        > * {
+            font-family: SansationLight !important;
+            &:nth-child(2),
+            &:first-child {
+                padding-right: 7px;
+            }
+            &:nth-child(2) {
+                font-weight: bold;
+                font-family: basis33 !important;
+                font-size: 28px;
+            }
+            &:nth-child(4) {
+                padding-left: 7px;
+            }
+        }
+    }
+    @media (min-width: 1025px) {
         display: none;
     }
 `;

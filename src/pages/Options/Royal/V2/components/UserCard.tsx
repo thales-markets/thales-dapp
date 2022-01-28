@@ -315,7 +315,6 @@ const DeadText = styled(Text)`
 const UserWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    height: 295px;
     width: 100%;
     padding: 34px 70px;
     background: var(--color-wrapper);
@@ -326,7 +325,6 @@ const UserWrapper = styled.div`
     margin-bottom: 50px;
     @media (max-width: 1024px) {
         padding: 15px;
-        height: 400px;
     }
 `;
 
