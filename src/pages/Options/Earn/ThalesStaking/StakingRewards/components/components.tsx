@@ -26,7 +26,6 @@ export const Description = styled(FlexDivColumnCentered)`
 export const Formula = styled(FlexDivRowCentered)`
     width: fit-content;
     align-self: center;
-    margin-bottom: 40px;
 `;
 
 export const FormulaLeftSide = styled(FlexDivColumnCentered)`
@@ -75,6 +74,7 @@ export const Link = styled.a`
     text-decoration-line: underline;
     color: #ffffff;
     text-align: center;
+    margin-top: 40px;
     &:hover:not(:disabled) {
         cursor: pointer;
         color: #00f9ff;

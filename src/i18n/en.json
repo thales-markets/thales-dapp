@@ -385,6 +385,16 @@
                     "amm-label": "AMM",
                     "thales-royale-label": "Thales Royale",
                     "max-reward-label": "Max reward: {{max}}",
+                    "bonus-info": {
+                        "current-snx-staking-label": "SNX staked",
+                        "additional-snx-staking-label": "Additional SNX to stake for max bonus",
+                        "current-amm-label": "AMM volume",
+                        "additional-amm-label": "Additional AMM volume for max bonus",
+                        "current-thales-royale-label": "Current participation",
+                        "thales-royale-participation-yes": "YES",
+                        "thales-royale-participation-no": "NO",
+                        "max-bonus-notice": "You have maximum bonus"
+                    },
                     "bonus-button": {
                         "snx-staking-label": "Stake SNX and get bonus THALES",
                         "amm-label": "Trade more and get bonus THALES",
@@ -1400,7 +1410,7 @@
             "vesting": "Staking logic has been migrated to L2."
         },
         "migration-notice": {
-            "text": " As THALES token holder you have option to migrate your token to L2 (Optimistic Etherium network)",
+            "text": "You can migrate THALES to L2 Optimistic Mainnet",
             "button-label": "Migrate THALES"
         },
         "migration-opt-out-notice": {

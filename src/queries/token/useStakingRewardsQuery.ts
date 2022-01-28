@@ -34,6 +34,8 @@ const useStakingRewardsQuery = (
                 snxBonus,
                 ammBonus,
                 thalesRoyaleBonus,
+                snxStaked,
+                ammVolume,
             ] = await Promise.all([
                 (snxJSConnector as any).stakingThalesContract.paused(),
                 (snxJSConnector as any).stakingThalesContract.periodsOfStaking(),
@@ -53,6 +55,8 @@ const useStakingRewardsQuery = (
                 (snxJSConnector as any).stakingThalesContract.getSNXBonus(walletAddress),
                 (snxJSConnector as any).stakingThalesContract.getAMMBonus(walletAddress),
                 (snxJSConnector as any).stakingThalesContract.getThalesRoyaleBonus(walletAddress),
+                (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
+                (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
             ]);
 
             const stakingRewards: StakingReward = {
@@ -82,6 +86,8 @@ const useStakingRewardsQuery = (
                 maxAmmBonus: (bigNumberFormatter(baseRewards) * Number(maxAMMVolumeRewardsPercentage)) / 100,
                 maxThalesRoyaleBonus:
                     (bigNumberFormatter(baseRewards) * Number(maxThalesRoyaleRewardsPercentage)) / 100,
+                snxStaked: bigNumberFormatter(snxStaked),
+                ammVolume: bigNumberFormatter(ammVolume),
             };
             return stakingRewards;
         },

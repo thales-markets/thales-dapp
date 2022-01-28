@@ -17,9 +17,14 @@ import { useTranslation } from 'react-i18next';
 type SnxStakingTooltipProps = {
     maxPercentage: number;
     snxVolumeRewardsMultiplier: number;
+    snxStakedMaxBonus: boolean;
 };
 
-const SnxStakingTooltip: React.FC<SnxStakingTooltipProps> = ({ maxPercentage, snxVolumeRewardsMultiplier }) => {
+const SnxStakingTooltip: React.FC<SnxStakingTooltipProps> = ({
+    maxPercentage,
+    snxVolumeRewardsMultiplier,
+    snxStakedMaxBonus,
+}) => {
     const { t } = useTranslation();
 
     return (
@@ -39,9 +44,11 @@ const SnxStakingTooltip: React.FC<SnxStakingTooltipProps> = ({ maxPercentage, sn
                 <FormulaSign>X</FormulaSign>
                 <FormulaRightSide>{maxPercentage}</FormulaRightSide>
             </Formula>
-            <Link target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.SnxStaking}>
-                {t('options.earn.thales-staking.staking-rewards.bonus-button.snx-staking-label')}
-            </Link>
+            {!snxStakedMaxBonus && (
+                <Link target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.SnxStaking}>
+                    {t('options.earn.thales-staking.staking-rewards.bonus-button.snx-staking-label')}
+                </Link>
+            )}
         </Conatiner>
     );
 };

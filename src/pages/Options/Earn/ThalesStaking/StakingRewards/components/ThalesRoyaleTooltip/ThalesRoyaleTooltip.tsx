@@ -5,22 +5,25 @@ import { useTranslation } from 'react-i18next';
 
 type ThalesRoyaleTooltipProps = {
     maxPercentage: number;
+    participatedInRoyale: boolean;
 };
 
-const ThalesRoyaleTooltip: React.FC<ThalesRoyaleTooltipProps> = ({ maxPercentage }) => {
+const ThalesRoyaleTooltip: React.FC<ThalesRoyaleTooltipProps> = ({ maxPercentage, participatedInRoyale }) => {
     const { t } = useTranslation();
 
     return (
         <Conatiner>
             <Title>{t('options.earn.thales-staking.staking-rewards.bonus-tooltip.thales-royale-title')}</Title>
-            <Description style={{ marginBottom: 40 }}>
+            <Description>
                 {t('options.earn.thales-staking.staking-rewards.bonus-tooltip.thales-royale-description', {
                     max: maxPercentage,
                 })}
             </Description>
-            <Link target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.ThalesRoyale}>
-                {t('options.earn.thales-staking.staking-rewards.bonus-button.thales-royale-label')}
-            </Link>
+            {!participatedInRoyale && (
+                <Link target="_blank" rel="noreferrer" href={LINKS.Token.Bonus.ThalesRoyale}>
+                    {t('options.earn.thales-staking.staking-rewards.bonus-button.thales-royale-label')}
+                </Link>
+            )}
         </Conatiner>
     );
 };
