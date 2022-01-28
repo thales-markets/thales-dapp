@@ -200,7 +200,7 @@ const AnimationSvg = styled.object``;
 const ListWrapper = styled.div`
     border: 1px solid var(--color);
     border-radius: 7px;
-    width: 60%;
+    width: 38em;
     margin-bottom: 4em;
 }
 `;

@@ -112,6 +112,10 @@ const Lines = styled.img`
     left: 0%;
     right: 0%;
     margin: auto;
+    @media (max-width: 1500px) {
+        width: 200%;
+        left: -50%;
+    }
     @media (max-width: 600px) {
         width: 200%;
         left: -50%;
@@ -124,7 +128,7 @@ const FooterHtml = styled.div`
     &.article {
         margin-top: 10px;
         display: flex;
-        & > img {
+        sve & > img {
             display: none !important;
         }
         & > div {
@@ -152,6 +156,7 @@ const Image = styled.img`
     @media (max-width: 600px) {
         width: 100%;
         transform: scale(1.52);
+        left: 0;
     }
 `;
 
