@@ -153,6 +153,9 @@ const Image = styled.img`
     left: 50%;
     transform: translateX(-50%);
     z-index: 2;
+    @supports (-moz-appearance: none) {
+        height: auto;
+    }
     @media (max-width: 600px) {
         width: 100%;
         transform: scale(1.52);

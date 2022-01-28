@@ -299,6 +299,7 @@ const ContIV = styled(ContWrapper)`
 const Image = styled.img`
     height: 100%;
     object-fit: contain;
+    position: absolute;
 `;
 
 const AnimationSvg = styled.object``;
