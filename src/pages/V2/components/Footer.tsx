@@ -128,7 +128,7 @@ const FooterHtml = styled.div`
     &.article {
         margin-top: 10px;
         display: flex;
-        sve & > img {
+        & > img {
             display: none !important;
         }
         & > div {

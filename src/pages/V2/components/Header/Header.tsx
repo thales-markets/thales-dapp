@@ -182,6 +182,7 @@ const Logo = styled.i`
     color: var(--color);
     z-index: 2;
     flex: 1;
+    cursor: pointer;
 `;
 
 const CenteredDiv = styled.div`

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Cookies from 'universal-cookie';
 import BlogPosts from './components/BlogPosts';
 import Footer from './components/Footer';
+import ROUTES from 'constants/routes';
 
 export enum Theme {
     Light,
@@ -23,30 +24,32 @@ const Home: React.FC = () => {
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
                 <FlexDiv className="initiatives">
-                    <Thales className="icon-home icon-home--thales" />
-                    <ThalesRoyale className="icon-home icon-home--royale" />
-                    <ThalesGame className="icon-home icon-home--game" />
+                    <a target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
+                        <Thales className="icon-home icon-home--thales" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href={ROUTES.Options.Royal}>
+                        <ThalesRoyale className="icon-home icon-home--royale" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href={ROUTES.Options.Game}>
+                        <ThalesGame className="icon-home icon-home--game" />
+                    </a>
                 </FlexDiv>
                 <Title style={{ marginBottom: '1em' }}> {t('landing-page.integrations')}</Title>
                 <FlexDiv>
-                    <SNX
-                        className="icon-home icon-home--snx"
-                        onClick={() => window.open('https://synthetix.io/', '_blank')}
-                    />
-                    <INCH
-                        className="icon-home icon-home--inch"
-                        onClick={() => window.open('https://1inch.io/', '_blank')}
-                    />
+                    <a target="_blank" rel="noreferrer" href="https://synthetix.io/">
+                        <SNX className="icon-home icon-home--snx" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href="https://1inch.io/">
+                        <INCH className="icon-home icon-home--inch" />
+                    </a>
                 </FlexDiv>
                 <FlexDiv>
-                    <LINK
-                        className="icon-home icon-home--link"
-                        onClick={() => window.open('https://chain.link/', '_blank')}
-                    />
-                    <OPTIMISM
-                        className="icon-home icon-home--optimism"
-                        onClick={() => window.open('https://www.optimism.io/', '_blank')}
-                    />
+                    <a target="_blank" rel="noreferrer" href="https://chain.link/">
+                        <LINK className="icon-home icon-home--link" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href="https://www.optimism.io/">
+                        <OPTIMISM className="icon-home icon-home--optimism" />
+                    </a>
                 </FlexDiv>
                 <Title style={{ marginTop: 100 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
