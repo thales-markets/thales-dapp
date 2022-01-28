@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -36,6 +36,7 @@ import { LINKS } from 'constants/links';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
 import i18n from '../../../../../i18n';
 import MigrationInfo from '../../components/MigrationInfo';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -281,9 +282,8 @@ const RetroRewards: React.FC = () => {
                     </AmountsContainer>
                     <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
                     <ButtonContainerBottom>
-                        <Button
+                        <DefaultSubmitButton
                             disabled={!isClaimAvailable || isClaiming}
-                            className="primary"
                             onClick={handleClaimRetroRewards}
                         >
                             {isClaiming
@@ -291,7 +291,7 @@ const RetroRewards: React.FC = () => {
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
                                 : t('options.earn.snx-stakers.claim') +
                                   ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
-                        </Button>
+                        </DefaultSubmitButton>
                         <ClaimMessage invisible={!!vestingInfo.initialLocked}>
                             {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
                         </ClaimMessage>

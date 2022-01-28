@@ -9,7 +9,7 @@ import {
 } from '../../components';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, GradientText } from '../../../../../theme/common';
+import { GradientText } from '../../../../../theme/common';
 import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import NetworkFees from '../../../components/NetworkFees';
@@ -24,6 +24,7 @@ import { formatGasLimit, getIsOVM, getL1FeeInWei } from '../../../../../utils/ne
 import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import styled from 'styled-components';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
 const Vest: React.FC = () => {
     const { t } = useTranslation();
@@ -105,12 +106,12 @@ const Vest: React.FC = () => {
 
     const getVestButton = () => {
         return (
-            <Button onClick={handleVest} disabled={isClaiming || !+claimable} className="primary">
+            <DefaultSubmitButton onClick={handleVest} disabled={isClaiming || !+claimable}>
                 {!isClaiming
                     ? t('options.earn.vesting.vest.vest') + ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}`
                     : t('options.earn.vesting.vest.vesting') +
                       ` ${formatCurrencyWithKey(THALES_CURRENCY, claimable)}...`}
-            </Button>
+            </DefaultSubmitButton>
         );
     };
 

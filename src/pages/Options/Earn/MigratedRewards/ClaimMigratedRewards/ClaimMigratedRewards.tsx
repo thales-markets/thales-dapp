@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -24,6 +23,7 @@ import {
     GridAction,
 } from '../../gridComponents';
 import useMigratedRewardsQuery from 'queries/token/useMigratedRewardsQuery';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -160,7 +160,7 @@ const ClaimMigratedRewards: React.FC = () => {
                             title={t('options.earn.thales-staking.staking-rewards.button-tooltip') as string}
                             open={showTooltip}
                         >
-                            <Button
+                            <DefaultSubmitButton
                                 onMouseOver={() => {
                                     setShowTooltip(true);
                                 }}
@@ -169,14 +169,13 @@ const ClaimMigratedRewards: React.FC = () => {
                                 }}
                                 onClick={handleClaimOngoingAirdrop}
                                 disabled={!isClaimAvailable || isClaiming}
-                                className="primary"
                             >
                                 {isClaiming
                                     ? t('options.earn.thales-staking.staking-rewards.claiming') +
                                       ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}...`
                                     : t('options.earn.thales-staking.staking-rewards.claim') +
                                       ` ${formatCurrencyWithKey(THALES_CURRENCY, balance)}`}
-                            </Button>
+                            </DefaultSubmitButton>
                         </StyledMaterialTooltip>
                         {migratedRewards && migratedRewards.isClaimPaused && (
                             <ClaimMessage>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button, GradientText } from 'theme/common';
+import { GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -34,6 +34,7 @@ import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import MigrationInfo from '../../components/MigrationInfo';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -127,11 +128,7 @@ const RetroAirdrop: React.FC = () => {
     const getClaimButton = () => {
         if (quizCompleted || !isClaimAvailable) {
             return (
-                <Button
-                    onClick={handleClaimRetroAirdrop}
-                    disabled={!isClaimAvailable || isClaiming}
-                    className="primary"
-                >
+                <DefaultSubmitButton onClick={handleClaimRetroAirdrop} disabled={!isClaimAvailable || isClaiming}>
                     {isClaiming
                         ? t('options.earn.snx-stakers.claiming')
                         : t('options.earn.snx-stakers.claim') +
@@ -141,13 +138,13 @@ const RetroAirdrop: React.FC = () => {
                               0,
                               true
                           )}`}
-                </Button>
+                </DefaultSubmitButton>
             );
         } else {
             return (
-                <Button onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
+                <DefaultSubmitButton onClick={startQuiz} disabled={!isClaimAvailable || isClaiming} className="primary">
                     {t('options.earn.snx-stakers.start-quiz')}
-                </Button>
+                </DefaultSubmitButton>
             );
         }
     };
