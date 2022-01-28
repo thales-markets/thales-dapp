@@ -319,11 +319,9 @@ const StakingRewards: React.FC = () => {
                                     )}
                                     :
                                 </BonusNeededLabel>
-                                (
                                 <BonusNeededContent>
                                     {formatCurrencyWithKey(CRYPTO_CURRENCY_MAP.SNX, additionalSnxStaked)}
                                 </BonusNeededContent>
-                                )
                             </BonusNeeded>
                         )}
                     </BonusInfo>
