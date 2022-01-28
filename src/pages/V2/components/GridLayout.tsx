@@ -349,7 +349,7 @@ const ThalesImageII = styled.div`
 `;
 
 const ThalesImageIII = styled.div`
-    grid-column-start: 20;
+    grid-column-start: 19;
     grid-column-end: 45;
     grid-row-start: 49;
     grid-row-end: 69;
