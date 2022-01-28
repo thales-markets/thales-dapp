@@ -122,7 +122,7 @@ const AssetContainer = styled.div`
     // align-items: center;
 `;
 
-const AssetNameContainer = styled.div`
+export const AssetNameContainer = styled.div`
     display: block;
     text-align: left;
 
@@ -130,7 +130,7 @@ const AssetNameContainer = styled.div`
     color: var(--primary-color) !important;
 `;
 
-const AssetName = styled.span`
+export const AssetName = styled.span`
     font-family: Titillium Regular !important;
     font-style: normal;
     display: block;
@@ -140,7 +140,7 @@ const AssetName = styled.span`
     line-height: 110%;
 `;
 
-const CurrencyKey = styled.span`
+export const CurrencyKey = styled.span`
     font-family: Titillium Regular !important;
     font-style: normal;
     display: block;

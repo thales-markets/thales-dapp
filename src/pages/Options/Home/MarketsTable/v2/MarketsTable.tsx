@@ -22,7 +22,6 @@ import { FlexDivRow } from 'theme/common';
 import TableGridSwitch from '../../../components/Input/TableGridSwitch';
 import SearchField from '../../../components/Input/SearchField';
 import { TablePagination } from '@material-ui/core';
-
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 

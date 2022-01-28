@@ -427,3 +427,7 @@ export const UserCardSectionHeader = styled.span`
     color: #64d9fe;
     text-transform: uppercase;
 `;
+
+export const MarketCardContainer = styled.div`
+    border: 2px solid #64d9fe;
+`;

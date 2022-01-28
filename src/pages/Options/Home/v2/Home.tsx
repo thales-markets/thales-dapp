@@ -4,6 +4,7 @@ import { Background, NewWrapper } from 'theme/common';
 
 import MarketsTable from '../MarketsTable/v2/MarketsTable';
 import MarketHeader from '../MarketHeader/v2/MarketHeader';
+import HotMarkets from '../HotMarkets/v2/HotMarkets';
 
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
@@ -18,6 +19,9 @@ import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarke
 
 import ROUTES from 'constants/routes';
 import { sortOptionsMarkets } from 'utils/options';
+import { PHASE } from 'constants/options';
+
+const MAX_HOT_MARKETS = 6;
 
 const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -61,6 +65,15 @@ const Home: React.FC = () => {
     });
     const exchangeRates = exchangeRatesMarketDataQuery.isSuccess ? exchangeRatesMarketDataQuery.data ?? null : null;
 
+    const hotMarkets = useMemo(
+        () =>
+            optionsMarkets
+                .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
+                .sort((a, b) => a.timeRemaining - b.timeRemaining)
+                .slice(0, MAX_HOT_MARKETS),
+        [optionsMarkets]
+    );
+
     return (
         <>
             <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
@@ -76,6 +89,7 @@ const Home: React.FC = () => {
                                 : ROUTES.Options.Overview
                         }
                     />
+                    <HotMarkets optionsMarkets={hotMarkets} />
                     <MarketsTable
                         optionsMarkets={optionsMarkets}
                         exchangeRates={exchangeRates}

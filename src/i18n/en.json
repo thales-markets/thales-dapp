@@ -269,6 +269,11 @@
                 "result": "Current result",
                 "view-market": "View Market"
             },
+            "hot-market-card": {
+                "price-per-option": "Price per option",
+                "time-left": "Time left",
+                "potential-profit": "Potential profit"
+            },
             "market-creation": {
                 "explore-markets-button-label": "Explore markets"
             },
