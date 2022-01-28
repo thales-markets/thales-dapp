@@ -78,18 +78,17 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
             switch (orderBy) {
                 case 1:
                     usersToShow = usersToShow.sort((a: any, b: any) => {
+                        if (a.isAlive && b.isAlive) {
+                            return a.number - b.number;
+                        }
+                        if (!a.isAlive && !b.isAlive) {
+                            if (a.deathRound === b.deathRound) return a.number - b.number;
+                            return b.deathRound - a.deathRound;
+                        }
                         if (orderDirection === OrderDirection.ASC) {
-                            return (a.isAlive && b.isAlive) || (!a.isAlive && !b.isAlive)
-                                ? a.number - b.number
-                                : a.isAlive
-                                ? -1
-                                : 1;
+                            return a.isAlive ? -1 : 1;
                         } else {
-                            return (a.isAlive && b.isAlive) || (!a.isAlive && !b.isAlive)
-                                ? a.number - b.number
-                                : a.isAlive
-                                ? 1
-                                : -1;
+                            return a.isAlive ? 1 : -1;
                         }
                     });
                     break;
