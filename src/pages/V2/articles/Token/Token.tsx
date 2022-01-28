@@ -128,6 +128,7 @@ const Content = styled.div`
     grid-column-end: 48;
     grid-row-start: 8;
     grid-row-end: 80;
+    width: 100%;
     @media (max-width: 1024px) {
         position: absolute;
         display: block;
