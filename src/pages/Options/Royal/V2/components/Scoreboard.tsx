@@ -221,9 +221,10 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
             ) : usersForUi ? (
                 usersForUi.usersToDisplay.map((user: User, key: number) => {
                     const lastRoundInSeason = royaleData?.round;
+
                     const isUserAWinner =
                         (user.isAlive && royaleData?.seasonFinished) ||
-                        (Number(user.deathRound) === lastRoundInSeason && royaleData?.seasonFinished);
+                        (Number(user.deathRound) === Number(lastRoundInSeason) && royaleData?.seasonFinished);
 
                     return (
                         <TableRow
