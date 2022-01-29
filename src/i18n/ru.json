@@ -1035,7 +1035,7 @@
             "scoreboard": {
                 "table-header": {
                     "status": "Положение дел",
-                    "number": "Игрок <без> № <без>",
+                    "number": "Игрок <sans> № <sans>",
                     "avatar": "Аватар",
                     "name": "Отображаемое имя"
                 },
@@ -1062,7 +1062,7 @@
                 "start-royale": "Запустить Thales Royale",
                 "question": "Есть ли у вас все необходимое, чтобы победить в соревновании и выйти в финальный раунд?",
                 "alive": "в живых",
-                "player-no": "Игрок <без> № <без>:",
+                "player-no": "Игрок <sans> № <sans>:",
                 "thales-default": "Thales: Торговля бинарными опционами на платформе Synthetix.",
                 "round-positioning": " пока не закончится позиционирование",
                 "eliminated": "Вы были исключены",
