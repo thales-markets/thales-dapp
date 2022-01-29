@@ -1073,7 +1073,7 @@
                 "alive": "alive",
                 "winner": "winner",
                 "users-per-page": "Users per page",
-                "no-users": "No users"
+                "no-users": "No players."
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",
