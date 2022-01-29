@@ -1049,6 +1049,9 @@
                 "player-no": "玩家  <sans>№<sans>: ",
                 "eliminated": "你被淘汰了",
                 "period-expired": "注册期限已过",
+                "season-not-started": "赛季还没有开始",
+                "approve-susd": "批准 sUSD",
+                "buy-in": "买入: {{buyInAmount}}sUSD",
                 "table-header": {
                     "status": "状态",
                     "avatar": "头像",
@@ -1068,7 +1071,13 @@
                 "dead": "死亡",
                 "alive": "活着",
                 "winner": "获胜者",
-                "users-per-page": "每页用户数"
+                "users-per-page": "每页用户数",
+                "season-ready-in": "下个赛季准备开始：",
+                "start-season": "开始赛季",
+                "season": "季节",
+                "season-finished": "赛季结束",
+                "loading-season": "正在加载",
+                "no-users": "没有用户"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
@@ -1078,15 +1087,22 @@
             },
             "wrong-network-dialog": {
                 "title": "错误的网络！",
-                "message": "请切换到Optimism Kovan 继续",
+                "message": "请切换到Optimistic Ethereum 继续",
                 "return-to-dapp": "返回泰雷兹dApp",
-                "button": "切换到Optimism Kovan",
-                "parameters": "OP Kovan参数"
+                "button": "切换到Optimistic Ethereum",
+                "parameters": "OP Ethereum参数"
             },
             "wallet-not-connected-dialog": {
                 "title": "钱包未连接",
                 "message": "请连接您的钱包继续",
                 "button": "连接钱包"
+            },
+            "edit-user-data-dialog": {
+                "enter-display-name": "输入显示名称",
+                "change-display-name": "更改显示名称",
+                "change-avatar": "输入头像网址",
+                "avatar": "头像图片",
+                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL"
             }
         },
         "amm-mining": {

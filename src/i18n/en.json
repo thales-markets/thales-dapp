@@ -1038,12 +1038,21 @@
                 "info2": "Thales Royale is a <bold>sequential winner-takes-all prediction game,</bold> played in 6 rounds.",
                 "info3": "After the sign-up period finishes, participants are presented with a target price for an asset on a future strike date. They must <bold>predict if the actual price of the asset will be higher (△) or lower (◯) than the target price on said strike date.</bold>",
                 "info4": "Those who guess correctly advance to the next round. Those who don't are eliminated. Players who reach and beat the final round split the whole prize pool.",
-                "info5": "All the information, rules, and detailed rounds & prize structure can be found here: ",
-                "info6": "<italic>Good luck and let the battle begin!</italic>",
+                "info5": "The current buy-in is <bold>30 sUSD</bold>. The winner(s) will share a prize pool composed of all participants' buy-ins plus current incentives of <bold>1000 sUSD</bold> and <bold>1000 THALES</bold>, as an added bonus.",
+                "info6": "All the information, rules, and detailed rounds & prize structure can be found here: ",
+                "info7": "<italic>Good luck and let the battle begin!</italic>",
                 "blog": "[Thales Royale blog post]",
                 "player-no": "Player  <sans>№<sans>: ",
                 "eliminated": "You have been eliminated",
                 "period-expired": "Sign up period has expired",
+                "season": "Season",
+                "loading-season": "Loading",
+                "season-not-started": "Season did not start yet",
+                "season-ready-in": "Next season ready to start in:",
+                "start-season": "Start season",
+                "season-finished": "Season finished",
+                "approve-susd": "Approve sUSD",
+                "buy-in": "Buy-in: {{buyInAmount}} sUSD",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1063,7 +1072,8 @@
                 "dead": "dead",
                 "alive": "alive",
                 "winner": "winner",
-                "users-per-page": "Users per page"
+                "users-per-page": "Users per page",
+                "no-users": "No users"
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",
@@ -1073,15 +1083,22 @@
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",
-                "message": "Please switch to Optimism Kovan to continue",
+                "message": "Please switch to Optimistic Ethereum to continue",
                 "return-to-dapp": "Return to the Thales dApp",
-                "button": "Switch to Optimism Kovan",
-                "parameters": "OP Kovan parameters"
+                "button": "Switch to Optimistic Ethereum",
+                "parameters": "OP Ethereum parameters"
             },
             "wallet-not-connected-dialog": {
                 "title": "Wallet not connected",
                 "message": "Please connect your wallet to continue",
                 "button": "Connect wallet"
+            },
+            "edit-user-data-dialog": {
+                "change-avatar": "Enter Avatar URL",
+                "avatar": "Avatar image",
+                "avatar-tip": "Please enter valid URL ending with either .jpg, .jpeg, .png, .svg or .gif",
+                "change-display-name": "Change Display Name",
+                "enter-display-name": "Enter Display Name"
             }
         },
         "amm-mining": {

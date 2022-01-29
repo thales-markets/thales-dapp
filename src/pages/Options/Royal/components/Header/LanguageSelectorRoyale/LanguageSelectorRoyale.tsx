@@ -7,17 +7,16 @@ import styled from 'styled-components';
 export const LanguageSelectorRoyale: React.FC = () => {
     return (
         <>
-            {Object.values(SupportedLanguages).map((language: string) => (
-                <>
-                    <LanguageSelect
-                        onClick={() => {
-                            i18n.changeLanguage(language);
-                        }}
-                    >
-                        <LanguageIcon className={`icon icon--${language}`} />
-                        <LanguageName key={language}>{(LanguageNameMap as any)[language]}</LanguageName>
-                    </LanguageSelect>
-                </>
+            {Object.values(SupportedLanguages).map((language: string, key: number) => (
+                <LanguageSelect
+                    key={key}
+                    onClick={() => {
+                        i18n.changeLanguage(language);
+                    }}
+                >
+                    <LanguageIcon className={`icon icon--${language}`} />
+                    <LanguageName key={language}>{(LanguageNameMap as any)[language]}</LanguageName>
+                </LanguageSelect>
             ))}
         </>
     );

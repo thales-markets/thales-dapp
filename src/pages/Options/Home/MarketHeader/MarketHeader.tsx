@@ -24,6 +24,9 @@ import earnSelectedIcon from 'assets/images/sidebar/thales-token-white.svg';
 import customMarketsDefaultIcon from 'assets/images/sidebar/custom-markets-default.svg';
 import customMarketsSelectedIcon from 'assets/images/sidebar/custom-markets-selected.svg';
 
+import royaleDefaultIcon from 'assets/images/sidebar/royale-default.svg';
+import royaleSelectedIcon from 'assets/images/sidebar/royale-selected.svg';
+
 import governanceDefaultIcon from 'assets/images/sidebar/governance-default.svg';
 import governanceSelectedIcon from 'assets/images/sidebar/governance-selected.svg';
 import logoSmallIcon from 'assets/images/logo-small-dark.svg';
@@ -180,16 +183,6 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.overview-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
-                    {/* <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
-                        <SidebarItem
-                            imgSrc={royaleDefaultIcon}
-                            imgSrcHoverSelected={royaleSelectedIcon}
-                            className={route === ROUTES.Options.Royal ? 'selected' : ''}
-                        >
-                            <SidebarIcon />
-                            <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
-                        </SidebarItem>
-                    </SPAAnchor> */}
                     {/* {!isL2 && (
                         <SPAAnchor href={buildHref(ROUTES.Options.CustomMarkets)}>
                             <SidebarItem
@@ -301,6 +294,18 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
+                    {isL2 && (
+                        <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
+                            <SidebarItem
+                                imgSrc={royaleDefaultIcon}
+                                imgSrcHoverSelected={royaleSelectedIcon}
+                                className={route === ROUTES.Options.Royal ? 'selected' : ''}
+                            >
+                                <SidebarIcon />
+                                <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
+                            </SidebarItem>
+                        </SPAAnchor>
+                    )}
                     <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
                         <SidebarItem
                             imgSrc={gameDefaultIcon}
