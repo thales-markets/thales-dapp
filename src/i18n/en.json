@@ -1097,7 +1097,7 @@
                 "change-avatar": "Enter Avatar URL",
                 "avatar": "Avatar image",
                 "avatar-tip": "Please enter valid URL ending with either .jpg, .jpeg, .png, .svg or .gif",
-                "change-display-name": "Change Display Name",
+                "change-display-name": "Apply changes",
                 "enter-display-name": "Enter Display Name"
             }
         },
