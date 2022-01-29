@@ -218,10 +218,18 @@ export const Intro: React.FC = () => {
                     }}
                 />
             </InfoText>
-            <InfoText style={{ margin: '14px 0px' }}>{t('options.royale.scoreboard.info4')}</InfoText>
+            <InfoText style={{ margin: '14px 0px' }}>{t('options.royale.scoreboard.info4')}</InfoText>{' '}
             <InfoText>
                 <Trans
                     i18nKey="options.royale.scoreboard.info5"
+                    components={{
+                        bold: <strong />,
+                    }}
+                />
+            </InfoText>
+            <InfoText style={{ margin: '14px 0px' }}>
+                <Trans
+                    i18nKey="options.royale.scoreboard.info6"
                     components={{
                         bold: <strong />,
                     }}
@@ -236,7 +244,7 @@ export const Intro: React.FC = () => {
             </InfoText>
             <InfoText style={{ marginTop: '8px', textAlign: 'center' }}>
                 <Trans
-                    i18nKey="options.royale.scoreboard.info6"
+                    i18nKey="options.royale.scoreboard.info7"
                     components={{
                         italic: <i />,
                     }}
