@@ -83,7 +83,9 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                         }
                         if (!a.isAlive && !b.isAlive) {
                             if (a.deathRound === b.deathRound) return a.number - b.number;
-                            return b.deathRound - a.deathRound;
+                            return orderDirection === OrderDirection.ASC
+                                ? b.deathRound - a.deathRound
+                                : a.deathRound - b.deathRound;
                         }
                         if (orderDirection === OrderDirection.ASC) {
                             return a.isAlive ? -1 : 1;
