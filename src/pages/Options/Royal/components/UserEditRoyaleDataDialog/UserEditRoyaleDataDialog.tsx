@@ -30,7 +30,7 @@ const ethEnabled = () => {
 };
 
 const DISPLAY_NAME_REGEX = /^[a-zA-Z0-9 ]+$/;
-const AVATAR_LINK_REGEX = /^(.*?)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$/;
+const AVATAR_LINK_REGEX = /^(.*?)\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF|webp)$/;
 
 const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
     open,
