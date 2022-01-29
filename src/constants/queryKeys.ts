@@ -33,6 +33,9 @@ export const QUERY_KEYS = {
     Synths: {
         FrozenSynths: ['synths', 'frozenSynths'],
     },
+    Medium: {
+        Posts: ['medium', 'posts'],
+    },
     Network: {
         EthGasPrice: ['network', 'ethGasPrice'],
         EthGasPriceEip1559: (networkId: NetworkId) => ['network', 'ethGasPriceEip1559', networkId],
@@ -109,6 +112,12 @@ export const QUERY_KEYS = {
             networkId,
         ],
         Info: (networkId: NetworkId) => ['token', 'info', networkId],
+        StakingMigrationOptout: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'stakingMigrationOptout',
+            walletAddress,
+            networkId,
+        ],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],

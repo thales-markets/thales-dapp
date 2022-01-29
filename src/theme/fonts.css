@@ -4,15 +4,6 @@
 }
 
 @font-face {
-    font-family: 'RobotoLight';
-    src: local('RobotoLight'), url(../assets/fonts/Roboto/Roboto-Light.ttf) format('truetype');
-}
-@font-face {
-    font-family: 'RobotoThin';
-    src: local('RobotoThin'), url(../assets/fonts/Roboto/Roboto-Thin.ttf) format('truetype');
-}
-
-@font-face {
     font-family: 'Open Sans';
     src: local('Open Sans'), url(../assets/fonts/OpenSans/OpenSans-Regular.ttf) format('truetype');
 }
@@ -25,6 +16,16 @@
 @font-face {
     font-family: 'Icons';
     src: local('Icons'), url(../assets/fonts/ThalesIcons/icons.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'SidebarIcons';
+    src: local('SidebarIcons'), url(../assets/fonts/ThalesIcons/sidebar.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Homepage Icons';
+    src: local('Homepage Icons'), url(../assets/fonts/HomepageIcons/homepage.ttf) format('truetype');
 }
 
 @font-face {
@@ -50,4 +51,24 @@
 @font-face {
     font-family: 'basis33';
     src: local('basis33'), url(../assets/fonts/Basis33/basis33.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Nunito';
+    src: local('Nunito'), url(../assets/fonts/Nunito/Nunito.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'NunitoExtraLight';
+    src: local('NunitoExtraLight'), url(../assets/fonts/Nunito/static/Nunito-ExtraLight.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'NunitoSemiBold';
+    src: local('NunitoSemiBold'), url(../assets/fonts/Nunito/static/Nunito-SemiBold.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'Playfair Display';
+    src: local('Playfair Display'), url(../assets/fonts/PlayfairDisplay/Playfair-Display.ttf) format('truetype');
 }

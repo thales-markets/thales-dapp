@@ -20,6 +20,7 @@ export const secondsToTime = (seconds: number) => {
 export const formattedDuration = (
     duration: Duration,
     dateTimeTranslationMap: any,
+    showSeconds = true,
     delimiter = ' ',
     firstTwo = false
 ) => {
@@ -55,8 +56,10 @@ export const formattedDuration = (
         }`;
     }
     if (duration.minutes) {
-        if (duration.minutes > 9) {
-            return `${duration.minutes} ${dateTimeTranslationMap['minutes']}`;
+        if (duration.minutes > 9 || !showSeconds) {
+            return `${duration.minutes} ${
+                duration.minutes > 1 ? dateTimeTranslationMap['minutes'] : dateTimeTranslationMap['minute']
+            }`;
         }
         formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
     }

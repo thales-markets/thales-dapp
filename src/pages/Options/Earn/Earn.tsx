@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
 import { getNetworkId } from '../../../redux/modules/wallet';
 import { isNetworkSupported } from '../../../utils/network';
+import MigrationOptOutNotice from './components/MigrationOptOutNotice';
 
 const EarnPage: React.FC = () => {
     const { t } = useTranslation();
@@ -81,6 +82,7 @@ const EarnPage: React.FC = () => {
                     <Container>
                         <FlexDivColumn>
                             <TokenOverview />
+                            <MigrationOptOutNotice />
                             <MainContentContainer>
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab, index) => (

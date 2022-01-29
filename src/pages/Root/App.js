@@ -29,9 +29,12 @@ import GovernancePage from 'pages/Governance';
 import TradeHistory from 'pages/Options/TradeHistory';
 import AmmMining from 'pages/Options/AmmMining';
 import AmmReporting from '../Options/AmmReporting';
+import Token from '../V2/articles/Token';
+import Governance from '../V2/articles/Governance';
+import Whitepaper from '../V2/articles/Whitepaper';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
-const Home = lazy(() => import('../Home'));
+const Home = lazy(() => import('../V2/Home'));
 const OptionsHome = lazy(() => import('../Options/Home'));
 const OptionsMarket = lazy(() => import('../Options/Market'));
 const App = () => {
@@ -277,6 +280,21 @@ const App = () => {
                         <Route exact path={ROUTES.Home}>
                             <MainLayout>
                                 <Home />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Token}>
+                            <MainLayout>
+                                <Token />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Governance}>
+                            <MainLayout>
+                                <Governance />
+                            </MainLayout>
+                        </Route>
+                        <Route exact path={ROUTES.Article.Whitepaper}>
+                            <MainLayout>
+                                <Whitepaper />
                             </MainLayout>
                         </Route>
                         <Route>

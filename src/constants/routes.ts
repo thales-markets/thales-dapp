@@ -1,5 +1,10 @@
 export const ROUTES = {
     Home: '/',
+    Article: {
+        Token: '/article/token',
+        Governance: '/article/governance',
+        Whitepaper: '/article/whitepaper',
+    },
     Options: {
         Home: '/markets',
         HotMarkets: '/markets?anchor=hot-markets',

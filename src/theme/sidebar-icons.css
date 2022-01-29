@@ -1,0 +1,31 @@
+.sidebar-icon {
+    display: inline-block;
+    font-family: SidebarIcons !important;
+    vertical-align: middle;
+    font-size: 30px;
+    color: var(--color);
+}
+
+.icon--token:before {
+    content: '\0043';
+}
+
+.icon--markets-overview:before {
+    content: '\0058';
+}
+
+.icon--create-market:before {
+    content: '\0057';
+}
+
+.icon--markets:before {
+    content: '\0059';
+}
+
+.icon--competition:before {
+    content: '\0045';
+}
+
+.icon--thales-royale:before {
+    content: '\005A';
+}
