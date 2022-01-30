@@ -249,6 +249,13 @@ const NestedList = styled.ul`
                 transition: 0.2s;
             }
         }
+        @media (max-width: 450px) {
+            &:nth-child(3),
+            &:nth-child(4),
+            &:nth-child(5) {
+                padding-bottom: 5em;
+            }
+        }
     }
 `;
 
