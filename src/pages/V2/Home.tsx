@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import GridLayout from './components/GridLayout';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,15 @@ const cookies = new Cookies();
 const Home: React.FC = () => {
     const { t } = useTranslation();
     const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
+
+    useEffect(() => {
+        const body = document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+    }, [theme]);
 
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
