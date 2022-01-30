@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FlexDivCentered, FlexDiv, FlexDivColumn, FlexDivColumnCentered } from 'theme/common';
 import { withTranslation } from 'react-i18next';
-import i18n from 'i18n';
+// import i18n from 'i18n';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
@@ -19,9 +19,11 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
         setLanguageDropdownIsOpen(isOpen);
     };
 
-    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
-        ? i18n.language
-        : DEFAULT_LANGUAGE;
+    // const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+    //     ? i18n.language
+    //     : DEFAULT_LANGUAGE;
+
+    const selectedLanguage = DEFAULT_LANGUAGE;
 
     return (
         <>
@@ -40,7 +42,7 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
                                 <DropDownItem
                                     key={language}
                                     onClick={() => {
-                                        i18n.changeLanguage(language);
+                                        // i18n.changeLanguage(language);
                                         setDropdownIsOpen(false);
                                     }}
                                 >
