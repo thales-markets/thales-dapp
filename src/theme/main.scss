@@ -148,6 +148,12 @@ table {
     &.dark-theme {
         scrollbar-color: #a1e1b4 #133326;
     }
+    &.light {
+        scrollbar-color: #1b314f #dcdcdc;
+    }
+    &.dark {
+        scrollbar-color: #f7f7f7 #1b314f;
+    }
 }
 
 *::-webkit-scrollbar {

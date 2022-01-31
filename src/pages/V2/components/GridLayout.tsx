@@ -13,7 +13,7 @@ import thalesIIIW from 'assets/images/landing-page/thales3-white.png';
 import Header from './Header/Header';
 import { Trans, useTranslation } from 'react-i18next';
 import { Theme } from '../Home';
-import { navigateTo } from 'utils/routes';
+// import { navigateTo } from 'utils/routes';
 import ROUTES from 'constants/routes';
 
 type GridLayoutProps = {
@@ -38,10 +38,8 @@ const GridLayout: React.FC<GridLayoutProps> = ({ setTheme, theme }) => {
             </TitleContainer>
             <ButtonContainer>
                 <ThalesButton>
-                    <Logo
-                        onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
-                        className="icon icon--logo"
-                    />
+                    <Link target="_blank" rel="noreferrer" href={ROUTES.Options.Home}></Link>
+                    <Logo className="icon icon--logo" />
                 </ThalesButton>
                 <LearnButton>
                     <Link target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
@@ -414,6 +412,7 @@ const ContTitle = styled.p`
     font-size: 3.5em;
     line-height: 95%;
     color: var(--color);
+    margin-top: 10px;
     margin-bottom: 0.75em;
     @media (max-width: 800px) {
         font-size: 3em;
@@ -454,6 +453,9 @@ const Link = styled.a`
     display: flex;
     align-items: inherit;
     justify-content: center;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
 `;
 
 const Logo = styled.i`
@@ -461,6 +463,7 @@ const Logo = styled.i`
     font-size: 5.2em;
     line-height: 1.75em;
     color: #ffffff !important;
+    position: absolute;
 `;
 
 export default GridLayout;
