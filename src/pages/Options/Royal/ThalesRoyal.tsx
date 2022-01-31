@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import queryString from 'query-string';
 import { useSelector } from 'react-redux';
 import { getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { Background, FlexDivCentered, Text, Wrapper } from 'theme/common';
+import { Background, Wrapper } from 'theme/common';
 import Cookies from 'universal-cookie';
-import ROUTES from '../../../constants/routes';
-import { history, navigateTo } from '../../../utils/routes';
-import BattleRoyale from './components/BattleRoyale';
+import { getIsOVM } from 'utils/network';
 import Header from './components/Header';
-import Scoreboard from './components/Scoreboard';
 import WalletNotConnectedDialog from './components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 import { WrongNetworkDialog } from './components/WrongNetworkDialog/WrongNetworkDialog';
-import queryString from 'query-string';
-import usePositionsQuery from './Queries/usePositionsQuery';
-import useThalesRoyaleData from './Queries/useThalesRoyaleData';
+import { FooterV2 } from './V2/components/Footer';
+
+import { ScoreboardPage } from './V2/components/ScoreboardPage';
+import { RoyaleArena } from './V2/components/RoyaleArena';
+import useLatestSeasonQuery from './V2/components/queries/useLatestSeasonQuery';
+import { getIsAppReady } from '../../../redux/modules/app';
+import useRoyaleFooterQuery, { FooterData } from './V2/components/queries/useRoyaleFooterQuery';
 import useEthPriceQuery from './Queries/useEthPriceQuery';
-import useRoyalePlayersQuery, { User } from './Queries/useRoyalePlayersQuery';
-import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
-import { RoyaleTooltip } from '../Market/components';
+import usePositionsQuery, { Positions } from './Queries/usePositionsQuery';
 
 export enum Theme {
     Light,
@@ -29,31 +28,53 @@ export enum Theme {
 const cookies = new Cookies();
 
 const ThalesRoyal: React.FC = () => {
-    const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
+    const isL2 = getIsOVM(networkId);
+    const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
+
+    const latestSeasonQuery = useLatestSeasonQuery({
+        enabled: isAppReady && isL2,
+    });
+    const [selectedSeason, setSelectedSeason] = useState(0);
+    const [royaleFooterData, setRoyaleStatsData] = useState<FooterData>();
+    const [ethPrice, setEthPrice] = useState<string>('');
+    const [positions, setPositions] = useState<Positions>({ up: 0, down: 0 });
+
+    const latestSeason = latestSeasonQuery.isSuccess ? latestSeasonQuery.data : 0;
+
+    const royaleFooterQuery = useRoyaleFooterQuery({ enabled: isAppReady });
+    const ethPriceQuery = useEthPriceQuery({ enabled: isAppReady });
+    const positionsQuery = usePositionsQuery(0, networkId, {
+        enabled: networkId !== undefined && isAppReady,
+    });
+
     const [theme, setTheme] = useState(Number(cookies.get('theme')) === 0 ? Theme.Light : Theme.Dark);
     const [openNetworkWarningDialog, setOpenNetworkWarningDialog] = useState(false);
     const [openWalletNotConnectedDialog, setOpenWalletNotConnectedDialog] = useState(false);
     const [selectedPage, setSelectedPage] = useState('');
-    const [showStats, setShowStats] = useState(true);
 
-    const royaleDataQuery = useThalesRoyaleData(walletAddress as any, { enabled: networkId === 69 });
-    const thalesRoyalData = royaleDataQuery.isSuccess ? royaleDataQuery.data : undefined;
+    useEffect(() => {
+        if (positionsQuery.isSuccess) {
+            setPositions(positionsQuery.data);
+        }
+    }, [positionsQuery.isSuccess, positionsQuery.data]);
 
-    const usersQuery = useRoyalePlayersQuery({ enabled: networkId === 69 });
-    const users = usersQuery.isSuccess ? usersQuery.data : [];
-    const user = users.filter(
-        (user: User) => walletAddress && user.address.toLowerCase() === walletAddress.toLowerCase()
-    )[0];
+    useEffect(() => {
+        if (ethPriceQuery.isSuccess) {
+            setEthPrice(ethPriceQuery.data);
+        }
+    }, [ethPriceQuery.isSuccess, ethPriceQuery.data]);
 
-    const positionsQuery = usePositionsQuery(networkId, { enabled: networkId !== undefined });
-    const positions = positionsQuery.isSuccess ? positionsQuery.data : { up: 0, down: 0 };
+    useEffect(() => {
+        if (royaleFooterQuery.isSuccess) {
+            setRoyaleStatsData(royaleFooterQuery.data);
+        }
+    }, [royaleFooterQuery.isSuccess, royaleFooterQuery.data]);
 
-    const ethPriceQuery = useEthPriceQuery(thalesRoyalData?.priceFeedAddress as any, {
-        enabled: thalesRoyalData !== undefined,
-    });
-    const ethPrice = ethPriceQuery.isSuccess ? ethPriceQuery.data : '';
+    useEffect(() => {
+        setSelectedSeason(latestSeasonQuery.data || 0);
+    }, [latestSeasonQuery.isSuccess, latestSeasonQuery.data]);
 
     useEffect(() => {
         const selectedPageParameter = queryString.parse(location.search).page;
@@ -66,36 +87,6 @@ const ThalesRoyal: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (thalesRoyalData) {
-            if (selectedPage === 'royale') {
-                if (thalesRoyalData.round > 0) {
-                    history.push({
-                        pathname: location.pathname,
-                        search: queryString.stringify({
-                            page: selectedPage,
-                        }),
-                    });
-                } else {
-                    history.push({
-                        pathname: location.pathname,
-                        search: queryString.stringify({
-                            page: 'scoreboard',
-                        }),
-                    });
-                    setSelectedPage('scoreboard');
-                }
-            } else {
-                history.push({
-                    pathname: location.pathname,
-                    search: queryString.stringify({
-                        page: selectedPage,
-                    }),
-                });
-            }
-        }
-    }, [selectedPage, thalesRoyalData]);
-
-    useEffect(() => {
         const timeout = setTimeout(() => {
             !walletAddress ? setOpenWalletNotConnectedDialog(true) : setOpenWalletNotConnectedDialog(false);
         }, 2500);
@@ -105,7 +96,7 @@ const ThalesRoyal: React.FC = () => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            walletAddress && networkId !== 69 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
+            walletAddress && !isL2 ? setOpenNetworkWarningDialog(true) : setOpenNetworkWarningDialog(false);
         }, 2000);
 
         return () => clearTimeout(timeout);
@@ -134,114 +125,46 @@ const ThalesRoyal: React.FC = () => {
                 className={selectedPage === 'royale' ? 'wrapper--showBattle' : 'wrapper--showScoreboard'}
                 style={{ position: 'relative', paddingLeft: 30 }}
             >
-                <Header theme={theme} setTheme={setTheme} />
-                <Scoreboard
+                <Header
+                    latestSeason={latestSeason}
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                    theme={theme}
+                    setTheme={setTheme}
+                />
+                <ScoreboardPage
                     ethPrice={ethPrice}
                     positions={positions}
-                    royaleData={thalesRoyalData as any}
-                    user={user}
-                    users={users}
+                    royaleFooterData={royaleFooterData}
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                    latestSeason={latestSeason}
                 />
-                {thalesRoyalData && (
-                    <BattleRoyale
-                        ethPrice={ethPrice}
-                        positions={positions}
-                        royaleData={thalesRoyalData}
-                        showBattle={selectedPage === 'royale'}
-                        user={user}
-                    />
-                )}
+                <RoyaleArena
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleFooterData={royaleFooterData}
+                    latestSeason={latestSeason}
+                    selectedSeason={selectedSeason}
+                    showBattle={selectedPage === 'royale'}
+                />
+                <FooterV2
+                    ethPrice={ethPrice}
+                    positions={positions}
+                    royaleData={royaleFooterData}
+                    latestSeason={latestSeason}
+                    selectedPage={selectedPage}
+                    setSelectedPage={setSelectedPage}
+                    selectedSeason={selectedSeason}
+                    setSelectedSeason={setSelectedSeason}
+                />
             </Wrapper>
-            <Footer>
-                <Nav>
-                    {selectedPage !== 'royale' && (
-                        <NavButton onClick={() => navigateTo(ROUTES.Options.Home)}>
-                            <i className="icon icon--left" />
-                            <Text> Thales dApp </Text>
-                        </NavButton>
-                    )}
-                    {selectedPage === 'royale' && (
-                        <NavButton onClick={() => setSelectedPage('scoreboard')}>
-                            <i className="icon icon--left" />
-                            <Text>{t('options.royale.footer.scoreboard')}</Text>
-                        </NavButton>
-                    )}
-                    {selectedPage !== 'royale' && (
-                        <NavButton
-                            className={thalesRoyalData?.round === 0 ? 'disabled' : ''}
-                            onClick={() => {
-                                if (thalesRoyalData && thalesRoyalData.round > 0) {
-                                    setSelectedPage('royale');
-                                }
-                            }}
-                        >
-                            <Separator>|</Separator>
-                            <Text>{t('options.royale.footer.royale')}</Text>
-                            <i className="icon icon--right" />
-                        </NavButton>
-                    )}
-                </Nav>
-                <div />
-                <StatsButtonWrapper>
-                    <StatsIcon onClick={() => setShowStats(true)} className="icon icon--stats" />
-                    <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
-                </StatsButtonWrapper>
-            </Footer>
-            <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
-                <CloseStats onClick={() => setShowStats(false)}>✖</CloseStats>
-                {!!user?.deathRound && (
-                    <div>
-                        <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
-                        <span>
-                            {`${t('options.royale.footer.rd')} `}
-                            {user.deathRound}
-                        </span>
-                    </div>
-                )}
-                <div>
-                    <span>{t('options.royale.footer.current-positions')}:</span>
-                    <span>{t('options.royale.footer.up')}</span>
-                    <span>{`${positions.up} ${t('options.royale.footer.vs')}  ${positions.down}`}</span>
-                    <span>{t('options.royale.footer.down')}</span>
-                </div>
-                <div>
-                    <span>
-                        {t('options.royale.footer.current')} ETH {t('options.royale.footer.price')}:
-                    </span>
-                    <span>${ethPrice}</span>
-                    <InfoIconContainer>
-                        <RoyaleTooltip title={t('options.royale.footer.price-source')}>
-                            <StyledInfoIcon />
-                        </RoyaleTooltip>
-                    </InfoIconContainer>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.current-reward-per-player')}:</span>
-                    <span>{(10000 / (Number(thalesRoyalData?.alivePlayers?.length) || 1)).toFixed(2)} THALES</span>
-                </div>
-                <div>
-                    <span>{t('options.royale.footer.players-alive')}:</span>
-                    <span>{thalesRoyalData?.alivePlayers?.length + ' / ' + thalesRoyalData?.players?.length}</span>
-                </div>
-            </InfoSection>
+
             <WrongNetworkDialog open={openNetworkWarningDialog} setOpen={setOpenNetworkWarningDialog} />
             <WalletNotConnectedDialog open={openWalletNotConnectedDialog} setOpen={setOpenWalletNotConnectedDialog} />
         </RoyaleBackground>
     );
 };
-
-const InfoIconContainer = styled.span`
-    display: inline-flex;
-    align-items: center;
-`;
-
-const StyledInfoIcon = styled(InfoIcon)`
-    width: 15px;
-    height: 15px;
-    path {
-        fill: var(--color);
-    }
-`;
 
 export const RoyaleBackground = styled(Background)`
     &.light-theme {
@@ -265,100 +188,6 @@ export const RoyaleBackground = styled(Background)`
             display: none;
         }
     }
-`;
-
-const Footer = styled.div`
-    position: fixed;
-    display: grid;
-    grid-template-columns: 2fr 5fr 2fr;
-    width: 100%;
-    padding: 50px;
-    align-items: flex-end;
-    @media (max-width: 1024px) {
-        position: absolute;
-        top: 0;
-        padding: 17px;
-        > * {
-            &:nth-child(1) {
-                justify-content: flex-start;
-            }
-            &:nth-child(2) {
-                display: none;
-            }
-            &:nth-child(3) {
-                display: none;
-            }
-        }
-    }
-    @media (min-width: 1025px) {
-        bottom: 0;
-    }
-`;
-
-const Separator = styled.span`
-    padding: 0px 10px;
-    @media (min-width: 1025px) {
-        display: none;
-    }
-`;
-
-const Nav = styled.div`
-    display: flex;
-    justify-content: space-between;
-    width: 275px;
-    @media (max-width: 1200px) {
-        width: auto;
-    }
-    @media (max-width: 1024px) {
-        width: 275px;
-    }
-`;
-
-const NavButton = styled(FlexDivCentered)`
-    justify-content: space-around;
-    cursor: pointer;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 20px;
-    line-height: 22px;
-    color: var(--color);
-    > span {
-        font-family: SansationLight !important;
-    }
-    &.disabled {
-        cursor: not-allowed;
-        opacity: 0.2;
-    }
-    img {
-        margin: 0 10px;
-    }
-`;
-
-const StatsButtonWrapper = styled.div`
-    font-style: normal;
-    font-weight: 300;
-    font-size: 20px;
-    line-height: 22px;
-    color: var(--color);
-    display: flex;
-    justify-content: flex-end;
-`;
-
-const StatsButton = styled.span`
-    cursor: pointer;
-    padding-left: 10px;
-    line-height: 27px;
-`;
-
-const CloseStats = styled.span`
-    cursor: pointer;
-    position: absolute;
-    top: 5px;
-    right: 10px;
-`;
-
-const StatsIcon = styled.i`
-    cursor: pointer;
 `;
 
 export const InfoSection = styled.div`

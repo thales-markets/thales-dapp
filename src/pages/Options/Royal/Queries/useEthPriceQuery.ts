@@ -1,18 +1,18 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import { ethers } from 'ethers';
-import priceFeed from 'utils/contracts/priceFeed';
+import snxJSConnector from 'utils/snxJSConnector';
 
-const useEthPriceQuery = (priceFeedContractAddress: string, options?: UseQueryOptions<any>) => {
+const useEthPriceQuery = (options?: UseQueryOptions<any>) => {
     return useQuery<any>(
-        QUERY_KEYS.Royale.EthPrice(priceFeedContractAddress),
+        QUERY_KEYS.Royale.EthPrice(),
         async () => {
-            console.log('Price Query', priceFeedContractAddress);
-            if (!priceFeedContractAddress) return;
-            const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-            const priceFeedContract = new ethers.Contract(priceFeedContractAddress, priceFeed.abi, provider);
-            const currencies = await priceFeedContract.getCurrencies();
-            return ethers.utils.formatEther(await priceFeedContract.rateForCurrency(currencies[2]));
+            const { priceFeedContract } = snxJSConnector;
+
+            if (priceFeedContract) {
+                const currencies = await priceFeedContract.getCurrencies();
+                return ethers.utils.formatEther(await priceFeedContract.rateForCurrency(currencies[1]));
+            }
         },
         {
             refetchInterval: 5000,
