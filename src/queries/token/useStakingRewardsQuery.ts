@@ -5,8 +5,6 @@ import { NetworkId } from '../../utils/network';
 import { StakingReward } from 'types/token';
 import { bigNumberFormatter } from 'utils/formatters/ethers';
 
-// const BALANCE_THRESHOLD = 0.0001;
-
 const useStakingRewardsQuery = (
     walletAddress: string,
     networkId: NetworkId,

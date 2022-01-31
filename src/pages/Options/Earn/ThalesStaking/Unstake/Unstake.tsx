@@ -17,7 +17,7 @@ import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryCo
 import { ethers } from 'ethers';
 import NumericInput from '../../../Market/components/NumericInput';
 import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from '../../../Market/components';
-import { formatCurrencyWithKey } from '../../../../../utils/formatters/number';
+import { formatCurrencyWithKey, truncToDecimals } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
 import { withStyles } from '@material-ui/core';
@@ -385,7 +385,7 @@ const Unstake: React.FC = () => {
     const unstakeDuration = formattedDuration(unstakeIntervalToDuration, dateTimeTranslationMap, false);
 
     const onMaxClick = () => {
-        setAmountToUnstake(thalesStaked);
+        setAmountToUnstake(truncToDecimals(thalesStaked, 8));
     };
 
     useEffect(() => {

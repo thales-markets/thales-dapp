@@ -35,7 +35,7 @@ const Vest: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [isClaiming, setIsClaiming] = useState(false);
-    const [claimable, setClaimable] = useState('0');
+    const [claimable, setClaimable] = useState<number | string>('0');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);

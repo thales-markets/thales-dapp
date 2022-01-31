@@ -1,5 +1,4 @@
 import { useQuery, UseQueryOptions } from 'react-query';
-import { ethers } from 'ethers';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
@@ -7,9 +6,9 @@ import { bigNumberFormatter } from '../../utils/formatters/ethers';
 
 type EscrowThalesQueryResponse = {
     escrowedBalance: number;
-    claimable: string;
-    totalEscrowBalanceNotIncludedInStaking: string;
-    totalEscrowedRewards: string;
+    claimable: number;
+    totalEscrowBalanceNotIncludedInStaking: number;
+    totalEscrowedRewards: number;
 };
 
 const useEscrowThalesQuery = (
@@ -22,9 +21,9 @@ const useEscrowThalesQuery = (
         async () => {
             const escrow = {
                 escrowedBalance: 0,
-                claimable: '0',
-                totalEscrowBalanceNotIncludedInStaking: '0',
-                totalEscrowedRewards: '0',
+                claimable: 0,
+                totalEscrowBalanceNotIncludedInStaking: 0,
+                totalEscrowedRewards: 0,
             };
 
             try {
@@ -33,10 +32,10 @@ const useEscrowThalesQuery = (
                     (snxJSConnector as any).escrowThalesContract.totalEscrowedRewards(),
                 ]);
 
-                escrow.totalEscrowBalanceNotIncludedInStaking = ethers.utils.formatEther(
+                escrow.totalEscrowBalanceNotIncludedInStaking = bigNumberFormatter(
                     totalEscrowBalanceNotIncludedInStaking
                 );
-                escrow.totalEscrowedRewards = ethers.utils.formatEther(totalEscrowedRewards);
+                escrow.totalEscrowedRewards = bigNumberFormatter(totalEscrowedRewards);
 
                 if (walletAddress !== '') {
                     const [escrowedBalance, claimable] = await Promise.all([
@@ -45,7 +44,7 @@ const useEscrowThalesQuery = (
                     ]);
 
                     escrow.escrowedBalance = bigNumberFormatter(escrowedBalance);
-                    escrow.claimable = ethers.utils.formatEther(claimable);
+                    escrow.claimable = bigNumberFormatter(claimable);
                 }
             } catch {}
 
