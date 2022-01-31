@@ -81,7 +81,7 @@ const GlobalStake: React.FC = () => {
 
     const myStakedShare = useMemo(
         () =>
-            (totalStakedAmount === 0 ? 0 : 100 * (Number(thalesStaked) + Number(escrowedBalance))) / totalThalesStaked,
+            totalThalesStaked === 0 ? 0 : (100 * (Number(thalesStaked) + Number(escrowedBalance))) / totalThalesStaked,
         [thalesStaked, totalThalesStaked, escrowedBalance]
     );
 
