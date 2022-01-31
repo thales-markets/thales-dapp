@@ -28,14 +28,6 @@ const useStakingRewardsQuery = (
                 snxVolumeRewardsMultiplier,
                 baseRewardsPool,
                 bonusRewardsPool,
-                rewards,
-                baseRewards,
-                totalBonus,
-                snxBonus,
-                ammBonus,
-                thalesRoyaleBonus,
-                snxStaked,
-                ammVolume,
             ] = await Promise.all([
                 (snxJSConnector as any).stakingThalesContract.paused(),
                 (snxJSConnector as any).stakingThalesContract.periodsOfStaking(),
@@ -49,50 +41,81 @@ const useStakingRewardsQuery = (
                 (snxJSConnector as any).stakingThalesContract.SNXVolumeRewardsMultiplier(),
                 (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
                 (snxJSConnector as any).stakingThalesContract.periodExtraReward(),
-                (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getBaseReward(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getTotalBonus(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getSNXBonus(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getAMMBonus(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getThalesRoyaleBonus(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
-                (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
             ]);
 
             const stakingRewards: StakingReward = {
-                closingDate: Number(lastPeriodTimeStamp) * 1000 + Number(durationPeriod) * 1000,
-                period: period,
                 isClaimPaused: paused,
-                hasClaimRights: bigNumberFormatter(rewards) > 0,
-                claimed:
-                    Number(
-                        await (snxJSConnector as any).stakingThalesContract.getLastPeriodOfClaimedRewards(walletAddress)
-                    ) === Number(period),
+                period: period,
+                closingDate: Number(lastPeriodTimeStamp) * 1000 + Number(durationPeriod) * 1000,
                 canClosePeriod,
-                baseRewardsPool: bigNumberFormatter(baseRewardsPool),
-                bonusRewardsPool: bigNumberFormatter(bonusRewardsPool),
+                maxSnxBonusPercentage: Number(maxSNXRewardsPercentage),
+                maxAmmBonusPercentage: Number(maxAMMVolumeRewardsPercentage),
+                maxThalesRoyaleBonusPercentage: Number(maxThalesRoyaleRewardsPercentage),
                 bonusRewardsPoolPercentage:
                     Number(maxSNXRewardsPercentage) +
                     Number(maxAMMVolumeRewardsPercentage) +
                     Number(maxThalesRoyaleRewardsPercentage),
-                rewards: bigNumberFormatter(rewards),
-                baseRewards: bigNumberFormatter(baseRewards),
-                totalBonus: bigNumberFormatter(totalBonus),
-                snxBonus: bigNumberFormatter(snxBonus),
-                ammBonus: bigNumberFormatter(ammBonus),
-                thalesRoyaleBonus: bigNumberFormatter(thalesRoyaleBonus),
-                maxSnxBonusPercentage: Number(maxSNXRewardsPercentage),
-                maxAmmBonusPercentage: Number(maxAMMVolumeRewardsPercentage),
-                maxThalesRoyaleBonusPercentage: Number(maxThalesRoyaleRewardsPercentage),
                 ammVolumeRewardsMultiplier: Number(ammVolumeRewardsMultiplier),
                 snxVolumeRewardsMultiplier: Number(snxVolumeRewardsMultiplier),
-                maxSnxBonus: (bigNumberFormatter(baseRewards) * Number(maxSNXRewardsPercentage)) / 100,
-                maxAmmBonus: (bigNumberFormatter(baseRewards) * Number(maxAMMVolumeRewardsPercentage)) / 100,
-                maxThalesRoyaleBonus:
-                    (bigNumberFormatter(baseRewards) * Number(maxThalesRoyaleRewardsPercentage)) / 100,
-                snxStaked: bigNumberFormatter(snxStaked),
-                ammVolume: bigNumberFormatter(ammVolume),
+                baseRewardsPool: bigNumberFormatter(baseRewardsPool),
+                bonusRewardsPool: bigNumberFormatter(bonusRewardsPool),
+
+                hasClaimRights: false,
+                claimed: false,
+                rewards: 0,
+                baseRewards: 0,
+                totalBonus: 0,
+                snxBonus: 0,
+                ammBonus: 0,
+                thalesRoyaleBonus: 0,
+                maxSnxBonus: 0,
+                maxAmmBonus: 0,
+                maxThalesRoyaleBonus: 0,
+                snxStaked: 0,
+                ammVolume: 0,
             };
+
+            if (walletAddress !== '') {
+                const [
+                    rewards,
+                    baseRewards,
+                    totalBonus,
+                    snxBonus,
+                    ammBonus,
+                    thalesRoyaleBonus,
+                    snxStaked,
+                    ammVolume,
+                ] = await Promise.all([
+                    (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getBaseReward(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getTotalBonus(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getSNXBonus(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getAMMBonus(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getThalesRoyaleBonus(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
+                    (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
+                ]);
+
+                stakingRewards.hasClaimRights = bigNumberFormatter(rewards) > 0;
+                stakingRewards.claimed =
+                    Number(
+                        await (snxJSConnector as any).stakingThalesContract.getLastPeriodOfClaimedRewards(walletAddress)
+                    ) === Number(period);
+                stakingRewards.rewards = bigNumberFormatter(rewards);
+                stakingRewards.baseRewards = bigNumberFormatter(baseRewards);
+                stakingRewards.totalBonus = bigNumberFormatter(totalBonus);
+                stakingRewards.snxBonus = bigNumberFormatter(snxBonus);
+                stakingRewards.ammBonus = bigNumberFormatter(ammBonus);
+                stakingRewards.thalesRoyaleBonus = bigNumberFormatter(thalesRoyaleBonus);
+                stakingRewards.maxSnxBonus = (bigNumberFormatter(baseRewards) * Number(maxSNXRewardsPercentage)) / 100;
+                stakingRewards.maxAmmBonus =
+                    (bigNumberFormatter(baseRewards) * Number(maxAMMVolumeRewardsPercentage)) / 100;
+                stakingRewards.maxThalesRoyaleBonus =
+                    (bigNumberFormatter(baseRewards) * Number(maxThalesRoyaleRewardsPercentage)) / 100;
+                stakingRewards.snxStaked = bigNumberFormatter(snxStaked);
+                stakingRewards.ammVolume = bigNumberFormatter(ammVolume);
+            }
+
             return stakingRewards;
         },
         {

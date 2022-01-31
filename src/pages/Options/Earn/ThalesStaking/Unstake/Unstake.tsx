@@ -29,6 +29,7 @@ import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
 import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import SimpleLoader from '../../components/SimpleLoader';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -445,7 +446,15 @@ const Unstake: React.FC = () => {
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
-                        {formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)}
+                        {isWalletConnected ? (
+                            stakingThalesQuery.isLoading ? (
+                                <SimpleLoader />
+                            ) : (
+                                formatCurrencyWithKey(THALES_CURRENCY, thalesStaked)
+                            )
+                        ) : (
+                            '-'
+                        )}
                         <MaxButton
                             disabled={isUnstakingInContract || isUnstaking || isCanceling || !isWalletConnected}
                             onClick={onMaxClick}

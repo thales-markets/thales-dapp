@@ -64,7 +64,7 @@ const StakingRewards: React.FC = () => {
     const { stakingThalesContract } = snxJSConnector as any;
 
     const stakingRewardsQuery = useStakingRewardsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected && !!stakingThalesContract,
+        enabled: isAppReady && !!stakingThalesContract,
     });
 
     useEffect(() => {
@@ -467,7 +467,8 @@ const StakingRewards: React.FC = () => {
                         {stakingRewards &&
                             !stakingRewards.isClaimPaused &&
                             !stakingRewards.claimed &&
-                            !stakingRewards.hasClaimRights && (
+                            !stakingRewards.hasClaimRights &&
+                            isWalletConnected && (
                                 <ClaimMessage>
                                     {t('options.earn.thales-staking.staking-rewards.not-eligible-message')}
                                 </ClaimMessage>
