@@ -103,7 +103,16 @@
         "newest-blog-posts": "Последние сообщения в блоге",
         "a2": "Набор смарт-контрактов, составляющих Thales, использует не подлежащий цензуре <bold>sUSD в качестве залога</bold>, неизменный источник правды для рыночных расчетов из потоков данных <bold>Chainlink</bold>, а также все преимущества (скорость, затраты и безопасность) сети, ориентированной на сводные данные, например <bold>Optimism.</bold>",
         "language": "Язык",
-        "learn-more": "Выучить больше"
+        "learn-more": "Выучить больше",
+        "footer": {
+            "language": "Язык",
+            "privacy-policy": "Политика конфиденциальности",
+            "theme": "тема",
+            "terms-of-use": "Условия эксплуатации",
+            "etherscan": "Этерскан",
+            "brand-assets": "Активы бренда",
+            "all-rights-reserved": "© {{year}} THALES DAO Все права защищены."
+        }
     },
     "maintenance-page": {
         "title": "Оставайтесь с нами, продолжние следует...",
@@ -1021,7 +1030,7 @@
             "scoreboard": {
                 "table-header": {
                     "status": "Положение дел",
-                    "number": "Игрок <без> № <без>",
+                    "number": "Игрок <sans> № <sans>",
                     "avatar": "Аватар",
                     "name": "Отображаемое имя"
                 },
@@ -1040,12 +1049,15 @@
                 "verify": "# thales-royale-verify и введите:",
                 "starts": "Thales Royale начинается в:",
                 "period-expired": "Срок регистрации истек",
+                "season-not-started": "Сезон еще не начался",
+                "approve-susd": "Одобрить sUSD",
+                "buy-in": "Бай-ин: {{buyInAmount}}sUSD",
                 "dead": "мертвых",
                 "round-starts": "Следующий раунд начинается через:",
                 "start-royale": "Запустить Thales Royale",
                 "question": "Есть ли у вас все необходимое, чтобы победить в соревновании и выйти в финальный раунд?",
                 "alive": "в живых",
-                "player-no": "Игрок <без> № <без>:",
+                "player-no": "Игрок <sans> № <sans>:",
                 "thales-default": "Thales: Торговля бинарными опционами на платформе Synthetix.",
                 "round-positioning": " пока не закончится позиционирование",
                 "eliminated": "Вы были исключены",
@@ -1054,7 +1066,14 @@
                 "winner": "победитель",
                 "info2": "Thales Royale - это <bold> игра с последовательным предсказанием, где победитель получает все </bold>, в которую играют в 6 раундов.",
                 "ends": "Thales Royale заканчивается:",
-                "round-ending": " до конца раунда {{round}}"
+                "round-ending": " до конца раунда {{round}}",
+                "season-ready-in": "Следующий сезон готов начать через:",
+                "start-season": "Начать сезон",
+                "season": "Время года",
+                "season-finished": "Сезон завершен",
+                "loading-season": "Загрузка",
+                "no-users": "Нет пользователей",
+                "info7": "<italic>Удачи и пусть битва начнется!</italic>"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",
@@ -1063,16 +1082,23 @@
                 "title": "Вы в сети Optimism Kovan"
             },
             "wrong-network-dialog": {
-                "parameters": "Параметры ОП Кован",
+                "parameters": "Параметры ОП Ethereum",
                 "return-to-dapp": "Вернуться в приложение Thales dApp",
                 "title": "Неправильная сеть!",
-                "button": "Переключиться на Optimism Kovan",
-                "message": "Пожалуйста, переключитесь на Optimism Kovan, чтобы продолжить"
+                "button": "Переключиться на Optimistic Ethereum",
+                "message": "Пожалуйста, переключитесь на Optimistic Ethereum, чтобы продолжить"
             },
             "wallet-not-connected-dialog": {
                 "button": "Подключить кошелек",
                 "title": "Кошелек не подключен",
                 "message": "Пожалуйста, подключите свой кошелек, чтобы продолжить"
+            },
+            "edit-user-data-dialog": {
+                "avatar": "Изображение аватара",
+                "change-display-name": "Изменить отображаемое имя",
+                "enter-display-name": "Введите отображаемое имя",
+                "change-avatar": "Введите URL-адрес аватара",
+                "avatar-tip": "Введите действительный URL, оканчивающийся на .jpg, .jpeg, .png, .svg или .gif."
             }
         },
         "amm-mining": {

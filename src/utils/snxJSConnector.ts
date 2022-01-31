@@ -10,6 +10,7 @@ import escrowThales from './contracts/escrowThales';
 import priceFeedContract from './contracts/priceFeedContract';
 import limitOrderProtocol1inchContract from './contracts/limitOrderProtocol1inchContract';
 import ammContract from './contracts/ammContract';
+import thalesRoyaleContract from './contracts/thalesRoyalContract';
 import thalesExchangerContract from './contracts/thalesExchangerContract';
 import opThalesContract from './contracts/opThalesContract';
 import { synthetix, SynthetixJS, Config } from '@synthetixio/contracts-interface';
@@ -30,6 +31,7 @@ type SnxJSConnector = {
     priceFeedContract?: ethers.Contract;
     limitOrderProtocol1inchContract?: ethers.Contract;
     ammContract?: ethers.Contract;
+    thalesRoyaleContract?: ethers.Contract;
     thalesExchangerContract?: ethers.Contract;
     opThalesTokenContract?: ethers.Contract;
     setContractSettings: (contractSettings: Config) => void;
@@ -61,6 +63,7 @@ const snxJSConnector: SnxJSConnector = {
             contractSettings
         );
         this.ammContract = conditionalInitializeContract(ammContract, contractSettings);
+        this.thalesRoyaleContract = conditionalInitializeContract(thalesRoyaleContract, contractSettings);
         this.thalesExchangerContract = conditionalInitializeContract(thalesExchangerContract, contractSettings);
         this.opThalesTokenContract = conditionalInitializeContract(opThalesContract, contractSettings);
     },

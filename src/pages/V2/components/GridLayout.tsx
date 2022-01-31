@@ -211,6 +211,10 @@ const LearnButton = styled(Button)`
     cursor: pointer;
     transition: 0.2s;
     z-index: 4;
+    & > a {
+        width: 100%;
+        height: 100%;
+    }
     &:hover {
         transform: scale(1.2);
     }
@@ -299,6 +303,9 @@ const ContIV = styled(ContWrapper)`
 const Image = styled.img`
     height: 100%;
     object-fit: contain;
+    @media (max-width: 600px) {
+        position: absolute;
+    }
 `;
 
 const AnimationSvg = styled.object``;
@@ -346,7 +353,7 @@ const ThalesImageII = styled.div`
 `;
 
 const ThalesImageIII = styled.div`
-    grid-column-start: 20;
+    grid-column-start: 19;
     grid-column-end: 45;
     grid-row-start: 49;
     grid-row-end: 69;

@@ -79,3 +79,12 @@ export const OP_USDT = {
     name: 'Tether USD',
     symbol: 'USDT',
 };
+
+export const OP_KOVAN_SUSD = {
+    address: '0xaA5068dC2B3AADE533d3e52C6eeaadC6a8154c57',
+    decimals: 6,
+    logoURI: 'https://tokens.1inch.io/0x57ab1ec28d129707052df4df418d58a2d46d5f51.png',
+    name: 'Synth sUSD',
+    symbol: 'sUSD',
+    synth: true,
+};

@@ -6,7 +6,6 @@ const useEthBalanceQuery = (walletAddress: string, options?: UseQueryOptions<str
     return useQuery<string>(
         QUERY_KEYS.Royale.EthBalance(walletAddress),
         async () => {
-            console.log('Balance Query');
             const provider = new ethers.providers.Web3Provider((window as any).ethereum);
             const balance = await provider.getBalance(walletAddress);
             return Number(ethers.utils.formatEther(balance)).toFixed(4);

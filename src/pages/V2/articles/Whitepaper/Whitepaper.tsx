@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Background, Theme } from '../../Home';
 import styled from 'styled-components';
 import Header from '../../components/Header/Header';
@@ -25,9 +25,19 @@ const cookies = new Cookies();
 const Whitepaper: React.FC = () => {
     const { t } = useTranslation();
     const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
+
+    useEffect(() => {
+        const body = document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+    }, [theme]);
+
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
-            <Wrapper size={window.innerWidth}>
+            <Wrapper>
                 <Header theme={theme} setTheme={setTheme} />
                 <Content>
                     <FlexDivCentered>
@@ -157,32 +167,20 @@ const Whitepaper: React.FC = () => {
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section1')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section2')}</Paragraph>
                     <Paragraph>{t('articles.whitepaper.paragraphs.4.section3')}</Paragraph>
-                    <Footer className="article" theme={theme} />
+                    <Footer className="article" theme={theme} setTheme={setTheme} />
                 </Content>
             </Wrapper>
         </Background>
     );
 };
 
-const Wrapper = styled.div<{ size: number }>`
+const Wrapper = styled.div`
     display: grid;
     width: 100%;
     margin: auto;
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(325, 2em);
-    @media (max-width: 1025px) {
-        grid-template-rows: repeat(${(props) => Math.round((1024 - props.size) / 3.5) + 325}, 2em);
-    }
-    @media (max-width: 850px) {
-        grid-template-rows: repeat(${(props) => Math.round((860 - props.size) / 3) + 325}, 2em);
-    }
-    @media (max-width: 769px) {
-        grid-template-rows: repeat(${(props) => Math.round((850 - props.size) / 2.5) + 325}, 2em);
-    }
-    @media (max-width: 451px) {
-        grid-template-rows: repeat(${(props) => Math.round((768 - props.size) / 1.6) + 325}, 2em);
-    }
 `;
 
 const Content = styled.div`
@@ -190,6 +188,7 @@ const Content = styled.div`
     grid-column-end: 48;
     grid-row-start: 8;
     grid-row-end: 80;
+    width: 100%;
     @media (max-width: 1024px) {
         position: absolute;
         display: block;

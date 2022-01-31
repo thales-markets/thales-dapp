@@ -48,7 +48,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                             {t('header.links.learn.whitepaper')}
                         </Link>
 
-                        <Link href="#faq-section">{t('header.links.faq')}</Link>
+                        <Link href="../#faq-section">{t('header.links.faq')}</Link>
                     </DropDownContainer>
                 </PositionedContainer>
                 <Link target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
@@ -66,7 +66,6 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
             </Links>
             <ToggleContainer
                 onClick={() => {
-                    console.log('clicked');
                     cookies.set('home-theme', theme === Theme.Light ? Theme.Dark : Theme.Light);
                     setTheme(theme === Theme.Light ? Theme.Dark : Theme.Light);
                 }}
@@ -88,11 +87,7 @@ const Header: React.FC<HeaderInput> = ({ theme, setTheme }) => {
                 <LanguageSelector />
             </LanguageContainer>
             <ButtonContainer>
-                <Link
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => navigateTo(ROUTES.Options.Home, false, false, 'show')}
-                >
+                <Link target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
                     {t('landing-page.use-app')}
                 </Link>
                 <i className="icon-home icon-home--right" />
@@ -183,6 +178,7 @@ const Logo = styled.i`
     color: var(--color);
     z-index: 2;
     flex: 1;
+    cursor: pointer;
 `;
 
 const CenteredDiv = styled.div`

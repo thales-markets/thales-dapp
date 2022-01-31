@@ -19,9 +19,11 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
         setLanguageDropdownIsOpen(isOpen);
     };
 
-    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
-        ? i18n.language
-        : DEFAULT_LANGUAGE;
+    // const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+    //     ? i18n.language
+    //     : DEFAULT_LANGUAGE;
+
+    const selectedLanguage = DEFAULT_LANGUAGE;
 
     return (
         <>
@@ -40,7 +42,7 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
                                 <DropDownItem
                                     key={language}
                                     onClick={() => {
-                                        i18n.changeLanguage(language);
+                                        i18n.changeLanguage(DEFAULT_LANGUAGE);
                                         setDropdownIsOpen(false);
                                     }}
                                 >

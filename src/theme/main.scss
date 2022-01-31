@@ -204,6 +204,21 @@ body {
         --color: #a1e1b4;
         --color-scrollbar-hover: #6e967a;
     }
+
+    &.light {
+        background: #f7f7f7;
+        scrollbar-color: #1b314f #dcdcdc;
+        --color-wrapper: #dcdcdc;
+        --color: #1b314f;
+        --color-scrollbar-hover: #1b314f;
+    }
+    &.dark {
+        background: #052040;
+        scrollbar-color: #f7f7f7 #1b314f;
+        --color-wrapper: #1b314f;
+        --color: #f7f7f7;
+        --color-scrollbar-hover: #f7f7f7;
+    }
 }
 
 a {
