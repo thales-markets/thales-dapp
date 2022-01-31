@@ -18,6 +18,7 @@ import { getIsOVM } from 'utils/network';
 
 import Currency from 'components/Currency/v2';
 import TimeRemaining from 'pages/Options/components/TimeRemaining';
+import MarketsGrid from '../../MarketsGrid';
 import { FlexDivRow } from 'theme/common';
 import TableGridSwitch from '../../../components/Input/TableGridSwitch';
 import SearchField from '../../../components/Input/SearchField';
@@ -25,7 +26,7 @@ import { TablePagination } from '@material-ui/core';
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 
-import MarketsGrid from '../../MarketsGrid';
+import { getSynthName } from 'utils/currency';
 
 import './main.scss';
 
@@ -86,6 +87,11 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     );
                 },
             },
+            {
+                id: 'assetFullName',
+                Header: t(`options.home.markets-table.asset-col`),
+                accessor: 'assetFullName',
+            },
             ...(isL2
                 ? [
                       {
@@ -143,6 +149,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         const processedMarkets = optionsMarkets.map((market) => {
             return {
                 asset: market.asset,
+                assetFullName: getSynthName(market.currencyKey),
                 availableLongs: market.availableLongs,
                 availableShorts: market.availableShorts,
                 longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
@@ -177,7 +184,10 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         {
             columns,
             data,
-            initalState: { pageIndex: 1 },
+            initalState: {
+                pageIndex: 1,
+                hiddenColumns: ['assetFullName'],
+            },
             autoResetSortBy: false,
             autoResetGlobalFilter: false,
             autoResetPage: false,
