@@ -474,7 +474,10 @@
                     "cancelUnstake": "No cancel unstaking transactions associated with this wallet.",
                     "unstake": "No unstake transactions associated with this wallet.",
                     "addToEscrow": "No add to escrow transactions associated with this wallet.",
-                    "vest": "No vest transactions associated with this wallet."
+                    "vest": "No vest transactions associated with this wallet.",
+                    "lpStake": "No LP stake transactions associated with this wallet.",
+                    "lpUnstake": "No LP unstake transactions associated with this wallet.",
+                    "lpClaimStakingRewards": "No LP staking rewards transactions associated with this wallet."
                 },
                 "types": {
                     "claimRetroAirdrop": "Claim retro airdrop",
@@ -486,7 +489,10 @@
                     "cancelUnstake": "Cancel unstaking",
                     "unstake": "Unstake",
                     "addToEscrow": "Add to escrow",
-                    "vest": "Vest"
+                    "vest": "Vest",
+                    "lpStake": "LP stake",
+                    "lpUnstake": "LP unstake",
+                    "lpClaimStakingRewards": "Claim LP staking rewards"
                 },
                 "filter": {
                     "all": "All",
@@ -499,7 +505,10 @@
                     "cancelUnstake": "Cancel unstaking",
                     "unstake": "Unstake",
                     "addToEscrow": "Add to escrow",
-                    "vest": "Vest"
+                    "vest": "Vest",
+                    "lpStake": "LP stake",
+                    "lpUnstake": "LP unstake",
+                    "lpClaimStakingRewards": "LP staking rewards"
                 }
             },
             "overview": {

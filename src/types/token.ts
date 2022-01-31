@@ -51,6 +51,9 @@ export enum TransactionFilterEnum {
     ADD_TO_ESCROW = 'addToEscrow',
     VEST = 'vest',
     CLAIM_MIGRATED_REWARDS = 'claimMigratedRewards',
+    LP_STAKE = 'lpStake',
+    LP_UNSTAKE = 'lpUnstake',
+    LP_CLAIM_STAKING_REWARDS = 'lpClaimStakingRewards',
 }
 
 export type TokenTransactions = TokenTransaction[];
