@@ -214,7 +214,7 @@ const Migrate: React.FC = () => {
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(thalesBalance, 4));
+        setAmount(truncToDecimals(thalesBalance, 8));
     };
 
     useEffect(() => {

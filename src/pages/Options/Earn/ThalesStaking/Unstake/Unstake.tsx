@@ -28,6 +28,7 @@ import { formattedDuration } from 'utils/formatters/date';
 import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
 import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const DEFAULT_UNSTAKE_PERIOD = 7 * 24 * 60 * 60;
 
@@ -204,7 +205,7 @@ const Unstake: React.FC = () => {
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToUnstake.toString());
-            const tx = await stakingThalesContractWithSigner.startUnstake(amount);
+            const tx = await stakingThalesContractWithSigner.startUnstake(amount, { gasLimit: MAX_L2_GAS_LIMIT });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -231,7 +232,7 @@ const Unstake: React.FC = () => {
             setTxErrorMessage(null);
             setIsUnstaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.unstake();
+            const tx = await stakingThalesContractWithSigner.unstake({ gasLimit: MAX_L2_GAS_LIMIT });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -256,7 +257,7 @@ const Unstake: React.FC = () => {
             setTxErrorMessage(null);
             setIsCanceling(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
-            const tx = await stakingThalesContractWithSigner.cancelUnstake();
+            const tx = await stakingThalesContractWithSigner.cancelUnstake({ gasLimit: MAX_L2_GAS_LIMIT });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

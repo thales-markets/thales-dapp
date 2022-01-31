@@ -25,6 +25,7 @@ import { ethers } from 'ethers';
 import { dispatchMarketNotification } from 'utils/options';
 import styled from 'styled-components';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const Vest: React.FC = () => {
     const { t } = useTranslation();
@@ -89,7 +90,9 @@ const Vest: React.FC = () => {
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
             const toVest = ethers.utils.parseEther(claimable.toString());
 
-            const tx = (await escrowThalesContractWithSigner.vest(toVest)) as ethers.ContractTransaction;
+            const tx = (await escrowThalesContractWithSigner.vest(toVest, {
+                gasLimit: MAX_L2_GAS_LIMIT,
+            })) as ethers.ContractTransaction;
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {

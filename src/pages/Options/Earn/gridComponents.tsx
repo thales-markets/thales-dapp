@@ -37,8 +37,14 @@ export const StakeInfoContent = styled.span`
     color: #f6f6fe;
 `;
 
-export const StakingRewardsItem = styled(StakeInfoItem)`
+export const StakingRewardsItem = styled(StakeInfoItem)<{
+    orderOnMobile?: number;
+}>`
     grid-column: span 3;
+    @media (max-width: 767px) {
+        grid-column: span 12 !important;
+        order: ${(props) => props.orderOnMobile ?? 10};
+    }
 `;
 
 export const StakingRewardsHeaderLabel = styled(StakeInfoContent)``;
@@ -75,6 +81,7 @@ export const GridAction = styled(FlexDivColumnCentered)`
     padding: 20px 100px;
     @media (max-width: 767px) {
         padding: 20px 20px;
+        order: 10;
     }
 `;
 

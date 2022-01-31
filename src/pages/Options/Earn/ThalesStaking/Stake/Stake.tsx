@@ -26,6 +26,7 @@ import { MaxButton, ThalesWalletAmountLabel } from '../../Migration/components';
 import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -133,7 +134,7 @@ const Stake: React.FC = () => {
             setIsStaking(true);
             const stakingThalesContractWithSigner = stakingThalesContract.connect((snxJSConnector as any).signer);
             const amount = ethers.utils.parseEther(amountToStake.toString());
-            const tx = await stakingThalesContractWithSigner.stake(amount);
+            const tx = await stakingThalesContractWithSigner.stake(amount, { gasLimit: MAX_L2_GAS_LIMIT });
             const txResult = await tx.wait();
 
             if (txResult && txResult.transactionHash) {
@@ -218,7 +219,7 @@ const Stake: React.FC = () => {
     };
 
     const onMaxClick = () => {
-        setAmountToStake(truncToDecimals(thalesBalance, 4));
+        setAmountToStake(truncToDecimals(thalesBalance, 8));
     };
 
     useEffect(() => {

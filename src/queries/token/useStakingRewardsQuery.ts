@@ -71,6 +71,10 @@ const useStakingRewardsQuery = (
                 canClosePeriod,
                 baseRewardsPool: bigNumberFormatter(baseRewardsPool),
                 bonusRewardsPool: bigNumberFormatter(bonusRewardsPool),
+                bonusRewardsPoolPercentage:
+                    Number(maxSNXRewardsPercentage) +
+                    Number(maxAMMVolumeRewardsPercentage) +
+                    Number(maxThalesRoyaleRewardsPercentage),
                 rewards: bigNumberFormatter(rewards),
                 baseRewards: bigNumberFormatter(baseRewards),
                 totalBonus: bigNumberFormatter(totalBonus),

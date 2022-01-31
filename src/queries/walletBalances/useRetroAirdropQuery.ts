@@ -19,7 +19,7 @@ const useRetroAirdropQuery = (walletAddress: string, networkId: NetworkId, optio
             const airdrop: Airdrop = {
                 isClaimPaused: false,
                 hasClaimRights: retroAirdropHash !== undefined,
-                claimed: true,
+                claimed: false,
             };
 
             if (retroAirdropHash) {

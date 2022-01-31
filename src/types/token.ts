@@ -71,6 +71,7 @@ export type StakingReward = {
     canClosePeriod: boolean;
     baseRewardsPool: number;
     bonusRewardsPool: number;
+    bonusRewardsPoolPercentage: number;
     rewards: number;
     baseRewards: number;
     totalBonus: number;

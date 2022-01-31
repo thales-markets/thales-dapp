@@ -35,6 +35,7 @@ import { LINKS } from 'constants/links';
 import styled from 'styled-components';
 import MigrationInfo from '../../components/MigrationInfo';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const RetroAirdrop: React.FC = () => {
     const { t } = useTranslation();
@@ -97,7 +98,8 @@ const RetroAirdrop: React.FC = () => {
                 const tx = (await airdropContractWithSigner.claim(
                     retroAirdrop.accountInfo.index,
                     retroAirdrop.accountInfo.rawBalance,
-                    retroAirdrop.accountInfo.proof
+                    retroAirdrop.accountInfo.proof,
+                    { gasLimit: MAX_L2_GAS_LIMIT }
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
@@ -193,15 +195,14 @@ const RetroAirdrop: React.FC = () => {
                                 {t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}
                             </ClaimMessage>
                         )}
-                        {retroAirdrop && retroAirdrop.hasClaimRights && (
+                        {retroAirdrop && retroAirdrop.hasClaimRights && retroAirdrop.claimed && (
+                            <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.claimed-message')}</ClaimMessage>
+                        )}
+                        {retroAirdrop && retroAirdrop.hasClaimRights && !retroAirdrop.claimed && (
                             <ClaimMessage>
-                                {quizCompleted && isClaimAvailable
+                                {quizCompleted
                                     ? t('options.earn.snx-stakers.retro-airdrop.completed-quiz')
-                                    : !quizCompleted && isClaimAvailable
-                                    ? t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')
-                                    : quizCompleted && !isClaimAvailable
-                                    ? t('options.earn.snx-stakers.retro-airdrop.claimed-message')
-                                    : t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}
+                                    : t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')}
                             </ClaimMessage>
                         )}
                     </ButtonContainerBottom>

@@ -229,7 +229,7 @@ const Swap: React.FC = () => {
     };
 
     const onMaxClick = () => {
-        setAmount(truncToDecimals(opThalesBalance));
+        setAmount(truncToDecimals(opThalesBalance, 8));
     };
 
     useEffect(() => {

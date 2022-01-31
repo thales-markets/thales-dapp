@@ -45,6 +45,8 @@ export const SectionHeader = styled(FlexDivRowCentered)`
         padding: 0px 5px;
         min-height: 25px;
         margin-bottom: 10px;
+        flex-direction: column;
+        align-items: start;
     }
 `;
 

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { /*ClaimMessage, */ EarnSection, SectionHeader } from '../../components';
 import { GridContainer, StakeInfoContent, StakeInfoItem, StakeInfoLabel } from '../../gridComponents';
+import { FlexDivRowCentered } from 'theme/common';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -96,7 +97,8 @@ const GlobalStake: React.FC = () => {
             <SectionHeader>
                 {t('options.earn.thales-staking.my-stake.global-staking-stats')}
                 <RewardsInfo>
-                    APR: {APR.toFixed(2)}%&nbsp;&nbsp;&nbsp;&nbsp;APY: {APY}%
+                    <span style={{ marginRight: 15 }}>APR: {APR.toFixed(2)}</span>
+                    <span>APY: {APY}%</span>
                 </RewardsInfo>
             </SectionHeader>
             <GridContainer>
@@ -122,24 +124,16 @@ const GlobalStake: React.FC = () => {
     );
 };
 
-const RewardsInfo = styled.span`
+const RewardsInfo = styled(FlexDivRowCentered)`
     font-weight: normal;
     font-size: 18px;
-    > * {
-        &:nth-child(2) {
-            padding-left: 20px;
-        }
-    }
-    @media (max-width: 767px) {
-        font-size: 14px;
-        display: flex;
-        > * {
-            &:nth-child(2) {
-                padding-left: 5px;
-            }
-        }
-    }
     text-align: end;
+    margin-left: 10px;
+    @media (max-width: 767px) {
+        margin-left: 0;
+        margin-top: 4px;
+        font-size: 14px;
+    }
 `;
 
 export default GlobalStake;

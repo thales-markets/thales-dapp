@@ -25,7 +25,7 @@ const useMigratedRewardsQuery = (
             const migratedRewards: MigratedReward = {
                 isClaimPaused: paused,
                 hasClaimRights: ongoingAirdropHash !== undefined && ongoingAirdropHash.balance !== '0',
-                claimed: true,
+                claimed: false,
             };
             if (ongoingAirdropHash) {
                 const balance = bigNumberFormatter(ongoingAirdropHash.balance);

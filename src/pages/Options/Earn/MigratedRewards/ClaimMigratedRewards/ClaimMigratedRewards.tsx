@@ -24,6 +24,7 @@ import {
 } from '../../gridComponents';
 import useMigratedRewardsQuery from 'queries/token/useMigratedRewardsQuery';
 import { DefaultSubmitButton } from 'pages/Options/Market/components';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 const ClaimMigratedRewards: React.FC = () => {
     const { t } = useTranslation();
@@ -112,7 +113,8 @@ const ClaimMigratedRewards: React.FC = () => {
                 const tx = (await ongoingAirdropContractWithSigner.claim(
                     migratedRewards.reward.index,
                     migratedRewards.reward.rawBalance,
-                    migratedRewards.reward.proof
+                    migratedRewards.reward.proof,
+                    { gasLimit: MAX_L2_GAS_LIMIT }
                 )) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
 
