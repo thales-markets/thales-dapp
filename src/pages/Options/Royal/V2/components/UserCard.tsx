@@ -20,6 +20,7 @@ import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
 import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
 import { FooterData } from './queries/useRoyaleFooterQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
+import { MAX_L2_GAS_LIMIT } from 'constants/options';
 
 type UserCardProps = {
     ethPrice: string;
@@ -85,7 +86,9 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         try {
             const { thalesRoyaleContract } = snxJSConnector;
             if (thalesRoyaleContract) {
-                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256);
+                const tx = await erc20Instance.approve(thalesRoyaleContract.address, ethers.constants.MaxUint256, {
+                    gasLimit: MAX_L2_GAS_LIMIT,
+                });
                 await tx.wait();
                 setAllowance(true);
             }
@@ -103,11 +106,15 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
         if (!user) return;
         if (royaleData.season === selectedSeason) {
             if (royaleData.signUpPeriod > new Date()) {
-                if (walletAddress && !user) {
+                if (user.status === UserStatus.NOTSIGNED) {
                     if (allowance) {
                         const buyInAmount = royaleData.buyInAmount;
                         return (
-                            <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
+                            <Button
+                                className={buyInAmount > Number(balance) ? 'disabled' : ''}
+                                disabled={buyInAmount > Number(balance)}
+                                onClick={signUp}
+                            >
                                 {t('options.royale.scoreboard.buy-in', { buyInAmount })}
                             </Button>
                         );
@@ -123,54 +130,28 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
                             </Button>
                         );
                     }
-                } else if (user) {
-                    if (user.status === UserStatus.NOTSIGNED) {
-                        if (allowance) {
-                            const buyInAmount = royaleData.buyInAmount;
-                            return (
-                                <Button disabled={buyInAmount > Number(balance)} onClick={signUp}>
-                                    {t('options.royale.scoreboard.buy-in', { buyInAmount })}
-                                </Button>
-                            );
-                        } else {
-                            return (
-                                <Button
-                                    onClick={async () => {
-                                        await approve();
-                                        updateBalanceAndAllowance(buyInToken);
-                                    }}
-                                >
-                                    {t('options.royale.scoreboard.approve-susd')}
-                                </Button>
-                            );
-                        }
-                    }
-                } else {
-                    return <Text>Please connect your wallet to compete</Text>;
                 }
             } else {
-                if (user) {
-                    if (user.status === UserStatus.RDY) {
-                        if (user.isAlive) {
-                            return <></>;
-                        } else {
-                            return (
-                                <DeadText>
-                                    <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
-                                    <span>
-                                        {` ${t('options.royale.footer.rd')} `}
-                                        {user.deathRound}
-                                    </span>
-                                </DeadText>
-                            );
-                        }
+                if (user.status === UserStatus.RDY) {
+                    if (user.isAlive) {
+                        return <></>;
+                    } else {
+                        return (
+                            <DeadText>
+                                <span>{t('options.royale.footer.you-were-eliminated-in')}</span>
+                                <span>
+                                    {` ${t('options.royale.footer.rd')} `}
+                                    {user.deathRound}
+                                </span>
+                            </DeadText>
+                        );
                     }
                 }
-                if (royaleData) {
-                    if (!royaleData.seasonStarted) {
-                        return;
-                    }
+
+                if (!royaleData.seasonStarted) {
+                    return;
                 }
+
                 if (royaleData.seasonFinished || (!royaleData.seasonStarted && !royaleData.canStartNewSeason)) {
                     return (
                         <DeadText>
