@@ -54,13 +54,15 @@ interface ManuCardProps {
 export const Overlay = styled.div`
     position: fixed;
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
     top: 0;
     left: 0;
-    background: #748bc6;
-    opacity: 0.4;
+    opacity: 1;
     z-index: 1;
-    backdrop-filter: blur(10px);
+    transition: opacity 2s;
+    background: linear-gradient(148.33deg, rgba(255, 255, 255, 0.06) -2.8%, rgba(255, 255, 255, 0.02) 106.83%);
+    box-shadow: 0px 25px 30px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(4px);
     &.show {
         display: block;
     }
