@@ -8,6 +8,8 @@ import { FlexDiv } from 'theme/common';
 import MarketCard from '../MarketCard/v2/MarketCard';
 import { PaginationWrapper } from '../MarketsTable/v2/MarketsTable';
 
+import { getSynthName } from 'utils/currency';
+
 type MarketsGridProps = {
     optionsMarkets: OptionsMarkets;
     exchangeRates: Rates | null;
@@ -29,13 +31,12 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
 
         if (filters?.searchQuery) {
             data = data.filter((market) => {
-                return Object.keys(market).some((property) => {
-                    return (
-                        (market as any)[property as any]?.toString().toLowerCase().indexOf(filters.searchQuery) != -1
-                    );
-                });
+                if (market?.asset.toLowerCase().includes(filters.searchQuery)) return market;
+                if (market?.strikePrice.toString().includes(filters.searchQuery)) return market;
+                if (getSynthName(market.currencyKey).toLowerCase().includes(filters.searchQuery)) return market;
             });
         }
+
         // if(filters?.primaryFilter == 'recentlyAdded')
 
         if (filters?.sort) {

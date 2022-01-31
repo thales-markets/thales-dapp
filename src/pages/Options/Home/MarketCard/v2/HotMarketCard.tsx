@@ -38,9 +38,8 @@ const HotMarketCard: React.FC<HotMarket> = ({
         setTime(formatTimeDifference(calculateDifference(timeRemaining)));
     }, 1000);
 
-    console.log('Address ', address);
     return (
-        <Card>
+        <Card address={address}>
             <AssetInfo>
                 <CurrencyIcon currencyKey={currencyKey} width="45px" height="45px" />
                 <AssetNameContainer>
@@ -66,7 +65,7 @@ const HotMarketCard: React.FC<HotMarket> = ({
     );
 };
 
-const Card = styled(MarketCardContainer)`
+const Card = styled(MarketCardContainer)<{ address?: string }>`
     padding: 20px;
     width: 195px;
     height: 316px;
