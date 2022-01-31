@@ -50,7 +50,6 @@ const useUserRoyalQuery = (
                 const royalePlayersDataUrl = BASE_URL + walletAddress;
                 const royalePlayersDataResponse = await fetch(royalePlayersDataUrl);
                 const royalePlayersDataResult = JSON.parse(await royalePlayersDataResponse.text());
-                console.log(royalePlayersDataResult);
                 const royalePlayerFromGraph = await thalesData.binaryOptions.thalesRoyalePlayers({
                     season: selectedSeason,
                     network: networkId,
