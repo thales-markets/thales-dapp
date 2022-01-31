@@ -21,6 +21,8 @@ type ScoreboardProps = {
     setSelectedSeason: (season: number) => void;
 };
 
+let showStatsUserSelection = true;
+
 export const FooterV2: React.FC<ScoreboardProps> = ({
     ethPrice,
     positions,
@@ -33,7 +35,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
 }) => {
     const { t } = useTranslation();
 
-    const [showStats, setShowStats] = useState(false);
+    const [showStats, setShowStats] = useState(true);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
 
     const allSeasons = useMemo(() => {
@@ -116,6 +118,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                         <Text
                                             onClick={() => {
                                                 if (allSeasons.length > 1) {
+                                                    setShowStats(showStatsUserSelection);
                                                     setSelectedSeason(option);
                                                     setShowSelectDropdown(false);
                                                 }
@@ -127,7 +130,12 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                                     ))}
 
                             {selectedSeason !== 0 ? (
-                                <Text onClick={setShowSelectDropdown.bind(this, true)}>
+                                <Text
+                                    onClick={() => {
+                                        setShowSelectDropdown(true);
+                                        setShowStats(false);
+                                    }}
+                                >
                                     {t('options.royale.scoreboard.season')} {selectedSeason}
                                     {!showSelectDropdown && allSeasons.length > 1 && (
                                         <Arrow className="icon icon--arrow-up" />
@@ -139,12 +147,34 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                         </SeasonSelector>
                     )}
 
-                    <StatsIcon onClick={() => setShowStats(true)} className="icon icon--stats" />
-                    <StatsButton onClick={() => setShowStats(true)}>{t('options.royale.footer.stats')}</StatsButton>
+                    <StatsIcon
+                        onClick={() => {
+                            showStatsUserSelection = !showStats;
+                            setShowStats(!showStats);
+                            setShowSelectDropdown(false);
+                        }}
+                        className="icon icon--stats"
+                    />
+                    <StatsButton
+                        onClick={() => {
+                            showStatsUserSelection = !showStats;
+                            setShowStats(!showStats);
+                            setShowSelectDropdown(false);
+                        }}
+                    >
+                        {t('options.royale.footer.stats')}
+                    </StatsButton>
                 </FooterButtonsWrapper>
             </Footer>
             <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
-                <CloseStats onClick={() => setShowStats(false)}>✖</CloseStats>
+                <CloseStats
+                    onClick={() => {
+                        showStatsUserSelection = false;
+                        setShowStats(false);
+                    }}
+                >
+                    ✖
+                </CloseStats>
                 <div>
                     <span>{t('options.royale.footer.current-positions')}:</span>
                     <span>{t('options.royale.footer.up')}</span>
@@ -171,7 +201,14 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                     <span>{royaleData?.playersAlive}</span>
                 </div>
             </InfoSection>
-            {showSelectDropdown && <Overlay onClick={() => setShowSelectDropdown(false)} />}
+            {showSelectDropdown && (
+                <Overlay
+                    onClick={() => {
+                        setShowStats(showStatsUserSelection);
+                        setShowSelectDropdown(false);
+                    }}
+                />
+            )}
         </>
     );
 };
@@ -299,7 +336,7 @@ const InfoSection = styled.div`
     position: fixed;
     z-index: 1000;
     right: 30px;
-    bottom: 30px;
+    bottom: 100px;
     background: var(--color-background);
     > * {
         margin-bottom: 0.1em;

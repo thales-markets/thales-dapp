@@ -197,11 +197,14 @@ const FooterIconsWrapper = styled(FlexDiv)`
     @media (max-width: 600px) {
         gap: 5em;
     }
+    @media (max-width: 450px) {
+        gap: 3em;
+    }
 `;
 
 const FooterLegalWrapper = styled(FlexDiv)`
     position: relative;
-    display: flex;
+    display: none;
     justify-content: center;
     margin-top: 10px;
     margin-bottom: 10px;

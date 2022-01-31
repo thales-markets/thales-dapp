@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Background, Theme } from '../../Home';
 import styled from 'styled-components';
 import Header from '../../components/Header/Header';
@@ -25,6 +25,16 @@ const cookies = new Cookies();
 const Whitepaper: React.FC = () => {
     const { t } = useTranslation();
     const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
+
+    useEffect(() => {
+        const body = document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+    }, [theme]);
+
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
             <Wrapper>
@@ -171,9 +181,6 @@ const Wrapper = styled.div`
     max-width: 1122px;
     grid-template-columns: repeat(51, 1fr);
     grid-template-rows: repeat(325, 2em);
-    @media (max-width: 600px) {
-        grid-template-rows: repeat(12, 20vmax);
-    }
 `;
 
 const Content = styled.div`

@@ -1077,7 +1077,8 @@
                 "season": "Время года",
                 "season-finished": "Сезон завершен",
                 "loading-season": "Загрузка",
-                "no-users": "Нет пользователей"
+                "no-users": "Нет пользователей",
+                "info7": "<italic>Удачи и пусть битва начнется!</italic>"
             },
             "redirect-dialog": {
                 "switch-to-mainnet": "Перейти на основную сеть Ethereum",

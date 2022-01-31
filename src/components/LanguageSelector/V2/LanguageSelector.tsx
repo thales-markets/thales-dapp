@@ -5,6 +5,7 @@ import i18n from 'i18n';
 import OutsideClickHandler from 'react-outside-click-handler';
 import styled from 'styled-components';
 import { DEFAULT_LANGUAGE, LanguageNameMap, SupportedLanguages } from 'i18n/config';
+import { LandingPageTooltip } from 'pages/Options/Market/components';
 
 type LanguageSelectorProps = {
     isBurger?: boolean;
@@ -19,9 +20,11 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
         setLanguageDropdownIsOpen(isOpen);
     };
 
-    const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
-        ? i18n.language
-        : DEFAULT_LANGUAGE;
+    // const selectedLanguage = (Object.values(SupportedLanguages) as string[]).includes(i18n.language)
+    //     ? i18n.language
+    //     : DEFAULT_LANGUAGE;
+
+    const selectedLanguage = DEFAULT_LANGUAGE;
 
     return (
         <>
@@ -40,14 +43,26 @@ export const LanguageSelectorV2: React.FC<LanguageSelectorProps> = ({ isBurger }
                                 <DropDownItem
                                     key={language}
                                     onClick={() => {
-                                        i18n.changeLanguage(language);
+                                        i18n.changeLanguage(DEFAULT_LANGUAGE);
                                         setDropdownIsOpen(false);
                                     }}
                                 >
                                     {LanguageFlag(language as any)}
-                                    <FlexDivCentered>
-                                        <LanguageName key={language}>{(LanguageNameMap as any)[language]}</LanguageName>
-                                    </FlexDivCentered>
+                                    {language !== SupportedLanguages.ENGLISH ? (
+                                        <LandingPageTooltip title="Coming soon">
+                                            <FlexDivCentered>
+                                                <LanguageName style={{ color: 'grey' }} key={language}>
+                                                    {(LanguageNameMap as any)[language] + '*'}
+                                                </LanguageName>
+                                            </FlexDivCentered>
+                                        </LandingPageTooltip>
+                                    ) : (
+                                        <FlexDivCentered>
+                                            <LanguageName key={language}>
+                                                {(LanguageNameMap as any)[language]}
+                                            </LanguageName>
+                                        </FlexDivCentered>
+                                    )}
                                 </DropDownItem>
                             ))}
                         </DropDown>
@@ -130,10 +145,10 @@ const LanguageFlag = (language: SupportedLanguages | any) => {
             return <FlagIcon className="icon-home icon-home--en" />;
 
         case SupportedLanguages.RUSSIAN:
-            return <FlagIcon className="icon-home icon-home--ru" />;
+            return <FlagIcon style={{ color: 'grey' }} className="icon-home icon-home--ru" />;
 
         case SupportedLanguages.CHINESE:
-            return <FlagIcon className="icon-home icon-home--ch" />;
+            return <FlagIcon style={{ color: 'grey' }} className="icon-home icon-home--ch" />;
 
         default:
             return <FlagIcon className="icon-home icon-home--en" />;
