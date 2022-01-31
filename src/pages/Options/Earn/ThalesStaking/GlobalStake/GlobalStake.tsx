@@ -63,8 +63,12 @@ const GlobalStake: React.FC = () => {
 
     const APR = useMemo(
         () =>
-            (Number(fixedPeriodReward) * 52 * 100) /
-            (Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking)),
+            totalStakedAmount === 0
+                ? 0
+                : (Number(fixedPeriodReward) * 52 * 100) /
+                  (Number(totalStakedAmount) +
+                      Number(totalEscrowedRewards) -
+                      Number(totalEscrowBalanceNotIncludedInStaking)),
         [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
@@ -75,11 +79,11 @@ const GlobalStake: React.FC = () => {
         [totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
 
-    const myStakedShare = useMemo(() => (100 * (Number(thalesStaked) + Number(escrowedBalance))) / totalThalesStaked, [
-        thalesStaked,
-        totalThalesStaked,
-        escrowedBalance,
-    ]);
+    const myStakedShare = useMemo(
+        () =>
+            (totalStakedAmount === 0 ? 0 : 100 * (Number(thalesStaked) + Number(escrowedBalance))) / totalThalesStaked,
+        [thalesStaked, totalThalesStaked, escrowedBalance]
+    );
 
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * Number(fixedPeriodReward), [myStakedShare]);
 
@@ -97,7 +101,7 @@ const GlobalStake: React.FC = () => {
             <SectionHeader>
                 {t('options.earn.thales-staking.my-stake.global-staking-stats')}
                 <RewardsInfo>
-                    <span style={{ marginRight: 15 }}>APR: {APR.toFixed(2)}</span>
+                    <span style={{ marginRight: 15 }}>APR: {APR.toFixed(2)}%</span>
                     <span>APY: {APY}%</span>
                 </RewardsInfo>
             </SectionHeader>

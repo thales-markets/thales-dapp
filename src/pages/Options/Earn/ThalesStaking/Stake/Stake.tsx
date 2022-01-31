@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, FullRow, SectionContentContainer, SectionHeader } from '../../components';
+import {
+    EarnSection,
+    FullRow,
+    SectionContentContainer,
+    SectionHeader,
+    StyledInfoIcon,
+    StyledMaterialTooltip,
+} from '../../components';
 import { formatCurrencyWithKey, truncToDecimals } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import { FlexDivCentered } from '../../../../../theme/common';
@@ -235,7 +242,18 @@ const Stake: React.FC = () => {
             orderOnTablet={4}
             style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
-            <SectionHeader>{t('options.earn.thales-staking.stake.stake')}</SectionHeader>
+            <SectionHeader>
+                <div>
+                    {t('options.earn.thales-staking.stake.stake')}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={t('options.earn.thales-staking.stake.info-tooltip') as string}
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </div>
+            </SectionHeader>
             <SectionContentContainer style={{ height: '100%' }}>
                 <InputContainer>
                     <NumericInput

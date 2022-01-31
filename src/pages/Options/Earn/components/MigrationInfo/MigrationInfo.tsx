@@ -1,19 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import { FlexDivCentered } from '../../../../../theme/common';
 import NetworkSwitch from 'components/NetworkSwitch';
+import { Tip20Link } from '../../components';
 
 type MigrationInfoProps = {
     messageKey: string;
 };
 
 const MigrationInfo: React.FC<MigrationInfoProps> = ({ messageKey }) => {
-    const { t } = useTranslation();
-
     return (
         <Conatiner>
-            <Message>{t(`migration.migration-messages.${messageKey}`)}</Message>
+            <Message>
+                <Trans
+                    i18nKey={`migration.migration-messages.${messageKey}`}
+                    components={[<span key="1" />, <Tip20Link key="2" />]}
+                />
+            </Message>
             <FlexDivCentered>
                 <NetworkSwitch hideL2DropDown />
             </FlexDivCentered>
@@ -42,6 +46,7 @@ const Message = styled(FlexDivCentered)`
     line-height: 44px;
     padding: 20px 0;
     text-align: center;
+    display: inline;
     @media (max-width: 767px) {
         font-size: 16px;
         line-height: 18px;

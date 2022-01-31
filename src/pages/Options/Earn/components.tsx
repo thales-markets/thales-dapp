@@ -1,8 +1,10 @@
+import React from 'react';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivCentered, FlexDivColumn, FlexDivColumnCentered, FlexDivRowCentered } from 'theme/common';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { LINKS } from 'constants/links';
 
 export const EarnSection = styled.section<{
     orderOnMobile?: number;
@@ -221,7 +223,12 @@ export const StyledInfoIcon = styled(InfoIcon)`
     min-height: 20px;
     margin-left: 10px;
     margin-bottom: -2px;
-    @media (max-width: 1024px) {
-        display: none;
-    }
 `;
+
+export const Tip20Link: React.FC = () => {
+    return (
+        <TooltipLink target="_blank" rel="noreferrer" href={LINKS.Token.TIP20}>
+            TIP-20
+        </TooltipLink>
+    );
+};

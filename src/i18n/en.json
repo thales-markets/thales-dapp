@@ -344,7 +344,8 @@
                     "staking": "Staking",
                     "available-to-stake": "Available to stake",
                     "amount-to-stake": "Amount to stake",
-                    "confirmation-message": "Tokens successfully staked"
+                    "confirmation-message": "Tokens successfully staked",
+                    "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction."
                 },
                 "my-stake": {
                     "my-stake": "My Staking Balance",
@@ -369,12 +370,13 @@
                     "unstake-confirmation-message": "Tokens successfully unstaked",
                     "unstaking": "Unstaking",
                     "amount-to-unstake": "Amount to unstake",
-                    "start-unstaking-tooltip": "During the 7-day unstaking cooldown you will not be able to stake or unstake more THALES.",
+                    "start-unstaking-tooltip": "During the unstaking cooldown you will not be able to stake or unstake more THALES.",
                     "cancel": "Cancel unstaking",
                     "canceling": "Canceling unstaking",
                     "cancel-confirmation-message": "Unstaking successfully canceled",
                     "network-fee-cancel": "Cancel",
-                    "network-fee-unstake": "Unstake"
+                    "network-fee-unstake": "Unstake",
+                    "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction."
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -405,9 +407,9 @@
                         "max-bonus-notice": "You have maximum bonus"
                     },
                     "bonus-button": {
-                        "snx-staking-label": "Stake SNX and get bonus THALES",
-                        "amm-label": "Trade more and get bonus THALES",
-                        "thales-royale-label": "Join Thales Royale and get bonus THALES"
+                        "snx-staking-label": "Stake more SNX to get more THALES bonus",
+                        "amm-label": "Trade more to get more THALES bonus",
+                        "thales-royale-label": "Join Thales Royale and get THALES bonus"
                     },
                     "bonus-tooltip": {
                         "snx-staking-title": "SNX staking bonus",
@@ -426,7 +428,8 @@
                         "title": "Migrated rewards",
                         "rewards-label": "Migrated rewards",
                         "claimed-message": "You have already claimed migrated rewards."
-                    }
+                    },
+                    "info-tooltip": "Unclaimed weekly rewards are forfeit."
                 }
             },
             "vesting": {
@@ -450,8 +453,8 @@
                     "text": "THALES ongoing rewards are subject to 10 weeks vesting. Escrowed THALES is calculated in your staked THALES balance."
                 },
                 "lp-staking": {
-                    "title": "You can provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",
-                    "button-text": "Click here to earn double rewards"
+                    "title": "You can provide liquidity for THALES/ETH pair and earn THALES rewards",
+                    "button-text": "Click here to earn THALES rewards"
                 }
             },
             "lp-staking": {
@@ -518,7 +521,7 @@
                 "price-tooltip-l2": "View on CoinGecko",
                 "market-cap-label": "Market cap",
                 "earn-label": "Earn LP rewards",
-                "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn double rewards THALES + DODO",
+                "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",
                 "earn-info-tooltip": "View guide on how to provide liquidity",
                 "circulating-supply-label": "Circulating supply",
                 "total-supply-label": "Total supply"
@@ -1439,10 +1442,10 @@
             "confirmation-message": "Tokens successfully swapped"
         },
         "migration-messages": {
-            "retro-airdrop": "Retro airdrop is available on L2.",
-            "retro-unlock": "This distribution is available on L1.",
-            "staking": "Staking logic has been migrated to L2.",
-            "vesting": "Staking logic has been migrated to L2."
+            "retro-airdrop": "<0>Retro airdrop has been migrated to L2 per </0><1 />.",
+            "retro-unlock": "<0>This distribution is available on L1 per </0><1 />.",
+            "staking": "<0>THALES Staking has been migrated to L2 per </0><1 />.",
+            "vesting": "<0>Escrowed THALES has been migrated to L2 per </0><1 />."
         },
         "migration-notice": {
             "text": "You can migrate THALES to L2 Optimistic Mainnet",

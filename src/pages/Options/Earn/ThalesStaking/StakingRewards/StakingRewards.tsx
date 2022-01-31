@@ -11,7 +11,14 @@ import { StakingReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { CRYPTO_CURRENCY_MAP, SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 import { refetchTokenQueries, refetchUserTokenTransactions } from 'utils/queryConnector';
-import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader, StyledMaterialTooltip } from '../../components';
+import {
+    ButtonContainer,
+    ClaimMessage,
+    EarnSection,
+    SectionHeader,
+    StyledInfoIcon,
+    StyledMaterialTooltip,
+} from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
@@ -34,6 +41,7 @@ import {
     MaxBonusNotice,
     BonusRewardButton,
     BonusRewardInnerButton,
+    StakingRewardsHeaderContent,
 } from '../../gridComponents';
 import useStakingRewardsQuery from 'queries/token/useStakingRewardsQuery';
 import { LINKS } from 'constants/links';
@@ -203,14 +211,14 @@ const StakingRewards: React.FC = () => {
         );
     };
 
-    const rewards = isClaimAvailable && stakingRewards ? stakingRewards.rewards : 0;
-    const baseRewards = isClaimAvailable && stakingRewards ? stakingRewards.baseRewards : 0;
-    const snxBonus = isClaimAvailable && stakingRewards ? stakingRewards.snxBonus : 0;
-    const ammBonus = isClaimAvailable && stakingRewards ? stakingRewards.ammBonus : 0;
-    const thalesRoyaleBonus = isClaimAvailable && stakingRewards ? stakingRewards.thalesRoyaleBonus : 0;
-    const maxSnxBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxSnxBonus : 0;
-    const maxAmmBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxAmmBonus : 0;
-    const maxThalesRoyaleBonus = isClaimAvailable && stakingRewards ? stakingRewards.maxThalesRoyaleBonus : 0;
+    const rewards = stakingRewards ? stakingRewards.rewards : 0;
+    const baseRewards = stakingRewards ? stakingRewards.baseRewards : 0;
+    const snxBonus = stakingRewards ? stakingRewards.snxBonus : 0;
+    const ammBonus = stakingRewards ? stakingRewards.ammBonus : 0;
+    const thalesRoyaleBonus = stakingRewards ? stakingRewards.thalesRoyaleBonus : 0;
+    const maxSnxBonus = stakingRewards ? stakingRewards.maxSnxBonus : 0;
+    const maxAmmBonus = stakingRewards ? stakingRewards.maxAmmBonus : 0;
+    const maxThalesRoyaleBonus = stakingRewards ? stakingRewards.maxThalesRoyaleBonus : 0;
     const maxSnxBonusPercentage = stakingRewards ? stakingRewards.maxSnxBonusPercentage : 0;
     const maxAmmBonusPercentage = stakingRewards ? stakingRewards.maxAmmBonusPercentage : 0;
     const maxThalesRoyaleBonusPercentage = stakingRewards ? stakingRewards.maxThalesRoyaleBonusPercentage : 0;
@@ -238,7 +246,16 @@ const StakingRewards: React.FC = () => {
             style={{ gridColumn: 'span 10', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
             <SectionHeader>
-                <div>{t('options.earn.thales-staking.staking-rewards.title')}</div>
+                <div>
+                    {t('options.earn.thales-staking.staking-rewards.title')}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={t('options.earn.thales-staking.staking-rewards.info-tooltip') as string}
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </div>
                 <PeriodContainer>
                     <FlexDivCentered>
                         <PeriodLabel>{t('options.earn.thales-staking.staking-rewards.period')}:</PeriodLabel>
@@ -267,15 +284,15 @@ const StakingRewards: React.FC = () => {
                     <StakingRewardsHeaderLabel>
                         {t('options.earn.thales-staking.staking-rewards.weekly-base-rewards')}
                     </StakingRewardsHeaderLabel>
-                    <StakingRewardsNotice>
+                    <StakingRewardsHeaderContent>
                         {formatCurrencyWithKey(THALES_CURRENCY, baseRewardsPool, 0, true)}
-                    </StakingRewardsNotice>
+                    </StakingRewardsHeaderContent>
                 </StakingRewardsItem>
                 <StakingRewardsItem orderOnMobile={2} style={{ gridColumn: 'span 9', padding: 15 }}>
                     <StakingRewardsHeaderLabel>
                         {t('options.earn.thales-staking.staking-rewards.weekly-bonus-rewards')}
                     </StakingRewardsHeaderLabel>
-                    <StakingRewardsNotice>{bonusRewardsPoolPercentage}%</StakingRewardsNotice>
+                    <StakingRewardsHeaderContent>{bonusRewardsPoolPercentage}%</StakingRewardsHeaderContent>
                 </StakingRewardsItem>
                 <StakingRewardsItem orderOnMobile={3}>
                     <StakingRewardsLabel color="#64D9FE">

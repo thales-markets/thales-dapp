@@ -109,7 +109,7 @@ const EarnPage: React.FC = () => {
                     <Container>
                         <FlexDivColumn>
                             <TokenOverview />
-                            {!isL2 && <MigrationNotice />}
+                            {!isL2 && selectedTab !== 'migration' && <MigrationNotice />}
                             <MainContentContainer>
                                 <OptionsTabContainer>
                                     {optionsTabContent.map((tab, index) => (

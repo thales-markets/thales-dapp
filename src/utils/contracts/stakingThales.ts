@@ -8,7 +8,7 @@ export const stakingThales = {
         [NetworkId.Kovan]: '0x8d178B3Dd7B29dfB38f55FdFE6518cabe6B31059',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
+        [NetworkId['Mainnet-Ovm']]: '0xC392133eEa695603B51a5d5de73655d571c2CE51',
         [NetworkId['Kovan-Ovm']]: '0x09F9FBA4C2A2f51182e90888df6B954C68288200',
     },
     abi: [

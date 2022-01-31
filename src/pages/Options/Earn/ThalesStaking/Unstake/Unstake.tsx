@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { EarnSection, SectionContentContainer, SectionHeader } from '../../components';
+import {
+    EarnSection,
+    SectionContentContainer,
+    SectionHeader,
+    StyledInfoIcon,
+    StyledMaterialTooltip,
+} from '../../components';
 import { FlexDivColumnCentered, FlexDivRowCentered } from '../../../../../theme/common';
 import TimeRemaining from '../../../components/TimeRemaining/TimeRemaining';
 import ValidationMessage from '../../../../../components/ValidationMessage/ValidationMessage';
@@ -20,8 +26,6 @@ import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from '
 import { formatCurrencyWithKey, truncToDecimals } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
 import { dispatchMarketNotification } from 'utils/options';
-import { withStyles } from '@material-ui/core';
-import MaterialTooltip from '@material-ui/core/Tooltip';
 import { GasLimit } from '../../../components/NetworkFees/NetworkFees';
 import intervalToDuration from 'date-fns/intervalToDuration';
 import { formattedDuration } from 'utils/formatters/date';
@@ -401,7 +405,18 @@ const Unstake: React.FC = () => {
             orderOnTablet={5}
             style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
-            <SectionHeader>{t('options.earn.thales-staking.unstake.unstake')}</SectionHeader>
+            <SectionHeader>
+                <div>
+                    {t('options.earn.thales-staking.unstake.unstake')}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={t('options.earn.thales-staking.unstake.info-tooltip') as string}
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </div>
+            </SectionHeader>
             <SectionContentContainer style={{ flexDirection: 'column', marginBottom: '25px' }}>
                 <UnstakingContainer>
                     <UnstakingTitleText>
@@ -526,26 +541,6 @@ const UnstakingTitleText = styled.span`
         margin-bottom: 10px;
     }
 `;
-
-const StyledMaterialTooltip = withStyles(() => ({
-    arrow: {
-        '&:before': {
-            border: '1px solid #7119e1',
-        },
-        color: '#04045A',
-    },
-    tooltip: {
-        background: 'linear-gradient(281.48deg, #04045A -16.58%, #141874 97.94%)',
-        borderRadius: '23px',
-        border: '1px solid #7119e1',
-        padding: '15px',
-        fontSize: '14px',
-        lineHeight: '24px',
-        letterSpacing: '0.4px',
-        color: '#F6F6FE',
-        maxWidth: 330,
-    },
-}))(MaterialTooltip);
 
 const ButtonsContainer = styled(FlexDivColumnCentered)`
     padding-top: 15px;

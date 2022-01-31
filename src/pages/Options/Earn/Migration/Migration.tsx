@@ -88,8 +88,10 @@ const Wrapper = styled(FlexDivColumnCentered)`
     padding: 1px;
     border-radius: 15px;
     margin: 60px 10px 50px 10px;
+    min-width: 500px;
     @media (max-width: 767px) {
         margin: 10px;
+        min-width: 200px;
     }
 `;
 

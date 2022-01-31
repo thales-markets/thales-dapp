@@ -11,7 +11,6 @@ import { getIsOVM, getTransactionPrice } from 'utils/network';
 import { SummaryContent, SummaryItem, SummaryLabel } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
-import WarningMessage from 'components/WarningMessage';
 import { getNetworkId } from 'redux/modules/wallet';
 
 export type GasLimit = {
@@ -88,7 +87,6 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                     {isL2 ? formatCurrencyWithPrecision(gasPrice ?? 0, true) : formatCurrency(gasPrice ?? 0, 0)}
                 </NetworkFeeSummaryContent>
             </NetworkFeeSummaryItem>
-            {!isL2 && <WarningMessage hideIcon message={t('common.gas-fee-info')} />}
         </>
     );
 };

@@ -47,7 +47,8 @@ export const StakingRewardsItem = styled(StakeInfoItem)<{
     }
 `;
 
-export const StakingRewardsHeaderLabel = styled(StakeInfoContent)``;
+export const StakingRewardsHeaderLabel = styled(StakeInfoLabel)``;
+export const StakingRewardsHeaderContent = styled(StakeInfoContent)``;
 
 export const StakingRewardsNotice = styled(StakeInfoLabel)`
     font-size: 12px;
