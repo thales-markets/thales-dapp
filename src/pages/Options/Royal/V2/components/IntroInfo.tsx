@@ -235,7 +235,7 @@ export const Intro: React.FC = () => {
                     }}
                 />
                 <Link
-                    href="https://thalesmarket.medium.com/thales-royale-a-predictions-game-where-the-winner-s-takes-all-a268f9ec6ec8"
+                    href="https://thalesmarket.medium.com/thales-royale-seasons-are-going-live-on-optimism-5459217ec0fd"
                     target="_blank"
                     rel="noreferrer"
                 >
