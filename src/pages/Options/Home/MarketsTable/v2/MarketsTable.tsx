@@ -73,6 +73,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const columns: Array<any> = useMemo(() => {
         return [
             {
+                id: 'asset',
                 Header: t(`options.home.markets-table.asset-col`),
                 accessor: 'asset',
                 Cell: (_props: any) => {
@@ -91,10 +92,13 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 id: 'assetFullName',
                 Header: t(`options.home.markets-table.asset-col`),
                 accessor: 'assetFullName',
+                isVisible: false,
+                disableSortBy: true,
             },
             ...(isL2
                 ? [
                       {
+                          id: 'availablePositions',
                           Header: t(`options.home.markets-table.amm-size-col`),
                           accessor: (row: any) => <RatioText green={row.availableLongs} red={row.availableShorts} />,
                           disableSortBy: true,
@@ -104,6 +108,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             ...(isL2
                 ? [
                       {
+                          id: 'availablePrices',
                           Header: t(`options.home.markets-table.price-up-down-col`),
                           accessor: (row: any) => <RatioText green={row.longPrice} red={row.shortPrice} />,
                           disableSortBy: true,
@@ -111,6 +116,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                   ]
                 : []),
             {
+                id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
                 Cell: (_props: any) => {
@@ -118,6 +124,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
+                id: 'currentPrice',
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
                 Cell: (_props: any) => {
@@ -125,6 +132,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
+                id: 'timeRemaining',
                 Header: t(`options.home.markets-table.time-remaining-col`),
                 accessor: 'timeRemaining',
                 Cell: (_props: any) => {
@@ -132,6 +140,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
+                id: 'phase',
                 Header: t(`options.home.markets-table.phase-col`),
                 accessor: 'phase',
                 Cell: (_props: any) => {
@@ -172,6 +181,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         prepareRow,
         state,
         setGlobalFilter,
+        setHiddenColumns,
         // canPreviousPage,
         // canNextPage,
         // nextPage,
@@ -186,7 +196,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             data,
             initalState: {
                 pageIndex: 1,
-                hiddenColumns: ['assetFullName'],
             },
             autoResetSortBy: false,
             autoResetGlobalFilter: false,
@@ -211,6 +220,10 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     useEffect(() => {
         gotoPage(0);
     }, [globalFilter]);
+
+    useEffect(() => {
+        setHiddenColumns(['assetFullName']);
+    }, []);
 
     const filters = useMemo(() => {
         return {

@@ -301,6 +301,11 @@
                 },
                 "current-asset-price-col": "当前资产价格",
                 "price-up-down-col": "价格上涨/下跌"
+            },
+            "hot-market-card": {
+                "time-left": "剩下的时间",
+                "potential-profit": "潜在利润",
+                "price-per-option": "每个选项的价格"
             }
         },
         "earn": {

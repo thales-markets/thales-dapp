@@ -301,6 +301,11 @@
                 },
                 "current-asset-price-col": "Текущая цена актива",
                 "price-up-down-col": "Цена ВВЕРХ/ВНИЗ"
+            },
+            "hot-market-card": {
+                "time-left": "Осталось времени",
+                "potential-profit": "Потенциальная прибыль",
+                "price-per-option": "Цена за вариант"
             }
         },
         "earn": {
