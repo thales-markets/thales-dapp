@@ -266,16 +266,11 @@ const StakingRewards: React.FC = () => {
                         )}
                     </FlexDivCentered>
                     {stakingRewards && stakingRewards.canClosePeriod && (
-                        <DefaultSubmitButton
-                            onClick={handleClosePeriod}
-                            disabled={!isClosingPeriodAvailable}
-                            className="primary"
-                            style={{ marginLeft: 10, padding: '6px 20px', minHeight: 0 }}
-                        >
+                        <ClosePeriodButton onClick={handleClosePeriod} disabled={!isClosingPeriodAvailable}>
                             {isClosingPeriod
                                 ? t('options.earn.thales-staking.staking-rewards.close-period.progress-label')
                                 : t('options.earn.thales-staking.staking-rewards.close-period.label')}
-                        </DefaultSubmitButton>
+                        </ClosePeriodButton>
                     )}
                 </PeriodContainer>
             </SectionHeader>
@@ -519,6 +514,18 @@ const BonusInfoIcon = styled(InfoIcon)`
     min-height: 14px;
     margin-left: 4px;
     margin-bottom: -2px;
+`;
+
+const ClosePeriodButton = styled(DefaultSubmitButton)`
+    background: linear-gradient(190.01deg, #516aff -17.89%, #8208fc 90.41%);
+    border-radius: 15px;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 24px;
+    text-transform: uppercase;
+    min-height: 24px;
+    margin-left: 10px;
+    padding: 0px 10px;
 `;
 
 export default StakingRewards;

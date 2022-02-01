@@ -15,6 +15,7 @@ type StakingThalesQueryResponse = {
     fixedPeriodReward: number;
     totalStakedAmount: number;
     paused: boolean;
+    maxBonusRewardsPercentage: number;
 };
 
 const useStakingThalesQuery = (
@@ -35,20 +36,36 @@ const useStakingThalesQuery = (
                 fixedPeriodReward: 0,
                 totalStakedAmount: 0,
                 paused: false,
+                maxBonusRewardsPercentage: 0,
             };
 
             try {
-                const [unstakeDurationPeriod, fixedPeriodReward, totalStakedAmount, paused] = await Promise.all([
+                const [
+                    unstakeDurationPeriod,
+                    fixedPeriodReward,
+                    totalStakedAmount,
+                    paused,
+                    maxSNXRewardsPercentage,
+                    maxAMMVolumeRewardsPercentage,
+                    maxThalesRoyaleRewardsPercentage,
+                ] = await Promise.all([
                     (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
                     (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
                     (snxJSConnector as any).stakingThalesContract.totalStakedAmount(),
                     (snxJSConnector as any).stakingThalesContract.paused(),
+                    (snxJSConnector as any).stakingThalesContract.maxSNXRewardsPercentage(),
+                    (snxJSConnector as any).stakingThalesContract.maxAMMVolumeRewardsPercentage(),
+                    (snxJSConnector as any).stakingThalesContract.maxThalesRoyaleRewardsPercentage(),
                 ]);
 
                 staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
                 staking.fixedPeriodReward = bigNumberFormatter(fixedPeriodReward);
                 staking.totalStakedAmount = bigNumberFormatter(totalStakedAmount);
                 staking.paused = paused;
+                staking.maxBonusRewardsPercentage =
+                    Number(maxSNXRewardsPercentage) +
+                    Number(maxAMMVolumeRewardsPercentage) +
+                    Number(maxThalesRoyaleRewardsPercentage);
 
                 if (walletAddress !== '') {
                     const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([

@@ -158,7 +158,7 @@ export const BonusNeededContent = styled.span`
     font-weight: normal;
     font-size: 12px;
     line-height: 16px;
-    color: #4fbf67;
+    color: #50ce99;
 `;
 
 export const MaxBonusNotice = styled.span`

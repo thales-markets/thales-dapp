@@ -7,11 +7,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/rootReducer';
 import { getIsAppReady } from '../../../../../redux/modules/app';
 import { getNetworkId, getWalletAddress } from '../../../../../redux/modules/wallet';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { /*ClaimMessage, */ EarnSection, SectionHeader } from '../../components';
+import { /*ClaimMessage, */ EarnSection, SectionHeader, StyledMaterialTooltip, Tip17Link } from '../../components';
 import { GridContainer, StakeInfoContent, StakeInfoItem, StakeInfoLabel } from '../../gridComponents';
-import { FlexDivRowCentered } from 'theme/common';
+import { FlexDiv, FlexDivRowCentered } from 'theme/common';
+import { ReactComponent as InfoIcon } from 'assets/images/info-circle-green.svg';
 
 function numberWithCommas(x: string | number) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -52,6 +53,8 @@ const GlobalStake: React.FC = () => {
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.fixedPeriodReward) : 0;
     const totalStakedAmount =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.totalStakedAmount) : 0;
+    const maxBonusRewardsPercentage =
+        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.maxBonusRewardsPercentage : 0;
     const escrowedBalance =
         escrowThalesQuery.isSuccess && escrowThalesQuery.data ? Number(escrowThalesQuery.data.escrowedBalance) : 0;
     const totalEscrowedRewards =
@@ -71,8 +74,14 @@ const GlobalStake: React.FC = () => {
                       Number(totalEscrowBalanceNotIncludedInStaking)),
         [fixedPeriodReward, totalStakedAmount, totalEscrowedRewards, totalEscrowBalanceNotIncludedInStaking]
     );
-
-    const APY = useMemo(() => getNumberLabel(Number(aprToApy(APR, 52).toFixed(2))), [APR]);
+    const bonusAPR = useMemo(() => (APR * maxBonusRewardsPercentage) / 100, [APR]);
+    const APY = useMemo(() => aprToApy(APR, 52), [APR]);
+    const formattedAPY = useMemo(() => getNumberLabel(Number(aprToApy(APR, 52).toFixed(2))), [APR]);
+    const apyWithBonus = useMemo(() => aprToApy(APR + bonusAPR, 52), [APR, bonusAPR]);
+    const formattedBonusAPY = useMemo(() => getNumberLabel(Number((apyWithBonus - APY).toFixed(2))), [
+        APY,
+        apyWithBonus,
+    ]);
 
     const totalThalesStaked = useMemo(
         () => Number(totalStakedAmount) + Number(totalEscrowedRewards) - Number(totalEscrowBalanceNotIncludedInStaking),
@@ -86,6 +95,9 @@ const GlobalStake: React.FC = () => {
     );
 
     const estimatedRewards = useMemo(() => (myStakedShare / 100) * Number(fixedPeriodReward), [myStakedShare]);
+    const bonusEstimatedRewards = useMemo(() => (estimatedRewards * maxBonusRewardsPercentage) / 100, [
+        estimatedRewards,
+    ]);
 
     // const notEligibleForStakingRewards = useMemo(() => {
     //     return !+thalesStaked && !!+escrowedBalance;
@@ -98,13 +110,49 @@ const GlobalStake: React.FC = () => {
             orderOnTablet={2}
             style={{ gridColumn: 'span 5', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
-            <SectionHeader>
+            <GlobalStakeHeader>
                 {t('options.earn.thales-staking.my-stake.global-staking-stats')}
                 <RewardsInfo>
-                    <span style={{ marginRight: 15 }}>APR: {APR.toFixed(2)}%</span>
-                    <span>APY: {APY}%</span>
+                    <RewardsInfoItem>
+                        <span>APR: {APR.toFixed(2)}%</span>
+                        <BonusInfo>
+                            +{bonusAPR.toFixed(2)}%
+                            <StyledMaterialTooltip
+                                arrow={true}
+                                title={
+                                    <Trans
+                                        i18nKey="options.earn.thales-staking.my-stake.bonus-apr-tooltip"
+                                        components={[<span key="1" />, <Tip17Link key="2" />]}
+                                        values={{ max: maxBonusRewardsPercentage }}
+                                    />
+                                }
+                                interactive
+                            >
+                                <StyledInfoIcon />
+                            </StyledMaterialTooltip>
+                        </BonusInfo>
+                    </RewardsInfoItem>
+                    <RewardsInfoItem>
+                        <span>APY: {formattedAPY}%</span>
+                        <BonusInfo>
+                            +{formattedBonusAPY}%
+                            <StyledMaterialTooltip
+                                arrow={true}
+                                title={
+                                    <Trans
+                                        i18nKey="options.earn.thales-staking.my-stake.bonus-apy-tooltip"
+                                        components={[<span key="1" />, <Tip17Link key="2" />]}
+                                        values={{ max: maxBonusRewardsPercentage }}
+                                    />
+                                }
+                                interactive
+                            >
+                                <StyledInfoIcon />
+                            </StyledMaterialTooltip>
+                        </BonusInfo>
+                    </RewardsInfoItem>
                 </RewardsInfo>
-            </SectionHeader>
+            </GlobalStakeHeader>
             <GridContainer>
                 <StakeInfoItem>
                     <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.my-staked-share')}</StakeInfoLabel>
@@ -112,7 +160,25 @@ const GlobalStake: React.FC = () => {
                 </StakeInfoItem>
                 <StakeInfoItem>
                     <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.estimated-rewards')}</StakeInfoLabel>
-                    <StakeInfoContent>{formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}</StakeInfoContent>
+                    <StakeInfoContent>
+                        {formatCurrencyWithKey(THALES_CURRENCY, estimatedRewards)}
+                        <BonusInfo>
+                            +{formatCurrencyWithKey(THALES_CURRENCY, bonusEstimatedRewards)}
+                            <StyledMaterialTooltip
+                                arrow={true}
+                                title={
+                                    <Trans
+                                        i18nKey="options.earn.thales-staking.my-stake.bonus-estimated-rewards-tooltip"
+                                        components={[<span key="1" />, <Tip17Link key="2" />]}
+                                        values={{ max: maxBonusRewardsPercentage }}
+                                    />
+                                }
+                                interactive
+                            >
+                                <StyledInfoIcon />
+                            </StyledMaterialTooltip>
+                        </BonusInfo>
+                    </StakeInfoContent>
                 </StakeInfoItem>
                 <StakeInfoItem style={{ gridColumn: 'span 12' }}>
                     <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.total-thales-staked')}</StakeInfoLabel>
@@ -128,16 +194,38 @@ const GlobalStake: React.FC = () => {
     );
 };
 
+const GlobalStakeHeader = styled(SectionHeader)`
+    flex-direction: column;
+    align-items: start;
+`;
+
 const RewardsInfo = styled(FlexDivRowCentered)`
     font-weight: normal;
-    font-size: 18px;
-    text-align: end;
-    margin-left: 10px;
+    font-size: 16px;
+    line-height: 24px;
+    width: 100%;
+    margin-bottom: 2px;
     @media (max-width: 767px) {
-        margin-left: 0;
         margin-top: 4px;
         font-size: 14px;
+        margin-bottom: 0px;
     }
+`;
+
+const RewardsInfoItem = styled(FlexDiv)`
+    width: 50%;
+`;
+
+const BonusInfo = styled.span`
+    margin-left: 4px;
+    color: #50ce99;
+`;
+
+export const StyledInfoIcon = styled(InfoIcon)`
+    min-width: 14px;
+    min-height: 14px;
+    margin-left: 4px;
+    margin-bottom: -1px;
 `;
 
 export default GlobalStake;

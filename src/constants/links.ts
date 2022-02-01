@@ -9,6 +9,8 @@ export const LINKS = {
             'https://docs.google.com/spreadsheets/d/1naboaD-UzIMHwT2bq7jNKkglA34jXmBTa2SrbWBNScg/edit#gid=0',
         RetroUnlockEligibilitySheet:
             'https://docs.google.com/spreadsheets/d/1nuTg7dL2BjMTbNAp_gnjjtXuhzNyw-DTy3PaZwsIXS0/edit#gid=0',
+        TIP17:
+            'https://thalesmarket.io/governance/thalesgov.eth/0xc91587a0f003df728e9bbcbc6719f6bb63162692de90207e0b498908e5ee4076',
         TIP18:
             'https://thalesmarket.io/governance/thalesgov.eth/0x2b9f3fadf2bc92af007845b8d2e941e26428ddb965d24f985f7b969b87e58d9c',
         TIP20:

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { ClaimMessage, ClaimTitle, EarnSection, SectionHeader } from '../../components';
 import { GridContainer, StakeInfoItem, StakeInfoLabel, StakeInfoContent } from '../../gridComponents';
+import { FlexDivRowCentered } from 'theme/common';
 
 const MyStake: React.FC = () => {
     const { t } = useTranslation();
@@ -42,7 +43,10 @@ const MyStake: React.FC = () => {
             orderOnTablet={1}
             style={{ gridColumn: 'span 5', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
-            <SectionHeader>{t('options.earn.thales-staking.my-stake.my-stake')}</SectionHeader>
+            <MyStakeHeader>
+                {t('options.earn.thales-staking.my-stake.my-stake')}
+                <DummyDiv></DummyDiv>
+            </MyStakeHeader>
             <GridContainer>
                 <StakeInfoItem>
                     <StakeInfoLabel>{t('options.earn.thales-staking.my-stake.staked-in-contract')}</StakeInfoLabel>
@@ -99,6 +103,20 @@ const StyledClaimTitle = styled(ClaimTitle)`
     position: relative;
     padding-bottom: 10px;
     font-size: 17px;
+`;
+
+const MyStakeHeader = styled(SectionHeader)`
+    flex-direction: column;
+    align-items: start;
+`;
+
+const DummyDiv = styled(FlexDivRowCentered)`
+    min-height: 24px;
+    margin-bottom: 2px;
+    @media (max-width: 767px) {
+        min-height: 0px;
+        margin-bottom: 0px;
+    }
 `;
 
 export default MyStake;

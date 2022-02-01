@@ -359,7 +359,10 @@
                     "global-staking-stats": "Global staking stats",
                     "total-thales-staked": "Total THALES Staked",
                     "my-staked-share": "My Staked Share",
-                    "estimated-rewards": "Estimated base rewards for this period"
+                    "estimated-rewards": "Estimated rewards for this period",
+                    "bonus-apr-tooltip": "<0>Maximum bonus APR of {{max}}% per </0><1 />.",
+                    "bonus-apy-tooltip": "<0>Maximum bonus APY of {{max}}% per </0><1 />.",
+                    "bonus-estimated-rewards-tooltip": "<0>Maximum bonus rewards of {{max}}% per </0><1 />."
                 },
                 "unstake": {
                     "unstake": "Unstake",
