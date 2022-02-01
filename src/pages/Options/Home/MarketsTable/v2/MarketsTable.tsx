@@ -22,7 +22,9 @@ import MarketsGrid from '../../MarketsGrid';
 import { FlexDivRow } from 'theme/common';
 import TableGridSwitch from '../../../components/Input/TableGridSwitch';
 import SearchField from '../../../components/Input/SearchField';
+import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
+
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
 
@@ -73,7 +75,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const columns: Array<any> = useMemo(() => {
         return [
             {
-                id: 'asset',
                 Header: t(`options.home.markets-table.asset-col`),
                 accessor: 'asset',
                 Cell: (_props: any) => {
@@ -89,16 +90,22 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                id: 'assetFullName',
+                Header: t(`options.home.markets-table.24h-change-col`),
+                accessor: 'currencyKey',
+                Cell: (_props: any) => {
+                    return <PriceChart currencyKey={_props?.cell?.value} showFooter={false} />;
+                },
+            },
+            {
                 Header: t(`options.home.markets-table.asset-col`),
                 accessor: 'assetFullName',
                 isVisible: false,
                 disableSortBy: true,
+                show: false,
             },
             ...(isL2
                 ? [
                       {
-                          id: 'availablePositions',
                           Header: t(`options.home.markets-table.amm-size-col`),
                           accessor: (row: any) => <RatioText green={row.availableLongs} red={row.availableShorts} />,
                           disableSortBy: true,
@@ -108,7 +115,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             ...(isL2
                 ? [
                       {
-                          id: 'availablePrices',
                           Header: t(`options.home.markets-table.price-up-down-col`),
                           accessor: (row: any) => <RatioText green={row.longPrice} red={row.shortPrice} />,
                           disableSortBy: true,
@@ -116,7 +122,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                   ]
                 : []),
             {
-                id: 'strikePrice',
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
                 Cell: (_props: any) => {
@@ -124,7 +129,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                id: 'currentPrice',
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
                 Cell: (_props: any) => {
@@ -132,7 +136,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                id: 'timeRemaining',
                 Header: t(`options.home.markets-table.time-remaining-col`),
                 accessor: 'timeRemaining',
                 Cell: (_props: any) => {
@@ -140,7 +143,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
-                id: 'phase',
                 Header: t(`options.home.markets-table.phase-col`),
                 accessor: 'phase',
                 Cell: (_props: any) => {
@@ -158,6 +160,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         const processedMarkets = optionsMarkets.map((market) => {
             return {
                 asset: market.asset,
+                currencyKey: market.currencyKey,
                 assetFullName: getSynthName(market.currencyKey),
                 availableLongs: market.availableLongs,
                 availableShorts: market.availableShorts,
@@ -223,7 +226,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
 
     useEffect(() => {
         setHiddenColumns(['assetFullName']);
-    }, []);
+    }, [columns]);
 
     const filters = useMemo(() => {
         return {
@@ -432,5 +435,9 @@ const RatioText: React.FC<{ green: string; red: string }> = ({ green, red }) => 
         </span>
     );
 };
+
+// const PriceChartInsideTable: React.FC = (currencyKey) => {
+
+// };
 
 export default MarketsTable;

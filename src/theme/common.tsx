@@ -129,6 +129,7 @@ export const Background = styled.section`
         --primary-color: #04045a;
         --input-border-color: #04045a;
         --table-border-color: #64d9fe;
+        --table-header-text-color: #64d9fe;
         --disabled-item: #8181ac;
         --enabled-item: #04045a;
     }
@@ -139,7 +140,8 @@ export const Background = styled.section`
         --shadow: 0px 0px 40px #64d9fe;
         --primary-color: #f7f7f7;
         --input-border-color: #64d9fe;
-        --table-border-color: #f7f7f7;
+        --table-border-color: rgba(100, 217, 254, 0.5);
+        --table-header-text-color: #64d9fe;
         --disabled-item: #8181ac;
         --enabled-item: #f7f7f7;
     }

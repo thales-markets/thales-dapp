@@ -318,7 +318,8 @@
                     "table": "桌子"
                 },
                 "current-asset-price-col": "当前资产价格",
-                "price-up-down-col": "价格上涨/下跌"
+                "price-up-down-col": "价格上涨/下跌",
+                "24h-change-col": "24小时变化"
             },
             "hot-market-card": {
                 "time-left": "剩下的时间",

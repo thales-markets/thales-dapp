@@ -20,6 +20,7 @@ type PriceChartProps = {
     width?: number;
     height?: number;
     showHeading?: boolean;
+    showFooter?: boolean;
     containerStyle?: CSSProperties;
 };
 
@@ -30,11 +31,12 @@ const PriceChart: React.FC<PriceChartProps> = ({
     width,
     height,
     showHeading,
+    showFooter,
     containerStyle,
 }) => {
     const { t } = useTranslation();
 
-    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days }, { enabled: true });
+    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days });
     const processedPriceData = useMemo(() => {
         let data: any = [];
 
@@ -104,14 +106,16 @@ const PriceChart: React.FC<PriceChartProps> = ({
                             />
                         </AreaChart>
                     </ResponsiveContainer>
-                    <ChartFooter>
-                        <TimerangeChange>
-                            {formatPriceChangeInterval(days, t('common.user-info-card.change'))}
-                        </TimerangeChange>
-                        <PriceChange uptrend={percentagePriceChange > 0 ? true : false}>
-                            {formatPricePercentageGrowth(percentagePriceChange)}
-                        </PriceChange>
-                    </ChartFooter>
+                    {showFooter !== false && (
+                        <ChartFooter>
+                            <TimerangeChange>
+                                {formatPriceChangeInterval(days, t('common.user-info-card.change'))}
+                            </TimerangeChange>
+                            <PriceChange uptrend={percentagePriceChange > 0 ? true : false}>
+                                {formatPricePercentageGrowth(percentagePriceChange)}
+                            </PriceChange>
+                        </ChartFooter>
+                    )}
                 </ChartWrapper>
             )}
         </>
