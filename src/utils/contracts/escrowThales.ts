@@ -108,6 +108,19 @@ export const escrowThales = {
                 {
                     indexed: false,
                     internalType: 'address',
+                    name: 'thalesStakingRewardsPool',
+                    type: 'address',
+                },
+            ],
+            name: 'ThalesStakingRewardsPoolChanged',
+            type: 'event',
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: 'address',
                     name: 'account',
                     type: 'address',
                 },
@@ -130,6 +143,21 @@ export const escrowThales = {
                     internalType: 'uint256',
                     name: '',
                     type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'ThalesStakingRewardsPool',
+            outputs: [
+                {
+                    internalType: 'contract IThalesStakingRewardsPool',
+                    name: '',
+                    type: 'address',
                 },
             ],
             payable: false,
@@ -508,6 +536,21 @@ export const escrowThales = {
                 },
             ],
             name: 'setStakingThalesContract',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function',
+        },
+        {
+            constant: false,
+            inputs: [
+                {
+                    internalType: 'address',
+                    name: '_thalesStakingRewardsPool',
+                    type: 'address',
+                },
+            ],
+            name: 'setThalesStakingRewardsPool',
             outputs: [],
             payable: false,
             stateMutability: 'nonpayable',

@@ -1911,6 +1911,21 @@ export const stakingThales = {
         {
             constant: true,
             inputs: [],
+            name: 'totalEscrowedLastPeriodEnd',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
             name: 'totalSNXFeesInPeriod',
             outputs: [
                 {
@@ -1942,6 +1957,21 @@ export const stakingThales = {
             constant: true,
             inputs: [],
             name: 'totalStakedAmount',
+            outputs: [
+                {
+                    internalType: 'uint256',
+                    name: '',
+                    type: 'uint256',
+                },
+            ],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function',
+        },
+        {
+            constant: true,
+            inputs: [],
+            name: 'totalStakedLastPeriodEnd',
             outputs: [
                 {
                     internalType: 'uint256',
