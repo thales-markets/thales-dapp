@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const escrowThales = {
     addresses: {
-        [NetworkId.Mainnet]: '0x8d3703d4dED77473E632dEf20002DAdC86bf4AAD',
-        [NetworkId.Ropsten]: '0x9b960789E6C56192D70a0167bDc7027fFC7F2E58',
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xcE9c1aAb41b18b24355138776186484B260B9cf0',
+        [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0xa25816b9605009aa446d4d597F0AA46FD828f056',

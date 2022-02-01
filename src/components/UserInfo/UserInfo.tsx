@@ -16,6 +16,7 @@ import { ReactComponent as InfoIcon } from '../../assets/images/info.svg';
 import ThalesBalanceTooltip from './ThalesBalanceTooltip';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
+import { getIsOVM } from 'utils/network';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -24,6 +25,7 @@ const UserInfo: React.FC = () => {
     const network = useSelector((state: RootState) => getNetwork(state));
     const [open, setOpen] = useState(false);
     const [thalesTotalBalance, setThalesTotalBalance] = useState(0);
+    const isL2 = getIsOVM(network.networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
@@ -61,13 +63,15 @@ const UserInfo: React.FC = () => {
                     />
                 </NetworkWrapper>
                 <ThalesBalance>
-                    <StyledMaterialTooltip
-                        PopperProps={{ keepMounted: true }}
-                        title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
-                    >
-                        <StyledInfoIcon width={iconSize} height={iconSize} />
-                    </StyledMaterialTooltip>
-                    {formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}
+                    {isL2 && (
+                        <StyledMaterialTooltip
+                            PopperProps={{ keepMounted: true }}
+                            title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
+                        >
+                            <StyledInfoIcon width={iconSize} height={iconSize} />
+                        </StyledMaterialTooltip>
+                    )}
+                    <span style={{ marginLeft: 10 }}>{formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}</span>
                 </ThalesBalance>
             </UserInfoWrapper>
             <UserInfoModal
@@ -159,7 +163,6 @@ const AddressWrapper = styled(FlexDivColumnCentered)`
 
 const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 10px;
-    margin-right: 5px;
     @media (max-width: 767px) {
         display: none;
     }

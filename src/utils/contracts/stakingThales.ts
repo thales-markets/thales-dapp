@@ -2,10 +2,10 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const stakingThales = {
     addresses: {
-        [NetworkId.Mainnet]: '0x883D651429B0829BC045A94F288f3b514021B8C1',
-        [NetworkId.Ropsten]: '0x9c27B789D645bf7bB02e71590df627b3DE8249fA',
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0x8d178B3Dd7B29dfB38f55FdFE6518cabe6B31059',
+        [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
         [NetworkId['Mainnet-Ovm']]: '0xC392133eEa695603B51a5d5de73655d571c2CE51',
