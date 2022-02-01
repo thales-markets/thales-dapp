@@ -46,7 +46,7 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     </ButtonWrapper>
                     <ButtonWrapper>
                         <ButtonContainer>
-                            <DAPPLink href={ROUTES.Options.Home}>
+                            <DAPPLink target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
                                 <i className="icon-home icon-home--thales" /> DAPP
                             </DAPPLink>
                         </ButtonContainer>
