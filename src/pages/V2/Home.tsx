@@ -172,8 +172,6 @@ const ThalesGame = styled(IconAbs)`
         line-height: 0.2em;
     }
     @media (max-width: 450px) {
-        font-size: 10em;
-        line-height: 0.2em;
         margin-bottom: 90px;
     }
 `;

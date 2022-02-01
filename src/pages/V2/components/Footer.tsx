@@ -113,8 +113,8 @@ const Lines = styled.img`
     right: 0%;
     margin: auto;
     @media (max-width: 1500px) {
-        width: 200%;
-        left: -50%;
+        width: 100%;
+        left: 0;
     }
     @media (max-width: 600px) {
         width: 200%;
