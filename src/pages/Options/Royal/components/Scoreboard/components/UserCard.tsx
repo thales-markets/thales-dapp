@@ -13,14 +13,14 @@ import { bigNumberFormatter } from 'utils/formatters/ethers';
 import { truncateAddress } from 'utils/formatters/string';
 import { getIsOVM } from 'utils/network';
 import snxJSConnector from 'utils/snxJSConnector';
-import UserEditRoyaleDataDialog from '../../components/UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
-import { signUp } from '../../getThalesRoyalData';
-import { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
-import useLatestRoyaleForUserInfo from './queries/useLastRoyaleForUserInfo';
-import useUserRoyalQuery, { AnonimUser } from './queries/useUserRoyalQuery';
-import { FooterData } from './queries/useRoyaleFooterQuery';
-import { Positions } from '../../Queries/usePositionsQuery';
+import UserEditRoyaleDataDialog from './UserEditRoyaleDataDialog/UserEditRoyaleDataDialog';
+import { User, UserStatus } from '../queries/useRoyalePlayersQuery';
+import useLatestRoyaleForUserInfo from '../queries/useLastRoyaleForUserInfo';
+import useUserRoyalQuery, { AnonimUser } from '../queries/useUserRoyalQuery';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { dispatchMarketNotification } from 'utils/options';
+import { Positions } from 'pages/Options/Royal/Queries/usePositionsQuery';
+import { FooterData } from 'pages/Options/Royal/Queries/useRoyaleFooterQuery';
 
 type UserCardProps = {
     ethPrice: string;
@@ -29,7 +29,7 @@ type UserCardProps = {
     selectedSeason: number;
 };
 
-export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
+const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, ethPrice, positions }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
@@ -261,6 +261,20 @@ export const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooter
     );
 };
 
+const signUp = async () => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.signUp();
+            await tx.wait();
+            dispatchMarketNotification('Successfully Signed Up');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
 const UserAvatar = styled(Image)<{ winner?: boolean }>`
     width: 44px;
     height: 44px;
@@ -411,3 +425,5 @@ const InfoSection = styled.div`
         display: none;
     }
 `;
+
+export default UserCard;

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Text } from 'theme/common';
 import onboardConnector from 'utils/onboardConnector';
-import { RoyaleBackground } from '../../ThalesRoyal';
+import { RoyaleBackground } from '../../Royal/ThalesRoyal';
 import './media.scss';
 
 type WalletNotConnectedDialogProps = {

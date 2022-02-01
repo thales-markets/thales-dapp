@@ -2,7 +2,7 @@ import QUERY_KEYS from 'constants/queryKeys';
 import { useQuery, UseQueryOptions } from 'react-query';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
-import { parseBytes32String } from '../../../../../../utils/formatters/ethers';
+import { parseBytes32String } from 'utils/formatters/ethers';
 
 export type RoyaleArenaData = {
     roundChoosingLength: number;

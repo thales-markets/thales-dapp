@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Intro } from './IntroInfo';
-import { ScoreboardV2 } from './Scoreboard';
-import { UserCard } from './UserCard';
-import { FooterData } from './queries/useRoyaleFooterQuery';
 import { Positions } from '../../Queries/usePositionsQuery';
+import { FooterData } from '../../Queries/useRoyaleFooterQuery';
+import Intro from './components/IntroInfo';
+import ScoreboardV2 from './components/Scoreboard';
+import UserCard from './components/UserCard';
 
 type Properties = {
     ethPrice: string;
@@ -15,7 +15,7 @@ type Properties = {
     latestSeason: number;
 };
 
-export const ScoreboardPage: React.FC<Properties> = ({
+const ScoreboardPage: React.FC<Properties> = ({
     ethPrice,
     positions,
     royaleFooterData,
@@ -56,3 +56,5 @@ const Wrapper = styled.div`
         padding-bottom: 60px;
     }
 `;
+
+export default ScoreboardPage;

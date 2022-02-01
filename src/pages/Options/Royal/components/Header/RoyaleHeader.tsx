@@ -4,15 +4,16 @@ import { useSelector } from 'react-redux';
 import { getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
+import { Text } from 'theme/common';
 import Cookies from 'universal-cookie';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
-import useEthBalanceQuery from '../../Queries/useEthBalanceQuery';
-import { Theme } from '../../ThalesRoyal';
-import UserInfoRoyaleDialog from '../UserInfoRoyaleDialog/UserInfoRoyaleDialog';
+import UserInfoRoyaleDialog from './UserInfoRoyaleDialog/UserInfoRoyaleDialog';
+import useEthBalanceQuery from './queries/useEthBalanceQuery';
+
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
-import { Text } from '../../../../../theme/common';
+import { Theme } from '../../ThalesRoyal';
 
 type RoyaleHeaderInput = {
     latestSeason: number;

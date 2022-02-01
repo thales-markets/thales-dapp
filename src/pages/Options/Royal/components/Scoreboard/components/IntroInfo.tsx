@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import circle from 'assets/images/royale/circle.svg';
-
 import triangle from 'assets/images/royale/triangle.svg';
 import format from 'date-fns/format';
 import useInterval from 'hooks/useInterval';
@@ -8,18 +7,20 @@ import TimeRemaining from 'pages/Options/components/TimeRemaining';
 import { Trans, useTranslation } from 'react-i18next';
 import React, { useEffect, useState } from 'react';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from 'i18n/config';
-import { getTimeLeft } from '../../components/BattleRoyale/BattleRoyale';
 import i18n from 'i18n';
-import { startRoyale, startRoyaleSeason } from '../../getThalesRoyalData';
 import { Text } from 'theme/common';
-import useLatestRoyaleSeasonInfo from './queries/useLastRoyaleSeasonInfo';
+import useLatestRoyaleSeasonInfo from '../queries/useLastRoyaleSeasonInfo';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
 import { getIsOVM } from 'utils/network';
 import { RootState } from 'redux/rootReducer';
 import { getIsAppReady } from 'redux/modules/app';
+import addSeconds from 'date-fns/addSeconds';
+import differenceInSeconds from 'date-fns/differenceInSeconds';
+import snxJSConnector from 'utils/snxJSConnector';
+import { dispatchMarketNotification } from 'utils/options';
 
-export const Intro: React.FC = () => {
+const Intro: React.FC = () => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
@@ -253,6 +254,47 @@ export const Intro: React.FC = () => {
         </>
     );
 };
+
+const getTimeLeft = (startTime: Date, roundLengthInSeconds: number) => {
+    const beginningOfTime = new Date(0);
+    beginningOfTime.setHours(0);
+    const roundEndTime = addSeconds(startTime, roundLengthInSeconds);
+    const timeDifferenceInSeconds = differenceInSeconds(roundEndTime, new Date());
+    if (timeDifferenceInSeconds <= 0) {
+        return null;
+    }
+    beginningOfTime.setSeconds(beginningOfTime.getSeconds() + timeDifferenceInSeconds);
+    return beginningOfTime;
+};
+
+const startRoyale = async () => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.startRoyaleInASeason();
+            await tx.wait();
+            dispatchMarketNotification('Royale Started');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
+const startRoyaleSeason = async () => {
+    const { thalesRoyaleContract } = snxJSConnector;
+    if (thalesRoyaleContract) {
+        const RoyalContract = thalesRoyaleContract.connect((snxJSConnector as any).signer);
+        try {
+            const tx = await RoyalContract.startNewSeason();
+            await tx.wait();
+            dispatchMarketNotification('Season Started');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
 const Button = styled.button`
     align-items: center;
     cursor: pointer;
@@ -368,3 +410,5 @@ const Link = styled.a`
         text-decoration: underline;
     }
 `;
+
+export default Intro;

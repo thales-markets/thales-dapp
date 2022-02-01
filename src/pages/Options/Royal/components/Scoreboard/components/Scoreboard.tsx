@@ -11,11 +11,11 @@ import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
 import { Image, LoaderContainer, Text } from 'theme/common';
 import { getIsOVM } from 'utils/network';
-import SimpleLoader from '../../components/SimpleLoader';
-import useRoyalePlayersQuery, { User, UserStatus } from '../../Queries/useRoyalePlayersQuery';
-import useRoyaleDataForScoreboard from './queries/useRoyaleDataForScoreboard';
+import useRoyalePlayersQuery, { User, UserStatus } from '../queries/useRoyalePlayersQuery';
+import useRoyaleDataForScoreboard from '../queries/useRoyaleDataForScoreboard';
 import DiscordImage from 'assets/images/royale/discord.png';
 import notSigned from 'assets/images/royale/not-signed.svg';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const PerPageOption = [15, 25, 50, 100];
 
@@ -38,7 +38,7 @@ type ScoreboardProps = {
 
 const defaultOrderBy = 1;
 
-export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
+const Scoreboard: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
@@ -272,7 +272,7 @@ export const ScoreboardV2: React.FC<ScoreboardProps> = ({ selectedSeason }) => {
                 })
             ) : (
                 <LoaderContainer style={{ top: 'calc(50% + 30px)' }}>
-                    <SimpleLoader />
+                    <StyledLoader />
                 </LoaderContainer>
             )}
 
@@ -376,6 +376,13 @@ const SearchWrapper = styled.input`
     &::placeholder {
         color: var(--coior);
     }
+`;
+
+const StyledLoader = styled(CircularProgress)`
+    position: absolute;
+    left: calc(50% - 22px);
+    top: calc(50% - 22px);
+    color: var(--color) !important;
 `;
 
 const SearchIcon = styled.i`
@@ -581,3 +588,5 @@ const Overlay = styled.div`
     right: 0;
     z-index: 4;
 `;
+
+export default Scoreboard;

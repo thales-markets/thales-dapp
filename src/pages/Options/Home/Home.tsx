@@ -16,8 +16,8 @@ import useExchangeRatesMarketDataQuery from '../../../queries/rates/useExchangeR
 import { getIsAppReady } from '../../../redux/modules/app';
 import { useLocation } from 'react-router-dom';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
-import { RedirectDialog } from '../Royal/components/RedirectDialog/RedirectDialog';
-import WalletNotConnectedDialog from '../Royal/components/WalletNotConnectedDialog/WalletNotConnectedDialog';
+import RedirectDialog from '../components/RedirectDialog/RedirectDialog';
+import WalletNotConnectedDialog from '../components/WalletNotConnectedDialog/WalletNotConnectedDialog';
 
 const MAX_HOT_MARKETS = 9;
 

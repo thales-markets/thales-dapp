@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { FlexDivCentered, Text } from 'theme/common';
 import { navigateTo, history } from 'utils/routes';
-import { Positions } from '../../Queries/usePositionsQuery';
-import { FooterData } from './queries/useRoyaleFooterQuery';
 import queryString from 'query-string';
+import { Positions } from '../../Queries/usePositionsQuery';
+import { FooterData } from '../../Queries/useRoyaleFooterQuery';
 
 type ScoreboardProps = {
     ethPrice: string;
@@ -23,7 +23,7 @@ type ScoreboardProps = {
 
 let showStatsUserSelection = true;
 
-export const FooterV2: React.FC<ScoreboardProps> = ({
+const Footer: React.FC<ScoreboardProps> = ({
     ethPrice,
     positions,
     royaleData,
@@ -78,7 +78,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
 
     return (
         <>
-            <Footer>
+            <FooterHtml>
                 <Nav>
                     {selectedPage !== 'royale' && (
                         <NavButton onClick={() => navigateTo(ROUTES.Options.Home)}>
@@ -165,7 +165,7 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
                         {t('options.royale.footer.stats')}
                     </StatsButton>
                 </FooterButtonsWrapper>
-            </Footer>
+            </FooterHtml>
             <InfoSection style={{ visibility: showStats === true ? 'visible' : 'hidden' }}>
                 <CloseStats
                     onClick={() => {
@@ -213,6 +213,8 @@ export const FooterV2: React.FC<ScoreboardProps> = ({
     );
 };
 
+export default Footer;
+
 const InfoIconContainer = styled.span`
     display: inline-flex;
     align-items: center;
@@ -226,7 +228,7 @@ const StyledInfoIcon = styled(InfoIcon)`
     }
 `;
 
-const Footer = styled.div`
+const FooterHtml = styled.div`
     position: fixed;
     display: grid;
     grid-template-columns: 2fr 5fr 2fr;

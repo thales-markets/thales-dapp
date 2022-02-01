@@ -1,5 +1,6 @@
 import { Modal } from '@material-ui/core';
 import metamask from 'assets/images/metamask.svg';
+import { Theme } from 'pages/Options/Royal/ThalesRoyal';
 import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +8,6 @@ import styled from 'styled-components';
 import { Button, FlexDiv, FlexDivColumn, Image, Text, XButton } from 'theme/common';
 import { truncateAddress } from 'utils/formatters/string';
 import onboardConnector from 'utils/onboardConnector';
-import { Theme } from '../../ThalesRoyal';
 import './media.scss';
 
 type UserInfoRoyaleDialogProps = {

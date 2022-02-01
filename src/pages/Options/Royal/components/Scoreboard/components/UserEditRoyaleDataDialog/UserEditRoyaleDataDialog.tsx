@@ -8,10 +8,10 @@ import { FlexDiv, FlexDivCentered, FlexDivColumn, Image, Text, XButton } from 't
 import Cookies from 'universal-cookie';
 import { truncateAddress } from 'utils/formatters/string';
 import Web3 from 'web3';
-import { User } from '../../Queries/useRoyalePlayersQuery';
-import { Theme } from '../../ThalesRoyal';
+import { User } from '../../queries/useRoyalePlayersQuery';
 import './media.scss';
-import { ReactComponent as InfoIcon } from '../../../../../assets/images/info.svg';
+import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
+import { Theme } from 'pages/Options/Royal/ThalesRoyal';
 
 type UserEditRoyaleDataDialogProps = {
     open: boolean;

@@ -11,8 +11,9 @@ type RedirectDialogProps = {
     setOpen: (data: any) => void;
 };
 
-export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen }) => {
+const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen }) => {
     const { t } = useTranslation();
+
     const onClose = () => {
         setOpen(false);
     };
@@ -34,8 +35,11 @@ export const RedirectDialog: React.FC<RedirectDialogProps> = ({ open, setOpen })
     return (
         <StyledModal
             open={open}
-            onClose={onClose}
-            disableBackdropClick
+            onClose={(_event, reason) => {
+                if (reason !== 'backdropClick') {
+                    onClose();
+                }
+            }}
             PaperProps={{
                 style: {
                     backgroundColor: '#64D9FE',
