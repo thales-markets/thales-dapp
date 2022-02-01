@@ -44,14 +44,12 @@ const Schedule: React.FC = () => {
                     tableHeadCellStyles={
                         isMobileOrTablet
                             ? {
-                                  fontSize: '16px',
-                                  color: '#b8c6e5',
                                   backgroundColor: '#04045a',
                                   marginTop: '-1px',
                               }
                             : {}
                     }
-                    tableRowCellStyles={isMobileOrTablet ? { fontSize: '16px', color: '#F6F6FE' } : {}}
+                    tableRowCellStyles={{}}
                 />
             </SectionContent>
         </SectionContainer>

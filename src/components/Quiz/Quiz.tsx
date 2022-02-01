@@ -121,7 +121,7 @@ export const Quiz: React.FC<QuizProps> = ({ quizData, openQuiz, setOpenQuiz }: Q
                                     className="quiz__modal-dialog__title__link"
                                     target="_blank"
                                     rel="noreferrer"
-                                    href="https://docs.thales.market/"
+                                    href="https://docs.thalesmarket.io/"
                                     style={{ marginRight: '10px' }}
                                 >
                                     {t('options.quiz.docs-link')}
