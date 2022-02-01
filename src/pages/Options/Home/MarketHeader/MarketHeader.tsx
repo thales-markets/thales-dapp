@@ -292,18 +292,18 @@ const MarketHeader: React.FC<MarketHeaderProps> = ({
                             <SidebarText>{t('common.sidebar.governance-label')}</SidebarText>
                         </SidebarItem>
                     </SPAAnchor>
-                    {isL2 && (
-                        <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
-                            <SidebarItem
-                                imgSrc={royaleDefaultIcon}
-                                imgSrcHoverSelected={royaleSelectedIcon}
-                                className={route === ROUTES.Options.Royal ? 'selected' : ''}
-                            >
-                                <SidebarIcon />
-                                <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
-                            </SidebarItem>
-                        </SPAAnchor>
-                    )}
+
+                    <SPAAnchor href={buildHref(ROUTES.Options.Royal)}>
+                        <SidebarItem
+                            imgSrc={royaleDefaultIcon}
+                            imgSrcHoverSelected={royaleSelectedIcon}
+                            className={route === ROUTES.Options.Royal ? 'selected' : ''}
+                        >
+                            <SidebarIcon />
+                            <SidebarText>{t('common.sidebar.royale-label')}</SidebarText>
+                        </SidebarItem>
+                    </SPAAnchor>
+
                     <SPAAnchor href={buildHref(ROUTES.Options.Game)}>
                         <SidebarItem
                             imgSrc={gameDefaultIcon}

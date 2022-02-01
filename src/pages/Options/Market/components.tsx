@@ -418,6 +418,23 @@ const StyledLightMediumTooltip = withStyles(() => ({
     },
 }))(StyledLightTooltip);
 
+const StyledLandingPageTooltip = withStyles(() => ({
+    arrow: {
+        color: '#052040',
+    },
+    tooltip: {
+        background: '#6A7FB6',
+        borderRadius: '6px',
+        padding: '4px 10px',
+        fontSize: '10px',
+        fontWeight: 600,
+        lineHeight: '16px',
+        letterSpacing: '0.4px',
+        color: '#f7f7f7',
+        backgroundColor: '#052040',
+    },
+}))(MaterialTooltip);
+
 export const LightTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
     <StyledLightTooltip
         disableHoverListener={disableHoverListener}
@@ -444,6 +461,17 @@ export const LightMediumTooltip: React.FC<TooltipIconProps> = ({ title, children
     >
         {children}
     </StyledLightMediumTooltip>
+);
+
+export const LandingPageTooltip: React.FC<TooltipIconProps> = ({ title, children, disableHoverListener }) => (
+    <StyledLandingPageTooltip
+        disableHoverListener={disableHoverListener}
+        title={<span>{title}</span>}
+        placement="top"
+        arrow={true}
+    >
+        {children}
+    </StyledLandingPageTooltip>
 );
 
 export const ProtocolFeeContainer = styled(FlexDivRow)`

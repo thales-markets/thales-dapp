@@ -69,8 +69,7 @@ const Footer: React.FC<HeaderInput> = ({ theme, setTheme, className }) => {
                     <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
                         <FooterIcon className="icon-home icon-home--twitter" />
                     </IconLink>
-
-                    <IconLink target="_blank" rel="noreferrer" href="https://docs.thales.market/">
+                    <IconLink target="_blank" rel="noreferrer" href="https://docs.thalesmarket.io/">
                         <FooterIcon className="icon-home icon-home--docs" />
                     </IconLink>
                 </FooterIconsWrapper>
@@ -114,8 +113,8 @@ const Lines = styled.img`
     right: 0%;
     margin: auto;
     @media (max-width: 1500px) {
-        width: 200%;
-        left: -50%;
+        width: 100%;
+        left: 0;
     }
     @media (max-width: 600px) {
         width: 200%;

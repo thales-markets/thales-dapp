@@ -64,7 +64,6 @@ const getFromContract = async (
         RoyaleContract.targetPricePerRoundPerSeason(season, roundInASeason),
         RoyaleContract.positionInARoundPerSeason(season, address, roundInASeason),
     ]);
-    console.log('', season, roundInASeason, Number(position));
     return {
         roundChoosingLength: Number(roundChoosingLength),
         roundInASeasonStartTime: new Date(Number(roundInASeasonStartTime) * 1000),
