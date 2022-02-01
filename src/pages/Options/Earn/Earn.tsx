@@ -21,8 +21,12 @@ import vestingActiveIcon from '../../../assets/images/vesting-active.svg';
 import vestingIcon from '../../../assets/images/vesting.svg';
 import lpActiveIcon from '../../../assets/images/lp-active.svg';
 import lpIcon from '../../../assets/images/lp.svg';
+import lpl2ActiveIcon from '../../../assets/images/lp-l2-active.svg';
+import lpl2Icon from '../../../assets/images/lp-l2.svg';
 import migrationActiveIcon from '../../../assets/images/migration-active.svg';
 import migrationIcon from '../../../assets/images/migration.svg';
+import migratedRewardsActiveIcon from '../../../assets/images/migrated-rewards-active.svg';
+import migratedRewardsIcon from '../../../assets/images/migrated-rewards.svg';
 import Loader from '../../../components/Loader';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/rootReducer';
@@ -201,22 +205,28 @@ const EarnPage: React.FC = () => {
                             }}
                             src={selectedTab === 'vesting' ? vestingActiveIcon : vestingIcon}
                         />
-                        {!isL2 && (
-                            <Icon
-                                width={50}
-                                height={30}
-                                onClick={() => {
-                                    history.push({
-                                        pathname: location.pathname,
-                                        search: queryString.stringify({
-                                            tab: 'lp-staking',
-                                        }),
-                                    });
-                                    setSelectedTab('lp-staking');
-                                }}
-                                src={selectedTab === 'lp-staking' ? lpActiveIcon : lpIcon}
-                            />
-                        )}
+                        <Icon
+                            width={isL2 ? 35 : 50}
+                            height={isL2 ? 35 : 30}
+                            onClick={() => {
+                                history.push({
+                                    pathname: location.pathname,
+                                    search: queryString.stringify({
+                                        tab: 'lp-staking',
+                                    }),
+                                });
+                                setSelectedTab('lp-staking');
+                            }}
+                            src={
+                                selectedTab === 'lp-staking'
+                                    ? isL2
+                                        ? lpl2ActiveIcon
+                                        : lpActiveIcon
+                                    : isL2
+                                    ? lpl2Icon
+                                    : lpIcon
+                            }
+                        />
                         {!isL2 && (
                             <Icon
                                 width={35}
@@ -235,8 +245,8 @@ const EarnPage: React.FC = () => {
                         )}
                         {isL2 && (
                             <Icon
-                                width={35}
-                                height={30}
+                                width={50}
+                                height={40}
                                 onClick={() => {
                                     history.push({
                                         pathname: location.pathname,
@@ -246,7 +256,9 @@ const EarnPage: React.FC = () => {
                                     });
                                     setSelectedTab('migrated-rewards');
                                 }}
-                                src={selectedTab === 'migrated-rewards' ? migrationActiveIcon : migrationIcon}
+                                src={
+                                    selectedTab === 'migrated-rewards' ? migratedRewardsActiveIcon : migratedRewardsIcon
+                                }
                             />
                         )}
                     </NavFooter>

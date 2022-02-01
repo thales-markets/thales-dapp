@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as InfoIcon } from 'assets/images/info-circle-orange.svg';
+import { ReactComponent as WarningIcon } from 'assets/images/warning-icon-orange.svg';
 import styled from 'styled-components';
 import { FlexDiv, FlexDivRow } from 'theme/common';
 
@@ -14,7 +14,7 @@ export const InfoWarningMessage: React.FC<InfoWarningMessageProps> = ({ message,
             <Container>
                 <Message>
                     <FlexDiv>
-                        {!hideIcon && <StyledInfoIIcon />} {message}
+                        {!hideIcon && <StyledWarningIcon />} {message}
                     </FlexDiv>
                 </Message>
             </Container>
@@ -36,10 +36,10 @@ const Message = styled(FlexDivRow)`
     color: #f55c05;
 `;
 
-export const StyledInfoIIcon = styled(InfoIcon)`
-    margin-right: 6px;
-    min-width: 14px;
-    min-height: 14px;
+export const StyledWarningIcon = styled(WarningIcon)`
+    margin-right: 4px;
+    min-width: 18px;
+    min-height: 18px;
 `;
 
 export default InfoWarningMessage;
