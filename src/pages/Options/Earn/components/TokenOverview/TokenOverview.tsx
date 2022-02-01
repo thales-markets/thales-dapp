@@ -113,7 +113,7 @@ export const TokentOverview: React.FC = () => {
                             </LightTooltip>
                             <LightTooltip title={t('options.earn.overview.earn-info-tooltip')}>
                                 <StyledLink
-                                    href="https://docs.thalesmarket.io/thales-token/thales-+-dodo-lp-rewards-guide"
+                                    href="https://docs.thalesmarket.io/thales-token/thales-lp-rewards-on-dodo-guide"
                                     target="_blank"
                                     rel="noreferrer"
                                 >
