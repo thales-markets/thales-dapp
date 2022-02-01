@@ -53,7 +53,11 @@ const RetroAirdrop: React.FC = () => {
     const isL2 = getIsOVM(networkId);
 
     const isClaimAvailable =
-        retroAirdrop && retroAirdrop.accountInfo && retroAirdrop.hasClaimRights && !retroAirdrop.claimed;
+        retroAirdrop &&
+        retroAirdrop.accountInfo &&
+        retroAirdrop.hasClaimRights &&
+        !retroAirdrop.claimed &&
+        !retroAirdrop.isClaimPaused;
 
     const airdropQuery = useRetroAirdropQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected && !!retroAirdropContract,
@@ -190,21 +194,32 @@ const RetroAirdrop: React.FC = () => {
                     {isClaimAvailable && <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />}
                     <ButtonContainerBottom>
                         {getClaimButton()}
-                        {retroAirdrop && !retroAirdrop.hasClaimRights && (
+                        {retroAirdrop && retroAirdrop.isClaimPaused && (
+                            <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.paused-message')}</ClaimMessage>
+                        )}
+                        {retroAirdrop && !retroAirdrop.isClaimPaused && !retroAirdrop.hasClaimRights && (
                             <ClaimMessage>
                                 {t('options.earn.snx-stakers.retro-airdrop.not-eligible-message')}
                             </ClaimMessage>
                         )}
-                        {retroAirdrop && retroAirdrop.hasClaimRights && retroAirdrop.claimed && (
-                            <ClaimMessage>{t('options.earn.snx-stakers.retro-airdrop.claimed-message')}</ClaimMessage>
-                        )}
-                        {retroAirdrop && retroAirdrop.hasClaimRights && !retroAirdrop.claimed && (
-                            <ClaimMessage>
-                                {quizCompleted
-                                    ? t('options.earn.snx-stakers.retro-airdrop.completed-quiz')
-                                    : t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')}
-                            </ClaimMessage>
-                        )}
+                        {retroAirdrop &&
+                            !retroAirdrop.isClaimPaused &&
+                            retroAirdrop.hasClaimRights &&
+                            retroAirdrop.claimed && (
+                                <ClaimMessage>
+                                    {t('options.earn.snx-stakers.retro-airdrop.claimed-message')}
+                                </ClaimMessage>
+                            )}
+                        {retroAirdrop &&
+                            !retroAirdrop.isClaimPaused &&
+                            retroAirdrop.hasClaimRights &&
+                            !retroAirdrop.claimed && (
+                                <ClaimMessage>
+                                    {quizCompleted
+                                        ? t('options.earn.snx-stakers.retro-airdrop.completed-quiz')
+                                        : t('options.earn.snx-stakers.retro-airdrop.complete-quiz-to-claim')}
+                                </ClaimMessage>
+                            )}
                     </ButtonContainerBottom>
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}

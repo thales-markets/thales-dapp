@@ -313,7 +313,8 @@
                     "complete-quiz-to-claim": "Complete quiz to claim this airdrop.",
                     "completed-quiz": "Quiz completed! You can claim the airdrop now.",
                     "claim-end-label": "Claimable until Sep 12, 2022.",
-                    "info-tooltip": "<0>The airdrop of 137 THALES was allocated to anyone who ever staked and claimed rewards using</0><0>- SNX staking on L1</0><0>- SNX staking on L2</0> <0>- xSNX</0> <0>- yearn SNX vault</0><0>since beginning of SNX staking until Sep 06, 2021 10:00 AM UTC.</0> <1>You can check if you were eligible in this </1><2 />."
+                    "info-tooltip": "<0>The airdrop of 137 THALES was allocated to anyone who ever staked and claimed rewards using</0><0>- SNX staking on L1</0><0>- SNX staking on L2</0> <0>- xSNX</0> <0>- yearn SNX vault</0><0>since beginning of SNX staking until Sep 06, 2021 10:00 AM UTC.</0> <1>You can check if you were eligible in this </1><2 />.",
+                    "paused-message": "Retro airdrop is paused."
                 },
                 "retro-rewards": {
                     "title": "Retro unlock",
@@ -345,7 +346,8 @@
                     "available-to-stake": "Available to stake",
                     "amount-to-stake": "Amount to stake",
                     "confirmation-message": "Tokens successfully staked",
-                    "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction."
+                    "info-tooltip": "Available staking rewards will be claimed as part of the stake transaction.",
+                    "paused-message": "Staking is paused."
                 },
                 "my-stake": {
                     "my-stake": "My Staking Balance",
@@ -376,7 +378,8 @@
                     "cancel-confirmation-message": "Unstaking successfully canceled",
                     "network-fee-cancel": "Cancel",
                     "network-fee-unstake": "Unstake",
-                    "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction."
+                    "info-tooltip": "Available staking rewards will be claimed as part of the start unstaking transaction.",
+                    "paused-message": "Unstaking is paused."
                 },
                 "staking-rewards": {
                     "title": "Staking Rewards",
@@ -386,7 +389,7 @@
                     "claiming": "Claiming",
                     "claimed-message": "You have already claimed the rewards for this week. Please come back next week.",
                     "not-eligible-message": "You are not eligible for these rewards.",
-                    "paused-message": "Claiming is paused, please try later.",
+                    "paused-message": "Claiming is paused.",
                     "confirmation-message": "Tokens successfully claimed",
                     "button-tooltip": "Claimed rewards are subject to a 10-week vesting period.",
                     "weekly-base-rewards": "Weekly base rewards pool",
@@ -427,7 +430,8 @@
                     "migrated-rewards": {
                         "title": "Migrated rewards",
                         "rewards-label": "Migrated rewards",
-                        "claimed-message": "You have already claimed migrated rewards."
+                        "claimed-message": "You have already claimed migrated rewards.",
+                        "info-tooltip": "<0>Unclaimed staking rewards from L1 have been migrated to L2 per </0><1 />."
                     },
                     "info-tooltip": "Unclaimed weekly rewards are forfeit."
                 }
@@ -1427,10 +1431,13 @@
     },
     "migration": {
         "title": "Migration",
+        "info-tooltip": "<0>During migration, THALES is first exchanged to OpTHALES on L1 mainnet, and then bridged to L2 Optimistic mainnet into L2 THALES per </0><1 />.",
         "migrated-rewards-title": "Migrated rewards",
         "migration-amount-label": "Amount to migrate",
         "from-label": "From",
         "to-label": "To",
+        "migration-delay-info": "Deposits take about twenty minutes before they're considered final on Optimistic mainnet.",
+        "migration-multisig-contact-warning": "Multisigs or contracts should not be migrating directly, otherwise, you will lose your funds.",
         "migrate-button": {
             "label": "Migrate",
             "progress-label": "Migration in progress...",

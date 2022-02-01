@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import { FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDiv } from 'theme/common';
+import { FlexDivColumn, FlexDivColumnCentered, FlexDivCentered, FlexDiv, FlexDivRowCentered } from 'theme/common';
 import Migrate from './Migrate';
 import Swap from './Swap';
 import { useLocation } from 'react-router-dom';
 import { history } from 'utils/routes';
 import queryString from 'query-string';
+import { StyledInfoIcon, StyledMaterialTooltip, Tip20Link } from '../components';
 
 const Migration: React.FC = () => {
     const { t } = useTranslation();
@@ -49,26 +50,40 @@ const Migration: React.FC = () => {
             <Wrapper>
                 <Container>
                     <OptionsTabContainer>
-                        {optionsTabContent.map((tab, index) => (
-                            <OptionsTab
-                                isActive={tab.id === selectedTab}
-                                key={index}
-                                index={index}
-                                onClick={() => {
-                                    history.push({
-                                        pathname: location.pathname,
-                                        search: queryString.stringify({
-                                            tab: 'migration',
-                                            action: tab.id,
-                                        }),
-                                    });
-                                    setSelectedTab(tab.id);
-                                }}
-                                className={`${tab.id === selectedTab ? 'selected' : ''}`}
-                            >
-                                {tab.name}
-                            </OptionsTab>
-                        ))}
+                        <FlexDiv>
+                            {optionsTabContent.map((tab, index) => (
+                                <OptionsTab
+                                    isActive={tab.id === selectedTab}
+                                    key={index}
+                                    index={index}
+                                    onClick={() => {
+                                        history.push({
+                                            pathname: location.pathname,
+                                            search: queryString.stringify({
+                                                tab: 'migration',
+                                                action: tab.id,
+                                            }),
+                                        });
+                                        setSelectedTab(tab.id);
+                                    }}
+                                    className={`${tab.id === selectedTab ? 'selected' : ''}`}
+                                >
+                                    {tab.name}
+                                </OptionsTab>
+                            ))}
+                        </FlexDiv>
+                        <StyledMaterialTooltip
+                            arrow={true}
+                            title={
+                                <Trans
+                                    i18nKey="migration.info-tooltip"
+                                    components={[<span key="1" />, <Tip20Link key="2" />]}
+                                />
+                            }
+                            interactive
+                        >
+                            <StyledInfoIcon />
+                        </StyledMaterialTooltip>
                     </OptionsTabContainer>
                     {selectedTab === 'migrate' && <Migrate />}
                     {selectedTab === 'swap' && <Swap />}
@@ -106,7 +121,7 @@ const Container = styled(FlexDivColumn)`
     }
 `;
 
-const OptionsTabContainer = styled(FlexDiv)`
+const OptionsTabContainer = styled(FlexDivRowCentered)`
     margin-bottom: 40px;
 `;
 

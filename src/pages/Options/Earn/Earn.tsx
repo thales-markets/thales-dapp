@@ -53,20 +53,25 @@ const EarnPage: React.FC = () => {
             name: t('options.earn.vesting.tab-title'),
             disabled: false,
         },
-        {
-            id: 'lp-staking',
-            name: t('options.earn.lp-staking.tab-title'),
-            disabled: false,
-        },
     ];
 
     if (isL2) {
+        tabs.push({
+            id: 'lp-staking',
+            name: t('options.earn.lp-staking.tab-title'),
+            disabled: false,
+        });
         tabs.push({
             id: 'migrated-rewards',
             name: t('migration.migrated-rewards-title'),
             disabled: false,
         });
     } else {
+        tabs.push({
+            id: 'lp-staking',
+            name: t('options.earn.lp-staking.tab-title'),
+            disabled: false,
+        });
         tabs.push({
             id: 'migration',
             name: t('migration.title'),
@@ -132,7 +137,7 @@ const EarnPage: React.FC = () => {
                                                 tab.disabled ? 'disabled' : ''
                                             }`}
                                         >
-                                            <InnerOptionsTab>
+                                            <InnerOptionsTab paddingLeft={tab.disabled ? 40 : 0}>
                                                 {`${tab.name} ${
                                                     tab.disabled ? `(${t('common.coming-soon').toLowerCase()})` : ''
                                                 }`}
@@ -332,11 +337,12 @@ const OptionsTab = styled(FlexDivCentered)<{ isActive: boolean; index: number; s
     }
 `;
 
-const InnerOptionsTab = styled(FlexDivCentered)`
+const InnerOptionsTab = styled(FlexDivCentered)<{ paddingLeft: number }>`
     background: linear-gradient(281.48deg, #04045a -16.58%, #141874 97.94%);
     border-radius: 10px 10px 0 0;
     width: 100%;
     height: 100%;
+    padding-left: ${(props) => props.paddingLeft}px;
 `;
 
 const WidgetsContainer = styled(FlexDivCentered)`

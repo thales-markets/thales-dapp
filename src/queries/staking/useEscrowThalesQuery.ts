@@ -9,6 +9,7 @@ type EscrowThalesQueryResponse = {
     claimable: number;
     totalEscrowBalanceNotIncludedInStaking: number;
     totalEscrowedRewards: number;
+    rawClaimable: string;
 };
 
 const useEscrowThalesQuery = (
@@ -24,6 +25,7 @@ const useEscrowThalesQuery = (
                 claimable: 0,
                 totalEscrowBalanceNotIncludedInStaking: 0,
                 totalEscrowedRewards: 0,
+                rawClaimable: '0',
             };
 
             try {
@@ -45,6 +47,7 @@ const useEscrowThalesQuery = (
 
                     escrow.escrowedBalance = bigNumberFormatter(escrowedBalance);
                     escrow.claimable = bigNumberFormatter(claimable);
+                    escrow.rawClaimable = claimable;
                 }
             } catch {}
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -11,7 +11,15 @@ import { MigratedReward } from 'types/token';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import { refetchMigratedRewards, refetchUserTokenTransactions } from 'utils/queryConnector';
-import { ButtonContainer, ClaimMessage, EarnSection, SectionHeader, StyledMaterialTooltip } from '../../components';
+import {
+    StyledInfoIcon,
+    ButtonContainer,
+    ClaimMessage,
+    EarnSection,
+    SectionHeader,
+    StyledMaterialTooltip,
+    Tip20Link,
+} from '../../components';
 import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import NetworkFees from 'pages/Options/components/NetworkFees';
 import { dispatchMarketNotification } from 'utils/options';
@@ -145,7 +153,21 @@ const ClaimMigratedRewards: React.FC = () => {
             style={{ gridColumn: 'span 10', gridRow: 'span 2', padding: 0, border: '0', background: 'transparent' }}
         >
             <SectionHeader>
-                <div>{t('options.earn.thales-staking.staking-rewards.migrated-rewards.title')}</div>
+                <div>
+                    {t('options.earn.thales-staking.staking-rewards.migrated-rewards.title')}
+                    <StyledMaterialTooltip
+                        arrow={true}
+                        title={
+                            <Trans
+                                i18nKey="options.earn.thales-staking.staking-rewards.migrated-rewards.info-tooltip"
+                                components={[<span key="1" />, <Tip20Link key="2" />]}
+                            />
+                        }
+                        interactive
+                    >
+                        <StyledInfoIcon />
+                    </StyledMaterialTooltip>
+                </div>
             </SectionHeader>
             <GridContainer>
                 <StakingRewardsItem style={{ gridColumn: 'span 12' }}>

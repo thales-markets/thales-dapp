@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+    ClaimMessage,
     EarnSection,
     SectionContentContainer,
     SectionHeader,
@@ -70,6 +71,7 @@ const Unstake: React.FC = () => {
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.thalesStaked) : 0;
     const unstakingAmount =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.unstakingAmount) : 0;
+    const isStakingPaused = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.paused;
 
     const isAmountEntered = Number(amountToUnstake) > 0;
     const insufficientBalance = Number(amountToUnstake) > thalesStaked || !thalesStaked;
@@ -483,7 +485,12 @@ const Unstake: React.FC = () => {
                     />
                 </InputContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />
-                <ButtonsContainer>{getSubmitButton()}</ButtonsContainer>
+                <ButtonsContainer>
+                    {getSubmitButton()}
+                    {isStakingPaused && (
+                        <ClaimMessage>{t('options.earn.thales-staking.unstake.paused-message')}</ClaimMessage>
+                    )}
+                </ButtonsContainer>
                 <ValidationMessage
                     showValidation={txErrorMessage !== null}
                     message={txErrorMessage}

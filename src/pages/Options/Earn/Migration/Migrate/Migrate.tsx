@@ -37,6 +37,10 @@ import {
     ThalesWalletAmountLabel,
 } from '../components';
 import SimpleLoader from '../../components/SimpleLoader';
+import InfoMessage from 'components/InfoMessage';
+import InfoWarningMessage from 'components/InfoWarningMessage';
+import { FlexDiv } from 'theme/common';
+import styled from 'styled-components';
 
 const Migrate: React.FC = () => {
     const { t } = useTranslation();
@@ -269,6 +273,12 @@ const Migrate: React.FC = () => {
             </ResultContainer>
             <Divider />
             <NetworkFees gasLimit={gasLimit} disabled={isSubmitting} />
+            <MessageContainer>
+                <InfoMessage message={t('migration.migration-delay-info')}></InfoMessage>
+            </MessageContainer>
+            <MessageContainer>
+                <InfoWarningMessage message={t('migration.migration-multisig-contact-warning')}></InfoWarningMessage>
+            </MessageContainer>
             <SubmitButtonContainer>{getSubmitButton()}</SubmitButtonContainer>
             <ValidationMessage
                 showValidation={txErrorMessage !== null}
@@ -278,5 +288,9 @@ const Migrate: React.FC = () => {
         </>
     );
 };
+
+const MessageContainer = styled(FlexDiv)`
+    margin-top: 10px;
+`;
 
 export default Migrate;

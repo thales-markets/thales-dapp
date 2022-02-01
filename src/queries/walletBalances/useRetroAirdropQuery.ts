@@ -15,9 +15,10 @@ const useRetroAirdropQuery = (walletAddress: string, networkId: NetworkId, optio
             const retroAirdropHash = (isL2 ? l2retroAirdropHashes : retroAirdropHashes).find(
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
             );
+            const paused = await (snxJSConnector as any).retroAirdropContract.paused();
 
             const airdrop: Airdrop = {
-                isClaimPaused: false,
+                isClaimPaused: paused,
                 hasClaimRights: retroAirdropHash !== undefined,
                 claimed: false,
             };

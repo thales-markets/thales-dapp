@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+    ClaimMessage,
     EarnSection,
     FullRow,
     SectionContentContainer,
@@ -9,7 +10,6 @@ import {
 } from '../../components';
 import { formatCurrencyWithKey, truncToDecimals } from '../../../../../utils/formatters/number';
 import { THALES_CURRENCY } from '../../../../../constants/currency';
-import { FlexDivCentered } from '../../../../../theme/common';
 import NumericInput from '../../../Market/components/NumericInput';
 import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from '../../../Market/components';
 import useThalesBalanceQuery from '../../../../../queries/walletBalances/useThalesBalanceQuery';
@@ -34,6 +34,7 @@ import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import useStakingThalesQuery from 'queries/staking/useStakingThalesQuery';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
+import { FlexDivColumnCentered } from 'theme/common';
 
 const Stake: React.FC = () => {
     const { t } = useTranslation();
@@ -62,6 +63,7 @@ const Stake: React.FC = () => {
     const thalesBalance =
         thalesBalanceQuery.isSuccess && thalesBalanceQuery.data ? Number(thalesBalanceQuery.data.balance) : 0;
     const isUnstaking = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.isUnstaking;
+    const isStakingPaused = stakingThalesQuery.isSuccess && stakingThalesQuery.data && stakingThalesQuery.data.paused;
 
     const isAmountEntered = Number(amountToStake) > 0;
     const insufficientBalance = Number(amountToStake) > thalesBalance || !thalesBalance;
@@ -286,7 +288,12 @@ const Stake: React.FC = () => {
                     />
                 </InputContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />
-                <StakeButtonDiv>{getStakeButton()}</StakeButtonDiv>
+                <StakeButtonDiv>
+                    {getStakeButton()}
+                    {isStakingPaused && (
+                        <ClaimMessage>{t('options.earn.thales-staking.stake.paused-message')}</ClaimMessage>
+                    )}
+                </StakeButtonDiv>
                 <FullRow>
                     <ValidationMessage
                         showValidation={txErrorMessage !== null}
@@ -299,8 +306,9 @@ const Stake: React.FC = () => {
     );
 };
 
-const StakeButtonDiv = styled(FlexDivCentered)`
+const StakeButtonDiv = styled(FlexDivColumnCentered)`
     padding-top: 40px;
+    align-items: center;
     @media (max-width: 1024px) {
         padding-top: 15px;
     }

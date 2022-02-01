@@ -14,6 +14,7 @@ type StakingThalesQueryResponse = {
     unstakeDurationPeriod: number;
     fixedPeriodReward: number;
     totalStakedAmount: number;
+    paused: boolean;
 };
 
 const useStakingThalesQuery = (
@@ -33,18 +34,21 @@ const useStakingThalesQuery = (
                 unstakeDurationPeriod: 7 * 24 * 60 * 60, // one week
                 fixedPeriodReward: 0,
                 totalStakedAmount: 0,
+                paused: false,
             };
 
             try {
-                const [unstakeDurationPeriod, fixedPeriodReward, totalStakedAmount] = await Promise.all([
+                const [unstakeDurationPeriod, fixedPeriodReward, totalStakedAmount, paused] = await Promise.all([
                     (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
                     (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
                     (snxJSConnector as any).stakingThalesContract.totalStakedAmount(),
+                    (snxJSConnector as any).stakingThalesContract.paused(),
                 ]);
 
                 staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
                 staking.fixedPeriodReward = bigNumberFormatter(fixedPeriodReward);
                 staking.totalStakedAmount = bigNumberFormatter(totalStakedAmount);
+                staking.paused = paused;
 
                 if (walletAddress !== '') {
                     const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([

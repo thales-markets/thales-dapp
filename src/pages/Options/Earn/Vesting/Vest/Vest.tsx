@@ -36,6 +36,7 @@ const Vest: React.FC = () => {
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const [isClaiming, setIsClaiming] = useState(false);
     const [claimable, setClaimable] = useState<number | string>('0');
+    const [rawClaimable, setRawClaimable] = useState<string>('0');
     const [gasLimit, setGasLimit] = useState<number | null>(null);
     const [txErrorMessage, setTxErrorMessage] = useState<string | null>(null);
     const [l1Fee, setL1Fee] = useState<number | null>(null);
@@ -49,6 +50,7 @@ const Vest: React.FC = () => {
     useEffect(() => {
         if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
             setClaimable(escrowThalesQuery.data.claimable);
+            setRawClaimable(escrowThalesQuery.data.rawClaimable);
         }
     }, [escrowThalesQuery.isSuccess, escrowThalesQuery.data]);
 
@@ -61,17 +63,16 @@ const Vest: React.FC = () => {
         const fetchGasLimit = async () => {
             try {
                 const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
-                const toVest = ethers.utils.parseEther(claimable.toString());
 
                 if (isL2) {
                     const [gasEstimate, l1FeeInWei] = await Promise.all([
-                        escrowThalesContractWithSigner.estimateGas.vest(toVest),
-                        fetchL1Fee(escrowThalesContractWithSigner, toVest),
+                        escrowThalesContractWithSigner.estimateGas.vest(rawClaimable),
+                        fetchL1Fee(escrowThalesContractWithSigner, rawClaimable),
                     ]);
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
                     setL1Fee(l1FeeInWei);
                 } else {
-                    const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(toVest);
+                    const gasEstimate = await escrowThalesContractWithSigner.estimateGas.vest(rawClaimable);
                     setGasLimit(formatGasLimit(gasEstimate, networkId));
                 }
             } catch (e) {
@@ -88,9 +89,8 @@ const Vest: React.FC = () => {
             setTxErrorMessage(null);
             setIsClaiming(true);
             const escrowThalesContractWithSigner = escrowThalesContract.connect((snxJSConnector as any).signer);
-            const toVest = ethers.utils.parseEther(claimable.toString());
 
-            const tx = (await escrowThalesContractWithSigner.vest(toVest, {
+            const tx = (await escrowThalesContractWithSigner.vest(rawClaimable, {
                 gasLimit: MAX_L2_GAS_LIMIT,
             })) as ethers.ContractTransaction;
             const txResult = await tx.wait();

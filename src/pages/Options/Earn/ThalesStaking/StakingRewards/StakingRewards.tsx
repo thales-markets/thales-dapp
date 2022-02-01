@@ -515,10 +515,10 @@ const PeriodLabel = styled(FlexDivRowCentered)`
 `;
 
 const BonusInfoIcon = styled(InfoIcon)`
-    min-width: 16px;
-    min-height: 16px;
+    min-width: 14px;
+    min-height: 14px;
     margin-left: 4px;
-    margin-bottom: -3px;
+    margin-bottom: -2px;
 `;
 
 export default StakingRewards;
