@@ -20,6 +20,7 @@ export const secondsToTime = (seconds: number) => {
 export const formattedDuration = (
     duration: Duration,
     dateTimeTranslationMap: any,
+    showSeconds = true,
     delimiter = ' ',
     firstTwo = false
 ) => {
@@ -35,7 +36,19 @@ export const formattedDuration = (
         }`;
     }
     if (duration.days) {
-        return `${duration.days} ${duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']}`;
+        if (duration.days === 1 && duration.hours === 0) {
+            return `24 ${dateTimeTranslationMap['hours']}`;
+        }
+
+        return `${duration.days} ${
+            duration.days > 1 ? dateTimeTranslationMap['days'] : dateTimeTranslationMap['day']
+        } ${
+            duration.hours
+                ? `${duration.hours} ${
+                      duration.hours > 1 ? dateTimeTranslationMap['hours'] : dateTimeTranslationMap['hour']
+                  }`
+                : ''
+        }`;
     }
     if (duration.hours) {
         return `${duration.hours} ${
@@ -43,8 +56,10 @@ export const formattedDuration = (
         }`;
     }
     if (duration.minutes) {
-        if (duration.minutes > 9) {
-            return `${duration.minutes} ${dateTimeTranslationMap['minutes']}`;
+        if (duration.minutes > 9 || !showSeconds) {
+            return `${duration.minutes} ${
+                duration.minutes > 1 ? dateTimeTranslationMap['minutes'] : dateTimeTranslationMap['minute']
+            }`;
         }
         formatted.push(`${duration.minutes}${dateTimeTranslationMap['minutes-short']}`);
     }

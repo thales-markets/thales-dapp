@@ -294,17 +294,16 @@ export const Logo = styled(Link)`
     flex: 1;
     content: ' ';
     background-image: url(${logo});
-    height: 77px;
+    height: 52px;
     @media (max-width: 468px) {
-        height: 54px;
-        margin-top: 6px;
+        height: 36px;
         &.footer_logo {
             margin-right: -50px;
         }
     }
-    width: 230px;
+    width: 214px;
     margin-right: 20px;
-    margin-bottom: 12px;
+    margin-top: 6px;
     background-repeat: no-repeat;
 `;
 

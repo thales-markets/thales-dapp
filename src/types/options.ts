@@ -65,6 +65,7 @@ export type HistoricalOptionsMarketInfo = {
     country?: string;
     eventName?: string;
     outcome?: string;
+    finalPrice?: number;
 };
 
 export type OptionsMarketInfo = {

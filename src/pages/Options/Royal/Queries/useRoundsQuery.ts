@@ -4,16 +4,24 @@ import QUERY_KEYS from 'constants/queryKeys';
 import thalesData from 'thales-data';
 
 type RoundData = {
-    eliminatedPerRound: string;
-    totalPlayersPerRound: string;
+    round: number;
+    season: number;
+    result?: number;
+    strikePrice?: number;
+    finalPrice?: number;
+    eliminatedPerRoundPerSeason: string;
+    totalPlayersPerRoundPerSeason: string;
 };
 
-const useRoundsQuery = (networkId: NetworkId, options?: UseQueryOptions<RoundData[]>) => {
+const useRoundsQuery = (selectedSeason: number, networkId: NetworkId, options?: UseQueryOptions<RoundData[]>) => {
     return useQuery<RoundData[]>(
-        QUERY_KEYS.Royale.Rounds(networkId),
+        QUERY_KEYS.Royale.Rounds(networkId, selectedSeason),
         async () => {
-            console.log('Round Query');
-            const data = await thalesData.binaryOptions.thalesRoyaleRounds({ network: networkId });
+            if (selectedSeason === 0) return [];
+            const data = await thalesData.binaryOptions.thalesRoyaleRounds({
+                season: selectedSeason,
+                network: networkId,
+            });
             const sortedRounds = data.sort((a: any, b: any) => (a.round > b.round ? 1 : -1));
             return sortedRounds;
         },

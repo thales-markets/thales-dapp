@@ -1,12 +1,19 @@
 {
     "header": {
         "links": {
+            "learn": {
+                "title": "Learn",
+                "docs": "Documentation",
+                "guides": "Guides",
+                "whitepaper": "Whitepaper"
+            },
+            "governance": "Governance",
             "faq": "FAQ",
             "partners": "Integrations",
             "community": "Community",
             "blog": "Blog",
-            "docs": "Docs",
-            "tokenomics": "Tokenomics",
+            "docs": "Learn",
+            "token": "Token",
             "test": "Test"
         }
     },
@@ -40,7 +47,7 @@
         }
     },
     "landing-page": {
-        "title": "Predict, participate and have fun",
+        "title": "Trade, participate and have fun",
         "subtitle": "Novel on-chain, permissionless, and non-custodial Parimutuel Markets.",
         "description": "Create, trade, and exercise binary options on Ethereum",
         "use-app": "DAPP",
@@ -51,7 +58,7 @@
         "q2": "How does it work?",
         "q3": "How is it structured?",
         "q4": "Why does it matter?",
-        "a1": "Thales is an Ethereum protocol that allows the creation of peer-to-peer <bold>parimutuel markets</bold> that anyone can join. This building block is the foundation of novel on-chain initiatives, from <bold>order book based positional markets platform</bold> to <bold>survival betting games.</bold>",
+        "a1": "Thales is an Ethereum protocol that allows the creation of peer-to-peer <bold>parimutuel markets</bold> that anyone can join. This building block is the foundation of novel on-chain initiatives, from a <bold>platform for AMM-based positional markets</bold> to <bold>immersive gamified experiences</bold>, and much more.",
         "a2": "The set of smart contracts composing Thales leverages uncensorable <bold>sUSD as collateral</bold>, an immutable source of truth for market settlement from <bold>Chainlink</bold> data feeds, and all the advantages (speed, costs, and security) of a rollup-centric network like <bold>Optimism.</bold>",
         "a3": "<bold>Decentralization</bold> is key to resiliency.\n\n This is why <bold>ThalesDAO</bold>, as a collective, is the owner of the protocol and it conducts <bold>governance</bold> through the <bold>Thales Council<bold>, elected by THALES token holders.",
         "a4": "Because building on the right foundations attracts like-minded people who care deeply about the open finance vision.\n\n With the support of bright minds, talented souls, and passionate people from the Thales community the protocol gets iterated, battle-tested, and more resilient every day.\n\n We are on our way to becoming <bold>unstoppable.</bold>",
@@ -91,7 +98,16 @@
             "thirdQ": "What is the utility of the THALES token?",
             "thirdA": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective staker a right to participate in the Thales governance functions. In this way, THALES staker represents the foundation of every key decision relevant for the development of the protocol. Any additional utility of the token, that could be relevant to the protocol, can be decided and voted on by the protocols community governance structure."
         },
-        "discord": "Join Discord"
+        "discord": "Join Discord",
+        "footer": {
+            "privacy-policy": "Privacy Policy",
+            "terms-of-use": "Terms of Use",
+            "brand-assets": "Brand assets",
+            "etherscan": "Etherscan",
+            "theme": "theme",
+            "language": "Language",
+            "all-rights-reserved": "© {{year}} THALES DAO All rights reserved."
+        }
     },
     "maintenance-page": {
         "title": "Stay tuned, coming soon...",
@@ -172,6 +188,7 @@
             "earn-label": "THALES",
             "royale-label": "Thales Royale",
             "governance-label": "Governance",
+            "game-label": "Tale of Thales",
             "trade-history-label": "Trading history",
             "amm-mining-label": "AMM rewards",
             "amm-reporting-label": "AMM reporting"
@@ -1037,15 +1054,24 @@
                 "start-royale": "Start Thales Royale",
                 "ends": "Thales Royale Ends In:",
                 "question": "Do you have what it takes to beat the competition and reach the final round?",
-                "info2": "Thales Royale is a <bold>sequential winner-takes-all prediction game,</bold> played in 6 rounds.",
-                "info3": "After the sign-up period finishes, participants are presented with a target price for an asset on a future strike date. They must <bold>predict if the actual price of the asset will be higher (△) or lower (◯) than the target price on said strike date.</bold>",
+                "info2": "Thales Royale is a <bold>sequential winner-takes-all positioning game,</bold> played in 6 rounds.",
+                "info3": "After the sign-up period finishes, participants are presented with a target price for an asset on a future strike date. They must <bold>choose if the actual price of the asset will be higher (△) or lower (◯) than the target price on said strike date.</bold>",
                 "info4": "Those who guess correctly advance to the next round. Those who don't are eliminated. Players who reach and beat the final round split the whole prize pool.",
-                "info5": "All the information, rules, and detailed rounds & prize structure can be found here: ",
-                "info6": "<italic>Good luck and let the battle begin!</italic>",
+                "info5": "The current buy-in is <bold>30 sUSD</bold>. The winner(s) will share a prize pool composed of all participants' buy-ins plus current incentives of <bold>1000 sUSD</bold> and <bold>1000 THALES</bold>, as an added bonus.",
+                "info6": "All the information, rules, and detailed rounds & prize structure can be found here: ",
+                "info7": "<italic>Good luck and let the battle begin!</italic>",
                 "blog": "[Thales Royale blog post]",
                 "player-no": "Player  <sans>№<sans>: ",
                 "eliminated": "You have been eliminated",
                 "period-expired": "Sign up period has expired",
+                "season": "Season",
+                "loading-season": "Loading",
+                "season-not-started": "Season did not start yet",
+                "season-ready-in": "Next season ready to start in:",
+                "start-season": "Start season",
+                "season-finished": "Season finished",
+                "approve-susd": "Approve sUSD",
+                "buy-in": "Buy-in: {{buyInAmount}} sUSD",
                 "table-header": {
                     "status": "Status",
                     "avatar": "Avatar",
@@ -1065,7 +1091,8 @@
                 "dead": "dead",
                 "alive": "alive",
                 "winner": "winner",
-                "users-per-page": "Users per page"
+                "users-per-page": "Users per page",
+                "no-users": "No players."
             },
             "redirect-dialog": {
                 "title": "You are on Optimism Kovan Network",
@@ -1075,27 +1102,36 @@
             },
             "wrong-network-dialog": {
                 "title": "Wrong network!",
-                "message": "Please switch to Optimism Kovan to continue",
+                "message": "Please switch to Optimistic Ethereum to continue",
                 "return-to-dapp": "Return to the Thales dApp",
-                "button": "Switch to Optimism Kovan",
-                "parameters": "OP Kovan parameters"
+                "button": "Switch to Optimistic Ethereum",
+                "parameters": "OP Ethereum parameters"
             },
             "wallet-not-connected-dialog": {
                 "title": "Wallet not connected",
                 "message": "Please connect your wallet to continue",
                 "button": "Connect wallet"
+            },
+            "edit-user-data-dialog": {
+                "change-avatar": "Enter Avatar URL",
+                "avatar": "Avatar image",
+                "avatar-tip": "Please enter valid URL ending with either .jpg, .jpeg, .png, .svg or .gif",
+                "change-display-name": "Apply changes",
+                "enter-display-name": "Enter Display Name"
             }
         },
         "amm-mining": {
             "title": "AMM rewards",
-            "subtitle1": "The <a>first batch of Thales markets</a> on Optimism it's currently being incentivized with 20,000 THALES. This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
-            "subtitle2": "This incentive will run until January 7th, 8:00am UTC. The THALES tokens rewards will be distributed as soon as the token is available on Optimism L2.  For more information please <b>read our blog post</b>",
-            "subtitle3": "You can check the expected amount of THALES rewards on the table below.",
+            "subtitle1": "The first batch of Thales markets on Optimism was incentivized with 20,000 THALES.",
+            "subtitle1a": "The second batch is also being incentivized with 20,000 THALES (10,000 THALES for short trades and 10,000 THALES for long trades). This incentive will be distributed pro-rata based on volume to all <b>AMM buyers.</b>",
+            "subtitle2": "This incentive will run until January 26th, 8:00am UTC. The THALES tokens rewards will be distributed as soon as the token is available on Optimism L2.  For more information please <b>read our blog post</b>",
+            "subtitle3": "You can check the expected amount of THALES rewards in the table below.",
             "subtitle4": "The results presented are provisional and subject to final corrections by Thales CCs and Thales Council",
             "address": "Address",
             "volume": "Volume",
             "share": "Share",
-            "rewards": "Rewards"
+            "rewards": "Rewards",
+            "round": "Round"
         },
         "amm-reporting": {
             "market": "Market",
@@ -1117,7 +1153,6 @@
             "available-to-buy-short": "Available to buy short"
         }
     },
-
     "governance": {
         "title": "Governance",
         "you": "You",
@@ -1216,5 +1251,157 @@
         "beta": "BETA",
         "price-changed-warning": "Price changed, please review",
         "explanation-text": "<0>Thales AMM is a smart contract that aims to provide liquidity to Thales Binary Markets.</0><0>The AMM uses the BlackScholes algorithm to determine a realistic price for a binary option. Based on that price and the skew, which represents the AMM exposure to the market at hand, the AMM will offer to buy or sell quotes to traders.</0><0>Thales' AMM always aims to rebalance its exposure, so if more long options are being bought from the AMM than short, it will add a skew price impact to the long option pricing, while offering short options at base price.</0><0>As the AMM is in beta it has a cap (limit) per market and the amount of options that can be bought/sold at any time is limited. However, even if all options on one side are bought from the AMM, more liquidity will be made available as soon as a trader buys options of the opposite position.</0><0>Thales' AMM only supports trading on a market with calculated odds via BlackScholes above 10% and below 90% and up to 24 hours before market maturity to avoid edge cases and last-minute frontrunning.</0><0>More information about the AMM can be found here: </0><1 />"
+    },
+    "articles": {
+        "token": {
+            "list": {
+                "1": "What’s THALES token?",
+                "2": "How it is distributed?",
+                "3": "How to get THALES token?",
+                "4": "How to stake THALES token?",
+                "5": "Why does this protocol need a token?"
+            },
+            "title": "THALES TOKEN",
+            "paragraphs": {
+                "1": "On the technical side, THALES is a <bold>fixed-supply standard ERC-20 token</bold> on the Ethereum network.\n\n Its only purpose is to <bold>govern the Thales protocol</bold>, granting voting power for DAO elections to those who stake it.\n\n This voting power for stakers is shown on the <bold>governance site</bold> and it can currently be used to participate in Thales Council elections.\n\n Any further utility of the token that could be relevant to the protocol can also be decided and voted on by the ThalesDAO governance structures, more specifically the Thales Council.",
+                "2": "For a more detailed breakdown and explanation of the different allocations we highly suggest you grab a cup of your favorite hot beverage and dive into the <bold>THALES tokenomics blog post.</bold>",
+                "3": "<bold>(*)</bold> Ongoing distribution to SNX stakers is currently paused, <bold2>TIP-18</bold2>, until it is adapted to the new staking system.",
+                "4": "You can obtain THALES tokens in both <bold>DODO exchange</bold> and <bold2>Uniswap</bold2> on Ethereum main net. It is also possible to do so via aggregators like 1inch and Matcha.\n\n THALES token will soon be available on Optimism network (Ethereum Layer 2).\n\n For more information regarding the THALES token migration please check <bold3>TIP-17</bold3>.",
+                "5": "Staking your THALES tokens means that you are <bold>locking them up in a smart contract to receive voting power</bold>, effectively making those tokens “untransferable” as long as they remain staked. To unstake them there’s a 7-day cool-off period after which the THALES tokens can be transferred again.\n\n Follow <bold>this detailed guide</bold> with step-by-step instructions and screenshots to stake your THALES tokens.",
+                "6": "THALES token is at the core of governance structures and it’s a key component in achieving an <bold>effective pace of developments and innovations in the Parimutuel markets niche, while still maintaining a decentralized organizational structure.</bold>"
+            }
+        },
+        "governance": {
+            "list": {
+                "1": "THALES DAOs",
+                "2": "THALES Council (Aka “the Brain”)",
+                "3": "Treasury DAO (Aka “the Pocket”)",
+                "4": "Protocol DAO (Aka “The Heart”)",
+                "5": "How to Start Participating"
+            },
+            "title": "THALES GOVERNANCE",
+            "paragraphs": {
+                "intro1": "Thales protocol governance system is composed of various <bold>decentralized autonomous organizations</bold> (DAOs) that oversee different parts of the protocol’s operations and developments.\n\n At the core of this governance structure are the <bold>THALES token stakers</bold>, that are responsible for overseeing and electing the DAO members themselves by <bold>voting</bold> on the different elections.",
+                "intro2": "The goal of this kind of governance framework is to promote <bold>censorship resistance</bold> and <bold>decentralization</bold> while also maintaining <bold>low friction</bold> for decision-making and new feature deployments.",
+                "1": "Each of these organizations has its own <bold>set of responsibilities</bold> and all of them together share the same mission of enabling the most optimal, efficient, and censorship-resistant way for the Thales community to be the main driving force of the project.",
+                "2": "Thales Council can be considered the <bold>chief advisory body of the Thales governance system.</bold>\n\n The Thales Council’s main responsibilities are conducting <bold>Thales Improvement Proposal (“TIP”) reviews,</bold> interacting with TIP proposers while <bold>debating the implications of proposed changes, and coordinating with the ProtocolDAO</bold> regarding the technical implications and implementations.\n\n But... what is a TIP?\n\n <url>Thales Improvement Proposals (TIPs)</url> are artifacts used to <bold>describe proposed changes to the core Thales protocol.</bold>\n\n They can be <bold>authored by anyone</bold> and feature the motivation, technical specifications, and rationale behind design decisions related to the proposed idea. It is basically a <bold>design document</bold> that provides information to the Thales community about a proposed change to the system.\n\n The author is responsible for building consensus within the <bold>community</bold> and documenting dissenting opinions.\n\n You can find all previous TIPs on the <bold>governance site</bold> and a draft with all the TIP-creation guidelines <bold>here.</bold>\n\n Members of the Thales Council are elected by the community utilizing their staked THALES tokens as voting power during the Thales Council elections. These elections are organized at pre-defined intervals where an open call for nominees (and their pitches) is performed. Everyone is welcome to nominate themselves and participate in Thales governance.",
+                "3": "The Treasury DAO’s primary purpose is to manage Thales protocol’s treasury and is responsible for properly incentivizing the other governing bodies, prioritizing asset management strategies, and supporting further developments of the protocol. All of the DAO roles of the Thales governance structure are paid a certain stipend by the Treasury DAO.\n\n This DAO doesn’t have regular elections at this early stage but could have if the Thales Council decides so when time is due.",
+                "4": "The Protocol DAO is the owner of Thales protocol’s core smart contracts and its main responsibilities are <bold>upgrading and releasing new contracts</bold> (on behalf of the Thales Council), <bold>implementation of approved TIPs</bold>, and <bold>operational security.</bold>\n\n The Protocol DAO is managed in an m-of-n multi-signature wallet (“Multisig”) capacity by its members, which are selected by balancing the need to populate this group with qualified and competent members aligned with the long-term interest of the project.\n\n This DAO doesn’t have regular elections at this early stage, due to its need to have constituents deeply familiarized with the protocol architecture, dependencies, and roadmap on a technical level.",
+                "5": "If you feel moved to contribute or are just curious about what Thales is doing, then by far the most optimal way to start your journey is to <url>join Thales Discord</url>, introduce yourself, and look where the interesting discussions are taking place.\n\n We’ll be waiting for you. Let’s build this together!"
+            }
+        },
+        "whitepaper": {
+            "title": "THALES WHITEPAPER",
+            "date": "November 2, 2021",
+            "paragraphs": {
+                "abstract": {
+                    "title": "Abstract",
+                    "section1": "Thales is a protocol that allows formation and participation in peer-to-peer parimutuel markets on Ethereum network. Born out of the Synthetix ecosystem, Thales leverages ChainLink provided price feeds, 0x limit order books, and the sUSD stablecoin to provide participants a novel on-chain, permissionless, and non-custodial way to participate in the price movement of crypto assets and certain non-crypto assets."
+                },
+                "1": {
+                    "title": "1 Introduction",
+                    "section1": "Decentralized derivatives present a novel opportunity to disintermediate barriers that divide global markets, reducing net efficiency and leaving market segments vulnerable to opacity. Bitcoin and Ethereum derivatives experienced tremendous growth, notably in the form of perpetual swaps and vanilla options on centralized platforms. With a high counter-party risk of centralized solutions, the need for trustless, self-custodied, decentralized crypto asset derivative products is clear. Thales’ goal is to contribute to alleviating this need by providing participants a novel on-chain, permissionless, versatile, and non-custodial derivative protocol.",
+                    "section2": "Thales enables participants to take part in price movement or certain on-chain outcomes of supported assets around available on-chain data feeds. Thales accomplishes this by utilizing its own parimutuel markets mechanism. These parimutuel markets are deployable by any user and are collateralized by uncensorable and decentralized stablecoin sUSD, the flagship product of Synthetix. These markets are deployed with custom strike threshold and maturity date, allowing unprecedented versa-\ntility. The majority of on-chain data feeds used by Thales parimutuel markets stem from Chainlink and are used as immutable sources of truth for market settlement.",
+                    "section3": "Combining everything mentioned, the following statement can be deduced: There is no way to stop a person from minting positional tokens for Thales parimutuel markets with sUSD and there is no way to stop a person from exercising his winning positional tokens for sUSD. In the event of a front-end not being functional for whatever reason, a user could always interact with the Thales smart contracts directly."
+                },
+                "1-1": {
+                    "title": "1.1 Thales Parimutuel Markets",
+                    "section1": "Thales’ primary innovation is a novel method of parimutuel market formation and participation. The definition of Parimutuel Market is a market where collateral is placed in a pool and final payout to participants is not determined until the market-settling event is finalized. By leveraging the secure, permissionless and non-custodial nature of Ethereum smart contracts, every participant is able to form a Thales parimutuel market around supported assets with custom parameters and every participant is able to participate in any formed Thales parimutuel market. Other than versatility and openness, when compared to other trading platforms, Thales parimutuel markets have the benefits of a limited risk environment. With capped downside and capped upside, both calculable from the start, participants are exposed to an easily understandable and familiar way to take advantage of various assets’ price- movements (or lack thereof).",
+                    "section2": "Thales Parimutuel Markets represent a novel financial mechanism in which participants’ collateral is placed together in an Ethereum smart-contract-based pool and participants in this Parimutuel Market’s pool collectively ensure that some participants’ collateral is protected (or even granted a windfall) based on a future event with an uncertain outcome. Depending on how this market’s particular event manifests in reality, the smart contracts underlying a Parimutuel Market will autonomously and independently execute according to the rules and terms established from the aggregated activity of the relevant Market Participants.",
+                    "section3": "While Thales is ideal for creating Parimutuel Markets for events related to price movements of crypto-assets, the protocol is not limited solely to such use and, theoretically, Parimutuel Markets may be introduced for any type of off-chain event. Further, some crypto-assets that are not natively tracked by the Ethereum blockchain (such as BTC) may also form the basis for Parimutuel Market events. This is accomplished by utilizing a network-authenticated reference data providers of information that can be read and processed on the blockchain, called ”oracles”. Given Thales’ goal of a system without a specific, discrete, and unilateral point of failure, the protocol relies on the ChainLink decentralized oracle solution project to provide this information.",
+                    "section4": "Parimutuel Markets on Thales are formed by Market Creators who set the parameters of the market as they see fit. For market creation, they are given a list of supported assets to choose from and are free to manually input the Strike Price and Maturity Date (including a specific Time) for this new market. Market Creator is also entailed to deposit initial collateral for this new market for which he receives proportional positional tokens.",
+                    "section5": "Assets pooled by market makers into market pools are used as collateral that secures the minted Positional Tokens. Each unit of collateral deposited mints an equal number of each positional tokens that represent positions in a particular parimutuel market. There are two distinct types of Positional Tokens: those where a Participant’s position is insured in the case the market determining event occurs positively, and those where a Participant’s position is insured in the case the same event occurs negatively. Only the holders of one of the types of Positional Tokens will receive coverage according to their claims."
+                },
+                "1-2": {
+                    "title": "1.2 Uncensorable and decentralized collateral",
+                    "section1": "Thales smart contracts exclusively support sUSD, an uncensorable and decentralized stablecoin, as collateral. This stablecoin is the flagship product of Synthetix. Synthetix is an open-source project that provides crypto-assets (namely, the Synths) whose value tracks that of Reference Assets without the need of a centralized authority or intermediary. Minting sUSD as a synth is functionally equivalent to issuing a fiat-denominated liability against the liquid market value of the ERC-20 collateral, denominated in “SNX,” the crypto-asset native to Synthetix. Holding sUSD is much safer for users who wish to avoid censorship risks, frustrations associated with traditional banking or financial services, associated with temporary geographical location, and the volatility inherent in many other crypto-assets. sUSD is overcollateralized several times, meaning there is anywhere from 4–7 times worth of SNX collateral backing the fiat value of each sUSD. This approach is intended to preemptively mitigate aforementioned risks before they manifest and causes Synthetix to achieve its mission towards stable sUSD value. Further, the fully developed use cases designed around sUSD enable the Protocol to function smoothly for the foreseeable future. There’s no way to stop one person from sending another person sUSD. Similarly, there is no way to stop a participant from minting Positional Tokens on Thales with sUSD and there is no way to stop a participant from exercising his winning Positional Tokens for sUSD. In the event of a front-end not being functional for whatever reason, a user could always interact with the Thales smart contracts directly through a blockchain explorer."
+                },
+                "1-3": {
+                    "title": "1.3 Positional Tokens",
+                    "section1": "Participants’ exposure to a certain Thales market is determined by Positional Tokens. Currently there are two distinct types of Positional Tokens: those which insure a position in case a certain market event resolves positively and those which insure a position in case a market event resolves negatively. These Positional Tokens are minted by Market Creators and Market Makers. When forming a market, Market Creator needs to deposit sufficient collateral to cover both ends of the market. This collateral is locked in that specific market’s smart contract, which proportionally mints both types of the Positional Tokens. The amount of Positional Tokens minted corresponds to the amount of collateral deposited, so only one side of the tokens (the winning side) will be able to redeem the collateral in 1:1 ratio, while the other side will be deemed worthless. Market Creators are not the only participants who provide collateral. Other participants, the Market Makers, may also provide additional sUSD collateral to increase the pool size and subsequently mint Positional Tokens for that specific Parimutuel Market. The only technical difference between Market Makers and Market Creator is that Market Creators initiated a relevant Pool’s creation. As Market Makers mint positional tokens on a market initiated by a particular Market Creator, that Market Creator will receive a part of fees assessed on those transactions while the rest of the fees are allocated towards the ThalesDAO fee pool."
+                },
+                "2": {
+                    "title": "2 Parimutuel Markets Architecture",
+                    "section1": "Thales Protocol Parimutuel Markets Architecture is composed of simple, secure, and effective smart contracts that work together to manage market creation, market making and market resolution.",
+                    "section2": "At the center of Thales architecture is the ParimutuelMarketManager.sol smart contract. This contract manages every individual parimutuel makret on the platform. Every market creation, intra-protocol sUSD transfer and market resolution is managed via Parimutuel Market Manager smart contract. Specific read methods within the contract also enable external integration of Thales Parimutuel Markets. In case of new markets manager deployment, the old market man- ager can be invoked to transfer ownership of all the markets to the new market manager smart contract.",
+                    "section3": "This contract’s purpose is to mint a new Parimutuel Market when called by the manager contract (ParimutuelMarketManager.sol), with custom parameters set by the Market Creator. Market Factory contract uses the Minimal Proxy pattern (described in Ethereum Improvement Proposal 1167) for new market creation. This pattern greatly reduces the gas cost for creating a market (from 5,000,000 Gas Limit Units to 1,000,000 Gas Limit Units).",
+                    "section4": "This contract describes every created parimutuel market. It stores the sUSD collateral for the market it describes and, in turn, mints the Positional Tokens for the Market Creator and the Market Makers. Positional Tokens minting process is done via the Minimal Proxy factory to significantly reduce gas cost. This contract also manages resolution of the market it describes where the wining Positional Tokens are redeemed for the sUSD collateral.",
+                    "section5": "This is an ERC-20 token contract representing Positional Tokens that are minted by markets described by the ParimutuelMarket.sol contract. These tokens are used for exercising for sUSD on the respective market maturity."
+                },
+                "2-1": {
+                    "title": "2.1 Market Creation Architecture",
+                    "section1": "Any Ethereum network user is enabled to create a Parimutuel Market on Thales without any limitations. Supported assets for market creation are a wide range of Chainlink-supported price feeds for cryptocurrencies, equities, commodities, indexes, forex currencies, and other exotic on-chain data feeds.\nInputs required from the Market Creator are:",
+                    "listitem1": "Asset",
+                    "listitem2": "Strike Price/Value/Amount",
+                    "listitem3": "Market Maturity Time and Date",
+                    "listitem4": "Initial Collateral (sUSD)",
+                    "section2": "After the <bold>ParimutuelMarketFactory.sol</bold> contract deploys the custom ParimutuelMarket.sol, the market contract mints Positional Tokens proportional to sUSD from the Initial Collateral and transfers them to the Market Creator.",
+                    "chartlabel": "Figure 1: Market Creation Workflow"
+                },
+                "2-2": {
+                    "title": "2.2 Market Making Architecture",
+                    "section1": "For liquidity provision and market making, Thales protocol uses a minting model. As with Market Creation, any Ethereum network user is able to mint Positional Tokens for any created market by depositing sUSD as collateral. For each sUSD deposited, an equal number of both types of Positional Tokens are minted. Only one of these types will be able to be redeemed for sUSD as a winning position, determined by the event that is chosen as the market settlement by the Market Creator.",
+                    "section2": "<bold>Total amount of each type of Positional Tokens minted for a specific market is always correlated to the amount of sUSD collateral that is insuring them inside the market contract.</bold>",
+                    "chartlabel": "Figure 2: Market Making Workflow"
+                },
+                "2-3": {
+                    "title": "2.3 Market Settlement and Positional Tokens Exercising Architecture",
+                    "section1": "After a specific market reaches the Market Maturity Time and Date, that was chosen and set during market creation by the Market Creator, this market begins the Maturity Phase. During this phase, Winning Positional Tokens Holders can redeem sUSD from the market collateral pool in 1:1 ratio for their Winning Positional Tokens.",
+                    "section2": "The first Winning Positional Tokens Holder that exercises his winning tokens on a certain market also triggers the market settlement of the said market prior to exercising. The default time limit for people to exercise their Winning Positional Tokens on the Thales protocol is 6 months from the expiry date of said market. After 6 months have passed, the market is removed from the protocol.",
+                    "chartlabel": "Figure 3: Market Settlement and Positional Tokens Exercising"
+                },
+                "3": {
+                    "title": "3 Thales Governance Structure",
+                    "section1": "Thales protocol governance system is composed of various decentralized autonomous organizations (DAOs) that oversee different parts of the Protocol’s operations and developments. The foundation of this governance structure are the ThalesDAO governance token holders that are responsible for overseeing and electing the DAO officials themselves. The goal of this kind of governance framework is to promote censorship resistance and decentralisation while also maintaining low friction for decision making and new feature deployments.",
+                    "section2": "Thales Governance Structure is comprised of three core DAOs:",
+                    "listitem1": "Thales Council",
+                    "listitem2": "Protocol Dao",
+                    "listitem3": "Treasury DAO",
+                    "section3": " Each of the DAOs has its own set of responsibilities and all of them together share the same mission of enabling the most optimal, efficient and censorship-resistant way for the Thales community to be the main driving force of the project."
+                },
+                "3-1": {
+                    "title": "3.1 Thales Council",
+                    "section1": "Thales Council can be considered the chief advisory body of the Thales governance system. Members of the Thales Council are elected by the community of staked token holders at intervals defined by the Protocol while those tokens remain staked. The Thales Council’s main responsibilities are conducting <bold>Thales Improvement Proposal (“TIP(s)”)</bold> reviews, interacting with TIP proposers, debating the implications of proposed changes, and coordinating with the Protocol DAO regarding the technical implications and implementations.",
+                    "section2": "Thales Improvement Proposals (TIPs) are artifacts that are used to describe proposed changes to the core Thales protocol. They can be authored by anyone and feature the motivation, technical specifications and rationale behind design decisions relating to the proposed idea. It is a design document providing information to the Thales community about a proposed change to the system. The author is responsible for building consensus within the community and documenting dissenting opinions.",
+                    "section3": " Each <bold>TIP</bold> is required to have the following parts:",
+                    "listitem1": "Preamble - Headers containing metadata about the TIP, including the TIP number, a short descriptive title, and the author details.",
+                    "listitem2": "Simple Summary - “If you can’t explain it simply, you don’t understand it well enough.” A simplified and layman-accessible explanation of the TIP.",
+                    "listitem3": "Abstract - a short ( 200 word) description of the technical issue being addressed.",
+                    "listitem4": "Motivation (*optional) - The motivation is critical for TIPs that want to change Thales. It should clearly explain why the existing specification is inadequate to address the problem that the TIP solves. TIP submissions without sufficient motivation may be rejected outright.",
+                    "listitem5": "Specification - The technical specification should describe the syntax and semantics of any new feature.",
+                    "listitem6": "Rationale - The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.",
+                    "listitem7": "Test Cases - Test cases may be added during the implementation phase but are required before implementation.",
+                    "listitem8": "Copyright Waiver - All TIPs must be in the public domain."
+                },
+                "3-2": {
+                    "title": "3.2 Protocol DAO",
+                    "section1": "The Protocol DAO is the owner of the Protocol’s core smart contracts. The Protocol DAO’s main responsibilities are upgrading and releasing new contracts (on behalf of the Thales Council), imple- mentation of approved TIPs and operational security. The Protocol DAO is managed in an m-of-n multi-signature wallet (“Multisig”) capacity by its members which are selected by balancing the need to populate this group with qualified, competent members aligned with the long-term interest of the project."
+                },
+                "3-3": {
+                    "title": "3.3 Treasury DAO",
+                    "section1": "The Treasury DAO’s primary purpose is to manage Protocol’s treasury. The Treasury DAO is respon- sible for properly incentivizing the other governing bodies and to support further developments of the protocol. All of the DAO roles of the Thales governance structure are paid a certain stipend by the Treasury DAO."
+                },
+                "4": {
+                    "title": "4 THALES governance token",
+                    "section1": "Thales DAO (THALES) governance token is a standard ERC-20 token used to govern the Thales protocol. These tokens grant the respective holders a right to participate in the Thales governance functions and make the THALES token holder the foundation of every key decision for further devel- opment of the protocol. Any further utility of the token that could be relevant to the protocol can also be decided and voted on by the mentioned governance functions.",
+                    "section2": "To acquire voting power, THALES token holders need to stake THALES governance tokens. Thales staking contract is a contract in which users lock their THALES to receive voting power on the protocol. THALES staked balances will be used to determine the amount of voting power for governance votes. After staking and acquiring voting power, a token holder can participate in elections of the new Thales Council.",
+                    "section3": "Candidates for participation in the Protocol DAO and Treasury DAO must also stake large portions of Tokens to be eligible. Staked Tokens are not available for transfer. If a staked Tokens’ holder decides they would like to transfer their staked tokens, they must be unstaked over a cool-off period lasting approximately seven days, during which they may neither be transferred nor used for governance purposes."
+                }
+            }
+        }
+    },
+    "game": {
+        "connect-wallet-warning": "In order to enable progress tracking, please connect your Ethereum wallet before starting the game."
+    },
+    "migration": {
+        "migration-opt-out-notice": {
+            "opt-out-text": "<0>All staked and escrowed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> If you would like to opt out of this migration, and keep your THALES on L1 Mainnet, you may do so by signing the following message with your wallet.</0>",
+            "cancel-opt-out-text": "<0>All staked and escrowed THALES is scheduled for automatic migration to L2 Optimism Mainnet per </0><1 />.<0> You have chosen to opt out of this migration, and keep your THALES on L1 Mainnet. If instead you do want to be included in the migration, you can cancel your opt out.</0>",
+            "button": {
+                "opt-out-label": "Opt out",
+                "cancel-opt-out-label": "Cancel opt out",
+                "progress-label": "Submitting in progress..."
+            }
+        }
     }
 }

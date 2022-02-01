@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import GridLayout from './components/GridLayout';
 import { useTranslation } from 'react-i18next';
 import Cookies from 'universal-cookie';
 import BlogPosts from './components/BlogPosts';
-import footer from 'assets/images/landing-page/footer.png';
-import footerW from 'assets/images/landing-page/footer-white.png';
-import { IconLink } from 'theme/common';
+import Footer from './components/Footer';
+import ROUTES from 'constants/routes';
 
 export enum Theme {
     Light,
@@ -19,28 +18,53 @@ const Home: React.FC = () => {
     const { t } = useTranslation();
     const [theme, setTheme] = useState(Number(cookies.get('home-theme')) === 0 ? Theme.Light : Theme.Dark);
 
+    useEffect(() => {
+        const body = document.getElementsByTagName('body')[0];
+        const html = document.documentElement;
+        html.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        html.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+        body.classList.remove(theme === Theme.Light ? 'dark' : 'light');
+        body.classList.add(theme !== Theme.Light ? 'dark' : 'light');
+    }, [theme]);
+
     return (
         <Background className={theme === Theme.Light ? 'light' : 'dark'}>
             <GridLayout theme={theme} setTheme={setTheme} />
             <FlexWrapper>
                 <Title> {t('landing-page.initiatives')}</Title>
-                <FlexDiv>
-                    <Thales className="icon-home icon-home--thales" />
-                    <ThalesRoyale className="icon-home icon-home--royale" />
-                    <ThalesGame className="icon-home icon-home--game" />
+                <FlexDiv className="initiatives">
+                    <a target="_blank" rel="noreferrer" href={ROUTES.Options.Home}>
+                        <Thales className="icon-home icon-home--thales" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href={ROUTES.Options.Royal}>
+                        <ThalesRoyale className="icon-home icon-home--royale" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href={ROUTES.Options.Game}>
+                        <ThalesGame className="icon-home icon-home--game" />
+                    </a>
                 </FlexDiv>
                 <Title style={{ marginBottom: '1em' }}> {t('landing-page.integrations')}</Title>
                 <FlexDiv>
-                    <SNX className="icon-home icon-home--snx" />
-                    <INCH className="icon-home icon-home--inch" />
+                    <a target="_blank" rel="noreferrer" href="https://synthetix.io/">
+                        <SNX className="icon-home icon-home--snx" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href="https://1inch.io/">
+                        <INCH className="icon-home icon-home--inch" />
+                    </a>
                 </FlexDiv>
                 <FlexDiv>
-                    <LINK className="icon-home icon-home--link" />
-                    <OPTIMISM className="icon-home icon-home--optimism" />
+                    <a target="_blank" rel="noreferrer" href="https://chain.link/">
+                        <LINK className="icon-home icon-home--link" />
+                    </a>
+                    <a target="_blank" rel="noreferrer" href="https://www.optimism.io/">
+                        <OPTIMISM className="icon-home icon-home--optimism" />
+                    </a>
                 </FlexDiv>
-                <Title style={{ marginTop: 50 }}> {t('landing-page.newest-blog-posts')}</Title>
+                <Title style={{ marginTop: 100 }}> {t('landing-page.newest-blog-posts')}</Title>
                 <BlogPosts />
-                <Title style={{ marginTop: 50 }}> {t('landing-page.faq.title')}</Title>
+                <Title id="faq-section" style={{ marginTop: 50 }}>
+                    {t('landing-page.faq.title')}
+                </Title>
                 <Faq>
                     <FaqQuestion>{t('landing-page.faq.firstQ')}</FaqQuestion>
                     <FaqAnswer>{t('landing-page.faq.firstA')}</FaqAnswer>
@@ -49,27 +73,7 @@ const Home: React.FC = () => {
                     <FaqQuestion>{t('landing-page.faq.thirdQ')}</FaqQuestion>
                     <FaqAnswer>{t('landing-page.faq.thirdA')}</FaqAnswer>
                 </Faq>
-                <Footer>
-                    <Image src={theme === Theme.Dark ? footerW : footer} />
-                    <FooterIconsWrapper>
-                        <IconLink target="_blank" rel="noreferrer" href="https://github.com/thales-markets">
-                            <FooterIcon className="icon-home icon-home--github" />
-                        </IconLink>
-                        <IconLink target="_blank" rel="noreferrer" href="https://discord.com/invite/rB3AWKwACM">
-                            <FooterIcon className="icon-home icon-home--discord" />
-                        </IconLink>
-                        <IconLink target="_blank" rel="noreferrer" href="https://thalesmarket.medium.com/">
-                            <FooterIcon className="icon-home icon-home--medium" />
-                        </IconLink>
-                        <IconLink target="_blank" rel="noreferrer" href="https://twitter.com/ThalesMarket">
-                            <FooterIcon className="icon-home icon-home--twitter" />
-                        </IconLink>
-
-                        <IconLink target="_blank" rel="noreferrer" href="https://docs.thales.market/">
-                            <FooterIcon className="icon-home icon-home--docs" />
-                        </IconLink>
-                    </FooterIconsWrapper>
-                </Footer>
+                <Footer theme={theme} setTheme={setTheme} />
             </FlexWrapper>
         </Background>
     );
@@ -77,15 +81,10 @@ const Home: React.FC = () => {
 
 export default Home;
 
-const Background = styled.div`
+export const Background = styled.div`
     width: 100%;
     font-size: 16px;
-    @media (max-width: 512px) {
-        font-size: 10px;
-    }
-    @media (max-width: 1024px) {
-        font-size: 12px;
-    }
+
     @media (max-width: 1440px) {
         font-size: 14px;
     }
@@ -117,7 +116,10 @@ const Title = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: bold;
-    font-size: 3em;
+    font-size: 4.4em;
+    @media (max-width: 600px) {
+        font-size: 2em;
+    }
     line-height: 91.91%;
     text-align: center;
     color: var(--color);
@@ -130,33 +132,79 @@ const FlexDiv = styled.div`
     align-items: center;
     color: var(--color);
     flex-wrap: wrap;
-`;
-
-const Thales = styled.i`
-    font-size: 16em;
-`;
-const ThalesRoyale = styled.i`
-    font-size: 12em;
-`;
-const ThalesGame = styled.i`
-    font-size: 16em;
+    &.initiatives {
+        & > i {
+            @media (max-width: 600px) {
+                flex: 1 40%;
+                text-align: center;
+            }
+        }
+    }
 `;
 
 const IconAbs = styled.i`
-    line-height: 0.5em;
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+        transform: scale(1.2);
+    }
+    &:before {
+        pointer-events: none;
+    }
+`;
+
+const Thales = styled(IconAbs)`
+    font-size: 16em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
+`;
+const ThalesRoyale = styled(IconAbs)`
+    font-size: 12em;
+    @media (max-width: 600px) {
+        font-size: 7em;
+    }
+`;
+const ThalesGame = styled(IconAbs)`
+    font-size: 16em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+        line-height: 0.2em;
+    }
+    @media (max-width: 450px) {
+        font-size: 10em;
+        line-height: 0.2em;
+        margin-bottom: 90px;
+    }
 `;
 
 const SNX = styled(IconAbs)`
     font-size: 16em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const OPTIMISM = styled(IconAbs)`
     font-size: 20em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const LINK = styled(IconAbs)`
     font-size: 20em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 const INCH = styled(IconAbs)`
     font-size: 20em;
+    line-height: 0.5em;
+    @media (max-width: 600px) {
+        font-size: 10em;
+    }
 `;
 
 const Faq = styled.div`
@@ -165,6 +213,11 @@ const Faq = styled.div`
     border-radius: 7px;
     margin: 3em 4em;
     padding: 2em;
+    @media (max-width: 600px) {
+        margin-left: 0;
+        margin-right: 0;
+        padding: 36px 30px 24px;
+    }
 `;
 
 const FaqQuestion = styled.p`
@@ -175,6 +228,9 @@ const FaqQuestion = styled.p`
     line-height: 91.91%;
     color: var(--color);
     margin-bottom: 1em;
+    @media (max-width: 600px) {
+        margin-bottom: 24px;
+    }
 `;
 
 const FaqAnswer = styled.p`
@@ -182,30 +238,15 @@ const FaqAnswer = styled.p`
     font-style: normal;
     font-weight: 300;
     font-size: 1em;
-    line-height: 91.91%;
+    line-height: 1.2em;
     color: var(--color);
     &:not(:last-child) {
         border-bottom: 1px solid var(--color);
         padding-bottom: 2em;
         margin-bottom: 2em;
+        @media (max-width: 600px) {
+            margin-bottom: 30px;
+            padding-bottom: 24px;
+        }
     }
-`;
-
-const Footer = styled.div`
-    position: relative;
-    top: 20px;
-`;
-
-const Image = styled.img`
-    height: 100%;
-    object-fit: contain;
-`;
-
-const FooterIconsWrapper = styled(FlexDiv)`
-    position: absolute;
-    bottom: 2.4em;
-`;
-const FooterIcon = styled.i`
-    font-size: 3.4em;
-    color: #f7f7f7;
 `;

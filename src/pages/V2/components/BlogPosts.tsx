@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import mediumPostsQuery from '../mediumPostsQuery';
 
-import nextArrow from 'assets/images/arrow-next.svg';
-import backArrow from 'assets/images/arrow-previous.svg';
+// import nextArrow from 'assets/images/arrow-next.svg';
+// import backArrow from 'assets/images/arrow-previous.svg';
 
 const limitBlogMeta = (text: string, limit: number) => {
     //Remove html tags from text
@@ -20,7 +20,6 @@ const BlogPosts: React.FC = () => {
     const blogPostsQuery = mediumPostsQuery({ enabled: true });
     const [blogPostsCount, setBlogPostsCount] = useState<number>(3);
     const blogPosts = blogPostsQuery.isSuccess ? blogPostsQuery.data.slice(blogPostsCount - 3, blogPostsCount) : [];
-    console.log(blogPosts);
 
     const carouselChangeHandler = (change: number) => {
         if (change < 0) {
@@ -36,36 +35,60 @@ const BlogPosts: React.FC = () => {
 
     return (
         <Wrapper>
-            <Arrow style={{ marginLeft: '-25px' }} src={backArrow} onClick={() => carouselChangeHandler(-1)} />
+            <Arrow
+                className="icon icon--left"
+                style={{ marginLeft: '-25px', fontSize: 35 }}
+                onClick={() => carouselChangeHandler(-1)}
+            />
             {blogPosts.map((blog, index) => {
                 return (
                     <BlogCard key={index} onClick={() => window.open(blog.link, '_blank')}>
                         <BlogTitle>{limitBlogMeta(blog.title, 50)}</BlogTitle>
-                        <BlogDescription>{limitBlogMeta(blog.description, 250)}</BlogDescription>
+                        <BlogDescription>
+                            <p>{limitBlogMeta(blog.description, 200)}</p>
+                        </BlogDescription>
                         <MediumDate>{formatDate(blog.pubDate)}</MediumDate>
                         <MediumIcon className="icon-home icon-home--medium" />
                     </BlogCard>
                 );
             })}
-            <Arrow style={{ marginRight: '-25px' }} src={nextArrow} onClick={() => carouselChangeHandler(1)} />
+            <Arrow
+                className="icon icon--right"
+                style={{ marginRight: '-25px', fontSize: 35 }}
+                onClick={() => carouselChangeHandler(1)}
+            />
+            <DotContainer>
+                {blogPosts.map((_blog, index) => {
+                    return (
+                        <Dot
+                            className={blogPostsCount === 3 + index ? 'selected' : ''}
+                            onClick={setBlogPostsCount.bind(this, 3 + index)}
+                            key={index}
+                        />
+                    );
+                })}
+            </DotContainer>
         </Wrapper>
     );
 };
 
 const Wrapper = styled.div`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-around;
     width: 100%;
     overflow: hidden;
-    padding: 2em;
-    @media (max-width: 500px) {
-        & > div:not(:nth-child(2)) {
+    padding: 2.2em;
+    @media (max-width: 600px) {
+        padding: 2em 0;
+        padding-bottom: 40px;
+        margin-bottom: 40px;
+        & > img {
             display: none;
         }
-        & > div:nth-child(2) {
-            min-width: 95% !important;
-            min-height: 345px;
+        & > div:not(:nth-child(2)) {
+            display: none;
         }
     }
 
@@ -81,7 +104,8 @@ const Wrapper = styled.div`
 
 const BlogCard = styled.div`
     height: 345px;
-    max-width: 32%;
+    margin-left: 10px;
+    margin-right: 10px;
     flex: 1;
     padding: 40px 30px 50px 30px;
     background: var(--background);
@@ -90,13 +114,18 @@ const BlogCard = styled.div`
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    @media (max-width: 600px) {
+        height: 300px;
+        margin-left: 0;
+        margin-right: 0;
+    }
 `;
 
 const BlogTitle = styled.p`
     font-family: Playfair Display !important;
     font-style: normal;
     font-weight: normal;
-    font-size: 25px;
+    font-size: 1.56em;
     line-height: 91.91%;
     text-transform: capitalize;
     color: var(--color);
@@ -107,30 +136,57 @@ const BlogDescription = styled.div`
     font-family: Nunito !important;
     font-style: normal;
     font-weight: 300;
-    font-size: 17px;
-    line-height: 15.63px;
+    font-size: 1em;
+    line-height: 1.2em;
     color: var(--color);
 `;
 
 const MediumIcon = styled.i`
     position: absolute;
-    font-size: 23px;
+    font-size: 2em;
     bottom: 10px;
-    right: 10px;
+    right: 25px;
 `;
 
 const MediumDate = styled.i`
     position: absolute;
-    font-size: 15px;
-    bottom: 10px;
+    font-size: 1em;
+    bottom: 1.2em;
     left: 30px;
     color: var(--color);
     font-style: italic;
 `;
 
-const Arrow = styled.img`
-    width: 25px;
-    fill: white;
+const Arrow = styled.i`
+    color: 'var(--color)';
+    cursor: pointer;
+    @media (max-width: 600px) {
+        display: none !important;
+    }
+`;
+
+const DotContainer = styled.div`
+    bottom: 0px;
+    @media (max-width: 600px) {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+    }
+    position: absolute;
+    display: none;
+`;
+
+const Dot = styled.div`
+    background: var(--color);
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    opacity: 0.6;
+    &.selected {
+        opacity: 1;
+    }
+    margin-right: 7px;
+    margin-left: 7px;
 `;
 
 export default BlogPosts;
