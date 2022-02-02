@@ -1,23 +1,26 @@
 import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
-import { NetworkId } from '../../utils/network';
+import { getIsOVM, NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
 import { Airdrop } from 'types/token';
 import retroAirdropHashes from 'utils/json/airdrop-hashes.json';
+import l2retroAirdropHashes from 'utils/json/l2-airdrop-hashes.json';
 
 const useRetroAirdropQuery = (walletAddress: string, networkId: NetworkId, options?: UseQueryOptions<Airdrop>) => {
     return useQuery<Airdrop>(
         QUERY_KEYS.WalletBalances.RetroAirdrop(walletAddress, networkId),
         async () => {
-            const retroAirdropHash = retroAirdropHashes.find(
+            const isL2 = getIsOVM(networkId);
+            const retroAirdropHash = (isL2 ? l2retroAirdropHashes : retroAirdropHashes).find(
                 (airdrop: any) => airdrop.address.toLowerCase() === walletAddress.toLowerCase()
             );
+            const paused = await (snxJSConnector as any).retroAirdropContract.paused();
 
             const airdrop: Airdrop = {
-                isClaimPaused: false,
+                isClaimPaused: paused,
                 hasClaimRights: retroAirdropHash !== undefined,
-                claimed: true,
+                claimed: false,
             };
 
             if (retroAirdropHash) {

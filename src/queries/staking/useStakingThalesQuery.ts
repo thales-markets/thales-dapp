@@ -3,17 +3,19 @@ import QUERY_KEYS from '../../constants/queryKeys';
 import snxJSConnector from '../../utils/snxJSConnector';
 import { NetworkId } from '../../utils/network';
 import { bigNumberFormatter } from '../../utils/formatters/ethers';
-import { ethers } from 'ethers';
+import { BALANCE_THRESHOLD } from 'constants/token';
 
 type StakingThalesQueryResponse = {
-    thalesStaked: string;
+    thalesStaked: number;
     rewards: number;
     lastUnstakeTime: number;
     isUnstaking: boolean;
-    unstakingAmount: string;
+    unstakingAmount: number;
     unstakeDurationPeriod: number;
-    fixedPeriodReward: string;
-    totalStakedAmount: string;
+    fixedPeriodReward: number;
+    totalStakedAmount: number;
+    paused: boolean;
+    maxBonusRewardsPercentage: number;
 };
 
 const useStakingThalesQuery = (
@@ -26,25 +28,44 @@ const useStakingThalesQuery = (
         async () => {
             const staking = {
                 rewards: 0,
-                thalesStaked: '0',
-                unstakingAmount: '0',
+                thalesStaked: 0,
+                unstakingAmount: 0,
                 lastUnstakeTime: Date.now(),
                 isUnstaking: false,
                 unstakeDurationPeriod: 7 * 24 * 60 * 60, // one week
-                fixedPeriodReward: '0',
-                totalStakedAmount: '0',
+                fixedPeriodReward: 0,
+                totalStakedAmount: 0,
+                paused: false,
+                maxBonusRewardsPercentage: 0,
             };
 
             try {
-                const [unstakeDurationPeriod, fixedPeriodReward, totalStakedAmount] = await Promise.all([
+                const [
+                    unstakeDurationPeriod,
+                    fixedPeriodReward,
+                    totalStakedAmount,
+                    paused,
+                    maxSNXRewardsPercentage,
+                    maxAMMVolumeRewardsPercentage,
+                    maxThalesRoyaleRewardsPercentage,
+                ] = await Promise.all([
                     (snxJSConnector as any).stakingThalesContract.unstakeDurationPeriod(),
                     (snxJSConnector as any).stakingThalesContract.fixedPeriodReward(),
                     (snxJSConnector as any).stakingThalesContract.totalStakedAmount(),
+                    (snxJSConnector as any).stakingThalesContract.paused(),
+                    (snxJSConnector as any).stakingThalesContract.maxSNXRewardsPercentage(),
+                    (snxJSConnector as any).stakingThalesContract.maxAMMVolumeRewardsPercentage(),
+                    (snxJSConnector as any).stakingThalesContract.maxThalesRoyaleRewardsPercentage(),
                 ]);
 
                 staking.unstakeDurationPeriod = Number(unstakeDurationPeriod) * 1000;
-                staking.fixedPeriodReward = ethers.utils.formatEther(fixedPeriodReward);
-                staking.totalStakedAmount = ethers.utils.formatEther(totalStakedAmount);
+                staking.fixedPeriodReward = bigNumberFormatter(fixedPeriodReward);
+                staking.totalStakedAmount = bigNumberFormatter(totalStakedAmount);
+                staking.paused = paused;
+                staking.maxBonusRewardsPercentage =
+                    Number(maxSNXRewardsPercentage) +
+                    Number(maxAMMVolumeRewardsPercentage) +
+                    Number(maxThalesRoyaleRewardsPercentage);
 
                 if (walletAddress !== '') {
                     const [isUnstaking, lastUnstakeTime, thalesStaked, unstakingAmount, rewards] = await Promise.all([
@@ -57,8 +78,9 @@ const useStakingThalesQuery = (
 
                     staking.isUnstaking = isUnstaking;
                     staking.lastUnstakeTime = Number(lastUnstakeTime) * 1000;
-                    staking.thalesStaked = ethers.utils.formatEther(thalesStaked);
-                    staking.unstakingAmount = ethers.utils.formatEther(unstakingAmount);
+                    staking.thalesStaked =
+                        bigNumberFormatter(thalesStaked) < BALANCE_THRESHOLD ? 0 : bigNumberFormatter(thalesStaked);
+                    staking.unstakingAmount = bigNumberFormatter(unstakingAmount);
                     staking.rewards = bigNumberFormatter(rewards);
                 }
             } catch {}

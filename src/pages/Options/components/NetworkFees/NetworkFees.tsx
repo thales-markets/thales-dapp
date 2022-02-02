@@ -11,7 +11,6 @@ import { getIsOVM, getTransactionPrice } from 'utils/network';
 import { SummaryContent, SummaryItem, SummaryLabel } from 'pages/Options/Market/components';
 import styled from 'styled-components';
 import useEthGasPriceEip1559Query from 'queries/network/useEthGasPriceEip1559Query';
-import WarningMessage from 'components/WarningMessage';
 import { getNetworkId } from 'redux/modules/wallet';
 
 export type GasLimit = {
@@ -22,7 +21,7 @@ export type GasLimit = {
 type NetworkFeesProps = {
     gasLimit: number | GasLimit[] | null;
     disabled?: boolean;
-    l1Fee?: number | null;
+    l1Fee?: number | number[] | null;
 };
 
 const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
@@ -43,7 +42,7 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
         <>
             {Array.isArray(gasLimit) ? (
                 <>
-                    {gasLimit.map((gas) => (
+                    {gasLimit.map((gas, index: number) => (
                         <div key={gas.label}>
                             <NetworkFeeSummaryItem key={gas.label}>
                                 <NetworkFeeSummaryLabel>{`${t('common.network-fee-gas')} - ${
@@ -52,7 +51,12 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                                 <NetworkFeeSummaryContent>
                                     {formatCurrencyWithSign(
                                         USD_SIGN,
-                                        getTransactionPrice(gasPrice, gas.gasLimit, ethRate)
+                                        getTransactionPrice(
+                                            gasPrice,
+                                            gas.gasLimit,
+                                            ethRate,
+                                            l1Fee && l1Fee !== null ? (l1Fee as number[])[index] : l1Fee
+                                        )
                                     )}
                                 </NetworkFeeSummaryContent>
                             </NetworkFeeSummaryItem>
@@ -66,7 +70,12 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                         <NetworkFeeSummaryContent>
                             {formatCurrencyWithSign(
                                 USD_SIGN,
-                                getTransactionPrice(gasPrice, gasLimit as number, ethRate, l1Fee)
+                                getTransactionPrice(
+                                    gasPrice,
+                                    gasLimit as number,
+                                    ethRate,
+                                    l1Fee && l1Fee !== null ? (l1Fee as number) : l1Fee
+                                )
                             )}
                         </NetworkFeeSummaryContent>
                     </NetworkFeeSummaryItem>
@@ -78,7 +87,6 @@ const NetworkFees: React.FC<NetworkFeesProps> = ({ gasLimit, l1Fee }) => {
                     {isL2 ? formatCurrencyWithPrecision(gasPrice ?? 0, true) : formatCurrency(gasPrice ?? 0, 0)}
                 </NetworkFeeSummaryContent>
             </NetworkFeeSummaryItem>
-            {!isL2 && <WarningMessage hideIcon message={t('common.gas-fee-info')} />}
         </>
     );
 };
@@ -90,34 +98,12 @@ const NetworkFeeSummaryItem = styled(SummaryItem)`
 const NetworkFeeSummaryLabel = styled(SummaryLabel)`
     font-size: 13px;
     line-height: 24px;
-    @media screen and (max-width: 1024px) {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 16px;
-        line-height: 24px;
-        letter-spacing: 0.25px;
-    }
-    @media screen and (max-width: 767px) {
-        width: 50%;
-        font-size: 14px;
-    }
 `;
 
 const NetworkFeeSummaryContent = styled(SummaryContent)`
     font-size: 13px;
     line-height: 24px;
     flex: 1;
-    @media screen and (max-width: 1024px) {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 16px;
-        line-height: 24px;
-        letter-spacing: 0.25px;
-    }
-    @media screen and (max-width: 767px) {
-        text-align: right;
-        font-size: 14px;
-    }
 `;
 
 export default NetworkFees;

@@ -2,14 +2,14 @@ import { NetworkId } from '@synthetixio/contracts-interface';
 
 export const ongoingAirdrop = {
     addresses: {
-        [NetworkId.Mainnet]: '0xDAaB884D083FE5c38b4679ae194c52f176Bd8783',
-        [NetworkId.Ropsten]: '0x3c9a11b9a8Ca835ed6931FD74a9F22A1Fc73Ac86',
+        [NetworkId.Mainnet]: 'TBD',
+        [NetworkId.Ropsten]: 'TBD',
         [NetworkId.Rinkeby]: 'TBD',
-        [NetworkId.Kovan]: '0xd9112fC9396d38D024D1369e72f039d542000f80',
+        [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
-        [NetworkId['Kovan-Ovm']]: 'TBD',
+        [NetworkId['Mainnet-Ovm']]: '0x8D47b12ce25E2dc6866e8aAC0DbD823Da09fADd6',
+        [NetworkId['Kovan-Ovm']]: '0xcA8d82a30fd9dfec102eCdfb59A13e9a86C2Ee6F',
     },
     abi: [
         {

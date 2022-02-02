@@ -22,7 +22,11 @@ import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 
-export const NetworkSwitch: React.FC = () => {
+type NetworkSwitchProps = {
+    hideL2DropDown?: boolean;
+};
+
+export const NetworkSwitch: React.FC<NetworkSwitchProps> = ({ hideL2DropDown }) => {
     const { t } = useTranslation();
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const isL2 = getIsOVM(networkId);
@@ -84,15 +88,27 @@ export const NetworkSwitch: React.FC = () => {
         <>
             <OutsideClickHandler onOutsideClick={() => setDropdownIsOpen(false)}>
                 <FlexDivRowCentered>
-                    <Container isL2={isL2}>
+                    <Container isL2={isL2 && !hideL2DropDown}>
                         <OptimismButton
                             onClick={() => {
-                                isL2 ? setDropdownIsOpen(!optimismDropdownIsOpen) : switchOrAddOptimismNetwork();
+                                isL2
+                                    ? hideL2DropDown
+                                        ? switchToL1()
+                                        : setDropdownIsOpen(!optimismDropdownIsOpen)
+                                    : switchOrAddOptimismNetwork();
                             }}
                         >
-                            <InnerButton isL2={isL2}>
-                                <FlexDiv>{t(isL2 ? 'optimism.optimistic-l2' : 'optimism.switch-to-l2')}</FlexDiv>
-                                {isL2 && <StyledDownIcon />}
+                            <InnerButton isL2={isL2 && !hideL2DropDown}>
+                                <FlexDiv>
+                                    {t(
+                                        isL2
+                                            ? hideL2DropDown
+                                                ? 'optimism.switch-to-l1'
+                                                : 'optimism.optimistic-l2'
+                                            : 'optimism.switch-to-l2'
+                                    )}
+                                </FlexDiv>
+                                {isL2 && !hideL2DropDown && <StyledDownIcon />}
                             </InnerButton>
                         </OptimismButton>
                         {optimismDropdownIsOpen && (
@@ -130,7 +146,7 @@ export const NetworkSwitch: React.FC = () => {
                             </DropdownContainer>
                         )}
                     </Container>
-                    {isL2 && (
+                    {isL2 && !hideL2DropDown && (
                         <TooltipContainer>
                             <StyledMaterialTooltip arrow interactive title={t('optimism.info') as string}>
                                 <StyledInfoIcon />

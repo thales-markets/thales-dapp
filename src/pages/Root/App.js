@@ -253,13 +253,12 @@ const App = () => {
                                 <GamePage />
                             </MainLayout>
                         </Route>
-                        {!isL2 && (
-                            <Route exact path={ROUTES.Options.Token}>
-                                <MainLayout>
-                                    <EarnPage />
-                                </MainLayout>
-                            </Route>
-                        )}
+
+                        <Route exact path={ROUTES.Options.Token}>
+                            <MainLayout>
+                                <EarnPage />
+                            </MainLayout>
+                        </Route>
 
                         <Route
                             exact

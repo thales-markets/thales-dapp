@@ -17,19 +17,27 @@ import ThalesBalanceTooltip from './ThalesBalanceTooltip';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { getIsOVM } from 'utils/network';
+import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const network = useSelector((state: RootState) => getNetwork(state));
-    const isL2 = getIsOVM(network.networkId);
     const [open, setOpen] = useState(false);
     const [thalesTotalBalance, setThalesTotalBalance] = useState(0);
+    const isL2 = getIsOVM(network.networkId);
 
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+
+    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const thalesBalance =
+        thalesBalanceQuery.isSuccess && thalesBalanceQuery.data ? Number(thalesBalanceQuery.data.balance) : 0;
 
     const walletBalancesMap =
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
@@ -62,17 +70,19 @@ const UserInfo: React.FC = () => {
                         src={avatar}
                     />
                 </NetworkWrapper>
-                {!isL2 && (
-                    <ThalesBalance>
+                <ThalesBalance>
+                    {isL2 && (
                         <StyledMaterialTooltip
                             PopperProps={{ keepMounted: true }}
                             title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
                         >
                             <StyledInfoIcon width={iconSize} height={iconSize} />
                         </StyledMaterialTooltip>
-                        {formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}
-                    </ThalesBalance>
-                )}
+                    )}
+                    <span style={{ marginLeft: 10 }}>
+                        {formatCurrencyWithKey(THALES_CURRENCY, isL2 ? thalesTotalBalance : thalesBalance)}
+                    </span>
+                </ThalesBalance>
             </UserInfoWrapper>
             <UserInfoModal
                 walletAddress={walletAddress}
@@ -163,7 +173,6 @@ const AddressWrapper = styled(FlexDivColumnCentered)`
 
 const StyledInfoIcon = styled(InfoIcon)`
     margin-left: 10px;
-    margin-right: 5px;
     @media (max-width: 767px) {
         display: none;
     }

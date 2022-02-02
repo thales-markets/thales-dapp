@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Cell, Pie, PieChart, Tooltip } from 'recharts';
 import styled from 'styled-components';
-import { Button, FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
+import { FlexDiv, FlexDivColumn, FlexDivColumnCentered, GradientText } from 'theme/common';
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
@@ -27,7 +27,7 @@ import {
     TooltipLink,
 } from '../../components';
 import { refetchUserTokenTransactions, refetchVestingBalance } from 'utils/queryConnector';
-import { formatGasLimit } from 'utils/network';
+import { formatGasLimit, getIsOVM, getL1FeeInWei } from 'utils/network';
 import { formatCurrency, formatCurrencyWithKey } from 'utils/formatters/number';
 import { THALES_CURRENCY } from 'constants/currency';
 import NetworkFees from 'pages/Options/components/NetworkFees';
@@ -35,6 +35,8 @@ import { dispatchMarketNotification } from 'utils/options';
 import { LINKS } from 'constants/links';
 import { DEFAULT_LANGUAGE, SupportedLanguages } from '../../../../../i18n/config';
 import i18n from '../../../../../i18n';
+import MigrationInfo from '../../components/MigrationInfo';
+import { DefaultSubmitButton } from 'pages/Options/Market/components';
 
 const initialVestingInfo = {
     unlocked: 0,
@@ -54,6 +56,9 @@ const RetroRewards: React.FC = () => {
     const [vestingInfo, setVestingInfo] = useState<VestingInfo>(initialVestingInfo);
     const [isClaiming, setIsClaiming] = useState(false);
     const [gasLimit, setGasLimit] = useState<number | null>(null);
+    const { vestingEscrowContract } = snxJSConnector as any;
+    const [l1Fee, setL1Fee] = useState<number | null>(null);
+    const isL2 = getIsOVM(networkId);
 
     const isClaimAvailable = vestingInfo.unlocked > 0;
 
@@ -62,7 +67,7 @@ const RetroRewards: React.FC = () => {
         : DEFAULT_LANGUAGE;
 
     const vestingQuery = useVestingBalanceQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
+        enabled: isAppReady && isWalletConnected && !!vestingEscrowContract,
     });
 
     useEffect(() => {
@@ -72,12 +77,26 @@ const RetroRewards: React.FC = () => {
     }, [vestingQuery.isSuccess, vestingQuery.data]);
 
     useEffect(() => {
+        const fetchL1Fee = async (vestingContractWithSigner: any) => {
+            const txRequest = await vestingContractWithSigner.populateTransaction.claim();
+            return getL1FeeInWei(txRequest);
+        };
+
         const fetchGasLimit = async () => {
             const { vestingEscrowContract } = snxJSConnector as any;
             try {
                 const vestingContractWithSigner = vestingEscrowContract.connect((snxJSConnector as any).signer);
-                const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
-                setGasLimit(formatGasLimit(gasEstimate, networkId));
+                if (isL2) {
+                    const [gasEstimate, l1FeeInWei] = await Promise.all([
+                        vestingContractWithSigner.estimateGas.claim(),
+                        fetchL1Fee(vestingContractWithSigner),
+                    ]);
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                    setL1Fee(l1FeeInWei);
+                } else {
+                    const gasEstimate = await vestingContractWithSigner.estimateGas.claim();
+                    setGasLimit(formatGasLimit(gasEstimate, networkId));
+                }
             } catch (e) {
                 console.log(e);
                 setGasLimit(null);
@@ -148,7 +167,7 @@ const RetroRewards: React.FC = () => {
     };
 
     return (
-        <EarnSection style={{ gridColumn: 'span 6' }}>
+        <RetroRewardsSection>
             <SectionHeader>
                 <div>
                     {t('options.earn.snx-stakers.retro-rewards.title')}
@@ -166,124 +185,136 @@ const RetroRewards: React.FC = () => {
                     </StyledMaterialTooltip>
                 </div>
             </SectionHeader>
-            <SectionContentContainer>
-                <PieChartContainer>
-                    <InfoDiv>
-                        <InfoLabel>{t('options.earn.snx-stakers.start-time')}</InfoLabel>
-                        <InfoContent>
-                            {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
-                        </InfoContent>
-                    </InfoDiv>
-                    <PieChart style={{ margin: 'auto', zIndex: 100 }} height={200} width={200}>
-                        <Pie
-                            isAnimationActive={false}
-                            blendStroke={true}
-                            data={pieData}
-                            dataKey={'value'}
-                            outerRadius={100}
-                            innerRadius={75}
-                        >
-                            {pieData.map((slice, index) => (
-                                <Cell key={index} fill={slice.color} />
-                            ))}
-                        </Pie>
-                        {!!vestingInfo.initialLocked && (
-                            <Tooltip
-                                wrapperStyle={{ zIndex: 1000 }}
-                                content={<CustomTooltip />}
-                                allowEscapeViewBox={{ x: true, y: true }}
-                            />
-                        )}
-                    </PieChart>
-                    <InfoDiv style={{ alignItems: 'flex-end' }}>
-                        <InfoLabel>{t('options.earn.snx-stakers.end-time')}</InfoLabel>
-                        <InfoContent style={{ textAlign: 'right' }}>
-                            {vestingInfo.endTime > 0 && formatShortDateWithTime(vestingInfo.endTime)}
-                        </InfoContent>
-                    </InfoDiv>
-                    <PieChartCenterDiv>
-                        <FlexDivColumnCentered>
-                            <PieChartCenterText disabled={!vestingInfo.initialLocked}>
-                                {t('options.earn.snx-stakers.initial-locked')}
-                            </PieChartCenterText>
-                            <GradientText
-                                gradient={`${
-                                    !vestingInfo.initialLocked
-                                        ? '#748BC6'
-                                        : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
-                                }`}
-                                fontSize={17}
-                                fontWeight={600}
-                                style={{ marginBottom: '3px' }}
+            {!isL2 && (
+                <SectionContentContainer>
+                    <PieChartContainer>
+                        <InfoDiv>
+                            <InfoLabel>{t('options.earn.snx-stakers.start-time')}</InfoLabel>
+                            <InfoContent>
+                                {vestingInfo.startTime > 0 && formatShortDateWithTime(vestingInfo.startTime)}
+                            </InfoContent>
+                        </InfoDiv>
+                        <PieChart style={{ margin: 'auto', zIndex: 100 }} height={200} width={200}>
+                            <Pie
+                                isAnimationActive={false}
+                                blendStroke={true}
+                                data={pieData}
+                                dataKey={'value'}
+                                outerRadius={100}
+                                innerRadius={75}
                             >
-                                {formatCurrency(vestingInfo.initialLocked, 2, true)}
-                            </GradientText>
-                            <GradientText
-                                gradient={`${
-                                    !vestingInfo.initialLocked
-                                        ? '#748BC6'
-                                        : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
-                                }`}
-                                fontSize={17}
-                                fontWeight={600}
+                                {pieData.map((slice, index) => (
+                                    <Cell key={index} fill={slice.color} />
+                                ))}
+                            </Pie>
+                            {!!vestingInfo.initialLocked && (
+                                <Tooltip
+                                    wrapperStyle={{ zIndex: 1000 }}
+                                    content={<CustomTooltip />}
+                                    allowEscapeViewBox={{ x: true, y: true }}
+                                />
+                            )}
+                        </PieChart>
+                        <InfoDiv style={{ alignItems: 'flex-end' }}>
+                            <InfoLabel>{t('options.earn.snx-stakers.end-time')}</InfoLabel>
+                            <InfoContent style={{ textAlign: 'right' }}>
+                                {vestingInfo.endTime > 0 && formatShortDateWithTime(vestingInfo.endTime)}
+                            </InfoContent>
+                        </InfoDiv>
+                        <PieChartCenterDiv>
+                            <FlexDivColumnCentered>
+                                <PieChartCenterText disabled={!vestingInfo.initialLocked}>
+                                    {t('options.earn.snx-stakers.initial-locked')}
+                                </PieChartCenterText>
+                                <GradientText
+                                    gradient={`${
+                                        !vestingInfo.initialLocked
+                                            ? '#748BC6'
+                                            : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                    }`}
+                                    fontSize={17}
+                                    fontWeight={600}
+                                    style={{ marginBottom: '3px' }}
+                                >
+                                    {formatCurrency(vestingInfo.initialLocked, 2, true)}
+                                </GradientText>
+                                <GradientText
+                                    gradient={`${
+                                        !vestingInfo.initialLocked
+                                            ? '#748BC6'
+                                            : 'linear-gradient(90deg, #3936c7, #2d83d2, #23a5dd, #35dadb)'
+                                    }`}
+                                    fontSize={17}
+                                    fontWeight={600}
+                                >
+                                    {THALES_CURRENCY}
+                                </GradientText>
+                            </FlexDivColumnCentered>
+                        </PieChartCenterDiv>
+                        <LearnMore top="61%" style={{ fontSize: '13px' }}>
+                            <StyledMaterialTooltip
+                                enterTouchDelay={1}
+                                arrow={true}
+                                title={t('options.earn.snx-stakers.retro-rewards.learn-more-text') as string}
                             >
-                                {THALES_CURRENCY}
-                            </GradientText>
-                        </FlexDivColumnCentered>
-                    </PieChartCenterDiv>
-                    <LearnMore top="61%" style={{ fontSize: '13px' }}>
-                        <StyledMaterialTooltip
-                            enterTouchDelay={1}
-                            arrow={true}
-                            title={t('options.earn.snx-stakers.retro-rewards.learn-more-text') as string}
+                                <span>{t('options.earn.snx-stakers.retro-rewards.learn-more')}</span>
+                            </StyledMaterialTooltip>
+                        </LearnMore>
+                    </PieChartContainer>
+                    <AmountsContainer>
+                        <div>
+                            <Dot backgroundColor="#5EA0A0" />
+                            {t('options.earn.snx-stakers.unlocked')}:{' '}
+                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
+                        </div>
+                        <div>
+                            <Dot backgroundColor="#AFC171" />
+                            {t('options.earn.snx-stakers.claimed')}:{' '}
+                            <span className="bold">
+                                {formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}
+                            </span>
+                        </div>
+                        <div>
+                            <Dot backgroundColor="#FFD9BA" />
+                            {t('options.earn.snx-stakers.locked')}:{' '}
+                            <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
+                        </div>
+                    </AmountsContainer>
+                    <NetworkFees gasLimit={gasLimit} disabled={isClaiming} l1Fee={l1Fee} />
+                    <ButtonContainerBottom>
+                        <DefaultSubmitButton
+                            disabled={!isClaimAvailable || isClaiming}
+                            onClick={handleClaimRetroRewards}
                         >
-                            <span>{t('options.earn.snx-stakers.retro-rewards.learn-more')}</span>
-                        </StyledMaterialTooltip>
-                    </LearnMore>
-                </PieChartContainer>
-                <AmountsContainer>
-                    <div>
-                        <Dot backgroundColor="#5EA0A0" />
-                        {t('options.earn.snx-stakers.unlocked')}:{' '}
-                        <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}</span>
-                    </div>
-                    <div>
-                        <Dot backgroundColor="#AFC171" />
-                        {t('options.earn.snx-stakers.claimed')}:{' '}
-                        <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.totalClaimed)}</span>
-                    </div>
-                    <div>
-                        <Dot backgroundColor="#FFD9BA" />
-                        {t('options.earn.snx-stakers.locked')}:{' '}
-                        <span className="bold">{formatCurrencyWithKey(THALES_CURRENCY, locked)}</span>
-                    </div>
-                </AmountsContainer>
-                <NetworkFees gasLimit={gasLimit} disabled={isClaiming} />
-                <ButtonContainerBottom>
-                    <Button
-                        disabled={!isClaimAvailable || isClaiming}
-                        className="primary"
-                        onClick={handleClaimRetroRewards}
-                    >
-                        {isClaiming
-                            ? t('options.earn.snx-stakers.claiming-unlocked') +
-                              ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
-                            : t('options.earn.snx-stakers.claim') +
-                              ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
-                    </Button>
-                    <ClaimMessage invisible={!!vestingInfo.initialLocked}>
-                        {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
-                    </ClaimMessage>
-                </ButtonContainerBottom>
-                <ValidationMessage
-                    showValidation={txErrorMessage !== null}
-                    message={txErrorMessage}
-                    onDismiss={() => setTxErrorMessage(null)}
-                />
-            </SectionContentContainer>
-        </EarnSection>
+                            {isClaiming
+                                ? t('options.earn.snx-stakers.claiming-unlocked') +
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}...`
+                                : t('options.earn.snx-stakers.claim') +
+                                  ` ${formatCurrencyWithKey(THALES_CURRENCY, vestingInfo.unlocked)}`}
+                        </DefaultSubmitButton>
+                        <ClaimMessage invisible={!!vestingInfo.initialLocked}>
+                            {t('options.earn.snx-stakers.retro-rewards.not-eligible-message')}
+                        </ClaimMessage>
+                    </ButtonContainerBottom>
+                    <ValidationMessage
+                        showValidation={txErrorMessage !== null}
+                        message={txErrorMessage}
+                        onDismiss={() => setTxErrorMessage(null)}
+                    />
+                </SectionContentContainer>
+            )}
+            {isL2 && <MigrationInfo messageKey="retro-unlock" />}
+        </RetroRewardsSection>
     );
 };
+
+const RetroRewardsSection = styled(EarnSection)`
+    grid-column: span 6;
+    min-height: 533px;
+    @media (max-width: 767px) {
+        min-height: 200px;
+    }
+`;
 
 const InfoDiv = styled(FlexDivColumn)`
     padding-bottom: 10px;
