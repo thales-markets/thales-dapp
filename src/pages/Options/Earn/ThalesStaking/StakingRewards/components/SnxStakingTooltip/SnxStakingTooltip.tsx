@@ -39,7 +39,7 @@ const SnxStakingTooltip: React.FC<SnxStakingTooltipProps> = ({
             <Formula>
                 <FormulaLeftSide>
                     <FormulaAmount>amountSNXStaked</FormulaAmount>
-                    <FormulaRequiredAmount>{snxVolumeRewardsMultiplier * 100}</FormulaRequiredAmount>
+                    <FormulaRequiredAmount>baseRewards</FormulaRequiredAmount>
                 </FormulaLeftSide>
                 <FormulaSign>X</FormulaSign>
                 <FormulaRightSide>{maxPercentage}</FormulaRightSide>

@@ -34,8 +34,8 @@ const AmmTooltip: React.FC<AmmTooltipProps> = ({ maxPercentage, ammVolumeRewards
             </Description>
             <Formula>
                 <FormulaLeftSide>
-                    <FormulaAmount>amountTraded</FormulaAmount>
-                    <FormulaRequiredAmount>{ammVolumeRewardsMultiplier * 100}</FormulaRequiredAmount>
+                    <FormulaAmount>amountTradedLast4Periods</FormulaAmount>
+                    <FormulaRequiredAmount>baseRewards * {ammVolumeRewardsMultiplier}</FormulaRequiredAmount>
                 </FormulaLeftSide>
                 <FormulaSign>X</FormulaSign>
                 <FormulaRightSide>{maxPercentage}</FormulaRightSide>
