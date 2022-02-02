@@ -144,7 +144,10 @@ const ClaimMigratedRewards: React.FC = () => {
         }
     };
 
-    const balance = isClaimAvailable && migratedRewards && migratedRewards.reward ? migratedRewards.reward.balance : 0;
+    const balance =
+        migratedRewards && migratedRewards.reward && migratedRewards.hasClaimRights && !migratedRewards.claimed
+            ? migratedRewards.reward.balance
+            : 0;
 
     return (
         <EarnSection
