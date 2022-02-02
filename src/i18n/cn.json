@@ -470,7 +470,25 @@
                 }
             },
             "lp-staking": {
-                "tab-title": "LP"
+                "tab-title": "LP",
+                "rewards": {
+                    "claim": "宣称",
+                    "title": "奖励",
+                    "lp-staking": "LP 质押"
+                },
+                "my-stake": {
+                    "total-staked": "总质押",
+                    "title": "我的质押代币",
+                    "lp-tokens": "LP 代币"
+                },
+                "info": {
+                    "apr": "年利率",
+                    "tvl": "锁定总值 (TVL)"
+                },
+                "provide-liquidity": {
+                    "button-text": "增加流动性的链接",
+                    "description": "您可以为THALES/ETH货币对提供流动性并获得双倍奖励"
+                }
             },
             "table": {
                 "title": "您的活动",

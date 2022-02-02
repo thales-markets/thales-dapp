@@ -130,6 +130,7 @@ export const QUERY_KEYS = {
             walletAddress,
             networkId,
         ],
+        LPStaking: (walletAddress: string, networkId: NetworkId) => ['token', 'LPStaking', walletAddress, networkId],
     },
     Swap: {
         Tokens: (networkId: NetworkId) => ['swap', 'tokens', networkId],
