@@ -21,6 +21,7 @@ const LPStakingL2: React.FC = () => {
         enabled: isAppReady,
     });
     const staked = stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.staked) : 0;
+    const paused = stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.paused : false;
     const rewards =
         stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.rewards) : 0;
 
@@ -30,8 +31,8 @@ const LPStakingL2: React.FC = () => {
             <ProvideLiquidity />
             <MyStake staked={staked} />
             <Rewards rewards={rewards} />
-            <Stake />
-            <Unstake />
+            <Stake isStakingPaused={paused} />
+            <Unstake staked={staked} />
             <YourTransactions />
         </>
     );

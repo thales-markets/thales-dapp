@@ -24,7 +24,7 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
             try {
                 const [balance, gUNITotalSupply, rewardForDuration, duration] = await Promise.all([
                     snxJSConnector?.gelatoContract?.getUnderlyingBalances(),
-                    snxJSConnector?.gelatoContract?.totalSuply(),
+                    snxJSConnector?.gelatoContract?.totalSupply(),
                     snxJSConnector?.lpStakingRewardsContract?.getRewardForDuration(),
                     snxJSConnector?.lpStakingRewardsContract?.rewardsDuration(),
                 ]);

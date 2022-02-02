@@ -474,7 +474,7 @@
                     "claimed": "Successfully claimed"
                 },
                 "my-stake": {
-                    "title": "My Staked tokens",
+                    "title": "My staked tokens",
                     "total-staked": "Total staked",
                     "lp-tokens": "LP Tokens"
                 },
@@ -483,7 +483,9 @@
                     "apr": "APR"
                 },
                 "provide-liquidity": {
-                    "description": "You can provide liquidity for THALES/ETH pair and earn double rewards",
+                    "description": "You can provide liquidity for THALES/WETH pair and earn double rewards",
+                    "wrap-your-eth": "First wrap your ETH",
+                    "here": "here",
                     "button-text": "Link to add liquidity"
                 }
             },

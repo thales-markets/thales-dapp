@@ -1,6 +1,6 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
 
-const GELATO_POOL_ADDRESS = '0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5'; // thales/WETH
+export const GELATO_POOL_ADDRESS = '0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5'; // thales/WETH
 const GELATO_POOL_ABI = [
     {
         inputs: [],
@@ -44,6 +44,51 @@ const GELATO_POOL_ABI = [
         payable: false,
         stateMutability: 'view',
         type: 'function',
+    },
+    {
+        constant: true,
+        inputs: [
+            {
+                name: '_owner',
+                type: 'address',
+            },
+            {
+                name: '_spender',
+                type: 'address',
+            },
+        ],
+        name: 'allowance',
+        outputs: [
+            {
+                name: '',
+                type: 'uint256',
+            },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                name: 'owner',
+                type: 'address',
+            },
+            {
+                indexed: true,
+                name: 'spender',
+                type: 'address',
+            },
+            {
+                indexed: false,
+                name: 'value',
+                type: 'uint256',
+            },
+        ],
+        name: 'Approval',
+        type: 'event',
     },
 ];
 

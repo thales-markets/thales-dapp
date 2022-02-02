@@ -489,7 +489,9 @@
                 },
                 "provide-liquidity": {
                     "button-text": "增加流动性的链接",
-                    "description": "您可以为THALES/ETH货币对提供流动性并获得双倍奖励"
+                    "description": "您可以为THALES/ETH货币对提供流动性并获得双倍奖励",
+                    "here": "这里",
+                    "wrap-your-eth": "首先包装你的 ETH"
                 }
             },
             "table": {

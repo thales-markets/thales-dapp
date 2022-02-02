@@ -131,6 +131,12 @@ export const QUERY_KEYS = {
             networkId,
         ],
         LPStaking: (walletAddress: string, networkId: NetworkId) => ['token', 'LPStaking', walletAddress, networkId],
+        GelatoBalance: (walletAddress: string, networkId: NetworkId) => [
+            'token',
+            'GelatoBalance',
+            walletAddress,
+            networkId,
+        ],
         Gelato: () => ['token', 'Gelato'],
     },
     Swap: {
