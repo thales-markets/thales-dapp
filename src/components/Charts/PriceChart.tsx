@@ -21,7 +21,9 @@ type PriceChartProps = {
     height?: number;
     showHeading?: boolean;
     showFooter?: boolean;
+    showPercentageChangeOnSide?: boolean;
     containerStyle?: CSSProperties;
+    footerStyle?: CSSProperties;
 };
 
 const PriceChart: React.FC<PriceChartProps> = ({
@@ -32,11 +34,13 @@ const PriceChart: React.FC<PriceChartProps> = ({
     height,
     showHeading,
     showFooter,
+    showPercentageChangeOnSide,
     containerStyle,
+    footerStyle,
 }) => {
     const { t } = useTranslation();
 
-    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days });
+    const priceData = usePriceDataQuery({ currencyKey, currencyVs, days }, { refetchInterval: false });
     const processedPriceData = useMemo(() => {
         let data: any = [];
 
@@ -72,14 +76,14 @@ const PriceChart: React.FC<PriceChartProps> = ({
     return (
         <>
             {processedPriceData?.length > 0 && (
-                <ChartWrapper style={{ ...containerStyle }}>
+                <ChartWrapper flexOrder={showPercentageChangeOnSide} style={{ ...containerStyle }}>
                     {processedPriceData && showHeading && (
                         <ChartHeader>
                             <CoinName>{currencyKey + ' price:'}</CoinName>
                             <Price>{formatCurrencyWithSign(USD_SIGN, lastPrice)}</Price>
                         </ChartHeader>
                     )}
-                    <ResponsiveContainer height={height ? height : 50}>
+                    <ResponsiveContainer height={height ? height : 50} width={width ? width : undefined}>
                         <AreaChart
                             data={processedPriceData ? processedPriceData : []}
                             margin={{ top: 0, left: 0, right: 0, bottom: 0 }}
@@ -103,18 +107,24 @@ const PriceChart: React.FC<PriceChartProps> = ({
                                 strokeWidth={1.5}
                                 stroke={`${percentagePriceChange > 0 ? '#50CE99' : '#C04119'}`}
                                 fill={`url(#${percentagePriceChange > 0 ? 'colorPriceBull' : 'colorPriceBear'})`}
+                                // isAnimationActive={false}
                             />
                         </AreaChart>
                     </ResponsiveContainer>
-                    {showFooter !== false && (
-                        <ChartFooter>
-                            <TimerangeChange>
+                    {showFooter !== false && showPercentageChangeOnSide !== true && (
+                        <ChartFooter style={{ ...footerStyle }}>
+                            <TimerangeChange style={{ ...footerStyle }}>
                                 {formatPriceChangeInterval(days, t('common.user-info-card.change'))}
                             </TimerangeChange>
-                            <PriceChange uptrend={percentagePriceChange > 0 ? true : false}>
+                            <PriceChange uptrend={percentagePriceChange > 0 ? true : false} style={{ ...footerStyle }}>
                                 {formatPricePercentageGrowth(percentagePriceChange)}
                             </PriceChange>
                         </ChartFooter>
+                    )}
+                    {showPercentageChangeOnSide == true && (
+                        <SidePercentageChange uptrend={percentagePriceChange > 0 ? true : false}>
+                            {formatPricePercentageGrowth(percentagePriceChange)}
+                        </SidePercentageChange>
                     )}
                 </ChartWrapper>
             )}
@@ -122,8 +132,11 @@ const PriceChart: React.FC<PriceChartProps> = ({
     );
 };
 
-const ChartWrapper = styled.div`
+const ChartWrapper = styled.div<{ flexOrder?: boolean }>`
     width: 100%;
+    ${(_props) => (_props?.flexOrder ? 'display: flex;' : '')};
+    ${(_props) => (_props?.flexOrder ? 'flex-direction: row;' : '')};
+    ${(_props) => (_props?.flexOrder ? 'align-items: center;' : '')};
     text-align: center;
     margin: 0px 0px 0px 0px;
 `;
@@ -180,6 +193,14 @@ const PriceChange = styled(FooterInfo)<{ uptrend?: boolean }>`
     color: ${(props: any) => (props.uptrend ? '#50CE99' : '#C04119')};
     font-weight: bold;
     text-align: right;
+`;
+
+const SidePercentageChange = styled.div<{ uptrend?: boolean }>`
+    font-family: Titillium Regular !important;
+    color: ${(props: any) => (props.uptrend ? '#50CE99' : '#C04119')};
+    font-weight: bold;
+    font-size: 15px;
+    margin-left: 30px;
 `;
 
 export default PriceChart;

@@ -90,11 +90,20 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 },
             },
             {
+                id: 'currencyKey',
                 Header: t(`options.home.markets-table.24h-change-col`),
-                accessor: 'currencyKey',
-                Cell: (_props: any) => {
-                    return <PriceChart currencyKey={_props?.cell?.value} showFooter={false} />;
-                },
+                accessor: (row: any) => (
+                    <PriceChart
+                        currencyKey={row?.currencyKey}
+                        height={30}
+                        width={125}
+                        showFooter={false}
+                        showPercentageChangeOnSide={true}
+                        containerStyle={{ marginTop: '6px', marginBottom: '6px', marginLeft: '10px' }}
+                        footerStyle={{ fontSize: '10px' }}
+                    />
+                ),
+                disableSortBy: true,
             },
             {
                 Header: t(`options.home.markets-table.asset-col`),
@@ -124,16 +133,10 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             {
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
-                Cell: (_props: any) => {
-                    return formatCurrencyWithSign(USD_SIGN, _props?.cell?.value ? _props?.cell?.value : 0);
-                },
             },
             {
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
-                Cell: (_props: any) => {
-                    return formatCurrencyWithSign(USD_SIGN, _props?.cell?.value ? _props?.cell?.value : 0);
-                },
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
@@ -166,8 +169,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 availableShorts: market.availableShorts,
                 longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
                 shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
-                strikePrice: market.strikePrice,
-                currentPrice: exchangeRates?.[market.currencyKey] || 0,
+                strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
+                currentPrice: formatCurrencyWithSign(USD_SIGN, exchangeRates?.[market.currencyKey] || 0, 2),
                 timeRemaining: market.timeRemaining,
                 phase: market.phase,
             };
@@ -200,9 +203,10 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             initalState: {
                 pageIndex: 1,
             },
+            autoResetPage: false,
             autoResetSortBy: false,
             autoResetGlobalFilter: false,
-            autoResetPage: false,
+            autoResetRowState: false,
         },
         useGlobalFilter,
         useSortBy,
@@ -290,10 +294,10 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                             ))}
                         </thead>
                         <tbody {...getTableBodyProps()}>
-                            {page.map((row: any) => {
+                            {page.map((row: any, index: number) => {
                                 prepareRow(row);
                                 return (
-                                    <tr {...row.getRowProps()}>
+                                    <tr key={index} {...row.getRowProps()}>
                                         {row.cells.map((cell: any) => {
                                             return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
                                         })}
@@ -380,6 +384,7 @@ const RedText = styled(Text)`
 const Phase = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
     color: ${(props: any) => (MarketPhase as any)[props.phase]};
     text-transform: capitalize;
+    font-weight: 300;
 `;
 
 const Dot = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
@@ -393,6 +398,7 @@ const Dot = styled.span<{ phase: 'trading' | 'paused' | 'maturity' }>`
 const Arrow = styled.i`
     margin-left: 5px;
     font-size: 15px;
+    text-transform: none;
 `;
 
 const Wrapper = styled(FlexDivRow)`
@@ -435,9 +441,5 @@ const RatioText: React.FC<{ green: string; red: string }> = ({ green, red }) => 
         </span>
     );
 };
-
-// const PriceChartInsideTable: React.FC = (currencyKey) => {
-
-// };
 
 export default MarketsTable;
