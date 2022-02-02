@@ -39,16 +39,11 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
                 } = ratesResults;
 
                 const totalInUSD = Number((weth * ethRate + thales * thalesRate).toFixed(2));
-
                 const gUNIPrice = totalInUSD / toNumber(gUNITotalSupply);
-
                 const yearProRata = ONE_YEAR_SECONDS / duration.toNumber();
-
                 const gUNIValueInContract = toNumber(contractBalance) * gUNIPrice;
                 const rewardsValuePerYear = toNumber(rewardForDuration) * yearProRata * thalesRate;
-
                 const apr = ((100 * rewardsValuePerYear) / gUNIValueInContract).toFixed(0) + '%';
-
                 return { totalInUSD, apr };
             } catch (e) {
                 console.log(e);
