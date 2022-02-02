@@ -163,10 +163,10 @@ export const BonusNeededContent = styled.span`
 
 export const MaxBonusNotice = styled.span`
     margin-top: 15px;
-    height: 24px;
+    height: 26px;
     font-weight: 500;
     font-size: 14px;
-    line-height: 24px;
+    line-height: 26px;
     color: #64d9fe;
     text-shadow: -2px -2px 10px rgba(100, 217, 254, 0.4), 2px 2px 10px rgba(100, 217, 254, 0.4);
     text-transform: uppercase;
