@@ -1,6 +1,6 @@
 import { NetworkId } from '@synthetixio/contracts-interface';
 
-const GELATO_POOL_ADDRESS = '0x7fad8444688c4babb792e960359ea467fd28d030'; // sLong/WETH
+const GELATO_POOL_ADDRESS = '0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5'; // thales/WETH
 const GELATO_POOL_ABI = [
     {
         inputs: [],
@@ -19,6 +19,25 @@ const GELATO_POOL_ABI = [
         outputs: [
             {
                 name: '',
+                type: 'uint256',
+            },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+    },
+    {
+        constant: true,
+        inputs: [
+            {
+                name: '_owner',
+                type: 'address',
+            },
+        ],
+        name: 'balanceOf',
+        outputs: [
+            {
+                name: 'balance',
                 type: 'uint256',
             },
         ],
