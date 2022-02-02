@@ -71,6 +71,7 @@ const useStakingRewardsQuery = (
                 maxThalesRoyaleBonus: 0,
                 snxStaked: 0,
                 ammVolume: 0,
+                hasParticipatedInCurrentOrLastRoyale: false,
             };
 
             if (walletAddress !== '') {
@@ -83,6 +84,7 @@ const useStakingRewardsQuery = (
                     thalesRoyaleBonus,
                     snxStaked,
                     ammVolume,
+                    hasParticipatedInCurrentOrLastRoyale,
                 ] = await Promise.all([
                     (snxJSConnector as any).stakingThalesContract.getRewardsAvailable(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getBaseReward(walletAddress),
@@ -92,6 +94,7 @@ const useStakingRewardsQuery = (
                     (snxJSConnector as any).stakingThalesContract.getThalesRoyaleBonus(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getSNXStaked(walletAddress),
                     (snxJSConnector as any).stakingThalesContract.getAMMVolume(walletAddress),
+                    (snxJSConnector as any).thalesRoyaleContract.hasParticipatedInCurrentOrLastRoyale(walletAddress),
                 ]);
 
                 stakingRewards.hasClaimRights = bigNumberFormatter(rewards) > 0;
@@ -112,6 +115,7 @@ const useStakingRewardsQuery = (
                     (bigNumberFormatter(baseRewards) * Number(maxThalesRoyaleRewardsPercentage)) / 100;
                 stakingRewards.snxStaked = bigNumberFormatter(snxStaked);
                 stakingRewards.ammVolume = bigNumberFormatter(ammVolume);
+                stakingRewards.hasParticipatedInCurrentOrLastRoyale = hasParticipatedInCurrentOrLastRoyale;
             }
 
             return stakingRewards;
