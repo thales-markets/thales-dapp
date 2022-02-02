@@ -8,7 +8,7 @@ export const lpStakingRewardsContract = {
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: '0x38f1487bd60142ae3633C082934455f06B613c6e',
+        [NetworkId['Mainnet-Ovm']]: '0x31a20E5b7b1b067705419D57Ab4F72E81cC1F6Bf',
         [NetworkId['Kovan-Ovm']]: 'TBD',
     },
     abi: [

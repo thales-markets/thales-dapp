@@ -4,12 +4,11 @@ import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
 
 export interface Balance {
-    sLong: number;
-    weth: number;
     totalInUSD: number;
+    apr: string;
 }
 
-// const ONE_YEAR_SECONDS = 365 * 24 * 3600;
+const ONE_YEAR_SECONDS = 365 * 24 * 3600;
 
 type CoinGeckoThalesRates = { thales: { usd: number }; ethereum: { usd: number } };
 const getCoinGeckoThalesRates = async (): Promise<CoinGeckoThalesRates> => {
@@ -22,44 +21,46 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
         QUERY_KEYS.Token.Gelato(),
         async () => {
             try {
-                const [balance, gUNITotalSupply, rewardForDuration, duration] = await Promise.all([
+                const [balance, gUNITotalSupply, rewardForDuration, duration, contractBalance] = await Promise.all([
                     snxJSConnector?.gelatoContract?.getUnderlyingBalances(),
                     snxJSConnector?.gelatoContract?.totalSupply(),
                     snxJSConnector?.lpStakingRewardsContract?.getRewardForDuration(),
                     snxJSConnector?.lpStakingRewardsContract?.rewardsDuration(),
+                    snxJSConnector?.gelatoContract?.balanceOf(snxJSConnector?.lpStakingRewardsContract?.address),
                 ]);
 
-                console.log(gUNITotalSupply, rewardForDuration, duration);
+                const thales = Number(toNumber(balance[0]).toFixed(2));
+                const weth = Number(toNumber(balance[1]).toFixed(2));
 
-                const sLong = Number(Number(ethers.utils.formatEther(balance[0])).toFixed(2));
-                const weth = Number(Number(ethers.utils.formatEther(balance[1])).toFixed(2));
                 const ratesResults = await getCoinGeckoThalesRates();
                 const {
                     thales: { usd: thalesRate },
                     ethereum: { usd: ethRate },
                 } = ratesResults;
 
-                const totalInUSD = Number((weth * ethRate * 2).toFixed(2));
-                console.log(thalesRate, ethRate, totalInUSD);
+                const totalInUSD = Number((weth * ethRate + thales * thalesRate).toFixed(2));
 
-                // const amount0CurrentWei = wei(amount0Current);
-                // const amount1CurrentWei = wei(amount1Current);
-                // const totalValueInPool = amount0CurrentWei
-                //     .mul(ethRate)
-                //     .add(amount1CurrentWei.mul(snxRate));
-                // const gUNIPrice = wei(totalValueInPool).div(wei(gUNITotalSupply));
-                // const yearProRata = ONE_YEAR_SECONDS / duration.toNumber();
-                // const gUNIValueInContract = wei(contractBalance).mul(gUNIPrice);
-                // const rewardsValuePerYear = wei(rewardForDuration).mul(yearProRata).mul(snxRate);
+                const gUNIPrice = totalInUSD / toNumber(gUNITotalSupply);
 
-                return { sLong, weth, totalInUSD };
+                const yearProRata = ONE_YEAR_SECONDS / duration.toNumber();
+
+                const gUNIValueInContract = toNumber(contractBalance) * gUNIPrice;
+                const rewardsValuePerYear = toNumber(rewardForDuration) * yearProRata * thalesRate;
+
+                const apr = ((100 * rewardsValuePerYear) / gUNIValueInContract).toFixed(0) + '%';
+
+                return { totalInUSD, apr };
             } catch (e) {
                 console.log(e);
             }
-            return { sLong: 0, weth: 0, totalInUSD: 0 };
+            return { totalInUSD: 0, apr: '' };
         },
         options
     );
 };
 
 export default useGelatoQuery;
+
+const toNumber = (number: number) => {
+    return Number(ethers.utils.formatEther(number));
+};
