@@ -32,7 +32,7 @@ const Info: React.FC = () => {
             >
                 <Amount>
                     <Title>{t('options.earn.lp-staking.info.apr')}</Title>
-                    75%
+                    {gelatoData?.apr}
                 </Amount>
             </EarnSection>
         </>
