@@ -8,7 +8,7 @@ export const airdrop = {
         [NetworkId.Kovan]: 'TBD',
         // added to resolve error with typings
         [NetworkId.Goerli]: '', // TODO: goerli network remove or implement
-        [NetworkId['Mainnet-Ovm']]: 'TBD',
+        [NetworkId['Mainnet-Ovm']]: '0x42B6e9b5Bb96a02E02e651d3104Fc3546E1313F2',
         [NetworkId['Kovan-Ovm']]: '0xA84062253E6FBC0c03Ab100A7953Ebe88BE86415',
     },
     abi: [
