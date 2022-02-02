@@ -1,8 +1,9 @@
 import React from 'react';
-import { EarnSection } from '../../components';
+import { ButtonContainer, EarnSection } from '../../components';
 import styled from 'styled-components';
 import { FlexDivCentered } from '../../../../../theme/common';
 import { useTranslation } from 'react-i18next';
+import { DefaultSubmitButton } from '../../../Market/components';
 
 const ProvideLiquidity: React.FC = () => {
     const { t } = useTranslation();
@@ -16,6 +17,11 @@ const ProvideLiquidity: React.FC = () => {
                 style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
             >
                 <Description>{t('options.earn.lp-staking.provide-liquidity.description')}</Description>
+                <ButtonContainer>
+                    <DefaultSubmitButton>
+                        {t('options.earn.lp-staking.provide-liquidity.button-text')}
+                    </DefaultSubmitButton>
+                </ButtonContainer>
             </EarnSection>
         </>
     );
@@ -28,6 +34,7 @@ const Description = styled(FlexDivCentered)`
     font-size: 16px;
     line-height: 24px;
     color: #ffffff;
+    flex: 1;
 `;
 
 export default ProvideLiquidity;

@@ -469,7 +469,9 @@
                 "rewards": {
                     "title": "Rewards",
                     "lp-staking": "LP staking",
-                    "claim": "Claim"
+                    "claim": "Claim",
+                    "claiming": "Claiming",
+                    "claimed": "Successfully claimed"
                 },
                 "my-stake": {
                     "title": "My Staked tokens",

@@ -474,7 +474,9 @@
                 "rewards": {
                     "claim": "宣称",
                     "title": "奖励",
-                    "lp-staking": "LP 质押"
+                    "lp-staking": "LP 质押",
+                    "claimed": "成功申领",
+                    "claiming": "声称"
                 },
                 "my-stake": {
                     "total-staked": "总质押",
