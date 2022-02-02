@@ -3,9 +3,13 @@ import { EarnSection } from '../../components';
 import styled from 'styled-components';
 import { FlexDivCentered } from '../../../../../theme/common';
 import { useTranslation } from 'react-i18next';
+import useGelatoQuery from 'queries/token/useGelatoQuery';
+import { formatCurrencyWithSign } from 'utils/formatters/number';
 
 const Info: React.FC = () => {
     const { t } = useTranslation();
+    const gelatoQuery = useGelatoQuery({ enabled: true });
+    const gelatoData = gelatoQuery.isSuccess ? gelatoQuery.data : undefined;
 
     return (
         <>
@@ -17,7 +21,7 @@ const Info: React.FC = () => {
             >
                 <Amount>
                     <Title>{t('options.earn.lp-staking.info.tvl')}</Title>
-                    $12.5 M
+                    {formatCurrencyWithSign('$', gelatoData?.totalInUSD ?? 0)}
                 </Amount>
             </EarnSection>
             <EarnSection
