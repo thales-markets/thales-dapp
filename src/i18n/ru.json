@@ -474,7 +474,9 @@
                 "rewards": {
                     "claim": "Требовать",
                     "lp-staking": "LP стейкинг",
-                    "title": "Награды"
+                    "title": "Награды",
+                    "claimed": "Заявлено успешно",
+                    "claiming": "Претензия"
                 },
                 "my-stake": {
                     "lp-tokens": "Жетоны LP",

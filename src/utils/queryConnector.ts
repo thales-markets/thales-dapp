@@ -89,4 +89,8 @@ export const refetchTokenQueries = (walletAddress: string, networkId: NetworkId)
     queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.StakingRewards(walletAddress, networkId));
 };
 
+export const refetchLPStakingQuery = (walletAddress: string, networkId: NetworkId) => {
+    queryConnector.queryClient.invalidateQueries(QUERY_KEYS.Token.LPStaking(walletAddress, networkId));
+};
+
 export default queryConnector;
