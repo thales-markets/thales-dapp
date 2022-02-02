@@ -83,7 +83,8 @@ const Unstake: React.FC = () => {
         isUnstakingInContract ||
         !isAmountEntered ||
         insufficientBalance ||
-        !isWalletConnected;
+        !isWalletConnected ||
+        isStakingPaused;
 
     const isCancelUnstakeButtonDisabled = isUnstaking || isCanceling || !stakingThalesContract || !isWalletConnected;
     const isUnstakeButtonDisabled = isUnstaking || isCanceling || !stakingThalesContract || !isWalletConnected;
@@ -455,11 +456,15 @@ const Unstake: React.FC = () => {
                     <NumericInput
                         value={amountToUnstake}
                         onChange={(_, value) => setAmountToUnstake(value)}
-                        disabled={isUnstakingInContract || isUnstaking || isCanceling}
+                        disabled={isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
                     />
                     <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
-                    <CurrencyLabel className={isUnstakingInContract || isUnstaking || isCanceling ? 'disabled' : ''}>
+                    <CurrencyLabel
+                        className={
+                            isUnstakingInContract || isUnstaking || isCanceling || isStakingPaused ? 'disabled' : ''
+                        }
+                    >
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
@@ -473,7 +478,13 @@ const Unstake: React.FC = () => {
                             '-'
                         )}
                         <MaxButton
-                            disabled={isUnstakingInContract || isUnstaking || isCanceling || !isWalletConnected}
+                            disabled={
+                                isUnstakingInContract ||
+                                isUnstaking ||
+                                isCanceling ||
+                                isStakingPaused ||
+                                !isWalletConnected
+                            }
                             onClick={onMaxClick}
                         >
                             {t('common.max')}

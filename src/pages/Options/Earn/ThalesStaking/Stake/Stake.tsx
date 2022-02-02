@@ -73,7 +73,8 @@ const Stake: React.FC = () => {
         isUnstaking ||
         !isAmountEntered ||
         insufficientBalance ||
-        !isWalletConnected;
+        !isWalletConnected ||
+        isStakingPaused;
 
     useEffect(() => {
         if (!!stakingThalesContract) {
@@ -261,11 +262,11 @@ const Stake: React.FC = () => {
                     <NumericInput
                         value={amountToStake}
                         onChange={(_, value) => setAmountToStake(value)}
-                        disabled={isStaking || isUnstaking}
+                        disabled={isStaking || isUnstaking || isStakingPaused}
                         className={isAmountValid ? '' : 'error'}
                     />
                     <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
-                    <CurrencyLabel className={isStaking || isUnstaking ? 'disabled' : ''}>
+                    <CurrencyLabel className={isStaking || isUnstaking || isStakingPaused ? 'disabled' : ''}>
                         {THALES_CURRENCY}
                     </CurrencyLabel>
                     <ThalesWalletAmountLabel>
@@ -278,7 +279,10 @@ const Stake: React.FC = () => {
                         ) : (
                             '-'
                         )}
-                        <MaxButton disabled={isStaking || isUnstaking || !isWalletConnected} onClick={onMaxClick}>
+                        <MaxButton
+                            disabled={isStaking || isUnstaking || isStakingPaused || !isWalletConnected}
+                            onClick={onMaxClick}
+                        >
                             {t('common.max')}
                         </MaxButton>
                     </ThalesWalletAmountLabel>
