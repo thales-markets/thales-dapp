@@ -488,10 +488,12 @@
                     "tvl": "锁定总值 (TVL)"
                 },
                 "provide-liquidity": {
-                    "button-text": "增加流动性的链接",
-                    "description": "您可以为THALES/ETH货币对提供流动性并获得双倍奖励",
                     "here": "这里",
-                    "wrap-your-eth": "首先包装你的 ETH"
+                    "deposit": "2. 将 WETH 和 SNX 存入 G-UNI 矿池",
+                    "description": "通过向 THALES/WETH 池增加流动性来获得 G-UNI LP 代币进行质押。",
+                    "button-text": "增加流动性的链接",
+                    "wrap-your-eth": "1. 包裹你的 ETH",
+                    "stake-here": "3. 在此页面质押LP代币"
                 }
             },
             "table": {

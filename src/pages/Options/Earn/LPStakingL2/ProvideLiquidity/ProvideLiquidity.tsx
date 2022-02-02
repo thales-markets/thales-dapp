@@ -1,9 +1,8 @@
 import React from 'react';
-import { ButtonContainer, EarnSection } from '../../components';
+import { EarnSection } from '../../components';
 import styled from 'styled-components';
-import { FlexDivCentered } from '../../../../../theme/common';
+import { FlexDivStart } from '../../../../../theme/common';
 import { useTranslation } from 'react-i18next';
-import { DefaultSubmitButton } from '../../../Market/components';
 
 const ProvideLiquidity: React.FC = () => {
     const { t } = useTranslation();
@@ -14,31 +13,36 @@ const ProvideLiquidity: React.FC = () => {
                 spanOnTablet={5}
                 orderOnMobile={4}
                 orderOnTablet={4}
-                style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
+                style={{ padding: '15px', gridColumn: 'span 5', gridRow: 'span 2' }}
             >
                 <Description>{t('options.earn.lp-staking.provide-liquidity.description')}</Description>
                 <Description>
-                    {t('options.earn.lp-staking.provide-liquidity.wrap-your-eth')}{' '}
-                    <a
-                        style={{ paddingLeft: '5px' }}
+                    {t('options.earn.lp-staking.provide-liquidity.wrap-your-eth')}
+                    <StyledAnchor
                         href="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x4200000000000000000000000000000000000006&chain=optimism"
                         target="_blank"
                         rel="noreferrer"
                     >
                         {t('options.earn.lp-staking.provide-liquidity.here')}
-                    </a>
+                    </StyledAnchor>
                 </Description>
-                <ButtonContainer>
-                    <DefaultSubmitButton>
-                        {t('options.earn.lp-staking.provide-liquidity.button-text')}
-                    </DefaultSubmitButton>
-                </ButtonContainer>
+                <Description>
+                    {t('options.earn.lp-staking.provide-liquidity.deposit')}
+                    <StyledAnchor
+                        href="https://www.sorbet.finance/#/pools/0xac6705BC7f6a35eb194bdB89066049D6f1B0B1b5"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        {t('options.earn.lp-staking.provide-liquidity.here')}
+                    </StyledAnchor>
+                </Description>
+                <Description>{t('options.earn.lp-staking.provide-liquidity.stake-here')}</Description>
             </EarnSection>
         </>
     );
 };
 
-const Description = styled(FlexDivCentered)`
+const Description = styled(FlexDivStart)`
     font-family: Roboto;
     font-style: normal;
     font-weight: 500;
@@ -46,6 +50,11 @@ const Description = styled(FlexDivCentered)`
     line-height: 24px;
     color: #ffffff;
     flex: 1;
+`;
+
+const StyledAnchor = styled.a`
+    padding-left: 5px;
+    color: #8208fc;
 `;
 
 export default ProvideLiquidity;

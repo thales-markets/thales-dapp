@@ -25,7 +25,10 @@ const useGelatoUserBalanceQuery = (
             }
             return { balance: 0 };
         },
-        options
+        {
+            refetchInterval: 5000,
+            ...options,
+        }
     );
 };
 

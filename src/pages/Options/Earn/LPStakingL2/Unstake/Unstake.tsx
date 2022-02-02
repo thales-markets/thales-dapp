@@ -94,6 +94,7 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                 setUnstakingEnded(true);
                 setIsUnstaking(false);
                 setGasLimit(null);
+                setAmountToUnstake('');
             }
         } catch (e) {
             setTxErrorMessage(t('common.errors.unknown-error-try-again'));

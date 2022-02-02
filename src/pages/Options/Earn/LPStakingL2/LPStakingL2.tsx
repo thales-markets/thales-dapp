@@ -17,13 +17,12 @@ const LPStakingL2: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
 
-    const stakingThalesQuery = useLPStakingQuery(walletAddress, networkId, {
+    const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
     });
-    const staked = stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.staked) : 0;
-    const paused = stakingThalesQuery.isSuccess && stakingThalesQuery.data ? stakingThalesQuery.data.paused : false;
-    const rewards =
-        stakingThalesQuery.isSuccess && stakingThalesQuery.data ? Number(stakingThalesQuery.data.rewards) : 0;
+    const staked = lpStakingQuery.isSuccess && lpStakingQuery.data ? Number(lpStakingQuery.data.staked) : 0;
+    const paused = lpStakingQuery.isSuccess && lpStakingQuery.data ? lpStakingQuery.data.paused : false;
+    const rewards = lpStakingQuery.isSuccess && lpStakingQuery.data ? Number(lpStakingQuery.data.rewards) : 0;
 
     return (
         <>
