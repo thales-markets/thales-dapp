@@ -465,7 +465,31 @@
                 }
             },
             "lp-staking": {
-                "tab-title": "LP staking"
+                "tab-title": "LP staking",
+                "rewards": {
+                    "title": "Rewards",
+                    "lp-staking": "LP staking",
+                    "claim": "Claim",
+                    "claiming": "Claiming",
+                    "claimed": "Successfully claimed"
+                },
+                "my-stake": {
+                    "title": "My staked tokens",
+                    "total-staked": "Total staked",
+                    "lp-tokens": "LP Tokens"
+                },
+                "info": {
+                    "tvl": "Total value locked (TVL)",
+                    "apr": "APR"
+                },
+                "provide-liquidity": {
+                    "description": "Obtain G-UNI LP tokens to stake by adding liquidity to the THALES/WETH pool.",
+                    "wrap-your-eth": "1. Wrap your ETH",
+                    "deposit": "2. Deposit THALES and WETH to the G-UNI pool",
+                    "stake-here": "3. Stake LP tokens in this page",
+                    "here": "here",
+                    "button-text": "Link to add liquidity"
+                }
             },
             "table": {
                 "title": "Your activity",

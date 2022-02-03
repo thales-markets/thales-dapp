@@ -13,6 +13,7 @@ import useUserTokenTransactionsQuery from 'queries/token/useUserTokenTransaction
 import { EarnSection, SectionHeader } from '../../components';
 import checkmark from '../../../../../assets/images/checkmark.svg';
 import arrowDown from '../../../../../assets/images/filters/arrow-down.svg';
+import { orderBy } from 'lodash';
 
 type TransactionsWithFiltersProps = {
     filters: TransactionFilterEnum[];
@@ -26,15 +27,23 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFiltersMobile, setShowFiltersMobile] = useState<boolean>(false);
-    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
-        enabled: isAppReady && isWalletConnected,
-    });
+    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(
+        '0x169379d950ceffa34f5d92e33e40b7f3787f0f71',
+        networkId,
+        {
+            enabled: isAppReady && isWalletConnected,
+        }
+    );
 
     const userTokenTransactions = useMemo(
         () =>
             userTokenTransactionsQuery.isSuccess && userTokenTransactionsQuery.data
-                ? userTokenTransactionsQuery.data.filter((tx: TokenTransaction) =>
-                      filters.includes(tx.type as TransactionFilterEnum)
+                ? orderBy(
+                      userTokenTransactionsQuery.data.filter((tx: TokenTransaction) =>
+                          filters.includes(tx.type as TransactionFilterEnum)
+                      ),
+                      ['timestamp', 'blockNumber'],
+                      ['desc', 'desc']
                   )
                 : [],
         [userTokenTransactionsQuery.data, walletAddress]
