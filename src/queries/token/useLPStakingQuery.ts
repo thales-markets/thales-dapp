@@ -49,7 +49,7 @@ const useLPStakingThalesQuery = (
                 if (walletAddress !== '') {
                     const [staked, rewards, paused] = await Promise.all([
                         (snxJSConnector as any).lpStakingRewardsContract.balanceOf(walletAddress),
-                        (snxJSConnector as any).lpStakingRewardsContract.rewards(walletAddress),
+                        (snxJSConnector as any).lpStakingRewardsContract.earned(walletAddress),
                         (snxJSConnector as any).lpStakingRewardsContract.paused(),
                     ]);
 
