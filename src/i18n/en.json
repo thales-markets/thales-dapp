@@ -486,7 +486,7 @@
                     "description": "Obtain G-UNI LP tokens to stake by adding liquidity to the THALES/WETH pool.",
                     "wrap-your-eth": "1. Wrap your ETH",
                     "deposit": "2. Deposit THALES and WETH to the G-UNI pool",
-                    "stake-here": "3. Stake LP tokens in this page",
+                    "stake-here": "3. Stake LP tokens on this page",
                     "here": "here",
                     "button-text": "Link to add liquidity"
                 }
