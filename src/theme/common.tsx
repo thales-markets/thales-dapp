@@ -23,6 +23,10 @@ export const FlexDivEnd = styled(FlexDiv)`
     justify-content: end;
 `;
 
+export const FlexDivStart = styled(FlexDiv)`
+    justify-content: start;
+`;
+
 export const FlexDivRow = styled(FlexDiv)`
     justify-content: space-between;
 `;

@@ -9,7 +9,7 @@ const useThalesStakersQuery = (options?: UseQueryOptions<Stakers>) => {
         QUERY_KEYS.Governance.ThalesStakers(),
         async () => {
             const stakers = await thalesData.binaryOptions.stakers({
-                network: NetworkId.Mainnet,
+                network: NetworkId['Mainnet-Ovm'],
             });
             return stakers.filter((staker: Staker) => staker.totalStakedAmount > 0);
         },

@@ -1,11 +1,11 @@
 import React, { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CellProps } from 'react-table';
-import { THALES_CURRENCY } from 'constants/currency';
+import { LP_TOKEN, THALES_CURRENCY } from 'constants/currency';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { formatTxTimestamp } from 'utils/formatters/date';
 import Table from 'components/Table';
-import { TokenTransaction, TokenTransactions } from 'types/token';
+import { TokenTransaction, TokenTransactions, TransactionFilterEnum } from 'types/token';
 import ViewEtherscanLink from 'components/ViewEtherscanLink';
 import { EMPTY_VALUE } from 'constants/placeholder';
 
@@ -45,8 +45,16 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                         accessor: 'amount',
                         Cell: (cellProps: CellProps<TokenTransaction, TokenTransaction['amount']>) => (
                             <p>
-                                {cellProps.cell.row.original.type !== 'cancelUnstake'
-                                    ? formatCurrencyWithKey(THALES_CURRENCY, cellProps.cell.value)
+                                {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE
+                                    ? formatCurrencyWithKey(
+                                          cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
+                                              cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE ||
+                                              cellProps.cell.row.original.type ===
+                                                  TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
+                                              ? LP_TOKEN
+                                              : THALES_CURRENCY,
+                                          cellProps.cell.value
+                                      )
                                     : EMPTY_VALUE}
                             </p>
                         ),
