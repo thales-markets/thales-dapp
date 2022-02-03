@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import QUERY_KEYS from 'constants/queryKeys';
 import snxJSConnector from 'utils/snxJSConnector';
 import { ethers } from 'ethers';
+import { formatCurrency } from 'utils/formatters/number';
 
 export interface Balance {
     totalInUSD: number;
@@ -44,8 +45,9 @@ const useGelatoQuery = (options?: UseQueryOptions<Balance>) => {
                 const totalInUSD = Number(
                     (weth * ratesResults.ethereum.usd + thales * ratesResults.thales.usd).toFixed(2)
                 );
-                const apr = ((100 * (35000 * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(0) + '%';
-                return { totalInUSD, apr };
+                const apr = ((100 * (35000 * ratesResults.thales.usd * 52)) / totalInUSD).toFixed(0);
+
+                return { totalInUSD, apr: formatCurrency(apr) + '%' };
             } catch (e) {
                 console.log(e);
             }
