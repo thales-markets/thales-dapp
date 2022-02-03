@@ -61,7 +61,7 @@ export const TokentOverview: React.FC = () => {
                         {tokenInfo && tokenInfo.price ? (
                             <LightTooltip title={t(`options.earn.overview.price-tooltip${isL2 ? '-l2' : ''}`)}>
                                 <StyledLink
-                                    href={isL2 ? LINKS.Token.CoinGecko : LINKS.Token.DodoPool}
+                                    href={isL2 ? LINKS.Token.Uniswap : LINKS.Token.DodoPool}
                                     target="_blank"
                                     rel="noreferrer"
                                 >

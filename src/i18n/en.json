@@ -486,7 +486,7 @@
                     "description": "Obtain G-UNI LP tokens to stake by adding liquidity to the THALES/WETH pool.",
                     "wrap-your-eth": "1. Wrap your ETH",
                     "deposit": "2. Deposit THALES and WETH to the G-UNI pool",
-                    "stake-here": "3. Stake LP tokens in this page",
+                    "stake-here": "3. Stake LP tokens on this page",
                     "here": "here",
                     "button-text": "Link to add liquidity"
                 }
@@ -549,7 +549,7 @@
                 "token-tooltip": "View THALES contract",
                 "price-label": "Price",
                 "price-tooltip": "View DODO pool",
-                "price-tooltip-l2": "View on CoinGecko",
+                "price-tooltip-l2": "Swap on UNISWAP",
                 "market-cap-label": "Market cap",
                 "earn-label": "Earn LP rewards",
                 "earn-tooltip": "Provide liquidity for THALES/ETH pair and earn THALES rewards",

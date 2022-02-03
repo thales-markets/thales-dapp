@@ -20,6 +20,8 @@ export const LINKS = {
             AMM: 'https://thalesmarket.io/markets',
             ThalesRoyale: 'https://thalesmarket.io/royale',
         },
+        Uniswap:
+            'https://app.uniswap.org/#/swap?outputCurrency=0x217d47011b23bb961eb6d93ca9945b7501a5bb11&chain=optimism',
     },
     AMM: {
         Tip: 'https://github.com/thales-markets/thales-improvement-proposals/blob/main/TIPs/TIP-11.md',
