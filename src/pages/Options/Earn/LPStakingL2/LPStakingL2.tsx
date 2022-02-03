@@ -16,7 +16,6 @@ const LPStakingL2: React.FC = () => {
     const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
-
     const lpStakingQuery = useLPStakingQuery(walletAddress, networkId, {
         enabled: isAppReady,
     });
