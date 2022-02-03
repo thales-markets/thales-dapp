@@ -14,6 +14,8 @@ import useEthBalanceQuery from './queries/useEthBalanceQuery';
 import { LanguageSelectorRoyale } from './LanguageSelectorRoyale/LanguageSelectorRoyale';
 import './media.scss';
 import { Theme } from '../../ThalesRoyal';
+import Swap from 'pages/Options/Home/Swap';
+import { Modal } from '@material-ui/core';
 
 type RoyaleHeaderInput = {
     latestSeason: number;
@@ -41,6 +43,7 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
     const { t } = useTranslation();
     const walletAddress = useSelector((state: RootState) => getWalletAddress(state));
     const [openUserInfo, setOpenUserInfo] = useState(false);
+    const [showSwap, setShowSwap] = useState(false);
     const [showSelectDropdown, setShowSelectDropdown] = useState(false);
     const balanceQuery = useEthBalanceQuery(walletAddress ?? '', { enabled: walletAddress !== null });
     const balance = balanceQuery.isSuccess ? balanceQuery.data : '';
@@ -61,6 +64,19 @@ const RoyaleHeader: React.FC<RoyaleHeaderInput> = ({
                 <ThalesLogo className="icon icon--logo" />
                 <InfoWrapper>
                     <UtilWrapper>
+                        {walletAddress && (
+                            <Button onClick={() => setShowSwap(true)}>{t('options.swap.button-text')}</Button>
+                        )}
+                        <Modal
+                            open={showSwap}
+                            onClose={(_, reason) => {
+                                if (reason !== 'backdropClick') setShowSwap(false);
+                            }}
+                        >
+                            <div style={{ height: 0 }}>
+                                <Swap royaleTheme={true} handleClose={setShowSwap}></Swap>
+                            </div>
+                        </Modal>
                         <RoyaleLogo className="icon icon--royale-logo" />
                         {selectedSeason !== 0 && (
                             <SeasonSelector isOpen={showSelectDropdown}>
@@ -380,6 +396,36 @@ const Overlay = styled.div`
     left: 0;
     right: 0;
     z-index: 4;
+`;
+
+const Button = styled.button`
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    font-family: Sansation !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    background: var(--color);
+    border: 1px solid var(--color);
+    box-sizing: border-box;
+    box-shadow: 0px 0px 30px var(--color);
+    border-radius: 20px;
+    padding: 6px 15px 6px 20px;
+    color: var(--color-wrapper);
+    margin-top: -4px;
+    margin-right: 20px;
+    &.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    @media (max-width: 1024px) {
+        position: absolute;
+        right: 40px;
+        top: 15px;
+        z-index: 999;
+    }
 `;
 
 export default RoyaleHeader;

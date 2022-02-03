@@ -1098,7 +1098,8 @@
                 "season-finished": "赛季结束",
                 "loading-season": "正在加载",
                 "no-users": "没有用户",
-                "info7": "<italic>祝你好运，让战斗开始吧！</italic>"
+                "info7": "<italic>祝你好运，让战斗开始吧！</italic>",
+                "insufficient-balance": "sUSD 余额不足"
             },
             "redirect-dialog": {
                 "title": "你在 Optimism Kovan 网络",
@@ -1123,7 +1124,9 @@
                 "change-display-name": "更改显示名称",
                 "change-avatar": "输入头像网址",
                 "avatar": "头像图片",
-                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL"
+                "avatar-tip": "请输入以 .jpg、.jpeg、.png、.svg 或 .gif 结尾的有效 URL",
+                "avatar-validation-msg": "请输入有效的头像网址",
+                "name-validation-msg": "请输入不带特殊字符的显示名称"
             }
         },
         "amm-mining": {

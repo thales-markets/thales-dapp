@@ -12,6 +12,7 @@ import { User } from '../../queries/useRoyalePlayersQuery';
 import './media.scss';
 import { ReactComponent as InfoIcon } from 'assets/images/info.svg';
 import { Theme } from 'pages/Options/Royal/ThalesRoyal';
+import FieldValidationMessage from 'components/FieldValidationMessage';
 
 type UserEditRoyaleDataDialogProps = {
     open: boolean;
@@ -45,7 +46,7 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
     const [avatar, setAvatar] = useState('');
 
     const isNameValid = useMemo(() => {
-        return DISPLAY_NAME_REGEX.test(name ?? '');
+        return DISPLAY_NAME_REGEX.test(name ?? '') || name === '';
     }, [name]);
 
     const isAvatarLinkValid = useMemo(() => {
@@ -127,19 +128,41 @@ const UserEditRoyaleDataDialog: React.FC<UserEditRoyaleDataDialogProps> = ({
                                     <StyledInfoIcon />
                                 </RoyaleTooltip>
                             </UserLabel>
-                            <InputWrapper
-                                onChange={(e) => setAvatar(e.target.value)}
-                                value={avatar}
-                                placeholder={t('options.royale.edit-user-data-dialog.change-avatar')}
-                            />
+                            <div>
+                                <InputWrapper
+                                    isInputValid={isAvatarLinkValid}
+                                    onChange={(e) => {
+                                        setAvatar(e.target.value);
+                                    }}
+                                    value={avatar}
+                                    placeholder={t('options.royale.edit-user-data-dialog.change-avatar')}
+                                />
+                                <ValidationMessage>
+                                    <FieldValidationMessage
+                                        showValidation={!isAvatarLinkValid}
+                                        message={t('options.royale.edit-user-data-dialog.avatar-validation-msg')}
+                                    />
+                                </ValidationMessage>
+                            </div>
                         </FlexContainer>
                         <FlexContainer>
                             <UserLabel>{t('options.leaderboard.display-name')}:</UserLabel>
-                            <InputWrapper
-                                onChange={(e) => setName(e.target.value)}
-                                value={name}
-                                placeholder={t('options.royale.edit-user-data-dialog.enter-display-name')}
-                            />
+                            <div>
+                                <InputWrapper
+                                    isInputValid={isNameValid}
+                                    onChange={(e) => {
+                                        setName(e.target.value);
+                                    }}
+                                    value={name}
+                                    placeholder={t('options.royale.edit-user-data-dialog.enter-display-name')}
+                                />
+                                <ValidationMessage>
+                                    <FieldValidationMessage
+                                        showValidation={!isNameValid}
+                                        message={t('options.royale.edit-user-data-dialog.name-validation-msg')}
+                                    />
+                                </ValidationMessage>
+                            </div>
                         </FlexContainer>
                         <FlexContainer>
                             <UserLabel></UserLabel>
@@ -212,6 +235,12 @@ const UserWrapper = styled.div`
     }
 `;
 
+const ValidationMessage = styled.div`
+    position: absolute;
+    display: flex;
+    z-index: 1;
+`;
+
 const StyledInfoIcon = styled(InfoIcon)`
     display: inline-block;
     position: absolute;
@@ -241,9 +270,9 @@ const UserAvatar = styled(Image)<{ winner?: boolean }>`
     }
 `;
 
-const InputWrapper = styled.input`
+const InputWrapper = styled.input<{ isInputValid?: boolean }>`
     width: 220px;
-    border: 1.30233px solid var(--color);
+    border: ${(props) => (props.isInputValid ? '1.30233px solid var(--color)' : '1.30233px solid red')};
     box-sizing: border-box;
     border-radius: 19.5349px;
     height: 28px;
@@ -258,6 +287,8 @@ const InputWrapper = styled.input`
     background: #e3f7e9;
     color: var(--color-wrapper);
     text-overflow: ellipsis;
+    outline: none !important;
+
     @media (max-width: 1024px) {
         width: 150px;
     }
