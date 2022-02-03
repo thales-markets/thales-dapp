@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SYNTHS_MAP, THALES_CURRENCY } from 'constants/currency';
 import useSynthsBalancesQuery from 'queries/walletBalances/useSynthsBalancesQuery';
 import { useSelector } from 'react-redux';
@@ -18,6 +18,8 @@ import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { getIsOVM } from 'utils/network';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
+import useStakingThalesQuery from '../../queries/staking/useStakingThalesQuery';
+import useEscrowThalesQuery from '../../queries/staking/useEscrowThalesQuery';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -32,13 +34,6 @@ const UserInfo: React.FC = () => {
         enabled: isAppReady && isWalletConnected,
     });
 
-    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, network.networkId, {
-        enabled: isAppReady && isWalletConnected && isL2,
-    });
-
-    const thalesBalance =
-        thalesBalanceQuery.isSuccess && thalesBalanceQuery.data ? Number(thalesBalanceQuery.data.balance) : 0;
-
     const walletBalancesMap =
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
             ? { synths: synthsWalletBalancesQuery.data }
@@ -47,6 +42,44 @@ const UserInfo: React.FC = () => {
     const iconSize = thalesTotalBalance ? '20' : '15';
     const truncateAddressNumberOfCharacters = window.innerWidth < 768 ? 2 : 5;
     const hideAddress = window.innerWidth < 320;
+
+    const [thalesStaked, setThalesStaked] = useState(0);
+    const [escrowedBalance, setEscrowedBalance] = useState(0);
+    const [thalesBalance, setThalesBalance] = useState(0);
+
+    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const stakingThalesQuery = useStakingThalesQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const escrowThalesQuery = useEscrowThalesQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
+
+    useEffect(() => {
+        if (stakingThalesQuery.isSuccess && stakingThalesQuery.data) {
+            const { thalesStaked } = stakingThalesQuery.data;
+            setThalesStaked(Number(thalesStaked));
+        }
+        if (escrowThalesQuery.isSuccess && escrowThalesQuery.data) {
+            setEscrowedBalance(escrowThalesQuery.data.escrowedBalance);
+        }
+    }, [stakingThalesQuery.isSuccess, escrowThalesQuery.isSuccess, stakingThalesQuery.data, escrowThalesQuery.data]);
+
+    useEffect(() => {
+        if (thalesBalanceQuery.isSuccess && thalesBalanceQuery.data) {
+            setThalesBalance(Number(thalesBalanceQuery.data.balance));
+        }
+    }, [thalesBalanceQuery.isSuccess, thalesBalanceQuery.data]);
+
+    useEffect(() => {
+        setThalesTotalBalance(
+            Number(thalesBalance.toFixed(2)) + Number(escrowedBalance.toFixed(2)) + Number(thalesStaked.toFixed(2))
+        );
+    }, [thalesBalance, escrowedBalance, thalesStaked]);
 
     return (
         <>
@@ -73,8 +106,13 @@ const UserInfo: React.FC = () => {
                 <ThalesBalance>
                     {isL2 && (
                         <StyledMaterialTooltip
-                            PopperProps={{ keepMounted: true }}
-                            title={<ThalesBalanceTooltip setThalesTotalBalance={setThalesTotalBalance} />}
+                            title={
+                                <ThalesBalanceTooltip
+                                    thalesBalance={thalesBalance}
+                                    thalesStaked={thalesStaked}
+                                    escrowedBalance={escrowedBalance}
+                                />
+                            }
                         >
                             <StyledInfoIcon width={iconSize} height={iconSize} />
                         </StyledMaterialTooltip>
