@@ -27,13 +27,9 @@ const TransactionsWithFilters: React.FC<TransactionsWithFiltersProps> = ({ filte
     const networkId = useSelector((state: RootState) => getNetworkId(state));
     const [filter, setFilter] = useState<string>(TransactionFilterEnum.ALL);
     const [showFiltersMobile, setShowFiltersMobile] = useState<boolean>(false);
-    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(
-        '0x169379d950ceffa34f5d92e33e40b7f3787f0f71',
-        networkId,
-        {
-            enabled: isAppReady && isWalletConnected,
-        }
-    );
+    const userTokenTransactionsQuery = useUserTokenTransactionsQuery(walletAddress, networkId, {
+        enabled: isAppReady && isWalletConnected,
+    });
 
     const userTokenTransactions = useMemo(
         () =>
