@@ -21,6 +21,7 @@ import onboardConnector from 'utils/onboardConnector';
 import FieldValidationMessage from 'components/FieldValidationMessage';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { ethers } from 'ethers';
+import { LP_TOKEN } from '../../../../../constants/currency';
 
 type Properties = {
     staked: number;
@@ -125,11 +126,11 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
             <DefaultSubmitButton onClick={handleUnstakeThales} disabled={isUnstakeButtonDisabled}>
                 {!isUnstaking
                     ? `${t('options.earn.thales-staking.unstake.unstake')} ${formatCurrencyWithKey(
-                          'LP Token',
+                          LP_TOKEN,
                           amountToUnstake
                       )}`
                     : `${t('options.earn.thales-staking.unstake.unstaking')} ${formatCurrencyWithKey(
-                          'LP Token',
+                          LP_TOKEN,
                           amountToUnstake
                       )}...`}
             </DefaultSubmitButton>
@@ -163,16 +164,16 @@ const Unstake: React.FC<Properties> = ({ staked }) => {
                         className={isAmountValid ? '' : 'error'}
                     />
                     <InputLabel>{t('options.earn.thales-staking.unstake.amount-to-unstake')}</InputLabel>
-                    <CurrencyLabel className={isUnstaking ? 'disabled' : ''}>{'LP Token'}</CurrencyLabel>
+                    <CurrencyLabel className={isUnstaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
                     <ThalesWalletAmountLabel>
-                        {isWalletConnected ? formatCurrencyWithKey('LP Token', staked) : '-'}
+                        {isWalletConnected ? formatCurrencyWithKey(LP_TOKEN, staked) : '-'}
                         <MaxButton disabled={isUnstaking || !isWalletConnected} onClick={onMaxClick}>
                             {t('common.max')}
                         </MaxButton>
                     </ThalesWalletAmountLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-staking-balance`, { currencyKey: 'LP Token' })}
+                        message={t(`common.errors.insufficient-staking-balance`, { currencyKey: LP_TOKEN })}
                     />
                 </InputContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isUnstaking} l1Fee={l1Fee} />

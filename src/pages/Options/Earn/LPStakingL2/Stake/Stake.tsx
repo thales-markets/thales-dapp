@@ -33,6 +33,7 @@ import FieldValidationMessage from 'components/FieldValidationMessage';
 import { MAX_L2_GAS_LIMIT } from 'constants/options';
 import { FlexDivColumnCentered } from 'theme/common';
 import useGelatoUserBalanceQuery from '../../../../../queries/token/useGelatoUserBalanceQuery';
+import { LP_TOKEN } from '../../../../../constants/currency';
 
 type Properties = {
     isStakingPaused: boolean;
@@ -191,9 +192,9 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             return (
                 <DefaultSubmitButton disabled={isAllowingStake} onClick={handleAllowance}>
                     {!isAllowingStake
-                        ? t('common.enable-wallet-access.approve-label', { currencyKey: 'LP Token' })
+                        ? t('common.enable-wallet-access.approve-label', { currencyKey: LP_TOKEN })
                         : t('common.enable-wallet-access.approve-progress-label', {
-                              currencyKey: 'LP Token',
+                              currencyKey: LP_TOKEN,
                           })}
                 </DefaultSubmitButton>
             );
@@ -203,11 +204,11 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             <DefaultSubmitButton disabled={isButtonDisabled} onClick={handleStakeThales}>
                 {!isStaking
                     ? `${t('options.earn.thales-staking.stake.stake')} ${formatCurrencyWithKey(
-                          'LP Token',
+                          LP_TOKEN,
                           amountToStake
                       )}`
                     : `${t('options.earn.thales-staking.stake.staking')} ${formatCurrencyWithKey(
-                          'LP Token',
+                          LP_TOKEN,
                           amountToStake
                       )}...`}
             </DefaultSubmitButton>
@@ -252,13 +253,13 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                         className={isAmountValid ? '' : 'error'}
                     />
                     <InputLabel>{t('options.earn.thales-staking.stake.amount-to-stake')}</InputLabel>
-                    <CurrencyLabel className={isStaking ? 'disabled' : ''}>{'LP Token'}</CurrencyLabel>
+                    <CurrencyLabel className={isStaking ? 'disabled' : ''}>{LP_TOKEN}</CurrencyLabel>
                     <ThalesWalletAmountLabel>
                         {isWalletConnected ? (
                             lpTokensBalanceQuery.isLoading ? (
                                 <SimpleLoader />
                             ) : (
-                                formatCurrencyWithKey('LP Token', lpTokensBalance)
+                                formatCurrencyWithKey(LP_TOKEN, lpTokensBalance)
                             )
                         ) : (
                             '-'
@@ -269,7 +270,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
                     </ThalesWalletAmountLabel>
                     <FieldValidationMessage
                         showValidation={!isAmountValid}
-                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: 'LP Token' })}
+                        message={t(`common.errors.insufficient-balance-wallet`, { currencyKey: LP_TOKEN })}
                     />
                 </InputContainer>
                 <NetworkFees gasLimit={gasLimit} disabled={isStaking} l1Fee={l1Fee} />

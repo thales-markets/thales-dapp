@@ -13,7 +13,7 @@ const ProvideLiquidity: React.FC = () => {
                 spanOnTablet={5}
                 orderOnMobile={4}
                 orderOnTablet={4}
-                style={{ padding: '15px', gridColumn: 'span 5', gridRow: 'span 2' }}
+                style={{ padding: '16px', gridColumn: 'span 5', gridRow: 'span 2' }}
             >
                 <Description>{t('options.earn.lp-staking.provide-liquidity.description')}</Description>
                 <Description>
@@ -46,7 +46,7 @@ const Description = styled(FlexDivStart)`
     font-family: Roboto;
     font-style: normal;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 24px;
     color: #ffffff;
     flex: 1;

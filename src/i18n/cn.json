@@ -489,11 +489,11 @@
                 },
                 "provide-liquidity": {
                     "here": "这里",
-                    "deposit": "2. 将 WETH 和 SNX 存入 G-UNI 矿池",
                     "description": "通过向 THALES/WETH 池增加流动性来获得 G-UNI LP 代币进行质押。",
                     "button-text": "增加流动性的链接",
                     "wrap-your-eth": "1. 包裹你的 ETH",
-                    "stake-here": "3. 在此页面质押LP代币"
+                    "stake-here": "3. 在此页面质押LP代币",
+                    "deposit": "2. 将THALES和WETH存入G-UNI矿池"
                 }
             },
             "table": {
