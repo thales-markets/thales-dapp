@@ -45,7 +45,7 @@ const Rewards: React.FC<Properties> = ({ rewards }) => {
                 const lpStakingRewardsContractWithSigner = lpStakingRewardsContract.connect(
                     (snxJSConnector as any).signer
                 );
-                const tx = (await lpStakingRewardsContractWithSigner.getRewar({
+                const tx = (await lpStakingRewardsContractWithSigner.getReward({
                     gasLimit: MAX_L2_GAS_LIMIT,
                 })) as ethers.ContractTransaction;
                 const txResult = await tx.wait();
