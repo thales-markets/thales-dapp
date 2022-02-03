@@ -29,7 +29,10 @@ export type TokenTransactionType =
     | 'startUnstaking'
     | 'unstake'
     | 'addToEscrow'
-    | 'vest';
+    | 'vest'
+    | 'lpStake'
+    | 'lpUnstake'
+    | 'lpClaimStakingRewards';
 
 export type TokenTransaction = {
     hash: string;
@@ -37,6 +40,7 @@ export type TokenTransaction = {
     account: string;
     timestamp: number;
     amount: number | string;
+    blockNumber: number;
 };
 
 export enum TransactionFilterEnum {
