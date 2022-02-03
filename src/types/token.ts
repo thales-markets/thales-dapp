@@ -95,6 +95,7 @@ export type StakingReward = {
     snxVolumeRewardsMultiplier: number;
     snxStaked: number;
     ammVolume: number;
+    hasParticipatedInCurrentOrLastRoyale: boolean;
 };
 
 type Reward = {

@@ -17,6 +17,7 @@ import ThalesBalanceTooltip from './ThalesBalanceTooltip';
 import { withStyles } from '@material-ui/core';
 import MaterialTooltip from '@material-ui/core/Tooltip';
 import { getIsOVM } from 'utils/network';
+import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -30,6 +31,13 @@ const UserInfo: React.FC = () => {
     const synthsWalletBalancesQuery = useSynthsBalancesQuery(walletAddress, network.networkId, {
         enabled: isAppReady && isWalletConnected,
     });
+
+    const thalesBalanceQuery = useThalesBalanceQuery(walletAddress, network.networkId, {
+        enabled: isAppReady && isWalletConnected && isL2,
+    });
+
+    const thalesBalance =
+        thalesBalanceQuery.isSuccess && thalesBalanceQuery.data ? Number(thalesBalanceQuery.data.balance) : 0;
 
     const walletBalancesMap =
         synthsWalletBalancesQuery.isSuccess && synthsWalletBalancesQuery.data
@@ -71,7 +79,9 @@ const UserInfo: React.FC = () => {
                             <StyledInfoIcon width={iconSize} height={iconSize} />
                         </StyledMaterialTooltip>
                     )}
-                    <span style={{ marginLeft: 10 }}>{formatCurrencyWithKey(THALES_CURRENCY, thalesTotalBalance)}</span>
+                    <span style={{ marginLeft: 10 }}>
+                        {formatCurrencyWithKey(THALES_CURRENCY, isL2 ? thalesTotalBalance : thalesBalance)}
+                    </span>
                 </ThalesBalance>
             </UserInfoWrapper>
             <UserInfoModal

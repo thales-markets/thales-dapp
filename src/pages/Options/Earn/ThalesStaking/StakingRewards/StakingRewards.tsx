@@ -237,7 +237,7 @@ const StakingRewards: React.FC = () => {
 
     const snxStakedMaxBonus = additionalSnxStaked === 0 && baseRewards > 0;
     const ammVolumeMaxBonus = additionalAmmVolume === 0 && baseRewards > 0;
-    const participatedInRoyale = thalesRoyaleBonus > 0;
+    const participatedInRoyale = !!(stakingRewards && stakingRewards.hasParticipatedInCurrentOrLastRoyale);
 
     return (
         <EarnSection

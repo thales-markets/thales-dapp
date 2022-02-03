@@ -410,7 +410,7 @@
                         "current-thales-royale-label": "Current participation",
                         "thales-royale-participation-yes": "YES",
                         "thales-royale-participation-no": "NO",
-                        "max-bonus-notice": "You have maximum bonus"
+                        "max-bonus-notice": "Eligible for maximum bonus"
                     },
                     "bonus-button": {
                         "snx-staking-label": "Stake more SNX to get more THALES bonus",
@@ -419,9 +419,9 @@
                     },
                     "bonus-tooltip": {
                         "snx-staking-title": "SNX staking bonus",
-                        "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If he has less SNX staked he gets amount calculated according to formula below:",
+                        "snx-staking-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{snxVolumeRewardsMultiplier}} SNX staked per THALES he would receive as base reward. If the staker has less SNX staked, he/she gets a bonus percentage multiplier based on the formula:",
                         "amm-title": "AMM bonus",
-                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{ammVolumeRewardsMultiplier}} sUSD AMM volume in last 4 epochs per THALES he gets as base reward. If he did less he gets amount calculated according to formula below:",
+                        "amm-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if has at least {{ammVolumeRewardsMultiplier}} sUSD AMM volume in last 4 periods per THALES he gets as base reward. If the staked did less volume, he/she gets a bonus percentage multiplier based on the formula:",
                         "thales-royale-title": "Thales Royale bonus",
                         "thales-royale-description": "THALES staker will get maximum value of {{max}}% on top of base rewards if the staker participated in the last or ongoing Thales Royale. This value can be either 0 or max."
                     },
