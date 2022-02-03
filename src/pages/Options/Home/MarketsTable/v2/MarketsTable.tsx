@@ -406,8 +406,8 @@ const Wrapper = styled(FlexDivRow)`
     flex-wrap: nowrap;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 10px;
     max-width: 1200px;
-    margin-bottom: 39px;
 `;
 
 const FormContainer = styled.div`
@@ -419,7 +419,7 @@ const FormContainer = styled.div`
 
 const FilterContainer = styled.div`
     display: flex;
-    align-items: center;
+    align-items: stretch;
 `;
 
 const Item = styled.span`
@@ -430,6 +430,7 @@ const Item = styled.span`
     text-transform: uppercase;
     padding: 6px 14px 6px 14px;
     margin-right: 20px;
+    margin-bottom: -10px;
     color: var(--primary-color);
     cursor: pointer;
 `;
