@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    ClaimMessage,
-    EarnSection,
-    FullRow,
-    SectionContentContainer,
-    SectionHeader,
-    StyledInfoIcon,
-    StyledMaterialTooltip,
-} from '../../components';
+import { ClaimMessage, EarnSection, FullRow, SectionContentContainer, SectionHeader } from '../../components';
 import { formatCurrencyWithKey, truncToDecimals } from '../../../../../utils/formatters/number';
 import NumericInput from '../../../Market/components/NumericInput';
 import { CurrencyLabel, DefaultSubmitButton, InputContainer, InputLabel } from '../../../Market/components';
@@ -233,16 +225,7 @@ const Stake: React.FC<Properties> = ({ isStakingPaused }) => {
             style={{ gridColumn: 'span 5', gridRow: 'span 2' }}
         >
             <SectionHeader>
-                <div>
-                    {t('options.earn.thales-staking.stake.stake')}
-                    <StyledMaterialTooltip
-                        arrow={true}
-                        title={t('options.earn.thales-staking.stake.info-tooltip') as string}
-                        interactive
-                    >
-                        <StyledInfoIcon />
-                    </StyledMaterialTooltip>
-                </div>
+                <div>{t('options.earn.thales-staking.stake.stake')}</div>
             </SectionHeader>
             <SectionContentContainer style={{ height: '100%' }}>
                 <InputContainer>

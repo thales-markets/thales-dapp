@@ -17,30 +17,25 @@ const Info: React.FC = () => {
                 spanOnTablet={5}
                 orderOnMobile={4}
                 orderOnTablet={4}
-                style={{ gridColumn: 'span 3', gridRow: 'span 2' }}
+                style={{ gridColumn: 'span 3', gridRow: 'span 2', justifyContent: 'center' }}
             >
-                <Amount>
-                    <Title>{t('options.earn.lp-staking.info.tvl')}</Title>
-                    {formatCurrencyWithSign('$', gelatoData?.totalInUSD ?? 0)}
-                </Amount>
+                <Title>{t('options.earn.lp-staking.info.tvl')}</Title>
+                <Amount>{formatCurrencyWithSign('$', gelatoData?.totalInUSD ?? 0)}</Amount>
             </EarnSection>
             <EarnSection
                 spanOnTablet={5}
                 orderOnMobile={4}
                 orderOnTablet={4}
-                style={{ gridColumn: 'span 2', gridRow: 'span 2' }}
+                style={{ gridColumn: 'span 2', gridRow: 'span 2', justifyContent: 'center' }}
             >
-                <Amount>
-                    <Title>{t('options.earn.lp-staking.info.apr')}</Title>
-                    {gelatoData?.apr}
-                </Amount>
+                <Title>{t('options.earn.lp-staking.info.apr')}</Title>
+                <Amount>{gelatoData?.apr}</Amount>
             </EarnSection>
         </>
     );
 };
 
 const Title = styled(FlexDivCentered)`
-    position: absolute;
     padding: 5px;
     font-family: Titillium Web;
     font-style: normal;
@@ -48,11 +43,9 @@ const Title = styled(FlexDivCentered)`
     font-size: 14px;
     line-height: 24px;
     color: #b8c6e5;
-    top: 0;
 `;
 const Amount = styled(FlexDivCentered)`
     position: relative;
-    padding: 30px 0;
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;

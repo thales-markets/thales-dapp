@@ -27,6 +27,7 @@ const MyStake: React.FC<Properties> = ({ staked }) => {
                     style={{
                         gridColumn: 'span 5',
                         gridRow: 'span 2',
+                        justifyContent: 'center',
                     }}
                 >
                     <Amount>
