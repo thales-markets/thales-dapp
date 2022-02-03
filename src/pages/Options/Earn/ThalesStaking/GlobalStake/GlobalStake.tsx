@@ -206,14 +206,18 @@ const RewardsInfo = styled(FlexDivRowCentered)`
     width: 100%;
     margin-bottom: 2px;
     @media (max-width: 767px) {
-        margin-top: 4px;
+        margin-top: 10px;
         font-size: 14px;
         margin-bottom: 0px;
+        flex-direction: column;
     }
 `;
 
 const RewardsInfoItem = styled(FlexDiv)`
     width: 50%;
+    @media (max-width: 767px) {
+        width: 100%;
+    }
 `;
 
 const BonusInfo = styled.span`
