@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { OptionsMarkets, PrimaryOptionsFilter } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
+import { SortOption } from 'types/options';
 
 import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,7 @@ import TableGridSwitch from '../../../components/Input/TableGridSwitch';
 import SearchField from '../../../components/Input/SearchField';
 import PriceChart from 'components/Charts/PriceChart';
 import { TablePagination } from '@material-ui/core';
+import SortingMenu from 'components/SortingMenu';
 
 import { formatCurrencyWithSign } from 'utils/formatters/number';
 import { USD_SIGN } from 'constants/currency';
@@ -56,7 +58,6 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     // const walletAddress = useSelector((state: RootState) => getWalletAddress(state)) || '';
     // const isAppReady = useSelector((state: RootState) => getIsAppReady(state));
     const isL2 = getIsOVM(networkId);
-    // const [structureType, setStructureType] = useState('table');
 
     const { t } = useTranslation();
 
@@ -66,11 +67,61 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         recentlyAdded: t('options.filters-labels.recently-added'),
     };
 
+    const GridSortFilters: Array<SortOption> = [
+        {
+            property: 'asset',
+            displayName: t(`options.home.markets-table.asset-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'strikePrice',
+            displayName: t(`options.home.markets-table.strike-price-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'currentAssetPrice',
+            displayName: t(`options.home.markets-table.current-asset-price-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'timeRemaining',
+            displayName: t(`options.home.markets-table.time-remaining-col`),
+            desc: false,
+            asc: false,
+        },
+        {
+            property: 'phase',
+            displayName: t(`options.home.markets-table.phase-col`),
+            desc: false,
+            asc: false,
+        },
+    ];
+
+    const [sortOptions, setSortOptions] = useState(GridSortFilters);
     const [tableView, setTableView] = useState<boolean>(false);
     const [primaryFilter, setPrimaryFilter] = useState<PrimaryOptionsFilter>(
         PrimaryFiltersEnum.allMarkets as PrimaryOptionsFilter
     );
     const labels = [t(`options.home.markets-table.menu.grid`), t(`options.home.markets-table.menu.table`)];
+
+    const updateSortOptions = (index: number) => {
+        const newSortOptions = [...sortOptions];
+
+        if (newSortOptions[index].asc) {
+            newSortOptions[index].asc = false;
+            newSortOptions[index].desc = true;
+        } else if (newSortOptions[index].desc) {
+            newSortOptions[index].asc = false;
+            newSortOptions[index].desc = false;
+        } else if (!newSortOptions[index].asc && !newSortOptions[index].desc) {
+            newSortOptions[index].asc = true;
+        }
+
+        setSortOptions(newSortOptions);
+    };
 
     const columns: Array<any> = useMemo(() => {
         return [
@@ -266,6 +317,7 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                     <SearchField text={globalFilter} handleChange={(value) => setGlobalFilter(value)} />
                 </FormContainer>
             </Wrapper>
+            {!tableView && <SortingMenu items={sortOptions} itemClickEventHandler={updateSortOptions} />}
             {tableView && (
                 <>
                     <table {...getTableProps()}>

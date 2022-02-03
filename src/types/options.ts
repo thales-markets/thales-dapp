@@ -261,3 +261,10 @@ export type GridFilters = {
 export type PrimaryOptionsFilter = 'allMarkets' | 'watchlist' | 'recentlyAdded';
 
 export type GridSortOption = 'byName' | 'byTimeRemaining';
+
+export type SortOption = {
+    property: string;
+    displayName: string;
+    desc: boolean;
+    asc: boolean;
+};
