@@ -45,6 +45,7 @@ import { ReactComponent as sFTSEIcon } from 'assets/synths/sFTSE.svg';
 import { ReactComponent as BCHIcon } from 'assets/currencies/crypto/BCH.svg';
 import { ReactComponent as SNXIcon } from 'assets/currencies/crypto/SNX.svg';
 import { ReactComponent as KNCIcon } from 'assets/currencies/crypto/KNC.svg';
+import { ReactComponent as sSOLIcon } from 'assets/synths/sSOL.svg';
 
 export type CurrencyKey = string;
 export type CurrencyKeys = string[];
@@ -101,6 +102,7 @@ export const SYNTHS = [
     'sUSD',
     'sLONG',
     'sSHORT',
+    'sSOL',
 ];
 export const SYNTHS_MAP = keyBy(SYNTHS);
 
@@ -197,6 +199,7 @@ export const currencyKeyToAssetIconMap = {
     [CRYPTO_CURRENCY_MAP.SNX]: SNXIcon,
     [CRYPTO_CURRENCY_MAP.KNC]: KNCIcon,
     [CRYPTO_CURRENCY_MAP.LEND]: sAAVEIcon,
+    [SYNTHS_MAP.sSOL]: sSOLIcon,
 };
 
 export const currencyKeyToNameMap = {
@@ -254,6 +257,7 @@ export const currencyKeyToNameMap = {
     [CRYPTO_CURRENCY_MAP.USDT]: 'Tether',
     [CRYPTO_CURRENCY_MAP.VELO]: 'Velo',
     [CRYPTO_CURRENCY_MAP.ZRX]: '0x',
+    [SYNTHS_MAP.sSOL]: 'Solana',
 };
 
 export const sUSD_EXCHANGE_RATE = 1;
