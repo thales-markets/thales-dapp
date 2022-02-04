@@ -1336,6 +1336,7 @@
         },
         "governance": {
             "list": {
+                "0": "Thales DAO Governance",
                 "1": "THALES DAOs",
                 "2": "THALES Council (Aka “the Brain”)",
                 "3": "Treasury DAO (Aka “the Pocket”)",

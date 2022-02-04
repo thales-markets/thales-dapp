@@ -1341,6 +1341,7 @@
         },
         "governance": {
             "list": {
+                "0": "Thales DAO Governance",
                 "1": "THALES DAO",
                 "2": "THALES 理事会（又名“大脑”）",
                 "3": "财政部 DAO（又名“口袋”）",
