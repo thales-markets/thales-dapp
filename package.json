@@ -51,7 +51,6 @@
         "recharts": "^2.0.8",
         "redux": "^4.0.5",
         "remarkable": "^2.0.1",
-        "remarkable-external-link": "^2.0.0",
         "styled-components": "^5.2.3",
         "synthetix-data": "^2.1.42",
         "terser": "^5.10.0",
