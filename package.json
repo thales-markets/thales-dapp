@@ -21,7 +21,6 @@
         "bignumber.js": "^9.0.1",
         "bnc-onboard": "^1.37.2",
         "browserslist": "^4.19.1",
-        "country-flag-icons": "^1.4.0",
         "date-fns": "^2.19.0",
         "ethereum-blockies-base64": "^1.0.2",
         "ethers": "5.4.1",
