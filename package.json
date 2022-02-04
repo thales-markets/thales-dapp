@@ -56,6 +56,7 @@
         "remarkable-external-link": "^2.0.0",
         "styled-components": "^5.2.3",
         "synthetix-data": "^2.1.42",
+        "terser": "^5.10.0",
         "thales-data": "^0.0.60",
         "three": "^0.129.0",
         "typescript": "^4.2.2",
