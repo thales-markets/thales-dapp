@@ -1,6 +1,6 @@
 import { getContractFactory, predeploys } from '@eth-optimism/contracts';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER, DEFAULT_GAS_BUFFER } from 'constants/defaults';
+import { DEFAULT_GAS_BUFFER } from 'constants/defaults';
 import { GWEI_UNIT } from 'constants/network';
 import { ethers } from 'ethers';
 import { serializeTransaction, UnsignedTransaction } from 'ethers/lib/utils';
@@ -69,8 +69,6 @@ export const isMainNet = (networkId: NetworkId) => networkId === 1;
 export const normalizeGasLimit = (gasLimit: number) => gasLimit + DEFAULT_GAS_BUFFER;
 
 export const normalizeL2GasLimit = (gasLimit: number) => Math.trunc(gasLimit * 1.2);
-
-export const normalize0xGasLimit = (gasLimit: number) => Math.trunc(gasLimit * DEFAULT_0X_PROTOCOL_FEE_GAS_MULTIPLIER);
 
 export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
