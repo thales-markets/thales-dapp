@@ -252,7 +252,7 @@ const TokenSwap: React.FC<TokenSwapProps> = ({ optionSide }) => {
                 );
                 resetForm();
             }
-        } catch (e) {
+        } catch (e: any) {
             console.log(e);
             setTxErrorMessage(
                 e.code === 4001 ? t('common.errors.user-rejected-tx') : t('common.errors.unknown-error-try-again')
