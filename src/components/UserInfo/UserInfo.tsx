@@ -6,10 +6,9 @@ import { getIsAppReady } from 'redux/modules/app';
 import { getIsWalletConnected, getNetwork, getWalletAddress } from 'redux/modules/wallet';
 import { RootState } from 'redux/rootReducer';
 import styled from 'styled-components';
-import { FlexDiv, FlexDivColumnCentered, Image } from 'theme/common';
+import { FlexDiv, FlexDivColumnCentered } from 'theme/common';
 import { getCurrencyKeyBalance } from 'utils/balances';
 import { truncateAddress } from 'utils/formatters/string';
-import avatar from 'assets/images/avatar.svg';
 import UserInfoModal from './UserInfoModal';
 import { formatCurrencyWithKey } from 'utils/formatters/number';
 import { ReactComponent as InfoIcon } from '../../assets/images/info.svg';
@@ -20,6 +19,7 @@ import { getIsOVM } from 'utils/network';
 import useThalesBalanceQuery from 'queries/walletBalances/useThalesBalanceQuery';
 import useStakingThalesQuery from '../../queries/staking/useStakingThalesQuery';
 import useEscrowThalesQuery from '../../queries/staking/useEscrowThalesQuery';
+import makeBlockie from 'ethereum-blockies-base64';
 
 const UserInfo: React.FC = () => {
     const isWalletConnected = useSelector((state: RootState) => getIsWalletConnected(state));
@@ -98,10 +98,7 @@ const UserInfo: React.FC = () => {
                             <p>{network.networkName}</p>
                         </AddressWrapper>
                     )}
-                    <Image
-                        style={{ width: '18px', height: '18px', marginRight: hideAddress ? '0' : '20px' }}
-                        src={avatar}
-                    />
+                    <Blockie marginRight={hideAddress ? 0 : 20} src={makeBlockie(walletAddress)} />
                 </NetworkWrapper>
                 <ThalesBalance>
                     {isL2 && (
@@ -235,5 +232,12 @@ const StyledMaterialTooltip = withStyles(() => ({
         maxWidth: 700,
     },
 }))(MaterialTooltip);
+
+export const Blockie = styled.img<{ marginRight: number }>`
+    width: 18px;
+    height: 18px;
+    border-radius: 12px;
+    margin-right: ${(props) => props.marginRight}px;
+`;
 
 export default UserInfo;

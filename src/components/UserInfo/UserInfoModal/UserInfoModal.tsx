@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Button, FlexDiv, FlexDivColumn, FlexDivCentered, Image, Text, XButton } from 'theme/common';
+import { Button, FlexDiv, FlexDivColumn, FlexDivCentered, Text, XButton } from 'theme/common';
 import styled from 'styled-components';
-import metamask from 'assets/images/metamask.svg';
 import onboardConnector from 'utils/onboardConnector';
 import { useSelector } from 'react-redux';
 import { getNetworkId } from 'redux/modules/wallet';
@@ -19,6 +18,7 @@ import useDisplayNameQuery from 'queries/user/useDisplayNameQuery';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
+import makeBlockie from 'ethereum-blockies-base64';
 
 type UserInfoModalProps = {
     open: boolean;
@@ -118,7 +118,7 @@ const UserInfoModal: React.FC<UserInfoModalProps> = ({ open, handleClose, wallet
                     <XButton onClick={() => handleClose(false)} />
                 </Header>
                 <WalletWrapper>
-                    <Image src={metamask} style={{ width: 55, height: 49 }}></Image>
+                    <Blockie src={makeBlockie(walletAddress)} />
                     <FlexDivColumn style={{ alignItems: 'center', flex: 2 }}>
                         <Text className="text-m bold pale-grey">{truncateAddress(walletAddress, 13, 4)}</Text>
                         <Text className="text-xs bold pale-grey capitalize">{network}</Text>
@@ -273,6 +273,12 @@ export const MarketRow = styled(Row)`
         border: 1px solid #44e1e2;
         padding: 19px;
     }
+`;
+
+export const Blockie = styled.img`
+    width: 45px;
+    height: 45px;
+    border-radius: 50px;
 `;
 
 export default UserInfoModal;
