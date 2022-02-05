@@ -48,9 +48,7 @@ export const TransactionsTable: FC<TransactionsTableProps> = memo(({ transaction
                                 {cellProps.cell.row.original.type !== TransactionFilterEnum.CANCEL_UNSTAKE
                                     ? formatCurrencyWithKey(
                                           cellProps.cell.row.original.type === TransactionFilterEnum.LP_STAKE ||
-                                              cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE ||
-                                              cellProps.cell.row.original.type ===
-                                                  TransactionFilterEnum.LP_CLAIM_STAKING_REWARDS
+                                              cellProps.cell.row.original.type === TransactionFilterEnum.LP_UNSTAKE
                                               ? LP_TOKEN
                                               : THALES_CURRENCY,
                                           cellProps.cell.value
