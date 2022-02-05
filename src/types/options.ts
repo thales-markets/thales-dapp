@@ -251,10 +251,15 @@ export type ExpirationOptions = ExpirationOption[];
 
 export type GridFilters = {
     searchQuery: string;
-    sort?: {
-        column: GridSortOption;
-        type: 'asc' | 'desc';
-    };
+    sort?:
+        | Array<
+              | {
+                    column: string;
+                    type: 'asc' | 'desc';
+                }
+              | undefined
+          >
+        | [];
     primaryFilter: PrimaryOptionsFilter;
 };
 

@@ -120,6 +120,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             newSortOptions[index].asc = true;
         }
 
+        newSortOptions.forEach((item, itemIndex) => {
+            if (index == itemIndex) return;
+            item.asc = false;
+            item.desc = false;
+        });
+
         setSortOptions(newSortOptions);
     };
 
@@ -286,9 +292,21 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
     const filters = useMemo(() => {
         return {
             searchQuery: globalFilter,
+            sort: [
+                ...sortOptions
+                    .map((item) => {
+                        if (item.asc || item.desc) {
+                            return {
+                                column: item.property as string,
+                                type: item.asc ? ('asc' as const) : ('desc' as const),
+                            };
+                        }
+                    })
+                    .filter((item) => item),
+            ],
             primaryFilter: 'allMarkets' as PrimaryOptionsFilter,
         };
-    }, [pageSize, pageIndex, globalFilter]);
+    }, [globalFilter, sortOptions]);
 
     return (
         <>

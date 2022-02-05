@@ -21,6 +21,11 @@ const usePriceDataQuery = (requestArgs: RequestParams, options?: UseQueryOptions
     return useQuery<PriceData>(
         QUERY_KEYS.PriceData.Currency(requestArgs.currencyKey),
         async () => {
+            if (!coinGeckoKey) {
+                console.log('currencyKey ', requestArgs.currencyKey);
+                return false;
+            }
+
             const url = `https://api.coingecko.com/api/v3/coins/${coinGeckoKey}/market_chart?vs_currency=${
                 requestArgs?.currencyVs ? requestArgs.currencyVs : 'usd'
             }&days=${requestArgs?.days ? requestArgs.days : '1'}&interval=hourly`;

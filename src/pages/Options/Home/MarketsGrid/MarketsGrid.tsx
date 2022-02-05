@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import _ from 'lodash';
 
 import { OptionsMarkets, GridFilters } from 'types/options';
 import { Rates } from 'queries/rates/useExchangeRatesQuery';
@@ -39,16 +40,19 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
 
         // if(filters?.primaryFilter == 'recentlyAdded')
 
-        if (filters?.sort) {
-            if (filters.sort.column == 'byName') {
-                if (filters.sort.type == 'asc')
-                    data.sort((a, b) => (a.asset > b.asset ? 1 : b.asset > a.asset ? -1 : 0));
-                if (filters.sort.type == 'desc')
-                    data.sort((a, b) => (a.asset > b.asset ? -1 : b.asset > a.asset ? 1 : 0));
-            } else if (filters.sort.column == 'byTimeRemaining') {
-                if (filters.sort.type == 'asc') data.sort((a, b) => (a.timeRemaining > b.timeRemaining ? 1 : -1));
-                if (filters.sort.type == 'desc') data.sort((a, b) => (a.timeRemaining > b.timeRemaining ? -1 : 1));
-            }
+        if (filters?.sort?.length) {
+            filters.sort.forEach((sort) => {
+                if (sort?.column && typeof (data as any)[0][sort.column] == 'number') {
+                    console.log('number');
+                    if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
+                    if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
+                }
+
+                if (sort?.column && typeof (data as any)[0][sort?.column] == 'string') {
+                    if (sort.type == 'asc') data = _.orderBy(data, [sort.column], 'asc');
+                    if (sort.type == 'desc') data = _.orderBy(data, [sort.column], 'desc');
+                }
+            });
         }
 
         setDataCount(data?.length || 0);
@@ -56,6 +60,10 @@ const MarketsGrid: React.FC<MarketsGridProps> = ({ optionsMarkets, exchangeRates
 
         return data;
     }, [optionsMarkets, exchangeRates, filters, pageIndex, rowsPerPage]);
+
+    useEffect(() => {
+        setPageIndex(0);
+    }, [filters]);
 
     return (
         <Wrapper>

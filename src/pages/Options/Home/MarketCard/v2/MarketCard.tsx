@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* tslint:disable:no-unused-variable */
 import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import { Rates } from 'queries/rates/useExchangeRatesQuery';
 
 import CurrencyIcon from 'components/Currency/v2/CurrencyIcon';
 import PriceChart from 'components/Charts/PriceChart';
+import { FlexDivColumn } from 'theme/common';
 
 import { formatCurrencyWithSign, getPercentageDifference } from 'utils/formatters/number';
 import { formatShortDate } from 'utils/formatters/date';
@@ -21,10 +22,6 @@ import { USD_SIGN } from 'constants/currency';
 type MarketCardPros = {
     exchangeRates: Rates | null;
     optionMarket: HistoricalOptionsMarketInfo;
-};
-
-type StrongTextProps = {
-    percentage?: number;
 };
 
 const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) => {
@@ -50,32 +47,33 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                         </LeftContainer>
                         <RightContainer>
                             <LightHeaderText>{t('options.home.market-card.current-asset-price')}</LightHeaderText>
-                            <StrongText>
-                                {currentAssetPrice ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice) : 'N/A'}
-                            </StrongText>
-                        </RightContainer>
-                    </InsideContainer>
-                    <InsideContainer>
-                        <LeftContainer>
-                            <LightHeaderText>{t('options.home.market-card.strike-price')}:</LightHeaderText>
                             <StrongHeaderText>
-                                {formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}
+                                {currentAssetPrice ? formatCurrencyWithSign(USD_SIGN, currentAssetPrice) : 'N/A'}
                             </StrongHeaderText>
-                        </LeftContainer>
-                        <RightContainer>
-                            <LightHeaderText>{t('options.home.market-card.difference-text')}:</LightHeaderText>
-                            <StrongText percentage={strikeAndAssetPriceDifference}>
-                                {strikeAndAssetPriceDifference.toFixed(2)}%
-                            </StrongText>
                         </RightContainer>
                     </InsideContainer>
-                    <InsideContainer style={{ alignItems: 'end' }}>
+                    <InsideContainer style={{ flex: 2, alignItems: 'flex-end' }}>
                         <LeftContainer>
-                            <LightHeaderText>{t('options.home.market-card.end-date')}</LightHeaderText>
-                            <StrongHeaderText>{formatShortDate(optionMarket.maturityDate)}</StrongHeaderText>
+                            <PriceChart
+                                key={optionMarket.currencyKey}
+                                currencyKey={optionMarket.currencyKey}
+                                height={75}
+                            />
                         </LeftContainer>
                         <RightContainer>
-                            <PriceChart key={optionMarket.currencyKey} currencyKey={optionMarket.currencyKey} />
+                            <FlexDivColumn>
+                                <LightHeaderText>
+                                    {`${t(
+                                        'options.home.market-card.strike-price'
+                                    )}${strikeAndAssetPriceDifference.toFixed(2)}%`}
+                                    :
+                                </LightHeaderText>
+                                <StrongHeaderText style={{ marginBottom: '10px' }}>
+                                    {formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}
+                                </StrongHeaderText>
+                                <LightHeaderText>{t('options.home.market-card.end-date')}</LightHeaderText>
+                                <StrongHeaderText>{formatShortDate(optionMarket.maturityDate)}</StrongHeaderText>
+                            </FlexDivColumn>
                         </RightContainer>
                     </InsideContainer>
                 </MarketCardWrapper>
@@ -169,12 +167,6 @@ const LightHeaderText = styled.span`
 const StrongHeaderText = styled(LightHeaderText)`
     font-size: 25px;
     font-weight: 700;
-`;
-
-const StrongText = styled(LightHeaderText)<StrongTextProps>`
-    font-weight: 700;
-    ${(props: StrongTextProps) =>
-        props?.percentage ? (props.percentage > 0 ? 'color: #50CE99' : 'color: #C3244A') : ''};
 `;
 
 export default MarketCard;
