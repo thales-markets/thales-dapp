@@ -190,10 +190,12 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
             {
                 Header: t(`options.home.markets-table.strike-price-col`),
                 accessor: 'strikePrice',
+                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
             },
             {
                 Header: t(`options.home.markets-table.current-asset-price-col`),
                 accessor: 'currentPrice',
+                Cell: (_props: any) => formatCurrencyWithSign(USD_SIGN, _props?.cell?.value, 2),
             },
             {
                 Header: t(`options.home.markets-table.time-remaining-col`),
@@ -226,8 +228,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
                 availableShorts: market.availableShorts,
                 longPrice: formatCurrencyWithSign(USD_SIGN, market.longPrice, 2),
                 shortPrice: formatCurrencyWithSign(USD_SIGN, market.shortPrice, 2),
-                strikePrice: formatCurrencyWithSign(USD_SIGN, market.strikePrice, 2),
-                currentPrice: formatCurrencyWithSign(USD_SIGN, exchangeRates?.[market.currencyKey] || 0, 2),
+                strikePrice: market.strikePrice,
+                currentPrice: exchangeRates?.[market.currencyKey] || 0,
                 timeRemaining: market.timeRemaining,
                 phase: market.phase,
             };
@@ -245,14 +247,8 @@ const MarketsTable: React.FC<MarketsTableProps> = ({ exchangeRates, optionsMarke
         state,
         setGlobalFilter,
         setHiddenColumns,
-        // canPreviousPage,
-        // canNextPage,
-        // nextPage,
         gotoPage,
-        // previousPage,
-        // pageCount,
         setPageSize,
-        // pageOptions,
     } = useTable(
         {
             columns,
