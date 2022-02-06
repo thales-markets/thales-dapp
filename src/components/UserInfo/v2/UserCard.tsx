@@ -9,6 +9,7 @@ import LanguageCardSelector from 'components/LanguageSelector/v3/LanguageCardSel
 import NetworkSwitchSection from 'components/NetworkSwitch/v2/NetworkSwitch';
 import ThemeSelector from 'components/ThemeSelector/ThemeSelector';
 import OutsideClickHandler from 'react-outside-click-handler';
+import DisplayNameForm from './DisplayNameForm';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'redux/rootReducer';
@@ -23,6 +24,10 @@ export const UserCard: React.FC = () => {
 
     return (
         <>
+            <UserWallet
+                style={{ position: 'absolute', top: '55px', right: '110px' }}
+                walletContainerStyle={{ margin: '0px', border: '1px solid rgba(100, 217, 254, 0.5)' }}
+            />
             <MenuCardButton onClick={() => setShowCard(!showCard)}>
                 <MenuIcon className="sidebar-icon icon--card-menu" />
             </MenuCardButton>
@@ -33,9 +38,10 @@ export const UserCard: React.FC = () => {
                         <LogoContainer>
                             <ThalesLogo className="icon icon--logo" />
                         </LogoContainer>
-                        <UserWallet />
+                        <UserWallet expandedView={true} />
                         {isWalletConnected && <PieChartUserBalance />}
                         <PriceChart currencyKey={'THALES'} showHeading={true} />
+                        {isWalletConnected && <DisplayNameForm />}
                         <ThemeSelector />
                         {isWalletConnected && <NetworkSwitchSection />}
                         <LanguageCardSelector />
@@ -76,7 +82,6 @@ const MenuCardButton = styled.div`
     top: 55px;
     right: 44px;
     width: 50px;
-    heigth: 20px;
     cursor: pointer;
 `;
 
@@ -110,7 +115,7 @@ const MenuCard = styled.div<ManuCardProps>`
 `;
 
 const CardWrapper = styled.div`
-    padding: 33px;
+    padding: 26px;
 `;
 
 const CloseIcon = styled.i`
@@ -124,7 +129,7 @@ const CloseIcon = styled.i`
 
 const LogoContainer = styled.div`
     line-height: 30px;
-    margin: 14px auto 22px auto;
+    margin: 14px auto 16px auto;
     width: 100%;
     text-align: center;
 `;

@@ -214,7 +214,11 @@
             "theme": "Theme",
             "change": "Change",
             "network": "Network",
-            "language": "Language"
+            "language": "Language",
+            "disconnect": "Disconnect",
+            "switch": "Switch",
+            "display-name": "Display Name",
+            "change-display-name": "Change Display Name"
         }
     },
     "modals": {

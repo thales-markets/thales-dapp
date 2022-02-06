@@ -86,7 +86,7 @@ export const NetworkSwitch: React.FC = () => {
 const NetworkSwitchContainer = styled(FlexDivRow)`
     width: 100%;
     align-items: center;
-    margin: 29px 0px 29px 0px;
+    margin: 16px 0px;
 `;
 
 const SectionHeader = styled(UserCardSectionHeader)`

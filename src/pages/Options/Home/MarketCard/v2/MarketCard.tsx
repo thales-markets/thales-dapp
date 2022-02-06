@@ -63,10 +63,10 @@ const MarketCard: React.FC<MarketCardPros> = ({ optionMarket, exchangeRates }) =
                         <RightContainer>
                             <FlexDivColumn>
                                 <LightHeaderText>
-                                    {`${t(
-                                        'options.home.market-card.strike-price'
-                                    )}${strikeAndAssetPriceDifference.toFixed(2)}%`}
-                                    :
+                                    {`${t('options.home.market-card.strike-price')}`}
+                                    <PriceDifferenceInfo priceDiff={strikeAndAssetPriceDifference}>
+                                        {`${strikeAndAssetPriceDifference.toFixed(2)}%`}
+                                    </PriceDifferenceInfo>
                                 </LightHeaderText>
                                 <StrongHeaderText style={{ marginBottom: '10px' }}>
                                     {formatCurrencyWithSign(USD_SIGN, optionMarket.strikePrice)}
@@ -104,7 +104,7 @@ const InsideContainer = styled.div`
 
 const LeftContainer = styled.div`
     display: block;
-    margin-right: 20px;
+    margin-right: 30px;
     flex: 1;
 `;
 
@@ -167,6 +167,14 @@ const LightHeaderText = styled.span`
 const StrongHeaderText = styled(LightHeaderText)`
     font-size: 25px;
     font-weight: 700;
+`;
+
+const PriceDifferenceInfo = styled.span<{ priceDiff: number }>`
+    ${(_props) => (_props.priceDiff > 0 ? 'color: #50CE99' : 'color: #C3244A')};
+    margin-left: 5px;
+    font-size: 15px;
+    font-family: Titillium Regular !important;
+    font-style: normal;
 `;
 
 export default MarketCard;

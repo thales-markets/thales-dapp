@@ -132,6 +132,9 @@ export const Background = styled.section`
         --table-header-text-color: #64d9fe;
         --disabled-item: #8181ac;
         --enabled-item: #04045a;
+        --primary-filter-menu-active: #04045a;
+        --hotmarket-arrow-enabled: #64d9fe;
+        --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
     }
     &.dark {
         background-color: #04045a;
@@ -144,6 +147,9 @@ export const Background = styled.section`
         --table-header-text-color: #64d9fe;
         --disabled-item: #8181ac;
         --enabled-item: #f7f7f7;
+        --primary-filter-menu-active: #64d9fe;
+        --hotmarket-arrow-enabled: #64d9fe;
+        --hotmarket-arrow-disable: rgba(100, 217, 254, 0.5);
     }
 `;
 

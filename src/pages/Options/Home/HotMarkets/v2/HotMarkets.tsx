@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 
 // import { Rates } from 'queries/rates/useExchangeRatesQuery';
@@ -6,7 +6,7 @@ import { OptionsMarkets } from 'types/options';
 
 import HotMarketCard, { HotMarket } from '../../MarketCard/v2/HotMarketCard';
 
-import { formatPricePercentageGrowth, calculatePercentageChange } from 'utils/formatters/number';
+import { formatPricePercentageGrowth } from 'utils/formatters/number';
 import { getSynthName } from 'utils/currency';
 
 type HotMarketsProps = {
@@ -18,19 +18,24 @@ enum MarketType {
     long = 'UP',
 }
 
+const calculatePotentialProfit = (price: number) => {
+    return ((1 - price) / price) * 100;
+};
+
 const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
-    // const [currentHotIndex, setCurrentHotIndex] = useState(0);
+    const [firstHotIndex, setFirstHotIndex] = useState(0);
     const currentMarkets = useMemo(() => {
         const markets: HotMarket[] = [];
 
         optionsMarkets?.forEach((market) => {
+            if (market.longPrice == 0 || market.shortPrice == 0) return;
             markets.push({
                 fullAssetName: getSynthName(market.currencyKey),
                 currencyKey: market.currencyKey,
                 assetName: `${market.asset} ${MarketType.long}`,
                 pricePerOption: market.longPrice,
                 timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePercentageChange(1, market.longPrice)),
+                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.longPrice)),
                 address: market.address,
             });
 
@@ -40,7 +45,7 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                 assetName: `${market.asset} ${MarketType.short}`,
                 pricePerOption: market.shortPrice,
                 timeRemaining: market.timeRemaining,
-                potentialProfit: formatPricePercentageGrowth(calculatePercentageChange(1, market.shortPrice)),
+                potentialProfit: formatPricePercentageGrowth(calculatePotentialProfit(market.shortPrice)),
                 address: market.address,
             });
         });
@@ -48,11 +53,20 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
         return markets;
     }, [optionsMarkets]);
 
+    const slicedMarkets = useMemo(() => {
+        return currentMarkets.slice(firstHotIndex, firstHotIndex + 5);
+    }, [currentMarkets, firstHotIndex]);
+
     return (
         <>
             {currentMarkets.length && (
                 <Wrapper>
-                    {currentMarkets.slice(5, 10).map((market, index) => (
+                    <Icon
+                        onClick={() => setFirstHotIndex(firstHotIndex > 0 ? firstHotIndex - 1 : firstHotIndex)}
+                        disabled={firstHotIndex == 0}
+                        className={'icon icon--left'}
+                    />
+                    {slicedMarkets.map((market, index) => (
                         <HotMarketCard
                             key={index}
                             fullAssetName={market.fullAssetName}
@@ -64,6 +78,15 @@ const HotMarkets: React.FC<HotMarketsProps> = ({ optionsMarkets }) => {
                             address={market.address}
                         />
                     ))}
+                    <Icon
+                        onClick={() =>
+                            setFirstHotIndex(
+                                firstHotIndex + 5 < currentMarkets.length - 1 ? firstHotIndex + 1 : firstHotIndex
+                            )
+                        }
+                        disabled={firstHotIndex + 5 == currentMarkets?.length - 1}
+                        className={'icon icon--right'}
+                    />
                 </Wrapper>
             )}
         </>
@@ -74,6 +97,13 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
     margin-bottom: 55px;
+    align-items: center;
+`;
+
+const Icon = styled.i<{ disabled?: boolean }>`
+    cursor: pointer;
+    font-size: 60px;
+    color: ${(_props) => (_props?.disabled ? 'var(--hotmarket-arrow-disable)' : 'var(--hotmarket-arrow-enabled)')};
 `;
 
 export default HotMarkets;

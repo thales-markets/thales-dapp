@@ -219,7 +219,11 @@
             "network": "Сеть",
             "wallet": "Кошелек",
             "theme": "Тема",
-            "language": "Язык"
+            "language": "Язык",
+            "switch": "Выключатель",
+            "disconnect": "Отключить",
+            "display-name": "Показать имя",
+            "change-display-name": "Изменить отображаемое имя"
         }
     },
     "modals": {

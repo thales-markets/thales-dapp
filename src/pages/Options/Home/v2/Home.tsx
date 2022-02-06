@@ -21,7 +21,7 @@ import ROUTES from 'constants/routes';
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 
-const MAX_HOT_MARKETS = 6;
+// const MAX_HOT_MARKETS = 6;
 
 const Home: React.FC = () => {
     const networkId = useSelector((state: RootState) => getNetworkId(state));
@@ -70,8 +70,7 @@ const Home: React.FC = () => {
         () =>
             optionsMarkets
                 .filter((market) => market.phaseNum === PHASE.trading && !market.customMarket)
-                .sort((a, b) => a.timeRemaining - b.timeRemaining)
-                .slice(0, MAX_HOT_MARKETS),
+                .sort((a, b) => a.timeRemaining - b.timeRemaining),
         [optionsMarkets]
     );
 

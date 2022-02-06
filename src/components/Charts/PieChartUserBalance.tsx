@@ -49,8 +49,8 @@ const PieChartUserBalance: React.FC = () => {
     const data =
         sUSDBalance || thalesBalance
             ? [
-                  { name: 'sUSD', value: sUSDBalance, color: '#50CE99' },
-                  { name: 'thales', value: thalesBalance, color: '#8208FC' },
+                  { name: 'sUSD', value: sUSDBalance ? sUSDBalance : 4000, color: '#50CE99' },
+                  { name: 'thales', value: thalesBalance ? thalesBalance : 600, color: '#8208FC' },
               ]
             : [{ name: 'No data', value: 1, color: '#8181ac' }];
 
@@ -64,7 +64,7 @@ const PieChartUserBalance: React.FC = () => {
                         <PartialAmount>{formatCurrencyWithKey(SYNTHS_MAP.sUSD, sUSDBalance)}</PartialAmount>
                         <ThalesAmount>{formatCurrencyWithKey(THALES_CURRENCY, thalesBalance)}</ThalesAmount>
                     </BalanceInfoContainer>
-                    <PieChart width={180} height={180}>
+                    <PieChart width={170} height={170}>
                         <Pie
                             startAngle={-45}
                             cornerRadius={20}
@@ -89,9 +89,10 @@ const PieChartUserBalance: React.FC = () => {
 };
 
 const ChartContainer = styled.div`
-    width: 180px;
-    height: 180px;
+    width: 170px;
+    height: 170px;
     position: relative;
+    margin: 0px auto 15px auto;
 `;
 
 const BalanceInfoContainer = styled.div`

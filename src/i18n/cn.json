@@ -219,7 +219,11 @@
             "wallet": "钱包",
             "language": "语",
             "theme": "主题",
-            "change": "改变"
+            "change": "改变",
+            "disconnect": "断开",
+            "switch": "转变",
+            "display-name": "显示名称",
+            "change-display-name": "更改显示名称"
         }
     },
     "modals": {
