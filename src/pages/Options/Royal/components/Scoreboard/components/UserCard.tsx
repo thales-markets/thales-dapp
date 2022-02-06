@@ -69,7 +69,7 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
 
                 try {
                     const balance = await erc20Instance.balanceOf(walletAddress);
-                    setBalance(ethers.utils.formatUnits(balance, (token as any).decimals));
+                    setBalance(ethers.utils.formatUnits(balance));
                 } catch (e) {
                     console.log(e);
                 }
@@ -110,13 +110,20 @@ const UserCard: React.FC<UserCardProps> = ({ selectedSeason, royaleFooterData, e
                     if (allowance) {
                         const buyInAmount = royaleData.buyInAmount;
                         return (
-                            <Button
-                                className={buyInAmount > Number(balance) ? 'disabled' : ''}
-                                disabled={buyInAmount > Number(balance)}
-                                onClick={signUp}
-                            >
-                                {t('options.royale.scoreboard.buy-in', { buyInAmount })}
-                            </Button>
+                            <>
+                                <Button
+                                    className={buyInAmount > Number(balance) ? 'disabled' : ''}
+                                    disabled={buyInAmount > Number(balance)}
+                                    onClick={signUp}
+                                >
+                                    {t('options.royale.scoreboard.buy-in', { buyInAmount })}
+                                </Button>
+                                {buyInAmount > Number(balance) && (
+                                    <DeadText style={{ marginTop: 10 }}>
+                                        {t('options.royale.scoreboard.insufficient-balance')}
+                                    </DeadText>
+                                )}
+                            </>
                         );
                     } else {
                         return (
