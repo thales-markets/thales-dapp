@@ -23,7 +23,6 @@ const torusIcon =
 
 export const initOnboard = (networkId: LocalNetworkId, subscriptions: Subscriptions) => {
     const infuraRpc = getInfuraRpcURL(networkId);
-    console.log(infuraRpc);
 
     return onboard({
         hideBranding: true,
