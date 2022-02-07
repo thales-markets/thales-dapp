@@ -21,6 +21,14 @@ export const SUPPORTED_NETWORKS: Record<NetworkId, string> = {
     69: 'KOVAN-OPTIMISTIC',
 };
 
+export const INFURA_SUPPORTED_NETWORKS: Record<NetworkId, string> = {
+    1: 'MAINNET',
+    3: 'ROPSTEN',
+    42: 'KOVAN',
+    10: 'OPTIMISM-MAINNET',
+    69: 'OPTIMISM-KOVAN',
+};
+
 export const SUPPORTED_NETWORKS_NAMES: Record<NetworkId, string> = {
     1: 'MAINNET',
     3: 'ROPSTEN',
@@ -73,7 +81,7 @@ export const normalizeL2GasLimit = (gasLimit: number) => Math.trunc(gasLimit * 1
 export const gasPriceInWei = (gasPrice: number) => gasPrice * GWEI_UNIT;
 
 export const getInfuraRpcURL = (networkId: NetworkId) => {
-    const network = SUPPORTED_NETWORKS[networkId];
+    const network = INFURA_SUPPORTED_NETWORKS[networkId];
     return `https://${network?.toLowerCase()}.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`;
 };
 
