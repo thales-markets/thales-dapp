@@ -254,8 +254,8 @@ const ContII = styled(ContWrapper)`
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
-        grid-row-start: 44;
-        grid-row-end: 55;
+        grid-row-start: 43;
+        grid-row-end: 54;
     }
 `;
 const ContIII = styled(ContWrapper)`
@@ -270,8 +270,8 @@ const ContIII = styled(ContWrapper)`
     @media (max-width: 600px) {
         grid-column-start: 4;
         grid-column-end: 49;
-        grid-row-start: 63;
-        grid-row-end: 74;
+        grid-row-start: 60;
+        grid-row-end: 71;
         padding-right: 28px;
         padding-top: 42px;
     }
@@ -290,8 +290,8 @@ const ContIV = styled(ContWrapper)`
         padding-left: 28px;
         grid-column-start: 4;
         grid-column-end: 49;
-        grid-row-start: 82;
-        grid-row-end: 97;
+        grid-row-start: 77;
+        grid-row-end: 92;
     }
     @media (max-width: 400px) {
         grid-row-end: 99;
@@ -345,8 +345,8 @@ const ThalesImageII = styled.div`
         position: static !important;
         grid-column-start: 37;
         grid-column-end: 45;
-        grid-row-start: 55;
-        grid-row-end: 67;
+        grid-row-start: 52;
+        grid-row-end: 64;
     }
 `;
 
@@ -367,8 +367,8 @@ const ThalesImageIII = styled.div`
     @media (max-width: 600px) {
         grid-column-start: 10;
         grid-column-end: 48;
-        grid-row-start: 75;
-        grid-row-end: 87;
+        grid-row-start: 70;
+        grid-row-end: 82;
         -webkit-transform: scaleX(-1);
         transform: scaleX(-1);
     }
@@ -380,11 +380,14 @@ const StarsImage = styled.div`
     grid-row-start: 58;
     grid-row-end: 78;
     z-index: 1;
+    @media (max-width: 800px) {
+        grid-column-end: 23;
+    }
     @media (max-width: 600px) {
-        grid-column-start: 5;
-        grid-column-end: 42;
-        grid-row-start: 75;
-        grid-row-end: 87;
+        grid-column-start: 8;
+        grid-column-end: 45;
+        grid-row-start: 85;
+        grid-row-end: 97;
         margin-bottom: -130px;
         & > img {
             width: 100%;
@@ -403,6 +406,10 @@ const SystemImage = styled.div`
     grid-row-end: 66;
     z-index: 1;
     transform: scale(1.7);
+    @media (max-width: 600px) {
+        top: 10em;
+        left: -6em;
+    }
 `;
 
 const ContTitle = styled.p`

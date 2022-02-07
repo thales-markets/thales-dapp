@@ -190,7 +190,7 @@ const FooterIconsWrapper = styled(FlexDiv)`
         gap: 4em;
     }
     @media (max-width: 600px) {
-        gap: 5em;
+        gap: 4em;
     }
     @media (max-width: 450px) {
         gap: 3em;
@@ -215,7 +215,7 @@ const FooterButtonsWrapper = styled(FlexDiv)`
         gap: 4em;
     }
     @media (max-width: 600px) {
-        gap: 3em;
+        gap: 2em;
     }
 `;
 
