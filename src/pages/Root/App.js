@@ -34,6 +34,7 @@ import Cookies from 'universal-cookie';
 import Token from '../V2/articles/Token';
 import Governance from '../V2/articles/Governance';
 import Whitepaper from '../V2/articles/Whitepaper';
+import DappLayout from 'layouts/DappLayout';
 
 const OptionsCreateMarket = lazy(() => import('../Options/CreateMarket'));
 const Home = lazy(() => import('../V2/Home'));
@@ -296,9 +297,9 @@ const App = () => {
                         </Route>
 
                         <Route exact path={ROUTES.Test.Home}>
-                            <MainLayout>
+                            <DappLayout>
                                 <OptionsHomeV2 />
-                            </MainLayout>
+                            </DappLayout>
                         </Route>
 
                         <Route exact path={ROUTES.Article.Token}>

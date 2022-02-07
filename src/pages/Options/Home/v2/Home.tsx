@@ -1,23 +1,19 @@
 import React, { useMemo } from 'react';
 
-import { Background, NewWrapper } from 'theme/common';
-
 import MarketsTable from '../MarketsTable/v2/MarketsTable';
-import MarketHeader from '../MarketHeader/v2/MarketHeader';
+
 import HotMarkets from '../HotMarkets/v2/HotMarkets';
 
 import { RootState } from 'redux/rootReducer';
 import { useSelector } from 'react-redux';
 import { getIsWalletConnected, getNetworkId, getWalletAddress } from 'redux/modules/wallet';
 import { getIsAppReady } from 'redux/modules/app';
-import { getTheme } from 'redux/modules/ui';
 
 import useBinaryOptionsMarketsQuery from 'queries/options/useBinaryOptionsMarketsQuery';
 import { fetchAllMarketOrders } from 'queries/options/fetchAllMarketOrders';
 import useUserWatchlistedMarketsQuery from 'queries/watchlist/useUserWatchlistedMarketsQuery';
 import useExchangeRatesMarketDataQuery from 'queries/rates/useExchangeRatesMarketDataQuery';
 
-import ROUTES from 'constants/routes';
 import { sortOptionsMarkets } from 'utils/options';
 import { PHASE } from 'constants/options';
 
@@ -34,8 +30,6 @@ const Home: React.FC = () => {
     const watchlistedMarketsQuery = useUserWatchlistedMarketsQuery(walletAddress, networkId, {
         enabled: isAppReady && isWalletConnected,
     });
-
-    const theme = useSelector((state: RootState) => getTheme(state));
 
     const openOrdersMap = useMemo(() => {
         if (openOrdersQuery.isSuccess) {
@@ -76,27 +70,12 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <Background style={{ minHeight: '100vh' }} className={theme == 0 ? 'light' : 'dark'}>
-                <NewWrapper>
-                    <MarketHeader
-                        route={
-                            location.search === '?anchor=overview'
-                                ? ROUTES.Options.Overview
-                                : location.search === '?userFilter2=custom'
-                                ? ROUTES.Options.CustomMarkets
-                                : location.search === '?userFilter2=competition'
-                                ? ROUTES.Options.CompetitionMarkets
-                                : ROUTES.Options.Overview
-                        }
-                    />
-                    <HotMarkets optionsMarkets={hotMarkets} />
-                    <MarketsTable
-                        optionsMarkets={optionsMarkets}
-                        exchangeRates={exchangeRates}
-                        watchlistedMarkets={watchlistedMarkets}
-                    />
-                </NewWrapper>
-            </Background>
+            <HotMarkets optionsMarkets={hotMarkets} />
+            <MarketsTable
+                optionsMarkets={optionsMarkets}
+                exchangeRates={exchangeRates}
+                watchlistedMarkets={watchlistedMarkets}
+            />
         </>
     );
 };
