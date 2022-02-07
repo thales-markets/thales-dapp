@@ -57,7 +57,6 @@ const App = () => {
         const init = async () => {
             const { networkId, name } = await getEthereumNetwork();
             try {
-                console.log(process.env.REACT_APP_INFURA_PROJECT_ID);
                 dispatch(updateNetworkSettings({ networkId, networkName: name?.toLowerCase() }));
                 if (!snxJSConnector.initialized) {
                     const provider = loadProvider({
